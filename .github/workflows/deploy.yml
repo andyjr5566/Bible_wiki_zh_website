@@ -1,3 +1,6 @@
+cd C:\Obsidian\Bible_wiki_zh_website_quartz
+
+@'
 name: Deploy Quartz to GitHub Pages
 
 on:
@@ -35,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Install Quartz plugins
-        run: npm run install-plugins
+        run: npx quartz plugin install
 
       - name: Build Quartz
         run: npx quartz build
@@ -50,3 +53,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+'@ | Set-Content .\.github\workflows\deploy.yml -Encoding UTF8

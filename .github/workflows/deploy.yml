@@ -1,9 +1,6 @@
-cd C:\Obsidian\Bible_wiki_zh_website_quartz
-
-@'
 name: Deploy Quartz to GitHub Pages
 
-on:
+"on":
   push:
     branches:
       - main
@@ -24,14 +21,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -47,10 +44,9 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
-'@ | Set-Content .\.github\workflows\deploy.yml -Encoding UTF8

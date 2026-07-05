@@ -150,7 +150,7 @@ plugins:
     enabled: true
   - source: github:quartz-community/content-page
     enabled: true
-  - source: github:quartz-community/folder-page
+  - source: github:andyjr5566/folder-page
     enabled: true
     options:
       showFolderCount: true

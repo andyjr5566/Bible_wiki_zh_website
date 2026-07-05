@@ -170,10 +170,10 @@ plugins:
       position: left
       priority: 50
   - source: github:quartz-community/graph
-    enabled: true
+    enabled: false
     options:
       localGraph:
-        depth: 3
+        depth: 1
       globalGraph:
         depth: -1
     layout:

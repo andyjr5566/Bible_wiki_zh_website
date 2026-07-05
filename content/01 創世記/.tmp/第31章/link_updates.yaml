@@ -1,0 +1,108 @@
+book: 創世記
+chapter: 31
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: |
+    在巴旦亞蘭服事拉班二十年（為兩女兒十四年、羊群六年），十次工價被改仍蒙神保護（v.7,41）。聽從神命令帶全家逃離，過伯拉大河往基列山（v.17-21）。與拉班對質時列舉忠心服事細節（v.38-42），稱神為「亞伯拉罕的神、以撒所敬畏的神」（v.42）。立約時立石柱、堆石堆、獻祭（v.45-54）。
+  relation: 本章為雅各在哈蘭生涯的轉折點，從被動受欺轉為蒙神帶領主動歸回應許之地
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 拉班
+  path: link_folder/人物/拉班.md
+  summary: |
+    兒子嫉妒雅各財富（v.1），態度轉冷（v.2）。追趕雅各七日，在基列山追上（v.23）。神在夢中警告不可說好說歹（v.24,29）。搜查神像未果（v.33-35）。與雅各立約，稱石堆為伊迦爾撒哈杜他（亞蘭語），要求雅各不苦待女兒、不另娶（v.44-53）。清早與外孫女兒親嘴祝福返家（v.55）。
+  relation: 本章展現拉班從剝削岳父轉為被迫立約的過程，其多神論背景見於v.53引用「拿鶴的神」
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 拉結
+  path: link_folder/人物/拉結.md
+  summary: |
+    同意雅各離開（v.14-16），認為父親視她們為外人、吞了聘禮價值。偷取父親家神像（特拉芬，v.19），藏於駱駝馱簍並以經期為由騙過拉班（v.34-35）。雅各不知情發咒詛「不容誰存活」（v.32），後應驗於產便雅憫難產而死（創35:16-20）。
+  relation: 本章揭示拉結仍有偶像崇拜殘餘，其偷神像動機複雜（產權繼承/平安保佑/屬靈軟弱）
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 利亞
+  path: link_folder/人物/利亞.md
+  summary: |
+    與拉結一致同意離開（v.14-16），承認父親待她們如外人。拉班搜查時先進利亞帳棚（v.33），未搜出神像。
+  relation: 本章利亞罕見與拉結同心，見證神的公義轉移產業
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 以撒
+  path: link_folder/人物/以撒.md
+  summary: |
+    被雅各稱為「父親以撒所敬畏的神」（v.42），雅各欲往迦南見以撒（v.18）。拉班立約時雅各「指著他父親以撒所敬畏的神起誓」（v.53）。
+  relation: 本章以撒雖未親自出場，但其「敬畏神」的屬靈傳承成為雅各倚靠的根基
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 伯特利
+  path: link_folder/地點/伯特利.md
+  summary: |
+    神自稱「伯特利的神」（v.13），提醒雅各二十年前在此澆油立柱、許願（創28:18-22）。成為雅各歸回應許之地的屬靈錨點。
+  relation: 本章呼應創28章伯特利之約，神信實成就當初應許
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 伯拉大河
+  path: link_folder/地點/伯拉大河.md
+  summary: |
+    雅各「起身過大河」（v.21），即伯拉大河（幼發拉底河），標誌離開巴旦亞蘭、進入基列地區。KC/BH/GT 均指此為應許之地邊界標記（創15:18）。
+  relation: 本章過河行動象徵從客居之地進入神應許之地的過渡
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 巴旦亞蘭
+  path: link_folder/地點/巴旦亞蘭.md
+  summary: |
+    雅各在此服事拉班二十年（v.18,41），積蓄牲畜財物（v.18）。拉班剪羊毛時雅各趁機逃離（v.19）。華爾頓背景註釋指巴旦亞蘭為美索不達米亞北部/敘利亞東北部地區。
+  relation: 本章為雅各巴旦亞蘭生涯的結束篇
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 「伯拉大河」名稱
+  path: link_folder/原文/「伯拉大河」名稱.md
+  summary: |
+    本章經文稱「大河」（v.21），CT/GT/KC/BH 同識為伯拉大河（幼發拉底河），希伯來文原文可指「大河」專稱。作為應許之地東北界（創15:18）。
+  relation: 本章提供「大河」即伯拉大河的經文實例
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 「拉結」名字含義
+  path: link_folder/原文/「拉結」名字含義.md
+  summary: |
+    本章拉結為核心人物（偷神像、經期藉口），名字含義「母羊/溫柔」與其牧羊背景、柔弱卻有計謀的性格形成對比（CT/GT）。
+  relation: 本章提供拉結行動的豐富素材支撐名字含義探討
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt]
+- title: 「利亞」名字含義
+  path: link_folder/原文/「利亞」名字含義.md
+  summary: |
+    本章利亞與拉結同心回應雅各（v.14-16），名字含義「疲乏/野牛」對比其此處屬靈敏銳、果斷支持神旨意的一面。
+  relation: 本章提供利亞屬靈回應的正面素材
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt]
+- title: 亞伯拉罕之約
+  path: link_folder/神學/亞伯拉罕之約.md
+  summary: |
+    雅各稱神為「亞伯拉罕的神」（v.42），拉班引用「亞伯拉罕的神和拿鶴的神」（v.53）。神命令雅各「回你祖、你父之地」（v.3）直接承接亞伯拉罕之約的地的應許。KC 列舉神七次對雅各說話，本章為第2、3次。
+  relation: 本章展現亞伯拉罕之約在雅各身上的具體延續與應驗
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 雅各與拉班（創31接續）
+  path: link_folder/互文/雅各與拉班（創31接續）.md
+  summary: |
+    本章為雅各拉班關係的高潮與終結：從欺哄工價十次（v.7,41）、神像偷竊（v.19,30-35）、追趕對質（v.23-42）到立約分離（v.44-55）。雙語命名石堆（伊迦爾撒哈杜他/迦累得）見證文化差異與互不信任。拉班清早祝福返家（v.55）標誌關係正式結束。
+  relation: 本章完整記載兩人關係從剝削/欺騙到立約界限的全過程
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 雅各逃往哈蘭
+  path: link_folder/主題/雅各逃往哈蘭.md
+  summary: |
+    本章為雅各第二次逃往/離開哈蘭（首次見創28:10-22）。v.3 神命令「回你祖、你父之地」；v.17-21 雅各帶全家秘密逃離；v.21 過伯拉大河面向基列山。與創28章首次逃往對比：首次孤身逃命、此次蒙神帶領帶全家歸回、攜二十年積蓄。
+  relation: 本章完成雅各哈蘭客居生涯的閉環，從逃往到歸回見證神信實
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]
+- title: 亞伯拉罕之約的應驗
+  path: link_folder/神學/亞伯拉罕之約的應驗.md
+  summary: |
+    神命令雅各「回你祖、你父之地」（v.3）直接應驗亞伯拉罕之約的地的應許（創12:7、15:18）。雅各二十年在巴旦亞蘭蒙神保護、財產增長（v.9、42），見證「亞伯拉罕的神與我同在」。KC 指本章為神七次對雅各說話中的第2、3次，推進約的應驗進程。
+  relation: 本章展現亞伯拉罕之約在雅各身上從應許到具體實現的關鍵步驟
+  sources: [BH, CT, GT, KC]
+  source_files: [raw_data/biblehub_study_genesis_31.txt, raw_data/ccbiblestudy_CT_genesis_31.txt, raw_data/ccbiblestudy_GT_genesis_31.txt, raw_data/kingcomments_genesis_31.txt]

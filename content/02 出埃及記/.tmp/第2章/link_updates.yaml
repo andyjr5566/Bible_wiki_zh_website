@@ -1,0 +1,75 @@
+book: 出埃及記
+chapter: 2
+updates:
+- title: 利未
+  path: link_folder/人物/利未.md
+  summary: 摩西生於利未家，父母雙方都屬利未支派；後文家譜顯示暗蘭出自哥轄家。
+  relation: 拯救者從受奴役的以色列支派內部興起，利未家背景也為摩西與亞倫日後的事奉身分奠定家譜基礎。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 以色列
+  path: link_folder/原文/以色列.md
+  summary: 埃及王死後，以色列人仍在苦工下歎息哀求；神聽見、看顧並知道他們的苦情。
+  relation: 本章末段把摩西個人經歷重新連到整個以色列民族，神對父祖之約的記念將帶出全族的拯救。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 亞伯拉罕
+  path: link_folder/人物/亞伯拉罕.md
+  summary: 神聽見百姓哀聲時，記念祂與亞伯拉罕、以撒、雅各所立的約。
+  relation: 亞伯拉罕雖早已去世，神給他的後裔、土地與賜福應許仍是出埃及行動的盟約根基。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 以撒
+  path: link_folder/人物/以撒.md
+  summary: 神記念與亞伯拉罕、以撒、雅各所立的約；以撒是父祖應許延續的第二代。
+  relation: 本章藉列出三位父祖，強調拯救以色列是神世代信實地履行同一盟約。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: 神記念與雅各及其父祖所立的約；正在埃及受苦的以色列人正是雅各家繁衍的後裔。
+  relation: 雅各一家因饑荒進入埃及的故事，在本章轉入神按約領其後裔離開奴役的階段。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 法老
+  path: link_folder/人物/法老.md
+  summary: 法老的殺嬰命令形成摩西出生的危機；其女兒卻收養摩西。摩西殺死欺壓希伯來人的埃及人後，法老又尋索要殺他。
+  relation: 法老的宮廷一面執行壓迫，一面在神的護理下成為養育未來拯救者的地方；其權勢仍不能阻止神的計畫。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 埃及
+  path: link_folder/地點/埃及.md
+  summary: 摩西在埃及出生、於王宮長大，又因認同希伯來同胞並殺死埃及人而逃離；多年後埃及王死，奴役卻仍持續。
+  relation: 埃及既提供摩西王室教育，也是他必須離開的壓迫體制；本章把敘事由埃及轉向米甸，再以百姓哀聲帶回埃及。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 井權與牧羊取水規矩
+  path: link_folder/背景/井權與牧羊取水規矩.md
+  summary: 流珥的七個女兒打水飲羊時被牧羊人趕走，摩西出面幫助並替她們的羊群打水。
+  relation: 古代井旁常涉及稀缺水源、先後次序與群體權力；摩西在此再次保護受欺壓者，但以服務和援助而非殺人解決。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 神保守救贖計畫中的生命
+  path: link_folder/神學/神保守救贖計畫中的生命.md
+  summary: 摩西的父母藏他三個月，母親以蒲草箱安置他，米利暗守望，法老女兒動憐憫並雇用其生母乳養，使他在殺嬰令下存活。
+  relation: 第1章的收生婆保全男嬰，第2章則具體追蹤一位將成為拯救者的孩子如何藉多位婦女與神的護理蒙保守。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 寄居身分
+  path: link_folder/神學/寄居身分.md
+  summary: 摩西為兒子取名革舜，解釋自己在外邦作了寄居者；他離開埃及王宮後，在米甸有家卻仍意識到自身流離身分。
+  relation: 革舜之名把摩西個人的寄居經驗，連於父祖及以色列全族在異地寄居的共同歷史。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 神的記念
+  path: link_folder/神學/神的記念.md
+  summary: 以色列人的哀聲達到神面前，神記念與亞伯拉罕、以撒、雅各所立的約，隨即看顧並知道他們的苦情。
+  relation: 神的「記念」不是先前遺忘，而是按盟約開始採取拯救行動；第23至25節為下一章呼召摩西作神學轉折。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]
+- title: 亞伯拉罕之約
+  path: link_folder/神學/亞伯拉罕之約.md
+  summary: 神聽見以色列人的哀聲後，記念祂與亞伯拉罕、以撒、雅各所立的約。
+  relation: 出埃及不是孤立的政治解放，而是神忠於父祖之約、使後裔得地並成為祂百姓的行動。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_2.txt, raw_data/ccbiblestudy_GT_exodus_2.txt, raw_data/kingcomments_exodus_2.txt, raw_data/biblehub_study_exodus_2.txt]

@@ -1,0 +1,52 @@
+/* Bible Wiki Quartz UI hotfix */
+
+/* 隱藏章節頁標題下方日期 / read time */
+.content-meta {
+  display: none !important;
+}
+
+/* 如果某些自動列表仍然出現，隱藏 FolderPage/PageList 的日期欄 */
+.page-listing .meta,
+.section-li > .section > .meta,
+.section > .meta,
+ul.section-ul .meta {
+  display: none !important;
+}
+
+/* 日期欄隱藏後，不要留下 blog list 的大空白 */
+.page-listing .section,
+.section-li > .section,
+ul.section-ul .section {
+  display: block !important;
+}
+
+.page-listing .desc,
+.section-li .desc,
+ul.section-ul .desc {
+  margin-left: 0 !important;
+}
+
+.page-listing .desc h3,
+.section-li .desc h3,
+ul.section-ul .desc h3 {
+  margin: 0.25rem 0 !important;
+}
+
+/* 手工生成的卷書 index.md 章節表格 */
+article table {
+  width: 100%;
+}
+
+article table td {
+  white-space: nowrap;
+  text-align: center;
+}
+
+article table td:empty {
+  border: none;
+}
+
+/* Graph 中文標籤比較長，給容器多一點高度 */
+.graph #graph-container {
+  min-height: 260px;
+}

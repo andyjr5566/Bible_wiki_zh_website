@@ -1,0 +1,21 @@
+book: 創世記
+chapter: 16
+updates:
+- title: 亞伯蘭
+  path: link_folder/人物/亞伯蘭.md
+  summary: 亞伯蘭聽從撒萊的代理孕母安排，與夏甲同房；家庭衝突後，他把夏甲交回撒萊權下。夏甲返回後為他生以實瑪利。
+  relation: 本章呈現亞伯蘭在後裔應許等待中的人為安排及其後果；他八十六歲時按使者所命為兒子起名以實瑪利。
+  sources: [經文, 創世記第十六章註解, 創世記第十六章拾穗, Kingcomments, BibleHub Study]
+  source_files: [raw_scripture/創世記/第16章.txt, raw_data/ccbiblestudy_CT_genesis_16.txt, raw_data/ccbiblestudy_GT_genesis_16.txt, raw_data/kingcomments_genesis_16.txt, raw_data/biblehub_study_genesis_16.txt]
+- title: 撒萊
+  path: link_folder/人物/撒萊.md
+  summary: 撒萊不育，將埃及使女夏甲給亞伯蘭為妾，希望藉她建立家室；夏甲懷孕後輕視她，撒萊苦待夏甲，導致其逃亡。
+  relation: 古代制度能解釋安排的社會背景，卻不能消除權力不平等與家庭傷害；敘事也記亞伯蘭同意並參與。
+  sources: [經文, 創世記第十六章註解, 創世記第十六章拾穗, Kingcomments, BibleHub Study]
+  source_files: [raw_scripture/創世記/第16章.txt, raw_data/ccbiblestudy_CT_genesis_16.txt, raw_data/ccbiblestudy_GT_genesis_16.txt, raw_data/kingcomments_genesis_16.txt, raw_data/biblehub_study_genesis_16.txt]
+- title: 加低斯
+  path: link_folder/地點/加低斯.md
+  summary: 夏甲遇見耶和華使者後，附近水井被稱為庇耳拉海萊，位置在加低斯與巴列之間。
+  relation: 加低斯在本章作南地與書珥曠野路線的地理參照；井的精確位置仍不確定。
+  sources: [經文, 創世記第十六章註解, 創世記第十六章拾穗, Kingcomments, BibleHub Study]
+  source_files: [raw_scripture/創世記/第16章.txt, raw_data/ccbiblestudy_CT_genesis_16.txt, raw_data/ccbiblestudy_GT_genesis_16.txt, raw_data/kingcomments_genesis_16.txt, raw_data/biblehub_study_genesis_16.txt]

@@ -1,0 +1,51 @@
+book: 創世記
+chapter: 42
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: 雅各因迦南饑荒，打發十子下埃及糴糧，但留下便雅憫怕他遭害。得知西緬被扣、約瑟要求帶便雅憫去埃及後，雅各極度哀傷，認為「這些事都歸到我身上了」。流便以兩個兒子擔保，雅各仍不願讓便雅憫同行。
+  relation: 雅各對便雅憫的保護反映他失去約瑟後的心理創傷；他的悲觀反應顯示信心軟弱，尚未學會看神在逆境中的護理。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 約瑟
+  path: link_folder/人物/約瑟.md
+  summary: 約瑟任埃及宰相，主管糶糧。哥哥們來糴糧，他認出他們卻裝作陌生人，以奸細罪囚禁他們三天。聽見他們認罪後痛哭，留下西緬為人質，釋放其餘人，暗中歸還銀子。
+  relation: 約瑟以嚴厲與恩慈交織的手法考驗哥哥們，引導他們面對二十年前的罪行。他的眼淚表明內心滿了手足之愛，隱藏身份是為了觀察哥哥們是否已改變。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 流便
+  path: link_folder/人物/流便.md
+  summary: 哥哥們在囚禁中認罪時，流便提醒他們當年他曾阻止他們傷害約瑟（v22）。回到迦南後，流便以自己兩個兒子的性命向雅各擔保必將便雅憫帶回（v37）。
+  relation: 流便作為長子，一再展現責任感。他用自己兒子的命擔保便雅憫，反映族長時代父親對子女的絕對權力；此舉雖悲壯，雅各仍不接受。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 西緬
+  path: link_folder/人物/西緬.md
+  summary: 約瑟從十個哥哥中挑出西緬，在眾人眼前把他捆綁作為人質（v24），要求他們帶便雅憫來埃及才釋放他。
+  relation: 西緬被選為人質可能因為他是次子且生性殘忍（創34:25，49:5），當年可能是謀害約瑟的主謀。流便因曾出手救約瑟而未被選中。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 便雅憫
+  path: link_folder/人物/便雅憫.md
+  summary: 雅各未打發便雅憫與哥哥們同去埃及糴糧，怕他遭害（v4）。約瑟堅持要哥哥們帶便雅憫來埃及以證實他們的話（v15-16,20,34），藉此確認便雅憫未被哥哥們所害。
+  relation: 便雅憫成為本章情節的關鍵——約瑟要確保同母弟弟平安，雅各怕再失去最後一個愛妻之子。雅各最後說「他哥哥死了，只剩下他」反映他以為約瑟已死的二十年的傷痛。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 埃及
+  path: link_folder/地點/埃及.md
+  summary: 迦南大饑荒期間，只有埃及因約瑟的積蓄政策有糧。雅各打發十子下埃及糴糧。約瑟時任埃及宰相，主管糶糧事務。
+  relation: 埃及在饑荒中成為神供應的管道，約瑟在埃及的高位使雅各一家得以存活。本章標誌神對亞伯拉罕之約（以色列要在外邦地受苦四百年）的逐步應驗。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 迦南地
+  path: link_folder/地點/迦南地.md
+  summary: 迦南地同樣遭受大饑荒，迫使雅各的兒子們下埃及糴糧。亞伯拉罕、以撒、雅各三位信心祖宗在迦南都遇過饑荒。哥哥們從埃及返回迦南地向雅各報告。
+  relation: 迦南地雖是應許之地，卻經歷饑荒考驗，說明地的完全不在今生。饑荒成為神引導雅各全家下埃及的契機。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_42.txt, raw_data/ccbiblestudy_GT_genesis_42.txt, raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]
+- title: 約瑟預表基督
+  path: link_folder/神學/約瑟預表基督.md
+  summary: 約瑟認得哥哥們，他們卻不認得他（v7-8），正如基督來到自己的地方，自己的人倒不接待祂（約1:11）。約瑟以嚴厲與恩慈交替的手法考驗哥哥們，如主引導人的良心悔改。約瑟暗中歸還銀子顯明恩典（v25），哥哥們因良心有虧反而懼怕（v28）。
+  relation: 約瑟在隱藏身份的過程中預表基督——他雖被自己的兄弟棄絕，卻成為他們的拯救者。他的眼淚（v24）顯明內心憐恤，正如主為耶路撒冷哀哭。約瑟的忍耐等候哥哥們悔改，預表基督等候以色列全家悔改。
+  sources: [KC, BH]
+  source_files: [raw_data/kingcomments_genesis_42.txt, raw_data/biblehub_study_genesis_42.txt]

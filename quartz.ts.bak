@@ -1,0 +1,10 @@
+import { loadQuartzConfig, loadQuartzLayout } from "./quartz/plugins/loader/config-loader"
+
+// Manual index mode:
+// - Do not override Explorer here, otherwise the Quartz v5 community Explorer can render empty.
+// - FolderPage is disabled in quartz.config.yaml.
+// - scripts/generate_bible_index_pages.ps1 creates real index.md pages for each book.
+
+const config = await loadQuartzConfig()
+export default config
+export const layout = await loadQuartzLayout()

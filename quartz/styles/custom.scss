@@ -1,3 +1,82 @@
-@use "./variables.scss" as *;
+﻿/* Bible Wiki Quartz UI hotfix */
 
-// put your custom CSS here!
+/* éš±è—ç« ç¯€é æ¨™é¡Œä¸‹æ–¹æ—¥æœŸ / read time */
+.content-meta {
+  display: none !important;
+}
+
+/* å¦‚æžœæŸäº›è‡ªå‹•åˆ—è¡¨ä»ç„¶å‡ºç¾ï¼Œéš±è— FolderPage/PageList çš„æ—¥æœŸæ¬„ */
+.page-listing .meta,
+.section-li > .section > .meta,
+.section > .meta,
+ul.section-ul .meta {
+  display: none !important;
+}
+
+/* æ—¥æœŸæ¬„éš±è—å¾Œï¼Œä¸è¦ç•™ä¸‹ blog list çš„å¤§ç©ºç™½ */
+.page-listing .section,
+.section-li > .section,
+ul.section-ul .section {
+  display: block !important;
+}
+
+.page-listing .desc,
+.section-li .desc,
+ul.section-ul .desc {
+  margin-left: 0 !important;
+}
+
+.page-listing .desc h3,
+.section-li .desc h3,
+ul.section-ul .desc h3 {
+  margin: 0.25rem 0 !important;
+}
+
+/* æ‰‹å·¥ç”Ÿæˆçš„å·æ›¸ index.md ç« ç¯€è¡¨æ ¼ */
+article table {
+  width: 100%;
+}
+
+article table td {
+  white-space: nowrap;
+  text-align: center;
+}
+
+article table td:empty {
+  border: none;
+}
+
+/* Graph ä¸­æ–‡æ¨™ç±¤æ¯”è¼ƒé•·ï¼Œçµ¦å®¹å™¨å¤šä¸€é»žé«˜åº¦ */
+.graph #graph-container {
+  min-height: 260px;
+}
+
+/* Bible Wiki custom cleanup:start */
+/* Hide page date / reading time and folder-list dates if a component still emits them. */
+.content-meta,
+.section > .meta,
+.page-listing .meta,
+li.section-li > .section > .meta {
+  display: none !important;
+}
+
+/* Make generated book landing pages look like reference pages, not blog posts. */
+.bible-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.5rem 0.9rem;
+  margin-top: 1rem;
+}
+
+.bible-book-grid a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.35rem;
+  text-decoration: none;
+}
+
+.bible-book-grid a:hover {
+  background: var(--highlight);
+}
+/* Bible Wiki custom cleanup:end */

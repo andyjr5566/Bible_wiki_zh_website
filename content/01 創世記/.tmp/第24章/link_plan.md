@@ -1,0 +1,34 @@
+# 第24章 link plan
+## B. 更新既有條目
+- [[以撒]] → link_folder/人物/以撒.md
+  - 動作：補充第24章資料（人物）
+- [[利百加]] → link_folder/人物/利百加.md
+  - 動作：補充第24章資料（人物）
+- [[彼土利]] → link_folder/人物/彼土利.md
+  - 動作：補充第24章資料（人物）
+- [[拿鶴]] → link_folder/人物/拿鶴.md
+  - 動作：補充第24章資料（人物）
+- [[哈蘭]] → link_folder/地點/哈蘭.md
+  - 動作：補充第24章資料（地點）
+- [[庇耳拉海萊]] → link_folder/地點/庇耳拉海萊.md
+  - 動作：補充第24章資料（地點）
+- [[迦南人]] → link_folder/人物/迦南人.md
+  - 動作：補充第24章資料（背景）
+## C. 新增正式條目
+- [[亞伯拉罕]] → link_folder/人物/亞伯拉罕.md
+- [[密迦]] → link_folder/人物/密迦.md
+- [[拉班]] → link_folder/人物/拉班.md
+- [[以利以謝]] → link_folder/人物/以利以謝.md
+- [[乳母底波拉]] → link_folder/人物/乳母底波拉.md
+- [[米所波大米]] → link_folder/地點/米所波大米.md
+- [[水井]] → link_folder/地點/水井.md
+- [[大腿底下起誓]] → link_folder/主題/大腿底下起誓.md
+- [[基督之新婦（豫表）]] → link_folder/主題/基督之新婦（豫表）.md
+- [[聖靈的引領]] → link_folder/主題/聖靈的引領.md
+- [[神約定之妻]] → link_folder/主題/神約定之妻.md
+- [[千萬人的母]] → link_folder/主題/千萬人的母.md
+- [[舍客勒]] → link_folder/原文/舍客勒.md
+- [[十匹駱駝]] → link_folder/背景/十匹駱駝.md
+- [[金環]] → link_folder/背景/金環.md
+- [[金鐲]] → link_folder/背景/金鐲.md
+- [[撒拉的帳棚]] → link_folder/文化/撒拉的帳棚.md

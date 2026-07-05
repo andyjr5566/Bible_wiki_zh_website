@@ -1,0 +1,62 @@
+book: 創世記
+chapter: 29
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: 雅各到達東方人之地，在井旁遇見拉結，為娶她服事拉班七年；拉班以利亞欺哄他後，他又為拉結再服事七年。
+  relation: 本章顯出雅各在神保守下到達母族之地，也開始在拉班手下經歷被欺哄與管教，為其性格受磨練的二十年揭開序幕。
+  sources: [CT, GT, KC, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/kingcomments_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt
+- title: 拉班
+  path: link_folder/人物/拉班.md
+  summary: 拉班接待雅各，提出工價問題，後以利亞代替拉結欺哄雅各，再要求雅各為拉結服事七年。
+  relation: 本章把拉班描繪為精於算計、利用親屬與女兒婚姻牟利的人，也成為神管教雅各的工具。
+  sources: [CT, GT, KC, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/kingcomments_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt
+- title: 拿鶴
+  path: link_folder/人物/拿鶴.md
+  summary: 雅各在井旁向哈蘭牧人詢問「拿鶴的孫子拉班」，以確認自己已到母族相關地區。
+  relation: 拿鶴在本章作為拉班家族身分的標記，連接雅各尋找母族與亞伯拉罕本族線索。
+  sources: [CT, GT, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt
+- title: 利百加
+  path: link_folder/人物/利百加.md
+  summary: 雅各向拉結表明自己是利百加的兒子，拉結便跑去告訴父親拉班。
+  relation: 利百加的身分使雅各得以被拉班家認作親屬，也承接她先前吩咐雅各逃往拉班家的敘事。
+  sources: [CT, GT, KC, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/kingcomments_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt
+- title: 哈蘭
+  path: link_folder/地點/哈蘭.md
+  summary: 雅各在東方人之地遇見從哈蘭來的牧人，並藉此確認拉班及拉結所在的母族環境。
+  relation: 哈蘭在本章不只是目的地名稱，也是雅各受拉班接納、服事與受磨練的背景區域。
+  sources: [CT, GT, KC, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/kingcomments_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt
+- title: 神的保守與帶領
+  path: link_folder/神學/神的保守與帶領.md
+  summary: 雅各離開伯特利後順利到達母族地區，正巧在井旁遇見拉結；來源把這理解為神在雅各路上的護理與帶領。
+  relation: 本章顯示創世記28章神同在與保守的應許開始落實，即使雅各之後仍要經過拉班家的管教與磨練。
+  sources: [CT, GT, KC, BH]
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_29.txt
+  - raw_data/ccbiblestudy_GT_genesis_29.txt
+  - raw_data/kingcomments_genesis_29.txt
+  - raw_data/biblehub_study_genesis_29.txt

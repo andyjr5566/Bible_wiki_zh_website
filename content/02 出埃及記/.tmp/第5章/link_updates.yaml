@@ -1,0 +1,99 @@
+book: 出埃及記
+chapter: 5
+updates:
+- title: 摩西
+  path: link_folder/人物/摩西.md
+  summary: |
+    本章記錄摩西和亞倫第一次到法老面前傳達神的命令（v1-3）。法老藐視拒絕後，摩西目睹百姓被加倍苦待、工頭挨打、官長向他抱怨（v20-21）。摩西在挫折中回到神面前，發出三次哀問：「你為什麼苦待這百姓呢？為什麼打發我去呢？…你一點也沒有拯救他們。」（v22-23）。
+  relation: |
+    本章是摩西從出4章順從的高峰跌入挫折的深谷。他首次經歷「順服神反而使情況更糟」的信仰考驗。KC指出摩西此時眼目從神身上轉移到百姓反應上，期待被感激卻遭敵意，大失所望。他對神的哀訴是真實的信仰掙扎——不是不信，而是在黑暗中期盼理解。本章結束時摩西仍在神面前（v22），表明他未放棄與神的關係，只是尚未學會定睛於差遣者而非結果。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt
+- title: 亞倫
+  path: link_folder/人物/亞倫.md
+  summary: |
+    本章中亞倫與摩西一同首次見法老，開口傳達神言（v1）。法老斥責摩西和亞倫「為什麼叫百姓曠工」（v4）。亞倫在法老面前默默站立（不像4:30那樣說話行神蹟），可能因法老即刻下令加重苦工而不再有機會展示神蹟。結尾官長埋怨的是摩西和亞倫二人（v20-21），但只有摩西回到神面前（v22）。
+  relation: |
+    亞倫在本章的角色是摩西的同伴，同受法老藐視和百姓埋怨。他的經驗構成事奉者必經的考驗：與領袖同受苦、同被誤解。KC暗示摩西和亞倫在官長埋怨時「默默轉離」，這是受苦僕人的典型反應——不作辯護，轉向神。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt
+- title: 法老
+  path: link_folder/人物/法老.md
+  summary: |
+    本章法老首次出現於敘事中（此前只有4:21-23神的預告）。他面對摩西和亞倫的宣告，回答：「耶和華是誰，使我聽祂的話，容以色列人去呢？我不認識耶和華，也不容以色列人去」（v2）。當天就下令加倍苦待以色列人（v6-9）：扣除草料、不減磚量、斥責懶惰、稱神的應許為「虛謊的言語」。以色列官長哀求時（v15-16），法老連罵「你們是懶惰的！你們是懶惰的！」（v17），拒絕聽任何解釋。
+  relation: |
+    本章展示法老的真實性格——驕傲、剛硬、蔑視真神、壓迫弱者。KC指出「耶和華是誰」不是尋求認識，而是驕傲的頂峰，肉體不順服神（羅8:7）。CT分析法老非不知道耶和華存在，而是以埃及諸神的優越感蔑視奴隸民族的神。本章也將法老描繪為撒但的預表（KC/CT），其策略——加重擔子使無暇聽真道、扭曲真理（稱神言為虛謊）——正是撒但的模式（約8:44）。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt
+- title: 埃及
+  path: link_folder/地點/埃及.md
+  summary: |
+    本章中埃及是壓迫場景的具體展現：法老從王宮發令（v6），百姓被逼「散在埃及遍地撿碎稭當作草」（v12）。埃及在此不再是出4章的地理目的地，而成為殘酷奴役系統的縮影——法老是「埃及王」（v4），督工是埃及人，磚是埃及建築的原料，而以色列人是「這地的賤民」（v5, GT）。
+  relation: |
+    本章使埃及的神學象徵具體化為社會壓迫機制：法老、督工、官長三層統治；草料政策、磚數要求、責打制度構成壓迫系統。KC將埃及與撒但統治下的世界體系對比：撒但奪取、殺害、毀壞（約10:10），正如法老對以色列人的對待。CT靈訓指出埃及預表「這世界的王」系統——只有加重負擔而不給釋放。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt
+- title: 耶和華的話臨到
+  path: link_folder/神學/耶和華的話臨到.md
+  summary: |
+    本章中「耶和華的話」體現在摩西和亞倫對法老的宣告格式：「耶和華以色列的神這樣說」（v1，CT指出這是先知書的標準句式），以及摩西「回到耶和華那裡」（v22）與神對話。本章充滿耶和華名字的密集使用（v1「耶和華以色列的神」、v2法老問「耶和華是誰」、v3「祭祀耶和華我們的神」、v21官長說「願耶和華鑒察你們」、v22摩西「回到耶和華那裡」）。
+  relation: |
+    本章中耶和華的話首次以先知宣告的形式對法老發出（v1「這樣說」）。法老以「耶和華是誰」否認這話的權柄，全章事件就此展開──耶和華的話不被世界承認、甚至導致百姓受苦更深（v22-23）。但摩西「回到耶和華那裡」表明他仍信這話的源頭，只是在黑暗中尋求理解。CT靈訓：神的工人必須親自從神領受話語，才能為神說話。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt
+- title: 以色列
+  path: link_folder/原文/以色列.md
+  summary: |
+    本章中「以色列」一詞頻繁出現，且在兩種脈絡中使用：(1)「以色列的神」（v1）──首次在聖經中使用此全稱（KC）；(2)「以色列人」指百姓，法老稱之為「這地的以色列人」（v5，GT分析原文' am ha'aretz 在此是輕蔑語氣「賤民」）。v16以色列官長自稱「僕人」，顯示這名稱在壓迫中的身份自覺。
+  relation: |
+    本章中「以色列」的名稱在法老口中帶蔑視（v5），在摩西口中帶尊榮（v1「以色列的神」），在官長口中帶受苦的自稱（v15-16「你的僕人」）。以色列身分的雙重性在此顯露：在神面前是「我的百姓」（v1），在人面前是「賤民」和「僕人」。CT靈訓指出神拯救的主要目的是使以色列成為敬拜事奉真神的子民。
+  sources:
+  - CT_註解
+  - GT_拾穗
+  - KC_KingComments
+  - BH_BibleHub Study
+  source_files:
+  - ccbiblestudy_CT_exodus_5.txt
+  - ccbiblestudy_GT_exodus_5.txt
+  - kingcomments_exodus_5.txt
+  - biblehub_study_exodus_5.txt

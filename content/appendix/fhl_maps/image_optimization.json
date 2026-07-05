@@ -1,0 +1,1169 @@
+{
+  "encoder": "ffmpeg",
+  "jpeg_quality": 8,
+  "pixel_format": "yuvj444p",
+  "minimum_reduction_pct": 10.0,
+  "images": [
+    {
+      "gid": "001",
+      "source_image": "001_〈總圖一〉迦南的地理位置和古代對外交通.GIF",
+      "chosen_image": "001_〈總圖一〉迦南的地理位置和古代對外交通.jpg",
+      "format": "jpeg",
+      "original_bytes": 1278346,
+      "chosen_bytes": 529626,
+      "reduction_pct": 58.57
+    },
+    {
+      "gid": "002",
+      "source_image": "002_〈總圖二〉古代迦南地範圍和交通情形.GIF",
+      "chosen_image": "002_〈總圖二〉古代迦南地範圍和交通情形.GIF",
+      "format": "gif",
+      "original_bytes": 371393,
+      "chosen_bytes": 371393,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "003",
+      "source_image": "003_〈總圖三〉迦南地諸山和河流.GIF",
+      "chosen_image": "003_〈總圖三〉迦南地諸山和河流.jpg",
+      "format": "jpeg",
+      "original_bytes": 841466,
+      "chosen_bytes": 384787,
+      "reduction_pct": 54.27
+    },
+    {
+      "gid": "004",
+      "source_image": "004_〈總圖四〉迦南地自然區域.GIF",
+      "chosen_image": "004_〈總圖四〉迦南地自然區域.jpg",
+      "format": "jpeg",
+      "original_bytes": 1685905,
+      "chosen_bytes": 471931,
+      "reduction_pct": 72.01
+    },
+    {
+      "gid": "005",
+      "source_image": "005_〈總圖五〉迦南地遠古的大城邦.GIF",
+      "chosen_image": "005_〈總圖五〉迦南地遠古的大城邦.GIF",
+      "format": "gif",
+      "original_bytes": 502933,
+      "chosen_bytes": 502933,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "006",
+      "source_image": "006_〈創圖一〉洪水前的各地示意圖.GIF",
+      "chosen_image": "006_〈創圖一〉洪水前的各地示意圖.jpg",
+      "format": "jpeg",
+      "original_bytes": 533356,
+      "chosen_bytes": 254813,
+      "reduction_pct": 52.22
+    },
+    {
+      "gid": "007",
+      "source_image": "007_〈創圖二〉挪亞後代組成的國族分布.GIF",
+      "chosen_image": "007_〈創圖二〉挪亞後代組成的國族分布.jpg",
+      "format": "jpeg",
+      "original_bytes": 1995398,
+      "chosen_bytes": 875805,
+      "reduction_pct": 56.11
+    },
+    {
+      "gid": "008",
+      "source_image": "008_〈創圖三〉族長們於迦南地以外的活動.GIF",
+      "chosen_image": "008_〈創圖三〉族長們於迦南地以外的活動.jpg",
+      "format": "jpeg",
+      "original_bytes": 855583,
+      "chosen_bytes": 364082,
+      "reduction_pct": 57.45
+    },
+    {
+      "gid": "009",
+      "source_image": "009_〈創圖四〉亞伯拉罕的生平.GIF",
+      "chosen_image": "009_〈創圖四〉亞伯拉罕的生平.jpg",
+      "format": "jpeg",
+      "original_bytes": 503320,
+      "chosen_bytes": 373639,
+      "reduction_pct": 25.77
+    },
+    {
+      "gid": "010",
+      "source_image": "010_〈創圖五〉羅得和他的後代－摩押與亞捫.GIF",
+      "chosen_image": "010_〈創圖五〉羅得和他的後代－摩押與亞捫.jpg",
+      "format": "jpeg",
+      "original_bytes": 715126,
+      "chosen_bytes": 482277,
+      "reduction_pct": 32.56
+    },
+    {
+      "gid": "011",
+      "source_image": "011_〈創圖六〉北方四王攻打南方五王.GIF",
+      "chosen_image": "011_〈創圖六〉北方四王攻打南方五王.GIF",
+      "format": "gif",
+      "original_bytes": 365190,
+      "chosen_bytes": 365190,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "012",
+      "source_image": "012_〈創圖七〉亞伯拉罕的七個庶子.GIF",
+      "chosen_image": "012_〈創圖七〉亞伯拉罕的七個庶子.jpg",
+      "format": "jpeg",
+      "original_bytes": 505827,
+      "chosen_bytes": 414500,
+      "reduction_pct": 18.05
+    },
+    {
+      "gid": "013",
+      "source_image": "013_〈創圖八〉以撒的生平.GIF",
+      "chosen_image": "013_〈創圖八〉以撒的生平.jpg",
+      "format": "jpeg",
+      "original_bytes": 386033,
+      "chosen_bytes": 278680,
+      "reduction_pct": 27.81
+    },
+    {
+      "gid": "014",
+      "source_image": "014_〈創圖九〉以掃的生平，以東、西珥、亞瑪力人和米甸人.GIF",
+      "chosen_image": "014_〈創圖九〉以掃的生平，以東、西珥、亞瑪力人和米甸人.jpg",
+      "format": "jpeg",
+      "original_bytes": 711490,
+      "chosen_bytes": 360256,
+      "reduction_pct": 49.37
+    },
+    {
+      "gid": "015",
+      "source_image": "015_〈創圖十〉雅各的生平.GIF",
+      "chosen_image": "015_〈創圖十〉雅各的生平.GIF",
+      "format": "gif",
+      "original_bytes": 387953,
+      "chosen_bytes": 387953,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "016",
+      "source_image": "016_〈創圖十一〉猶大和約瑟的生平.GIF",
+      "chosen_image": "016_〈創圖十一〉猶大和約瑟的生平.GIF",
+      "format": "gif",
+      "original_bytes": 415332,
+      "chosen_bytes": 415332,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "017",
+      "source_image": "017_〈創圖十二〉古埃及全圖.GIF",
+      "chosen_image": "017_〈創圖十二〉古埃及全圖.GIF",
+      "format": "gif",
+      "original_bytes": 154429,
+      "chosen_bytes": 154429,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "018",
+      "source_image": "018_〈出圖一〉摩西的早年.GIF",
+      "chosen_image": "018_〈出圖一〉摩西的早年.jpg",
+      "format": "jpeg",
+      "original_bytes": 428898,
+      "chosen_bytes": 278588,
+      "reduction_pct": 35.05
+    },
+    {
+      "gid": "019",
+      "source_image": "019_〈出圖二〉以色列人出埃及到西乃山.GIF",
+      "chosen_image": "019_〈出圖二〉以色列人出埃及到西乃山.GIF",
+      "format": "gif",
+      "original_bytes": 408905,
+      "chosen_bytes": 408905,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "020",
+      "source_image": "020_〈民圖一〉從西乃山到加低斯.GIF",
+      "chosen_image": "020_〈民圖一〉從西乃山到加低斯.GIF",
+      "format": "gif",
+      "original_bytes": 166876,
+      "chosen_bytes": 166876,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "021",
+      "source_image": "021_〈民圖二〉探查應許地和應許地的範圍.GIF",
+      "chosen_image": "021_〈民圖二〉探查應許地和應許地的範圍.jpg",
+      "format": "jpeg",
+      "original_bytes": 1275254,
+      "chosen_bytes": 415806,
+      "reduction_pct": 67.39
+    },
+    {
+      "gid": "022",
+      "source_image": "022_〈民圖三〉從何珥山到摩押平原.GIF",
+      "chosen_image": "022_〈民圖三〉從何珥山到摩押平原.GIF",
+      "format": "gif",
+      "original_bytes": 413017,
+      "chosen_bytes": 413017,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "023",
+      "source_image": "023_〈民圖四〉分地給兩個半支派.GIF",
+      "chosen_image": "023_〈民圖四〉分地給兩個半支派.jpg",
+      "format": "jpeg",
+      "original_bytes": 334073,
+      "chosen_bytes": 291253,
+      "reduction_pct": 12.82
+    },
+    {
+      "gid": "024",
+      "source_image": "024_〈民圖五〉出埃及和進迦南的旅程.GIF",
+      "chosen_image": "024_〈民圖五〉出埃及和進迦南的旅程.jpg",
+      "format": "jpeg",
+      "original_bytes": 608002,
+      "chosen_bytes": 363617,
+      "reduction_pct": 40.19
+    },
+    {
+      "gid": "025",
+      "source_image": "025_〈申圖一〉應許之地全圖.GIF",
+      "chosen_image": "025_〈申圖一〉應許之地全圖.jpg",
+      "format": "jpeg",
+      "original_bytes": 1108425,
+      "chosen_bytes": 368916,
+      "reduction_pct": 66.72
+    },
+    {
+      "gid": "026",
+      "source_image": "026_〈申圖二〉征服東岸及分地給兩個半支派.GIF",
+      "chosen_image": "026_〈申圖二〉征服東岸及分地給兩個半支派.GIF",
+      "format": "gif",
+      "original_bytes": 375730,
+      "chosen_bytes": 375730,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "027",
+      "source_image": "027_〈申圖三〉摩西觀看迦南地後去世和埋葬.GIF",
+      "chosen_image": "027_〈申圖三〉摩西觀看迦南地後去世和埋葬.jpg",
+      "format": "jpeg",
+      "original_bytes": 390937,
+      "chosen_bytes": 307856,
+      "reduction_pct": 21.25
+    },
+    {
+      "gid": "028",
+      "source_image": "028_〈書圖一〉過約但河及征服南方諸王.GIF",
+      "chosen_image": "028_〈書圖一〉過約但河及征服南方諸王.jpg",
+      "format": "jpeg",
+      "original_bytes": 537729,
+      "chosen_bytes": 434620,
+      "reduction_pct": 19.17
+    },
+    {
+      "gid": "029",
+      "source_image": "029_〈書圖二〉征服北方諸王.GIF",
+      "chosen_image": "029_〈書圖二〉征服北方諸王.jpg",
+      "format": "jpeg",
+      "original_bytes": 592374,
+      "chosen_bytes": 434718,
+      "reduction_pct": 26.61
+    },
+    {
+      "gid": "030",
+      "source_image": "030_〈書圖三〉已得和未得之地.GIF",
+      "chosen_image": "030_〈書圖三〉已得和未得之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 1218671,
+      "chosen_bytes": 389138,
+      "reduction_pct": 68.07
+    },
+    {
+      "gid": "031",
+      "source_image": "031_〈書圖四〉以色列人所征服應許地的諸王.GIF",
+      "chosen_image": "031_〈書圖四〉以色列人所征服應許地的諸王.jpg",
+      "format": "jpeg",
+      "original_bytes": 758448,
+      "chosen_bytes": 403198,
+      "reduction_pct": 46.84
+    },
+    {
+      "gid": "032",
+      "source_image": "032_〈書圖五〉約但河東兩個半支派的領土.GIF",
+      "chosen_image": "032_〈書圖五〉約但河東兩個半支派的領土.jpg",
+      "format": "jpeg",
+      "original_bytes": 636538,
+      "chosen_bytes": 280802,
+      "reduction_pct": 55.89
+    },
+    {
+      "gid": "033",
+      "source_image": "033_〈書圖六〉猶大支派最初的地業.GIF",
+      "chosen_image": "033_〈書圖六〉猶大支派最初的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 1741670,
+      "chosen_bytes": 476134,
+      "reduction_pct": 72.66
+    },
+    {
+      "gid": "034",
+      "source_image": "034_〈書圖七〉以法蓮和瑪拿西（西）半支派最初的地業.GIF",
+      "chosen_image": "034_〈書圖七〉以法蓮和瑪拿西（西）半支派最初的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 1067399,
+      "chosen_bytes": 281640,
+      "reduction_pct": 73.61
+    },
+    {
+      "gid": "035",
+      "source_image": "035_〈書圖八〉便雅憫、但、以法蓮和瑪拿西的地業.GIF",
+      "chosen_image": "035_〈書圖八〉便雅憫、但、以法蓮和瑪拿西的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 966257,
+      "chosen_bytes": 289410,
+      "reduction_pct": 70.05
+    },
+    {
+      "gid": "036",
+      "source_image": "036_〈書圖九〉西緬和猶大支派的地業.GIF",
+      "chosen_image": "036_〈書圖九〉西緬和猶大支派的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 1540164,
+      "chosen_bytes": 444922,
+      "reduction_pct": 71.11
+    },
+    {
+      "gid": "037",
+      "source_image": "037_〈書圖十〉西布倫、以薩迦、亞設、拿弗他利和但等支派的地業.GIF",
+      "chosen_image": "037_〈書圖十〉西布倫、以薩迦、亞設、拿弗他利和但等支派的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 1277845,
+      "chosen_bytes": 383233,
+      "reduction_pct": 70.01
+    },
+    {
+      "gid": "038",
+      "source_image": "038_〈書圖十一〉利未人的城和十二個支派的地業.GIF",
+      "chosen_image": "038_〈書圖十一〉利未人的城和十二個支派的地業.jpg",
+      "format": "jpeg",
+      "original_bytes": 1465551,
+      "chosen_bytes": 511140,
+      "reduction_pct": 65.12
+    },
+    {
+      "gid": "039",
+      "source_image": "039_〈士圖一〉攻取南部之地.GIF",
+      "chosen_image": "039_〈士圖一〉攻取南部之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 331189,
+      "chosen_bytes": 207855,
+      "reduction_pct": 37.24
+    },
+    {
+      "gid": "040",
+      "source_image": "040_〈士圖二〉約書亞去世時已得和未得之地.GIF",
+      "chosen_image": "040_〈士圖二〉約書亞去世時已得和未得之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 1366476,
+      "chosen_bytes": 426148,
+      "reduction_pct": 68.81
+    },
+    {
+      "gid": "041",
+      "source_image": "041_〈士圖三〉士師俄陀聶、以笏、珊迦和底波拉.GIF",
+      "chosen_image": "041_〈士圖三〉士師俄陀聶、以笏、珊迦和底波拉.GIF",
+      "format": "gif",
+      "original_bytes": 488602,
+      "chosen_bytes": 488602,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "042",
+      "source_image": "042_〈士圖四〉士師基甸和陀拉.GIF",
+      "chosen_image": "042_〈士圖四〉士師基甸和陀拉.jpg",
+      "format": "jpeg",
+      "original_bytes": 416185,
+      "chosen_bytes": 337326,
+      "reduction_pct": 18.95
+    },
+    {
+      "gid": "043",
+      "source_image": "043_〈士圖五〉士師睚珥和耶弗他.GIF",
+      "chosen_image": "043_〈士圖五〉士師睚珥和耶弗他.GIF",
+      "format": "gif",
+      "original_bytes": 198563,
+      "chosen_bytes": 198563,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "044",
+      "source_image": "044_〈士圖六〉士師參孫.GIF",
+      "chosen_image": "044_〈士圖六〉士師參孫.jpg",
+      "format": "jpeg",
+      "original_bytes": 757338,
+      "chosen_bytes": 232217,
+      "reduction_pct": 69.34
+    },
+    {
+      "gid": "045",
+      "source_image": "045_〈士圖七〉士師陀拉、睚珥、以比讚、以倫、押頓，但支派遠征，以色列人攻打基比亞.GIF",
+      "chosen_image": "045_〈士圖七〉士師陀拉、睚珥、以比讚、以倫、押頓，但支派遠征，以色列人攻打基比亞.jpg",
+      "format": "jpeg",
+      "original_bytes": 609072,
+      "chosen_bytes": 362250,
+      "reduction_pct": 40.52
+    },
+    {
+      "gid": "046",
+      "source_image": "046_〈撒上圖一〉撒母耳任以色列的士師、祭司和先知.GIF",
+      "chosen_image": "046_〈撒上圖一〉撒母耳任以色列的士師、祭司和先知.jpg",
+      "format": "jpeg",
+      "original_bytes": 521142,
+      "chosen_bytes": 346755,
+      "reduction_pct": 33.46
+    },
+    {
+      "gid": "047",
+      "source_image": "047_〈撒上圖二〉撒母耳膏立掃羅作以色列的王.GIF",
+      "chosen_image": "047_〈撒上圖二〉撒母耳膏立掃羅作以色列的王.GIF",
+      "format": "gif",
+      "original_bytes": 227355,
+      "chosen_bytes": 227355,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "048",
+      "source_image": "048_〈撒上圖三〉掃羅攻打亞捫人.GIF",
+      "chosen_image": "048_〈撒上圖三〉掃羅攻打亞捫人.jpg",
+      "format": "jpeg",
+      "original_bytes": 905399,
+      "chosen_bytes": 346276,
+      "reduction_pct": 61.75
+    },
+    {
+      "gid": "049",
+      "source_image": "049_〈撒上圖四〉掃羅和非利士人的戰爭（本圖分為四個附圖）.GIF",
+      "chosen_image": "049_〈撒上圖四〉掃羅和非利士人的戰爭（本圖分為四個附圖）.jpg",
+      "format": "jpeg",
+      "original_bytes": 415276,
+      "chosen_bytes": 325048,
+      "reduction_pct": 21.73
+    },
+    {
+      "gid": "050",
+      "source_image": "050_〈撒上圖五〉掃羅時代以色列人的疆土.GIF",
+      "chosen_image": "050_〈撒上圖五〉掃羅時代以色列人的疆土.jpg",
+      "format": "jpeg",
+      "original_bytes": 838909,
+      "chosen_bytes": 469545,
+      "reduction_pct": 44.03
+    },
+    {
+      "gid": "051",
+      "source_image": "051_〈撒上圖六〉掃羅攻打亞瑪力人，大衛擊殺歌利亞.GIF",
+      "chosen_image": "051_〈撒上圖六〉掃羅攻打亞瑪力人，大衛擊殺歌利亞.jpg",
+      "format": "jpeg",
+      "original_bytes": 1076454,
+      "chosen_bytes": 335060,
+      "reduction_pct": 68.87
+    },
+    {
+      "gid": "052",
+      "source_image": "052_〈撒上圖七〉大衛逃避掃羅追殺.GIF",
+      "chosen_image": "052_〈撒上圖七〉大衛逃避掃羅追殺.jpg",
+      "format": "jpeg",
+      "original_bytes": 1232036,
+      "chosen_bytes": 349861,
+      "reduction_pct": 71.6
+    },
+    {
+      "gid": "053",
+      "source_image": "053_〈撒上圖八〉大衛追擊亞瑪力人.GIF",
+      "chosen_image": "053_〈撒上圖八〉大衛追擊亞瑪力人.jpg",
+      "format": "jpeg",
+      "original_bytes": 601330,
+      "chosen_bytes": 337010,
+      "reduction_pct": 43.96
+    },
+    {
+      "gid": "054",
+      "source_image": "054_〈撒上圖九〉掃羅被非利士人殺害.GIF",
+      "chosen_image": "054_〈撒上圖九〉掃羅被非利士人殺害.GIF",
+      "format": "gif",
+      "original_bytes": 155058,
+      "chosen_bytes": 155058,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "055",
+      "source_image": "055_〈撒下圖一〉大衛王在希伯崙作猶大和以色列的王.GIF",
+      "chosen_image": "055_〈撒下圖一〉大衛王在希伯崙作猶大和以色列的王.jpg",
+      "format": "jpeg",
+      "original_bytes": 1019129,
+      "chosen_bytes": 486892,
+      "reduction_pct": 52.22
+    },
+    {
+      "gid": "056",
+      "source_image": "056_〈撒下圖二〉大衛攻取耶路撒冷作為首都，非利士兩次攻打皆被擊敗，迎約櫃到耶路撒冷.GIF",
+      "chosen_image": "056_〈撒下圖二〉大衛攻取耶路撒冷作為首都，非利士兩次攻打皆被擊敗，迎約櫃到耶路撒冷.jpg",
+      "format": "jpeg",
+      "original_bytes": 271232,
+      "chosen_bytes": 230877,
+      "reduction_pct": 14.88
+    },
+    {
+      "gid": "057",
+      "source_image": "057_〈撒下圖三〉大衛王的戰績.GIF",
+      "chosen_image": "057_〈撒下圖三〉大衛王的戰績.jpg",
+      "format": "jpeg",
+      "original_bytes": 1052882,
+      "chosen_bytes": 343746,
+      "reduction_pct": 67.35
+    },
+    {
+      "gid": "058",
+      "source_image": "058_〈撒下圖四〉押沙龍謀反、被誅.GIF",
+      "chosen_image": "058_〈撒下圖四〉押沙龍謀反、被誅.jpg",
+      "format": "jpeg",
+      "original_bytes": 406203,
+      "chosen_bytes": 331819,
+      "reduction_pct": 18.31
+    },
+    {
+      "gid": "059",
+      "source_image": "059_〈撒下圖五〉示巴叛變，數點以色列人.GIF",
+      "chosen_image": "059_〈撒下圖五〉示巴叛變，數點以色列人.jpg",
+      "format": "jpeg",
+      "original_bytes": 785513,
+      "chosen_bytes": 394596,
+      "reduction_pct": 49.77
+    },
+    {
+      "gid": "060",
+      "source_image": "060_〈撒下圖六〉大衛王諸勇士.GIF",
+      "chosen_image": "060_〈撒下圖六〉大衛王諸勇士.jpg",
+      "format": "jpeg",
+      "original_bytes": 404505,
+      "chosen_bytes": 300669,
+      "reduction_pct": 25.67
+    },
+    {
+      "gid": "061",
+      "source_image": "061_〈王上圖一〉所羅門王即位，耶路撒冷城和聖殿.GIF",
+      "chosen_image": "061_〈王上圖一〉所羅門王即位，耶路撒冷城和聖殿.GIF",
+      "format": "gif",
+      "original_bytes": 218543,
+      "chosen_bytes": 218543,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "062",
+      "source_image": "062_〈王上圖二〉列王紀上的零星事件.GIF",
+      "chosen_image": "062_〈王上圖二〉列王紀上的零星事件.jpg",
+      "format": "jpeg",
+      "original_bytes": 812083,
+      "chosen_bytes": 420818,
+      "reduction_pct": 48.18
+    },
+    {
+      "gid": "063",
+      "source_image": "063_〈王上圖三〉所羅門王的行政組織和供膳區.GIF",
+      "chosen_image": "063_〈王上圖三〉所羅門王的行政組織和供膳區.jpg",
+      "format": "jpeg",
+      "original_bytes": 773852,
+      "chosen_bytes": 430130,
+      "reduction_pct": 44.42
+    },
+    {
+      "gid": "064",
+      "source_image": "064_〈王上圖四〉所羅門王的疆域和屬國.GIF",
+      "chosen_image": "064_〈王上圖四〉所羅門王的疆域和屬國.jpg",
+      "format": "jpeg",
+      "original_bytes": 1004249,
+      "chosen_bytes": 306505,
+      "reduction_pct": 69.48
+    },
+    {
+      "gid": "065",
+      "source_image": "065_〈王上圖五〉所羅門王去世，王國分裂.GIF",
+      "chosen_image": "065_〈王上圖五〉所羅門王去世，王國分裂.jpg",
+      "format": "jpeg",
+      "original_bytes": 1070385,
+      "chosen_bytes": 449109,
+      "reduction_pct": 58.04
+    },
+    {
+      "gid": "066",
+      "source_image": "066_〈王上圖六〉南、北國對峙（914~874BC）.GIF",
+      "chosen_image": "066_〈王上圖六〉南、北國對峙（914~874BC）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1316682,
+      "chosen_bytes": 462149,
+      "reduction_pct": 64.9
+    },
+    {
+      "gid": "067",
+      "source_image": "067_〈王上圖七〉先知以利亞和以色列王亞哈.GIF",
+      "chosen_image": "067_〈王上圖七〉先知以利亞和以色列王亞哈.GIF",
+      "format": "gif",
+      "original_bytes": 416326,
+      "chosen_bytes": 416326,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "068",
+      "source_image": "068_〈王上圖八〉南、北國關係良好時期.GIF",
+      "chosen_image": "068_〈王上圖八〉南、北國關係良好時期.jpg",
+      "format": "jpeg",
+      "original_bytes": 704891,
+      "chosen_bytes": 436066,
+      "reduction_pct": 38.14
+    },
+    {
+      "gid": "069",
+      "source_image": "069_〈王下圖一〉先知以利沙.GIF",
+      "chosen_image": "069_〈王下圖一〉先知以利沙.jpg",
+      "format": "jpeg",
+      "original_bytes": 518851,
+      "chosen_bytes": 412953,
+      "reduction_pct": 20.41
+    },
+    {
+      "gid": "070",
+      "source_image": "070_〈王下圖二〉南、北國衰微時期.GIF",
+      "chosen_image": "070_〈王下圖二〉南、北國衰微時期.jpg",
+      "format": "jpeg",
+      "original_bytes": 676382,
+      "chosen_bytes": 438705,
+      "reduction_pct": 35.14
+    },
+    {
+      "gid": "071",
+      "source_image": "071_〈王下圖三〉南、北國極盛時期.GIF",
+      "chosen_image": "071_〈王下圖三〉南、北國極盛時期.jpg",
+      "format": "jpeg",
+      "original_bytes": 1066828,
+      "chosen_bytes": 376595,
+      "reduction_pct": 64.7
+    },
+    {
+      "gid": "072",
+      "source_image": "072_〈王下圖四〉以色列國覆亡.GIF",
+      "chosen_image": "072_〈王下圖四〉以色列國覆亡.jpg",
+      "format": "jpeg",
+      "original_bytes": 602256,
+      "chosen_bytes": 463758,
+      "reduction_pct": 23.0
+    },
+    {
+      "gid": "073",
+      "source_image": "073_〈王下圖五〉猶大國受亞述欺壓.GIF",
+      "chosen_image": "073_〈王下圖五〉猶大國受亞述欺壓.jpg",
+      "format": "jpeg",
+      "original_bytes": 873862,
+      "chosen_bytes": 449038,
+      "reduction_pct": 48.61
+    },
+    {
+      "gid": "074",
+      "source_image": "074_〈王下圖六〉猶大國被巴比倫所滅（640∼586BC）.GIF",
+      "chosen_image": "074_〈王下圖六〉猶大國被巴比倫所滅（640∼586BC）.jpg",
+      "format": "jpeg",
+      "original_bytes": 892971,
+      "chosen_bytes": 461482,
+      "reduction_pct": 48.32
+    },
+    {
+      "gid": "075",
+      "source_image": "075_〈王下圖七〉亞述帝國.GIF",
+      "chosen_image": "075_〈王下圖七〉亞述帝國.jpg",
+      "format": "jpeg",
+      "original_bytes": 1914506,
+      "chosen_bytes": 487777,
+      "reduction_pct": 74.52
+    },
+    {
+      "gid": "076",
+      "source_image": "076_〈王下圖八〉巴比倫帝國及迦勒底.GIF",
+      "chosen_image": "076_〈王下圖八〉巴比倫帝國及迦勒底.jpg",
+      "format": "jpeg",
+      "original_bytes": 2454344,
+      "chosen_bytes": 523127,
+      "reduction_pct": 78.69
+    },
+    {
+      "gid": "077",
+      "source_image": "077_〈代上圖一〉歷代志上以色列地的地名.GIF",
+      "chosen_image": "077_〈代上圖一〉歷代志上以色列地的地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 795979,
+      "chosen_bytes": 416472,
+      "reduction_pct": 47.68
+    },
+    {
+      "gid": "078",
+      "source_image": "078_〈代上圖二〉迦勒的子孫所居之城.GIF",
+      "chosen_image": "078_〈代上圖二〉迦勒的子孫所居之城.GIF",
+      "format": "gif",
+      "original_bytes": 137055,
+      "chosen_bytes": 137055,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "079",
+      "source_image": "079_〈代上圖三〉西緬支派的領土.GIF",
+      "chosen_image": "079_〈代上圖三〉西緬支派的領土.jpg",
+      "format": "jpeg",
+      "original_bytes": 292475,
+      "chosen_bytes": 195957,
+      "reduction_pct": 33.0
+    },
+    {
+      "gid": "080",
+      "source_image": "080_〈代上圖四〉河東兩個半支派的領土.GIF",
+      "chosen_image": "080_〈代上圖四〉河東兩個半支派的領土.jpg",
+      "format": "jpeg",
+      "original_bytes": 730819,
+      "chosen_bytes": 343816,
+      "reduction_pct": 52.95
+    },
+    {
+      "gid": "081",
+      "source_image": "081_〈代上圖五〉以法蓮支派擴張後的領土.GIF",
+      "chosen_image": "081_〈代上圖五〉以法蓮支派擴張後的領土.jpg",
+      "format": "jpeg",
+      "original_bytes": 725559,
+      "chosen_bytes": 299343,
+      "reduction_pct": 58.74
+    },
+    {
+      "gid": "082",
+      "source_image": "082_〈代上圖六〉便雅憫的領土和掃羅王的家譜.GIF",
+      "chosen_image": "082_〈代上圖六〉便雅憫的領土和掃羅王的家譜.jpg",
+      "format": "jpeg",
+      "original_bytes": 380682,
+      "chosen_bytes": 218383,
+      "reduction_pct": 42.63
+    },
+    {
+      "gid": "083",
+      "source_image": "083_〈代上圖七〉大衛王行政官長的祖籍.GIF",
+      "chosen_image": "083_〈代上圖七〉大衛王行政官長的祖籍.jpg",
+      "format": "jpeg",
+      "original_bytes": 243895,
+      "chosen_bytes": 184560,
+      "reduction_pct": 24.33
+    },
+    {
+      "gid": "084",
+      "source_image": "084_〈代下圖一〉歷代志下以色列地常見的零星地名.GIF",
+      "chosen_image": "084_〈代下圖一〉歷代志下以色列地常見的零星地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 673323,
+      "chosen_bytes": 396968,
+      "reduction_pct": 41.04
+    },
+    {
+      "gid": "085",
+      "source_image": "085_〈拉圖一〉波斯帝國.GIF",
+      "chosen_image": "085_〈拉圖一〉波斯帝國.jpg",
+      "format": "jpeg",
+      "original_bytes": 1700184,
+      "chosen_bytes": 502230,
+      "reduction_pct": 70.46
+    },
+    {
+      "gid": "086",
+      "source_image": "086_〈拉圖二〉歸回故土之人的祖籍及重建聖殿.GIF",
+      "chosen_image": "086_〈拉圖二〉歸回故土之人的祖籍及重建聖殿.jpg",
+      "format": "jpeg",
+      "original_bytes": 693879,
+      "chosen_bytes": 226354,
+      "reduction_pct": 67.38
+    },
+    {
+      "gid": "087",
+      "source_image": "087_〈拉圖三〉以斯拉返國前後的以色列地.GIF",
+      "chosen_image": "087_〈拉圖三〉以斯拉返國前後的以色列地.jpg",
+      "format": "jpeg",
+      "original_bytes": 682588,
+      "chosen_bytes": 416785,
+      "reduction_pct": 38.94
+    },
+    {
+      "gid": "088",
+      "source_image": "088_〈尼圖一〉尼希米重建的城牆.GIF",
+      "chosen_image": "088_〈尼圖一〉尼希米重建的城牆.jpg",
+      "format": "jpeg",
+      "original_bytes": 465649,
+      "chosen_bytes": 292598,
+      "reduction_pct": 37.16
+    },
+    {
+      "gid": "089",
+      "source_image": "089_〈尼圖二〉參與耶路撒冷城牆重建者和歌唱者居住的城邑.GIF",
+      "chosen_image": "089_〈尼圖二〉參與耶路撒冷城牆重建者和歌唱者居住的城邑.jpg",
+      "format": "jpeg",
+      "original_bytes": 309165,
+      "chosen_bytes": 205872,
+      "reduction_pct": 33.41
+    },
+    {
+      "gid": "090",
+      "source_image": "090_〈尼圖三〉猶大人和便雅憫人居住的城邑.GIF",
+      "chosen_image": "090_〈尼圖三〉猶大人和便雅憫人居住的城邑.jpg",
+      "format": "jpeg",
+      "original_bytes": 675601,
+      "chosen_bytes": 197292,
+      "reduction_pct": 70.8
+    },
+    {
+      "gid": "091",
+      "source_image": "091_〈伯圖一〉約伯的故事.GIF",
+      "chosen_image": "091_〈伯圖一〉約伯的故事.GIF",
+      "format": "gif",
+      "original_bytes": 257429,
+      "chosen_bytes": 257429,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "092",
+      "source_image": "092_詩篇相關地名位置.GIF",
+      "chosen_image": "092_詩篇相關地名位置.jpg",
+      "format": "jpeg",
+      "original_bytes": 812354,
+      "chosen_bytes": 413647,
+      "reduction_pct": 49.08
+    },
+    {
+      "gid": "093",
+      "source_image": "093_詩篇相關地名位置.GIF",
+      "chosen_image": "093_詩篇相關地名位置.jpg",
+      "format": "jpeg",
+      "original_bytes": 1175517,
+      "chosen_bytes": 565489,
+      "reduction_pct": 51.89
+    },
+    {
+      "gid": "094",
+      "source_image": "094_雅歌相關地名位置.GIF",
+      "chosen_image": "094_雅歌相關地名位置.jpg",
+      "format": "jpeg",
+      "original_bytes": 851228,
+      "chosen_bytes": 405395,
+      "reduction_pct": 52.38
+    },
+    {
+      "gid": "095",
+      "source_image": "095_以賽亞書相關地名.GIF",
+      "chosen_image": "095_以賽亞書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 783830,
+      "chosen_bytes": 443713,
+      "reduction_pct": 43.39
+    },
+    {
+      "gid": "096",
+      "source_image": "096_以賽亞書相關地名.GIF",
+      "chosen_image": "096_以賽亞書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 998575,
+      "chosen_bytes": 533443,
+      "reduction_pct": 46.58
+    },
+    {
+      "gid": "097",
+      "source_image": "097_〈賽圖三〉亞述侵略猶大.GIF",
+      "chosen_image": "097_〈賽圖三〉亞述侵略猶大.jpg",
+      "format": "jpeg",
+      "original_bytes": 120746,
+      "chosen_bytes": 100039,
+      "reduction_pct": 17.15
+    },
+    {
+      "gid": "098",
+      "source_image": "098_〈賽圖四〉摩押之地.GIF",
+      "chosen_image": "098_〈賽圖四〉摩押之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 293024,
+      "chosen_bytes": 188891,
+      "reduction_pct": 35.54
+    },
+    {
+      "gid": "099",
+      "source_image": "099_耶利米書相關地名.GIF",
+      "chosen_image": "099_耶利米書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 771398,
+      "chosen_bytes": 419752,
+      "reduction_pct": 45.59
+    },
+    {
+      "gid": "100",
+      "source_image": "100_耶利米書相關地名.GIF",
+      "chosen_image": "100_耶利米書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 1750629,
+      "chosen_bytes": 693442,
+      "reduction_pct": 60.39
+    },
+    {
+      "gid": "101",
+      "source_image": "101_以西結書相關地名.GIF",
+      "chosen_image": "101_以西結書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 343123,
+      "chosen_bytes": 254386,
+      "reduction_pct": 25.86
+    },
+    {
+      "gid": "102",
+      "source_image": "102_以西結書相關地名.GIF",
+      "chosen_image": "102_以西結書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 1375486,
+      "chosen_bytes": 597592,
+      "reduction_pct": 56.55
+    },
+    {
+      "gid": "103",
+      "source_image": "103_〈結圖三〉以西結預言的應許之地.GIF",
+      "chosen_image": "103_〈結圖三〉以西結預言的應許之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 1405124,
+      "chosen_bytes": 376794,
+      "reduction_pct": 73.18
+    },
+    {
+      "gid": "104",
+      "source_image": "104_104_但圖一_小先知書中以色列以外之地.GIF",
+      "chosen_image": "104_104_但圖一_小先知書中以色列以外之地.jpg",
+      "format": "jpeg",
+      "original_bytes": 1131402,
+      "chosen_bytes": 548962,
+      "reduction_pct": 51.48
+    },
+    {
+      "gid": "105",
+      "source_image": "105_小先知書相關地名.GIF",
+      "chosen_image": "105_小先知書相關地名.jpg",
+      "format": "jpeg",
+      "original_bytes": 773629,
+      "chosen_bytes": 421007,
+      "reduction_pct": 45.58
+    },
+    {
+      "gid": "106",
+      "source_image": "106_〈新圖一〉新約時代的巴勒斯坦.GIF",
+      "chosen_image": "106_〈新圖一〉新約時代的巴勒斯坦.jpg",
+      "format": "jpeg",
+      "original_bytes": 736054,
+      "chosen_bytes": 567657,
+      "reduction_pct": 22.88
+    },
+    {
+      "gid": "107",
+      "source_image": "107_〈福圖一〉耶穌誕生和幼年（主前4年至主後8年）.GIF",
+      "chosen_image": "107_〈福圖一〉耶穌誕生和幼年（主前4年至主後8年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 964240,
+      "chosen_bytes": 553654,
+      "reduction_pct": 42.58
+    },
+    {
+      "gid": "108",
+      "source_image": "108_〈福圖二〉耶穌受洗和受試探，開始傳道（主後27年前後）.GIF",
+      "chosen_image": "108_〈福圖二〉耶穌受洗和受試探，開始傳道（主後27年前後）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1149192,
+      "chosen_bytes": 472210,
+      "reduction_pct": 58.91
+    },
+    {
+      "gid": "109",
+      "source_image": "109_〈福圖三〉耶穌行傳之二（主後28~29年）.GIF",
+      "chosen_image": "109_〈福圖三〉耶穌行傳之二（主後28~29年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 876817,
+      "chosen_bytes": 577684,
+      "reduction_pct": 34.12
+    },
+    {
+      "gid": "110",
+      "source_image": "110_〈福圖四〉耶穌傳道的第三年（主後29至主後30年）.GIF",
+      "chosen_image": "110_〈福圖四〉耶穌傳道的第三年（主後29至主後30年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1403661,
+      "chosen_bytes": 439358,
+      "reduction_pct": 68.7
+    },
+    {
+      "gid": "111",
+      "source_image": "111_〈福圖五〉_耶穌被賣、受審、定罪、被釘十字架、復活（主後30年）.GIF",
+      "chosen_image": "111_〈福圖五〉_耶穌被賣、受審、定罪、被釘十字架、復活（主後30年）.GIF",
+      "format": "gif",
+      "original_bytes": 221735,
+      "chosen_bytes": 221735,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "112",
+      "source_image": "112_〈新圖二〉新約時代的羅馬帝國.GIF",
+      "chosen_image": "112_〈新圖二〉新約時代的羅馬帝國.jpg",
+      "format": "jpeg",
+      "original_bytes": 1877972,
+      "chosen_bytes": 1019258,
+      "reduction_pct": 45.73
+    },
+    {
+      "gid": "113",
+      "source_image": "113_〈徒圖一〉耶路撒冷初期教會和五旬節時猶太人於各處的分布情形.GIF",
+      "chosen_image": "113_〈徒圖一〉耶路撒冷初期教會和五旬節時猶太人於各處的分布情形.jpg",
+      "format": "jpeg",
+      "original_bytes": 1616197,
+      "chosen_bytes": 490175,
+      "reduction_pct": 69.67
+    },
+    {
+      "gid": "114",
+      "source_image": "114_〈徒圖二〉_腓利和彼得傳道的情形（主後30至33年）.GIF",
+      "chosen_image": "114_〈徒圖二〉_腓利和彼得傳道的情形（主後30至33年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1039180,
+      "chosen_bytes": 425751,
+      "reduction_pct": 59.03
+    },
+    {
+      "gid": "115",
+      "source_image": "115_〈徒圖三〉使徒到猶太省外傳道，掃羅信主和早期的工作（約主後32至46年）.GIF",
+      "chosen_image": "115_〈徒圖三〉使徒到猶太省外傳道，掃羅信主和早期的工作（約主後32至46年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1085171,
+      "chosen_bytes": 427279,
+      "reduction_pct": 60.63
+    },
+    {
+      "gid": "116",
+      "source_image": "116_〈徒圖四〉保羅第一次行傳（約主後47至48年）.GIF",
+      "chosen_image": "116_〈徒圖四〉保羅第一次行傳（約主後47至48年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 1080013,
+      "chosen_bytes": 349626,
+      "reduction_pct": 67.63
+    },
+    {
+      "gid": "117",
+      "source_image": "117_〈徒圖五〉保羅第二次行傳（約主後48至51年）.GIF",
+      "chosen_image": "117_〈徒圖五〉保羅第二次行傳（約主後48至51年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 2132237,
+      "chosen_bytes": 568984,
+      "reduction_pct": 73.32
+    },
+    {
+      "gid": "118",
+      "source_image": "118_〈徒圖六〉_保羅第三次行傳（約主後52至54年）.GIF",
+      "chosen_image": "118_〈徒圖六〉_保羅第三次行傳（約主後52至54年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 2488312,
+      "chosen_bytes": 659459,
+      "reduction_pct": 73.5
+    },
+    {
+      "gid": "119",
+      "source_image": "119_〈徒圖七〉_保羅被押解去羅馬（約主後57至62年）.GIF",
+      "chosen_image": "119_〈徒圖七〉_保羅被押解去羅馬（約主後57至62年）.jpg",
+      "format": "jpeg",
+      "original_bytes": 2300010,
+      "chosen_bytes": 543471,
+      "reduction_pct": 76.37
+    },
+    {
+      "gid": "120",
+      "source_image": "120_120_啟圖一_啟示錄所提七個教會.GIF",
+      "chosen_image": "120_120_啟圖一_啟示錄所提七個教會.jpg",
+      "format": "jpeg",
+      "original_bytes": 986514,
+      "chosen_bytes": 259696,
+      "reduction_pct": 73.68
+    },
+    {
+      "gid": "171",
+      "source_image": "171_171_創表十二_與以色列有關的埃及諸王.GIF",
+      "chosen_image": "171_171_創表十二_與以色列有關的埃及諸王.GIF",
+      "format": "gif",
+      "original_bytes": 252405,
+      "chosen_bytes": 252405,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "201",
+      "source_image": "201_201_民表一a.GIF",
+      "chosen_image": "201_201_民表一a.jpg",
+      "format": "jpeg",
+      "original_bytes": 187095,
+      "chosen_bytes": 117536,
+      "reduction_pct": 37.18
+    },
+    {
+      "gid": "202",
+      "source_image": "202_202_民表一b.GIF",
+      "chosen_image": "202_202_民表一b.GIF",
+      "format": "gif",
+      "original_bytes": 71266,
+      "chosen_bytes": 71266,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "203",
+      "source_image": "203_203_民表一c.GIF",
+      "chosen_image": "203_203_民表一c.jpg",
+      "format": "jpeg",
+      "original_bytes": 147591,
+      "chosen_bytes": 128727,
+      "reduction_pct": 12.78
+    },
+    {
+      "gid": "204",
+      "source_image": "204_204_民表一d.GIF",
+      "chosen_image": "204_204_民表一d.GIF",
+      "format": "gif",
+      "original_bytes": 123506,
+      "chosen_bytes": 123506,
+      "reduction_pct": 0.0
+    },
+    {
+      "gid": "205",
+      "source_image": "205_205_王上表六.GIF",
+      "chosen_image": "205_205_王上表六.jpg",
+      "format": "jpeg",
+      "original_bytes": 293724,
+      "chosen_bytes": 136409,
+      "reduction_pct": 53.56
+    },
+    {
+      "gid": "206",
+      "source_image": "206_206_王上表八.GIF",
+      "chosen_image": "206_206_王上表八.jpg",
+      "format": "jpeg",
+      "original_bytes": 1517568,
+      "chosen_bytes": 293058,
+      "reduction_pct": 80.69
+    },
+    {
+      "gid": "207",
+      "source_image": "207_207_王下表七.GIF",
+      "chosen_image": "207_207_王下表七.jpg",
+      "format": "jpeg",
+      "original_bytes": 306693,
+      "chosen_bytes": 229899,
+      "reduction_pct": 25.04
+    },
+    {
+      "gid": "208",
+      "source_image": "208_208_王下表八.GIF",
+      "chosen_image": "208_208_王下表八.jpg",
+      "format": "jpeg",
+      "original_bytes": 288767,
+      "chosen_bytes": 183722,
+      "reduction_pct": 36.38
+    }
+  ]
+}

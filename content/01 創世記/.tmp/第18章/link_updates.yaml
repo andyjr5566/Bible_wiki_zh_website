@@ -1,0 +1,17 @@
+book: 創世記
+chapter: 18
+updates:
+- title: 亞伯拉罕
+  path: link_folder/人物/亞伯拉罕.md
+  summary: 亞伯拉罕在幔利盛情接待三位訪客，陪同送行後得知神將察驗所多瑪，便以神的公義為根據，從五十個義人逐步為全城代求到十個。
+  relation: 本章呈現亞伯拉罕作神朋友的關係：他接待、同行、領受神所透露的計畫，也負責教導家人秉公行義，並在敬畏中為別人陳情。
+  sources:
+  - https://biblehub.com/study/genesis/18.htm
+  - https://www.kingcomments.com/en/bible-studies/Gen/18
+  - https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT18.htm
+  - https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT18.htm
+  source_files:
+  - raw_data/biblehub_study_genesis_18.txt
+  - raw_data/kingcomments_genesis_18.txt
+  - raw_data/ccbiblestudy_CT_genesis_18.txt
+  - raw_data/ccbiblestudy_GT_genesis_18.txt

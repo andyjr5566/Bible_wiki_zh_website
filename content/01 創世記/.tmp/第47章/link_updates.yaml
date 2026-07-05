@@ -1,0 +1,45 @@
+book: 創世記
+chapter: 47
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: 雅各兩次祝福法老，稱自己一百三十年的寄居生涯又少又苦；他在埃及再活十七年，臨終要求約瑟起誓將他歸葬列祖之地。
+  relation: 雅各在埃及蒙供養卻不以埃及為永久歸宿，歸葬要求顯示他仍持守土地應許。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 約瑟
+  path: link_folder/人物/約瑟.md
+  summary: 約瑟使父家正式定居歌珊並按人口奉養；他在饑荒中收取銀子、牲畜、土地與勞役，供給種子並制定五分之一常例。
+  relation: 約瑟同時管理父家生存與埃及糧政，把所得交給法老，並承諾依父命將雅各歸葬迦南。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 法老
+  path: link_folder/人物/法老.md
+  summary: 法老批准雅各家住歌珊並可派能人管理王室牲畜；饑荒政策使銀子、牲畜、土地和百姓勞役集中歸他，並取得五分之一收成。
+  relation: 法老提供避難地與行政授權，也成為埃及資產和土地集中後的所有者。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 埃及
+  path: link_folder/地點/埃及.md
+  summary: 雅各家在歌珊定居增多；埃及其他地區在饑荒中經歷銀子、牲畜與土地轉歸法老，形成五分之一常例。
+  relation: 埃及同時成為以色列家蒙保全之地與王權藉饑荒集中土地的場域。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 迦南地
+  path: link_folder/地點/迦南地.md
+  summary: 迦南同受嚴重饑荒，銀子也因糴糧流入法老宮；雅各要求死後離開埃及，歸葬列祖所在之地。
+  relation: 迦南目前缺糧，仍是雅各認定與神應許相連的歸葬之地。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 神的護理
+  path: link_folder/神學/神的護理.md
+  summary: 饑荒仍遍及埃及與迦南時，約瑟按人口奉養父家；以色列人在歌珊置產、生育增多，雅各晚年也得與約瑟同住十七年。
+  relation: 全家保存與繁衍延續神在別是巴所應許的「在埃及成為大族」。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]
+- title: 大腿底下起誓
+  path: link_folder/主題/大腿底下起誓.md
+  summary: 雅各要求約瑟把手放在他大腿底下，以慈愛和誠實承諾不將他葬在埃及。
+  relation: 這種鄭重起誓方式呼應亞伯拉罕差遣老僕為以撒娶妻，兩次都涉及家族應許的延續。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_genesis_47.txt, raw_data/ccbiblestudy_GT_genesis_47.txt, raw_data/kingcomments_genesis_47.txt, raw_data/biblehub_study_genesis_47.txt]

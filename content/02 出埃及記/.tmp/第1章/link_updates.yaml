@@ -1,0 +1,135 @@
+book: 出埃及記
+chapter: 1
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: 出埃及記以雅各眾子攜家眷下埃及作開端，承接創世記末段；雅各一家在埃及由七十人發展為強盛民族。
+  relation: 雅各既是十二支派的父祖，也是神向亞伯拉罕、以撒所立之約的承受者；本章顯示應許跨過父祖死亡而繼續成就。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 約瑟
+  path: link_folder/人物/約瑟.md
+  summary: 約瑟早已在埃及，後與弟兄及同代人相繼去世；他曾有的地位與功績也不再受新王尊重。
+  relation: 「不認識約瑟」標誌埃及政策由接納轉為壓迫，並使創世記中的保全之地成為出埃及記中的奴役之地。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 流便
+  path: link_folder/人物/流便.md
+  summary: 流便列在隨雅各下埃及的眾子之首；來源指出他雖為長子，卻因先前的罪失去長子名分。
+  relation: 本章名單把流便放回以色列家族與十二支派的共同歷史中。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 西緬
+  path: link_folder/人物/西緬.md
+  summary: 西緬列於隨雅各進入埃及的眾子名單，是利亞所生的兒子之一。
+  relation: 他的名字見證出埃及敘事所拯救的民族，源自雅各具體的家庭與支派。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 利未
+  path: link_folder/人物/利未.md
+  summary: 利未列於進入埃及的眾子中；來源特別指出摩西與亞倫將由利未支派而出。
+  relation: 第1章先交代利未的父祖位置，為後文神從受壓迫群體中興起摩西與亞倫預備家譜背景。
+  sources: [CT, GT, KC]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt]
+- title: 猶大（雅各之子）
+  path: link_folder/人物/猶大（雅各之子）.md
+  summary: 猶大列在隨雅各下埃及的眾子中；來源並從後來的救贖歷史指出君王與彌賽亞支系由他而出。
+  relation: 猶大支系也在法老壓迫與殺嬰命令下蒙保守，救贖歷史沒有被埃及王中斷。
+  sources: [CT, GT, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 以薩迦（價值）
+  path: link_folder/人物/以薩迦（價值）.md
+  summary: 以薩迦列於雅各眾子名單，是利亞所生的兒子之一。
+  relation: 他的後裔與其他支派一同在埃及繁衍，也一同承受強迫勞役。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 西布倫（同住）
+  path: link_folder/人物/西布倫（同住）.md
+  summary: 西布倫列於雅各眾子名單，是利亞所生的兒子之一。
+  relation: 本章以他的名字保存十二支派在埃及共同生活、受苦與增長的家族根源。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 便雅憫
+  path: link_folder/人物/便雅憫.md
+  summary: 便雅憫列於隨雅各下埃及的眾子名單，是拉結所生、約瑟的同母弟弟。
+  relation: 便雅憫後裔與全以色列一同由寄居家族成為人數眾多的民族。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 但（審判）
+  path: link_folder/人物/但（審判）.md
+  summary: 但列於雅各眾子名單，是拉結的使女辟拉所生。
+  relation: 本章的「但」是雅各之子而非後來的地名，故以限定詞條目保留人物身分。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 拿弗他利
+  path: link_folder/人物/拿弗他利.md
+  summary: 拿弗他利列於雅各眾子名單，是辟拉所生。
+  relation: 他的後裔與全以色列一同經歷人口增長、埃及壓迫與神的保守。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 迦得（萬幸）
+  path: link_folder/人物/迦得（萬幸）.md
+  summary: 迦得列於雅各眾子名單，是利亞的使女悉帕所生。
+  relation: 本章將他的支派納入由七十人繁衍成大族、又在埃及受苦的共同歷史。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 亞設（有福）
+  path: link_folder/人物/亞設（有福）.md
+  summary: 亞設列於雅各眾子名單，是悉帕所生。
+  relation: 亞設後裔與其餘支派一同見證神使以色列生養眾多的應許。
+  sources: [CT, GT]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt]
+- title: 法老
+  path: link_folder/人物/法老.md
+  summary: 新王不再尊重約瑟，因恐懼以色列人口與潛在軍事威脅，先以苦役限制他們，再命收生婆及全民殺害男嬰。
+  relation: 法老在本章代表埃及王權對神應許的正面抵抗；他的計策逐步升級，卻不能阻止以色列增長。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 埃及
+  path: link_folder/地點/埃及.md
+  summary: 埃及由保存雅各家的避難地轉為奴役之地；王權利用以色列人建城、製磚與田間勞作，又把尼羅河變為殺害男嬰的工具。
+  relation: 本章揭示以色列在埃及寄居、繁衍和受壓迫的處境，為神後續施行拯救建立舞台。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 古代收生婆
+  path: link_folder/文化/古代收生婆.md
+  summary: 施弗拉與普阿受命在希伯來婦人生產時殺死男嬰，卻因敬畏神而存留孩子性命；來源討論產凳與收生婆的專業角色。
+  relation: 收生婆原可成為王權控制生育的工具，卻利用自己的職分保全生命，成為本章抵抗殺戮命令的關鍵人物。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 積貨城制度
+  path: link_folder/歷史/積貨城制度.md
+  summary: 以色列人在督工轄制下為法老建造比東和蘭塞兩座積貨城，用於儲存糧食、軍需並服務行政與邊防。
+  relation: 創世記中積貨制度曾在饑荒中保存生命，本章卻顯示同類國家設施被強權以奴役勞動建造。
+  sources: [CT, GT, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 以色列
+  path: link_folder/原文/以色列.md
+  summary: 「以色列的眾子」起初指雅各的兒子與家族，至第9節已被法老稱為一個人數眾多、力量強盛的「以色列民」。
+  relation: 本章呈現「以色列」由個人蒙賜之名、家族稱呼，逐漸成為一個民族共同身分。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 十二支派起源
+  path: link_folder/神學/十二支派起源.md
+  summary: 第1至5節重列雅各眾子，按母親身分與長幼次序列名，約瑟因已在埃及而另於第5節提及。
+  relation: 名單把出埃及的民族與創世記中的父祖家族直接相連，表明十二支派不是抽象群體，而是同一約民的延續。
+  sources: [CT, GT, KC]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt]
+- title: 生養眾多與治理
+  path: link_folder/主題/生養眾多與治理.md
+  summary: 以色列人生養、繁茂、增多、強盛並遍滿那地；來源注意第7節密集使用繁殖詞語，呼應創世記的創造祝福與父祖應許。
+  relation: 神的賜福在異地與政權壓迫下仍繼續運行，法老越想限制人口，百姓反而越發增多。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 敬畏神
+  path: link_folder/神學/敬畏神.md
+  summary: 施弗拉與普阿因敬畏神，不照埃及王命令殺死男嬰；神厚待她們並使她們成立家室。
+  relation: 敬畏神在本章表現為把神的權柄置於君王之上，並在職業責任中保護無辜生命。
+  sources: [CT, GT, KC, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/kingcomments_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]
+- title: 雅各家七十人與七十五人
+  path: link_folder/解經爭議/雅各家七十人與七十五人.md
+  summary: 本章依希伯來文本說從雅各而生的共有七十人；使徒行傳7章則說七十五人，來源以不同文本傳統與計算範圍說明差異。
+  relation: 出埃及記1章是七十人傳統的直接經文之一，也把這個小家族與後來人口強盛的民族並列。
+  sources: [CT, GT, BH]
+  source_files: [raw_data/ccbiblestudy_CT_exodus_1.txt, raw_data/ccbiblestudy_GT_exodus_1.txt, raw_data/biblehub_study_exodus_1.txt]

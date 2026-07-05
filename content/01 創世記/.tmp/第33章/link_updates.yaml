@@ -1,0 +1,143 @@
+book: 創世記
+chapter: 33
+updates:
+- title: 雅各
+  path: link_folder/人物/雅各.md
+  summary: "雅各從毗努伊勒出發，見以掃帶四百人來，將家人分三組（兩使女在前、利亞居中、拉結約瑟在後）自保；自己走在最前、一連七次俯伏至地求和；見以掃跑來擁抱親嘴雙雙流淚；稱以掃「我主」、自稱「僕人」，堅持以掃收下禮物（視為歸還當年騙得的福分），說「見你的面如見神的面」；拒絕以掃同行、也拒留人保護，謊稱往西珥實往疏割；在疏割蓋房搭棚，後渡河至示劍買地、築壇稱「伊利伊羅伊以色列」。"
+  relation: "本章為雅各與以掃恩怨二十年的高潮與和好，亦是雅各生命從「詭詐者」轉向「以色列」的關鍵見證，但行動仍顯軟弱（謊稱往西珥、未上伯特利），導致後來底拿事件。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 以掃
+  path: link_folder/人物/以掃.md
+  summary: "以掃帶四百人來迎雅各，卻跑前擁抱、親嘴、雙雙流淚，稱雅各「兄弟」（與雅各稱「我主」強烈對比）；說「我的已經夠了」拒收禮物，後在雅各堅持下收下；提議同行並前導，又提議留人保護，雅各皆拒；當日起行回西珥。以掃的態度反映神已改變其心（箴21:1），但來12:16稱其為「貪戀世俗的人」。"
+  relation: "本章完成創27:41以掃懷恨要殺雅各的線索，見證神主權使仇敵與人和好（箴16:7）。以掃展現慷慨寬恕，但屬世俗生命本質未變（未問神、稱滿足、非屬靈領袖）。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 利亞
+  path: link_folder/人物/利亞.md
+  summary: "利亞與孩子們在行列中間（次於兩使女），到以掃面前下拜。作為雅各首娶卻失寵的妻子，其位置反映雅各家庭的偏愛結構。"
+  relation: "本章簡短記載利亞在見以掃時的行動，與創29-31章她爭寵、生育、隨雅各離開拉班的經歷連貫。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 拉結
+  path: link_folder/人物/拉結.md
+  summary: "拉結與約瑟在行列最後（最受保護位置），到以掃面前下拜。其位置確認雅各對拉結的偏愛延續至安排家人見以掃的順序。"
+  relation: "本章印證創29:30「雅各也愛拉結，勝過愛利亞」，偏愛在面對潛在威脅時具體化為保護優先權。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 悉帕
+  path: link_folder/人物/悉帕.md
+  summary: "悉帕作為利亞的使女，與孩子們在行列最前面見以掃下拜。反映古代近東使女地位低、在危急時被安排在前的現實。"
+  relation: "本章為悉帕在創世記中第二次出現（首見創29:24作利亞使女），見證其從幕後人物被推上前台面對威脅。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 毗努伊勒
+  path: link_folder/地點/毗努伊勒.md
+  summary: "雅各離開毗努伊勒（創32:31「日出時經過毗努伊勒」）前往見以掃。毗努伊勒經歷（見神面、得新名、大腿扭傷）成為雅各面對以掃勇氣的根基。"
+  relation: "本章為毗努伊勒經歷的直接後續行動：雅各帶著「見神面仍存活」的見證、跛行的身體、以色列的新名，去面對二十年的仇敵。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 巴旦亞蘭
+  path: link_folder/地點/巴旦亞蘭.md
+  summary: "雅各「從巴旦亞蘭回來」（18節），平安到達迦南地示劍。結束在巴旦亞蘭服事拉班二十年的寄居生涯。"
+  relation: "本章標記雅各巴旦亞蘭階段的完全結束，地理與屬靈上都進入應許之地新階段。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 迦南地
+  path: link_folder/地點/迦南地.md
+  summary: "雅各平安回到迦南地（18節），在示劍城東支搭帳棚、買地、築壇。應驗神在伯特利的應許（創28:15「保守你、領你回這地」）。"
+  relation: "本章為雅各進入迦南地的首個定居點（示劍），但非神指定的伯特利，顯示雅各順服仍有保留。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 雅博
+  path: link_folder/原文/雅博.md
+  summary: "雅各已過雅博河（創32:22-31），現位於雅博河北岸地區（毗努伊勒至疏割一帶）準備見以掃。雅博摔跤經歷賜給雅各面對以掃的屬靈資本。"
+  relation: "本章行動發生在雅博渡口事件之後，地理上位於雅博河北，屬靈上承接雅博「與神摔跤、生命被倒空重塑」的果效。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt
+- title: 約但河
+  path: link_folder/地點/約但河.md
+  summary: "雅各從雅博河北（約但河東岸）渡過約但河，來到迦南地西岸的示劍（18節）。渡河標誌從寄居地進入應許之地核心區。"
+  relation: "本章記載雅各生平第二次過約但河（首次創32:10「只拿杖過約但河」），此次帶著兩隊人馬、大群牲畜、完整家庭回歸。"
+  sources:
+  - CT
+  - GT
+  - KC
+  - BH
+  source_files:
+  - raw_data/ccbiblestudy_CT_genesis_33.txt
+  - raw_data/ccbiblestudy_GT_genesis_33.txt
+  - raw_data/kingcomments_genesis_33.txt
+  - raw_data/biblehub_study_genesis_33.txt

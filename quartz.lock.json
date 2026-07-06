@@ -121,6 +121,12 @@
       "commit": "85842d5c15f937a3d1a02c45accee27118146d73",
       "installedAt": "2026-07-04T16:32:46.974Z"
     },
+    "folder-page": {
+      "source": "github:andyjr5566/folder-page",
+      "resolved": "https://github.com/andyjr5566/folder-page.git",
+      "commit": "8745572b7a084324936995545f2455e5728d7f2b",
+      "installedAt": "2026-07-06T01:37:39.929Z"
+    },
     "fonts": {
       "source": "github:quartz-community/fonts",
       "resolved": "https://github.com/quartz-community/fonts.git",

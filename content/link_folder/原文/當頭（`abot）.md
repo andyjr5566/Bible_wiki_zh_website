@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 典當、抵押品，窮人外袍作當頭須日落前歸還（出22:26）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

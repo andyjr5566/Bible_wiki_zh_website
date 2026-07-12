@@ -16,7 +16,7 @@ source_scope: collected_only
 
 ### 出埃及記
 <!-- accumulation:出埃及記:21:start -->
-#### 第21章
+#### [[02 出埃及記/第21章|第21章]]
 - 出21:2以ebed指希伯來男僕，規定服役六年後第七年可自由離去，確立奴僕的自由期限與基本權益。
 <!-- accumulation:出埃及記:21:end -->
 

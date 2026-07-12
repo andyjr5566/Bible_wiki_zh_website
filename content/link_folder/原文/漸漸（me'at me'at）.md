@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 一點點、少量，神漸漸將他們趕出去（出23:30）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 利息、高利，借錢給窮人不可取利（出22:25）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

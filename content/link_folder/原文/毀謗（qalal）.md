@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 藐視、詛咒，不可毀謗神與官長（出22:28）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

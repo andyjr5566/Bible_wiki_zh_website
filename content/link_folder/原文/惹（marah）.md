@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 違背、悖逆，不可惹使者（出23:21）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

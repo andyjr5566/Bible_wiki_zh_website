@@ -16,7 +16,7 @@ source_scope: collected_only
 
 ### 出埃及記
 <!-- accumulation:出埃及記:21:start -->
-#### 第21章
+#### [[02 出埃及記/第21章|第21章]]
 - 出21:2使用chophshi指希伯來男僕服役六年後可「自由」離去，確立奴僕的自由權利，與安息年（利25:4）的自由理念相呼應。
 <!-- accumulation:出埃及記:21:end -->
 

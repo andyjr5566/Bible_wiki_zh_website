@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 放置手、聯手，不可與惡人聯手妄作見證（出23:1）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

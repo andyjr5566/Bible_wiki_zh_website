@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 讓落下、鬆開，第七年要叫地歇息（出23:11）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 許多、大多數，不可隨眾行惡、隨眾偏行（出23:2）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

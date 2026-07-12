@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 聘金、新娘價，引誘處女須交聘禮（出22:16-17）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

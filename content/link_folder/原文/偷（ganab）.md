@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 偷竊、拐帶、拿走（出22:1）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

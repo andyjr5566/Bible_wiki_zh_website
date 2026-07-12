@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 女巫、行邪術者，不可容她存活（出22:18）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

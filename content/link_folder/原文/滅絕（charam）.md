@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:22:start -->
-#### 第22章
+#### [[02 出埃及記/第22章|第22章]]
 - 滅絕、毀滅、歸神當滅之物（出22:20）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:22:end -->

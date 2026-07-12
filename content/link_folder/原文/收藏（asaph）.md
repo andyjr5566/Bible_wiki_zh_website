@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 收集、聚集，年底收藏節（出23:16）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

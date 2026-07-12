@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 折彎、傾斜，作見證屈枉正直、不可屈枉窮人（出23:2,6）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

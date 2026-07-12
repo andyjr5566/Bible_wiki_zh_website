@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 消除、抹去，神必將迦南人剪除（出23:23）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

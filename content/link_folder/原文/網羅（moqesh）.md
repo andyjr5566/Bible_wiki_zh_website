@@ -17,7 +17,7 @@ source_scope: collected_only
 ### 出埃及記
 
 <!-- accumulation:出埃及記:23:start -->
-#### 第23章
+#### [[02 出埃及記/第23章|第23章]]
 - 陷阱、圈套，事奉他們的神必成為網羅（出23:33）
 - 來源：CT, GT, KC, BH
 <!-- accumulation:出埃及記:23:end -->

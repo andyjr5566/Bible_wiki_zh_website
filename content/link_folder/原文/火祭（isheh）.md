@@ -28,6 +28,12 @@ source_scope: collected_only
 - 本章重點：v5 贖愆祭脂油焚燒為獻給耶和華的火祭。v30 親手獻給耶和華的火祭（脂油和胸）。v35 從耶和華火祭中作亞倫受膏的分和他子孫受膏的分。BH: food offering/fire offering signifies dedication to God. CT: 火祭指經火焚燒所獻的祭。KC: the offerings by fire to the LORD are the basis of the priest's consecrated portion.
 - 與本章關聯：本章三次提及火祭——贖愆祭脂油、平安祭脂油和胸、祭司受膏之分皆從火祭而出，表徵一切事奉根基在於基督獻己為火祭。
 <!-- accumulation:利未記:7:end -->
+
+<!-- accumulation:利未記:8:start -->
+#### [[03 利未記/第8章|第8章]]
+- 本章重點：利8:21,28 火祭（isheh，意「火獻祭」）：燔祭為獻給耶和華的火祭（v21）；承接聖職獻給耶和華馨香的火祭（v28）。火祭指被火燒盡獻給神的祭物。CT：火祭表徵經過神審判之火的獻祭。KC：火祭說明基督經歷神審判的火。
+- 與本章關聯：利8章火祭出現在燔祭和承接聖職禮，顯示祭司職分建立在經過火（審判）的獻祭基礎上。預表基督在十字架經歷神審判之火（來12:29）。
+<!-- accumulation:利未記:8:end -->
 ## 相關條目
 
 - [[素祭（minchah）]]

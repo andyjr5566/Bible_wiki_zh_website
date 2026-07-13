@@ -28,6 +28,12 @@ source_scope: collected_only
 - 本章重點：v5 祭司在壇上焚燒贖愆祭脂油為獻給耶和華的火祭——火祭即馨香火祭。BH: food offering signifies pleasing aroma to God. CT: 脂油焚燒為馨香火祭歸神。KC: the offering by fire is a soothing aroma to the LORD.
 - 與本章關聯：本章贖愆祭脂油焚燒為馨香火祭，延續火祭的馨香意義——基督獻己為神所悅納。
 <!-- accumulation:利未記:7:end -->
+
+<!-- accumulation:利未記:8:start -->
+#### [[03 利未記/第8章|第8章]]
+- 本章重點：利8:21,28 馨香（reach nichoach，意「安息的香氣」）：全羊燒在壇上為馨香的燔祭（v21）；承接聖職獻給耶和華馨香的火祭（v28）。馨香表徵神悅納祭物（創8:21；弗5:2）。CT：馨香表徵基督獻上自己為神所悅納的香氣。KC：馨香火祭預表基督完全討神喜悅的獻上。
+- 與本章關聯：利8章兩次提到馨香，分別在燔祭和承接聖職禮中，顯示祭司承接聖職的獻祭都蒙神悅納。預表基督一次獻上自己為馨香的祭（弗5:2）。
+<!-- accumulation:利未記:8:end -->
 ## 相關條目
 
 - [[素祭（minchah）]]

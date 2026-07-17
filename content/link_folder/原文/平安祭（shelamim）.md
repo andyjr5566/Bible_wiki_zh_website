@@ -23,6 +23,11 @@ source_scope: collected_only
 
 ### 利未記
 
+<!-- accumulation:利未記:3:start -->
+#### [[03 利未記/第3章|第3章]]
+- 本章重點：利3 是平安祭條例的本章。CT 給的原文字義是「感恩，聯盟，友誼」，並指出此名詞「在希伯來文表示『和好』或『福祉』」；《精讀本》記其字根「薛列」意為「報答」、「賠償」、「重新給」；和合本小字作「酬恩」。丁良才列出三種名目：「平安祭有三樣：（一）感恩，（二）還願，（三）樂獻（利7:11-18），這三樣都有酬恩的意思」，並記其場合：「以色列人在喜樂的日子和過節的時候多獻平安祭（民10:10，王上8:63，撒上11:15，撒下6:17）。」全章分三級：牛群（v1-5）、綿羊（v6-11）、山羊（v12-16），末以脂油和血不可吃的永遠定例收束（v17）。
+- 與本章關聯：KC 指出平安祭在五祭中的位置不是偶然：「The 'peace offering' is the middle of the five offerings. The burnt offering and the grain offering are voluntary offerings and for God. The sin offering and the guilt offering that follow are obligatory offerings.」前二者甘心獻給神，後二者為罪不得不獻，平安祭居中，是兩者交會之處——「It represents a fellowship meal.」其最獨特之處在於誰能吃：神得脂油、祭司得胸與右腿（利7:31），而「as the only offering in the Old Testament, all of the people may eat who are clean（利7:19）」。《雷氏研讀本》同此：「『平安祭』是獻祭者能分享的惟一一種祭。」與燔祭的三個差別（丁良才）：祭牲可公可母、只燒脂油與肥尾巴、祭司和獻祭者都可以吃。
+<!-- accumulation:利未記:3:end -->
 <!-- accumulation:利未記:6:start -->
 #### [[03 利未記/第6章|第6章]]
 - 本章重點：v12 祭司每日早晨在壇上燒柴，把燔祭擺上，在其上燒平安祭牲的脂油。BH: peace offering symbolized fellowship and reconciliation with God. CT: 脂油表徵將上好的因著感恩獻給神。KC: the fat portions of the peace offerings are offered up in smoke on the altar.

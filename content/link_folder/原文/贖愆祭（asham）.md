@@ -23,6 +23,23 @@ source_scope: collected_only
 - 與本章關聯：本章燔祭中「贖罪」的概念，與贖愆祭處理罪愆過犯的神學目的同源，皆為使獻祭者在神面前得著赦免與悅納。
 <!-- accumulation:利未記:1:end -->
 
+<!-- accumulation:利未記:2:start -->
+#### [[03 利未記/第2章|第2章]]
+- 本章重點：利2 中贖愆祭未直接出現，但在「至聖」的分類上與素祭同列。丁良才：「一切獻與神的祭物，連眾人所可吃之平安祭的肉都是聖的，唯有素祭（利6:16、10:12）、贖罪祭（利6:17-18、25-26）、贖愆祭（利14:13，民18:9-10）和陳設餅（利24:9），卻是至聖的。」
+- 與本章關聯：「至聖」這個分類把素祭與贖愆祭綁在一起，儘管兩者性質相反——素祭無血無贖罪，贖愆祭則專為賠償得罪聖物而設。可見「至聖」標定的不是祭的功能，而是其歸屬的嚴格程度：至聖之物只有亞倫的子孫（男丁）能吃，且必須在聖處吃；平安祭的肉雖也是聖的，祭司卻可帶回任何潔淨的地方與全家男女同吃（利10:12-14）。
+<!-- accumulation:利未記:2:end -->
+
+<!-- accumulation:利未記:3:start -->
+#### [[03 利未記/第3章|第3章]]
+- 本章重點：利3 中贖愆祭未直接出現，但在兩處作為對照：KC 指出燔祭與素祭是甘心獻的、贖罪祭與贖愆祭是為罪不得不獻的，平安祭居中；丁良才則指出贖愆祭的祭牲與燔祭、贖罪祭一樣都在壇的北邊宰（利7:2、14:13），惟獨平安祭經文沒有指定宰牲的地方。
+- 與本章關聯：五祭在「自願／義務」上分成兩組，平安祭正在分界線上。KC：「The burnt offering and the grain offering are voluntary offerings and for God. The sin offering and the guilt offering that follow are obligatory offerings and are necessary for the sins of the people or of a member of the people. The peace offering is rightly central.」平安祭是自願的最後一個，也是唯一一個獻祭者能與神、與祭司同席的祭——義務的祭處理隔閡，自願的祭表達相交，平安祭則是相交的高點。
+<!-- accumulation:利未記:3:end -->
+
+<!-- accumulation:利未記:4:start -->
+#### [[03 利未記/第4章|第4章]]
+- 本章重點：利4 中贖愆祭未直接出現，但丁良才在本章把五祭的特點各壓成一句，贖愆祭的特點是「納罰金」，表示賠償——這正是它與贖罪祭最清楚的分界。丁良才另記：「贖罪祭和贖愆祭，沒有同獻的素祭和奠祭（民15:1-11）。」
+- 與本章關聯：KC 指出利5 的三個案例雖然名為贖罪祭，性質卻靠近贖愆祭：「The three cases in Leviticus 5 concern concrete, named sins. These sin offerings therefore bear more of the character of the guilt offering that is discussed in the remainder of Leviticus 5. Guilt arises when a commandment is transgressed.」——利4 的罪是「不出於順服的一切」（KC：「sin is everything that does not happen out of obedience to God」），利5 後半的愆則是具體踩到某條線。CT 另從對象上分：「基督在十字架上捨命流血，解決了人的罪行（贖愆祭）；基督死而復活的生命，對付人的罪性（贖罪祭）。」
+<!-- accumulation:利未記:4:end -->
 <!-- accumulation:利未記:5:start -->
 #### [[03 利未記/第5章|第5章]]
 - 本章重點：規定在聖物上誤犯或行了不可行之事時，需獻上無殘疾的公綿羊為贖愆祭，並償還外加五分之一。

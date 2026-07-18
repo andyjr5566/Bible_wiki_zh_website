@@ -32,13 +32,13 @@ source_scope: collected_only
 <!-- accumulation:利未記:3:start -->
 #### [[03 利未記/第3章|第3章]]
 - 本章重點：利3 中贖愆祭未直接出現，但在兩處作為對照：KC 指出燔祭與素祭是甘心獻的、贖罪祭與贖愆祭是為罪不得不獻的，平安祭居中；丁良才則指出贖愆祭的祭牲與燔祭、贖罪祭一樣都在壇的北邊宰（利7:2、14:13），惟獨平安祭經文沒有指定宰牲的地方。
-- 與本章關聯：五祭在「自願／義務」上分成兩組，平安祭正在分界線上。KC：「The burnt offering and the grain offering are voluntary offerings and for God. The sin offering and the guilt offering that follow are obligatory offerings and are necessary for the sins of the people or of a member of the people. The peace offering is rightly central.」平安祭是自願的最後一個，也是唯一一個獻祭者能與神、與祭司同席的祭——義務的祭處理隔閡，自願的祭表達相交，平安祭則是相交的高點。
+- 與本章關聯：五祭在「自願／義務」上分成兩組，平安祭正在分界線上。KC：「燔祭與素祭是甘心獻的，是為著神的。隨後的贖罪祭與贖愆祭則是義務的祭，是為百姓、或百姓中某一個人的罪所必需的。平安祭理當居中。」平安祭是自願的最後一個，也是唯一一個獻祭者能與神、與祭司同席的祭——義務的祭處理隔閡，自願的祭表達相交，平安祭則是相交的高點。
 <!-- accumulation:利未記:3:end -->
 
 <!-- accumulation:利未記:4:start -->
 #### [[03 利未記/第4章|第4章]]
 - 本章重點：利4 中贖愆祭未直接出現，但丁良才在本章把五祭的特點各壓成一句，贖愆祭的特點是「納罰金」，表示賠償——這正是它與贖罪祭最清楚的分界。丁良才另記：「贖罪祭和贖愆祭，沒有同獻的素祭和奠祭（民15:1-11）。」
-- 與本章關聯：KC 指出利5 的三個案例雖然名為贖罪祭，性質卻靠近贖愆祭：「The three cases in Leviticus 5 concern concrete, named sins. These sin offerings therefore bear more of the character of the guilt offering that is discussed in the remainder of Leviticus 5. Guilt arises when a commandment is transgressed.」——利4 的罪是「不出於順服的一切」（KC：「sin is everything that does not happen out of obedience to God」），利5 後半的愆則是具體踩到某條線。CT 另從對象上分：「基督在十字架上捨命流血，解決了人的罪行（贖愆祭）；基督死而復活的生命，對付人的罪性（贖罪祭）。」
+- 與本章關聯：KC 指出利5 的三個案例雖然名為贖罪祭，性質卻靠近贖愆祭：「利5 的三個案例關乎具體的、指名道姓的罪。因此那些贖罪祭帶著較多贖愆祭的性質——就是利5 其餘部分所討論的那種祭。罪愆是在一條誡命被違犯時產生的。」——利4 的罪是「不出於順服的一切」（KC：「凡不出於順服神的，都是罪」），利5 後半的愆則是具體踩到某條線。CT 另從對象上分：「基督在十字架上捨命流血，解決了人的罪行（贖愆祭）；基督死而復活的生命，對付人的罪性（贖罪祭）。」
 <!-- accumulation:利未記:4:end -->
 <!-- accumulation:利未記:5:start -->
 #### [[03 利未記/第5章|第5章]]
@@ -57,6 +57,12 @@ source_scope: collected_only
 - 本章重點：本章1-7節從祭司角度補充贖愆祭條例：宰於燔祭牲處（壇北邊）、血灑壇周圍（非抹壇角，與贖罪祭不同）、脂油（肥尾巴、蓋臟脂油、腰子、肝上網子）焚燒為火祭、祭司男丁在聖處吃祭物（至聖）。v7 贖罪祭怎樣贖愆祭也是怎樣，兩個祭一個條例，獻贖愆祭贖罪的祭司得祭物。BH: guilt offering is most holy; blood splattered on all sides indicates thoroughness of atonement. CT: 贖愆祭表徵基督應付人的罪行（複數）。GT: 贖愆祭有五樣與贖罪祭不同之處——表意、性質、用血、祭牲、條例。KC: whoever brings a guilt offering may also see that the Lord Jesus is also the burnt offering.
 - 與本章關聯：本章補充贖愆祭的祭司實務細節（宰殺位置、灑血方式、脂油部位、祭司食用權），強調贖愆祭與贖罪祭同例——對付罪行與對付罪性不可分割。
 <!-- accumulation:利未記:7:end -->
+
+<!-- accumulation:利未記:14:start -->
+#### [[03 利未記/第14章|第14章]]
+- 本章重點：利14:12-14、21、24-25 潔淨長大痲瘋者第八天所獻的第一個祭就是贖愆祭，且與一羅革油一同作搖祭。丁良才逐條列出它與尋常贖愆祭的九處不同：是公羊羔不必長成、不按祭司估價、有同獻的素祭、與一羅革油同獻、須作搖祭、由祭司自己搖、搖全祭牲而且是活搖的、血有特別的用法、沒有罰金。《舊約聖經背景註釋》證實其中一點：「本段是惟一典禮使用全隻祭牲的例證。」至於他到底虧欠了神什麼，各家給三說：補償隔離期間積欠的祭（《串珠》、背景註釋）、以防萬一自己真的誤犯了罪（背景註釋、《串珠》）、他的不潔連累了會眾（丁良才、《精讀本》）。《串珠》並老實承認「惟獨贖愆祭的意義並不明顯」。
+- 與本章關聯：本章是全卷贖愆祭體例最特殊的一次：它排在贖罪祭與燔祭之前，是活搖的全祭牲，而且貧窮人也不得以鳥代替（v21）——祭物可以減，這一項不能減。
+<!-- accumulation:利未記:14:end -->
 ## 相關條目
 
 - [[公綿羊]]

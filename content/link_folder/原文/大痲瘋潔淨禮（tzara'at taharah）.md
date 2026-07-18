@@ -28,7 +28,6 @@ source_scope: collected_only
 - [[大痲瘋潔淨禮的兩階段]]
 - [[兩隻潔淨活鳥（shtei tzipporim tehorot）]]
 - [[抹血抹油禮儀（dam ve-shemen）]]
-- [[貧窮人的代替獻祭（dal）]]
 - [[房屋大痲瘋（tzara'at ba-bayit）]]
 
 ## 來源依據

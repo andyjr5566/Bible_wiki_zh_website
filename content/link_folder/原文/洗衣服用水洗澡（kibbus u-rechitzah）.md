@@ -30,6 +30,7 @@ source_scope: collected_only
 - [[漏症（zav）]]
 - [[不潔淨到晚上（tame ad erev）]]
 - [[夢遺（mikreh lailah）]]
+- [[男女交合（shichvat zera）]]
 - [[月經（niddah）]]
 - [[血漏（zavah）]]
 - [[洗濯儀式的屬靈意義]]

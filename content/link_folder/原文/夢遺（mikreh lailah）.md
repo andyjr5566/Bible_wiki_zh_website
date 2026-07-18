@@ -28,6 +28,7 @@ source_scope: collected_only
 
 - [[不潔淨到晚上（tame ad erev）]]
 - [[洗衣服用水洗澡（kibbus u-rechitzah）]]
+- [[男女交合（shichvat zera）]]
 - [[男女交合與夢遺的屬靈意義]]
 - [[保羅論肉體情慾（加5：19-21；羅7：14-25）]]
 

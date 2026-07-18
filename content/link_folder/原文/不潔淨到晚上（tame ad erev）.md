@@ -28,6 +28,7 @@ source_scope: collected_only
 - [[漏症（zav）]]
 - [[洗衣服用水洗澡（kibbus u-rechitzah）]]
 - [[夢遺（mikreh lailah）]]
+- [[男女交合（shichvat zera）]]
 - [[月經（niddah）]]
 - [[血漏（zavah）]]
 - [[不潔淨的傳染與隔離]]

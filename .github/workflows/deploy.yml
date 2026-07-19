@@ -8,6 +8,7 @@ name: Deploy Quartz to GitHub Pages
       - "content/**"  # ⭐ 只在 content 資料夾改動時觸發
       - "quartz.ts"
       - "quartz.config.yaml"
+      - "quartz/styles/**"
   workflow_dispatch:
 
 permissions:

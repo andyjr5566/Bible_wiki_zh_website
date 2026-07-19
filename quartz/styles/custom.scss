@@ -80,3 +80,60 @@ li.section-li > .section > .meta {
   background: var(--highlight);
 }
 /* Bible Wiki custom cleanup:end */
+
+/* Mermaid diagram fix:start */
+/*
+ * The quartz-themes plugin defines accent colors such as `--tertiary` as
+ * `hsl(calc(var(--accent-h) - 3), ...)`. Quartz's mermaid script reads these
+ * CSS variables with getComputedStyle().getPropertyValue(). For UNREGISTERED
+ * custom properties the browser substitutes var() but does NOT evaluate
+ * calc(), so mermaid receives the literal string
+ * `hsl(calc(258 - 3), calc(88% * 1.02), calc(66% * 1.15))`. Its color parser
+ * (khroma) then throws `Unsupported color format` and the whole diagram fails
+ * to render, leaving only the raw text.
+ *
+ * Registering these variables as typed <color> properties forces the browser
+ * to evaluate calc() and expose a concrete, khroma-parsable color (e.g.
+ * `rgb(...)`) in the computed value. The rendered colors are unchanged.
+ */
+@property --secondary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #888888;
+}
+@property --tertiary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #888888;
+}
+@property --dark {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2b2b2b;
+}
+@property --darkgray {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #4e4e4e;
+}
+@property --gray {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #b8b8b8;
+}
+@property --light {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #faf8f8;
+}
+@property --lightgray {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #e5e5e5;
+}
+@property --highlight {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(143, 159, 169, 0.15);
+}
+/* Mermaid diagram fix:end */

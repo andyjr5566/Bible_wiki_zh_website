@@ -50,7 +50,7 @@ source_scope: collected_only
 - [[受膏的祭司（mashiach kohen）]]
 - [[公牛犢（par ben baqar）]]
 - [[贖罪祭]]
-- [[香壇（mizbeach ha-qetoret）]]
+- [[金香壇（香壇）]]
 - [[營外焚燒（machutz la-machaneh saraf）]]
 - [[赦免（salach）]]
 - [[按手（samak）]]

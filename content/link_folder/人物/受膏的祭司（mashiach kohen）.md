@@ -49,7 +49,7 @@ source_scope: collected_only
 
 - [[贖罪祭]]
 - [[公牛犢（par ben baqar）]]
-- [[香壇（mizbeach ha-qetoret）]]
+- [[金香壇（香壇）]]
 - [[營外焚燒（machutz la-machaneh saraf）]]
 - [[全會眾（kol ha-edah）]]
 - [[按手（samak）]]

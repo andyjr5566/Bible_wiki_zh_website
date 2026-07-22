@@ -71,7 +71,7 @@ source_scope: collected_only
 - [[腰子（kilyah）]]
 - [[肝上的網子（yoteret ha-kaved）]]
 - [[肥尾巴（alyah）]]
-- [[脂油不可吃（脂油の禁令）]]
+- [[脂油和血都不可吃]]
 - [[永遠的定例（chuqqat olam）]]
 - [[馨香之氣]]
 

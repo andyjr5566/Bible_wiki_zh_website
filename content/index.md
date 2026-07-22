@@ -43,6 +43,7 @@
 ## 🎞️ 相關影片
 
 ### 大衛鮑森講座
+聖經解析
 	舊約綜覽系列
 - https://www.youtube.com/playlist?list=PLZfkFcz5Qd08O-lWINo2CowDGHw3jBA6x
 	新約綜覽系列

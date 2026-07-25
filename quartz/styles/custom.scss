@@ -270,12 +270,12 @@ article {
 
 /* 亮色模式：純粹使用羊皮紙圖片，移除所有干擾漸層 */
 [saved-theme="light"] body {
-  background: url('/static/parchment.jpg') center center / cover fixed !important;
+  background: url('./static/parchment.jpg') center center / cover fixed !important;
 }
 
 /* 暗色模式：支援暗色羊皮紙背景圖 */
 [saved-theme="dark"] body {
-  background: url('/static/dark_parchment.jpg') center center / cover fixed, var(--light) !important;
+  background: url('./static/dark_parchment.jpg') center center / cover fixed, var(--light) !important;
 }
 
 /* ============================================================

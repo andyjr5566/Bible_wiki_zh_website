@@ -1,6 +1,6 @@
-﻿/* Bible Wiki Quartz UI hotfix */
+/* Bible Wiki Quartz UI hotfix */
 
-/* éš±è—ç« ç¯€é æ¨™é¡Œä¸‹æ–¹æ—¥æœŸ / read time */
+/* éš±è— ç« ç¯€é  æ¨™é¡Œä¸‹æ–¹æ—¥æœŸ / read time */
 .content-meta {
   display: none !important;
 }
@@ -137,3 +137,325 @@ li.section-li > .section > .meta {
   initial-value: rgba(143, 159, 169, 0.15);
 }
 /* Mermaid diagram fix:end */
+
+/* ==========================================================================
+   Bible Reading Aesthetics & Micro-Typography (v5.0 Mobile & Dark Mode)
+   ========================================================================== */
+
+/* 1. 全局字體與舒適閱讀行距 */
+article {
+  font-family: var(--bodyFont), "LXGW WenKai TC", "BiauKai", "PingFang TC", serif;
+
+  p, li {
+    font-size: 1.26rem; /* 提升 0.2rem */
+    line-height: 1.88;
+    letter-spacing: 0.015em;
+    color: var(--dark);
+    margin-bottom: 1.25rem;
+  }
+
+  /* 2. 標題典雅風采 (古典墨紅與裝飾) */
+  h1, h2, h3, h4 {
+    font-family: var(--headerFont), "Noto Serif TC", "BiauKai", "PingFang TC", serif;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--secondary);
+    border-bottom: none;
+  }
+
+  h1 {
+    text-align: center;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: clamp(1.8rem, 4vw, 2.4rem); /* 提升 0.2rem */
+    position: relative;
+    
+    &::after {
+      content: "── ✤ ──";
+      display: block;
+      font-size: 0.9rem;
+      color: var(--tertiary);
+      margin-top: 0.5rem;
+      font-weight: 400;
+      opacity: 0.75;
+    }
+  }
+
+  h2 {
+    margin-top: 2rem;
+    font-size: clamp(1.45rem, 3vw, 1.7rem); /* 提升 0.2rem */
+    padding-bottom: 0.3rem;
+    border-bottom: 1px dashed var(--lightgray);
+  }
+
+  /* 3. 經節上標數字 (Verse Numbers) */
+  sup, .verse-num {
+    font-size: 0.78em;
+    font-weight: 700;
+    color: var(--tertiary);
+    margin-right: 0.3rem;
+    vertical-align: super;
+    user-select: none;
+    line-height: 0;
+  }
+
+  /* 4. 詩篇 / 詩歌對稱縮排 (Poetic Indent) */
+  blockquote {
+    border-left: 3px solid var(--secondary);
+    background: rgba(230, 215, 170, 0.25) !important; /* 改為半透明，讓羊皮紙透出 */
+    padding: 0.9rem 1.3rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    margin: 1.4rem 0;
+    font-size: 1.02rem;
+    line-height: 1.82;
+
+    p {
+      margin-bottom: 0.5rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  /* 5. 表格古典卡片樣式 */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--lightgray);
+    margin: 1.5rem 0;
+
+    th {
+      background-color: var(--lightgray);
+      color: var(--dark);
+      font-weight: 700;
+      padding: 0.6rem 0.8rem;
+    }
+
+    td {
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid var(--lightgray);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+/* 6. 典雅 Popover 浮動卡片 (暗色/亮色自適應與毛玻璃) */
+.popover .popover-inner {
+  border: 1px solid var(--tertiary);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  background-color: var(--light);
+  color: var(--dark);
+  padding: 1rem 1.2rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ==========================================================================
+   實體羊皮紙背景 (Light Mode) 與 Explorer 修正
+   ========================================================================== */
+
+/* 修正左側「探索」文字被裁切的問題 */
+.explorer .title {
+  line-height: 1.4 !important;
+  padding-bottom: 4px;
+  overflow: visible !important;
+}
+
+/* 亮色模式：純粹使用羊皮紙圖片，移除所有干擾漸層 */
+[saved-theme="light"] body {
+  background: url('/static/parchment.jpg') center center / cover fixed !important;
+}
+
+/* 暗色模式：支援暗色羊皮紙背景圖 */
+[saved-theme="dark"] body {
+  background: url('/static/dark_parchment.jpg') center center / cover fixed, var(--light) !important;
+}
+
+/* ============================================================
+   強制覆蓋 Obsidian 主題 resource-style CSS 的不透明背景
+   使用與主題完全相同的高特異性選擇器 + !important
+   ============================================================ */
+
+/* 覆蓋: body { background-color: var(--background-primary) } */
+html[saved-theme="light"] body,
+html[saved-theme="dark"] body {
+  background-color: transparent !important;
+}
+
+/* 覆蓋: html[saved-theme] body body[data-slug] */
+html[saved-theme="light"] body body[data-slug],
+html[saved-theme="dark"] body body[data-slug] {
+  background-color: transparent !important;
+}
+
+/* 覆蓋: html[saved-theme] body[data-slug] .page > div#quartz-body */
+html[saved-theme="light"] body[data-slug] .page > div#quartz-body,
+html[saved-theme="dark"] body[data-slug] .page > div#quartz-body {
+  background-color: transparent !important;
+}
+
+/* 覆蓋: html[saved-theme] .page > div#quartz-body div.center */
+html[saved-theme="light"] .page > div#quartz-body div.center,
+html[saved-theme="dark"] .page > div#quartz-body div.center {
+  background-color: transparent !important;
+}
+
+/* 覆蓋: html[saved-theme] .page > div#quartz-body footer */
+html[saved-theme="light"] .page > div#quartz-body footer,
+html[saved-theme="dark"] .page > div#quartz-body footer {
+  background-color: transparent !important;
+}
+
+/* 覆蓋: html[saved-theme] body body[data-slug] div#quartz-root.page 及其子元素 (不包含 sidebar) */
+html[saved-theme="light"] body body[data-slug] div#quartz-root.page,
+html[saved-theme="dark"] body body[data-slug] div#quartz-root.page {
+  background-color: transparent !important;
+}
+
+/* 基礎保底：所有可能的佈局容器 */
+#quartz-root, .page, .center, .sidebar, article,
+div#quartz-body, .page-header, .popover-hint,
+.markdown-preview-view, .markdown-rendered {
+  background-color: transparent !important;
+}
+
+/* ============================================================
+   🎛️ 中間閱讀區半透明底色
+   調透明度：修改下方 0.3 這個數字
+   0   = 完全透明 (100% 羊皮紙)
+   0.3 = 70% 羊皮紙 ← 目前設定
+   0.5 = 50% 羊皮紙
+   1   = 完全不透明
+   ============================================================ */
+html[saved-theme="light"] .page > div#quartz-body div.center {
+  background-color: rgb(250 248 248 / 0.7) !important; /* ← 改這個 0.7 */
+  border-radius: 12px;
+  padding: 1rem;
+}
+html[saved-theme="dark"] .page > div#quartz-body div.center {
+  background-color: rgba(8, 8, 8, 0.7) !important; /* ← 改這個 0.7 */
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* 🎛️ 左右側邊欄半透明底色 — 同上，改 0.7 調透明度 */
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar,
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar.left,
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar.right {
+  background-color: rgb(250 248 248 / 0.85) !important; /* ← 改這個 0.7 */
+}
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar,
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.left,
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
+  background-color: rgba(8, 8, 8, 0.9) !important; /* ← 改這個 0.7 */
+}
+
+/* 7. 章節選單典雅按鈕網格 (Bible Book Grid - 響應式) */
+.bible-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.bible-book-grid a {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  font-family: var(--headerFont), serif;
+  color: var(--dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bible-book-grid a:hover {
+  border-color: var(--secondary);
+  background: var(--highlight);
+  color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 8. 手機端行動裝置適配 (Mobile Responsive @ 800px) */
+@media (max-width: 800px) {
+  article p, article li {
+    font-size: 1.4rem; /* 提升 0.2rem */
+    line-height: 1.8;
+  }
+
+  article blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .bible-book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+    gap: 0.45rem;
+  }
+
+  .bible-book-grid a {
+    padding: 0.4rem 0.3rem;
+    font-size: 0.92rem;
+  }
+
+  .popover .popover-inner {
+    max-width: 90vw;
+    padding: 0.8rem;
+  }
+}
+/* ============================================================
+   🔗 連結顏色調整 (客製化字體顏色與底部高光)
+   ============================================================ */
+
+/* ----------------- 🌙 暗色模式 (Dark Mode) ----------------- */
+[saved-theme="dark"] article a.internal-link,
+[saved-theme="dark"] article a.external-link,
+[saved-theme="dark"] .sidebar a.internal-link {
+  color: #fbbf24 !important; /* 字體顏色 (目前: 亮琥珀色) */
+  background-color: rgba(251, 191, 36, 0.1) !important; /* 字體底部顏色/高光 (目前: 微弱的琥珀色背景) */
+  border-radius: 4px; /* 底部背景的圓角 */
+  padding: 0 4px; /* 讓底部背景稍微向外延展一點 */
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+[saved-theme="dark"] article a.internal-link:hover,
+[saved-theme="dark"] article a.external-link:hover,
+[saved-theme="dark"] .sidebar a.internal-link:hover {
+  color: #f59e0b !important; /* 滑鼠移過去的字體顏色 */
+  background-color: rgba(251, 191, 36, 0.25) !important; /* 滑鼠移過去的底部顏色變深 */
+  text-decoration: none;
+}
+
+/* ----------------- ☀️ 亮色模式 (Light Mode) ----------------- */
+[saved-theme="light"] article a.internal-link,
+[saved-theme="light"] article a.external-link,
+[saved-theme="light"] .sidebar a.internal-link {
+  color: #7A1C1C !important; /* 字體顏色 (目前: 經典紅) */
+  background-color: rgba(122, 28, 28, 0.08) !important; /* 字體底部顏色/高光 (目前: 微弱的紅色背景) */
+  border-radius: 4px;
+  padding: 0 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+[saved-theme="light"] article a.internal-link:hover,
+[saved-theme="light"] article a.external-link:hover,
+[saved-theme="light"] .sidebar a.internal-link:hover {
+  color: #B45309 !important; /* 滑鼠移過去的字體顏色 (目前: 棕橘色) */
+  background-color: rgba(180, 83, 9, 0.15) !important; /* 滑鼠移過去的底部顏色變深 */
+  text-decoration: none;
+}

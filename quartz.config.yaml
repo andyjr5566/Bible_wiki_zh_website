@@ -1,4 +1,4 @@
-﻿# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
   pageTitle: 聖經研讀知識庫
   pageTitleSuffix: ""
@@ -12,34 +12,43 @@ configuration:
     - private
     - templates
     - .obsidian
+
+#  更換字型：
+# header: Noto Serif TC (控制所有大標題的字體，目前是思源宋體)
+# body: LXGW WenKai TC (控制內文字體，目前是霞鶖文楷)
+# 更換主色調：
+# light: 是背景色
+# dark: 是主要內文文字顏色
+# secondary: 是標題與連結的顏色 (目前是經典紅 #7A1C1C)
+
   theme:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Schibsted Grotesk
-      body: Source Sans Pro
+      header: Noto Sans Traditional Chinese
+      body: LXGW WenKai TC
       code: IBM Plex Mono
     colors:
       lightMode:
-        light: "#faf8f8"
-        lightgray: "#e5e5e5"
-        gray: "#b8b8b8"
-        darkgray: "#4e4e4e"
-        dark: "#2b2b2b"
-        secondary: "#284b63"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#fff23688"
+        light: "#FAF7F0"
+        lightgray: "#EFECE4"
+        gray: "#A8A29E"
+        darkgray: "#44403C"
+        dark: "#1C1917"
+        secondary: "#7A1C1C"
+        tertiary: "#B45309"
+        highlight: rgba(122, 28, 28, 0.08)
+        textHighlight: "#FEF08A88"
       darkMode:
-        light: "#161618"
-        lightgray: "#393639"
-        gray: "#646464"
-        darkgray: "#d4d4d4"
-        dark: "#ebebec"
-        secondary: "#7b97aa"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#b3aa0288"
+        light: "#1C1917"
+        lightgray: "#292524"
+        gray: "#78716C"
+        darkgray: "#D6D3D1"
+        dark: "#F5F5F4"
+        secondary: "#DC2626"
+        tertiary: "#D97706"
+        highlight: rgba(217, 119, 6, 0.15)
+        textHighlight: "#B3AA0288"
 plugins:
   - source: github:quartz-community/created-modified-date
     enabled: false

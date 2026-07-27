@@ -2,7 +2,7 @@ import sourceMapSupport from "source-map-support"
 sourceMapSupport.install(options)
 import path from "path"
 import { PerfTimer } from "./util/perf"
-import { rm } from "fs/promises"
+import { rm, copyFile, mkdir } from "fs/promises"
 import { GlobbyFilterFunction, isGitIgnored } from "globby"
 import { styleText } from "util"
 import { parseMarkdown } from "./processors/parse"
@@ -27,6 +27,20 @@ function reportSlugCollisions(content: ProcessedContent[]): void {
   const collisions = detectSlugCollisions(content)
   if (collisions.length === 0) return
   console.warn(styleText("yellow", formatCollisionWarning(collisions)))
+}
+
+async function copyOpeningIntro(ctx: BuildCtx) {
+  try {
+    const openingSource = joinSegments(ctx.argv.directory, "appendix/website/.opening/InTheBeginning.html")
+    const openingTarget = joinSegments(ctx.argv.output, "InTheBeginning.html")
+    await mkdir(ctx.argv.output, { recursive: true })
+    await copyFile(openingSource, openingTarget)
+    if (ctx.argv.verbose) {
+      console.log(`[emit:openingIntro] Copied ${openingSource} -> ${openingTarget}`)
+    }
+  } catch (err) {
+    console.warn(styleText("yellow", `Warning: Could not copy opening intro InTheBeginning.html: ${(err as Error).message}`))
+  }
 }
 
 type ContentMap = Map<
@@ -95,6 +109,7 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
   const filteredContent = filterContent(ctx, parsedFiles)
 
   await emitContent(ctx, filteredContent)
+  await copyOpeningIntro(ctx)
   console.log(
     styleText("green", `Done processing ${markdownPaths.length} files in ${perf.timeSince()}`),
   )
@@ -349,6 +364,7 @@ async function rebuild(changes: ChangeEvent[], clientRefresh: () => void, buildD
       }
     }
 
+    await copyOpeningIntro(ctx)
     console.log(
       `Emitted ${emittedFiles} files to \`${argv.output}\` in ${perf.timeSince("rebuild")}`,
     )

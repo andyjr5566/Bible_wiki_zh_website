@@ -106,6 +106,38 @@ export default (() => {
             return resource
           }
         })}
+        {fileData.slug === "index" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    var p = new URLSearchParams(window.location.search);
+                    if (p.get('opening') === '1' || p.get('intro') === '1') {
+                      sessionStorage.setItem('seen_opening', 'true');
+                      window.location.replace('./InTheBeginning.html' + window.location.search);
+                      return;
+                    }
+                    if (p.get('opening') === '0' || p.get('skip') === '1') {
+                      sessionStorage.setItem('seen_opening', 'true');
+                      return;
+                    }
+                    var seen = sessionStorage.getItem('seen_opening');
+                    var lastSeen = localStorage.getItem('opening_last_seen');
+                    var now = Date.now();
+                    var windowMs = 24 * 60 * 60 * 1000;
+                    var expired = (!lastSeen || (now - parseInt(lastSeen, 10)) > windowMs);
+                    if (!seen || expired) {
+                      sessionStorage.setItem('seen_opening', 'true');
+                      localStorage.setItem('opening_last_seen', now.toString());
+                      window.location.replace('./InTheBeginning.html');
+                    }
+                  } catch (e) {}
+                })();
+              `,
+            }}
+          />
+        )}
       </head>
     )
   }

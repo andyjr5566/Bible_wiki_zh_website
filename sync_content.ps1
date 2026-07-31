@@ -45,11 +45,15 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
     $filePath = $_.FullName
     $fileContent = Get-Content -Path $filePath -Raw -Encoding UTF8
     if ($fileContent -match 'appendix/website/') {
+        $relDir = [System.IO.Path]::GetDirectoryName($filePath).Substring($target.Length).TrimStart('\', '/')
+        $depth = if ($relDir.Length -gt 0) { ($relDir -split '[\\/]').Count } else { 0 }
+        $prefix = if ($depth -gt 0) { (1..$depth | ForEach-Object { '..' }) -join '/' } else { '.' }
+
         $updated = [regex]::Replace($fileContent, '\[([^\]]+)\]\((?:\./)?(?:.*?/)?appendix/website/([^)]+)\)', {
             param($match)
             $title = $match.Groups[1].Value
             $relPath = $match.Groups[2].Value
-            return "<a href=""/Bible_wiki_zh_website/static/website/$relPath"" target=""_blank"">$title</a>"
+            return "<a href=""$prefix/static/website/$relPath"" target=""_blank"">$title</a>"
         })
         if ($updated -ne $fileContent) {
             Set-Content -Path $filePath -Value $updated -Encoding UTF8

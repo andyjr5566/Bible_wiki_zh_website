@@ -40,6 +40,23 @@ if (Test-Path $websiteSource) {
     Write-Host 'Static website assets synced to quartz/static/website.'
 }
 
+# ── Auto-transform appendix/website links in content .md files ──
+Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
+    $filePath = $_.FullName
+    $fileContent = Get-Content -Path $filePath -Raw -Encoding UTF8
+    if ($fileContent -match 'appendix/website/') {
+        $updated = [regex]::Replace($fileContent, '\[([^\]]+)\]\((?:\./)?(?:.*?/)?appendix/website/([^)]+)\)', {
+            param($match)
+            $title = $match.Groups[1].Value
+            $relPath = $match.Groups[2].Value
+            return "<a href=""/Bible_wiki_zh_website/static/website/$relPath"" target=""_blank"">$title</a>"
+        })
+        if ($updated -ne $fileContent) {
+            Set-Content -Path $filePath -Value $updated -Encoding UTF8
+        }
+    }
+}
+
 # ── Git commit & push ──────────────────────────────────────────
 $repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 Push-Location $repoPath

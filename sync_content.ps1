@@ -1,3 +1,4 @@
+$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
@@ -25,6 +26,19 @@ Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' 
 }
 
 Write-Host 'Content sync completed.'
+
+# ── Sync static website assets to quartz/static/website ────────
+$websiteSource = Join-Path $source 'appendix\website'
+$staticWebsiteTarget = Join-Path $repoPath 'quartz\static\website'
+
+if (Test-Path $websiteSource) {
+    if (Test-Path $staticWebsiteTarget) {
+        Remove-Item -Path $staticWebsiteTarget -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $staticWebsiteTarget -Force | Out-Null
+    Copy-Item -Path "$websiteSource\*" -Destination $staticWebsiteTarget -Recurse -Force
+    Write-Host 'Static website assets synced to quartz/static/website.'
+}
 
 # ── Git commit & push ──────────────────────────────────────────
 $repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'

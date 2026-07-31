@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>挪亞方舟 3D 聖經探秘 | Noah's Ark 3D Bible Explorer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap');
+
+    :root {
+      --bg: #0f172a;
+      --panel-bg: rgba(15, 23, 42, 0.94);
+      --panel-border: rgba(212, 175, 55, 0.35);
+      --accent: #d4af37;
+      --accent-light: #f3e5ab;
+      --accent-dark: #8c6d1f;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.12);
+      --glass: rgba(30, 41, 59, 0.85);
+      --touch-target: 44px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: "Noto Serif TC", "Segoe UI", -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .app {
+      display: grid;
+      grid-template-rows: 56px 1fr auto;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--panel-border);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      font-family: 'Cinzel', "Noto Serif TC", serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+    .header-title span {
+      color: var(--accent);
+      margin-left: 10px;
+      font-weight: 400;
+      font-size: 0.82rem;
+    }
+    .header-icon {
+      width: 28px; height: 28px; margin-right: 10px;
+      filter: drop-shadow(0 0 6px rgba(212,175,55,0.4));
+    }
+    .header-tag {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      color: var(--accent-light);
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.75rem; white-space: nowrap;
+    }
+
+    /* Main Grid */
+    .main {
+      display: grid;
+      grid-template-columns: 370px 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Left Panel (Desktop) */
+    .left-panel {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--panel-border);
+      padding: 22px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 6px 0 25px rgba(0,0,0,0.3);
+      z-index: 40;
+    }
+    .left-panel::-webkit-scrollbar { width: 6px; }
+    .left-panel::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 3px; }
+
+    .section-title {
+      font-family: 'Cinzel', "Noto Serif TC", serif;
+      font-size: 0.88rem; color: var(--accent);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::before {
+      content: ''; display: inline-block; width: 4px; height: 14px; background: var(--accent); border-radius: 2px;
+    }
+
+    .scripture-block {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px; font-size: 0.85rem; line-height: 1.6;
+    }
+    .scripture-block .ref {
+      font-family: 'Cinzel', serif; font-weight: 700; color: var(--accent-light);
+      margin-bottom: 10px; font-size: 0.9rem; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 6px;
+    }
+    .scripture-block .verse {
+      cursor: pointer; padding: 10px 12px; margin: 6px -6px; border-radius: 8px;
+      transition: all 0.25s ease; border-left: 3px solid transparent; min-height: var(--touch-target);
+    }
+    .scripture-block .verse:hover { background: rgba(212, 175, 55, 0.1); border-left-color: var(--accent); }
+    .scripture-block .verse.active { background: rgba(212, 175, 55, 0.18); border-left-color: var(--accent); }
+    .scripture-block .zh { color: #f1f5f9; font-weight: 600; margin-bottom: 4px; }
+    .scripture-block .en { color: var(--muted); font-size: 0.78rem; font-family: Georgia, serif; }
+
+    .timeline-list { list-style: none; font-size: 0.85rem; }
+    .timeline-list li {
+      padding: 12px 14px; cursor: pointer; margin-bottom: 6px; border-radius: 8px; transition: all 0.25s ease;
+      background: var(--glass); border: 1px solid var(--border); border-left: 3px solid transparent;
+      display: flex; align-items: center; justify-content: space-between; min-height: var(--touch-target);
+    }
+    .timeline-list li:hover { background: rgba(212,175,55,0.15); border-left-color: var(--accent-light); }
+    .timeline-list li.active { background: rgba(212, 175, 55, 0.2); border-left-color: var(--accent); color: #fff; font-weight: 600; }
+    .timeline-badge { font-size: 0.72rem; background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 10px; color: var(--muted); }
+    .timeline-list li.active .timeline-badge { background: var(--accent); color: #000; font-weight: 700; }
+
+    .info-card { background: var(--glass); border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-size: 0.82rem; line-height: 1.55; }
+    .info-card .info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .info-card .info-row:last-child { border-bottom: none; }
+    .info-card .info-row .label { color: var(--muted); }
+    .info-card .info-row .val { font-weight: 600; color: var(--accent-light); }
+
+    .ref-list { font-size: 0.75rem; color: var(--muted); line-height: 1.6; list-style: none; }
+    .ref-list li { margin-bottom: 8px; padding-left: 12px; border-left: 2px solid var(--accent); }
+    .ref-list b { color: var(--accent-light); }
+
+    /* Viewport Area */
+    .viewport-wrap { position: relative; background: #090d16; overflow: hidden; }
+    #canvas-container { width: 100%; height: 100%; }
+
+    /* Desktop Controls */
+    .desktop-only-controls { display: flex; }
+    .viewport-overlay {
+      position: absolute; top: 14px; right: 14px;
+      display: flex; gap: 8px; z-index: 10;
+    }
+    .overlay-btn {
+      background: rgba(15, 23, 42, 0.88); border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 20px; padding: 8px 14px; font-size: 0.78rem; cursor: pointer; color: #f1f5f9;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4); backdrop-filter: blur(12px);
+      transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap;
+    }
+    .overlay-btn:hover { background: rgba(212, 175, 55, 0.25); border-color: var(--accent); color: #fff; }
+    .overlay-btn.active {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #0f172a; border-color: var(--accent-light); font-weight: 700; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+
+    .bottom-bar {
+      background: rgba(15, 23, 42, 0.94); border-top: 1px solid var(--panel-border);
+      display: flex; flex-direction: column; padding: 10px 18px; gap: 8px;
+      backdrop-filter: blur(16px); z-index: 20;
+    }
+    .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .control-group { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+    .control-group label { color: var(--accent-light); white-space: nowrap; font-weight: 600; }
+    input[type="range"] { width: 100px; accent-color: var(--accent); cursor: pointer; height: 24px; }
+    
+    .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ctrl-btn {
+      background: var(--glass); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 0.78rem; color: #e2e8f0; cursor: pointer; transition: all 0.2s ease; font-weight: 500;
+      min-height: 38px; display: flex; align-items: center; justify-content: center;
+    }
+    .ctrl-btn:hover { background: rgba(212,175,55,0.2); border-color: var(--accent); color: #fff; }
+    .ctrl-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent-light); font-weight: 700; }
+
+    .data-matrix {
+      display: flex; gap: 16px; font-size: 0.78rem; align-items: center; flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px;
+    }
+    .data-item .label { color: var(--muted); font-size: 0.68rem; margin-bottom: 1px; }
+    .data-item .value { font-weight: 700; font-size: 0.88rem; color: var(--accent); font-family: 'Cinzel', serif; }
+
+    .phase-track { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--muted); }
+    .phase-dot {
+      width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.2);
+      border: 2px solid transparent; cursor: pointer; transition: all 0.25s ease;
+    }
+    .phase-dot:hover { transform: scale(1.2); border-color: var(--accent-light); }
+    .phase-dot.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 8px var(--accent); }
+    .phase-line { width: 24px; height: 2px; background: rgba(255,255,255,0.15); }
+
+    /* Mobile Dedicated Controls */
+    .mobile-only-controls { display: none; }
+
+    @media (max-width: 960px) {
+      .header-title span { display: none; }
+      .header-tag { font-size: 0.7rem; padding: 3px 8px; }
+      .main { grid-template-columns: 1fr; }
+      
+      .desktop-only-controls { display: none !important; }
+      .left-panel {
+        position: absolute; top: 0; left: 0; width: 310px; max-width: 85vw; height: 100%;
+        transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 80;
+      }
+      .left-panel.open { transform: translateX(0); }
+      
+      .mobile-only-controls { display: block; }
+      
+      .mobile-top-bar {
+        position: absolute; top: 10px; left: 10px; right: 10px;
+        display: flex; align-items: center; justify-content: space-between; gap: 8px; z-index: 25;
+      }
+      .mobile-btn-pill {
+        background: rgba(15, 23, 42, 0.92); border: 1.5px solid var(--accent); border-radius: 20px;
+        padding: 8px 14px; font-size: 0.78rem; color: var(--accent-light); font-weight: 700;
+        cursor: pointer; backdrop-filter: blur(14px); min-height: 40px; display: flex; align-items: center; gap: 6px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
+      .mobile-quick-actions { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+      .mobile-quick-btn {
+        background: rgba(15, 23, 42, 0.9); border: 1px solid var(--panel-border); border-radius: 20px;
+        padding: 8px 12px; font-size: 0.75rem; color: #fff; cursor: pointer; backdrop-filter: blur(12px);
+        white-space: nowrap; font-weight: 600; min-height: 40px; display: flex; align-items: center; gap: 4px;
+      }
+      .mobile-quick-btn.active { background: var(--accent); color: #0f172a; border-color: var(--accent-light); font-weight: 700; }
+
+      .mobile-bottom-sheet {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        background: rgba(15, 23, 42, 0.96); border-top: 2px solid var(--accent); border-radius: 20px 20px 0 0;
+        padding: 16px 20px 24px 20px; z-index: 70; backdrop-filter: blur(20px);
+        transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+      }
+      .mobile-bottom-sheet.open { transform: translateY(0); }
+      .sheet-handle { width: 40px; height: 4px; background: var(--muted); border-radius: 2px; margin: 0 auto 12px auto; }
+      .sheet-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 8px; margin-bottom: 14px; }
+      .sheet-title { font-family: 'Cinzel', serif; font-size: 0.92rem; color: var(--accent-light); font-weight: 700; }
+      .sheet-close { font-size: 1.2rem; color: var(--muted); cursor: pointer; padding: 4px 8px; }
+      .sheet-grid { display: flex; flex-direction: column; gap: 14px; }
+      .sheet-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; }
+      .sheet-row label { color: var(--accent-light); font-weight: 600; }
+      .sheet-row input[type="range"] { width: 140px; }
+    }
+
+    /* 🎬 Cinematic Tour HUD */
+    .tour-hud {
+      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+      width: 680px; max-width: calc(100vw - 32px); background: rgba(15, 23, 42, 0.94);
+      border: 1.5px solid var(--accent); border-radius: 16px; padding: 16px 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 65;
+      display: none; flex-direction: column; gap: 10px;
+    }
+    .tour-hud.visible { display: flex; }
+    .tour-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 6px; }
+    .tour-title { font-family: 'Cinzel', serif; font-size: 0.95rem; color: var(--accent-light); font-weight: 700; }
+    .tour-subtitle { font-size: 0.85rem; line-height: 1.55; color: #f1f5f9; }
+    .tour-controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .tour-btn {
+      background: rgba(212,175,55,0.15); border: 1px solid var(--accent); border-radius: 8px;
+      color: var(--accent-light); padding: 6px 14px; font-size: 0.78rem; cursor: pointer; font-weight: 600;
+    }
+
+    /* 🚶‍♂️ FPS Walkthrough HUD & Operation Instruction Banner */
+    .fps-hud {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.96); border: 1.5px solid var(--accent); border-radius: 30px;
+      padding: 8px 20px; font-size: 0.8rem; color: var(--accent-light); backdrop-filter: blur(16px);
+      z-index: 95; display: none; flex-direction: column; align-items: center; gap: 6px; white-space: nowrap;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.7);
+    }
+    .fps-hud.visible { display: flex; }
+    .fps-hud-row { display: flex; align-items: center; gap: 10px; }
+    .fps-deck-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid var(--border); border-radius: 14px;
+      padding: 4px 10px; color: #fff; cursor: pointer; font-size: 0.75rem;
+    }
+    .fps-deck-btn.active { background: var(--accent); color: #0f172a; font-weight: 700; }
+
+    .fps-instruction-banner {
+      background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.5);
+      border-radius: 20px; padding: 4px 12px; font-size: 0.73rem; color: #fff; text-align: center;
+    }
+
+    .fps-dpad {
+      position: absolute; bottom: 24px; left: 20px;
+      display: none; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px);
+      gap: 6px; z-index: 95; pointer-events: auto;
+    }
+    .fps-dpad.visible { display: grid; }
+    .dpad-btn {
+      background: rgba(15, 23, 42, 0.92); border: 1.5px solid var(--accent); border-radius: 12px;
+      color: var(--accent-light); font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; -webkit-user-select: none; user-select: none; backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+    .dpad-btn:active { background: var(--accent); color: #0f172a; transform: scale(0.94); }
+
+    /* Hide Unnecessary UI elements in Clean FPS Mode */
+    body.fps-active .mobile-top-bar,
+    body.fps-active .viewport-overlay,
+    body.fps-active .animal-hint-banner,
+    body.fps-active .scale-bar-hud,
+    body.fps-active .bottom-bar,
+    body.fps-active .mobile-toggle {
+      display: none !important;
+    }
+
+    /* Modals & Overlays */
+    .knowledge-card {
+      position: absolute; top: 65px; right: 16px; width: 340px; max-width: calc(100vw - 32px);
+      background: rgba(15, 23, 42, 0.95); border: 1.5px solid var(--accent); border-radius: 14px;
+      padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); backdrop-filter: blur(16px);
+      z-index: 60; display: none;
+    }
+    .knowledge-card.visible { display: block; }
+    .knowledge-card .title {
+      font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.96rem; color: var(--accent-light);
+      border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 8px; margin-bottom: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .knowledge-card .close-btn { cursor: pointer; font-size: 1.2rem; color: var(--muted); padding: 4px 8px; }
+    .knowledge-card .body { font-size: 0.8rem; line-height: 1.55; color: #e2e8f0; }
+    .knowledge-card .body b { color: var(--accent); }
+    .knowledge-card .biblical-ref { font-size: 0.74rem; color: var(--muted); font-style: italic; margin-top: 8px; background: rgba(0,0,0,0.3); padding: 6px 10px; border-radius: 6px; }
+
+    .ar-modal {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 340px; max-width: calc(100vw - 32px); background: rgba(15, 23, 42, 0.96);
+      border: 1.5px solid var(--accent); border-radius: 16px; padding: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 85; display: none; text-align: center;
+    }
+    .ar-modal.visible { display: block; }
+    .ar-modal h3 { font-family: 'Cinzel', serif; color: var(--accent-light); font-size: 1.05rem; margin-bottom: 10px; }
+    .ar-modal p { font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; }
+    .ar-btn-action {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); color: #0f172a;
+      border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; width: 100%; margin-bottom: 10px; min-height: var(--touch-target);
+    }
+    .ar-close-btn { background: rgba(255,255,255,0.1); color: var(--muted); border: 1px solid var(--border); padding: 10px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; width: 100%; min-height: 40px; }
+
+    .scale-bar-hud {
+      position: absolute; bottom: 75px; right: 14px; background: rgba(15, 23, 42, 0.88);
+      border: 1px solid var(--accent); border-radius: 10px; padding: 6px 12px;
+      display: flex; flex-direction: column; align-items: center; backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 15; pointer-events: none;
+    }
+    .scale-bar-title { font-size: 0.65rem; color: var(--muted); margin-bottom: 3px; }
+    .scale-bar-line {
+      display: flex; align-items: center; width: 110px; height: 5px;
+      border-left: 2px solid var(--accent); border-right: 2px solid var(--accent);
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%) center / 100% 2px no-repeat;
+    }
+    .scale-bar-value { font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 700; color: var(--accent-light); margin-top: 3px; }
+
+    .scale-comparison-info {
+      position: absolute; bottom: 75px; left: 14px; background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--accent); border-radius: 10px; padding: 10px 14px;
+      font-size: 0.78rem; color: var(--accent-light); backdrop-filter: blur(10px);
+      z-index: 15; display: none; max-width: 320px; line-height: 1.45;
+    }
+    .scale-comparison-info.visible { display: block; }
+    .scale-comparison-info b { color: #fff; }
+
+    .animal-hint-banner {
+      position: absolute; top: 65px; left: 14px; background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--accent); border-radius: 8px; padding: 6px 12px;
+      font-size: 0.75rem; color: var(--accent-light); backdrop-filter: blur(10px);
+      z-index: 15; display: flex; align-items: center; gap: 6px; max-width: calc(100% - 28px);
+    }
+
+    .loading-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99; transition: opacity 0.8s ease;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .loading-spinner {
+      width: 48px; height: 48px; border: 4px solid rgba(212,175,55,0.2); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite; margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-family: 'Cinzel', serif; font-size: 0.92rem; color: var(--accent-light); letter-spacing: 0.08em; text-align: center; padding: 0 16px; }
+
+    .tooltip {
+      position: absolute; background: rgba(15, 23, 42, 0.94); border: 1px solid var(--accent);
+      color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; pointer-events: none; z-index: 30; opacity: 0; transition: opacity 0.2s; white-space: nowrap; backdrop-filter: blur(8px);
+    }
+    .tooltip.visible { opacity: 1; }
+
+    .drawer-backdrop {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 75; display: none; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .drawer-backdrop.visible { display: block; opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="header-title">
+        <svg class="header-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 18 L4 12 Q4 10 6 10 L22 10 Q24 10 24 12 L24 18 L24 22 L4 22 Z" fill="#d4af37" stroke="#8c6d1f" stroke-width="1.2"/>
+          <path d="M6 10 L6 7 Q6 6 7 6 L21 6 Q22 6 22 7 L22 10" fill="#f3e5ab" stroke="#8c6d1f" stroke-width="0.8"/>
+          <line x1="8" y1="12" x2="8" y2="20" stroke="#8c6d1f" stroke-width="0.8"/>
+          <line x1="14" y1="12" x2="14" y2="20" stroke="#8c6d1f" stroke-width="0.8"/>
+          <line x1="20" y1="12" x2="20" y2="20" stroke="#8c6d1f" stroke-width="0.8"/>
+        </svg>
+        挪亞方舟 3D 聖經探秘
+        <span>NOAH'S ARK 3D BIBLE EXPLORER</span>
+      </div>
+      <div class="header-tag">古航海建築學術考據 · 3D 全景探秘</div>
+    </header>
+
+    <div class="main">
+      <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+      <!-- Left Panel (Scripture & Timeline) -->
+      <aside class="left-panel" id="left-panel">
+        <div>
+          <div class="section-title">聖經經文導覽</div>
+          <div class="scripture-block">
+            <div class="ref">創世記 6:14-16 · Genesis 6:14-16</div>
+            <div class="verse" data-verse="14">
+              <div class="zh">14 你要用歌斐木造一隻方舟，分一間一間地造，內外抹上松香。</div>
+              <div class="en">Make yourself an ark of gopher wood. Make rooms in the ark, and cover it inside and out with pitch.</div>
+            </div>
+            <div class="verse" data-verse="15">
+              <div class="zh">15 方舟的造法乃是這樣：要長三百肘，寬五十肘，高三十肘。</div>
+              <div class="en">This is how you are to make it: the length of the ark 300 cubits, its breadth 50 cubits, and its height 30 cubits.</div>
+            </div>
+            <div class="verse" data-verse="16">
+              <div class="zh">16 方舟上邊要留透光處，高一肘。方舟的門要開在旁邊。方舟要分上、中、下三層。</div>
+              <div class="en">Make a roof for the ark, and finish it to a cubit above. Set the door of the ark in its side. Make it with lower, second, and third decks.</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">建造工藝與結構階段</div>
+          <ul class="timeline-list">
+            <li data-phase="1">
+              <span>1. 雙層底骨架與斜向榫卯木撐</span>
+              <span class="timeline-badge">第一階段</span>
+            </li>
+            <li data-phase="2">
+              <span>2. 歌斐木雙層外板與瀝青夾層</span>
+              <span class="timeline-badge">第二階段</span>
+            </li>
+            <li data-phase="3">
+              <span>3. 三層甲板、中央天井與防潮糧倉</span>
+              <span class="timeline-badge">第三階段</span>
+            </li>
+            <li class="active" data-phase="4">
+              <span>4. 雙坡屋頂、頂窗、側門與阻浪重石完工</span>
+              <span class="timeline-badge">完工狀態</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="section-title">古航海工程與學術細節</div>
+          <div class="info-card">
+            <div class="info-row"><span class="label">聖經尺寸</span><span class="val">300 × 50 × 30 肘</span></div>
+            <div class="info-row"><span class="label">公制折算</span><span class="val">133.5 × 22.3 × 13.4 公尺</span></div>
+            <div class="info-row"><span class="label">容積對照</span><span class="val">約 40,000 m³ (1,044 個標準貨櫃)</span></div>
+            <div class="info-row"><span class="label">航海工程</span><span class="val">6:1 耐浪比例與沉石索定錨</span></div>
+            <div class="info-row"><span class="label">換氣系統</span><span class="val">Moon Pool 天井與一肘高頂窗</span></div>
+            <div class="info-row"><span class="label">防腐密封</span><span class="val">歌斐木板牆與內外松香瀝青</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">📚 參考文獻與考據來源</div>
+          <ul class="ref-list">
+            <li><b>1. 《聖經·創世記》</b> 6:14-16, 7:2-3 (歌斐木、松香與潔淨/不潔淨動物記載)</li>
+            <li><b>2. Athanasius Kircher (1675)</b> 《Arca Noë》三層功能分區圖繪, Amsterdam.</li>
+            <li><b>3. Ark Encounter 研究團隊 (2016)</b> 巨型木構工藝與通風換氣專案 (Answers in Genesis)</li>
+            <li><b>4. KRISO 韓國造船海洋研究所 (1993)</b> 《Safety Analysis of Noah's Ark in Waves》流體力學水槽實驗報告</li>
+            <li><b>5. Tim Lovett (2008)</b> 《Noah's Ark: Thinking Outside the Box》阻浪沉石索與通風天井考據</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- 3D Viewport -->
+      <div class="viewport-wrap">
+        <div id="canvas-container"></div>
+        <div class="loading-overlay" id="loading">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">正在加載高品質 3D 方舟探秘...</div>
+        </div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="animal-hint-banner">
+          💡 <b>提示</b>：按住滑鼠或手指滑動可任意旋轉視角！
+        </div>
+
+        <!-- 📱 MOBILE ONLY DEDICATED CONTROLS -->
+        <div class="mobile-only-controls">
+          <div class="mobile-top-bar">
+            <button class="mobile-btn-pill" id="m-btn-drawer">📜 經文</button>
+            <div class="mobile-quick-actions">
+              <button class="mobile-quick-btn" id="m-btn-tour">🎬 導覽</button>
+              <button class="mobile-quick-btn" id="m-btn-fps">🚶‍♂️ 漫步</button>
+              <button class="mobile-quick-btn" id="m-btn-ar">📱 AR</button>
+              <button class="mobile-quick-btn" id="m-btn-sheet">⚙️ 選項</button>
+            </div>
+          </div>
+
+          <!-- Mobile Slide-Up Bottom Sheet for Sliders & Scales -->
+          <div class="mobile-bottom-sheet" id="mobile-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+              <span class="sheet-title">⚙️ 方舟剖面與功能面板</span>
+              <span class="sheet-close" id="sheet-close">✕</span>
+            </div>
+            <div class="sheet-grid">
+              <div class="sheet-row">
+                <label>🔪 剖面裁切</label>
+                <input type="range" id="m-clip-slider" min="0" max="100" value="0" />
+              </div>
+              <div class="sheet-row">
+                <label>🔍 X-Ray 透視</label>
+                <input type="range" id="m-xray-slider" min="0" max="100" value="0" />
+              </div>
+              <div class="sheet-row">
+                <label>💥 三層拆解</label>
+                <input type="range" id="m-explode-slider" min="0" max="100" value="0" />
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                <button class="ctrl-btn" id="m-btn-scale-field">⚽ 足球場對照</button>
+                <button class="ctrl-btn" id="m-btn-scale-building">🏢 4層樓對照</button>
+                <button class="ctrl-btn" id="m-btn-rain">🌧️ 暴風雨</button>
+                <button class="ctrl-btn" id="m-btn-rainbow">🌈 彩虹</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🖥️ DESKTOP ONLY DEDICATED OVERLAY BUTTONS -->
+        <div class="desktop-only-controls">
+          <div class="viewport-overlay">
+            <button class="overlay-btn" id="btn-tour">🎬 故事導覽</button>
+            <button class="overlay-btn" id="btn-fps">🚶‍♂️ 自由漫步</button>
+            <button class="overlay-btn" id="btn-ar">📱 WebAR 擺放</button>
+            <button class="overlay-btn" id="btn-clip">🔪 CAD 剖面</button>
+            <button class="overlay-btn" id="btn-ruler">📏 3D 標尺</button>
+            <button class="overlay-btn" id="btn-rotate">🔄 360° 環繞</button>
+            <button class="overlay-btn" id="btn-xray">🔍 X-Ray 透視</button>
+            <button class="overlay-btn" id="btn-explode">💥 分解視角</button>
+            <button class="overlay-btn" id="btn-rain">🌧️ 暴風雨</button>
+            <button class="overlay-btn" id="btn-rainbow">🌈 恩典彩虹</button>
+          </div>
+        </div>
+
+        <!-- 🎬 Tour Subtitle HUD -->
+        <div class="tour-hud" id="tour-hud">
+          <div class="tour-header">
+            <span class="tour-title" id="tour-step-title">【第一站：方舟全景】</span>
+            <button class="tour-btn" id="tour-close-btn">✕ 退出巡航</button>
+          </div>
+          <div class="tour-subtitle" id="tour-step-sub">載入導覽講詞中...</div>
+          <div class="tour-controls">
+            <button class="tour-btn" id="tour-prev-btn">◀ 上一站</button>
+            <button class="tour-btn" id="tour-play-btn">⏯️ 自動播放中</button>
+            <button class="tour-btn" id="tour-next-btn">下一站 ▶</button>
+          </div>
+        </div>
+
+        <!-- 🚶‍♂️ Clean FPS Walkthrough HUD with Clear Operation Instructions -->
+        <div class="fps-hud" id="fps-hud">
+          <div class="fps-hud-row">
+            <span>🚶‍♂️ <b>第一人稱漫步</b></span>
+            <div>
+              <button class="fps-deck-btn active" data-d="0">1F 動物</button>
+              <button class="fps-deck-btn" data-d="1">2F 糧倉</button>
+              <button class="fps-deck-btn" data-d="2">3F 住所</button>
+            </div>
+            <button class="fps-deck-btn" id="fps-exit-btn" style="background:var(--accent);color:#0f172a;font-weight:700">✕ 離開漫步</button>
+          </div>
+          <div class="fps-instruction-banner" id="fps-instruction-text">
+            💡 <b>漫步操作說明</b>：電腦使用 WASD 移動 + 按住滑鼠拖曳轉動 360° 視角 (按鍵 1/2/3 切換樓層)
+          </div>
+        </div>
+
+        <!-- Mobile Clean Touch D-Pad -->
+        <div class="fps-dpad" id="fps-dpad">
+          <div></div>
+          <div class="dpad-btn" id="dpad-up">▲</div>
+          <div></div>
+          <div class="dpad-btn" id="dpad-left">◄</div>
+          <div></div>
+          <div class="dpad-btn" id="dpad-right">►</div>
+          <div></div>
+          <div class="dpad-btn" id="dpad-down">▼</div>
+          <div></div>
+        </div>
+
+        <!-- Knowledge Modal -->
+        <div class="knowledge-card" id="knowledge-card">
+          <div class="title">
+            <span id="kc-title">歌斐木 (Gopher Wood)</span>
+            <span class="close-btn" id="kc-close">✕</span>
+          </div>
+          <div class="body" id="kc-body">解說載入中...</div>
+          <div class="biblical-ref" id="kc-ref">創世記 6:14</div>
+        </div>
+
+        <!-- WebAR Modal -->
+        <div class="ar-modal" id="ar-modal">
+          <h3>📱 WebAR 擴增實境 1:1 擺放</h3>
+          <p>您可以在手機相機中將挪亞方舟 <b>1:100 放在桌面</b>，或 <b>1:1 實體比例擺放在公園大草皮上</b> 親自繞行觀賞！</p>
+          <button class="ar-btn-action" id="ar-launch-btn">🚀 啟動 AR 相機體驗 (Export GLB/USDZ)</button>
+          <button class="ar-close-btn" id="ar-close-btn">關閉</button>
+        </div>
+
+        <div class="scale-bar-hud">
+          <div class="scale-bar-title">DYNAMIC HUD SCALE BAR</div>
+          <div class="scale-bar-line"></div>
+          <div class="scale-bar-value" id="hud-scale-text">20m (45肘)</div>
+        </div>
+
+        <div class="scale-comparison-info" id="comparison-badge"></div>
+      </div>
+    </div>
+
+    <!-- 🖥️ DESKTOP ONLY BOTTOM CONTROLS -->
+    <footer class="bottom-bar desktop-only-controls">
+      <div class="controls-row">
+        <div class="phase-track">
+          <div class="phase-dot active" data-p="1"></div>
+          <div class="phase-line"></div>
+          <div class="phase-dot active" data-p="2"></div>
+          <div class="phase-line"></div>
+          <div class="phase-dot active" data-p="3"></div>
+          <div class="phase-line"></div>
+          <div class="phase-dot active" data-p="4"></div>
+          <span style="margin-left:6px;color:var(--accent-light)">建造階段</span>
+        </div>
+
+        <div class="control-group">
+          <label>🔪 剖面</label>
+          <input type="range" id="clip-slider" min="0" max="100" value="0" />
+        </div>
+        <div class="control-group">
+          <label>透視 X-Ray</label>
+          <input type="range" id="xray-slider" min="0" max="100" value="0" />
+        </div>
+        <div class="control-group">
+          <label>三層拆解</label>
+          <input type="range" id="explode-slider" min="0" max="100" value="0" />
+        </div>
+
+        <div class="btn-group">
+          <button class="ctrl-btn" id="btn-reset">↺ 重置</button>
+          <button class="ctrl-btn" id="btn-scale-field">⚽ 足球場對照</button>
+          <button class="ctrl-btn" id="btn-scale-building">🏢 4層樓對照</button>
+          <button class="ctrl-btn" id="btn-scale-containers">📦 貨櫃對照</button>
+        </div>
+      </div>
+
+      <div class="data-matrix">
+        <div class="data-item"><div class="label">長 LENGTH</div><div class="value">300 肘 (133.5m)</div></div>
+        <div class="data-item"><div class="label">寬 WIDTH</div><div class="value">50 肘 (22.3m)</div></div>
+        <div class="data-item"><div class="label">高 HEIGHT</div><div class="value">30 肘 (13.4m)</div></div>
+        <div class="data-item"><div class="label">樓層規劃</div><div class="value">上中下三層 (創 6:16)</div></div>
+        <div class="data-item"><div class="label">防蝕工藝</div><div class="value">內外抹上松香 (創 6:14)</div></div>
+      </div>
+    </footer>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 800);
+    camera.position.set(65, 32, 85);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.localClippingEnabled = true;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 8, 0);
+    controls.maxPolarAngle = Math.PI * 0.49;
+    controls.minDistance = 12;
+    controls.maxDistance = 260;
+
+    const clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1000);
+
+    /* ========== Lighting ========== */
+    const hemiLight = new THREE.HemisphereLight(0x7090b8, 0x443322, 0.7);
+    scene.add(hemiLight);
+
+    const sunLight = new THREE.DirectionalLight(0xfff1d0, 1.4);
+    sunLight.position.set(80, 90, 50);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 4096;
+    sunLight.shadow.mapSize.height = 4096;
+    sunLight.shadow.camera.near = 10;
+    sunLight.shadow.camera.far = 300;
+    const shadowD = 90;
+    sunLight.shadow.camera.left = -shadowD;
+    sunLight.shadow.camera.right = shadowD;
+    sunLight.shadow.camera.top = shadowD;
+    sunLight.shadow.camera.bottom = -shadowD;
+    sunLight.shadow.bias = -0.0001;
+    scene.add(sunLight);
+
+    const fillLight = new THREE.DirectionalLight(0x8cb0e0, 0.4);
+    fillLight.position.set(-60, 40, -40);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffd59e, 0.5);
+    rimLight.position.set(0, 20, -70);
+    scene.add(rimLight);
+
+    scene.fog = new THREE.FogExp2(0xb0c4de, 0.0028);
+
+    /* ========== Sky ========== */
+    function createProceduralSkyTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024; canvas.height = 1024;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, 0, 1024);
+      grad.addColorStop(0.0, '#1e3a5f');
+      grad.addColorStop(0.35, '#3b6e9a');
+      grad.addColorStop(0.65, '#8ab4d5');
+      grad.addColorStop(0.82, '#e0c097');
+      grad.addColorStop(1.0, '#c7b097');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      const sunGrad = ctx.createRadialGradient(700, 750, 0, 700, 750, 250);
+      sunGrad.addColorStop(0, 'rgba(255, 245, 220, 0.95)');
+      sunGrad.addColorStop(0.2, 'rgba(255, 220, 160, 0.5)');
+      sunGrad.addColorStop(1, 'rgba(255, 200, 120, 0)');
+      ctx.fillStyle = sunGrad;
+      ctx.fillRect(0, 0, 1024, 1024);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+    scene.background = createProceduralSkyTexture();
+
+    /* ========== Materials ========== */
+    function createAdvancedWoodMaterial(baseHex, darkHex, plankCount) {
+      const size = 1024;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      const bumpCanvas = document.createElement('canvas');
+      bumpCanvas.width = size; bumpCanvas.height = size;
+      const bumpCtx = bumpCanvas.getContext('2d');
+
+      ctx.fillStyle = baseHex; ctx.fillRect(0, 0, size, size);
+      bumpCtx.fillStyle = '#808080'; bumpCtx.fillRect(0, 0, size, size);
+
+      const plankH = size / plankCount;
+      for (let i = 0; i < plankCount; i++) {
+        const y = i * plankH;
+        const shade = (Math.random() - 0.5) * 0.12;
+        ctx.fillStyle = adjustColor(baseHex, shade);
+        ctx.fillRect(0, y, size, plankH - 2);
+
+        ctx.fillStyle = darkHex;
+        ctx.fillRect(0, y + plankH - 2, size, 2);
+
+        bumpCtx.fillStyle = '#000000';
+        bumpCtx.fillRect(0, y + plankH - 3, size, 3);
+
+        for (let j = 0; j < 12; j++) {
+          const gy = y + Math.random() * plankH;
+          ctx.strokeStyle = `rgba(0,0,0,${0.03 + Math.random() * 0.05})`;
+          ctx.lineWidth = 0.8 + Math.random() * 1.5;
+          ctx.beginPath();
+          ctx.moveTo(0, gy);
+          ctx.bezierCurveTo(size * 0.3, gy + (Math.random() - 0.5) * 12, size * 0.7, gy + (Math.random() - 0.5) * 12, size, gy);
+          ctx.stroke();
+
+          bumpCtx.strokeStyle = Math.random() > 0.5 ? '#ffffff' : '#333333';
+          bumpCtx.lineWidth = 1;
+          bumpCtx.beginPath();
+          bumpCtx.moveTo(0, gy);
+          bumpCtx.bezierCurveTo(size * 0.3, gy + (Math.random() - 0.5) * 12, size * 0.7, gy + (Math.random() - 0.5) * 12, size, gy);
+          bumpCtx.stroke();
+        }
+
+        for (let n = 50; n < size; n += 180) {
+          ctx.fillStyle = '#22150c';
+          ctx.beginPath();
+          ctx.arc(n, y + 6, 2.2, 0, Math.PI * 2);
+          ctx.arc(n, y + plankH - 8, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          bumpCtx.fillStyle = '#ffffff';
+          bumpCtx.beginPath();
+          bumpCtx.arc(n, y + 6, 2.2, 0, Math.PI * 2);
+          bumpCtx.arc(n, y + plankH - 8, 2.2, 0, Math.PI * 2);
+          bumpCtx.fill();
+        }
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
+      texture.colorSpace = THREE.SRGBColorSpace;
+
+      const bumpTexture = new THREE.CanvasTexture(bumpCanvas);
+      bumpTexture.wrapS = THREE.RepeatWrapping; bumpTexture.wrapT = THREE.RepeatWrapping;
+
+      return new THREE.MeshStandardMaterial({
+        map: texture, bumpMap: bumpTexture, bumpScale: 0.08, roughness: 0.75, metalness: 0.05,
+        clippingPlanes: [clipPlane], clipShadows: true, side: THREE.DoubleSide
+      });
+    }
+
+    function adjustColor(hex, amount) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const r = Math.max(0, Math.min(255, (num >> 16) + Math.round(amount * 255)));
+      const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + Math.round(amount * 255)));
+      const b = Math.max(0, Math.min(255, (num & 0x0000FF) + Math.round(amount * 255)));
+      return `rgb(${r},${g},${b})`;
+    }
+
+    const gopherWoodMat = createAdvancedWoodMaterial('#aa7844', '#553418', 14);
+    gopherWoodMat.map.repeat.set(4, 1); gopherWoodMat.bumpMap.repeat.set(4, 1);
+
+    const darkTimberMat = createAdvancedWoodMaterial('#7a4e28', '#38200d', 10);
+    darkTimberMat.map.repeat.set(3, 1); darkTimberMat.bumpMap.repeat.set(3, 1);
+
+    const pitchMat = new THREE.MeshStandardMaterial({
+      color: 0x1e1e24, roughness: 0.45, metalness: 0.25, bumpScale: 0.05,
+      clippingPlanes: [clipPlane], clipShadows: true, side: THREE.DoubleSide
+    });
+
+    const glassMat = new THREE.MeshPhysicalMaterial({
+      color: 0xe0f2fe, transmission: 0.85, opacity: 1, transparent: true, roughness: 0.15, ior: 1.4, thickness: 0.5,
+      clippingPlanes: [clipPlane], clipShadows: true
+    });
+
+    const clayMat = new THREE.MeshStandardMaterial({ color: 0xc86d4b, roughness: 0.8, metalness: 0.05, clippingPlanes: [clipPlane] });
+    const siloWoodMat = new THREE.MeshStandardMaterial({ color: 0x9e6a38, roughness: 0.7, clippingPlanes: [clipPlane] });
+
+    /* ========== Terrain ========== */
+    const terrainGeo = new THREE.PlaneGeometry(500, 400, 90, 70);
+    const tPos = terrainGeo.attributes.position;
+    for (let i = 0; i < tPos.count; i++) {
+      const x = tPos.getX(i); const y = tPos.getY(i);
+      const dist = Math.sqrt(x * x + y * y);
+      if (dist > 45) {
+        tPos.setZ(i, (dist - 45) * 0.08 + Math.sin(x * 0.04) * 2.5 + Math.cos(y * 0.03) * 2.2);
+      }
+    }
+    terrainGeo.computeVertexNormals();
+    const terrainMat = new THREE.MeshStandardMaterial({ color: 0x6b7c59, roughness: 0.9, flatShading: true });
+    const terrain = new THREE.Mesh(terrainGeo, terrainMat);
+    terrain.rotation.x = -Math.PI / 2; terrain.receiveShadow = true;
+    scene.add(terrain);
+
+    function createDetailedMountainRange(zPos, colorHex, heightScale, opacity) {
+      const group = new THREE.Group();
+      const shape = new THREE.Shape();
+      shape.moveTo(-300, 0);
+      let x = -300;
+      while (x < 300) {
+        const peakH = (15 + Math.random() * 35) * heightScale;
+        const peakW = (20 + Math.random() * 30) * heightScale;
+        shape.lineTo(x + peakW * 0.4, peakH * 0.6);
+        shape.lineTo(x + peakW * 0.5, peakH);
+        shape.lineTo(x + peakW * 0.7, peakH * 0.5);
+        shape.lineTo(x + peakW, 0);
+        x += peakW;
+      }
+      shape.lineTo(300, 0); shape.lineTo(-300, 0);
+      const geo = new THREE.ShapeGeometry(shape);
+      const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.95, transparent: true, opacity: opacity, side: THREE.DoubleSide });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(0, 0, zPos);
+      group.add(mesh);
+      return group;
+    }
+    scene.add(createDetailedMountainRange(-160, 0x4a5d6e, 1.4, 0.85));
+    scene.add(createDetailedMountainRange(-120, 0x5a6e5d, 1.1, 0.9));
+    scene.add(createDetailedMountainRange(-85, 0x6e7f5a, 0.75, 0.95));
+
+    /* ========== Water ========== */
+    const waterGeo = new THREE.PlaneGeometry(500, 400, 100, 80);
+    const wPos = waterGeo.attributes.position;
+    const waterBaseZ = new Float32Array(wPos.count);
+    for (let i = 0; i < wPos.count; i++) {
+      const x = wPos.getX(i); const y = wPos.getY(i);
+      const z = Math.sin(x * 0.05) * 0.6 + Math.cos(y * 0.04) * 0.5;
+      wPos.setZ(i, z); waterBaseZ[i] = z;
+    }
+    waterGeo.computeVertexNormals();
+
+    const waterMat = new THREE.MeshPhysicalMaterial({
+      color: 0x1a4b70, roughness: 0.1, metalness: 0.1, transmission: 0.6, transparent: true, opacity: 0, ior: 1.333, side: THREE.DoubleSide
+    });
+    const water = new THREE.Mesh(waterGeo, waterMat);
+    water.rotation.x = -Math.PI / 2; water.position.y = -0.5;
+    scene.add(water);
+
+    /* ========== Ark Dimensions ========== */
+    const CUBIT = 0.445;
+    const SCALE_FACTOR = 0.55;
+    const lenMeters = 300 * CUBIT;
+    const widMeters = 50 * CUBIT;
+    const heiMeters = 30 * CUBIT;
+
+    const len = lenMeters * SCALE_FACTOR;
+    const wid = widMeters * SCALE_FACTOR;
+    const hei = heiMeters * SCALE_FACTOR;
+
+    const ark = new THREE.Group();
+    scene.add(ark);
+
+    /* Interior Candlelight */
+    const candleLights = [];
+    const candlePositions = [
+      { x: -len * 0.25, y: hei * 0.35, z: 0 },
+      { x: 0, y: hei * 0.35, z: 0 },
+      { x: len * 0.25, y: hei * 0.35, z: 0 },
+      { x: -len * 0.2, y: hei * 0.65, z: 0 },
+      { x: len * 0.2, y: hei * 0.65, z: 0 },
+      { x: 0, y: hei * 0.88, z: 0 }
+    ];
+    candlePositions.forEach(p => {
+      const light = new THREE.PointLight(0xffaa44, 2.2, 25);
+      light.position.set(p.x, p.y, p.z);
+      ark.add(light);
+      candleLights.push(light);
+    });
+
+    /* Hull & Structure */
+    const hullGeo = new THREE.BoxGeometry(len, hei, wid);
+    const hull = new THREE.Mesh(hullGeo, gopherWoodMat);
+    hull.position.y = hei / 2;
+    hull.castShadow = true; hull.receiveShadow = true;
+    hull.userData.phase = 1; hull.userData.kType = 'gopherWood';
+    ark.add(hull);
+
+    const pitchGeo = new THREE.BoxGeometry(len * 1.008, hei * 0.16, wid * 1.008);
+    const pitch = new THREE.Mesh(pitchGeo, pitchMat);
+    pitch.position.y = hei * 0.08;
+    pitch.castShadow = true;
+    pitch.userData.phase = 2; pitch.userData.kType = 'pitchCoating';
+    ark.add(pitch);
+
+    const frameBeams = [];
+    for (let i = -4; i <= 4; i++) {
+      const x = i * (len / 9);
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.5, hei * 1.02, 0.5), darkTimberMat);
+      post.position.set(x, hei / 2, wid / 2 + 0.1);
+      post.castShadow = true; post.userData.phase = 1; post.userData.kType = 'timberFrame';
+      ark.add(post); frameBeams.push(post);
+
+      const postOpp = post.clone();
+      postOpp.position.z = -wid / 2 - 0.1;
+      ark.add(postOpp); frameBeams.push(postOpp);
+
+      const kneeGeo = new THREE.BoxGeometry(0.35, 1.2, 0.35);
+      const kneeL = new THREE.Mesh(kneeGeo, darkTimberMat);
+      kneeL.position.set(x, hei * 0.75, wid * 0.42);
+      kneeL.rotation.z = Math.PI / 4;
+      kneeL.userData.phase = 1; kneeL.userData.kType = 'kneeBrace';
+      ark.add(kneeL); frameBeams.push(kneeL);
+
+      const kneeR = kneeL.clone();
+      kneeR.position.z = -wid * 0.42;
+      ark.add(kneeR); frameBeams.push(kneeR);
+    }
+
+    const airShaftW = 4.2, airShaftD = 4.2;
+    const airShaftMat = darkTimberMat.clone();
+    airShaftMat.transparent = true; airShaftMat.opacity = 0.85;
+    const airShaft = new THREE.Mesh(new THREE.BoxGeometry(airShaftW, hei * 1.05, airShaftD), airShaftMat);
+    airShaft.position.set(0, hei / 2, 0);
+    airShaft.userData.phase = 3; airShaft.userData.kType = 'moonPool';
+    ark.add(airShaft);
+
+    const shaftLightBeam = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.2, 1.6, hei * 1.1, 16),
+      new THREE.MeshBasicMaterial({ color: 0xfffae6, transparent: true, opacity: 0.25 })
+    );
+    shaftLightBeam.position.set(0, hei / 2, 0);
+    shaftLightBeam.userData.phase = 3; shaftLightBeam.userData.kType = 'moonPool';
+    ark.add(shaftLightBeam);
+
+    const drogueGroup = new THREE.Group();
+    drogueGroup.userData.phase = 4; drogueGroup.userData.kType = 'drogueStones';
+    const ropeMat = new THREE.MeshStandardMaterial({ color: 0x5a422b, roughness: 0.9, clippingPlanes: [clipPlane] });
+    const stoneMat = new THREE.MeshStandardMaterial({ color: 0x4a4d52, roughness: 0.95, clippingPlanes: [clipPlane] });
+    for (let side of [-1, 1]) {
+      const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 16, 8), ropeMat);
+      rope.position.set(-len / 2 - 2, -3, side * 2.5); rope.rotation.z = 0.2;
+      drogueGroup.add(rope);
+
+      const stone = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.8, 0.8), stoneMat);
+      stone.position.set(-len / 2 - 3.8, -10, side * 2.5);
+      drogueGroup.add(stone);
+    }
+    ark.add(drogueGroup);
+
+    const roofHeight = wid * 0.22;
+    const roofOverhang = 0.45;
+    const roofShape = new THREE.Shape();
+    roofShape.moveTo(-wid / 2 - roofOverhang, 0);
+    roofShape.lineTo(0, roofHeight);
+    roofShape.lineTo(wid / 2 + roofOverhang, 0);
+    roofShape.lineTo(wid / 2 + roofOverhang, -0.3);
+    roofShape.lineTo(0, roofHeight - 0.4);
+    roofShape.lineTo(-wid / 2 - roofOverhang, -0.3);
+    roofShape.closePath();
+
+    const roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: len * 0.998, bevelEnabled: false });
+    roofGeo.translate(0, 0, -len * 0.499);
+    roofGeo.rotateY(Math.PI / 2);
+
+    const roof = new THREE.Mesh(roofGeo, darkTimberMat);
+    roof.position.set(0, hei, 0);
+    roof.castShadow = true; roof.receiveShadow = true;
+    roof.userData.phase = 4; roof.userData.baseY = hei; roof.userData.kType = 'roofSystem';
+    ark.add(roof);
+
+    const ridgeBeam = new THREE.Mesh(new THREE.BoxGeometry(len * 1.01, 0.4, 0.5), darkTimberMat);
+    ridgeBeam.position.set(0, hei + roofHeight + 0.1, 0);
+    ridgeBeam.castShadow = true; ridgeBeam.userData.phase = 4; ridgeBeam.userData.baseY = hei + roofHeight + 0.1; ridgeBeam.userData.kType = 'roofSystem';
+    ark.add(ridgeBeam);
+
+    function makeGable(xSign) {
+      const shape = new THREE.Shape();
+      shape.moveTo(-wid / 2 - 0.1, 0);
+      shape.lineTo(0, roofHeight + 0.05);
+      shape.lineTo(wid / 2 + 0.1, 0);
+      shape.closePath();
+      const g = new THREE.Mesh(new THREE.ShapeGeometry(shape), gopherWoodMat);
+      g.position.set(xSign * (len / 2 + 0.15), hei, 0);
+      g.rotation.y = Math.PI / 2;
+      g.userData.phase = 4; g.userData.baseY = hei; g.userData.kType = 'roofSystem';
+      ark.add(g);
+      return g;
+    }
+    const gableF = makeGable(-1);
+    const gableB = makeGable(1);
+
+    const skylight = new THREE.Mesh(new THREE.BoxGeometry(len * 0.75, 0.25, 1.6), glassMat);
+    skylight.position.set(0, hei + roofHeight * 0.52, 0);
+    skylight.userData.phase = 4; skylight.userData.baseY = hei + roofHeight * 0.52; skylight.userData.kType = 'tsoharSkylight';
+    ark.add(skylight);
+
+    const doorW = 4.5, doorH = 5.5;
+    const door = new THREE.Mesh(new THREE.BoxGeometry(doorW, doorH, 0.6), darkTimberMat);
+    door.position.set(len * 0.15, doorH / 2 + 0.2, wid / 2 + 0.25);
+    door.castShadow = true; door.userData.phase = 4; door.userData.kType = 'sideDoor';
+    ark.add(door);
+
+    const rampLen = 9;
+    const ramp = new THREE.Mesh(new THREE.BoxGeometry(doorW * 0.9, 0.35, rampLen), darkTimberMat);
+    ramp.position.set(len * 0.15, doorH / 2 - 0.8, wid / 2 + rampLen / 2 + 0.1);
+    ramp.rotation.x = -Math.atan2(doorH / 2, rampLen);
+    ramp.userData.phase = 4; ramp.userData.kType = 'sideDoor';
+    ark.add(ramp);
+
+    const wallL = new THREE.Mesh(new THREE.BoxGeometry(len * 0.99, hei * 0.98, 0.4), gopherWoodMat);
+    wallL.position.set(0, hei / 2, -wid / 2 - 0.1); wallL.userData.phase = 2; wallL.userData.kType = 'gopherWood'; ark.add(wallL);
+    const wallR = new THREE.Mesh(new THREE.BoxGeometry(len * 0.99, hei * 0.98, 0.4), gopherWoodMat);
+    wallR.position.set(0, hei / 2, wid / 2 + 0.1); wallR.userData.phase = 2; wallR.userData.kType = 'gopherWood'; ark.add(wallR);
+    const wallF = new THREE.Mesh(new THREE.BoxGeometry(0.4, hei * 0.98, wid * 0.98), gopherWoodMat);
+    wallF.position.set(-len / 2 - 0.1, hei / 2, 0); wallF.userData.phase = 2; wallF.userData.kType = 'gopherWood'; ark.add(wallF);
+    const wallB = new THREE.Mesh(new THREE.BoxGeometry(0.4, hei * 0.98, wid * 0.98), gopherWoodMat);
+    wallB.position.set(len / 2 + 0.1, hei / 2, 0); wallB.userData.phase = 2; wallB.userData.kType = 'gopherWood'; ark.add(wallB);
+
+    /* ========== Decks & Interior Content ========== */
+    const deckGroup = new THREE.Group();
+    ark.add(deckGroup);
+    const deckLevels = [hei * 0.28, hei * 0.56, hei * 0.84];
+    const decks = []; const stalls = []; const animals = [];
+
+    function createPolishedAnimal(type, colorHex) {
+      const g = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.6, metalness: 0.1, clippingPlanes: [clipPlane] });
+
+      if (type === 'elephant') {
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 0.9), mat);
+        body.position.y = 0.8; g.add(body);
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.7, 0.7), mat);
+        head.position.set(1.0, 1.1, 0); g.add(head);
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.08, 0.9, 8), mat);
+        trunk.position.set(1.3, 0.6, 0); trunk.rotation.z = -0.4; g.add(trunk);
+        const tuskMat = new THREE.MeshStandardMaterial({ color: 0xfffaed, roughness: 0.3, clippingPlanes: [clipPlane] });
+        for (let s of [-0.2, 0.2]) {
+          const tusk = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.5, 6), tuskMat);
+          tusk.position.set(1.2, 0.7, s); tusk.rotation.z = -1.2; g.add(tusk);
+        }
+      } else if (type === 'giraffe') {
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.9, 0.6), mat);
+        body.position.y = 0.9; g.add(body);
+        const neck = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.4, 0.35), mat);
+        neck.position.set(0.6, 1.8, 0); neck.rotation.z = -0.2; g.add(neck);
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.3), mat);
+        head.position.set(0.8, 2.4, 0); g.add(head);
+      } else {
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.7, 0.5), mat);
+        body.position.y = 0.5; g.add(body);
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.35), mat);
+        head.position.set(0.7, 0.8, 0); g.add(head);
+      }
+
+      g.children.forEach(c => { c.castShadow = true; c.receiveShadow = true; });
+      return g;
+    }
+
+    function createPolishedBarrel(r, h) {
+      const g = new THREE.Group();
+      const bMat = new THREE.MeshStandardMaterial({ color: 0x6e4522, roughness: 0.6, clippingPlanes: [clipPlane] });
+      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.05, h, 14), bMat);
+      g.add(barrel);
+      const hoopMat = new THREE.MeshStandardMaterial({ color: 0x222225, metalness: 0.8, roughness: 0.3, clippingPlanes: [clipPlane] });
+      for (let hy of [-h * 0.3, h * 0.3]) {
+        const hoop = new THREE.Mesh(new THREE.TorusGeometry(r * 1.02, 0.03, 6, 16), hoopMat);
+        hoop.rotation.x = Math.PI / 2; hoop.position.y = hy; g.add(hoop);
+      }
+      g.children.forEach(c => { c.castShadow = true; c.receiveShadow = true; });
+      return g;
+    }
+
+    function createGrainSilo(r, h) {
+      const g = new THREE.Group();
+      const silo = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 16), siloWoodMat);
+      silo.position.y = h / 2; g.add(silo);
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(r * 1.15, h * 0.35, 16), darkTimberMat);
+      cap.position.y = h + h * 0.17; g.add(cap);
+      g.children.forEach(c => { c.castShadow = true; c.receiveShadow = true; });
+      return g;
+    }
+
+    function createAmphora() {
+      const g = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 10), clayMat);
+      body.scale.set(1, 1.4, 1); g.add(body);
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 0.3), clayMat);
+      neck.position.y = 0.55; g.add(neck);
+      return g;
+    }
+
+    deckLevels.forEach((y, deckIdx) => {
+      const d = new THREE.Mesh(new THREE.BoxGeometry(len * 0.94, 0.22, wid * 0.9), darkTimberMat);
+      d.position.y = y; d.userData.baseY = y; d.userData.deckIdx = deckIdx; d.userData.phase = 3;
+      deckGroup.add(d); decks.push(d);
+
+      for (let s = -3; s <= 3; s++) {
+        if (s === 0) continue;
+        const stall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.5, wid * 0.4), darkTimberMat);
+        stall.position.set(s * (len / 8), y + 0.85, s > 0 ? wid * 0.22 : -wid * 0.22);
+        stall.userData.baseY = y + 0.85; stall.userData.deckIdx = deckIdx; stall.userData.phase = 3;
+        deckGroup.add(stall); stalls.push(stall);
+      }
+
+      if (deckIdx === 0) {
+        const types = ['elephant', 'giraffe', 'quad', 'elephant', 'quad', 'giraffe'];
+        const colors = [0x8b5a2b, 0xd2b48c, 0xa0522d, 0x696969, 0xb8860b, 0x5c4033];
+        for (let a = 0; a < 12; a++) {
+          const side = a < 6 ? -1 : 1; const idx = a % 6;
+          const animal = createPolishedAnimal(types[idx], colors[idx]);
+          animal.position.set(-len * 0.35 + idx * (len * 0.7 / 6), y + 0.12, side * (wid * 0.22));
+          animal.userData.baseY = y + 0.12; animal.userData.deckIdx = 0; animal.userData.phase = 3;
+          animal.userData.kType = (idx % 2 === 0) ? 'cleanAnimals' : 'uncleanAnimals';
+          deckGroup.add(animal); animals.push(animal);
+        }
+      } else if (deckIdx === 1) {
+        for (let i = 0; i < 14; i++) {
+          const side = i < 7 ? -1 : 1; const idx = i % 7;
+          let item;
+          if (idx % 3 === 0) item = createGrainSilo(0.8, 1.8);
+          else if (idx % 3 === 1) item = createPolishedBarrel(0.45, 1.0);
+          else item = createAmphora();
+
+          item.position.set(-len * 0.36 + idx * (len * 0.72 / 7), y + 0.4, side * (wid * 0.22));
+          item.userData.baseY = y + 0.4; item.userData.deckIdx = 1; item.userData.phase = 3;
+          item.userData.kType = 'foodSilos';
+          deckGroup.add(item); animals.push(item);
+        }
+      } else {
+        for (let c = 0; c < 3; c++) {
+          const cabin = new THREE.Mesh(new THREE.BoxGeometry(3.8, 2.2, 2.6), darkTimberMat);
+          cabin.position.set(-len * 0.25 + c * 8.5, y + 1.2, -wid * 0.22);
+          cabin.userData.baseY = y + 1.2; cabin.userData.deckIdx = 2; cabin.userData.phase = 3;
+          cabin.userData.kType = 'humanQuarters';
+          deckGroup.add(cabin); animals.push(cabin);
+        }
+      }
+    });
+
+    /* ========== 📏 3D Scale System ========== */
+    const rulerGroup = new THREE.Group();
+    rulerGroup.visible = true; scene.add(rulerGroup);
+
+    const goldLineMat = new THREE.LineBasicMaterial({ color: 0xd4af37, linewidth: 2 });
+    const rulerZ = wid / 2 + 10;
+    const tapeLineGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-len / 2, 0.1, rulerZ), new THREE.Vector3(len / 2 + 5, 0.1, rulerZ)
+    ]);
+    rulerGroup.add(new THREE.Line(tapeLineGeo, goldLineMat));
+
+    for (let m = 0; m <= 140; m += 20) {
+      const tickX = -len / 2 + (m * SCALE_FACTOR);
+      const tickGeo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(tickX, 0.1, rulerZ - 0.8), new THREE.Vector3(tickX, 0.1, rulerZ + 0.8)
+      ]);
+      rulerGroup.add(new THREE.Line(tickGeo, goldLineMat));
+    }
+
+    const lenArrowZ = -wid / 2 - 4;
+    rulerGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-len / 2, 0.2, lenArrowZ), new THREE.Vector3(len / 2, 0.2, lenArrowZ)
+    ]), goldLineMat));
+
+    const heiArrowX = len / 2 + 4;
+    rulerGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(heiArrowX, 0, 0), new THREE.Vector3(heiArrowX, hei + roofHeight, 0)
+    ]), goldLineMat));
+
+    const widArrowX = -len / 2 - 4;
+    rulerGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(widArrowX, 0.2, -wid / 2), new THREE.Vector3(widArrowX, 0.2, wid / 2)
+    ]), goldLineMat));
+
+    /* ========== Scale Comparison Models ========== */
+    const fieldGroup = new THREE.Group(); fieldGroup.visible = false;
+    const fL = 105 * SCALE_FACTOR; const fW = 68 * SCALE_FACTOR;
+
+    function createSoccerFieldTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024; canvas.height = 664;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#38761d'; ctx.fillRect(0, 0, 1024, 664);
+      ctx.fillStyle = '#438a22';
+      for (let x = 0; x < 1024; x += 128) ctx.fillRect(x, 0, 64, 664);
+
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 6;
+      ctx.strokeRect(32, 32, 1024 - 64, 664 - 64);
+      ctx.beginPath(); ctx.moveTo(512, 32); ctx.lineTo(512, 664 - 32); ctx.stroke();
+      ctx.beginPath(); ctx.arc(512, 332, 88, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeRect(32, 180, 160, 304); ctx.strokeRect(1024 - 32 - 160, 180, 160, 304);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace; return tex;
+    }
+
+    const fieldGeo = new THREE.PlaneGeometry(fL, fW);
+    const fieldMat = new THREE.MeshStandardMaterial({ map: createSoccerFieldTexture(), roughness: 0.85 });
+    const field = new THREE.Mesh(fieldGeo, fieldMat);
+    field.rotation.x = -Math.PI / 2; field.position.set(0, 0.05, 0);
+    fieldGroup.add(field);
+
+    function createGoalPost(xSign) {
+      const g = new THREE.Group();
+      const goalW = 7.32 * SCALE_FACTOR; const goalH = 2.44 * SCALE_FACTOR;
+      const pMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const postL = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, goalH), pMat);
+      postL.position.set(xSign * (fL / 2 - 0.2), goalH / 2, -goalW / 2); g.add(postL);
+      const postR = postL.clone(); postR.position.z = goalW / 2; g.add(postR);
+      const crossbar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, goalW), pMat);
+      crossbar.position.set(xSign * (fL / 2 - 0.2), goalH, 0); crossbar.rotation.x = Math.PI / 2; g.add(crossbar);
+      return g;
+    }
+    fieldGroup.add(createGoalPost(1)); fieldGroup.add(createGoalPost(-1));
+    scene.add(fieldGroup);
+
+    const buildingGroup = new THREE.Group(); buildingGroup.visible = false;
+    const bH = 4 * 3.3 * SCALE_FACTOR; const bW = 24.0 * SCALE_FACTOR; const bD = 14.0 * SCALE_FACTOR;
+    const bMesh = new THREE.Mesh(new THREE.BoxGeometry(bW, bH, bD), new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.4 }));
+    bMesh.position.set(len / 2 + bW / 2 + 6, bH / 2, 0); buildingGroup.add(bMesh);
+
+    for (let f = 0; f < 4; f++) {
+      const slab = new THREE.Mesh(new THREE.BoxGeometry(bW * 1.02, 0.3 * SCALE_FACTOR, bD * 1.02), new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 }));
+      slab.position.set(bMesh.position.x, (f + 1) * (3.3 * SCALE_FACTOR), 0); buildingGroup.add(slab);
+    }
+    const glassFacade = new THREE.Mesh(new THREE.BoxGeometry(bW * 0.96, bH * 0.95, bD * 1.01), new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, transmission: 0.85, opacity: 1, transparent: true, roughness: 0.1 }));
+    glassFacade.position.copy(bMesh.position); buildingGroup.add(glassFacade); scene.add(buildingGroup);
+
+    const containerGroup = new THREE.Group(); containerGroup.visible = false;
+    const cL = 6.06 * SCALE_FACTOR; const cW = 2.44 * SCALE_FACTOR; const cH = 2.59 * SCALE_FACTOR;
+    const cColors = [0x1e40af, 0xb91c1c, 0x15803d, 0xca8a04, 0x6b21a8];
+    for (let i = 0; i < 7; i++) {
+      for (let j = 0; j < 2; j++) {
+        for (let k = 0; k < 4; k++) {
+          const c = new THREE.Mesh(new THREE.BoxGeometry(cL, cH, cW), new THREE.MeshStandardMaterial({ color: cColors[(i + j + k) % 5], roughness: 0.45, metalness: 0.35 }));
+          c.position.set(-len * 0.35 + i * (cL + 0.3), cH / 2 + 0.05 + k * (cH + 0.08), wid / 2 + 6 + j * (cW + 0.3));
+          c.castShadow = true; containerGroup.add(c);
+        }
+      }
+    }
+    scene.add(containerGroup);
+
+    /* ========== Rain Particles & Rainbow ========== */
+    const rainGroup = new THREE.Group(); rainGroup.visible = false; scene.add(rainGroup);
+    const rainCount = 6500; const rainGeo = new THREE.BufferGeometry();
+    const rainPos = new Float32Array(rainCount * 3); const rainVel = new Float32Array(rainCount);
+    for (let i = 0; i < rainCount; i++) {
+      rainPos[i * 3] = (Math.random() - 0.5) * 280; rainPos[i * 3 + 1] = Math.random() * 110 + 10; rainPos[i * 3 + 2] = (Math.random() - 0.5) * 200;
+      rainVel[i] = 0.8 + Math.random() * 1.0;
+    }
+    rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+    const rainMat = new THREE.PointsMaterial({ color: 0xc4e1f8, size: 0.45, transparent: true, opacity: 0.65, depthWrite: false });
+    const rain = new THREE.Points(rainGeo, rainMat); rainGroup.add(rain);
+
+    const rainbowGroup = new THREE.Group(); rainbowGroup.visible = false; scene.add(rainbowGroup);
+    const rainbowColors = [0xff4d4d, 0xffa64d, 0xffff4d, 0x4dff4d, 0x4d94ff, 0x994dff];
+    rainbowColors.forEach((col, i) => {
+      const arcMat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.6, side: THREE.DoubleSide });
+      const arc = new THREE.Mesh(new THREE.TorusGeometry(70 - i * 1.4, 0.7, 8, 64, Math.PI), arcMat);
+      arc.position.set(0, 2, -40); rainbowGroup.add(arc);
+    });
+
+    /* ========== 🎬 Feature 1: Automated Cinematic Tour Engine ========== */
+    const tourStops = [
+      {
+        title: "【第一站：方舟全景與 6:1 耐浪比例】",
+        sub: "經文記載方舟長 300 肘 (133.5m)、寬 50 肘 (22.3m)、高 30 肘 (13.4m)。6:1 的長寬黃金比例配備船頭沉石索，具備高達 60 度的極限抗翻耐浪性能。",
+        cam: [65, 32, 85], look: [0, 8, 0], xray: 0, rain: false, rainbow: false
+      },
+      {
+        title: "【第二站：側面單一開口與進舟坡道】",
+        sub: "創世記 6:16 記載『方舟的門要開在旁邊』。當萬物與挪亞一家進入後，神將門封關，成為漂流期間全船唯一的安全出入口。",
+        cam: [22, 12, 28], look: [12, 4, 10], xray: 0, rain: false, rainbow: false
+      },
+      {
+        title: "【第三站：底艙潔淨與不潔淨動物區】",
+        sub: "創世記 7:2 記載潔淨動物帶七對 (14隻)，多出來的用於大洪水後獻祭 (創 8:20) 與食用儲備；不潔淨動物各帶一對保全物種生命。",
+        cam: [-18, 8, 12], look: [-5, 3, 0], xray: 85, rain: false, rainbow: false
+      },
+      {
+        title: "【第四站：中層防潮糧倉與赤陶罐】",
+        sub: "中層設有高架圓柱木糧倉儲存乾草與穀物，並使用封口赤陶罐 (Amphorae) 儲存淡水與橄欖油，確保 371 天全船萬物糧食不腐。",
+        cam: [15, 12, -10], look: [0, 8, 0], xray: 85, rain: false, rainbow: false
+      },
+      {
+        title: "【第五站：中央 Moon Pool 天井與 Tsohar 頂窗】",
+        sub: "利用海浪在底艙起伏的水壓活塞效應 (Moon Pool Effect)，配合一肘高的頂窗 (Tsohar) 形成全船強大的熱對流換氣風道。",
+        cam: [0, 18, 14], look: [0, 8, 0], xray: 60, rain: false, rainbow: false
+      },
+      {
+        title: "【第六站：大雨滂沱與恩典彩虹綻放】",
+        sub: "創世記 9:13 記載神將彩虹放在雲彩中作為立約的記號。洪水消退，天地迎來永恆新生的希望。",
+        cam: [55, 25, 75], look: [0, 8, 0], xray: 0, rain: true, rainbow: true
+      }
+    ];
+
+    let isTourActive = false;
+    let tourCurrentIdx = 0;
+
+    const tourHud = document.getElementById('tour-hud');
+    const tourStepTitle = document.getElementById('tour-step-title');
+    const tourStepSub = document.getElementById('tour-step-sub');
+
+    function startCinematicTour() {
+      stopFpsMode();
+      isTourActive = true;
+      tourCurrentIdx = 0;
+      tourHud.classList.add('visible');
+      document.getElementById('btn-tour').classList.add('active');
+      document.getElementById('m-btn-tour').classList.add('active');
+      goToTourStop(0);
+    }
+
+    function stopCinematicTour() {
+      isTourActive = false;
+      tourHud.classList.remove('visible');
+      document.getElementById('btn-tour').classList.remove('active');
+      document.getElementById('m-btn-tour').classList.remove('active');
+    }
+
+    function goToTourStop(idx) {
+      tourCurrentIdx = (idx + tourStops.length) % tourStops.length;
+      const stop = tourStops[tourCurrentIdx];
+      tourStepTitle.textContent = stop.title;
+      tourStepSub.textContent = stop.sub;
+
+      triggerCameraFlight(stop.cam[0], stop.cam[1], stop.cam[2], stop.look[0], stop.look[1], stop.look[2]);
+      
+      xraySlider.value = stop.xray;
+      updateXRay(stop.xray);
+
+      rainActive = stop.rain; rainGroup.visible = stop.rain;
+      document.getElementById('btn-rain').classList.toggle('active', stop.rain);
+      waterTargetLevel = stop.rain ? hei * 0.6 : 0;
+
+      rainbowActive = stop.rainbow; rainbowGroup.visible = stop.rainbow;
+      document.getElementById('btn-rainbow').classList.toggle('active', stop.rainbow);
+    }
+
+    document.getElementById('btn-tour').addEventListener('click', () => {
+      if (isTourActive) stopCinematicTour(); else startCinematicTour();
+    });
+    document.getElementById('m-btn-tour').addEventListener('click', () => {
+      if (isTourActive) stopCinematicTour(); else startCinematicTour();
+    });
+
+    document.getElementById('tour-close-btn').addEventListener('click', stopCinematicTour);
+    document.getElementById('tour-next-btn').addEventListener('click', () => goToTourStop(tourCurrentIdx + 1));
+    document.getElementById('tour-prev-btn').addEventListener('click', () => goToTourStop(tourCurrentIdx - 1));
+
+    /* ========== 🚶‍♂️ Feature 4: First-Person Walkthrough Engine & Instructions ========== */
+    let isFpsMode = false;
+    let fpsDeckIdx = 0;
+    let fpsYaw = 0;    /* Yaw Angle in Radians */
+    let fpsPitch = 0;  /* Pitch Angle in Radians */
+
+    let isFpsPointerDown = false;
+    let fpsPrevPointerX = 0;
+    let fpsPrevPointerY = 0;
+
+    const keysPressed = {};
+    const mobileFpsMove = { forward: false, backward: false, left: false, right: false };
+
+    const fpsHud = document.getElementById('fps-hud');
+    const fpsDpad = document.getElementById('fps-dpad');
+    const fpsInstructionText = document.getElementById('fps-instruction-text');
+
+    function updateFpsCameraRotation() {
+      const cosPitch = Math.cos(fpsPitch);
+      const dirX = Math.sin(fpsYaw) * cosPitch;
+      const dirY = Math.sin(fpsPitch);
+      const dirZ = Math.cos(fpsYaw) * cosPitch;
+
+      const targetPos = new THREE.Vector3().copy(camera.position).add(new THREE.Vector3(dirX, dirY, dirZ));
+      camera.lookAt(targetPos);
+    }
+
+    function startFpsMode(deckIdx = 0) {
+      stopCinematicTour();
+      isFpsMode = true;
+      controls.enabled = false;
+      fpsDeckIdx = deckIdx;
+      
+      const deckY = deckLevels[fpsDeckIdx] + 1.6;
+      camera.position.set(0, deckY, wid * 0.2);
+      fpsYaw = Math.PI; fpsPitch = 0;
+      updateFpsCameraRotation();
+
+      document.body.classList.add('fps-active');
+
+      fpsHud.classList.add('visible');
+      document.getElementById('btn-fps').classList.add('active');
+      document.getElementById('m-btn-fps').classList.add('active');
+
+      if (window.innerWidth < 960) {
+        fpsDpad.classList.add('visible');
+        if (fpsInstructionText) {
+          fpsInstructionText.innerHTML = '💡 <b>漫步操作說明</b>：左下角按鈕移動 + 手指滑動轉動 360° 視角';
+        }
+      } else {
+        if (fpsInstructionText) {
+          fpsInstructionText.innerHTML = '💡 <b>漫步操作說明</b>：WASD 鍵盤移動 + 按住滑鼠拖曳轉動 360° 視角 (按 1/2/3 切換樓層)';
+        }
+      }
+
+      xraySlider.value = 85; updateXRay(85);
+    }
+
+    function stopFpsMode() {
+      isFpsMode = false;
+      controls.enabled = true;
+      document.body.classList.remove('fps-active');
+      fpsHud.classList.remove('visible');
+      fpsDpad.classList.remove('visible');
+      document.getElementById('btn-fps').classList.remove('active');
+      document.getElementById('m-btn-fps').classList.remove('active');
+      triggerCameraFlight(65, 32, 85, 0, 8, 0);
+    }
+
+    document.getElementById('btn-fps').addEventListener('click', () => {
+      if (isFpsMode) stopFpsMode(); else startFpsMode(0);
+    });
+    document.getElementById('m-btn-fps').addEventListener('click', () => {
+      if (isFpsMode) stopFpsMode(); else startFpsMode(0);
+    });
+
+    document.getElementById('fps-exit-btn').addEventListener('click', stopFpsMode);
+
+    document.querySelectorAll('.fps-deck-btn[data-d]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.fps-deck-btn[data-d]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const d = +btn.dataset.d;
+        startFpsMode(d);
+      });
+    });
+
+    /* Pointer Drag for Camera Rotation (Dragging right turns view right) */
+    renderer.domElement.addEventListener('pointerdown', (e) => {
+      if (isFpsMode) {
+        isFpsPointerDown = true;
+        fpsPrevPointerX = e.clientX;
+        fpsPrevPointerY = e.clientY;
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (isFpsMode && isFpsPointerDown) {
+        const deltaX = e.clientX - fpsPrevPointerX;
+        const deltaY = e.clientY - fpsPrevPointerY;
+        fpsPrevPointerX = e.clientX;
+        fpsPrevPointerY = e.clientY;
+
+        fpsYaw -= deltaX * 0.005;    
+        fpsPitch -= deltaY * 0.004;
+        fpsPitch = Math.max(-Math.PI * 0.38, Math.min(Math.PI * 0.38, fpsPitch));
+        updateFpsCameraRotation();
+      }
+    });
+
+    window.addEventListener('pointerup', () => { isFpsPointerDown = false; });
+    window.addEventListener('pointercancel', () => { isFpsPointerDown = false; });
+
+    /* Mobile Virtual Touch D-Pad Events */
+    function bindDpadButton(id, dirProp) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const start = (e) => { e.preventDefault(); mobileFpsMove[dirProp] = true; };
+      const end = (e) => { e.preventDefault(); mobileFpsMove[dirProp] = false; };
+      el.addEventListener('touchstart', start, { passive: false });
+      el.addEventListener('touchend', end, { passive: false });
+      el.addEventListener('mousedown', start);
+      el.addEventListener('mouseup', end);
+    }
+    bindDpadButton('dpad-up', 'forward');
+    bindDpadButton('dpad-down', 'backward');
+    bindDpadButton('dpad-left', 'left');
+    bindDpadButton('dpad-right', 'right');
+
+    window.addEventListener('keydown', (e) => {
+      keysPressed[e.key.toLowerCase()] = true;
+      if (isFpsMode) {
+        if (e.key === '1') startFpsMode(0);
+        if (e.key === '2') startFpsMode(1);
+        if (e.key === '3') startFpsMode(2);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      keysPressed[e.key.toLowerCase()] = false;
+    });
+
+    function updateFpsMovement(dt) {
+      if (!isFpsMode) return;
+
+      const speed = 11.0 * dt;
+      const forward = new THREE.Vector3(Math.sin(fpsYaw), 0, Math.cos(fpsYaw)).normalize();
+      const right = new THREE.Vector3().crossVectors(forward, new THREE.Vector3(0, 1, 0)).normalize();
+
+      if (keysPressed['w'] || keysPressed['arrowup'] || mobileFpsMove.forward) camera.position.addScaledVector(forward, speed);
+      if (keysPressed['s'] || keysPressed['arrowdown'] || mobileFpsMove.backward) camera.position.addScaledVector(forward, -speed);
+      if (keysPressed['a'] || keysPressed['arrowleft'] || mobileFpsMove.left) camera.position.addScaledVector(right, -speed);
+      if (keysPressed['d'] || keysPressed['arrowright'] || mobileFpsMove.right) camera.position.addScaledVector(right, speed);
+
+      camera.position.x = Math.max(-len * 0.42, Math.min(len * 0.42, camera.position.x));
+      camera.position.z = Math.max(-wid * 0.38, Math.min(wid * 0.38, camera.position.z));
+      camera.position.y = deckLevels[fpsDeckIdx] + 1.6;
+
+      updateFpsCameraRotation();
+    }
+
+    /* ========== State & Animation Loop ========== */
+    let autoRotate = false; let rainActive = false; let rainbowActive = false;
+    let waterLevel = 0; let waterTargetLevel = 0;
+    let isLerpingCamera = false;
+    const targetCamPos = new THREE.Vector3(); const targetLookAt = new THREE.Vector3();
+
+    function triggerCameraFlight(px, py, pz, tx, ty, tz) {
+      targetCamPos.set(px, py, pz); targetLookAt.set(tx, ty, tz); isLerpingCamera = true;
+    }
+
+    const hudScaleText = document.getElementById('hud-scale-text');
+    const comparisonBadge = document.getElementById('comparison-badge');
+
+    function updateDynamicHUDScale() {
+      const camDist = camera.position.distanceTo(controls.target);
+      const metersPerSegment = Math.round((camDist * 0.32) / 10) * 10 || 10;
+      const cubitsPerSegment = Math.round(metersPerSegment / CUBIT);
+      hudScaleText.textContent = `${metersPerSegment}m (${cubitsPerSegment}肘)`;
+    }
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta(); const t = clock.getElapsedTime();
+      if (autoRotate && !isFpsMode) ark.rotation.y += 0.003;
+
+      if (isFpsMode) {
+        updateFpsMovement(dt);
+      } else if (isLerpingCamera) {
+        camera.position.lerp(targetCamPos, 0.05); controls.target.lerp(targetLookAt, 0.05);
+        if (camera.position.distanceTo(targetCamPos) < 0.2) isLerpingCamera = false;
+      }
+
+      if (rainActive) {
+        const positions = rainGeo.attributes.position.array;
+        for (let i = 0; i < rainCount; i++) {
+          positions[i * 3 + 1] -= rainVel[i] * 80 * dt; positions[i * 3] += Math.sin(t * 2 + i) * 0.03;
+          if (positions[i * 3 + 1] < water.position.y + 0.5) {
+            positions[i * 3 + 1] = 100 + Math.random() * 20; positions[i * 3] = (Math.random() - 0.5) * 280; positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+          }
+        }
+        rainGeo.attributes.position.needsUpdate = true;
+        waterLevel += (waterTargetLevel - waterLevel) * 0.015; water.position.y = -0.5 + waterLevel; water.material.opacity = Math.min(0.85, 0.2 + waterLevel * 0.1);
+        const pos = waterGeo.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i); const y = pos.getY(i);
+          pos.setZ(i, waterBaseZ[i] + Math.sin(x * 0.08 + t * 2.0) * 0.45 + Math.cos(y * 0.07 + t * 1.5) * 0.35);
+        }
+        pos.needsUpdate = true; waterGeo.computeVertexNormals();
+        const floatY = Math.max(0, waterLevel - 1.2) * 0.4;
+        ark.position.y = floatY + Math.sin(t * 1.2) * 0.15; ark.rotation.z = Math.sin(t * 0.9) * 0.015;
+      } else {
+        waterLevel += (0 - waterLevel) * 0.03; water.position.y = -0.5 + waterLevel; water.material.opacity = Math.max(0, waterLevel * 0.1);
+        ark.position.y += (0 - ark.position.y) * 0.05; ark.rotation.z += (0 - ark.rotation.z) * 0.05;
+      }
+
+      candleLights.forEach((l, idx) => { l.intensity = 2.0 + Math.sin(t * 8 + idx * 3) * 0.4; });
+      updateDynamicHUDScale();
+      if (!isFpsMode) controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    setTimeout(() => { document.getElementById('loading').classList.add('hidden'); }, 600);
+
+    /* ========== Section Clipping & Sliders (Desktop & Mobile Sync) ========== */
+    const clipSlider = document.getElementById('clip-slider');
+    const xraySlider = document.getElementById('xray-slider');
+    const explodeSlider = document.getElementById('explode-slider');
+
+    const mClipSlider = document.getElementById('m-clip-slider');
+    const mXraySlider = document.getElementById('m-xray-slider');
+    const mExplodeSlider = document.getElementById('m-explode-slider');
+
+    function updateClipPlane(v) {
+      if (v === 0) {
+        clipPlane.constant = 1000;
+      } else {
+        const pos = (len / 2) - (v / 100) * (len * 1.1);
+        clipPlane.constant = pos;
+      }
+      clipSlider.value = v; if (mClipSlider) mClipSlider.value = v;
+    }
+
+    clipSlider.addEventListener('input', (e) => updateClipPlane(+e.target.value));
+    if (mClipSlider) mClipSlider.addEventListener('input', (e) => updateClipPlane(+e.target.value));
+
+    function updateXRay(v) {
+      const t = Math.max(0, Math.min(1, v / 100));
+      const eased = t * t * (3 - 2 * t);
+      
+      const wallOpacity = 1 - eased * 0.92;
+      const roofOpacity = 1 - eased * 0.88;
+      const pitchOpacity = Math.max(0.15, 1 - eased * 0.75);
+
+      [hull, wallL, wallR, wallF, wallB].forEach(m => {
+        if (!m || !m.material) return;
+        m.material.transparent = wallOpacity < 0.98;
+        m.material.opacity = wallOpacity;
+        m.material.depthWrite = wallOpacity > 0.45;
+        m.material.needsUpdate = true;
+      });
+
+      if (pitch && pitch.material) {
+        pitch.material.transparent = pitchOpacity < 0.98;
+        pitch.material.opacity = pitchOpacity;
+        pitch.material.depthWrite = pitchOpacity > 0.45;
+        pitch.material.needsUpdate = true;
+      }
+
+      [roof, ridgeBeam, gableF, gableB].forEach(m => {
+        if (!m || !m.material) return;
+        m.material.transparent = roofOpacity < 0.98;
+        m.material.opacity = roofOpacity;
+        m.material.depthWrite = roofOpacity > 0.45;
+        m.material.needsUpdate = true;
+      });
+
+      if (skylight && skylight.material) {
+        skylight.material.transparent = true;
+        skylight.material.opacity = Math.min(0.85, roofOpacity);
+        skylight.material.needsUpdate = true;
+      }
+      xraySlider.value = v; if (mXraySlider) mXraySlider.value = v;
+    }
+
+    function updateExplode(v) {
+      const gap = (v / 100) * 7.5;
+      decks.forEach((d, i) => { d.position.y = d.userData.baseY + (i + 1) * gap * 0.7; });
+      animals.forEach(a => { a.position.y = a.userData.baseY + (a.userData.deckIdx + 1) * gap * 0.7; });
+      stalls.forEach(s => { s.position.y = s.userData.baseY + (s.userData.deckIdx + 1) * gap * 0.7; });
+      if (roof.visible) {
+        const roofLift = gap * 3.2;
+        roof.position.y = roof.userData.baseY + roofLift;
+        ridgeBeam.position.y = ridgeBeam.userData.baseY + roofLift;
+        skylight.position.y = skylight.userData.baseY + roofLift;
+        gableF.position.y = gableF.userData.baseY + roofLift;
+        gableB.position.y = gableB.userData.baseY + roofLift;
+      }
+      explodeSlider.value = v; if (mExplodeSlider) mExplodeSlider.value = v;
+    }
+
+    xraySlider.addEventListener('input', (e) => updateXRay(+e.target.value));
+    if (mXraySlider) mXraySlider.addEventListener('input', (e) => updateXRay(+e.target.value));
+
+    explodeSlider.addEventListener('input', (e) => updateExplode(+e.target.value));
+    if (mExplodeSlider) mExplodeSlider.addEventListener('input', (e) => updateExplode(+e.target.value));
+
+    /* ========== Construction Phases ========== */
+    function setPhase(phase) {
+      const show = (obj, minP) => { if (obj) obj.visible = phase >= minP; };
+      show(hull, 2); frameBeams.forEach(b => show(b, 1));
+      show(pitch, 2); show(wallL, 2); show(wallR, 2); show(wallF, 2); show(wallB, 2);
+      decks.forEach(d => show(d, 3)); stalls.forEach(s => show(s, 3)); animals.forEach(a => show(a, 3));
+      show(airShaft, 3); show(shaftLightBeam, 3);
+      show(roof, 4); show(ridgeBeam, 4); show(gableF, 4); show(gableB, 4);
+      show(skylight, 4); show(door, 4); show(ramp, 4); show(drogueGroup, 4);
+
+      document.querySelectorAll('.timeline-list li').forEach(l => {
+        l.classList.toggle('active', +l.dataset.phase === phase);
+      });
+      document.querySelectorAll('.phase-dot').forEach(d => {
+        d.classList.toggle('active', +d.dataset.p <= phase);
+      });
+    }
+
+    /* ========== Knowledge Base & Modals ========== */
+    const knowledgeData = {
+      gopherWood: {
+        title: '歌斐木 (Gopher Wood)',
+        body: '<b>聖經譯名考據</b>：希伯來原文 <i>gopher</i> 為獨有詞 (Hapax Legomenon)。現代學者與 Ark Encounter 指出其指富含防腐樹脂的<b>柏木 (Cypress)</b>、<b>松木 (Pine)</b> 或<b>樹脂硬化工藝</b>。',
+        ref: '創世記 6:14 · Answers in Genesis'
+      },
+      pitchCoating: {
+        title: '內外抹上松香 (Pitch Coating)',
+        body: '<b>防蝕與密封工程</b>：經文「內外抹上松香」。原文 <i>kaphar</i> 含有「遮蓋 / 贖罪」。古船匠使用松脂或地底瀝青塗抹於雙層木牆之間，達到雙重防蝕與百分之百密封。',
+        ref: '創世記 6:14 · Tim Lovett 考據'
+      },
+      cleanAnimals: {
+        title: '潔淨的動物 (Clean Animals - 七對)',
+        body: '<b>七對 (14隻) 記載考據</b>：帶<b>七對潔淨動物</b>進入方舟。多的潔淨動物用於大洪水過後向神獻祭 (創 8:20) 與肉食食用儲備。',
+        ref: '創世記 7:2-3, 8:20'
+      },
+      uncleanAnimals: {
+        title: '不潔淨的動物 (Unclean Animals - 一對)',
+        body: '<b>一對 (2隻) 保全生命</b>：不潔淨動物（如大象、獅子等）每種各帶一對公母進入方舟，旨在全地洪水時保全物種生命延續。',
+        ref: '創世記 7:2'
+      },
+      foodSilos: {
+        title: '防潮糧倉與陶罐 (Grain Silos & Amphorae)',
+        body: '<b>371天漂流物資工程</b>：中層物資區設有<b>高架圓柱防潮糧倉</b>儲存乾燥穀物，並使用封口<b>赤陶罐 (Amphorae)</b> 儲存淡水、油與酒。',
+        ref: '創世記 6:21 · Athanasius Kircher (1675)'
+      },
+      humanQuarters: {
+        title: '挪亞一家住所 (Human Living Quarters)',
+        body: '<b>上層生活與採光</b>：方舟第三層最靠近頂窗 (Tsohar)，採光與通風最佳。設有挪亞一家八口的木屋隔間住所與家庭燈臺。',
+        ref: '創世記 6:18, 8:16'
+      },
+      moonPool: {
+        title: '中央通風天井與水壓抽風井 (Moon Pool Shaft)',
+        body: '<b>換氣對流工程</b>：Ark Encounter 提出貫穿三層的<b>中央天井風道</b>：當海浪在底艙起伏時，像活塞一樣將新鮮空氣從頂窗抽入並排出一萬隻動物的熱廢氣。',
+        ref: 'Ark Encounter 工程研究報告'
+      },
+      drogueStones: {
+        title: '船頭阻浪重石索 (Bow Drogue Sea Anchors)',
+        body: '<b>定向抗翻穩定</b>：黑海與古地中海考古發現大量穿孔巨石。方舟船頭係有繩索沉石，在暴風浪中自動引導船頭迎浪，提供高達 60 度的抗翻穩定度。',
+        ref: 'KRISO 韓國造船海洋研究所 (1993)'
+      },
+      tsoharSkylight: {
+        title: '一肘高 Tsohar 頂部透光帶 (Skylight Strip)',
+        body: '<b>頂部透光與排氣</b>：經文「上邊要留透光處，高一肘」。沿著屋頂脊樑全長延伸，提供全船自然採光並作為熱對流廢氣排出口。',
+        ref: '創世記 6:16'
+      },
+      sideDoor: {
+        title: '方舟側門與坡道 (Side Door & Ramp)',
+        body: '<b>側面巨大單一開口</b>：動物與挪亞一家由此門進入方舟。當神將門關閉後，成為全船唯一的出入口。',
+        ref: '創世記 6:16, 7:16'
+      },
+      kneeBrace: {
+        title: '榫卯木撐 (Timber Knee Braces)',
+        body: '<b>古木構斜向加強筋</b>：在柱樑交接處採用天然彎曲木材作為斜撐 (Knee Braces)，大幅增強抗剪力與扭轉剛性。',
+        ref: '古代造船工藝考據'
+      }
+    };
+
+    const knowledgeCard = document.getElementById('knowledge-card');
+    const kcTitle = document.getElementById('kc-title');
+    const kcBody = document.getElementById('kc-body');
+    const kcRef = document.getElementById('kc-ref');
+
+    function openKnowledgeCard(key) {
+      const data = knowledgeData[key];
+      if (!data) return;
+      kcTitle.textContent = data.title;
+      kcBody.innerHTML = data.body;
+      kcRef.textContent = data.ref;
+      knowledgeCard.classList.add('visible');
+    }
+
+    document.getElementById('kc-close').addEventListener('click', () => {
+      knowledgeCard.classList.remove('visible');
+    });
+
+    /* WebAR Modal & Exporter */
+    const arModal = document.getElementById('ar-modal');
+    document.getElementById('btn-ar').addEventListener('click', () => arModal.classList.add('visible'));
+    document.getElementById('m-btn-ar').addEventListener('click', () => arModal.classList.add('visible'));
+    document.getElementById('ar-close-btn').addEventListener('click', () => arModal.classList.remove('visible'));
+
+    document.getElementById('ar-launch-btn').addEventListener('click', () => {
+      const exporter = new GLTFExporter();
+      exporter.parse(ark, (gltf) => {
+        const blob = new Blob([gltf], { type: 'model/gltf-binary' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url; link.download = "noahs_ark_3d.glb"; link.click();
+        alert("已成功導出挪亞方舟 3D GLB 檔案！您可以直接在 Android / iOS 裝置上開啟進行 WebAR 現實擺放觀賞！");
+      }, (err) => console.error(err), { binary: true });
+    });
+
+    /* Section Cut Toggle Button */
+    document.getElementById('btn-clip').addEventListener('click', function() {
+      this.classList.toggle('active');
+      const val = this.classList.contains('active') ? 50 : 0;
+      updateClipPlane(val);
+    });
+
+    document.getElementById('btn-ruler').addEventListener('click', function() {
+      rulerGroup.visible = !rulerGroup.visible;
+      this.classList.toggle('active', rulerGroup.visible);
+    });
+
+    document.getElementById('btn-xray').addEventListener('click', function() {
+      this.classList.toggle('active');
+      const val = this.classList.contains('active') ? 80 : 0;
+      updateXRay(val);
+    });
+
+    document.getElementById('btn-explode').addEventListener('click', function() {
+      this.classList.toggle('active');
+      const val = this.classList.contains('active') ? 70 : 0;
+      updateExplode(val);
+    });
+
+    document.getElementById('btn-rotate').addEventListener('click', function() {
+      autoRotate = !autoRotate;
+      this.classList.toggle('active', autoRotate);
+    });
+
+    const toggleRain = () => {
+      rainActive = !rainActive; rainGroup.visible = rainActive;
+      document.getElementById('btn-rain').classList.toggle('active', rainActive);
+      document.getElementById('m-btn-rain').classList.toggle('active', rainActive);
+      waterTargetLevel = rainActive ? hei * 0.6 : 0;
+    };
+    document.getElementById('btn-rain').addEventListener('click', toggleRain);
+    document.getElementById('m-btn-rain').addEventListener('click', toggleRain);
+
+    const toggleRainbow = () => {
+      rainbowActive = !rainbowActive; rainbowGroup.visible = rainbowActive;
+      document.getElementById('btn-rainbow').classList.toggle('active', rainbowActive);
+      document.getElementById('m-btn-rainbow').classList.toggle('active', rainbowActive);
+    };
+    document.getElementById('btn-rainbow').addEventListener('click', toggleRainbow);
+    document.getElementById('m-btn-rainbow').addEventListener('click', toggleRainbow);
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      stopCinematicTour(); stopFpsMode();
+      triggerCameraFlight(65, 32, 85, 0, 8, 0);
+      autoRotate = false; rainActive = false; rainbowActive = false;
+      rainGroup.visible = false; rainbowGroup.visible = false;
+      waterTargetLevel = 0;
+      updateClipPlane(0); updateXRay(0); updateExplode(0);
+      comparisonBadge.classList.remove('visible');
+      knowledgeCard.classList.remove('visible');
+      arModal.classList.remove('visible');
+      fieldGroup.visible = false; buildingGroup.visible = false; containerGroup.visible = false;
+      document.getElementById('btn-clip').classList.remove('active');
+      document.getElementById('btn-scale-field').classList.remove('active');
+      document.getElementById('btn-scale-building').classList.remove('active');
+      document.getElementById('btn-scale-containers').classList.remove('active');
+      setPhase(4);
+    });
+
+    const toggleSoccerField = (btn) => {
+      fieldGroup.visible = !fieldGroup.visible;
+      btn.classList.toggle('active', fieldGroup.visible);
+      if (fieldGroup.visible) {
+        comparisonBadge.innerHTML = '<b>⚽ FIFA 國際標準足球場比例對照</b><br>• 方舟長度 133.5m ＝ <b>1.27 座足球場長度</b> (105m)<br>• 方舟寬度 22.3m ＝ 約足球場 1/3 寬度 (68m)';
+        comparisonBadge.classList.add('visible');
+      } else if (!buildingGroup.visible && !containerGroup.visible) {
+        comparisonBadge.classList.remove('visible');
+      }
+    };
+    document.getElementById('btn-scale-field').addEventListener('click', function() { toggleSoccerField(this); });
+    document.getElementById('m-btn-scale-field').addEventListener('click', function() { toggleSoccerField(this); });
+
+    const toggleBuilding = (btn) => {
+      buildingGroup.visible = !buildingGroup.visible;
+      btn.classList.toggle('active', buildingGroup.visible);
+      if (buildingGroup.visible) {
+        comparisonBadge.innerHTML = '<b>🏢 4層樓現代建築比例對照</b><br>• 方舟高度 13.35m (30肘) ＝ <b>幾乎完全等同 4 層樓現代建築高度 (13.2m)</b><br>• 方舟總容積約為該棟 4 層樓建築的 6.5 倍！';
+        comparisonBadge.classList.add('visible');
+      } else if (!fieldGroup.visible && !containerGroup.visible) {
+        comparisonBadge.classList.remove('visible');
+      }
+    };
+    document.getElementById('btn-scale-building').addEventListener('click', function() { toggleBuilding(this); });
+    document.getElementById('m-btn-scale-building').addEventListener('click', function() { toggleBuilding(this); });
+
+    document.getElementById('btn-scale-containers').addEventListener('click', function() {
+      containerGroup.visible = !containerGroup.visible;
+      this.classList.toggle('active', containerGroup.visible);
+      if (containerGroup.visible) {
+        comparisonBadge.innerHTML = '<b>📦 20呎標準貨櫃 (TEU) 容積對照</b><br>• 單個 20呎貨櫃容積為 38.3 m³ (6.06×2.44×2.59m)<br>• 方舟總容積約 40,000 m³ ＝ <b>可完整裝載約 1,044 個標準 20呎貨櫃 (1,044 TEU)</b>！';
+        comparisonBadge.classList.add('visible');
+      } else if (!fieldGroup.visible && !buildingGroup.visible) {
+        comparisonBadge.classList.remove('visible');
+      }
+    });
+
+    document.querySelectorAll('.verse').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.verse').forEach(v => v.classList.remove('active'));
+        el.classList.add('active');
+        const v = el.dataset.verse;
+        if (v === '14') { triggerCameraFlight(35, 12, 30, 0, 6, 0); openKnowledgeCard('gopherWood'); }
+        else if (v === '15') { triggerCameraFlight(85, 45, 100, 0, 8, 0); }
+        else if (v === '16') {
+          triggerCameraFlight(25, 25, 40, 0, 12, 0);
+          updateExplode(40);
+          document.getElementById('btn-explode').classList.add('active');
+          openKnowledgeCard('tsoharSkylight');
+        }
+        if (window.innerWidth < 960) closeMobileDrawer();
+      });
+    });
+
+    document.querySelectorAll('.timeline-list li').forEach(li => {
+      li.addEventListener('click', () => {
+        const p = +li.dataset.phase; setPhase(p);
+        if (p === 1) { triggerCameraFlight(55, 20, 60, 0, 5, 0); openKnowledgeCard('kneeBrace'); }
+        else if (p === 2) { triggerCameraFlight(45, 16, 40, 0, 6, 0); openKnowledgeCard('pitchCoating'); }
+        else if (p === 3) { triggerCameraFlight(35, 24, 45, 0, 9, 0); openKnowledgeCard('foodSilos'); }
+        else if (p === 4) { triggerCameraFlight(65, 32, 85, 0, 8, 0); openKnowledgeCard('drogueStones'); }
+        if (window.innerWidth < 960) closeMobileDrawer();
+      });
+    });
+
+    /* Mobile Sheet & Left Drawer Controls */
+    const leftPanel = document.getElementById('left-panel');
+    const drawerBackdrop = document.getElementById('drawer-backdrop');
+    const mobileSheet = document.getElementById('mobile-sheet');
+
+    function openMobileDrawer() {
+      leftPanel.classList.add('open'); drawerBackdrop.classList.add('visible');
+    }
+    function closeMobileDrawer() {
+      leftPanel.classList.remove('open'); drawerBackdrop.classList.remove('visible');
+    }
+    document.getElementById('m-btn-drawer').addEventListener('click', openMobileDrawer);
+    drawerBackdrop.addEventListener('click', closeMobileDrawer);
+
+    document.getElementById('m-btn-sheet').addEventListener('click', () => {
+      mobileSheet.classList.toggle('open');
+    });
+    document.getElementById('sheet-close').addEventListener('click', () => {
+      mobileSheet.classList.remove('open');
+    });
+
+    /* Tooltip & Raycasting */
+    const tooltip = document.getElementById('tooltip');
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    renderer.domElement.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 960 || isFpsMode) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+
+      const targetObjects = [...ark.children, ...deckGroup.children];
+      const intersects = raycaster.intersectObjects(targetObjects, true);
+
+      if (intersects.length > 0) {
+        let obj = intersects[0].object;
+        let kType = obj.userData.kType;
+        while (!kType && obj.parent && obj.parent !== ark && obj.parent !== scene) {
+          obj = obj.parent; kType = obj.userData.kType;
+        }
+
+        let name = '';
+        if (kType && knowledgeData[kType]) name = knowledgeData[kType].title;
+        else if (obj === hull || obj === wallL || obj === wallR || obj === wallF || obj === wallB) name = '歌斐木雙層板牆 (點擊看考據)';
+        else if (obj === pitch) name = '防水松香瀝青密封層 (點擊看考據)';
+        else if (obj === roof || obj === ridgeBeam || obj === gableF || obj === gableB) name = 'Kircher 雙坡屋頂 (點擊看考據)';
+        else if (obj === skylight) name = '一肘高 Tsohar 頂部透光帶 (點擊看考據)';
+        else if (obj === door || obj === ramp) name = '方舟側門與坡道 (點擊看考據)';
+        else if (obj === airShaft || obj === shaftLightBeam) name = '中央 Moon Pool 通風天井 (點擊看考據)';
+
+        if (name) {
+          tooltip.textContent = name + ' 💡 點擊開啟科普卡';
+          tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+          tooltip.style.top = (e.clientY - rect.top + 15) + 'px';
+          tooltip.classList.add('visible');
+        } else { tooltip.classList.remove('visible'); }
+      } else { tooltip.classList.remove('visible'); }
+    });
+
+    renderer.domElement.addEventListener('click', (e) => {
+      if (isFpsMode) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+
+      const targetObjects = [...ark.children, ...deckGroup.children];
+      const intersects = raycaster.intersectObjects(targetObjects, true);
+
+      if (intersects.length > 0) {
+        let obj = intersects[0].object;
+        let kType = obj.userData.kType;
+        while (!kType && obj.parent && obj.parent !== ark && obj.parent !== scene) {
+          obj = obj.parent; kType = obj.userData.kType;
+        }
+
+        if (!kType) {
+          if (obj === hull || obj === wallL || obj === wallR || obj === wallF || obj === wallB) kType = 'gopherWood';
+          else if (obj === pitch) kType = 'pitchCoating';
+          else if (obj === roof || obj === ridgeBeam || obj === gableF || obj === gableB) kType = 'tsoharSkylight';
+          else if (obj === skylight) kType = 'tsoharSkylight';
+          else if (obj === door || obj === ramp) kType = 'sideDoor';
+          else if (obj === airShaft || obj === shaftLightBeam) kType = 'moonPool';
+        }
+
+        if (kType) openKnowledgeCard(kType);
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+
+    setPhase(4);
+  </script>
+</body>
+</html>

@@ -30,7 +30,11 @@ const filesToCopy = async (argv: Argv, cfg: QuartzConfig, excludeExtensions: Set
 const copyFile = async (argv: Argv, fp: FilePath) => {
   const src = joinSegments(argv.directory, fp) as FilePath
 
-  const name = slugifyFilePath(fp)
+  const ext = path.extname(fp)
+  let name = slugifyFilePath(fp)
+  if (ext && !name.endsWith(ext)) {
+    name = (name + ext) as FilePath
+  }
   const dest = joinSegments(argv.output, name) as FilePath
 
   const dir = path.dirname(dest) as FilePath

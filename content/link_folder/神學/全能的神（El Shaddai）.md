@@ -56,14 +56,14 @@ source_scope: collected_only
 
 <!-- accumulation:創世記:48:start -->
 #### [[01 創世記/第48章|第48章]]
-- 本章重點：雅各稱在路斯向他顯現、賜下生養眾多與土地應許的神為全能的神。
-- 與本章關聯：此稱號把臨終的產業安排連回神有能力成就的族長之約。
+- 本章重點：雅各對約瑟說：「全能的神曾在迦南地的路斯向我顯現，賜福與我」，隨即複述那應許：「我必使你生養眾多，成為多民，又要把這地賜給你的後裔，永遠為業」（3-4節）。
+- 與本章關聯：雅各在臨終安排產業時，先把根據說明白——這些安排不是他個人的意思，而是「全能的神」在路斯所應許的。GT 丁良才把這個稱號與創43:14 連起來（雅各差便雅憫下埃及時也是求「全能的神」施憐憫）。CT 指出這次顯現就是雅各往哈蘭路上睡夢中所見的異象（28:10-17）。
 <!-- accumulation:創世記:48:end -->
 
 <!-- accumulation:創世記:49:start -->
 #### [[01 創世記/第49章|第49章]]
-- 本章重點：雅各在約瑟的祝福中稱神為全能者，祈求祂賜下天、地與生育乳養的福。
-- 與本章關聯：全能者在此是能以全面豐盛成就族長祝福的神。
+- 本章重點：「你父親的神必幫助你，那全能者必將天上所有的福，地裡所藏的福，以及生產乳養的福，都賜給你」（25節）。
+- 與本章關聯：CT 解釋這三重的福：「生產乳養」的原文是「母腹和胸奶」，母腹是為生產，胸奶是為乳養；整體指天候與地利之福，包括雨水、甘露、泉源、礦藏、農產、畜牧。GT《聖經精讀本》分得更細：天上所有的福指早晨的露水、適量的雨水與陽光，地裡所藏的福指使土地肥沃的泉水——「常年乾旱的巴勒斯坦地帶，豐富的水是最大的祝福」，生產乳養的福則指順產及多產帶來多子多孫。
 <!-- accumulation:創世記:49:end -->
 ## 主題發展
 
@@ -99,4 +99,27 @@ GT 丁良才給的理由最直接：「神用這話，為要激發亞伯蘭的�
 
 ## 來源依據
 
-- ccbiblestudy 註解、拾穗
+- 創世記 17章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT17.htm
+- 創世記 17章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT17.htm
+- 創世記 17章 KC: https://www.kingcomments.com/en/bible-studies/Gen/17
+- 創世記 17章 BH: https://biblehub.com/study/genesis/17.htm
+- 創世記 28章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT28.htm
+- 創世記 28章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT28.htm
+- 創世記 28章 KC: https://www.kingcomments.com/en/bible-studies/Gen/28
+- 創世記 28章 BH: https://biblehub.com/study/genesis/28.htm
+- 創世記 35章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT35.htm
+- 創世記 35章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT35.htm
+- 創世記 35章 KC: https://www.kingcomments.com/en/bible-studies/Gen/35
+- 創世記 35章 BH: https://biblehub.com/study/genesis/35.htm
+- 創世記 43章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT43.htm
+- 創世記 43章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT43.htm
+- 創世記 43章 KC: https://www.kingcomments.com/en/bible-studies/Gen/43
+- 創世記 43章 BH: https://biblehub.com/study/genesis/43.htm
+- 創世記 48章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT48.htm
+- 創世記 48章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT48.htm
+- 創世記 48章 KC: https://www.kingcomments.com/en/bible-studies/Gen/48
+- 創世記 48章 BH: https://biblehub.com/study/genesis/48.htm
+- 創世記 49章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT49.htm
+- 創世記 49章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT49.htm
+- 創世記 49章 KC: https://www.kingcomments.com/en/bible-studies/Gen/49
+- 創世記 49章 BH: https://biblehub.com/study/genesis/49.htm

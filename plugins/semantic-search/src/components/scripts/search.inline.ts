@@ -6,6 +6,7 @@ import {
   resolveBasePath,
   escapeHTML,
 } from "@quartz-community/utils";
+import { shouldRunExactSearch } from "../searchLogic";
 
 interface Item {
   id: number;
@@ -16,11 +17,7 @@ interface Item {
   [key: string]: any;
 }
 
-type SearchType = "basic" | "tags";
-let searchType: SearchType = "basic";
 let currentSearchTerm: string = "";
-const numSearchResults = 8;
-const numTagResults = 5;
 const contextWindowWords = 30;
 
 const encoder = (str: string): string[] => {
@@ -82,30 +79,10 @@ const index = new FlexSearch.Document({
 
 let contentData: Record<string, Item> | null = null;
 let idDataMap: string[] = [];
-let allTags: string[] = [];
 const fetchContentCache = new Map<string, Element[]>();
 
-function parseSearchQuery(input: string): { tags: string[]; query: string } {
-  const tokens = input.split(/\s+/);
-  const tags: string[] = [];
-  const queryParts: string[] = [];
-  for (const token of tokens) {
-    if (token.startsWith("#") && token.length > 1) {
-      tags.push(token.substring(1));
-    } else if (token !== "#") {
-      queryParts.push(token);
-    }
-  }
-  return { tags, query: queryParts.join(" ").trim() };
-}
-
-function getCurrentTagToken(input: string): string | null {
-  const tokens = input.split(/\s+/);
-  const last = tokens[tokens.length - 1];
-  if (last && last.startsWith("#")) {
-    return last.substring(1);
-  }
-  return null;
+function parseSearchQuery(input: string): { query: string } {
+  return { query: input.trim() };
 }
 const parser = new DOMParser();
 
@@ -173,111 +150,10 @@ async function setupSearch() {
       searchLayout.appendChild(preview);
     }
 
-    const tagDropdown = document.createElement("div");
-    tagDropdown.className = "tag-suggestions";
-    tagDropdown.setAttribute("role", "listbox");
-    tagDropdown.setAttribute("aria-label", "Tag suggestions");
-    tagDropdown.style.display = "none";
-    const searchSpace = searchBar.parentElement!;
-    searchSpace.insertBefore(tagDropdown, searchBar.nextSibling);
-
-    const ghostText = document.createElement("span");
-    ghostText.className = "ghost-text";
-    ghostText.setAttribute("aria-hidden", "true");
-    searchSpace.insertBefore(ghostText, searchBar.nextSibling);
-
-    let tagSuggestionIndex = -1;
-    let filteredTags: string[] = [];
-    let tagDropdownVisible = false;
-
-    const updateGhostText = (partial: string) => {
-      if (tagSuggestionIndex < 0 || tagSuggestionIndex >= filteredTags.length) {
-        ghostText.textContent = "";
-        return;
-      }
-      const selectedTag = filteredTags[tagSuggestionIndex]!;
-      if (!selectedTag.toLowerCase().startsWith(partial.toLowerCase())) {
-        ghostText.textContent = "";
-        return;
-      }
-      const completion = selectedTag.substring(partial.length);
-      ghostText.innerHTML = "";
-      const invisible = document.createElement("span");
-      invisible.style.visibility = "hidden";
-      invisible.textContent = searchBar.value;
-      ghostText.appendChild(invisible);
-      ghostText.appendChild(document.createTextNode(completion));
-    };
-
-    const updateTagDropdownHighlight = () => {
-      const items = tagDropdown.querySelectorAll(".tag-suggestion-item");
-      items.forEach((item, i) => {
-        item.classList.toggle("active", i === tagSuggestionIndex);
-      });
-      const partial = getCurrentTagToken(searchBar.value) || "";
-      updateGhostText(partial);
-    };
-
-    const hideTagDropdown = () => {
-      tagDropdownVisible = false;
-      tagSuggestionIndex = -1;
-      filteredTags = [];
-      tagDropdown.style.display = "none";
-      ghostText.textContent = "";
-    };
-
-    const acceptTagSuggestion = (tag: string) => {
-      const value = searchBar.value;
-      const lastHashIndex = value.lastIndexOf("#");
-      if (lastHashIndex !== -1) {
-        searchBar.value = value.substring(0, lastHashIndex) + "#" + tag + " ";
-      }
-      hideTagDropdown();
-      searchBar.focus();
-      searchBar.dispatchEvent(new Event("input"));
-    };
-
-    const showTagDropdown = (partial: string) => {
-      if (!indexInitialized) return;
-      filteredTags =
-        partial === ""
-          ? allTags.slice(0, 10)
-          : allTags.filter((t) => t.toLowerCase().startsWith(partial.toLowerCase())).slice(0, 10);
-      if (filteredTags.length === 0) {
-        hideTagDropdown();
-        return;
-      }
-      tagSuggestionIndex = 0;
-      tagDropdownVisible = true;
-      removeAllChildren(tagDropdown);
-      for (let i = 0; i < filteredTags.length; i++) {
-        const tag = filteredTags[i]!;
-        const item = document.createElement("div");
-        item.className = "tag-suggestion-item" + (i === 0 ? " active" : "");
-        item.setAttribute("role", "option");
-        item.setAttribute("data-tag", tag);
-        item.setAttribute("data-index", String(i));
-        item.textContent = "#" + tag;
-        tagDropdown.appendChild(item);
-      }
-      tagDropdown.style.display = "block";
-      updateGhostText(partial);
-    };
-
-    const navigateTagDropdown = (direction: "up" | "down"): boolean => {
-      if (!tagDropdownVisible || filteredTags.length === 0) return false;
-      if (direction === "down") {
-        tagSuggestionIndex = Math.min(tagSuggestionIndex + 1, filteredTags.length - 1);
-      } else {
-        tagSuggestionIndex = Math.max(tagSuggestionIndex - 1, 0);
-      }
-      updateTagDropdownHighlight();
-      return true;
-    };
-
     let currentHover: HTMLElement | null = null;
     let previewToken = 0;
     let previewDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+    let latestSearchRequest = 0;
 
     const hideSearch = () => {
       container.classList.remove("active");
@@ -287,14 +163,12 @@ async function setupSearch() {
       removeAllChildren(results!);
       if (preview) removeAllChildren(preview);
       searchLayout.classList.remove("display-results");
-      searchType = "basic";
+      latestSearchRequest++;
       currentHover = null;
-      hideTagDropdown();
       searchButton.focus();
     };
 
-    const showSearch = (type: SearchType) => {
-      searchType = type;
+    const showSearch = () => {
       if (sidebar) sidebar.style.zIndex = "9999";
       container.classList.add("active");
       searchButton.setAttribute("aria-expanded", "true");
@@ -327,33 +201,33 @@ async function setupSearch() {
           titleEl.className = "card-title";
           // Add a badge depending on the match type
           if (item.type === "semantic") {
-             const badge = document.createElement("span");
-             badge.style.fontSize = "0.7em";
-             badge.style.backgroundColor = "var(--secondary)";
-             badge.style.color = "var(--light)";
-             badge.style.padding = "2px 6px";
-             badge.style.borderRadius = "4px";
-             badge.style.marginRight = "6px";
-             badge.style.verticalAlign = "middle";
-             const scoreText = item.score !== undefined ? ` ${Math.round(item.score * 100)}%` : "";
-             badge.textContent = `AI 語意${scoreText}`;
-             titleEl.appendChild(badge);
+            const badge = document.createElement("span");
+            badge.style.fontSize = "0.7em";
+            badge.style.backgroundColor = "var(--secondary)";
+            badge.style.color = "var(--light)";
+            badge.style.padding = "2px 6px";
+            badge.style.borderRadius = "4px";
+            badge.style.marginRight = "6px";
+            badge.style.verticalAlign = "middle";
+            const scoreText = item.score !== undefined ? ` ${Math.round(item.score * 100)}%` : "";
+            badge.textContent = `AI 語意${scoreText}`;
+            titleEl.appendChild(badge);
           } else if (item.type === "keyword") {
-             const badge = document.createElement("span");
-             badge.style.fontSize = "0.7em";
-             badge.style.backgroundColor = "var(--tertiary)";
-             badge.style.color = "var(--light)";
-             badge.style.padding = "2px 6px";
-             badge.style.borderRadius = "4px";
-             badge.style.marginRight = "6px";
-             badge.style.verticalAlign = "middle";
-             badge.textContent = `精準比對`;
-             titleEl.appendChild(badge);
+            const badge = document.createElement("span");
+            badge.style.fontSize = "0.7em";
+            badge.style.backgroundColor = "var(--tertiary)";
+            badge.style.color = "var(--light)";
+            badge.style.padding = "2px 6px";
+            badge.style.borderRadius = "4px";
+            badge.style.marginRight = "6px";
+            badge.style.verticalAlign = "middle";
+            badge.textContent = `精準比對`;
+            titleEl.appendChild(badge);
           }
           const titleText = document.createElement("span");
           titleText.innerHTML = item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
           titleEl.appendChild(titleText);
-          
+
           itemTile.appendChild(titleEl);
 
           if (item.tags.length > 0) {
@@ -378,8 +252,7 @@ async function setupSearch() {
     };
 
     const highlightTerm = () => {
-      const parsed = parseSearchQuery(currentSearchTerm);
-      return parsed.query || (parsed.tags.length > 0 ? parsed.tags.join(" ") : currentSearchTerm);
+      return currentSearchTerm.trim();
     };
 
     const updatePreview = async (el: HTMLElement | null) => {
@@ -459,18 +332,10 @@ async function setupSearch() {
     const onType = async (e: Event) => {
       const inputValue = (e.target as HTMLInputElement).value;
       currentSearchTerm = inputValue;
-
-      const partialTag = getCurrentTagToken(inputValue);
-      if (partialTag !== null) {
-        showTagDropdown(partialTag);
-      } else {
-        hideTagDropdown();
-      }
-
+      const requestId = ++latestSearchRequest;
       const parsed = parseSearchQuery(inputValue);
-      const hasContent = parsed.query !== "" || parsed.tags.length > 0;
+      const hasContent = parsed.query !== "";
       searchLayout.classList.toggle("display-results", hasContent);
-      searchType = parsed.tags.length > 0 && !parsed.query ? "tags" : "basic";
 
       if (!hasContent) {
         removeAllChildren(results);
@@ -483,29 +348,29 @@ async function setupSearch() {
 
       searchDebounceTimer = setTimeout(async () => {
         let finalResults: any[] = [];
-        const displayTerm =
-          parsed.query || (parsed.tags.length > 0 ? parsed.tags.join(" ") : inputValue);
+        const displayTerm = parsed.query;
 
         if (parsed.query) {
           // Perform both semantic search and exact keyword search concurrently
           const semanticPromise = fetch(`/api/search?q=${encodeURIComponent(parsed.query)}`)
-            .then(res => res.ok ? res.json() : null)
-            .catch(error => {
+            .then((res) => (res.ok ? res.json() : null))
+            .catch((error) => {
               console.error("Semantic search error:", error);
               return null;
             });
 
           // Only perform keyword search if query length is >= 2
           let exactPromise: Promise<any> | null = null;
-          if (parsed.query.length >= 2) {
+          if (shouldRunExactSearch(parsed.query)) {
             exactPromise = index.searchAsync({
               query: parsed.query,
               limit: 10000,
-              index: ["title", "content"]
+              index: ["title", "content"],
             });
           }
 
           const [semanticData, exactData] = await Promise.all([semanticPromise, exactPromise]);
+          if (requestId !== latestSearchRequest) return;
 
           const resultMap = new Map<string, any>();
 
@@ -519,7 +384,7 @@ async function setupSearch() {
                 title: highlight(displayTerm, r.title || r.slug),
                 content: highlight(displayTerm, r.text || "", true),
                 tags: [],
-                type: "semantic"
+                type: "semantic",
               });
             });
           }
@@ -531,18 +396,20 @@ async function setupSearch() {
               return results.length === 0 ? [] : ([...results[0].result] as number[]);
             };
             const exactIds = new Set([...getByField("title"), ...getByField("content")]);
-            Array.from(exactIds).forEach(id => {
+            Array.from(exactIds).forEach((id) => {
               const slug = idDataMap[id as number];
+              if (!slug) return;
               if (!resultMap.has(slug)) {
                 // Found only by keyword
                 const doc = contentData![slug];
+                if (!doc) return;
                 resultMap.set(slug, {
                   id: slug,
                   slug: slug,
                   title: highlight(displayTerm, doc.title || slug),
                   content: highlight(displayTerm, doc.content || "", true),
                   tags: doc.tags || [],
-                  type: "keyword"
+                  type: "keyword",
                 });
               }
             });
@@ -550,35 +417,9 @@ async function setupSearch() {
 
           // Convert Map to array (preserves insertion order: semantic/both first, then pure keywords)
           finalResults = Array.from(resultMap.values());
-
-        } else if (parsed.tags.length > 0) {
-          const searchResults = await index.searchAsync({
-            query: parsed.tags[0],
-            limit: 10000,
-            index: ["tags"],
-          });
-          
-          const getByField = (field: string): number[] => {
-            const matched = searchResults.filter((x: any) => x.field === field);
-            return matched.length === 0 ? [] : ([...matched[0].result] as number[]);
-          };
-
-          const allIds = new Set<number>([
-            ...getByField("title"),
-            ...getByField("content"),
-            ...getByField("tags"),
-          ]);
-          finalResults = Array.from(allIds).map((id) => {
-            const item = contentData![idDataMap[id]];
-            return {
-              ...item,
-              title: highlight(displayTerm, item.title),
-              content: highlight(displayTerm, item.content, true),
-              tags: highlightTags(parsed.tags, item.tags),
-            };
-          });
         }
 
+        if (requestId !== latestSearchRequest) return;
         await displayResults(finalResults);
         const resultElements = getResultElements();
         setFocus(resultElements[0] ?? null);
@@ -587,7 +428,7 @@ async function setupSearch() {
 
     const onButtonClick = (e: Event) => {
       e.stopPropagation();
-      showSearch("basic");
+      showSearch();
     };
     searchButton.addEventListener("click", onButtonClick);
     addCleanup(() => searchButton.removeEventListener("click", onButtonClick));
@@ -596,38 +437,6 @@ async function setupSearch() {
     addCleanup(() => searchBar.removeEventListener("input", onType));
 
     const onSearchBarKeydown = (e: KeyboardEvent) => {
-      if (tagDropdownVisible) {
-        if (e.key === "ArrowDown") {
-          e.preventDefault();
-          navigateTagDropdown("down");
-          return;
-        }
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
-          navigateTagDropdown("up");
-          return;
-        }
-        if (e.key === "Tab") {
-          e.preventDefault();
-          if (tagSuggestionIndex >= 0 && tagSuggestionIndex < filteredTags.length) {
-            acceptTagSuggestion(filteredTags[tagSuggestionIndex]!);
-          }
-          return;
-        }
-        if (e.key === "Enter" && !e.isComposing) {
-          if (tagSuggestionIndex >= 0 && tagSuggestionIndex < filteredTags.length) {
-            e.preventDefault();
-            acceptTagSuggestion(filteredTags[tagSuggestionIndex]!);
-            return;
-          }
-        }
-        if (e.key === "Escape") {
-          e.preventDefault();
-          hideTagDropdown();
-          return;
-        }
-      }
-
       if (e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab")) {
         e.preventDefault();
         focusPrevious();
@@ -654,22 +463,15 @@ async function setupSearch() {
     const onDocumentKeydown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
         e.preventDefault();
-        container.classList.contains("active") ? hideSearch() : showSearch("basic");
-      } else if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        showSearch("tags");
-        searchBar.value = "#";
-        searchBar.dispatchEvent(new Event("input"));
+        container.classList.contains("active") ? hideSearch() : showSearch();
       }
     };
     document.addEventListener("keydown", onDocumentKeydown);
     addCleanup(() => document.removeEventListener("keydown", onDocumentKeydown));
 
     const storeSearchTerm = () => {
-      const parsed = parseSearchQuery(currentSearchTerm);
-      const term =
-        parsed.query || (parsed.tags.length > 0 ? parsed.tags.join(" ") : currentSearchTerm);
-      if (term.trim()) sessionStorage.setItem("search-term", term.trim());
+      const term = currentSearchTerm.trim();
+      if (term) sessionStorage.setItem("search-term", term);
     };
 
     const onResultsClick = (e: Event) => {
@@ -689,32 +491,6 @@ async function setupSearch() {
     addCleanup(() => {
       results!.removeEventListener("click", onResultsClick);
       results!.removeEventListener("mouseover", onResultsMouseover);
-    });
-
-    const onTagDropdownClick = (e: Event) => {
-      const target = (e.target as HTMLElement).closest(
-        ".tag-suggestion-item",
-      ) as HTMLElement | null;
-      if (!target) return;
-      const tag = target.getAttribute("data-tag");
-      if (tag) acceptTagSuggestion(tag);
-    };
-    const onTagDropdownMouseover = (e: Event) => {
-      const target = (e.target as HTMLElement).closest(
-        ".tag-suggestion-item",
-      ) as HTMLElement | null;
-      if (!target) return;
-      const idx = target.getAttribute("data-index");
-      if (idx !== null) {
-        tagSuggestionIndex = parseInt(idx, 10);
-        updateTagDropdownHighlight();
-      }
-    };
-    tagDropdown.addEventListener("click", onTagDropdownClick);
-    tagDropdown.addEventListener("mouseover", onTagDropdownMouseover);
-    addCleanup(() => {
-      tagDropdown.removeEventListener("click", onTagDropdownClick);
-      tagDropdown.removeEventListener("mouseover", onTagDropdownMouseover);
     });
 
     const cleanupEscapeHandler = registerEscapeHandler(container, hideSearch);
@@ -825,64 +601,14 @@ function highlight(searchTerm: string, text: string, trim?: boolean): string {
   );
 }
 
-function highlightTags(searchTags: string[], tags?: string[]): string[] {
-  if (!tags || tags.length === 0 || searchTags.length === 0) return [];
-  return tags
-    .map((tag) => {
-      const escaped = escapeHTML(tag);
-      if (searchTags.some((st) => tag.toLowerCase().includes(st.toLowerCase()))) {
-        return `<li><p class="match-tag">#${escaped}</p></li>`;
-      } else {
-        return `<li><p>#${escaped}</p></li>`;
-      }
-    })
-    .slice(0, numTagResults);
-}
-
-function formatForDisplay(term: string, id: number): any {
-  const slug = idDataMap[id];
-  if (!slug || !contentData) {
-    return {
-      id,
-      slug: "",
-      title: "",
-      content: "",
-      tags: [],
-    };
-  }
-  const data = contentData[slug];
-  if (!data) {
-    return {
-      id,
-      slug,
-      title: "",
-      content: "",
-      tags: [],
-    };
-  }
-  const parsed = parseSearchQuery(currentSearchTerm);
-  return {
-    id: id,
-    slug: slug,
-    title:
-      parsed.tags.length > 0 && !parsed.query
-        ? escapeHTML(data.title)
-        : highlight(term, data.title || ""),
-    content: highlight(term, data.content || "", true),
-    tags: highlightTags(parsed.tags, data.tags),
-  };
-}
-
 async function fillDocument() {
   if (!contentData) return;
   let id = 0;
   const promises: Array<Promise<unknown>> = [];
-  const tagSet = new Set<string>();
   for (const slug of Object.keys(contentData)) {
     const fileData = contentData[slug];
     if (!fileData) continue;
     idDataMap[id] = slug;
-    for (const tag of fileData.tags || []) tagSet.add(tag);
     promises.push(
       index.addAsync(id, {
         id: id,
@@ -895,7 +621,6 @@ async function fillDocument() {
     id++;
   }
   await Promise.all(promises);
-  allTags = [...tagSet].sort();
 }
 
 async function fetchContentIndex(): Promise<Record<string, Item>> {
@@ -914,7 +639,6 @@ async function initIndex() {
 
 async function addContentIndexEntries(patch: Record<string, Item>): Promise<number> {
   if (!indexInitialized || !contentData) return 0;
-  const tagSet = new Set<string>(allTags);
   let added = 0;
   for (const slug of Object.keys(patch)) {
     if (contentData[slug]) continue;
@@ -923,7 +647,6 @@ async function addContentIndexEntries(patch: Record<string, Item>): Promise<numb
     const id = idDataMap.length;
     idDataMap[id] = slug;
     contentData[slug] = fileData;
-    for (const tag of fileData.tags || []) tagSet.add(tag);
     await index.addAsync(id, {
       id,
       slug,
@@ -933,7 +656,6 @@ async function addContentIndexEntries(patch: Record<string, Item>): Promise<numb
     });
     added++;
   }
-  allTags = [...tagSet].sort();
   return added;
 }
 

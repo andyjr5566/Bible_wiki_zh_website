@@ -31,7 +31,7 @@ const copyFile = async (argv: Argv, fp: FilePath) => {
   const src = joinSegments(argv.directory, fp) as FilePath
 
   const ext = path.extname(fp)
-  let name = slugifyFilePath(fp)
+  let name: string = slugifyFilePath(fp)
   if (ext && !name.endsWith(ext)) {
     name = (name + ext) as FilePath
   }

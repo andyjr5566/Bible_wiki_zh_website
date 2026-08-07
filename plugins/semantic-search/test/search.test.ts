@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import Search from "../src/components/Search";
+import { shouldRunExactSearch } from "../src/components/searchLogic";
 
 describe("Search Component", () => {
   it("exports a component factory function", () => {
@@ -20,5 +21,10 @@ describe("Search Component", () => {
     const SearchComponent = Search();
     expect(SearchComponent.css).toBeDefined();
     expect(SearchComponent.afterDOMLoaded).toBeDefined();
+  });
+
+  it("skips exact matching for one-character queries", () => {
+    expect(shouldRunExactSearch(" 神 ")).toBe(false);
+    expect(shouldRunExactSearch("神蹟")).toBe(true);
   });
 });

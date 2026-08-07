@@ -155,6 +155,19 @@
     max-height: 60vh;
     flex: 0 0 100%;
   }
+
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout
+    > .results-container
+    .result-card
+    > p.card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
 }
 
 .search > .search-container > .search-space > .search-layout .highlight {

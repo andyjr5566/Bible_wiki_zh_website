@@ -579,7 +579,7 @@ async function setupSearch() {
           });
         }
 
-        await displayResults(finalResults.slice(0, numSearchResults));
+        await displayResults(finalResults);
         const resultElements = getResultElements();
         setFocus(resultElements[0] ?? null);
       }, 500);

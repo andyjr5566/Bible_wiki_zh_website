@@ -35,10 +35,10 @@ export default async function handler(req, res) {
     
     const queryEmbedding = embeddingResponse.data[0].embedding
 
-    // 4. Query Pinecone for top 10 matches
+    // 4. Query Pinecone for top 30 matches
     const searchResults = await index.query({
       vector: queryEmbedding,
-      topK: 10,
+      topK: 30,
       includeMetadata: true
     })
 

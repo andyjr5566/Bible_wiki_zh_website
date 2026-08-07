@@ -326,7 +326,7 @@ async function setupSearch() {
           const titleEl = document.createElement("h3");
           titleEl.className = "card-title";
           // Add a badge depending on the match type
-          if (item.type === "semantic" && item.score !== undefined) {
+          if (item.type === "both" || item.type === "semantic") {
              const badge = document.createElement("span");
              badge.style.fontSize = "0.7em";
              badge.style.backgroundColor = "var(--secondary)";
@@ -335,9 +335,10 @@ async function setupSearch() {
              badge.style.borderRadius = "4px";
              badge.style.marginRight = "6px";
              badge.style.verticalAlign = "middle";
-             badge.textContent = `AI 語意: ${Math.round(item.score * 100)}%`;
+             const scoreText = item.score !== undefined ? ` ${Math.round(item.score * 100)}%` : "";
+             badge.textContent = item.type === "both" ? `雙重命中${scoreText}` : `AI 語意${scoreText}`;
              titleEl.appendChild(badge);
-          } else if (item.type === "exact") {
+          } else if (item.type === "keyword") {
              const badge = document.createElement("span");
              badge.style.fontSize = "0.7em";
              badge.style.backgroundColor = "var(--tertiary)";
@@ -346,7 +347,7 @@ async function setupSearch() {
              badge.style.borderRadius = "4px";
              badge.style.marginRight = "6px";
              badge.style.verticalAlign = "middle";
-             badge.textContent = `精準比對`;
+             badge.textContent = `字詞比對`;
              titleEl.appendChild(badge);
           }
           const titleText = document.createElement("span");
@@ -502,45 +503,52 @@ async function setupSearch() {
 
           const [semanticData, exactData] = await Promise.all([semanticPromise, exactPromise]);
 
-          let exactMatches: any[] = [];
+          const resultMap = new Map<string, any>();
+
+          // 1. Process Semantic Matches First (High Priority)
+          if (semanticData && semanticData.results) {
+            semanticData.results.forEach((r: any) => {
+              resultMap.set(r.slug, {
+                id: r.slug,
+                slug: r.slug,
+                score: r.score,
+                title: highlight(displayTerm, r.title || r.slug),
+                content: highlight(displayTerm, r.text || "", true),
+                tags: [],
+                type: "semantic"
+              });
+            });
+          }
+
+          // 2. Process Keyword Matches
           if (exactData) {
             const getByField = (field: string): number[] => {
               const results = exactData.filter((x: any) => x.field === field);
               return results.length === 0 ? [] : ([...results[0].result] as number[]);
             };
             const exactIds = new Set([...getByField("title"), ...getByField("content")]);
-            exactMatches = Array.from(exactIds).map(id => {
+            Array.from(exactIds).forEach(id => {
               const slug = idDataMap[id as number];
-              const doc = contentData![slug];
-              return {
-                id: slug,
-                slug: slug,
-                title: highlight(displayTerm, doc.title || slug),
-                content: highlight(displayTerm, doc.content || "", true),
-                tags: doc.tags || [],
-                type: "exact"
-              };
+              if (resultMap.has(slug)) {
+                // Found by both: Upgrade badge to "both" but keep semantic score
+                resultMap.get(slug).type = "both";
+              } else {
+                // Found only by keyword
+                const doc = contentData![slug];
+                resultMap.set(slug, {
+                  id: slug,
+                  slug: slug,
+                  title: highlight(displayTerm, doc.title || slug),
+                  content: highlight(displayTerm, doc.content || "", true),
+                  tags: doc.tags || [],
+                  type: "keyword"
+                });
+              }
             });
           }
 
-          let semanticMatches: any[] = [];
-          if (semanticData && semanticData.results) {
-            semanticMatches = semanticData.results.map((r: any) => ({
-              id: r.slug,
-              slug: r.slug,
-              score: r.score,
-              title: highlight(displayTerm, r.title || r.slug),
-              content: highlight(displayTerm, r.text || "", true),
-              tags: [],
-              type: "semantic"
-            }));
-          }
-
-          // Deduplicate: remove semantic matches that already appear in exact matches
-          const exactSlugs = new Set(exactMatches.map(m => m.slug));
-          const filteredSemantic = semanticMatches.filter(m => !exactSlugs.has(m.slug));
-
-          finalResults = [...exactMatches, ...filteredSemantic];
+          // Convert Map to array (preserves insertion order: semantic/both first, then pure keywords)
+          finalResults = Array.from(resultMap.values());
 
         } else if (parsed.tags.length > 0) {
           const searchResults = await index.searchAsync({

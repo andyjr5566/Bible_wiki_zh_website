@@ -37,6 +37,16 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Restore Quartz build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .quartz-cache
+            .quartz
+          key: quartz-build-${{ hashFiles('quartz.config.yaml', 'plugins/**', 'quartz/**') }}
+          restore-keys: |
+            quartz-build-
+
       - name: Install dependencies
         run: npm ci
 

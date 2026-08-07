@@ -11,6 +11,8 @@ private/
 replit.nix
 quartz/cli/tui/dist/
 .env
+.env.*
+!.env.example
 *.bak
 api_test.json
 actions.log

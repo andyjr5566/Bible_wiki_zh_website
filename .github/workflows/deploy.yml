@@ -53,6 +53,10 @@ jobs:
       - name: Install Quartz plugins
         run: npx quartz plugin install
 
+      - name: Configure GitHub Pages base URL
+        run: |
+          sed -i 's|baseUrl: bible-wiki-zh-website.vercel.app|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|' quartz.config.yaml
+
       - name: Build Quartz
         run: npx quartz build
 

@@ -236,7 +236,7 @@
     },
     "semantic-search": {
       "source": "./plugins/semantic-search",
-      "resolved": "C:\\Obsidian\\Bible_wiki_zh_website_quartz\\plugins\\semantic-search",
+      "resolved": "./plugins/semantic-search",
       "commit": "local",
       "installedAt": "2026-08-07T09:11:25.524Z"
     },

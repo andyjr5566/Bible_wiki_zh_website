@@ -8,6 +8,31 @@ import {
 } from "@quartz-community/utils";
 import { shouldRunExactSearch } from "../searchLogic";
 
+const GITHUB_PAGES_HOST = "andyjr5566.github.io";
+const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
+const SEARCH_API_ORIGIN = "https://bible-wiki-zh-website.vercel.app";
+
+function isGitHubPagesHost(): boolean {
+  return window.location.hostname === GITHUB_PAGES_HOST;
+}
+
+function getSearchBasePath(): string {
+  const configuredBasePath = document.body?.dataset?.basepath ?? "";
+  if (configuredBasePath) return configuredBasePath;
+  return isGitHubPagesHost() ? GITHUB_PAGES_BASE_PATH : "";
+}
+
+function resolveSearchPath(slug: string): string {
+  return resolveBasePath(slug, getSearchBasePath());
+}
+
+function getSearchApiUrl(query: string): string {
+  const origin = isGitHubPagesHost() ? SEARCH_API_ORIGIN : window.location.origin;
+  const url = new URL("/api/search", origin);
+  url.searchParams.set("q", query);
+  return url.toString();
+}
+
 interface Item {
   id: number;
   slug: string;
@@ -90,7 +115,7 @@ async function fetchContent(slug: string): Promise<Element[]> {
   if (fetchContentCache.has(slug)) {
     return fetchContentCache.get(slug) as Element[];
   }
-  const targetUrl = new URL(resolveBasePath(slug), window.location.origin).toString();
+  const targetUrl = new URL(resolveSearchPath(slug), window.location.origin).toString();
   try {
     const res = await fetch(targetUrl);
     if (!res.ok) return [];
@@ -195,7 +220,7 @@ async function setupSearch() {
           const itemTile = document.createElement("a");
           itemTile.className = "result-card";
           itemTile.id = item.slug;
-          itemTile.href = resolveBasePath(item.slug);
+          itemTile.href = resolveSearchPath(item.slug);
 
           const titleEl = document.createElement("h3");
           titleEl.className = "card-title";
@@ -352,7 +377,7 @@ async function setupSearch() {
 
         if (parsed.query) {
           // Perform both semantic search and exact keyword search concurrently
-          const semanticPromise = fetch(`/api/search?q=${encodeURIComponent(parsed.query)}`)
+          const semanticPromise = fetch(getSearchApiUrl(parsed.query))
             .then((res) => (res.ok ? res.json() : null))
             .catch((error) => {
               console.error("Semantic search error:", error);

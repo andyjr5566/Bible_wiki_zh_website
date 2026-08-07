@@ -2,8 +2,26 @@ import { OpenAI } from "openai"
 import { Pinecone } from "@pinecone-database/pinecone"
 import { normalizeSearchSlug } from "./slug.js"
 
+function setCorsHeaders(req, res) {
+  const origin = req.headers?.origin
+  const allowedOrigin = process.env.SEARCH_CORS_ORIGIN || "https://andyjr5566.github.io"
+
+  if (origin === allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", origin)
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+    res.setHeader("Vary", "Origin")
+  }
+}
+
 // Vercel Serverless Function
 export default async function handler(req, res) {
+  setCorsHeaders(req, res)
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end()
+  }
+
   // Only allow GET requests
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" })

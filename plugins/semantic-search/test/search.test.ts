@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import Search from "../src/components/Search";
-import { shouldRunExactSearch } from "../src/components/searchLogic";
+import {
+  containsExactSearchText,
+  findExactMatchSlugs,
+  shouldRunExactSearch,
+} from "../src/components/searchLogic";
 
 describe("Search Component", () => {
   it("exports a component factory function", () => {
@@ -26,5 +30,22 @@ describe("Search Component", () => {
   it("skips exact matching for one-character queries", () => {
     expect(shouldRunExactSearch(" 神 ")).toBe(false);
     expect(shouldRunExactSearch("神蹟")).toBe(true);
+  });
+
+  it("requires the complete query to occur contiguously", () => {
+    expect(containsExactSearchText("這段文字提到聖靈。", "聖靈哈哈")).toBe(false);
+    expect(containsExactSearchText("這段文字提到聖靈哈哈。", "聖靈哈哈")).toBe(true);
+  });
+
+  it("returns only documents containing the complete query", () => {
+    const results = findExactMatchSlugs(
+      {
+        first: { title: "聖靈", content: "相關內容" },
+        second: { title: "其他", content: "聖靈哈哈出現在這裡" },
+      },
+      "聖靈哈哈",
+    );
+
+    expect(results).toEqual(["second"]);
   });
 });

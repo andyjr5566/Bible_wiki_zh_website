@@ -6,7 +6,7 @@ import {
   resolveBasePath,
   escapeHTML,
 } from "@quartz-community/utils";
-import { shouldRunExactSearch } from "../searchLogic";
+import { findExactMatchSlugs, shouldRunExactSearch } from "../searchLogic";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -387,11 +387,7 @@ async function setupSearch() {
           // Only perform keyword search if query length is >= 2
           let exactPromise: Promise<any> | null = null;
           if (shouldRunExactSearch(parsed.query)) {
-            exactPromise = index.searchAsync({
-              query: parsed.query,
-              limit: 10000,
-              index: ["title", "content"],
-            });
+            exactPromise = Promise.resolve(findExactMatchSlugs(contentData ?? {}, parsed.query));
           }
 
           const [semanticData, exactData] = await Promise.all([semanticPromise, exactPromise]);
@@ -416,13 +412,7 @@ async function setupSearch() {
 
           // 2. Process Keyword Matches
           if (exactData) {
-            const getByField = (field: string): number[] => {
-              const results = exactData.filter((x: any) => x.field === field);
-              return results.length === 0 ? [] : ([...results[0].result] as number[]);
-            };
-            const exactIds = new Set([...getByField("title"), ...getByField("content")]);
-            Array.from(exactIds).forEach((id) => {
-              const slug = idDataMap[id as number];
+            exactData.forEach((slug: string) => {
               if (!slug) return;
               if (!resultMap.has(slug)) {
                 // Found only by keyword

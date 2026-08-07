@@ -188,7 +188,7 @@ plugins:
     layout:
       position: right
       priority: 10
-  - source: github:quartz-community/search
+  - source: ./plugins/semantic-search
     enabled: true
     layout:
       position: left

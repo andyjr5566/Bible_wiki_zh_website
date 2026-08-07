@@ -43,12 +43,17 @@ export default async function handler(req, res) {
     })
 
     // 5. Format results
-    const results = searchResults.matches.map(match => ({
-      score: match.score,
-      slug: match.metadata.slug,
-      title: match.metadata.title,
-      text: match.metadata.text
-    }))
+    const results = searchResults.matches.map(match => {
+      const rawSlug = match.metadata.slug;
+      const slugified = rawSlug ? rawSlug.split("/").map(seg => seg.replace(/\s/g, "-").replace(/&/g, "-and-").replace(/%/g, "-percent").replace(/\?/g, "").replace(/#/g, "").toLowerCase()).join("/") : rawSlug;
+
+      return {
+        score: match.score,
+        slug: slugified,
+        title: match.metadata.title,
+        text: match.metadata.text
+      };
+    })
 
     // Return the results
     return res.status(200).json({ results })

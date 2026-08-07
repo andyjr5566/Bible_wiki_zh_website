@@ -7,6 +7,7 @@ name: Deploy Quartz to GitHub Pages
     paths:
       - "content/**"
       - "quartz/**"
+      - "plugins/**"
       - "quartz.ts"
       - "quartz.config.yaml"
   workflow_dispatch:

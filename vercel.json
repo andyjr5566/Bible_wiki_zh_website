@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx quartz build",
+  "buildCommand": "node -e \"require('fs').rmSync('.quartz/plugins/semantic-search',{recursive:true,force:true})\" && npx quartz build",
   "cleanUrls": true,
   "trailingSlash": false
 }

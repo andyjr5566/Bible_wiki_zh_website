@@ -326,7 +326,7 @@ async function setupSearch() {
           const titleEl = document.createElement("h3");
           titleEl.className = "card-title";
           // Add a badge depending on the match type
-          if (item.type === "both" || item.type === "semantic") {
+          if (item.type === "semantic") {
              const badge = document.createElement("span");
              badge.style.fontSize = "0.7em";
              badge.style.backgroundColor = "var(--secondary)";
@@ -336,7 +336,7 @@ async function setupSearch() {
              badge.style.marginRight = "6px";
              badge.style.verticalAlign = "middle";
              const scoreText = item.score !== undefined ? ` ${Math.round(item.score * 100)}%` : "";
-             badge.textContent = item.type === "both" ? `雙重命中${scoreText}` : `AI 語意${scoreText}`;
+             badge.textContent = `AI 語意${scoreText}`;
              titleEl.appendChild(badge);
           } else if (item.type === "keyword") {
              const badge = document.createElement("span");
@@ -347,7 +347,7 @@ async function setupSearch() {
              badge.style.borderRadius = "4px";
              badge.style.marginRight = "6px";
              badge.style.verticalAlign = "middle";
-             badge.textContent = `字詞比對`;
+             badge.textContent = `精準比對`;
              titleEl.appendChild(badge);
           }
           const titleText = document.createElement("span");
@@ -495,11 +495,15 @@ async function setupSearch() {
               return null;
             });
 
-          const exactPromise = index.searchAsync({
-            query: parsed.query,
-            limit: 100, // Top 100 exact matches
-            index: ["title", "content"]
-          });
+          // Only perform keyword search if query length is >= 2
+          let exactPromise: Promise<any> | null = null;
+          if (parsed.query.length >= 2) {
+            exactPromise = index.searchAsync({
+              query: parsed.query,
+              limit: 10000,
+              index: ["title", "content"]
+            });
+          }
 
           const [semanticData, exactData] = await Promise.all([semanticPromise, exactPromise]);
 
@@ -529,10 +533,7 @@ async function setupSearch() {
             const exactIds = new Set([...getByField("title"), ...getByField("content")]);
             Array.from(exactIds).forEach(id => {
               const slug = idDataMap[id as number];
-              if (resultMap.has(slug)) {
-                // Found by both: Upgrade badge to "both" but keep semantic score
-                resultMap.get(slug).type = "both";
-              } else {
+              if (!resultMap.has(slug)) {
                 // Found only by keyword
                 const doc = contentData![slug];
                 resultMap.set(slug, {

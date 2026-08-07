@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: zh-TW
-  baseUrl: andyjr5566.github.io/Bible_wiki_zh_website
+  baseUrl: bible-wiki-zh-website.vercel.app
   ignorePatterns:
     - private
     - templates

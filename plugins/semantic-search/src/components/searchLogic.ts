@@ -39,3 +39,24 @@ export function findExactMatchSlugs(
     })
     .map(([slug]) => slug);
 }
+
+/** Extract a readable book name from a Quartz slug such as 04-民數記/第16章. */
+export function getBookNameFromSlug(slug: string): string {
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // Keep the original slug when it contains malformed URL encoding.
+  }
+
+  const segments = decodedSlug.split(/[\\/]/).filter(Boolean);
+  if (segments.length < 2) return "";
+
+  const parentSegment = segments.at(-2);
+  if (!parentSegment) return "";
+
+  return parentSegment
+    .replace(/^\d+[-_\s]*/, "")
+    .replace(/-/g, " ")
+    .trim();
+}

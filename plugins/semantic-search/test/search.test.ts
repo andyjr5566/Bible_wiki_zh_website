@@ -3,6 +3,7 @@ import Search from "../src/components/Search";
 import {
   containsExactSearchText,
   findExactMatchSlugs,
+  getBookNameFromSlug,
   shouldRunExactSearch,
 } from "../src/components/searchLogic";
 
@@ -47,5 +48,11 @@ describe("Search Component", () => {
     );
 
     expect(results).toEqual(["second"]);
+  });
+
+  it("extracts the book name from chapter slugs", () => {
+    expect(getBookNameFromSlug("04-民數記/第16章")).toBe("民數記");
+    expect(getBookNameFromSlug("民數記/第16章")).toBe("民數記");
+    expect(getBookNameFromSlug("第16章")).toBe("");
   });
 });

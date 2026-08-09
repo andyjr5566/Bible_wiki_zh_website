@@ -6,7 +6,7 @@ import {
   resolveBasePath,
   escapeHTML,
 } from "@quartz-community/utils";
-import { findExactMatchSlugs, shouldRunExactSearch } from "../searchLogic";
+import { findExactMatchSlugs, getBookNameFromSlug, shouldRunExactSearch } from "../searchLogic";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -250,7 +250,11 @@ async function setupSearch() {
             titleEl.appendChild(badge);
           }
           const titleText = document.createElement("span");
-          titleText.innerHTML = item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
+          const bookName = getBookNameFromSlug(item.slug);
+          const plainTitle = item.title.replace(/<[^>]*>/g, "");
+          const bookPrefix =
+            bookName && !plainTitle.includes(bookName) ? `${escapeHTML(bookName)} ` : "";
+          titleText.innerHTML = `${bookPrefix}${item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "")}`;
           titleEl.appendChild(titleText);
 
           itemTile.appendChild(titleEl);

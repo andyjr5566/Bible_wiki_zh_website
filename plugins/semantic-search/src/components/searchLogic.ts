@@ -11,6 +11,29 @@ export interface ExactSearchItem {
   tags?: string[];
 }
 
+const EXCLUDED_SEARCH_BASENAMES = new Set([
+  "index",
+  "readme",
+  "install-computer",
+  "install-mobile",
+  "license",
+  "changelog",
+  "contributing",
+  "code-of-conduct",
+]);
+
+export function isSearchExcludedSlug(slug: string): boolean {
+  const basename = slug
+    .split(/[\\/]/)
+    .filter(Boolean)
+    .at(-1)
+    ?.replace(/\.(?:md|html)$/i, "")
+    .replace(/[_\s]+/g, "-")
+    .toLowerCase();
+
+  return basename ? EXCLUDED_SEARCH_BASENAMES.has(basename) : true;
+}
+
 /**
  * Exact search means the complete query occurs as one contiguous substring.
  * Do not split CJK queries into individual characters: "聖靈哈哈" must not
@@ -31,6 +54,7 @@ export function findExactMatchSlugs(
   query: string,
 ): string[] {
   return Object.entries(items)
+    .filter(([slug]) => !isSearchExcludedSlug(slug))
     .filter(([, item]) => {
       const searchableText = [item.title ?? "", item.content ?? "", ...(item.tags ?? [])].join(
         "\n",

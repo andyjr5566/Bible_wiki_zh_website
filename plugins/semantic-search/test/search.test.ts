@@ -4,6 +4,7 @@ import {
   containsExactSearchText,
   findExactMatchSlugs,
   getBookNameFromSlug,
+  isSearchExcludedSlug,
   shouldRunExactSearch,
 } from "../src/components/searchLogic";
 
@@ -54,5 +55,12 @@ describe("Search Component", () => {
     expect(getBookNameFromSlug("04-民數記/第16章")).toBe("民數記");
     expect(getBookNameFromSlug("民數記/第16章")).toBe("民數記");
     expect(getBookNameFromSlug("第16章")).toBe("");
+  });
+
+  it("excludes technical pages from search", () => {
+    expect(isSearchExcludedSlug("index")).toBe(true);
+    expect(isSearchExcludedSlug("README")).toBe(true);
+    expect(isSearchExcludedSlug("INSTALL_COMPUTER")).toBe(true);
+    expect(isSearchExcludedSlug("04-民數記/第16章")).toBe(false);
   });
 });

@@ -6,7 +6,12 @@ import {
   resolveBasePath,
   escapeHTML,
 } from "@quartz-community/utils";
-import { findExactMatchSlugs, getBookNameFromSlug, shouldRunExactSearch } from "../searchLogic";
+import {
+  findExactMatchSlugs,
+  getBookNameFromSlug,
+  isSearchExcludedSlug,
+  shouldRunExactSearch,
+} from "../searchLogic";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -402,6 +407,7 @@ async function setupSearch() {
           // 1. Process Semantic Matches First (High Priority)
           if (semanticData && semanticData.results) {
             semanticData.results.forEach((r: any) => {
+              if (isSearchExcludedSlug(r.slug)) return;
               resultMap.set(r.slug, {
                 id: r.slug,
                 slug: r.slug,

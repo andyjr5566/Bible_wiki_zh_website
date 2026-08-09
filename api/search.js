@@ -2,6 +2,29 @@ import { OpenAI } from "openai"
 import { Pinecone } from "@pinecone-database/pinecone"
 import { normalizeSearchSlug } from "./slug.js"
 
+const EXCLUDED_SEARCH_BASENAMES = new Set([
+  "index",
+  "readme",
+  "install-computer",
+  "install-mobile",
+  "license",
+  "changelog",
+  "contributing",
+  "code-of-conduct",
+])
+
+function isSearchExcludedSlug(slug) {
+  const basename = slug
+    .split(/[\\/]/)
+    .filter(Boolean)
+    .at(-1)
+    ?.replace(/\.(?:md|html)$/i, "")
+    .replace(/[_\s]+/g, "-")
+    .toLowerCase()
+
+  return basename ? EXCLUDED_SEARCH_BASENAMES.has(basename) : true
+}
+
 function setCorsHeaders(req, res) {
   const origin = req.headers?.origin
   const allowedOrigin = process.env.SEARCH_CORS_ORIGIN || "https://andyjr5566.github.io"
@@ -55,10 +78,10 @@ export default async function handler(req, res) {
 
     const queryEmbedding = embeddingResponse.data[0].embedding
 
-    // 4. Return the ten best semantic matches required by the search UI.
+    // Fetch extra candidates so excluded technical pages do not reduce the final top 10.
     const searchResults = await index.query({
       vector: queryEmbedding,
-      topK: 10,
+      topK: 50,
       includeMetadata: true,
     })
 
@@ -67,7 +90,7 @@ export default async function handler(req, res) {
       .map((match) => {
         const metadata = match.metadata ?? {}
         const slug = normalizeSearchSlug(metadata.slug)
-        if (!slug) return null
+        if (!slug || isSearchExcludedSlug(slug)) return null
 
         return {
           score: match.score,
@@ -77,6 +100,7 @@ export default async function handler(req, res) {
         }
       })
       .filter(Boolean)
+      .slice(0, 10)
 
     // Return the results
     return res.status(200).json({ results })

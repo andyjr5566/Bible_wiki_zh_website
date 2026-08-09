@@ -236,6 +236,29 @@ async function embedAndUpsert(index, openai, records) {
   }
 }
 
+function getIndexRecordCount(stats) {
+  const directCount = Number(stats?.totalRecordCount ?? stats?.totalVectorCount)
+  if (Number.isFinite(directCount)) return directCount
+
+  return Object.values(stats?.namespaces ?? {}).reduce((total, namespaceStats) => {
+    const count = Number(namespaceStats?.recordCount ?? namespaceStats?.vectorCount ?? 0)
+    return total + (Number.isFinite(count) ? count : 0)
+  }, 0)
+}
+
+async function clearDefaultNamespace(index) {
+  const stats = await index.describeIndexStats()
+  const recordCount = getIndexRecordCount(stats)
+
+  if (recordCount <= 0) {
+    console.log("Pinecone index is empty; skipping deleteAll().")
+    return
+  }
+
+  console.log(`Deleting ${recordCount} existing vectors for the full rebuild...`)
+  await index.deleteAll()
+}
+
 async function main() {
   const changedPaths = FULL_REBUILD ? [] : await readChangedPaths()
   const files = FULL_REBUILD
@@ -272,8 +295,7 @@ async function main() {
   const index = pinecone.index(process.env.PINECONE_INDEX_NAME)
 
   if (FULL_REBUILD) {
-    console.log("Deleting all vectors for the full rebuild...")
-    await index.deleteAll()
+    await clearDefaultNamespace(index)
   } else {
     for (const relativePath of sourcePaths) {
       const source = getSourceInfo(relativePath)

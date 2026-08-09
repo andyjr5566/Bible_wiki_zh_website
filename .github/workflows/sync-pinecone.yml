@@ -1,0 +1,65 @@
+name: Sync Pinecone embeddings
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "content/**"
+      - "scripts/generate_embeddings.js"
+      - "api/slug.js"
+  workflow_dispatch:
+    inputs:
+      full_rebuild:
+        description: "Delete the namespace and rebuild every searchable page"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Collect changed content files
+        shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            : > changed-files.txt
+          elif [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
+            git diff-tree --no-commit-id --name-only -r "$AFTER_SHA" -- content > changed-files.txt
+          else
+            git diff --name-only "$BEFORE_SHA" "$AFTER_SHA" -- content > changed-files.txt
+          fi
+          echo "Changed files:"
+          cat changed-files.txt
+
+      - name: Sync embeddings
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_INDEX_NAME: ${{ secrets.PINECONE_INDEX_NAME }}
+          CHANGED_FILES_FILE: changed-files.txt
+          FULL_REBUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.full_rebuild || 'false' }}
+        run: node scripts/generate_embeddings.js

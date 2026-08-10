@@ -15,6 +15,11 @@ on:
         required: true
         default: false
         type: boolean
+      sync_commit:
+        description: "Sync content changes from a specific commit, for example d0bb478"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -44,9 +49,22 @@ jobs:
           BEFORE_SHA: ${{ github.event.before }}
           AFTER_SHA: ${{ github.sha }}
           EVENT_NAME: ${{ github.event_name }}
+          FULL_REBUILD_INPUT: ${{ inputs.full_rebuild }}
+          SYNC_COMMIT: ${{ inputs.sync_commit }}
         run: |
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            : > changed-files.txt
+            if [[ "$FULL_REBUILD_INPUT" == "true" ]]; then
+              : > changed-files.txt
+            elif [[ -n "$SYNC_COMMIT" ]]; then
+              if ! [[ "$SYNC_COMMIT" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
+                echo "sync_commit must be a commit SHA"
+                exit 1
+              fi
+              git rev-parse --verify "${SYNC_COMMIT}^{commit}" >/dev/null
+              git -c core.quotePath=false diff --name-only "${SYNC_COMMIT}^" "$SYNC_COMMIT" -- content > changed-files.txt
+            else
+              : > changed-files.txt
+            fi
           elif [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
             git -c core.quotePath=false diff-tree --no-commit-id --name-only -r "$AFTER_SHA" -- content > changed-files.txt
           else

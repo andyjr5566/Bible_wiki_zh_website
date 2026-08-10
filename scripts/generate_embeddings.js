@@ -14,6 +14,8 @@ const CONTENT_DIR = process.env.CONTENT_DIR || "content"
 const CHUNK_SIZE = Number(process.env.EMBED_CHUNK_SIZE || 1200)
 const CHUNK_OVERLAP = Number(process.env.EMBED_CHUNK_OVERLAP || 150)
 const EMBED_BATCH_SIZE = Number(process.env.EMBED_BATCH_SIZE || 32)
+const DELETE_SOURCE_BATCH_SIZE = Number(process.env.DELETE_SOURCE_BATCH_SIZE || 50)
+const DELETE_RETRY_ATTEMPTS = Number(process.env.DELETE_RETRY_ATTEMPTS || 5)
 const FULL_REBUILD = process.env.FULL_REBUILD === "true"
 const DRY_RUN = process.env.DRY_RUN === "true"
 
@@ -26,10 +28,7 @@ function isEmbeddablePath(relativePath) {
   const normalized = normalizeRelativePath(relativePath)
   const topLevel = normalized.split("/")[0] || ""
 
-  return (
-    /^\d{2}\s.+\/.+\.md$/i.test(normalized) ||
-    /^link_folder\/.+\.md$/i.test(normalized)
-  )
+  return /^\d{2}\s.+\/.+\.md$/i.test(normalized) || /^link_folder\/.+\.md$/i.test(normalized)
 }
 
 function stripFrontmatter(markdown) {
@@ -56,7 +55,9 @@ function nodeToText(node) {
 
 /** Keep headings as context while excluding code and generated navigation. */
 function extractSections(markdown) {
-  const tree = unified().use(remarkParse).parse(removeGeneratedSections(stripFrontmatter(markdown)))
+  const tree = unified()
+    .use(remarkParse)
+    .parse(removeGeneratedSections(stripFrontmatter(markdown)))
   const sections = []
   let currentHeading = ""
 
@@ -196,7 +197,9 @@ async function readChangedPaths() {
     .split(/\r?\n/)
     .map((line) => normalizeRelativePath(line.trim()))
     .filter(Boolean)
-    .map((filePath) => (filePath.startsWith(contentPrefix) ? filePath.slice(contentPrefix.length) : filePath))
+    .map((filePath) =>
+      filePath.startsWith(contentPrefix) ? filePath.slice(contentPrefix.length) : filePath,
+    )
 }
 
 async function pathExists(filePath) {
@@ -232,7 +235,9 @@ async function embedAndUpsert(index, openai, records) {
       })),
     })
 
-    console.log(`Upserted ${Math.min(offset + batch.length, records.length)}/${records.length} chunks`)
+    console.log(
+      `Upserted ${Math.min(offset + batch.length, records.length)}/${records.length} chunks`,
+    )
   }
 }
 
@@ -257,6 +262,47 @@ async function clearDefaultNamespace(index) {
 
   console.log(`Deleting ${recordCount} existing vectors for the full rebuild...`)
   await index.deleteAll()
+}
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
+}
+
+function isRateLimitError(error) {
+  const message = error instanceof Error ? error.message : String(error)
+  return /\b429\b|rate limit|too many requests/i.test(message)
+}
+
+async function deleteChangedSources(index, sourcePaths) {
+  const slugs = [
+    ...new Set(
+      sourcePaths.map((relativePath) => getSourceInfo(relativePath)?.slug).filter(Boolean),
+    ),
+  ]
+
+  for (let offset = 0; offset < slugs.length; offset += DELETE_SOURCE_BATCH_SIZE) {
+    const batch = slugs.slice(offset, offset + DELETE_SOURCE_BATCH_SIZE)
+    let attempt = 0
+
+    while (true) {
+      try {
+        await index.deleteMany({ filter: { slug: { $in: batch } } })
+        break
+      } catch (error) {
+        if (!isRateLimitError(error) || attempt >= DELETE_RETRY_ATTEMPTS) throw error
+
+        const delay = Math.min(30_000, 1_000 * 2 ** attempt)
+        console.log(`Pinecone delete rate limit reached; retrying in ${delay}ms...`)
+        await sleep(delay)
+        attempt++
+      }
+    }
+
+    console.log(
+      `Deleted vectors for ${Math.min(offset + batch.length, slugs.length)}/${slugs.length} changed sources`,
+    )
+    if (offset + batch.length < slugs.length) await sleep(250)
+  }
 }
 
 async function main() {
@@ -297,12 +343,7 @@ async function main() {
   if (FULL_REBUILD) {
     await clearDefaultNamespace(index)
   } else {
-    for (const relativePath of sourcePaths) {
-      const source = getSourceInfo(relativePath)
-      if (source) {
-        await index.deleteMany({ filter: { slug: { $eq: source.slug } } })
-      }
-    }
+    await deleteChangedSources(index, sourcePaths)
   }
 
   const records = []

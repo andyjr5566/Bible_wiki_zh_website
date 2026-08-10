@@ -48,9 +48,9 @@ jobs:
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             : > changed-files.txt
           elif [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
-            git diff-tree --no-commit-id --name-only -r "$AFTER_SHA" -- content > changed-files.txt
+            git -c core.quotePath=false diff-tree --no-commit-id --name-only -r "$AFTER_SHA" -- content > changed-files.txt
           else
-            git diff --name-only "$BEFORE_SHA" "$AFTER_SHA" -- content > changed-files.txt
+            git -c core.quotePath=false diff --name-only "$BEFORE_SHA" "$AFTER_SHA" -- content > changed-files.txt
           fi
           echo "Changed files:"
           cat changed-files.txt

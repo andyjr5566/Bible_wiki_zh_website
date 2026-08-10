@@ -70,7 +70,7 @@ source_scope: collected_only
 - [[認罪]]
 - [[血]]
 - [[聖物]]
-- [[賠償（shalem）]]
+- [[賠償]]
 
 ## 來源依據
 

@@ -34,7 +34,7 @@ source_scope: collected_only
 - [[受膏的祭司（mashiach kohen）]]
 - [[全會眾（kol ha-edah）]]
 - [[以色列人的官長]]
-- [[按手（samak）]]
+- [[按手]]
 - [[灑血（zaraq）]]
 
 ## 來源依據

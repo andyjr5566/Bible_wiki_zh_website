@@ -55,7 +55,7 @@ source_scope: collected_only
 ## 相關條目
 
 - [[平安祭]]
-- [[脂油（chelev）]]
+- [[脂油]]
 - [[腰子（kilyah）]]
 - [[火祭（isheh）]]
 - [[內臟（qereb）]]

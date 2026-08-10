@@ -42,7 +42,7 @@ source_scope: collected_only
 ## 相關條目
 
 - [[平安祭]]
-- [[脂油（chelev）]]
+- [[脂油]]
 - [[腰子（kilyah）]]
 - [[肝上的網子（yoteret ha-kaved）]]
 - [[肥尾巴（alyah）]]

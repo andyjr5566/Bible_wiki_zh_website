@@ -44,9 +44,9 @@ source_scope: collected_only
 - [[受膏的祭司（mashiach kohen）]]
 - [[全會眾（kol ha-edah）]]
 - [[贖罪祭]]
-- [[營外焚燒（machutz la-machaneh saraf）]]
+- [[營外焚燒]]
 - [[潔淨之地（maqom tahor）]]
-- [[脂油（chelev）]]
+- [[脂油]]
 
 ## 來源依據
 

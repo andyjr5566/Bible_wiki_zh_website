@@ -17,8 +17,8 @@ source_scope: collected_only
 ### 出埃及記
 <!-- accumulation:出埃及記:24:start -->
 #### [[02 出埃及記/第24章|第24章]]
-- 本章重點：向耶和華獻牛為平安祭（v5），與燔祭並獻。平安祭的祭肉歸獻祭者分享，預表立約後神與百姓同席吃喝（v11長老看見神又吃又喝）。
-- 與本章關聯：燔祭（全歸神）與平安祭（神人同享）雙重獻祭，完整表達立約關係——完全獻上自己（燔祭），並進入與神的交通（平安祭）。
+- 本章重點：出二十四5「又向耶和華獻牛為平安祭」。CT 的原文字義給「平安」為「平安祭，結盟的祭」，並解為「甘心還願的火祭，脂油全然焚燒給神享受，祭肉則歸獻祭的人分享」；CT 並註明「牛」在原文是複數。GT《中文聖經註釋》指出這個複數的含意：「這裏提到的牛是複數，表明當日他們『在神面前喫喝』，以表彼此立約的人數為頗多。」GT《舊約聖經背景註釋》說明為何這種祭適合立約：「立約儀式獻這種祭十分適宜，因為它是為參與者分享而設的。完全燒在壇上的只是祭牲的一部分，餘下的部分用來設宴，來締結人神之間的條約協定。」
+- 與本章關聯：第11節的「又吃又喝」正是這祭的後半。GT《丁道爾聖經註釋》指出「『又吃又喝』所指的，大概是『燔祭』之後獻上的『平安祭』」，並反問：「不然祭肉怎麼處理呢？」KC 也說平安祭是相交的祭，「其中表達了耶和華與祂百姓之間的相交」。
 <!-- accumulation:出埃及記:24:end -->
 
 ### 利未記
@@ -101,12 +101,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 出埃及記24:5
-- 利未記3章, 7:11-36
-- 歌羅西書1:20
-- 以弗所書2:14-17
-- 哥林多前書10:16-17, 11:23-26
-- CT: https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT24.htm
-- GT: https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm
-- KC: https://www.kingcomments.com/en/bible-studies/Exo/24
-- BH: https://biblehub.com/study/exodus/24.htm
+- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT24.htm — ccbiblestudy 註解（CT）出埃及記第24章
+- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm — ccbiblestudy 拾穗（GT）出埃及記第24章
+- https://www.kingcomments.com/en/bible-studies/Exo/24 — KingComments 出埃及記第24章
+- https://biblehub.com/study/exodus/24.htm — BibleHub Study 出埃及記第24章

@@ -49,7 +49,7 @@ source_scope: collected_only
 ## 相關條目
 
 - [[平安祭]]
-- [[脂油（chelev）]]
+- [[脂油]]
 - [[火祭（isheh）]]
 - [[綿羊]]
 - [[馨香之氣]]

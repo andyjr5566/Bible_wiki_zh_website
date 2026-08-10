@@ -39,7 +39,7 @@ source_scope: collected_only
 - [[赦免（salach）]]
 - [[無殘疾（tamim）]]
 - [[贖罪]]
-- [[按手（samak）]]
+- [[按手]]
 - [[灑血（zaraq）]]
 
 ## 來源依據

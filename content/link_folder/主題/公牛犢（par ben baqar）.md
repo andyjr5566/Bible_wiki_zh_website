@@ -39,10 +39,10 @@ source_scope: collected_only
 - [[全會眾（kol ha-edah）]]
 - [[贖罪祭]]
 - [[金香壇（香壇）]]
-- [[營外焚燒（machutz la-machaneh saraf）]]
+- [[營外焚燒]]
 - [[無殘疾（tamim）]]
 - [[灑血（zaraq）]]
-- [[脂油（chelev）]]
+- [[脂油]]
 
 ## 來源依據
 

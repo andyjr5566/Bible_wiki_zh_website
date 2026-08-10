@@ -35,7 +35,7 @@ source_scope: collected_only
 
 ## 相關條目
 
-- [[營外焚燒（machutz la-machaneh saraf）]]
+- [[營外焚燒]]
 - [[受膏的祭司（mashiach kohen）]]
 - [[全會眾（kol ha-edah）]]
 - [[贖罪祭]]

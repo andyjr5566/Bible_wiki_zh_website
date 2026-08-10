@@ -17,8 +17,8 @@ source_scope: collected_only
 ### 出埃及記
 <!-- accumulation:出埃及記:24:start -->
 #### [[02 出埃及記/第24章|第24章]]
-- 本章重點：打發少年人獻燔祭（v5），作為立約儀式的一部分。燔祭全然焚燒歸神，與平安祭（人可分享祭肉）對比，顯示立約要求百姓全然歸神。
-- 與本章關聯：燔祭與平安祭並獻，構成立約獻祭的雙重意義——燔祭表達對神的完全獻上，平安祭表達與神和好後的交通。
+- 本章重點：出二十四5「又打發以色列人中的少年人去獻燔祭」。CT 的原文字義給「燔祭」為「燔祭，升高」，並解為「馨香的火祭，全然焚燒獻給神，以討神悅納」。GT 丁良才說「燔祭有贖罪和貢獻的意思，表明以色列人將自己獻與神」。GT《中文聖經註釋》則從立約的次序解釋為何先獻燔祭：「獻燔祭是將祭牲全部燒化，表明『完成感恩』，以討神喜悅的祭祀。所以首先獻上燔祭，表明百姓接納此約，以討神悅納。」BH 也指出燔祭「象徵贖罪與獻身」，整隻牲畜被火燒盡「代表完全順服於神的旨意」。
+- 與本章關聯：KC 把兩種祭的分工說明白：「燔祭全然歸耶和華」，而平安祭是相交的祭。CT 也說：「獻燔祭是為討神喜悅，獻平安祭是為使人得與神有平安，在獻祭的事上兼顧神和人，而唯有先讓神得著滿足，人才能有所享受。」
 <!-- accumulation:出埃及記:24:end -->
 
 ### 利未記
@@ -92,11 +92,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 出埃及記24:5
-- 利未記1章
-- 希伯來書10:5-10
-- 羅馬書12:1
-- CT: https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT24.htm
-- GT: https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm
-- KC: https://www.kingcomments.com/en/bible-studies/Exo/24
-- BH: https://biblehub.com/study/exodus/24.htm
+- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT24.htm — ccbiblestudy 註解（CT）出埃及記第24章
+- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm — ccbiblestudy 拾穗（GT）出埃及記第24章
+- https://www.kingcomments.com/en/bible-studies/Exo/24 — KingComments 出埃及記第24章
+- https://biblehub.com/study/exodus/24.htm — BibleHub Study 出埃及記第24章

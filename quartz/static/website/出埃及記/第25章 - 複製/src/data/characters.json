@@ -1,0 +1,9 @@
+{
+  "characters": [
+    { "id": "aaron-high-priest", "name": "大祭司亞倫（教學重建）", "role": "HighPriest", "baseAssetId": null, "navigation": { "spawnLocationId": "holy-place", "routeLocationIds": ["laver-location", "holy-place", "most-holy-place"], "movementProfile": "ritual-route" }, "animations": { "idle": "idle", "walk": "walk", "ritual": { "washing": "wash", "incense": "offer-incense", "atonement-entry": "enter" } }, "scriptureReferences": ["Exodus 28:1-43", "Exodus 39:1-31"], "garments": [
+      { "slot": "Ephod", "assetId": null, "confidence": "textual" }, { "slot": "Breastpiece", "assetId": null, "confidence": "textual" }, { "slot": "TurbanMiter", "assetId": null, "confidence": "textual" }, { "slot": "Robe", "assetId": null, "confidence": "textual" }, { "slot": "Tunic", "assetId": null, "confidence": "textual" }, { "slot": "GoldPlate", "assetId": null, "confidence": "textual" }
+    ] },
+    { "id": "serving-priest", "name": "供職祭司（教學重建）", "role": "Priest", "baseAssetId": null, "navigation": { "spawnLocationId": "burnt-altar-location", "routeLocationIds": ["burnt-altar-location", "laver-location", "holy-place"], "movementProfile": "ritual-route" }, "animations": { "idle": "idle", "walk": "walk", "ritual": { "washing": "wash", "burnt-offering": "offer", "lamp-care": "tend-lamp", "shewbread": "arrange-bread" } }, "scriptureReferences": ["Exodus 29:1-46"], "garments": [{ "slot": "Tunic", "assetId": null, "confidence": "textual" }] },
+    { "id": "levite-helper", "name": "利未人／助手（教學角色）", "role": "LeviteHelper", "baseAssetId": null, "navigation": { "spawnLocationId": "east-gate", "routeLocationIds": ["east-gate", "burnt-altar-location"], "movementProfile": "ambient-route" }, "animations": { "idle": "idle", "walk": "walk", "ritual": {} }, "scriptureReferences": ["Numbers 3:5-10"], "garments": [{ "slot": "Tunic", "assetId": null, "confidence": "reconstructed" }] }
+  ]
+}

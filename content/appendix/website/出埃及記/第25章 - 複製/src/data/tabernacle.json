@@ -1,0 +1,13 @@
+{
+  "id": "wilderness-tabernacle",
+  "name": "曠野會幕",
+  "purpose": "以經文、3D 空間與教學重建連結出埃及記的會幕描述。",
+  "objects": [
+    { "id": "burnt-altar", "name": "燔祭壇", "locationId": "burnt-altar-location", "assetId": "tabernacle-burnt-altar-detail", "interactionPosition": { "x": 0, "y": 0, "z": 9 }, "confidence": "textual", "scriptureReferences": ["Exodus 27:1-8"], "interactable": true },
+    { "id": "laver", "name": "洗濯盆", "locationId": "laver-location", "assetId": "tabernacle-laver-detail", "interactionPosition": { "x": 0, "y": 0, "z": 0 }, "confidence": "textual", "scriptureReferences": ["Exodus 30:17-21"], "interactable": true },
+    { "id": "incense-altar", "name": "香壇", "locationId": "holy-place", "assetId": "tabernacle-incense-altar-detail", "interactionPosition": { "x": 0, "y": 0, "z": -5.2 }, "confidence": "textual", "scriptureReferences": ["Exodus 30:1-10"], "interactable": true },
+    { "id": "menorah", "name": "金燈臺", "locationId": "holy-place", "assetId": "tabernacle-menorah-detail", "interactionPosition": { "x": -1.2, "y": 0, "z": -4.35 }, "confidence": "textual", "scriptureReferences": ["Exodus 25:31-40"], "interactable": true },
+    { "id": "shewbread-table", "name": "陳設餅桌", "locationId": "holy-place", "assetId": "tabernacle-table-shewbread-detail", "interactionPosition": { "x": 1.2, "y": 0, "z": -4.35 }, "confidence": "textual", "scriptureReferences": ["Exodus 25:23-30"], "interactable": true },
+    { "id": "ark", "name": "約櫃", "locationId": "most-holy-place", "assetId": "tabernacle-ark-alternative", "interactionPosition": { "x": 0, "y": 0, "z": -9 }, "confidence": "textual", "scriptureReferences": ["Exodus 25:10-22"], "interactable": true }
+  ]
+}

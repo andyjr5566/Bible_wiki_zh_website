@@ -1,0 +1,30 @@
+{
+  "name": "interactive-biblical-tabernacle",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Non-commercial high-fidelity interactive Biblical Tabernacle architecture skeleton",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 3001",
+    "build": "npm run verify && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify:architecture": "node scripts/verify-architecture.mjs",
+    "verify:assets": "node scripts/verify-assets.mjs",
+    "verify": "npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets",
+    "process:assets": "node scripts/process-sketchfab-assets.mjs"
+  },
+  "dependencies": {
+    "three": "^0.162.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.2.0",
+    "@types/three": "^0.162.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5"
+  }
+}

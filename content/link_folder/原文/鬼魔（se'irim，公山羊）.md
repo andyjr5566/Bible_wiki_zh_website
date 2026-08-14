@@ -26,7 +26,7 @@ source_scope: collected_only
 ## 相關條目
 
 - [[私宰祭牲須獻為平安祭的條例]]
-- [[平安祭（shelamim）]]
+- [[平安祭]]
 
 ## 來源依據
 

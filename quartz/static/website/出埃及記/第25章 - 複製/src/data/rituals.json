@@ -1,0 +1,34 @@
+{
+  "rituals": [
+    {
+      "id": "priestly-washing", "name": "祭司洗濯", "type": "washing", "locationId": "laver-location", "confidence": "textual",
+      "trigger": { "kind": "interaction", "objectId": "laver" },
+      "steps": [{ "id": "washing-hands-feet", "order": 1, "title": "洗手洗腳", "instruction": "祭司進入會幕或走近壇前，先在盆中洗濯。", "confidence": "textual", "objectIds": ["laver"], "characterIds": ["serving-priest"], "scriptureReferences": ["Exodus 30:17-21"], "playbackHook": "character.wash", "uiHook": "learning.show-washing" }]
+    },
+    {
+      "id": "burnt-offering-service", "name": "燔祭", "type": "burnt-offering", "locationId": "burnt-altar-location", "confidence": "textual",
+      "trigger": { "kind": "interaction", "objectId": "burnt-altar" },
+      "steps": [{ "id": "burnt-offering-at-altar", "order": 1, "title": "在壇上獻燔祭", "instruction": "以非寫實、教育性呈現標示祭壇與程序位置。", "confidence": "textual", "objectIds": ["burnt-altar"], "characterIds": ["serving-priest"], "scriptureReferences": ["Leviticus 1:1-17"], "playbackHook": "ritual.burnt-offering", "uiHook": "learning.show-offering" }]
+    },
+    {
+      "id": "incense-service", "name": "獻香", "type": "incense", "locationId": "holy-place", "confidence": "textual",
+      "trigger": { "kind": "interaction", "objectId": "incense-altar" },
+      "steps": [{ "id": "offer-incense", "order": 1, "title": "燒馨香", "instruction": "在香壇呈現獻香位置與經文脈絡。", "confidence": "textual", "objectIds": ["incense-altar"], "characterIds": ["aaron-high-priest"], "scriptureReferences": ["Exodus 30:1-10"], "playbackHook": "effects.incense", "uiHook": "learning.show-incense" }]
+    },
+    {
+      "id": "lampstand-care", "name": "整理燈臺", "type": "lamp-care", "locationId": "holy-place", "confidence": "textual",
+      "trigger": { "kind": "interaction", "objectId": "menorah" },
+      "steps": [{ "id": "tend-lamps", "order": 1, "title": "整理燈盞", "instruction": "呈現燈臺位置與每日整理的經文關聯。", "confidence": "textual", "objectIds": ["menorah"], "characterIds": ["serving-priest"], "scriptureReferences": ["Exodus 27:20-21"], "playbackHook": "effects.lamp-care", "uiHook": "learning.show-lamp" }]
+    },
+    {
+      "id": "shewbread-service", "name": "陳設餅", "type": "shewbread", "locationId": "holy-place", "confidence": "textual",
+      "trigger": { "kind": "interaction", "objectId": "shewbread-table" },
+      "steps": [{ "id": "arrange-shewbread", "order": 1, "title": "陳設餅常擺在桌上", "instruction": "呈現桌的位置、器具與經文描述。", "confidence": "textual", "objectIds": ["shewbread-table"], "characterIds": ["serving-priest"], "scriptureReferences": ["Exodus 25:23-30"], "playbackHook": "ritual.arrange-bread", "uiHook": "learning.show-shewbread" }]
+    },
+    {
+      "id": "atonement-entry", "name": "贖罪日進入至聖所（教學重建）", "type": "atonement-entry", "locationId": "most-holy-place", "confidence": "reconstructed",
+      "trigger": { "kind": "learning-mode", "locationId": "most-holy-place" },
+      "steps": [{ "id": "enter-most-holy-place", "order": 1, "title": "按條例進入", "instruction": "以教學時間線說明一年一次的進入，不模擬可自由進出的玩法。", "confidence": "reconstructed", "objectIds": ["ark"], "characterIds": ["aaron-high-priest"], "scriptureReferences": ["Leviticus 16:1-34", "Hebrews 9:1-12"], "playbackHook": "ritual.atonement-entry", "uiHook": "learning.show-atonement" }]
+    }
+  ]
+}

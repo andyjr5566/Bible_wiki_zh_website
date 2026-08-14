@@ -26,6 +26,7 @@
 | **GT** | ccbiblestudy 拾穗 | 多版本註釋綜編、背景資料   |
 | **KC** | KingComments    | 研經大綱、屬靈應用導向    |
 | **BH** | BibleHub Study  | 多譯本對照、原文解析、專題  |
+| **STEP** | [STEP Bible](https://www.stepbible.org/) / [STEPBible-Data](https://github.com/STEPBible/STEPBible-Data) | 原文詞形、Strong、morphology、lexicon（CC BY 4.0；原文證據層，非第五套註釋） |
 
 > 所有補充資料皆經人工整理並標註來源，方便回溯查證。
 

@@ -74,10 +74,16 @@ Bible_wiki_zh/
 
 ## 資料來源
 
-本知識庫整理自 nbible、ccbiblestudy、KingComments 與 BibleHub 等資料來源。使用或引用內容時，請一併留意各來源的原始授權與使用條款。
+本知識庫整理自 nbible、ccbiblestudy、KingComments、BibleHub 與 STEP Bible 等資料來源。使用或引用內容時，請一併留意各來源的原始授權與使用條款。
+
+- 原文詞形、Strong 編號、morphology 與 brief lexicon 資料取自 [STEP Bible](https://www.stepbible.org/) 的 [STEPBible-Data](https://github.com/STEPBible/STEPBible-Data)，依 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。`raw_data/stepbible_*.txt` 是由本專案工具產生的衍生擷取檔，使用或再散布時仍須標示 STEP Bible 與原授權。
+- STEP 是原文證據層，不是第五套註釋；lexicon 列的是可能義域，morphology 列的是語法形態，兩者不自動決定本節語境義或神學結論。
+- 正式來源與 prompt context 分層：四套 commentary 的 raw 原檔由 Agent 全文閱讀並驗 read receipt；STEP 完整 raw 檔由 deterministic parser 驗證並留 SHA-256 receipt。Manual M3/M6 不重貼 commentary 全文，只放 task-aware STEP compact projection；需要更多資料可用 `python util/step_context.py 書名 章 --verses ...` 查本章正式來源。
+- 本 repository 自有程式與文件仍依 [`LICENSE`](LICENSE) 的 Apache-2.0 授權；這不會改變或取代上游 STEP 資料的 CC BY 4.0 條款。
 
 批註
 - **BibleHub** — 聖經研究工具
+- **STEP Bible** — 原文資料與工具（CC BY 4.0）
 
 感謝所有貢獻者！
 

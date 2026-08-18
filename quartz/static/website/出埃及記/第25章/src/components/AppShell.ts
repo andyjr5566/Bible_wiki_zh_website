@@ -8,6 +8,7 @@ import { ModeNavigation } from './ModeNavigation';
 import { MiniMap } from './MiniMap';
 import { SettingsModal } from './SettingsModal';
 import { ScriptureStudyModal } from './ScriptureStudyModal';
+import { CinematicOverlay } from './CinematicOverlay';
 
 const profiles: Array<{ id: AssetProfile; label: string }> = [
   { id: 'desktop-high', label: '完整會幕' },
@@ -31,6 +32,7 @@ export class AppShell {
   readonly #miniMap: MiniMap;
   readonly #settingsModal: SettingsModal;
   readonly #scriptureModal: ScriptureStudyModal;
+  readonly #cinematicOverlay: CinematicOverlay;
   readonly #assetStatus: HTMLElement;
   readonly #researchPanel: HTMLElement;
   readonly #sheetToggle: HTMLButtonElement;
@@ -41,6 +43,7 @@ export class AppShell {
   #unsubscribe: (() => void) | null = null;
   #assetUnsubscribe: (() => void) | null = null;
   #experienceUnsubscribe: (() => void) | null = null;
+  #cinematicUnsubscribe: (() => void) | null = null;
 
   constructor(root: HTMLElement) {
     root.innerHTML = `<main class="app-shell">
@@ -57,7 +60,8 @@ export class AppShell {
         </div>
         <nav class="mode-navigation"></nav>
         <div class="header-action-group">
-          <button class="action-pill-button" type="button" data-open-scripture>📜 出25章逐節研讀</button>
+          <button class="action-pill-button primary-action-glow" type="button" data-open-cinematic>▶ 電影級逐節導覽</button>
+          <button class="action-pill-button" type="button" data-open-scripture>📜 出25章研讀</button>
           <button class="action-pill-button" type="button" data-toggle-map>🗺️ 平面圖</button>
           <button class="action-icon-button" type="button" data-toggle-audio title="切換音效">🔊</button>
           <button class="action-icon-button" type="button" data-open-settings title="設定與大氣氛圍">⚙️</button>
@@ -115,6 +119,7 @@ export class AppShell {
     this.#miniMap = new MiniMap(minimapOverlay);
     this.#settingsModal = new SettingsModal(root);
     this.#scriptureModal = new ScriptureStudyModal(root);
+    this.#cinematicOverlay = new CinematicOverlay(root);
     this.#assetStatus = assetStatus;
 
     this.installAssetControls(root);
@@ -127,12 +132,17 @@ export class AppShell {
     this.#miniMap.bind(app);
     this.#sheetToggle.addEventListener('click', this.#onSheetToggle);
 
-    // If app is AppKernel instance, bind modals
-    if ('scene' in app && 'audio' in app) {
+    // If app is AppKernel instance, bind modals & cinematic overlay
+    if ('scene' in app && 'audio' in app && 'cinematic' in app) {
       const kernel = app as unknown as AppKernel;
       this.#settingsModal.bind(kernel);
       this.#scriptureModal.bind(kernel);
+      this.#cinematicOverlay.bind(kernel);
     }
+
+    document.querySelector('[data-open-cinematic]')?.addEventListener('click', () => {
+      app.startCinematicTour();
+    });
 
     document.querySelector('[data-credits-trigger]')?.addEventListener('click', () => app.setCreditsOpen(true));
     this.#profileButtons.forEach((button, profile) => button.addEventListener('click', () => app.setAssetProfile(profile)));
@@ -147,18 +157,24 @@ export class AppShell {
       this.#experienceState = state;
       this.render();
     });
+    this.#cinematicUnsubscribe = app.subscribeCinematic((state) => {
+      this.#cinematicOverlay.render(state);
+      document.body.classList.toggle('cinematic-tour-active', state.isPlaying);
+    });
   }
 
   dispose(): void {
     this.#unsubscribe?.();
     this.#assetUnsubscribe?.();
     this.#experienceUnsubscribe?.();
+    this.#cinematicUnsubscribe?.();
     this.#sheetToggle.removeEventListener('click', this.#onSheetToggle);
     this.#modeNavigation.dispose();
     this.#experiencePanel.dispose();
     this.#miniMap.dispose();
     this.#settingsModal.dispose();
     this.#scriptureModal.dispose();
+    this.#cinematicOverlay.dispose();
   }
 
   readonly #onSheetToggle = (): void => {
@@ -186,7 +202,6 @@ export class AppShell {
 
     const audioBtn = root.querySelector<HTMLButtonElement>('[data-toggle-audio]');
     audioBtn?.addEventListener('click', () => {
-      // Toggle audio
       this.#settingsModal.element.querySelector<HTMLButtonElement>('[data-settings-action="toggle-mute"]')?.click();
     });
   }

@@ -8,14 +8,16 @@ import { RitualRegistry } from '../rituals/RitualRegistry';
 import { RitualVisualSystem } from '../rituals/RitualVisualSystem';
 import { SceneBootstrap } from '../scene/SceneBootstrap';
 import { ObjectRegistry } from '../scene/ObjectRegistry';
-import type { AtmosphereMode } from '../scene/DesertEnvironment';
+import type { AtmosphereMode } from '../types/atmosphere';
 import { ScriptureMappingService } from '../scripture/ScriptureMappingService';
 import { ScriptureRegistry } from '../scripture/ScriptureRegistry';
 import { LearningModeManager } from '../systems/LearningModeManager';
 import { TourManager, type TourStop } from '../systems/TourManager';
+import { CinematicTourController, type CinematicState } from '../systems/CinematicTourController';
 import { AssetManifest } from '../systems/assets/AssetManifest';
 import { GLTFAssetLoader } from '../systems/assets/AssetLoader';
 import { AssetRuntimeManager } from '../systems/assets/AssetRuntimeManager';
+import type { DimensionUnit } from '../scene/DimensionVisualizer';
 import type { AppPort, ArchitectureStats } from '../types/app';
 import type { AssetProfile, AssetRuntimeState } from '../types/assets';
 import type { AttributionView, ExperienceState, RitualCommand, TourCommand } from '../types/experience';
@@ -44,6 +46,7 @@ export class AppKernel implements AppPort {
   readonly scriptures = new ScriptureMappingService(new ScriptureRegistry(this.data.scriptures.passages));
   readonly tour = new TourManager(tourStops);
   readonly learning = new LearningModeManager();
+  readonly cinematic = new CinematicTourController();
   readonly assets = new AssetManifest(this.data.assets.assets);
   readonly assetLoader: GLTFAssetLoader;
   readonly assetRuntime: AssetRuntimeManager;
@@ -53,6 +56,7 @@ export class AppKernel implements AppPort {
   #creditsOpen = false;
   #unsubscribe: (() => void) | null = null;
   #assetUnsubscribe: (() => void) | null = null;
+  #cinematicUnsubscribe: (() => void) | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.scene = new SceneBootstrap(canvas);
@@ -78,7 +82,16 @@ export class AppKernel implements AppPort {
     };
     this.#unsubscribe = this.uiState.subscribe((state) => this.applyMode(state.mode));
     this.#assetUnsubscribe = this.assetRuntime.subscribe((state) => this.onAssetState(state));
+    this.#cinematicUnsubscribe = this.cinematic.subscribe((state) => this.onCinematicState(state));
     this.scene.setUpdate((deltaSeconds) => this.update(deltaSeconds));
+
+    // Listen to manual orbit dragging to pause cinematic tour cleanly
+    this.scene.context.cameraManager.controls?.addEventListener('start', () => {
+      if (this.cinematic.snapshot.isPlaying && !this.cinematic.snapshot.isPaused) {
+        this.cinematic.pause();
+        this.scene.context.cameraManager.stopFlyTo();
+      }
+    });
   }
 
   start(): void {
@@ -98,6 +111,7 @@ export class AppKernel implements AppPort {
   getState(): Readonly<UIState> { return this.uiState.snapshot; }
   subscribe(listener: (state: Readonly<UIState>) => void): () => void { return this.uiState.subscribe(listener); }
   transitionTo(mode: ExperienceMode, reason: string): void {
+    if (this.cinematic.snapshot.isPlaying) this.stopCinematicTour();
     if (mode === 'tour' && !this.tour.current) return;
     const isCurrentMode = this.uiState.snapshot.mode === mode;
     this.uiState.transitionTo(mode, reason);
@@ -106,6 +120,57 @@ export class AppKernel implements AppPort {
     if (mode === 'learning') this.openLearningObject(this.learning.context.objectId ?? 'burnt-altar');
     if (mode === 'overview' && isCurrentMode) this.scene.context.cameraManager.applyMode('overview');
     this.publishExperience();
+  }
+
+  // Cinematic Tour Implementation
+  startCinematicTour(fromIndex = 0): void {
+    void this.audio.enableAudio();
+    this.audio.playNav();
+    this.assetRuntime.setInteriorReveal(false);
+    this.cinematic.start(fromIndex);
+  }
+
+  stopCinematicTour(): void {
+    this.cinematic.stop();
+    this.scene.context.dimensions.clear();
+    this.scene.context.cameraManager.stopFlyTo();
+    this.assetRuntime.setInteriorReveal(this.uiState.snapshot.mode === 'learning');
+    this.publishExperience();
+  }
+
+  toggleCinematicPlayPause(): void {
+    this.cinematic.togglePlayPause();
+    this.audio.playClick();
+  }
+
+  nextCinematicAct(): void {
+    this.cinematic.next();
+    this.audio.playNav();
+  }
+
+  prevCinematicAct(): void {
+    this.cinematic.previous();
+    this.audio.playNav();
+  }
+
+  toggleCinematicDimensions(): void {
+    this.cinematic.toggleDimensions();
+    this.audio.playClick();
+  }
+
+  setCinematicDimensionUnit(unit: DimensionUnit): void {
+    this.cinematic.setDimensionUnit(unit);
+    this.scene.context.dimensions.setUnit(unit);
+    this.audio.playClick();
+  }
+
+  setCinematicSpeed(speed: number): void {
+    this.cinematic.setSpeed(speed);
+    this.audio.playClick();
+  }
+
+  subscribeCinematic(listener: (state: Readonly<CinematicState>) => void): () => void {
+    return this.cinematic.subscribe(listener);
   }
 
   getAssetState(): Readonly<AssetRuntimeState> { return this.assetRuntime.snapshot; }
@@ -227,6 +292,7 @@ export class AppKernel implements AppPort {
   dispose(): void {
     this.#unsubscribe?.();
     this.#assetUnsubscribe?.();
+    this.#cinematicUnsubscribe?.();
     this.#experienceEvents.clear();
     this.audio.dispose();
     this.ritualVisuals.dispose();
@@ -247,8 +313,49 @@ export class AppKernel implements AppPort {
 
   private update(deltaSeconds: number): void {
     this.ritualVisuals.update(performance.now() / 1000);
+    this.cinematic.update(deltaSeconds);
+
     const cameraPose = this.scene.context.cameraManager.pose;
     this.audio.updatePlayerState(cameraPose.position, false, deltaSeconds);
+  }
+
+  #lastHandledActId: string | null = null;
+  private onCinematicState(state: Readonly<CinematicState>): void {
+    if (!state.isPlaying) {
+      this.#lastHandledActId = null;
+      return;
+    }
+
+    const act = state.currentAct;
+    if (act.id !== this.#lastHandledActId) {
+      this.#lastHandledActId = act.id;
+
+      // Keep tabernacle and curtains fully visible during cinematic walkthrough
+      this.assetRuntime.setInteriorReveal(!!act.peelRoof);
+
+      // Start camera smooth flight from act.cameraStart to act.cameraEnd
+      this.scene.context.cameraManager.flyAlongPath(
+        act.cameraStart,
+        act.cameraEnd,
+        act.durationSeconds / state.playbackSpeed
+      );
+
+      // Trigger 3D Dimensions
+      if (state.showDimensions && act.dimensionTargetId) {
+        this.scene.context.dimensions.setUnit(state.dimensionUnit);
+        this.scene.context.dimensions.showObjectDimensions(act.dimensionTargetId);
+      } else {
+        this.scene.context.dimensions.clear();
+      }
+    } else {
+      // Dynamic dimension toggle during the same act
+      if (state.showDimensions && act.dimensionTargetId) {
+        this.scene.context.dimensions.setUnit(state.dimensionUnit);
+        this.scene.context.dimensions.showObjectDimensions(act.dimensionTargetId);
+      } else if (!state.showDimensions) {
+        this.scene.context.dimensions.clear();
+      }
+    }
   }
 
   private openLearningObject(objectId: string): void {

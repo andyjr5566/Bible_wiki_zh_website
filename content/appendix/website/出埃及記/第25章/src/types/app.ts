@@ -3,6 +3,8 @@ import type { AssetProfile, AssetRuntimeState } from './assets';
 import type { AttributionView, ExperienceState, RitualCommand, TourCommand } from './experience';
 import type { AudioManager } from '../audio/AudioManager';
 import type { AtmosphereMode } from './atmosphere';
+import type { CinematicState } from '../systems/CinematicTourController';
+import type { DimensionUnit } from '../scene/DimensionVisualizer';
 
 export interface ArchitectureStats {
   objects: number;
@@ -33,4 +35,15 @@ export interface AppPort {
   getAttributions(): AttributionView[];
   setAtmosphere(mode: AtmosphereMode): void;
   setQuality(preset: 'high' | 'medium' | 'low'): void;
+
+  // Cinematic Tour APIs
+  startCinematicTour(fromIndex?: number): void;
+  stopCinematicTour(): void;
+  toggleCinematicPlayPause(): void;
+  nextCinematicAct(): void;
+  prevCinematicAct(): void;
+  toggleCinematicDimensions(): void;
+  setCinematicDimensionUnit(unit: DimensionUnit): void;
+  setCinematicSpeed(speed: number): void;
+  subscribeCinematic(listener: (state: Readonly<CinematicState>) => void): () => void;
 }

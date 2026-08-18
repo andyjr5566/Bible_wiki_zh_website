@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CameraManager } from './CameraManager';
 import { DesertEnvironment } from './DesertEnvironment';
 import { ParticleEffects } from './ParticleEffects';
+import { DimensionVisualizer } from './DimensionVisualizer';
 import type { AtmosphereMode } from '../types/atmosphere';
 
 export interface SceneContext {
@@ -11,6 +12,7 @@ export interface SceneContext {
   renderer: THREE.WebGLRenderer;
   cameraManager: CameraManager;
   particles: ParticleEffects;
+  dimensions: DimensionVisualizer;
   environment: DesertEnvironment;
 }
 
@@ -50,6 +52,7 @@ export class SceneBootstrap {
     const cameraManager = new CameraManager(1, canvas);
     const environment = new DesertEnvironment(scene);
     const particles = new ParticleEffects(worldRoot);
+    const dimensions = new DimensionVisualizer(worldRoot);
 
     this.context = {
       scene,
@@ -58,6 +61,7 @@ export class SceneBootstrap {
       renderer,
       cameraManager,
       particles,
+      dimensions,
       environment
     };
 
@@ -108,6 +112,7 @@ export class SceneBootstrap {
     this.stop();
     this.context.environment.dispose();
     this.context.particles.dispose();
+    this.context.dimensions.dispose();
     this.context.cameraManager.dispose();
     this.context.renderer.dispose();
   }
@@ -119,7 +124,7 @@ export class SceneBootstrap {
 
     this.#update(deltaSeconds);
     this.context.particles.update(deltaSeconds, this.#elapsedTime);
-    this.context.cameraManager.update();
+    this.context.cameraManager.update(deltaSeconds);
     this.context.renderer.render(this.context.scene, this.context.cameraManager.camera);
     this.#animationFrame = requestAnimationFrame(this.#tick);
   };

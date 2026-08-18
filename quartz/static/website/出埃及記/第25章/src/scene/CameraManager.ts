@@ -4,10 +4,23 @@ import type { ExperienceMode } from '../types/ui';
 import type { Vector3Data } from '../types/core';
 import type { WorldBounds } from './WorldAlignment';
 
+export interface CameraTransition {
+  startPos: THREE.Vector3;
+  endPos: THREE.Vector3;
+  startTarget: THREE.Vector3;
+  endTarget: THREE.Vector3;
+  startFov: number;
+  endFov: number;
+  duration: number;
+  elapsed: number;
+  onComplete?: (() => void) | undefined;
+}
+
 export class CameraManager {
   readonly camera: THREE.PerspectiveCamera;
   readonly #controls: OrbitControls | null;
   #mode: ExperienceMode = 'overview';
+  #activeTransition: CameraTransition | null = null;
 
   constructor(aspect: number, domElement?: HTMLElement) {
     this.camera = new THREE.PerspectiveCamera(48, aspect, 0.1, 500);
@@ -43,8 +56,107 @@ export class CameraManager {
     this.camera.updateProjectionMatrix();
   }
 
-  update(): void {
-    this.#controls?.update();
+  update(deltaSeconds = 0.016): void {
+    if (this.#activeTransition) {
+      this.#activeTransition.elapsed += deltaSeconds;
+      const t = Math.min(1.0, this.#activeTransition.elapsed / this.#activeTransition.duration);
+      // Smooth cosine ease-in-out curve
+      const easeT = 0.5 - 0.5 * Math.cos(t * Math.PI);
+
+      this.camera.position.lerpVectors(
+        this.#activeTransition.startPos,
+        this.#activeTransition.endPos,
+        easeT
+      );
+
+      const curTarget = new THREE.Vector3().lerpVectors(
+        this.#activeTransition.startTarget,
+        this.#activeTransition.endTarget,
+        easeT
+      );
+
+      if (this.#controls) {
+        this.#controls.target.copy(curTarget);
+        this.#controls.update();
+      } else {
+        this.camera.lookAt(curTarget);
+      }
+
+      this.camera.fov = THREE.MathUtils.lerp(
+        this.#activeTransition.startFov,
+        this.#activeTransition.endFov,
+        easeT
+      );
+      this.camera.updateProjectionMatrix();
+
+      if (t >= 1.0) {
+        const cb = this.#activeTransition.onComplete;
+        this.#activeTransition = null;
+        cb?.();
+      }
+    } else {
+      this.#controls?.update();
+    }
+  }
+
+  flyAlongPath(
+    start: { position: Vector3Data; target: Vector3Data; fov: number },
+    end: { position: Vector3Data; target: Vector3Data; fov: number },
+    durationSeconds = 3.5,
+    onComplete?: () => void
+  ): void {
+    // Immediately position camera at start of path
+    this.camera.position.set(start.position.x, start.position.y, start.position.z);
+    this.camera.fov = start.fov;
+    this.camera.updateProjectionMatrix();
+    if (this.#controls) {
+      this.#controls.target.set(start.target.x, start.target.y, start.target.z);
+      this.#controls.update();
+    } else {
+      this.camera.lookAt(start.target.x, start.target.y, start.target.z);
+    }
+
+    // Set transition to smoothly glide from start to end
+    this.#activeTransition = {
+      startPos: new THREE.Vector3(start.position.x, start.position.y, start.position.z),
+      endPos: new THREE.Vector3(end.position.x, end.position.y, end.position.z),
+      startTarget: new THREE.Vector3(start.target.x, start.target.y, start.target.z),
+      endTarget: new THREE.Vector3(end.target.x, end.target.y, end.target.z),
+      startFov: start.fov,
+      endFov: end.fov,
+      duration: Math.max(0.5, durationSeconds),
+      elapsed: 0,
+      onComplete,
+    };
+  }
+
+  flyToPath(
+    goal: { position: Vector3Data; target: Vector3Data; fov?: number },
+    durationSeconds = 2.8,
+    onComplete?: () => void
+  ): void {
+    const startTarget = this.#controls
+      ? this.#controls.target.clone()
+      : new THREE.Vector3().addVectors(
+          this.camera.position,
+          this.camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(8)
+        );
+
+    this.#activeTransition = {
+      startPos: this.camera.position.clone(),
+      endPos: new THREE.Vector3(goal.position.x, goal.position.y, goal.position.z),
+      startTarget,
+      endTarget: new THREE.Vector3(goal.target.x, goal.target.y, goal.target.z),
+      startFov: this.camera.fov,
+      endFov: goal.fov ?? 46,
+      duration: Math.max(0.5, durationSeconds),
+      elapsed: 0,
+      onComplete,
+    };
+  }
+
+  stopFlyTo(): void {
+    this.#activeTransition = null;
   }
 
   dispose(): void {
@@ -54,6 +166,7 @@ export class CameraManager {
   applyMode(mode: ExperienceMode): void {
     this.#mode = mode;
     this.camera.up.set(0, 1, 0);
+    this.stopFlyTo();
     if (mode === 'overview') this.applyRig({ position: { x: 17, y: 13, z: 30 }, target: { x: 0, y: 0.8, z: 0 }, fov: 46 });
     if (mode === 'tour') this.applyRig({ position: { x: 10, y: 7, z: 22 }, target: { x: 0, y: 1.2, z: 12 }, fov: 46 });
     if (mode === 'learning') this.applyRig({ position: { x: 8, y: 5.5, z: 14 }, target: { x: 0, y: 1.2, z: 7 }, fov: 48 });
@@ -127,6 +240,7 @@ export class CameraManager {
   }
 
   private applyRig(rig: { position: Vector3Data; target: Vector3Data; fov: number }): void {
+    this.stopFlyTo();
     this.camera.position.set(rig.position.x, rig.position.y, rig.position.z);
     this.camera.fov = rig.fov;
     this.camera.updateProjectionMatrix();

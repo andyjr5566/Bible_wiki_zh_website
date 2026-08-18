@@ -79,7 +79,7 @@ export class AssetRuntimeManager {
   setProfileVisible(visible: boolean): void { this.#profileRoot.visible = visible; }
 
   /**
-   * Reveals the interior while an object is being studied.  Only materials
+   * Reveals the interior while an object is being studied. Only materials
    * belonging to the fabric/rope/structural shell are changed; the learned
    * object and its on-demand detail asset remain fully opaque.
    */

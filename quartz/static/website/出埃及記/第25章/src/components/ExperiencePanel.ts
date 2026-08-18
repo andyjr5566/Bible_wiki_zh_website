@@ -26,7 +26,7 @@ const objectMeta: Record<string, { hebrew: string; dimensions: string; materials
     materials: '皂莢木、純金包裹、金牙邊、金盤金爵',
   },
   'incense-altar': {
-    hebrew: 'מִזְבַּח הַקְּטֹרֶת (Mizbeach HaKetoret)',
+    hebrew: 'מִזְבַּח הַקְּטֹרֶ特 (Mizbeach HaKetoret)',
     dimensions: '長 1 肘 × 寬 1 肘 × 高 2 肘 (約 45 × 45 × 90 cm)',
     materials: '皂莢木、四角純金包裹、聖香料',
   },
@@ -110,8 +110,9 @@ export class ExperiencePanel {
   }
 
   readonly #onClick = (event: Event): void => {
-    const target = (event.target as HTMLElement).closest<HTMLElement>('[data-mode-jump],[data-tour-command],[data-learning-object],[data-ritual-id],[data-ritual-command],[data-credits]');
+    const target = (event.target as HTMLElement).closest<HTMLElement>('[data-start-cinematic],[data-mode-jump],[data-tour-command],[data-learning-object],[data-ritual-id],[data-ritual-command],[data-credits]');
     if (!target || !this.#app) return;
+    if (target.dataset.startCinematic) this.#app.startCinematicTour();
     if (target.dataset.modeJump) this.#app.transitionTo(target.dataset.modeJump as ExperienceMode, `quick-start:${target.dataset.modeJump}`);
     if (target.dataset.tourCommand) this.#app.commandTour(target.dataset.tourCommand as Parameters<AppPort['commandTour']>[0]);
     if (target.dataset.learningObject) this.#app.selectLearningObject(target.dataset.learningObject);
@@ -125,14 +126,23 @@ function renderOverview(state: Readonly<ExperienceState>): string {
   return `<section class="panel-card intro-card" aria-labelledby="overview-title">
     <p class="section-kicker">3D 探索指南</p>
     <h2 id="overview-title">拖曳畫面，探索神聖空間</h2>
-    <p class="intro-lede">按住滑鼠左鍵拖曳環視，滾輪縮放；可隨時點選上方導覽或器物以進入深度研讀。</p>
+    <p class="intro-lede">按住滑鼠左鍵拖曳環視，滾輪縮放；可隨時啟動電影級逐節導覽或點選器物研讀。</p>
+    
+    <button type="button" class="cinema-launch-banner" data-start-cinematic="true">
+      <span class="banner-play-icon">▶</span>
+      <div>
+        <strong>啟動電影級逐節 3D 導覽</strong>
+        <p>自動運鏡 · 逐節經文字幕 · 3D 尺寸標尺</p>
+      </div>
+    </button>
+
     <ol class="quick-steps">
       <li><b>拖曳</b><span>旋轉 3D 視角</span></li>
       <li><b>滾輪</b><span>拉近或縮遠</span></li>
       <li><b>選器物</b><span>查看考據註解</span></li>
     </ol>
     <div class="quick-actions">
-      <button type="button" class="primary-button" data-mode-jump="tour">開始五站導覽</button>
+      <button type="button" class="primary-button" data-mode-jump="tour">五站導覽</button>
       <button type="button" data-mode-jump="learning">查看器物與經文</button>
     </div>
     <p class="orientation-note"><strong>空間方向：</strong>由東門進入，依序經過燔祭壇、洗濯盆、聖所與至聖所。</p>

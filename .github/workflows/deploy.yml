@@ -58,7 +58,12 @@ jobs:
         run: npx quartz plugin install --from-config
 
       - name: Build interactive websites
-        run: python quartz/static/website/build.py --ci-build
+        run: |
+          python quartz/static/website/build.py --ci-build > build_interactive.log 2>&1 || {
+            echo "::error::Build interactive websites failed. Check the uploaded log artifact for details."
+            cat build_interactive.log
+            exit 1
+          }
 
       - name: Build Quartz
         run: npx quartz build

@@ -1,0 +1,92 @@
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+added 273 packages, and audited 274 packages in 4s
+
+65 packages are looking for funding
+  run `npm fund` for details
+
+7 vulnerabilities (3 moderate, 3 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> interactive-biblical-tabernacle@1.0.0 build
+> npm run verify && vite build
+
+
+> interactive-biblical-tabernacle@1.0.0 verify
+> npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets
+
+
+> interactive-biblical-tabernacle@1.0.0 typecheck
+> tsc --noEmit
+
+
+> interactive-biblical-tabernacle@1.0.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章[39m
+
+ [32m✓[39m src/systems/CinematicTourController.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m src/data/ProjectData.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m src/systems/assets/AssetRuntimeManager.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m src/systems/assets/AssetLoader.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m src/systems/assets/AssetManifest.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m src/systems/MapModeManager.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+ [32m✓[39m src/scene/WorldAlignment.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+ [32m✓[39m src/scene/CameraManager.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m src/controls/InputManager.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m src/controls/PlayerController.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m src/systems/TourManager.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m src/systems/CollisionWorld.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m src/ui/UIStateManager.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m src/scripture/ScriptureMappingService.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m src/rituals/RitualPlaybackController.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m src/systems/InteractionSystem.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m      Tests [22m [1m[32m33 passed[39m[22m[90m (33)[39m
+[2m   Start at [22m 01:44:50
+[2m   Duration [22m 2.38s[2m (transform 531ms, setup 0ms, collect 1.75s, tests 175ms, environment 3ms, prepare 1.59s)[22m
+
+
+> interactive-biblical-tabernacle@1.0.0 verify:architecture
+> node scripts/verify-architecture.mjs
+
+Architecture boundaries verified across 81 TypeScript modules.
+
+> interactive-biblical-tabernacle@1.0.0 verify:assets
+> node scripts/verify-assets.mjs
+
+node:internal/fs/promises:639
+  return new FileHandle(await PromisePrototypeThen(
+                        ^
+
+Error: ENOENT: no such file or directory, open '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章/public/models/manifest.json'
+    at async open (node:internal/fs/promises:639:25)
+    at async readFile (node:internal/fs/promises:1252:14)
+    at async file:///home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/%E5%87%BA%E5%9F%83%E5%8F%8A%E8%A8%98/%E7%AC%AC25%E7%AB%A0/scripts/verify-assets.mjs:8:35 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章/public/models/manifest.json'
+}
+
+Node.js v22.23.2
+[依賴] static/website/出埃及記/第25章
+[建置] static/website/出埃及記/第25章
+Traceback (most recent call last):
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 339, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 327, in main
+    build_vite_apps(apps, install_dependencies=True)
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 195, in build_vite_apps
+    subprocess.run([npm_command, "run", "build"], cwd=app, check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['npm', 'run', 'build']' returned non-zero exit status 1.

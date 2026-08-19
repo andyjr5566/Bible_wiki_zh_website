@@ -13,6 +13,9 @@
     # 建置所有找到的 Vite 章節
     python appendix/website/build.py --build
 
+    # 安裝乾淨依賴並建置所有找到的 Vite 章節 (適合 CI/CD)
+    python appendix/website/build.py --ci-build
+
     # 建置並複製可部署檔案到靜態主機目錄
     python appendix/website/build.py --build --deploy-dir .tmp/website-deploy
 """
@@ -166,11 +169,29 @@ def render_category_markdown(book: str, chapter_name: str) -> str | None:
     return "\n".join(lines)
 
 
-def build_vite_apps(apps: Iterable[Path]) -> None:
+def _display_rel_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPOSITORY_ROOT).as_posix())
+    except ValueError:
+        return path.as_posix()
+
+
+def build_vite_apps(
+    apps: Iterable[Path],
+    *,
+    install_dependencies: bool = False,
+) -> None:
     """Run each app's verified production build."""
     npm_command = "npm.cmd" if os.name == "nt" else "npm"
     for app in apps:
-        print(f"[建置] {app.relative_to(REPOSITORY_ROOT)}")
+        rel_path = _display_rel_path(app)
+        if install_dependencies:
+            print(f"[依賴] {rel_path}")
+            if (app / "package-lock.json").is_file():
+                subprocess.run([npm_command, "ci"], cwd=app, check=True)
+            elif (app / "package.json").is_file():
+                subprocess.run([npm_command, "install"], cwd=app, check=True)
+        print(f"[建置] {rel_path}")
         subprocess.run([npm_command, "run", "build"], cwd=app, check=True)
 
 
@@ -282,10 +303,16 @@ def _print_entries(entries: dict[str, list[dict[str, str]]]) -> None:
 def main(argv: list[str] | None = None) -> int:
     configure_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    build_group = parser.add_mutually_exclusive_group()
+    build_group.add_argument(
         "--build",
         action="store_true",
         help="對所有找到的 Vite 章節執行 npm run build",
+    )
+    build_group.add_argument(
+        "--ci-build",
+        action="store_true",
+        help="先安裝乾淨依賴（npm ci/install），再對所有找到的 Vite 章節執行 npm run build",
     )
     parser.add_argument(
         "--deploy-dir",
@@ -296,7 +323,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     apps = discover_vite_apps()
-    if args.build:
+    if args.ci_build:
+        build_vite_apps(apps, install_dependencies=True)
+    elif args.build:
         build_vite_apps(apps)
     if args.deploy_dir:
         records = export_vite_apps(apps, args.deploy_dir)

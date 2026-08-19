@@ -60,8 +60,11 @@ jobs:
       - name: Build interactive websites
         run: |
           python quartz/static/website/build.py --ci-build > build_interactive.log 2>&1 || {
-            echo "::error::Build interactive websites failed. Check the uploaded log artifact for details."
-            cat build_interactive.log
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@github.com"
+            git add build_interactive.log
+            git commit -m "chore: upload build log"
+            git push origin HEAD
             exit 1
           }
 

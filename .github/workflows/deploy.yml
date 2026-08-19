@@ -63,6 +63,14 @@ jobs:
       - name: Build Quartz
         run: npx quartz build
 
+      - name: Copy interactive website dist to public
+        run: |
+          find quartz/static/website -type d -name "dist" | while read dist_dir; do
+            dest_dir="public/${dist_dir#quartz/}"
+            mkdir -p "$(dirname "$dest_dir")"
+            cp -r "$dist_dir" "$(dirname "$dest_dir")/"
+          done
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

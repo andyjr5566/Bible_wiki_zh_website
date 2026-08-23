@@ -10,7 +10,13 @@ source_scope: collected_only
 
 ## 定義
 
-「工作」（baabodath / abodah）在民數記8:24中指利未人從二十五歲開始進入會幕所從事的輔助性勞作、雜務或學徒訓練（GT）。與民數記4:3專指三十歲正式獨立任職的「辦事（melakah）」有所區別，baabodath 著重於體力付出、服侍與學習過程（GT難解經文）。年輕利未人在這5年訓練期中觀察年長者如何拆卸包紮器具、清理地坪與協助獻祭，為日後30歲承擔 melakah 重任奠定堅實基礎（GT）。
+GT 賈斯樂郝威《聖經難解經文詮釋手冊》命題5 在處理利未人任職年齡的差異時，把民數記八章24節那個詞單獨標了出來：「民數記八章24節 提到利未人進入會幕從事的工作（baabodath；表示工作或勞力的工作）。」
+
+他的論證是：民四3 的「辦事」與民八24 的「工作」不是同一個詞，所以兩處的年齡下限（三十歲與二十五歲）指的也不是同一件事——「在民數記八章24節所提到的工作可能是年青人從事的學徒訓練工作。以後到了三十歲之後才進入會幕辦事（民四3）。」
+
+GT 艾基斯《舊約聖經難題彙編》用另一條路得出同樣的結論，並引詹麥臣的說法：「利未人於二十五歲時，於會幕裡充當學生，或作試用期的職員，接受年長的利未人的監督或教導。到了三十歲時才正式任職於會幕，負責自己那部份的工作。」他並描述這五年裡年輕利未人實際在做什麼：觀察正式任職的利未人工作，「得知移動燈檯、陳設餅桌及祭壇的正確方法，亦可學習會幕中各種器具應置於何處」，此外還有清掃會幕地面、協助獻祭的雜務。
+
+這個詞本身不出現在民數記第四章，它之所以與本章有關，是因為第四章的三十歲下限只有放在它旁邊才解釋得通。
 
 ## 按書卷累積
 
@@ -30,7 +36,6 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 民數記第四章註解（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT04.htm>）
-- 拾穗: 民數記第四章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT04.htm>）
-- 研經註解: KingComments Numbers 4（<https://www.kingcomments.com/en/bible-studies/Num/4>）
-- 研經註解: BibleHub Study Numbers 4（<https://biblehub.com/study/numbers/4.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第四章拾穗 — 賈斯樂郝威命題5、艾基斯引詹麥臣論學徒期（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT04.htm>）
+- 逐節註解（ccbiblestudy CT）: 民數記第四章註解 — 民四3 三十至五十歲（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT04.htm>）
+- 研經註解（KingComments）: Numbers 4 — 二十五歲與二十歲的其他年齡（<https://www.kingcomments.com/en/bible-studies/Num/4>）

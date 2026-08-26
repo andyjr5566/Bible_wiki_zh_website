@@ -2,8 +2,42 @@ $repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
-if (Test-Path $target) {
-    Remove-Item -Path $target -Recurse -Force
+function Sync-WithRobocopy {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourcePath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DestinationPath,
+
+        [string]$FileName
+    )
+
+    New-Item -ItemType Directory -Path $DestinationPath -Force | Out-Null
+
+    $robocopyArgs = @($SourcePath, $DestinationPath)
+
+    if ($FileName) {
+        $robocopyArgs += $FileName
+    }
+
+    $robocopyArgs += @(
+        '/E',
+        '/XD', '.tmp',
+        '/XO',
+        '/R:2',
+        '/W:1',
+        '/NFL',
+        '/NDL',
+        '/NJH',
+        '/NJS',
+        '/NP'
+    )
+
+    & robocopy @robocopyArgs | Out-Null
+    if ($LASTEXITCODE -ge 8) {
+        throw "Failed to sync $SourcePath to $DestinationPath"
+    }
 }
 
 New-Item -ItemType Directory -Path $target -Force | Out-Null
@@ -12,17 +46,19 @@ $items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md'
 foreach ($item in $items) {
     $itemPath = Join-Path $source $item
     if (Test-Path $itemPath) {
-        Copy-Item -Path $itemPath -Destination $target -Recurse -Force
+        if ((Get-Item -LiteralPath $itemPath).PSIsContainer) {
+            $destination = Join-Path $target $item
+            Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination
+        }
+        else {
+            Sync-WithRobocopy -SourcePath $source -DestinationPath $target -FileName $item
+        }
     }
 }
 
 Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' } | ForEach-Object {
     $destination = Join-Path $target $_.Name
-    robocopy $_.FullName $destination /E /XD .tmp /NFL /NDL /NJH /NJS /NP | Out-Null
-
-    if ($LASTEXITCODE -ge 8) {
-        throw "Failed to copy $($_.FullName) to $destination"
-    }
+    Sync-WithRobocopy -SourcePath $_.FullName -DestinationPath $destination
 }
 
 Write-Host 'Content sync completed.'
@@ -32,11 +68,7 @@ $websiteSource = Join-Path $source 'appendix\website'
 $staticWebsiteTarget = Join-Path $repoPath 'quartz\static\website'
 
 if (Test-Path $websiteSource) {
-    if (Test-Path $staticWebsiteTarget) {
-        Remove-Item -Path $staticWebsiteTarget -Recurse -Force
-    }
-    New-Item -ItemType Directory -Path $staticWebsiteTarget -Force | Out-Null
-    Copy-Item -Path "$websiteSource\*" -Destination $staticWebsiteTarget -Recurse -Force
+    Sync-WithRobocopy -SourcePath $websiteSource -DestinationPath $staticWebsiteTarget
     Write-Host 'Static website assets synced to quartz/static/website.'
 }
 

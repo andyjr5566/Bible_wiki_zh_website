@@ -1,0 +1,64 @@
+---
+type: 原文
+secondary_types:
+- 神學
+aliases:
+- ki.pher
+status: formal
+source_scope: collected_only
+---
+
+# 那地不得潔淨（ki.pher）
+
+## 定義
+
+民數記35:33 是本章的結論句，和合本在句末自己加了一個註：「那地就不得潔淨（潔淨原文作贖）」。
+
+**譯本註明的那個字，STEP 也證實了。** STEP 原文資料顯示「不得潔淨」的動詞是 ye.khu.Par（H3722A，詞典形 ki.pher），簡要詞典義是 to atone（贖罪），形態是 Pual（被動）——所以和合本才註明「原文作贖」。CT 的原文字義給的方向相同：「潔淨」遮蓋，贖回，平息。
+
+**同一節裡還有另外幾個字。** 「污穢」是 ta.cha.Ni.fu 與 ya.cha.Nif（H2610，詞典形 cha.neph），簡要詞典義 to pollute，Hiphil 形；下一節第34節「玷污」則換成另一個字 te.ta.Me'（H2930A，詞典形 ta.me），簡要詞典義 to defile。「流」血用的是 shu.pakh 與 sho.fe.Kh/o（H8210H，詞典形 sha.phakh），簡要詞典義 to pour: kill。
+
+| 節次 | 和合本 | 原文（STEP） | 簡要詞典義 |
+|---|---|---|---|
+| 33 | 污穢 | ta.cha.Ni.fu（H2610 cha.neph） | to pollute |
+| 33 | 不得潔淨 | ye.khu.Par（H3722A ki.pher） | to atone |
+| 33 | 流（人血） | shu.pakh（H8210H sha.phakh） | to pour: kill |
+| 34 | 玷污 | te.ta.Me'（H2930A ta.me） | to defile |
+
+**為什麼只有血能贖血。** GT《舊約聖經背景註釋》給的理由是：「由於血是生命之源、神的賜與，因此流血所造成的玷污只有藉著流血，才能塗抹。即使是祭牲的血，也必須倒在壇上，作為宰殺牠的人的贖價（見：利十七11）。」它並把本章的兩條規定接在同一個理由上——這就是為什麼宣判有罪的謀殺犯必須處死，也是為什麼祭司之死能夠塗抹誤殺所構成的玷污。
+
+**土地會不潔淨，有兩種原因。** CT 在本節列出：「在神看來，土地的潔與不潔，端視地上居民的兩種情形：(1)是否敬拜偶像假神；(2)是否流無辜之人的血。為著第一種情形，神命以色列人除滅迦南人；為著第二種情形，神命以色列人嚴格執行逃城制度。」
+
+**錢平息不了的那一位。** GT 丁良才《民數記註釋》把第31-34節連起來讀：「金銀或能使那被殺之人的親屬止息怒氣，卻不能使造那人之主的震怒止息。神是聖潔的，不肯容讓人的惡行，所以應受罰的人，也必須受罰。」BibleHub Study 也指出，贖罪通常是透過獻祭完成的，但這一節說明有些罪的後果嚴重到不能這樣了結，土地要等到公義被執行才能被潔淨。
+
+**CT 引溫漢（Gordon Wenham）的話收束整段：** 「由於聖潔的神不能住在污穢的地方，而不審判其中的居民，以色列一定要特別留意保持土地的純潔，流人血的罪一出現，就要立刻處理。本段把流人血的罪挑出來討論，是因為它造成的污穢是最嚴重的。」
+
+KingComments 從新約回看這一句：本節的字面要求會導出一個難以承受的結論——地上的人都有分於主耶穌的死，若照這條原則，那地只能靠殺盡其上所有的人才得潔淨；他說神恩典的奇妙就在於，那位無辜者的血已經潔淨了這地，整個受造界都要基於他所流的血得潔淨。
+
+## 按書卷累積
+
+### 民數記
+
+<!-- accumulation:民數記:35:start -->
+#### [[04 民數記/第35章|第35章]]
+- 本章重點：第33節「那地就不得潔淨（潔淨原文作贖）」。STEP 原文資料顯示動詞是 ye.khu.Par（H3722A，詞典形 ki.pher，簡要詞典義 to atone，Pual），同節「污穢」是 ta.cha.Ni.fu（H2610 cha.neph，to pollute），第34節「玷污」另換 te.ta.Me'（H2930A ta.me，to defile）。CT 原文字義給「遮蓋，贖回，平息」，並指土地的潔與不潔取決於是否拜偶像、是否流無辜之人的血；GT《舊約聖經背景註釋》以利十七11 說明只有血能塗抹流血的玷污。
+- 與本章關聯：這一節是本章前面所有條例的理由：逃城、不可收贖價、憑見證人定罪，都因為流人血會使地不得贖。CT 引溫漢的話點出這段的位置——本段把流人血的罪挑出來討論，是因為它造成的污穢最嚴重。
+<!-- accumulation:民數記:35:end -->
+
+## 相關條目
+
+- [[血]]
+- [[污穢]]
+- [[玷污自己也玷污地]]
+- [[神住在人間]]
+- [[贖命的價銀]]
+- [[大祭司死了誤殺者才得釋放]]
+- [[殺人（ratsach）]]
+
+## 來源依據
+
+- 逐節註解（ccbiblestudy CT）: 民數記第三十五章註解 — 第33節原文字義與文意註解、第34節〔話中之光〕引溫漢（Gordon Wenham）論保持土地純潔（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT35.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第三十五章拾穗 — 第33節《舊約聖經背景註釋》〈流血玷污地〉、第31~34節丁良才《民數記註釋》金銀不能止息神的震怒（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT35.htm>）
+- 研經註解（KingComments）: Numbers 35 — 33 - 34 The Land Shall Not Be Polluted（流血玷污地、無辜者的血潔淨了地、整個受造界基於他所流的血得潔淨）（<https://www.kingcomments.com/en/bible-studies/Num/35>）
+- 研經註解（BibleHub Study）: Numbers 35 — Numbers 35:33 no atonement can be made for the land 與 except by the blood of the one who shed it（有些罪不能靠獻祭了結、土地要等公義被執行才得潔淨）（<https://biblehub.com/study/numbers/35.htm>）
+- 原文資料（STEP Bible）: Numbers 35:33-34 — H3722A ye.khu.Par、H2610 ta.cha.Ni.fu 與 ya.cha.Nif、H8210H shu.pakh 與 sho.fe.Kh/o、H2930A te.ta.Me'（<https://github.com/STEPBible/STEPBible-Data>）

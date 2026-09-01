@@ -21,18 +21,34 @@ function Sync-WithRobocopy {
         $robocopyArgs += $FileName
     }
 
-    $robocopyArgs += @(
-        '/E',
-        '/XD', '.tmp',
-        '/XO',
-        '/R:2',
-        '/W:1',
-        '/NFL',
-        '/NDL',
-        '/NJH',
-        '/NJS',
-        '/NP'
-    )
+    if ($FileName) {
+        # A file filter must not use /E, otherwise robocopy creates every
+        # source subdirectory and copies matching files from all levels.
+        $robocopyArgs += @(
+            '/XO',
+            '/R:2',
+            '/W:1',
+            '/NFL',
+            '/NDL',
+            '/NJH',
+            '/NJS',
+            '/NP'
+        )
+    }
+    else {
+        $robocopyArgs += @(
+            '/E',
+            '/XD', '.tmp',
+            '/XO',
+            '/R:2',
+            '/W:1',
+            '/NFL',
+            '/NDL',
+            '/NJH',
+            '/NJS',
+            '/NP'
+        )
+    }
 
     & robocopy @robocopyArgs | Out-Null
     if ($LASTEXITCODE -ge 8) {

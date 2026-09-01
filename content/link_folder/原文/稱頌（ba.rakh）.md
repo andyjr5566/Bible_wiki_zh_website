@@ -1,0 +1,49 @@
+---
+type: 原文
+secondary_types:
+- 主題
+aliases:
+- 稱頌
+status: formal
+source_scope: collected_only
+---
+
+# 稱頌（ba.rakh）
+
+## 定義
+
+第10節說「你吃得飽足，就要稱頌耶和華─你的神」。STEP 顯示「飽足」是 שָׂבֵעַ（sa.va，H7646，簡要詞典義 to satisfy），「稱頌」是 בָּרַךְ（ba.rakh，H1288），詞形標為 Hc/Vpq2ms，本節譯義 and you will bless。
+
+CT 的〔原文字義〕給「飽足」是「滿意，滿足」，給「稱頌」是「祝福，屈膝」——這是 CT 列出的可能字義範圍，本節的用法則由上下文決定，STEP 給第10節的本節譯義是 and you will bless。文意註解用「飲水思源」概括本節，說「人得以飽食應思食物的來源，乃是出於神的賞賜」。
+
+BH 把這節放進希伯來文化裡讀：向神稱頌是敬拜與感恩的行動，是承認神的主權與良善；吃飽之後才稱頌，正提醒人他是一切福分的源頭，並舉詩103:2 為同一主題的例子。這也是後世飯後謝恩禱告的經文根據。
+
+CT 的〔話中之光〕注意到同一件事，卻補上一個提醒：傳統上人引用這一節在飯前或飯後稱謝神，但它原本的目的是警告以色列人，在所求所想得到滿足的時候不要忘記神；CT 接著說，這樣的謝飯禱告應當讓人恆常記起神的良善，也負起幫助不幸之人的責任。KC 把稱頌與本章的警告直接接起來：為神一切的祝福讚美他，同時也就防止了我們忘記他。
+
+第10節在本章的位置值得留意——它夾在美地的富饒描述（7到9節）與「你要謹慎，免得忘記」（11節）之間，是從享受轉入警告的接縫。
+
+## 按書卷累積
+
+### 申命記
+
+<!-- accumulation:申命記:8:start -->
+#### [[05 申命記/第8章|第8章]]
+- 本章重點：第10節「稱頌」STEP 為 בָּרַךְ（ba.rakh，H1288，Piel），本節譯義 and you will bless；「飽足」為 שָׂבֵעַ（sa.va，H7646）。CT 的〔原文字義〕給「祝福，屈膝」與「滿意，滿足」，並以飲水思源解本節；BH 說飯後稱頌神是承認神主權與良善的敬拜行動；KC 指出讚美防止遺忘。
+- 與本章關聯：這一節是本章由富饒轉入警告的接縫：吃飽之後該有的第一個動作是稱頌，而第11節緊接著就說「你要謹慎，免得忘記」。
+<!-- accumulation:申命記:8:end -->
+
+## 相關條目
+
+- [[美地]]
+- [[迦南地的七樣出產]]
+- [[忘記（sha.khach）]]
+- [[心高氣傲（rum）]]
+- [[神的供應]]
+
+## 來源依據
+
+- 原文資料（STEP Bible）: 申命記8:10 稱頌與飽足的字形、Strong、morphology 與本節譯義（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 申命記8:10〔原文字義〕、文意註解與〔話中之光〕（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05CT08.htm>）
+- 拾穗（ccbiblestudy GT）: 申命記8:7-10《聖經精讀本》論吃得飽足與應許之地（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT08.htm>）
+- 研經註解（KingComments）: Deuteronomy 8:7-10，讚美防止遺忘（<https://www.kingcomments.com/en/bible-studies/Deu/8>）
+- 研經註解（BibleHub Study）: Deuteronomy 8:10，向神稱頌是敬拜與感恩的行動（<https://biblehub.com/study/deuteronomy/8.htm>）

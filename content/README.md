@@ -69,7 +69,8 @@ Bible_wiki_zh/
 | ---------------------------------------------------------- | ---------------------------- |
 | [電腦版安裝指南](INSTALL_COMPUTER.md)                             | 安裝 Obsidian、取得專案並開啟 Vault    |
 | [手機版安裝指南](INSTALL_MOBILE.md)                               | 安裝手機版 Obsidian 與設定 GitHub 同步 |
-| [問題回報](https://github.com/andyjr5566/Bible_wiki_zh/issues) | 回報錯誤或提出建議                    |
+| [讀者反饋與勘誤問卷](https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform) | 線上回報勘誤、使用體驗與功能建議          |
+| [問題回報 (GitHub Issues)](https://github.com/andyjr5566/Bible_wiki_zh/issues) | 回報錯誤或提出建議                    |
 | [授權條款](LICENSE)                                            | 專案授權資訊                       |
 
 ## 資料來源
@@ -104,8 +105,9 @@ Bible_wiki_zh/
 ## 🌟 快速連結
 
 - 🏠 [GitHub 專案](https://github.com/andyjr5566/Bible_wiki_zh)
+- 📝 [讀者反饋與勘誤問卷 (Google 表單)](https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform)
 - 📖 [核心規則文檔](./scheme.md)
-- 🐛 [報告問題](https://github.com/andyjr5566/Bible_wiki_zh/issues)
+- 🐛 [GitHub 問題回報](https://github.com/andyjr5566/Bible_wiki_zh/issues)
 - 🔧 [技術討論](https://github.com/andyjr5566/Bible_wiki_zh/discussions)
 - 📱 [Obsidian 官網](https://obsidian.md/)
 - 📚 [Obsidian 官方文檔](https://help.obsidian.md/)

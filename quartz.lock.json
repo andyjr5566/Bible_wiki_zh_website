@@ -146,10 +146,10 @@
       "installedAt": "2026-08-07T09:11:27.240Z"
     },
     "graph": {
-      "source": "./plugins/graph",
-      "resolved": "./plugins/graph",
-      "commit": "local",
-      "installedAt": "2026-09-04T16:00:00.000Z"
+      "source": "github:quartz-community/graph",
+      "resolved": "https://github.com/quartz-community/graph.git",
+      "commit": "411971434ab698c495dfc42870eb02d3bc539b3a",
+      "installedAt": "2026-08-07T09:11:32.722Z"
     },
     "hard-line-breaks": {
       "source": "github:quartz-community/hard-line-breaks",
@@ -284,7 +284,7 @@
     },
     "wiki-tour": {
       "source": "./plugins/wiki-tour",
-      "resolved": "./plugins/wiki-tour",
+      "resolved": "C:\\Obsidian\\Bible_wiki_zh_website_quartz\\plugins\\wiki-tour",
       "commit": "local",
       "installedAt": "2026-09-04T03:12:28.311Z"
     }

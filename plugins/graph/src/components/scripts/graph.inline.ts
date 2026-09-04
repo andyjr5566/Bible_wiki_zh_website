@@ -142,8 +142,11 @@ import {
         return function () {};
       }
 
-      var width = graph.offsetWidth;
-      var height = Math.max(graph.offsetHeight, 250);
+      var isGlobal = graph.classList.contains("global-graph-container");
+      var rect = graph.getBoundingClientRect();
+      var width = graph.offsetWidth || Math.round(rect.width) || (isGlobal ? Math.round(window.innerWidth * 0.85) : 250);
+      var height = Math.max(graph.offsetHeight || Math.round(rect.height) || (isGlobal ? Math.round(window.innerHeight * 0.82) : 250), 250);
+      var minDim = Math.min(width, height);
 
       var links = [];
       var allTags = [];
@@ -190,10 +193,14 @@ import {
               var link = links[li];
               if (link.source === cur && !seen.has(link.target)) {
                 seen.add(link.target);
-                nextQueue.push(link.target);
               }
               if (link.target === cur && !seen.has(link.source)) {
                 seen.add(link.source);
+              }
+              if (link.source === cur && !seen.has(link.target)) {
+                nextQueue.push(link.target);
+              }
+              if (link.target === cur && !seen.has(link.source)) {
                 nextQueue.push(link.source);
               }
             }
@@ -240,6 +247,41 @@ import {
         }
       }
 
+      // Dynamic sizing based on viewport dimension and graph density
+      var nodeCount = nodes.length;
+      var countFactor = Math.max(0.75, Math.min(1.3, 16 / Math.max(nodeCount, 6)));
+      var baseRadius = isGlobal
+        ? Math.max(6.5, Math.min(13, minDim * 0.0125)) * countFactor
+        : Math.max(2.8, Math.min(4.5, minDim * 0.014));
+
+      function nodeRadius(d) {
+        var isCurrent = d.id === slug;
+        if (isCurrent) {
+          return baseRadius * 1.55;
+        }
+        var numLinks = 0;
+        for (var i = 0; i < graphLinks.length; i++) {
+          if (graphLinks[i].source.id === d.id || graphLinks[i].target.id === d.id) {
+            numLinks++;
+          }
+        }
+        return baseRadius + Math.min(baseRadius * 0.55, Math.sqrt(numLinks) * (baseRadius * 0.22));
+      }
+
+      var spreadRatio = nodeCount > 20 ? 0.35 : (nodeCount < 6 ? 0.24 : 0.29);
+      var dynamicLinkDistance = isGlobal
+        ? Math.max(90, Math.min(minDim * spreadRatio, 300))
+        : Math.max(25, Math.min(minDim * 0.16, 45));
+
+      var dynamicRepel = isGlobal
+        ? Math.max(160, dynamicLinkDistance * (nodeCount > 15 ? 1.8 : 1.4))
+        : (100 * repelForce);
+
+      var dynamicCenterForce = isGlobal ? 0.25 : centerForce;
+      var dynamicFontSize = isGlobal
+        ? Math.max(11, Math.min(14, minDim * 0.015))
+        : Math.max(8, fontSize * 15);
+
       var styles = getComputedStyle(document.documentElement);
       var secondary = resolveColor(styles.getPropertyValue("--secondary").trim(), "#c792ea");
       var tertiary = resolveColor(styles.getPropertyValue("--tertiary").trim(), "#82aaff");
@@ -267,21 +309,15 @@ import {
 
       var simulation = d3
         .forceSimulation(nodes)
-        .force("charge", d3.forceManyBody().strength(-100 * repelForce))
-        .force("center", d3.forceCenter().strength(centerForce))
-        .force("link", d3.forceLink(graphLinks).distance(linkDistance))
+        .force("charge", d3.forceManyBody().strength(-dynamicRepel))
+        .force("center", d3.forceCenter().strength(dynamicCenterForce))
+        .force("link", d3.forceLink(graphLinks).distance(dynamicLinkDistance))
         .force(
           "collide",
           d3
             .forceCollide()
             .radius(function (d) {
-              var numLinks = 0;
-              for (var i = 0; i < graphLinks.length; i++) {
-                if (graphLinks[i].source.id === d.id || graphLinks[i].target.id === d.id) {
-                  numLinks++;
-                }
-              }
-              return 2 + Math.sqrt(numLinks);
+              return nodeRadius(d) + (isGlobal ? 12 : 3);
             })
             .iterations(3),
         );
@@ -305,16 +341,6 @@ import {
       var dragStartTime = 0;
       var dragging = false;
       var currentTransform = d3.zoomIdentity;
-
-      function nodeRadius(d) {
-        var numLinks = 0;
-        for (var i = 0; i < graphLinks.length; i++) {
-          if (graphLinks[i].source.id === d.id || graphLinks[i].target.id === d.id) {
-            numLinks++;
-          }
-        }
-        return 2 + Math.sqrt(numLinks);
-      }
 
       function nodeColor(d) {
         var isCurrent = d.id === slug;
@@ -378,14 +404,22 @@ import {
 
       function renderLabels() {
         var defaultScale = 1 / scale;
-        var activeScale = defaultScale * 1.1;
+        var activeScale = defaultScale * 1.12;
 
         for (var i = 0; i < nodeRenderData.length; i++) {
           var nodeData = nodeRenderData[i];
-          if (hoveredNodeId === nodeData.simulationData.id) {
-            nodeData.label.alpha = 1;
-            nodeData.label.scale.set(activeScale);
+          var isCurrent = nodeData.simulationData.id === slug;
+
+          if (hoveredNodeId !== null) {
+            if (nodeData.active || hoveredNodeId === nodeData.simulationData.id) {
+              nodeData.label.alpha = 1;
+              nodeData.label.scale.set(activeScale);
+            } else {
+              nodeData.label.alpha = isGlobal ? 0.25 : 0;
+              nodeData.label.scale.set(defaultScale);
+            }
           } else {
+            nodeData.label.alpha = isGlobal ? (isCurrent ? 1 : 0.88) : 0;
             nodeData.label.scale.set(defaultScale);
           }
         }
@@ -412,20 +446,22 @@ import {
         var node = nodes[i];
         var nodeId = node.id;
         var isTagNode = nodeId.startsWith("tags/");
+        var isCurrentNode = nodeId === slug;
         var radius = nodeRadius(node);
         var color = nodeColor(node);
 
         var label = new PIXI.Text({
           text: node.text,
           style: {
-            fontSize: fontSize * 15,
+            fontSize: isCurrentNode ? dynamicFontSize * 1.15 : dynamicFontSize,
+            fontWeight: isCurrentNode ? "bold" : "normal",
             fill: dark,
             fontFamily: bodyFont,
           },
-          resolution: window.devicePixelRatio * 4,
+          resolution: (window.devicePixelRatio || 1) * 3,
         });
-        label.anchor.set(0.5, 1.2);
-        label.alpha = 0;
+        label.anchor.set(0.5, 0);
+        label.alpha = isGlobal ? (isCurrentNode ? 1 : 0.88) : 0;
         label.scale.set(1 / scale);
         labelsContainer.addChild(label);
 
@@ -434,6 +470,8 @@ import {
         gfx.fill({ color: isTagNode ? light : color });
         if (isTagNode) {
           gfx.stroke({ width: 2, color: tertiary });
+        } else if (isCurrentNode) {
+          gfx.stroke({ width: isGlobal ? 3 : 2, color: secondary, alpha: 0.6 });
         }
 
         gfx.eventMode = "static";
@@ -535,6 +573,7 @@ import {
           renderPixiFromD3();
 
           if (Date.now() - dragStartTime < 500) {
+            hideGlobalGraph();
             var target = resolveBasePath(event.subject.id);
             var url = new URL(target, window.location.toString());
             if (window.spaNavigate) {
@@ -558,6 +597,7 @@ import {
         for (var i = 0; i < nodeRenderData.length; i++) {
           (function (nodeData) {
             nodeData.gfx.on("click", function () {
+              hideGlobalGraph();
               var target = resolveBasePath(nodeData.simulationData.id);
               var url = new URL(target, window.location.toString());
               if (window.spaNavigate) {
@@ -576,20 +616,22 @@ import {
           stage.scale.set(currentTransform.k, currentTransform.k);
           stage.position.set(currentTransform.x, currentTransform.y);
 
-          var newScale = currentTransform.k * opacityScale;
-          var scaleOpacity = Math.max((newScale - 1) / 3.75, 0);
+          if (!isGlobal) {
+            var newScale = currentTransform.k * opacityScale;
+            var scaleOpacity = Math.max((newScale - 1) / 3.75, 0);
 
-          var activeLabels = [];
-          for (var i = 0; i < nodeRenderData.length; i++) {
-            if (nodeRenderData[i].active) {
-              activeLabels.push(nodeRenderData[i].label);
+            var activeLabels = [];
+            for (var i = 0; i < nodeRenderData.length; i++) {
+              if (nodeRenderData[i].active) {
+                activeLabels.push(nodeRenderData[i].label);
+              }
             }
-          }
 
-          for (var i = 0; i < labelsContainer.children.length; i++) {
-            var label = labelsContainer.children[i];
-            if (activeLabels.indexOf(label) === -1) {
-              label.alpha = scaleOpacity;
+            for (var i = 0; i < labelsContainer.children.length; i++) {
+              var label = labelsContainer.children[i];
+              if (activeLabels.indexOf(label) === -1) {
+                label.alpha = scaleOpacity;
+              }
             }
           }
         };
@@ -615,9 +657,12 @@ import {
           var x = n.simulationData.x;
           var y = n.simulationData.y;
           if (x != null && y != null) {
-            n.gfx.position.set(x + width / 2, y + height / 2);
+            var posX = x + width / 2;
+            var posY = y + height / 2;
+            n.gfx.position.set(posX, posY);
             if (n.label) {
-              n.label.position.set(x + width / 2, y + height / 2);
+              var r = nodeRadius(n.simulationData);
+              n.label.position.set(posX, posY + r + (isGlobal ? 5 : 2));
             }
           }
         }
@@ -633,7 +678,8 @@ import {
             l.gfx.clear();
             l.gfx.moveTo(sx + width / 2, sy + height / 2);
             l.gfx.lineTo(tx + width / 2, ty + height / 2);
-            l.gfx.stroke({ alpha: l.alpha, width: 1, color: l.color });
+            var strokeWidth = isGlobal ? (l.active ? 2.5 : 1.5) : 1;
+            l.gfx.stroke({ alpha: l.alpha, width: strokeWidth, color: l.color });
           }
         }
 
@@ -869,5 +915,18 @@ import {
       }
     }
     document.addEventListener("themechange", handleThemeChange);
+
+    var resizeTimer = null;
+    function handleResize() {
+      if (globalContainers.length > 0 && anyGlobalGraphActive()) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          if (anyGlobalGraphActive()) {
+            showGlobalGraph();
+          }
+        }, 150);
+      }
+    }
+    window.addEventListener("resize", handleResize);
   }
 })();

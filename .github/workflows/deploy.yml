@@ -10,6 +10,8 @@ name: Deploy Quartz to GitHub Pages
       - "plugins/**"
       - "quartz.ts"
       - "quartz.config.yaml"
+      - "quartz.lock.json"
+      - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
 permissions:
@@ -19,7 +21,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -58,7 +60,6 @@ jobs:
           rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph
           cp -r plugins/wiki-tour .quartz/plugins/wiki-tour
           cp -r plugins/semantic-search .quartz/plugins/semantic-search
-          cp -r plugins/graph .quartz/plugins/graph
 
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config

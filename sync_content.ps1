@@ -1,4 +1,4 @@
-$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
+﻿$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
@@ -164,3 +164,4 @@ finally {
 }
 
 exit 0
+

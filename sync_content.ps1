@@ -58,7 +58,7 @@ function Sync-WithRobocopy {
 
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 
-$items = @('appendix', 'link_folder', '教學', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md')
+$items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md')
 foreach ($item in $items) {
     $itemPath = Join-Path $source $item
     if (Test-Path $itemPath) {
@@ -106,6 +106,34 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
         if ($updated -ne $fileContent) {
             Set-Content -Path $filePath -Value $updated -Encoding UTF8
         }
+    }
+}
+
+# ── Inject website guide navigation into content/index.md ────────
+$contentIndexPath = Join-Path $target 'index.md'
+if (Test-Path $contentIndexPath) {
+    $indexContent = Get-Content -Path $contentIndexPath -Raw -Encoding UTF8
+    if ($indexContent -notmatch '功能教學與新手指南') {
+        $guideSection = @"
+
+## 🧭 功能教學與新手指南
+
+- [[教學/快速入門|🚀 快速入門（5 分鐘核心功能與導航導覽）]]
+- [[教學/如何查一個主題|🔍 如何查一個主題（全文、標籤、語意、反向連結）]]
+- [[教學/如何跨書卷找相關條目|🔗 如何跨書卷找相關條目（互文與圖譜探索）]]
+- [[教學/熱鍵與功能速查|⌨️ 熱鍵與功能速查（快捷鍵及 UI 對照表）]]
+- [[教學/註釋來源怎麼讀|📚 註釋來源怎麼讀（CT / GT / KC / BH / STEP 深度對照）]]
+
+---
+"@
+        if ($indexContent -match '(?m)^## ✍️ 作者的話') {
+            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n## ✍️ 作者的話")
+        }
+        else {
+            $indexContent += "`r`n" + $guideSection
+        }
+        Set-Content -Path $contentIndexPath -Value $indexContent -Encoding UTF8
+        Write-Host 'Website guide navigation preserved in content/index.md.'
     }
 }
 

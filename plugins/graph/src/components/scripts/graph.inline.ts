@@ -193,14 +193,10 @@ import {
               var link = links[li];
               if (link.source === cur && !seen.has(link.target)) {
                 seen.add(link.target);
-              }
-              if (link.target === cur && !seen.has(link.source)) {
-                seen.add(link.source);
-              }
-              if (link.source === cur && !seen.has(link.target)) {
                 nextQueue.push(link.target);
               }
               if (link.target === cur && !seen.has(link.source)) {
+                seen.add(link.source);
                 nextQueue.push(link.source);
               }
             }

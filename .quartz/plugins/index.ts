@@ -42,6 +42,7 @@ export { tokenClassifierTransformer } from "./syntax-highlighting"
 export { TableOfContents } from "./table-of-contents"
 export { TagList } from "./tag-list"
 export { TagPage, TagPageOptions, TagContent } from "./tag-page"
+export { TourLauncher } from "./wiki-tour"
 
 export const plugins: Record<string, Record<string, (...args: unknown[]) => void>> = {
   "alias-redirects": {

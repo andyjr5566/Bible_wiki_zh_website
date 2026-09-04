@@ -1,0 +1,53 @@
+{
+  "name": "@local/wiki-tour",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "preact": {
+      "optional": false
+    }
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types",
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "sass": "^1.103.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.9.3"
+  },
+  "quartz": {
+    "name": "wiki-tour",
+    "displayName": "Wiki Tour",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "components": {
+      "TourLauncher": {
+        "displayName": "Wiki Tour",
+        "defaultPosition": "beforeBody",
+        "defaultPriority": 5
+      }
+    }
+  }
+}

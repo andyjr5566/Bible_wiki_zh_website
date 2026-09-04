@@ -281,6 +281,12 @@
       "resolved": "https://github.com/quartz-community/unlisted-pages.git",
       "commit": "3a01e0cb208dd6ef3c7520963198cd2991c6742c",
       "installedAt": "2026-08-07T09:11:28.763Z"
+    },
+    "wiki-tour": {
+      "source": "./plugins/wiki-tour",
+      "resolved": "C:\\Obsidian\\Bible_wiki_zh_website_quartz\\plugins\\wiki-tour",
+      "commit": "local",
+      "installedAt": "2026-09-04T03:12:28.311Z"
     }
   }
 }

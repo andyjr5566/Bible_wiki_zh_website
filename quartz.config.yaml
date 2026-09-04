@@ -179,15 +179,18 @@ plugins:
       position: left
       priority: 50
   - source: github:quartz-community/graph
-    enabled: false
+    enabled: true
     options:
       localGraph:
         depth: 1
-      globalGraph:
-        depth: -1
     layout:
       position: right
       priority: 10
+  - source: ./plugins/wiki-tour
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 5
   - source: ./plugins/semantic-search
     enabled: true
     layout:

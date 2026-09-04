@@ -809,6 +809,11 @@ import {
       }
       documentClickHandler = function (e) {
         if (anyGlobalGraphActive()) {
+          var closeBtn = e.target.closest(".global-graph-close-btn");
+          if (closeBtn) {
+            hideGlobalGraph();
+            return;
+          }
           var inContainer = e.target.closest(".global-graph-container");
           var inIcon = e.target.closest(".global-graph-icon");
           if (!inContainer && !inIcon) {

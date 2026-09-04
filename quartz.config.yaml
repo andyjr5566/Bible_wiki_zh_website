@@ -178,12 +178,14 @@ plugins:
     layout:
       position: left
       priority: 50
-  # Graph component with Chinese slug decoding and global graph disabled to prevent mobile crashes
+  # Graph component with Chinese slug decoding and expand modal view locked to depth 1
   - source: github:quartz-community/graph
     enabled: true
     options:
-      enableGlobal: false
+      enableGlobal: true
       localGraph:
+        depth: 1
+      globalGraph:
         depth: 1
     layout:
       position: right

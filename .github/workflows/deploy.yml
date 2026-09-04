@@ -11,6 +11,7 @@ name: Deploy Quartz to GitHub Pages
       - "quartz.ts"
       - "quartz.config.yaml"
       - "quartz.lock.json"
+      - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
 permissions:

@@ -14,6 +14,7 @@ import { QuartzLogger } from "../util/log"
 import { trace } from "../util/trace"
 import { BuildCtx, WorkerSerializableBuildCtx } from "../util/ctx"
 import { styleText } from "util"
+import { hashContent, loadCached, saveToCache, hydrateFromCache } from "./parseCache"
 
 export type QuartzMdProcessor = Processor<MDRoot, MDRoot, MDRoot>
 export type QuartzHtmlProcessor = Processor<undefined, MDRoot, HTMLRoot>
@@ -145,77 +146,168 @@ export function createMarkdownParser(ctx: BuildCtx, mdContent: MarkdownContent[]
 const clamp = (num: number, min: number, max: number) =>
   Math.min(Math.max(Math.round(num), min), max)
 
+// ── helpers for incremental parse ─────────────────────────────────────────────
+
+/**
+ * Read every file in `fps`, compute its content hash, and split into:
+ * - `hits`: files whose hash matches the cache → restored directly
+ * - `misses`: files that changed or are new → must go through parse pipeline
+ */
+async function partitionByCache(fps: FilePath[]): Promise<{
+  hits: ProcessedContent[]
+  missFiles: Array<{ fp: FilePath; raw: string }>
+}> {
+  const hits: ProcessedContent[] = []
+  const missFiles: Array<{ fp: FilePath; raw: string }> = []
+
+  await Promise.all(
+    fps.map(async (fp) => {
+      try {
+        const { readFile } = await import("fs/promises")
+        const raw = (await readFile(fp, "utf-8")).trim()
+        const hash = hashContent(raw)
+        const cached = await loadCached(fp, hash)
+        if (cached) {
+          hits.push(hydrateFromCache(cached))
+        } else {
+          missFiles.push({ fp, raw })
+        }
+      } catch {
+        // If we can't read the file at all, treat as miss so the normal
+        // parser can produce a proper error message.
+        missFiles.push({ fp, raw: "" })
+      }
+    }),
+  )
+
+  return { hits, missFiles }
+}
+
+/**
+ * After the full parse pipeline has run for all miss files, save their results
+ * to the cache so future runs can skip them.
+ */
+async function saveParsedToCache(fps: FilePath[], results: ProcessedContent[]): Promise<void> {
+  // fps and results are parallel arrays (same length, same order)
+  await Promise.all(
+    results.map(async ([hast, vfile], i) => {
+      const fp = fps[i]
+      if (!fp) return
+      try {
+        const { readFile } = await import("fs/promises")
+        const raw = (await readFile(fp, "utf-8")).trim()
+        const hash = hashContent(raw)
+        await saveToCache(fp, hash, hast, vfile)
+      } catch {
+        // Non-fatal
+      }
+    }),
+  )
+}
+
+// ── main entry point ───────────────────────────────────────────────────────────
+
 export async function parseMarkdown(ctx: BuildCtx, fps: FilePath[]): Promise<ProcessedContent[]> {
   const { argv } = ctx
   const perf = new PerfTimer()
   const log = new QuartzLogger(argv.verbose)
 
+  // ── Step 1: cache-first partitioning ──────────────────────────────────────
+  // Only run this when not in worker-incremental (watch) mode and when the
+  // QUARTZ_INCREMENTAL env var is set (CI incremental build) OR always
+  // (incremental cache always helps even on first build for subsequent runs).
+  log.start(`Checking parse cache for ${fps.length} files`)
+  const { hits, missFiles } = await partitionByCache(fps)
+  log.end(
+    `Parse cache: ${styleText("green", `${hits.length} hits`)}, ` +
+    `${styleText("yellow", `${missFiles.length} misses`)}`
+  )
+
+  const missFps = missFiles.map((m) => m.fp)
+
   // rough heuristics: 128 gives enough time for v8 to JIT and optimize parsing code paths
   const CHUNK_SIZE = 128
-  const concurrency = ctx.argv.concurrency ?? clamp(fps.length / CHUNK_SIZE, 1, 4)
+  const concurrency = ctx.argv.concurrency ?? clamp(missFps.length / CHUNK_SIZE, 1, 4)
 
-  let res: ProcessedContent[] = []
-  log.start(`Parsing input files using ${concurrency} threads`)
-  if (concurrency === 1) {
-    try {
-      const mdRes = await createFileParser(ctx, fps)(createMdProcessor(ctx))
-      res = await createMarkdownParser(ctx, mdRes)(createHtmlProcessor(ctx))
-    } catch (error) {
-      log.end()
-      throw error
+  let parsedMisses: ProcessedContent[] = []
+
+  if (missFps.length > 0) {
+    log.start(`Parsing ${missFps.length} changed/new files using ${concurrency} threads`)
+
+    if (concurrency === 1) {
+      try {
+        const mdRes = await createFileParser(ctx, missFps)(createMdProcessor(ctx))
+        parsedMisses = await createMarkdownParser(ctx, mdRes)(createHtmlProcessor(ctx))
+      } catch (error) {
+        log.end()
+        throw error
+      }
+    } else {
+      await transpileWorkerScript()
+      const pool = workerpool.pool("./quartz/bootstrap-worker.mjs", {
+        minWorkers: "max",
+        maxWorkers: concurrency,
+        workerType: "thread",
+      })
+      const serializableCtx: WorkerSerializableBuildCtx = {
+        buildId: ctx.buildId,
+        argv: ctx.argv,
+        allSlugs: ctx.allSlugs,
+        allFiles: ctx.allFiles,
+        incremental: ctx.incremental,
+        virtualPages: [],
+      }
+
+      try {
+        const textToMarkdownPromises: WorkerPromise<MarkdownContent[]>[] = []
+        let processedFiles = 0
+        for (const chunk of chunks(missFps, CHUNK_SIZE)) {
+          textToMarkdownPromises.push(pool.exec("parseMarkdown", [serializableCtx, chunk]))
+        }
+
+        const mdResults: Array<MarkdownContent[]> = await Promise.all(
+          textToMarkdownPromises.map(async (promise) => {
+            const result = await promise
+            processedFiles += result.length
+            log.updateText(`text->markdown ${styleText("gray", `${processedFiles}/${missFps.length}`)}`)
+            return result
+          }),
+        )
+
+        const markdownToHtmlPromises: WorkerPromise<ProcessedContent[]>[] = []
+        processedFiles = 0
+        for (const mdChunk of mdResults) {
+          markdownToHtmlPromises.push(pool.exec("processHtml", [serializableCtx, mdChunk]))
+        }
+        const results: ProcessedContent[][] = await Promise.all(
+          markdownToHtmlPromises.map(async (promise) => {
+            const result = await promise
+            processedFiles += result.length
+            log.updateText(`markdown->html ${styleText("gray", `${processedFiles}/${missFps.length}`)}`)
+            return result
+          }),
+        )
+
+        parsedMisses = results.flat()
+      } finally {
+        await pool.terminate()
+      }
     }
-  } else {
-    await transpileWorkerScript()
-    const pool = workerpool.pool("./quartz/bootstrap-worker.mjs", {
-      minWorkers: "max",
-      maxWorkers: concurrency,
-      workerType: "thread",
+
+    log.end(`Parsed ${parsedMisses.length} files in ${perf.timeSince()}`)
+
+    // ── Step 3: save newly-parsed results to cache ─────────────────────────
+    // Do this asynchronously so it doesn't block the emit step.
+    // We intentionally do NOT await this — failures are non-fatal.
+    saveParsedToCache(missFps, parsedMisses).catch((err) => {
+      console.warn(`[parseCache] Background save failed: ${(err as Error).message}`)
     })
-    const serializableCtx: WorkerSerializableBuildCtx = {
-      buildId: ctx.buildId,
-      argv: ctx.argv,
-      allSlugs: ctx.allSlugs,
-      allFiles: ctx.allFiles,
-      incremental: ctx.incremental,
-      virtualPages: [],
-    }
-
-    try {
-      const textToMarkdownPromises: WorkerPromise<MarkdownContent[]>[] = []
-      let processedFiles = 0
-      for (const chunk of chunks(fps, CHUNK_SIZE)) {
-        textToMarkdownPromises.push(pool.exec("parseMarkdown", [serializableCtx, chunk]))
-      }
-
-      const mdResults: Array<MarkdownContent[]> = await Promise.all(
-        textToMarkdownPromises.map(async (promise) => {
-          const result = await promise
-          processedFiles += result.length
-          log.updateText(`text->markdown ${styleText("gray", `${processedFiles}/${fps.length}`)}`)
-          return result
-        }),
-      )
-
-      const markdownToHtmlPromises: WorkerPromise<ProcessedContent[]>[] = []
-      processedFiles = 0
-      for (const mdChunk of mdResults) {
-        markdownToHtmlPromises.push(pool.exec("processHtml", [serializableCtx, mdChunk]))
-      }
-      const results: ProcessedContent[][] = await Promise.all(
-        markdownToHtmlPromises.map(async (promise) => {
-          const result = await promise
-          processedFiles += result.length
-          log.updateText(`markdown->html ${styleText("gray", `${processedFiles}/${fps.length}`)}`)
-          return result
-        }),
-      )
-
-      res = results.flat()
-    } finally {
-      await pool.terminate()
-    }
   }
 
-  log.end(`Parsed ${res.length} Markdown files in ${perf.timeSince()}`)
+  const res = [...hits, ...parsedMisses]
+  console.log(
+    styleText("green", `Total: ${res.length} files ready in ${perf.timeSince()} `) +
+    styleText("gray", `(${hits.length} cached, ${parsedMisses.length} parsed)`)
+  )
   return res
 }

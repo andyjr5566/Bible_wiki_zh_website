@@ -54,6 +54,23 @@ jobs:
         run: |
           sed -i 's|baseUrl: bible-wiki-zh-website.vercel.app|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|' quartz.config.yaml
 
+      - name: Detect changed paths
+        id: changes
+        run: |
+          # Check if any non-content file changed (quartz/**, plugins/**, config, etc.)
+          CODE_CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -vE '^content/' | wc -l | tr -d ' ')
+          echo "code_changed=$CODE_CHANGED" >> $GITHUB_OUTPUT
+          echo "Changed code files: $CODE_CHANGED"
+
+      - name: Restore public/ output cache
+        id: restore-public
+        uses: actions/cache@v4
+        with:
+          path: public
+          key: quartz-public-${{ github.sha }}
+          restore-keys: |
+            quartz-public-
+
       - name: Setup local plugins
         run: |
           mkdir -p .quartz/plugins
@@ -81,7 +98,22 @@ jobs:
           }
 
       - name: Build Quartz
-        run: npx quartz build
+        env:
+          # Enable incremental mode only when:
+          # 1. public/ cache was restored (cache-hit), AND
+          # 2. No quartz/plugins/config files changed (content-only push)
+          QUARTZ_INCREMENTAL: ${{ steps.restore-public.outputs.cache-hit == 'true' && steps.changes.outputs.code_changed == '0' && '1' || '0' }}
+        run: |
+          echo "QUARTZ_INCREMENTAL=$QUARTZ_INCREMENTAL"
+          npx quartz build --concurrency=2
+
+      - name: Save public/ output cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: public
+          key: quartz-public-${{ github.sha }}
+
 
       - name: Copy interactive website dist to public
         run: |

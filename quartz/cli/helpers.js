@@ -68,7 +68,16 @@ export function symlinkOrCopySync(target, linkPath) {
   try {
     fs.symlinkSync(target, linkPath, "dir")
   } catch (err) {
-    if (err.code === "EEXIST") return
+    if (err.code === "EEXIST") {
+      try {
+        if (fs.lstatSync(linkPath).isSymbolicLink()) {
+          fs.unlinkSync(linkPath)
+          fs.symlinkSync(target, linkPath, "dir")
+          return
+        }
+      } catch {}
+      return
+    }
     if (err.code === "EPERM" && process.platform === "win32") {
       try {
         fs.symlinkSync(target, linkPath, "junction")

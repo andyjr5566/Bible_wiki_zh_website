@@ -54,6 +54,13 @@ jobs:
         run: |
           sed -i 's|baseUrl: bible-wiki-zh-website.vercel.app|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|' quartz.config.yaml
 
+      - name: Setup local plugins
+        run: |
+          mkdir -p .quartz/plugins
+          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search
+          ln -s ../../plugins/wiki-tour .quartz/plugins/wiki-tour
+          ln -s ../../plugins/semantic-search .quartz/plugins/semantic-search
+
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config
 

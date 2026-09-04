@@ -1,4 +1,4 @@
-﻿$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
+$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
@@ -149,14 +149,21 @@ try {
         git commit -m "sync: content update $timestamp"
         Write-Host 'Committed changes.'
 
-        git push
+        Write-Host 'Pulling latest remote changes...'
+        git pull --rebase origin main
+        if ($LASTEXITCODE -ne 0) {
+            throw "git pull --rebase failed (exit code $LASTEXITCODE)"
+        }
+
+        git push origin main
         if ($LASTEXITCODE -ne 0) {
             throw "git push failed (exit code $LASTEXITCODE)"
         }
         Write-Host 'Pushed to remote.'
     }
     else {
-        Write-Host 'No changes to commit.'
+        git pull origin main
+        Write-Host 'No changes to commit. Repository is up to date.'
     }
 }
 finally {

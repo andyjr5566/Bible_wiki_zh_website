@@ -459,3 +459,9 @@ html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
   background-color: rgba(180, 83, 9, 0.15) !important; /* 滑鼠移過去的底部顏色變深 */
   text-decoration: none;
 }
+
+/* 禁用全局關係圖譜，避免手機與桌面端因數千節點渲染導致當機癱瘓 */
+.global-graph-icon,
+.global-graph-outer {
+  display: none !important;
+}

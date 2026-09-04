@@ -181,6 +181,7 @@ plugins:
   - source: github:quartz-community/graph
     enabled: true
     options:
+      enableGlobal: false
       localGraph:
         depth: 1
     layout:

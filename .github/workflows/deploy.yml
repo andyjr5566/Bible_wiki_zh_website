@@ -57,9 +57,10 @@ jobs:
       - name: Setup local plugins
         run: |
           mkdir -p .quartz/plugins
-          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search
+          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph
           ln -s ../../plugins/wiki-tour .quartz/plugins/wiki-tour
           ln -s ../../plugins/semantic-search .quartz/plugins/semantic-search
+          ln -s ../../plugins/graph .quartz/plugins/graph
 
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config

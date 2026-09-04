@@ -178,7 +178,7 @@ plugins:
     layout:
       position: left
       priority: 50
-  # Keep Graph on the pinned remote plugin in CI; local Graph caused the Quartz build to stall.
+  # Graph component with Chinese slug decoding and global graph disabled to prevent mobile crashes
   - source: github:quartz-community/graph
     enabled: true
     options:

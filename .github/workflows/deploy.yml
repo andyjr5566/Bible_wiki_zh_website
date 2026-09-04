@@ -64,6 +64,11 @@ jobs:
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config
 
+      - name: Apply patched plugins
+        run: |
+          mkdir -p .quartz/plugins/graph/dist
+          cp -r plugins/graph/dist/* .quartz/plugins/graph/dist/
+
       - name: Build interactive websites
         run: |
           python quartz/static/website/build.py --ci-build > build_interactive.log 2>&1 || {

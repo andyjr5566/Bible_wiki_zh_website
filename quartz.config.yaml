@@ -178,6 +178,7 @@ plugins:
     layout:
       position: left
       priority: 50
+  # Keep Graph on the pinned remote plugin in CI; local Graph caused the Quartz build to stall.
   - source: github:quartz-community/graph
     enabled: true
     options:

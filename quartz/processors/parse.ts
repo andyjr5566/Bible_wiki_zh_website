@@ -7,6 +7,7 @@ import { Root as HTMLRoot } from "hast"
 import { MarkdownContent, ProcessedContent } from "../plugins/vfile"
 import { PerfTimer } from "../util/perf"
 import { read } from "to-vfile"
+import { readFile } from "fs/promises"
 import { FilePath, QUARTZ, slugifyFilePath } from "../util/path"
 import path from "path"
 import workerpool, { Promise as WorkerPromise } from "workerpool"
@@ -155,32 +156,31 @@ const clamp = (num: number, min: number, max: number) =>
  */
 async function partitionByCache(fps: FilePath[]): Promise<{
   hits: ProcessedContent[]
-  missFiles: Array<{ fp: FilePath; raw: string }>
+  missFps: FilePath[]
 }> {
   const hits: ProcessedContent[] = []
-  const missFiles: Array<{ fp: FilePath; raw: string }> = []
+  const missFps: FilePath[] = []
 
   await Promise.all(
     fps.map(async (fp) => {
       try {
-        const { readFile } = await import("fs/promises")
         const raw = (await readFile(fp, "utf-8")).trim()
         const hash = hashContent(raw)
         const cached = await loadCached(fp, hash)
         if (cached) {
           hits.push(hydrateFromCache(cached))
         } else {
-          missFiles.push({ fp, raw })
+          missFps.push(fp)
         }
       } catch {
         // If we can't read the file at all, treat as miss so the normal
         // parser can produce a proper error message.
-        missFiles.push({ fp, raw: "" })
+        missFps.push(fp)
       }
     }),
   )
 
-  return { hits, missFiles }
+  return { hits, missFps }
 }
 
 /**
@@ -194,7 +194,6 @@ async function saveParsedToCache(fps: FilePath[], results: ProcessedContent[]): 
       const fp = fps[i]
       if (!fp) return
       try {
-        const { readFile } = await import("fs/promises")
         const raw = (await readFile(fp, "utf-8")).trim()
         const hash = hashContent(raw)
         await saveToCache(fp, hash, hast, vfile)
@@ -217,13 +216,11 @@ export async function parseMarkdown(ctx: BuildCtx, fps: FilePath[]): Promise<Pro
   // QUARTZ_INCREMENTAL env var is set (CI incremental build) OR always
   // (incremental cache always helps even on first build for subsequent runs).
   log.start(`Checking parse cache for ${fps.length} files`)
-  const { hits, missFiles } = await partitionByCache(fps)
+  const { hits, missFps } = await partitionByCache(fps)
   log.end(
     `Parse cache: ${styleText("green", `${hits.length} hits`)}, ` +
-    `${styleText("yellow", `${missFiles.length} misses`)}`
+    `${styleText("yellow", `${missFps.length} misses`)}`
   )
-
-  const missFps = missFiles.map((m) => m.fp)
 
   // rough heuristics: 128 gives enough time for v8 to JIT and optimize parsing code paths
   const CHUNK_SIZE = 128

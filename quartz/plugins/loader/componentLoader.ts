@@ -63,9 +63,9 @@ export async function loadComponentsFromPackage(
         )
       }
     }
-  } catch {
+  } catch (err) {
     if (manifest.components && Object.keys(manifest.components).length > 0) {
-      console.warn(`Plugin "${pluginName}" declares components but failed to load them`)
+      console.warn(`Plugin "${pluginName}" declares components but failed to load them:`, err)
     }
   }
 }

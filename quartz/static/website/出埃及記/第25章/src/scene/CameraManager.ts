@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { ExperienceMode } from '../types/ui';
 import type { Vector3Data } from '../types/core';
 import type { WorldBounds } from './WorldAlignment';
+import type { DimensionSpec } from '../types/dimensions';
 
 export interface CameraTransition {
   startPos: THREE.Vector3;
@@ -21,8 +22,10 @@ export class CameraManager {
   readonly #controls: OrbitControls | null;
   #mode: ExperienceMode = 'overview';
   #activeTransition: CameraTransition | null = null;
+  readonly #dimensionSpecs: ReadonlyMap<string, DimensionSpec>;
 
-  constructor(aspect: number, domElement?: HTMLElement) {
+  constructor(aspect: number, domElement?: HTMLElement, dimensionSpecs: readonly DimensionSpec[] = []) {
+    this.#dimensionSpecs = new Map(dimensionSpecs.map((spec) => [spec.id, spec]));
     this.camera = new THREE.PerspectiveCamera(48, aspect, 0.1, 500);
     this.camera.position.set(17, 13, 30);
     this.camera.lookAt(0, 0.8, 0);
@@ -159,6 +162,13 @@ export class CameraManager {
     this.#activeTransition = null;
   }
 
+  get isFlying(): boolean { return this.#activeTransition !== null; }
+
+  /** Apply a teaching pose immediately for reduced-motion users or a paused tour. */
+  applyCinematicPose(pose: { position: Vector3Data; target: Vector3Data; fov: number }): void {
+    this.applyRig(pose);
+  }
+
   dispose(): void {
     this.#controls?.dispose();
   }
@@ -170,6 +180,7 @@ export class CameraManager {
     if (mode === 'overview') this.applyRig({ position: { x: 17, y: 13, z: 30 }, target: { x: 0, y: 0.8, z: 0 }, fov: 46 });
     if (mode === 'tour') this.applyRig({ position: { x: 10, y: 7, z: 22 }, target: { x: 0, y: 1.2, z: 12 }, fov: 46 });
     if (mode === 'learning') this.applyRig({ position: { x: 8, y: 5.5, z: 14 }, target: { x: 0, y: 1.2, z: 7 }, fov: 48 });
+    if (mode === 'ritual') this.applyRig({ position: { x: 8, y: 5.5, z: 14 }, target: { x: 0, y: 1.2, z: 7 }, fov: 48 });
   }
 
   focus(target: Vector3Data, distance = 8): void {

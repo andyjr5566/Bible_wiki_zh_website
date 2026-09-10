@@ -1,0 +1,168 @@
+{
+  "animals": [
+    {
+      "id": "offering-bull",
+      "label": "公牛（模型示意）",
+      "kind": "cattle",
+      "requiredSex": "male",
+      "assetId": "bull-library",
+      "representation": "model-with-label",
+      "confidence": "reconstructed",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "scriptureReferences": ["利1:3-9"],
+      "limitations": ["模型只作公牛分支的低細節示意，不呈現未載的屠宰動作。", "模型來源沒有提供古代品種或外觀證據。"]
+    },
+    {
+      "id": "offering-sheep",
+      "label": "公綿羊（模型示意）",
+      "kind": "sheep",
+      "requiredSex": "male",
+      "assetId": "sheep-library",
+      "representation": "model-with-label",
+      "confidence": "reconstructed",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "scriptureReferences": ["利1:10-13"],
+      "limitations": ["分支標籤指定公羊；模型本身不作性別證明。", "模型來源沒有提供古代品種或外觀證據。"]
+    },
+    {
+      "id": "offering-cow-candidate",
+      "label": "牛模型候選（未接入公牛分支）",
+      "kind": "cattle",
+      "requiredSex": "unspecified",
+      "assetId": "cow-npc-library",
+      "representation": "model-with-label",
+      "confidence": "illustrative",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "scriptureReferences": ["利1:3-9"],
+      "limitations": ["來源模型性別未核准，不能代替經文要求的公牛。", "只保留作資產審查候選，不被任何已核准分支引用。"]
+    },
+    {
+      "id": "offering-goat-symbol",
+      "label": "公山羊（文字／符號示意）",
+      "kind": "goat",
+      "requiredSex": "male",
+      "assetId": null,
+      "representation": "symbol-with-label",
+      "confidence": "textual",
+      "sourceClaimIds": ["C-LV01-BRANCHES", "C-LV16-DAY"],
+      "scriptureReferences": ["利1:10-13", "利16:5-10,20-22"],
+      "limitations": ["目前沒有核准的山羊 mesh，使用清楚標字的符號，不冒充綿羊或牛。"]
+    },
+    {
+      "id": "offering-bird-symbol",
+      "label": "鳥（文字／符號示意）",
+      "kind": "bird",
+      "requiredSex": "unspecified",
+      "assetId": null,
+      "representation": "symbol-with-label",
+      "confidence": "textual",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "scriptureReferences": ["利1:14-17"],
+      "limitations": ["目前沒有核准的斑鳩或雛鴿 mesh，使用清楚標字的符號，不以其他動物代替。"]
+    }
+  ],
+  "branches": [
+    {
+      "id": "burnt-offering-cattle",
+      "label": "燔祭／牛",
+      "animalId": "offering-bull",
+      "ritualId": "burnt-offering-service",
+      "branchKind": "cattle",
+      "actorRole": "offering-person",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "instruction": "獻祭者按手並在指定位置宰殺公牛；祭司接續處理血與壇上步驟。畫面只用分工標籤。"
+    },
+    {
+      "id": "burnt-offering-sheep",
+      "label": "燔祭／羊",
+      "animalId": "offering-sheep",
+      "ritualId": "burnt-offering-sheep-service",
+      "branchKind": "sheep",
+      "actorRole": "offering-person",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "instruction": "獻祭者按手並在指定位置宰殺公綿羊；祭司接續處理血與壇上步驟。畫面只用分工標籤。"
+    },
+    {
+      "id": "burnt-offering-goat",
+      "label": "燔祭／山羊",
+      "animalId": "offering-goat-symbol",
+      "ritualId": "burnt-offering-goat-service",
+      "branchKind": "goat",
+      "actorRole": "offering-person",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "instruction": "以公山羊文字／符號保留分支，完成後回到同一燔祭程序導覽。"
+    },
+    {
+      "id": "burnt-offering-bird",
+      "label": "燔祭／鳥",
+      "animalId": "offering-bird-symbol",
+      "ritualId": "burnt-offering-bird-service",
+      "branchKind": "bird",
+      "actorRole": "priest",
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "instruction": "以鳥的文字／符號保留分支；祭司執行經文所載處理，畫面不加入未載的寫實細節。"
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "burnt-offering",
+      "label": "燔祭",
+      "materials": "牛、羊／山羊或鳥",
+      "purpose": "全然焚燒的供物，分支依牲畜種類展開。",
+      "actorRole": "both",
+      "location": "會幕門口與燔祭壇",
+      "handling": "獻祭者按手並依分支宰殺；祭司處理血、分塊／清洗與壇上焚燒。",
+      "scriptureReferences": ["Leviticus 1:1-17"],
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "limitations": ["不補入未載的寫實宰殺、聲音或火焰細節。"]
+    },
+    {
+      "id": "grain-offering",
+      "label": "素祭",
+      "materials": "細麵、油、乳香；部分帶鹽",
+      "purpose": "以穀物、油與乳香獻上的供物，保留經文指定的紀念部分。",
+      "actorRole": "both",
+      "location": "祭司與燔祭壇",
+      "handling": "祭司取出紀念部分在壇上焚燒，餘下部分按規定歸祭司；不套用動物血祭流程。",
+      "scriptureReferences": ["Leviticus 2:1-16", "Leviticus 6:14-18"],
+      "sourceClaimIds": ["C-LV02-07-FIVE"],
+      "limitations": ["不同素祭形式的器具與配方細節只按引用段落呈現。"]
+    },
+    {
+      "id": "peace-offering",
+      "label": "平安祭",
+      "materials": "牛、羊／山羊與脂油",
+      "purpose": "按感謝、還願或甘心獻上的祭，保留獻祭者與祭司的分工。",
+      "actorRole": "both",
+      "location": "會幕門口與燔祭壇",
+      "handling": "祭司灑血並焚燒脂油；可食部分與期限依分支經文處理，不把全牲都焚燒。",
+      "scriptureReferences": ["Leviticus 3:1-17", "Leviticus 7:11-21,29-36"],
+      "sourceClaimIds": ["C-LV02-07-FIVE"],
+      "limitations": ["食用期限與分配依不同平安祭分支，不合併成單一時間。"]
+    },
+    {
+      "id": "sin-offering",
+      "label": "贖罪祭",
+      "materials": "依身份與情況使用公牛、山羊、母羊等",
+      "purpose": "按犯罪者身份與情況處理的贖罪祭。",
+      "actorRole": "both",
+      "location": "會幕、燔祭壇與營外（依分支）",
+      "handling": "祭司按分支處理血與祭肉；帶血入會幕與營外焚燒的分支不得與一般可食祭肉混同。",
+      "scriptureReferences": ["Leviticus 4:1-35", "Leviticus 6:24-30"],
+      "sourceClaimIds": ["C-LV02-07-FIVE"],
+      "limitations": ["不把受膏祭司、會眾、官長與平民的分支合併。"]
+    },
+    {
+      "id": "guilt-offering",
+      "label": "贖愆祭",
+      "materials": "無殘疾公綿羊或利未記五章指定供物",
+      "purpose": "針對特定過犯與賠償責任的祭。",
+      "actorRole": "both",
+      "location": "燔祭壇與聖處",
+      "handling": "祭司在壇處理血與脂油；祭司中的男子按規定在聖處吃祭肉，並保留賠償加五分之一的文字。",
+      "scriptureReferences": ["Leviticus 5:1-19", "Leviticus 7:1-10"],
+      "sourceClaimIds": ["C-LV02-07-FIVE"],
+      "limitations": ["不把贖愆祭的處理規則改寫成平安祭的共享宴席。"]
+    }
+  ]
+}

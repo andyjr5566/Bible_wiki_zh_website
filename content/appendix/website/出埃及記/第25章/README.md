@@ -1,62 +1,36 @@
-# Interactive Biblical Tabernacle
+# 會幕互動導覽網站
 
-以出埃及記 25–30 章為核心的互動式聖經會幕專案。本 repository 目前完成「全新架構骨架」里程碑：舊版大型 JavaScript runtime 已移除，改為 Vite + strict TypeScript + Three.js + Zod 的模組化基線。
+以出埃及記的會幕、器物與供職規範為核心的繁體中文3D研讀網站。技術為 Vite、TypeScript、Three.js、Zod。用途為非商業教育與研讀，保留所有第三方素材歸屬。
 
-用途限制：非商業教育與聖經研讀。主會幕與多個器具模型使用 CC BY-NC，署名及非商業限制不可移除。
+## 本輪工作入口
 
-## 啟動
+目前依使用者要求回復分支前可用的體驗，保留來源與載入可靠性等修正。改動與驗證見 [體驗回復紀錄](docs/qa/restoration/RESTORE_EXPERIENCE.md)。
 
-```bash
-npm install
+提供 3D 總覽、八幕自動運鏡、五站手動導覽、六件器物研讀及來源查閱。器物模式聚焦完整會幕裡的器物；完整經文與來源可展開閱讀。
+
+新增程序、角色卡、五祭比較與細節模型入口已撤下；研究資料與 Blender 工作檔保留。整站擴張曾未通過 R24 驗收，歷史與未解問題仍見 [實作進度](docs/planning/REVAMP_PROGRESS.md)，不視為已完成功能。
+
+## 本機啟動
+
+在本目錄執行；首次安裝依 lockfile：
+
+```powershell
+npm ci
 npm run dev
 ```
 
-預設網址：`http://127.0.0.1:3001/`
+依終端實際網址開啟，預設 `http://127.0.0.1:3001/`。
 
-完整驗證與 production build：
-
-```bash
-npm run verify
+```powershell
 npm run build
 npm run preview
 ```
 
-## 部署
+build 包含 typecheck、tests、architecture、assets。單獨驗證可跑 `npm run verify`。指定 preview 埠遇到 npm/PowerShell 轉傳問題時，直接執行 `npx vite preview --host 127.0.0.1 --port 4173`。
 
-這個章節是 Vite 專案，`index.html` 是開發來源，真正可部署的是 `dist/`。
-`appendix/website/build.py` 會辨識這類章節；它不會在一般附錄索引時偷偷執行
-`npm`，只有明確指定 `--build` 才會建置。
+## 原始資料與交付
 
-在 repository 根目錄執行：
-
-```bash
-python appendix/website/build.py --build --deploy-dir .tmp/website-deploy
-```
-
-完成後，把 `.tmp/website-deploy` 設為靜態主機的 publish directory。根目錄的
-`index.html` 是網站入口清單，會幕網站位於
-`出埃及記/第25章/index.html`；同一目錄也會產生
-`interactive-websites.json`。部署產物只供非商業教育與聖經研讀使用，模型署名
-與授權資訊仍保留在本專案文件中。
-
-## 目前交付
-
-- 單一 `UIStateManager` 管理 Walking、Overview、Tour、Learning、Map；相機聚焦不再暗中改模式。
-- 統一 `InputState` 與 Desktop/Mobile adapters；WASD、E、Space、Shift、M、T 進入同一 input pipeline。
-- SceneBootstrap、CameraManager、PlayerController、InteractionSystem 與各領域 managers/registries 的 typed skeleton。
-- `tabernacle.json`、`characters.json`、`rituals.json`、`scriptures.json`、`locations.json` 通過 Zod schema 與 cross-reference tests。
-- Bible ↔ object/ritual/location/character 雙向 mapping。
-- High Priest、Priest、Levite/Helper、garment slots、六個具名儀式與 playback/UI hooks。
-- Desktop-high 預設 hero 模型、structural framework、六個 detail models；lowpoly 只允許手動 fallback。
-- 參考圖已用於 canonical spatial sequence，但不直接當 runtime asset。
-
-目前頁面刻意只呈現 canonical world-frame skeleton，不沿用舊 UI 或舊場景。高品質主模型接入、world alignment、碰撞、完整人物與儀式動畫屬於下一階段。
-
-## 文件
-
-- [架構與舊版稽核](docs/ARCHITECTURE.md)
-- [重建階段與完成定義](docs/REBUILD_PLAN.md)
-- [高品質資產策略](docs/ASSET_STRATEGY.md)
-- [最終完成稽核](docs/planning/COMPLETION_AUDIT.md)
-- [資產與署名紀錄](docs/ASSETS.md)
-- [參考資料使用紀錄](docs/REFERENCE_MATERIAL.md)
+- 經文字文使用庫根 `raw_scripture/`；本站來源流程依 [證據契約](docs/planning/REVAMP_EVIDENCE.md)。
+- 已下載模型與歸屬：[ASSETS](docs/ASSETS.md)、[授權歷史](docs/assets/LICENSE_AUDIT.md)。原source不覆寫，Blender改造另產衍生。
+- 使用者研究素材：[REFERENCE_MATERIAL](docs/REFERENCE_MATERIAL.md)；可供查核，不直接當歷史真相。
+- 可部署產物是 `dist/`，不是原始 `index.html`。既有建置／匯出方式見 [DEPLOYMENT](docs/DEPLOYMENT.md)，本批只交付本機預覽與產物，不自動發布。

@@ -12,9 +12,10 @@ export const assetSchema = z.object({
   runtimeFile: z.string().min(1), sourceFile: z.string().min(1), processedFile: z.string().min(1),
   license: z.string().min(1), licenseUrl: z.string().url(), downloadAvailable: z.literal(true),
   commercialUse: z.literal(false), downloadDate: z.string().min(10), sha256: z.string().length(64),
+  derivedHash: z.string().length(64).optional(), derivedBytes: z.number().int().positive().optional(),
   triangleCount: z.number().int().nonnegative(), vertexCount: z.number().int().nonnegative(),
   attribution: z.string().min(1),
   transform: z.object({ position: vector3Schema, rotation: vector3Schema, scale: z.number().positive() }),
 });
 
-export const assetsSchema = z.object({ version: z.literal(2), assets: z.array(assetSchema) });
+export const assetsSchema = z.object({ version: z.literal(2), derivedManifest: z.string().min(1).optional(), assets: z.array(assetSchema) });

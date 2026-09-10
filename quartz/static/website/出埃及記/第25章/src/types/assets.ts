@@ -31,6 +31,8 @@ export interface AssetDefinition {
   commercialUse: false;
   downloadDate: string;
   sha256: string;
+  derivedHash?: string | undefined;
+  derivedBytes?: number | undefined;
   triangleCount: number;
   vertexCount: number;
   attribution: string;
@@ -59,4 +61,5 @@ export interface AssetRuntimeState {
   boundsByAssetId: Readonly<Record<string, AssetWorldBounds>>;
   progress: { assetId: string; phase: 'download' | 'parse' | 'validate' | 'ready' | 'error'; loadedBytes: number; totalBytes: number | null; ratio: number | null } | null;
   error: AssetRuntimeError | null;
+  diagnostics: { selectedAssetId: string | null; detailGeneration: number; pendingAssetIds: string[] };
 }

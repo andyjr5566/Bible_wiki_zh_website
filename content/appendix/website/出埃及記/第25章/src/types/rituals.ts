@@ -5,6 +5,9 @@ export type RitualTrigger = { kind: 'interaction'; objectId: EntityId } | { kind
 
 export interface RitualStep {
   id: EntityId;
+  branchId: EntityId;
+  actorRole: 'offering-person' | 'priest' | 'high-priest' | 'levite' | 'assigned-person' | 'actor-unspecified';
+  locationId: EntityId;
   order: number;
   title: string;
   instruction: string;
@@ -14,6 +17,11 @@ export interface RitualStep {
   scriptureReferences: ScriptureReference[];
   playbackHook: string;
   uiHook: string;
+  garmentState: 'daily-priest' | 'daily-high-priest' | 'atonement-linen' | 'post-atonement-garments' | 'unspecified';
+  actionClaimIds: string[];
+  nextStepIds: EntityId[];
+  displayCue: string;
+  unresolved: string[];
 }
 
 export interface RitualDefinition {

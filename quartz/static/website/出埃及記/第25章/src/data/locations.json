@@ -7,6 +7,9 @@
     { "id": "burnt-altar-location", "name": "燔祭壇", "zone": "outer-court", "position": { "x": 0, "y": 0, "z": 9 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.2954545455 } },
     { "id": "laver-location", "name": "洗濯盆", "zone": "outer-court", "position": { "x": 0, "y": 0, "z": 0 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.5 } },
     { "id": "holy-place", "name": "聖所", "zone": "holy-place", "position": { "x": 0, "y": 0, "z": -5 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.6136363636 } },
-    { "id": "most-holy-place", "name": "至聖所", "zone": "most-holy-place", "position": { "x": 0, "y": 0, "z": -9 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.7045454545 } }
+    { "id": "most-holy-place", "name": "至聖所", "zone": "most-holy-place", "position": { "x": 0, "y": 0, "z": -9 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.7045454545 } },
+    { "id": "camp-assembly", "name": "營中會眾區", "zone": "camp", "position": { "x": 0, "y": 0, "z": 20 }, "facingRadians": 0, "mapPoint": { "x": 0.5, "y": 0.0454545455 } },
+    { "id": "wilderness-route", "name": "曠野路線（示意）", "zone": "camp", "position": { "x": 10, "y": 0, "z": 20 }, "facingRadians": 0, "mapPoint": { "x": 0.9166666667, "y": 0.0454545455 } },
+    { "id": "camp-outside", "name": "營外處理區（示意）", "zone": "camp", "position": { "x": -10, "y": 0, "z": 16 }, "facingRadians": 0, "mapPoint": { "x": 0.0833333333, "y": 0.1363636364 } }
   ]
 }

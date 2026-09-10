@@ -1,0 +1,194 @@
+- main:
+  - generic "可拖曳旋轉、滾輪縮放的 3D 會幕場景"
+  - paragraph: 3D 場景提供同等的文字操作：使用上方四個入口切換場景總覽、五站導覽、器物與經文、服事程序；器物、程序步驟和來源會在左側面板列出。鍵盤可用 Tab 選取按鈕，Escape 關閉目前最上層的視窗。
+  - paragraph: EXODUS 25 · 3D INTERACTIVE EXPLORER
+  - heading "聖經會幕 · 空間研讀" [level=1]
+  - navigation "體驗模式":
+    - button "場景總覽模式":
+      - generic: 場景總覽
+    - button "五站導覽模式":
+      - generic: 五站導覽
+    - button "器物與經文模式" [active] [pressed]:
+      - generic: 器物與經文
+    - button "服事程序模式":
+      - generic: 服事程序
+  - button "▶ 逐幕 3D 導覽"
+  - button "📜 出25章研讀"
+  - button "🗺️ 平面圖"
+  - button "切換音效": 🔊
+  - button "開啟設定與大氣氛圍": ⚙️
+  - button "資料來源"
+  - complementary "研讀與操作面板":
+    - region "燔祭壇":
+      - paragraph: 器物空間研讀 · 考據探索
+      - heading "燔祭壇" [level=2]
+      - generic: 經文明載
+      - paragraph: 模型檢視：框架剖面 · 教學重建
+      - paragraph: 📍 位置：燔祭壇
+      - paragraph: 皂莢木壇包銅，長寬各五肘、高三肘，設有角、網與杠。
+      - paragraph:
+        - strong: 用途／角色：
+        - text: 燔祭壇以皂莢木製作，長寬各五肘、高三肘，包銅並有角、網與杠。
+      - generic: 尺寸：
+      - strong: 長 5 肘 × 寬 5 肘 × 高 3 肘（長度單位：肘）
+      - paragraph: 主體三向尺寸有明文；網與角的細部尺寸未詳。
+      - generic: 材料：
+      - strong: 皂莢木、銅
+      - heading "可點部件" [level=3]
+      - button "清除焦點"
+      - list:
+        - button "四角 重建／未詳":
+          - strong: 四角
+          - generic: 重建／未詳
+        - button "銅網 3D 對應":
+          - strong: 銅網
+          - generic: 3D 對應
+        - button "杠 重建／未詳":
+          - strong: 杠
+          - generic: 重建／未詳
+      - navigation "器物選擇":
+        - button "約櫃"
+        - button "陳設餅桌"
+        - button "金燈臺"
+        - button "香壇"
+        - button "燔祭壇"
+        - button "洗濯盆"
+      - generic "經文、來源與事奉規範"
+      - paragraph: 文字、尺寸與材料只取自已核准資料；模型外觀若屬重建，會保留清楚標示。
+      - region "經文證據與限制":
+        - heading "經文證據與限制" [level=3]
+        - generic: 每項主張分開追溯
+        - generic "經文 C-EX27-BURNT-ALTAR 已核准":
+          - generic: 經文
+          - strong: C-EX27-BURNT-ALTAR
+          - generic: 已核准
+        - heading "考古／研究比較" [level=4]
+        - paragraph: 目前沒有本器物可核准的考古比較主張。
+      - heading "相關程序" [level=3]
+      - generic: 此器物的程序另在資料中標示。
+      - region "五祭比較":
+        - heading "五祭比較" [level=3]
+        - generic: 來源分支
+        - paragraph: 每一行保留材料、目的、行動者、地點與處理／可食界線；燔祭提供牛、羊／山羊、鳥三條核心回放分支。
+        - generic "燔祭 獻祭者／祭司":
+          - heading "燔祭" [level=3]
+          - generic: 獻祭者／祭司
+        - term: 材料
+        - definition: 牛、羊／山羊或鳥
+        - term: 目的
+        - definition: 全然焚燒的供物，分支依牲畜種類展開。
+        - term: 地點
+        - definition: 會幕門口與燔祭壇
+        - term: 處理／可食
+        - definition: 獻祭者按手並依分支宰殺；祭司處理血、分塊／清洗與壇上焚燒。
+        - paragraph: Leviticus 1:1-17
+        - generic "素祭 獻祭者／祭司":
+          - heading "素祭" [level=3]
+          - generic: 獻祭者／祭司
+        - term: 材料
+        - definition: 細麵、油、乳香；部分帶鹽
+        - term: 目的
+        - definition: 以穀物、油與乳香獻上的供物，保留經文指定的紀念部分。
+        - term: 地點
+        - definition: 祭司與燔祭壇
+        - term: 處理／可食
+        - definition: 祭司取出紀念部分在壇上焚燒，餘下部分按規定歸祭司；不套用動物血祭流程。
+        - paragraph: Leviticus 2:1-16 · Leviticus 6:14-18
+        - generic "平安祭 獻祭者／祭司":
+          - heading "平安祭" [level=3]
+          - generic: 獻祭者／祭司
+        - term: 材料
+        - definition: 牛、羊／山羊與脂油
+        - term: 目的
+        - definition: 按感謝、還願或甘心獻上的祭，保留獻祭者與祭司的分工。
+        - term: 地點
+        - definition: 會幕門口與燔祭壇
+        - term: 處理／可食
+        - definition: 祭司灑血並焚燒脂油；可食部分與期限依分支經文處理，不把全牲都焚燒。
+        - paragraph: Leviticus 3:1-17 · Leviticus 7:11-21,29-36
+        - generic "贖罪祭 獻祭者／祭司":
+          - heading "贖罪祭" [level=3]
+          - generic: 獻祭者／祭司
+        - term: 材料
+        - definition: 依身份與情況使用公牛、山羊、母羊等
+        - term: 目的
+        - definition: 按犯罪者身份與情況處理的贖罪祭。
+        - term: 地點
+        - definition: 會幕、燔祭壇與營外（依分支）
+        - term: 處理／可食
+        - definition: 祭司按分支處理血與祭肉；帶血入會幕與營外焚燒的分支不得與一般可食祭肉混同。
+        - paragraph: Leviticus 4:1-35 · Leviticus 6:24-30
+        - generic "贖愆祭 獻祭者／祭司":
+          - heading "贖愆祭" [level=3]
+          - generic: 獻祭者／祭司
+        - term: 材料
+        - definition: 無殘疾公綿羊或利未記五章指定供物
+        - term: 目的
+        - definition: 針對特定過犯與賠償責任的祭。
+        - term: 地點
+        - definition: 燔祭壇與聖處
+        - term: 處理／可食
+        - definition: 祭司在壇處理血與脂油；祭司中的男子按規定在聖處吃祭肉，並保留賠償加五分之一的文字。
+        - paragraph: Leviticus 5:1-19 · Leviticus 7:1-10
+      - list:
+        - generic: 製作指示
+        - strong: Exodus 25:1-9
+        - generic: 奉獻材料與建造目的
+        - generic: 這段先列出金、銀、銅、織物、皮料、木材、油與香料，並以建造聖所、按所示樣式製作作為整體前言。場景中的顏色與細節仍屬視覺重建。
+        - generic "展開和合本原文"
+        - generic: 製作指示
+        - strong: Exodus 27:1-8
+        - generic: 燔祭壇的製作指示
+        - generic: 壇為方形皂莢木結構、包銅，四角有角，另有銅網、器具、環與槓。經文說明壇是空心板造，模型內部結構仍屬重建。
+        - generic "展開和合本原文"
+        - generic: 事奉規範
+        - strong: Exodus 29:1-46
+        - generic: 承接聖職與祭司事奉
+        - generic: 全章涵蓋祭司承接聖職、祭壇相關禮儀、每日常獻祭與會幕相會。人物視覺暫不展示，避免把通用造型誤當考據結果。
+        - generic "展開和合本原文"
+        - generic: 事奉規範
+        - strong: Exodus 29:38-46
+        - generic: 每日獻祭與會幕相會
+        - generic: 這段描述每日早晚的常獻祭，並把會幕、祭壇、祭司的分別為聖與上帝住在以色列人中連在一起。
+        - generic "展開和合本原文"
+        - generic: 實作記錄
+        - strong: Exodus 38:1-7
+        - generic: 燔祭壇的製作記錄
+        - generic: 完成敘事依序記錄壇、四角、銅器具、銅網、環與搬運槓，與第 27 章逐項呼應。
+        - generic "展開和合本原文"
+        - generic: 事奉規範
+        - strong: Leviticus 1:1-17
+        - generic: 燔祭條例
+        - generic: 《利未記》把牛、羊、山羊與鳥類燔祭的處理程序分段說明。本網站只用非寫實提示呈現位置，不重現宰殺細節。
+        - generic "展開和合本原文"
+      - generic "燔祭分支":
+        - button "燔祭／牛"
+        - button "燔祭／羊"
+        - button "燔祭／鳥"
+      - generic "人物與服飾考據"
+      - heading "供職祭司（教學重建）" [level=3]
+      - generic: 普通祭司／亞倫子孫
+      - paragraph: 服裝狀態：普通祭司日常聖衣 · 技術基底：priest-arab-man-library
+      - paragraph: 技術基底＋經文部件標籤，屬教學重建。
+      - list:
+        - listitem: 洗手洗腳後進入會幕或走近壇
+        - listitem: 料理燈、陳設餅與日常獻香
+        - listitem: 依祭種執行灑血、放火與處理祭肉
+      - list:
+        - strong: 內袍
+        - generic: 細麻布 · 一件
+        - strong: 腰帶
+        - generic: 細麻布 · 一條
+        - strong: 裹頭巾
+        - generic: 細麻布 · 一件
+        - strong: 細麻布褲
+        - generic: 細麻布 · 一條
+      - paragraph: 以授權的技術基底配合文字部件標籤；外貌、版型與動作是教學重建，不宣稱歷史復原。
+    - generic "模型檢視選項"
+  - generic "3D 操作說明":
+    - strong: 拖曳
+    - text: 旋轉視角
+    - strong: 滾輪
+    - text: 拉近縮遠
+    - strong: 選取器物
+    - text: 開啟研讀面板

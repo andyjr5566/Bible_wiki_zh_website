@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "r07",
+  "assetId": "tabernacle-ark-alternative",
+  "generatedAt": "2026-09-09T19:02:52.640576+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/ark-of-the-covenant-alternative/ark_of_the_covenant_alternative.glb",
+    "sha256": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+    "bytes": 4183752
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r07\\tabernacle-ark-alternative.staged.glb",
+    "sha256": "6dff185db66739ea6d12688146f7c9f9743a2089ba6fcee0646717b7bb78b781",
+    "bytes": 3971896
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r07\\tabernacle-ark-alternative.optimized.glb",
+    "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+    "bytes": 2109944
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "ArkGoldImproved",
+      "baseColor": [
+        0.8,
+        0.45,
+        0.08
+      ],
+      "metallic": 0.28,
+      "roughness": 0.34
+    },
+    {
+      "name": "ArkAcaciaWoodImproved",
+      "baseColor": [
+        0.12,
+        0.035,
+        0.01
+      ],
+      "metallic": 0.0,
+      "roughness": 0.72
+    }
+  ],
+  "parts": [
+    {
+      "id": "ark-body",
+      "label": "櫃體（木芯剖面示意）",
+      "object": "Ark_0",
+      "mappingStatus": "source-bounds-region",
+      "claimIds": [
+        "C-EX25-ARK-SPEC"
+      ]
+    },
+    {
+      "id": "mercy-seat",
+      "label": "施恩座",
+      "object": "Ark_1",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX25-ARK-CHERUB"
+      ]
+    },
+    {
+      "id": "cherubim",
+      "label": "二基路伯",
+      "object": "Ark_0.001",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX25-ARK-CHERUB"
+      ]
+    },
+    {
+      "id": "rings",
+      "label": "四個環（來源未分離節點）",
+      "object": "Ark_0",
+      "mappingStatus": "unresolved",
+      "claimIds": [
+        "C-EX25-ARK-SPEC"
+      ]
+    },
+    {
+      "id": "poles",
+      "label": "兩根杠（來源未分離節點）",
+      "object": "Ark_0",
+      "mappingStatus": "unresolved",
+      "claimIds": [
+        "C-EX25-ARK-SPEC"
+      ]
+    }
+  ],
+  "section": {
+    "label": "剖面示意：木芯與精金包覆",
+    "note": "教學示意；不代表古物原貌或考古剖面"
+  },
+  "buildMetrics": {
+    "objectCount": 4,
+    "meshCount": 3,
+    "triangleCount": 41380,
+    "bounds": {
+      "min": [
+        -4.503260135650635,
+        -1.3961100578308105,
+        -0.9283999800682068
+      ],
+      "max": [
+        4.496739864349365,
+        0.75,
+        0.9262199997901917
+      ],
+      "size": [
+        9.0,
+        2.1461100578308105,
+        1.8546199798583984
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "ArkAcaciaWoodImproved",
+      "ArkGoldImproved"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 4,
+    "meshCount": 3,
+    "triangleCount": 41380,
+    "bounds": {
+      "min": [
+        -4.503260135650635,
+        -1.3960838317871094,
+        -0.9283643960952759
+      ],
+      "max": [
+        4.496739864349365,
+        0.7497925758361816,
+        0.9261844158172607
+      ],
+      "size": [
+        9.0,
+        2.145876407623291,
+        1.8545488119125366
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "ArkAcaciaWoodImproved",
+      "ArkGoldImproved"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r07\\previews\\before-R07_Front.png",
+    "assets\\staging\\blender\\r07\\previews\\before-R07_Side.png",
+    "assets\\staging\\blender\\r07\\previews\\before-R07_Top.png",
+    "assets\\staging\\blender\\r07\\previews\\before-R07_Close.png",
+    "assets\\staging\\blender\\r07\\previews\\after-R07_Front.png",
+    "assets\\staging\\blender\\r07\\previews\\after-R07_Side.png",
+    "assets\\staging\\blender\\r07\\previews\\after-R07_Top.png",
+    "assets\\staging\\blender\\r07\\previews\\after-R07_Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/ark-of-the-covenant-alternative/ark-alternative.glb",
+      "public/models/ark-alternative.glb"
+    ]
+  }
+}

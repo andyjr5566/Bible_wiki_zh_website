@@ -14,7 +14,7 @@ source_scope: collected_only
 
 ## 定義
 
-「欣」hin 是本章計量油和酒的液量單位。STEP 將它標為 H1969，lemma 為 hin，簡要義是 hin；五次出現都帶定冠詞，morphology 為 HTd/Ncmsa，即定冠詞加陽性名詞單數絕對形：第5節一次、第7節一次、第14節三次。
+「欣」hin 是本章計量油和酒的液量單位。STEP 將它標為 H1969，lemma 為 hin，簡要義是 hin；五次出現都帶定冠詞，morphology 為 HTd/Ncmsa，即定冠詞加陽性名詞單數絕對形：民28:5 一次、民28:7 一次、民28:14 三次。
 
 本章最重要的不是換算成某一個現代公升數，而是經文本身給出的比例：
 

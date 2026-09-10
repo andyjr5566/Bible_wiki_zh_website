@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "r10",
+  "assetId": "tabernacle-menorah-detail",
+  "generatedAt": "2026-09-09T19:32:20.952714+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/lampstand-menorah/lampstand_menorah_of_the_tabernacle.glb",
+    "sha256": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+    "bytes": 1856960
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\tabernacle-menorah-detail.staged.glb",
+    "sha256": "d8d77060021a463697c5a14604d1f0e30006e822cf82eef3b56eb48b435e847d",
+    "bytes": 1370328
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\tabernacle-menorah-detail.optimized.glb",
+    "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+    "bytes": 800612
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "Gold",
+      "baseColor": [
+        0.8,
+        0.45,
+        0.08
+      ],
+      "metallic": 0.28,
+      "roughness": 0.34
+    }
+  ],
+  "parts": [
+    {
+      "id": "menorah-seven-lamps",
+      "label": "七盞燈",
+      "object": "Lamp.008_0",
+      "mappingStatus": "instanced-source-node",
+      "claimIds": [
+        "C-EX25-MENORAH",
+        "C-LV24-LAMP"
+      ]
+    },
+    {
+      "id": "menorah-shaft",
+      "label": "燈臺本體",
+      "object": "LampStand.001_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX25-MENORAH"
+      ]
+    },
+    {
+      "id": "menorah-tools",
+      "label": "修剪工具",
+      "object": "Tweezers_0",
+      "mappingStatus": "source-node",
+      "claimIds": [
+        "C-LV24-LAMP"
+      ]
+    }
+  ],
+  "section": {
+    "label": "金燈臺與服事工具",
+    "note": "七盞燈數量可核對；未載高度不自行補值"
+  },
+  "buildMetrics": {
+    "objectCount": 25,
+    "meshCount": 12,
+    "triangleCount": 55632,
+    "bounds": {
+      "min": [
+        -2.0225400924682617,
+        -5.1099700927734375,
+        -2.092909812927246
+      ],
+      "max": [
+        2.001939296722412,
+        0.4013383686542511,
+        1.0721499919891357
+      ],
+      "size": [
+        4.024479389190674,
+        5.511308461427689,
+        3.165059804916382
+      ]
+    },
+    "materialCount": 1,
+    "materials": [
+      "Gold"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 25,
+    "meshCount": 12,
+    "triangleCount": 55632,
+    "bounds": {
+      "min": [
+        -2.022515296936035,
+        -5.1099700927734375,
+        -2.0928947925567627
+      ],
+      "max": [
+        2.0019288063049316,
+        0.4012996256351471,
+        1.0721766948699951
+      ],
+      "size": [
+        4.024444103240967,
+        5.511269718408585,
+        3.165071487426758
+      ]
+    },
+    "materialCount": 1,
+    "materials": [
+      "Gold"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\before-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\before-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\before-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\before-Close.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\after-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\after-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\after-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-menorah-detail\\previews\\after-Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/lampstand-menorah/lampstand-menorah.glb",
+      "public/models/lampstand-menorah.glb"
+    ]
+  }
+}

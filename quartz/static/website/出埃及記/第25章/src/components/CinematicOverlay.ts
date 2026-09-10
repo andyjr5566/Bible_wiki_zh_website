@@ -5,16 +5,20 @@ export class CinematicOverlay {
   readonly element: HTMLElement;
   #kernel: AppKernel | null = null;
   #state: Readonly<CinematicState> | null = null;
+  #returnFocus: HTMLElement | null = null;
 
   constructor(container: HTMLElement) {
     this.element = document.createElement('section');
     this.element.className = 'cinematic-overlay is-hidden';
-    this.element.setAttribute('aria-label', '電影級逐節導覽播放器');
+    this.element.setAttribute('role', 'dialog');
+    this.element.setAttribute('aria-modal', 'true');
+    this.element.setAttribute('aria-labelledby', 'cinema-act-title');
+    this.element.setAttribute('aria-label', '逐幕 3D 導覽播放器');
     this.element.innerHTML = `
       <!-- Top Letterbox Bar -->
       <div class="cinema-letterbox top-bar">
         <div class="cinema-title-lockup">
-          <span class="cinema-badge">BIBLICAL 3D CINEMATIC TOUR</span>
+          <span class="cinema-badge">BIBLICAL 3D GUIDED TOUR</span>
           <h2 id="cinema-act-title">第一幕：曠野中的聖所與東門</h2>
           <span class="cinema-hebrew-tag" id="cinema-hebrew-term">חֲצַר הַמִּשְׁכָּן</span>
         </div>
@@ -26,9 +30,6 @@ export class CinematicOverlay {
       </div>
 
       <!-- Center Click Area to Pause/Play or Orbit -->
-      <div class="cinema-interaction-hint" data-cinema-action="toggle-play">
-        <div class="hint-pill"><span id="cinema-hint-icon">⏸</span><span>點擊畫面或按空白鍵暫停 · 可隨時滑鼠拖曳 360° 環視</span></div>
-      </div>
 
       <!-- Bottom Letterbox Bar & Subtitle Card -->
       <div class="cinema-letterbox bottom-bar">
@@ -40,6 +41,7 @@ export class CinematicOverlay {
           <p class="subtitle-text" id="cinema-verse-text">
             你要做帳幕的院子。院子的南面當用撚的細麻做帷子... 院子的門當有簾子，長二十肘...
           </p>
+          <details class="cinema-full-scripture"><summary>閱讀本幕完整經文</summary><p id="cinema-full-text"></p></details>
           <div class="act-timeline-track">
             <div class="act-timeline-fill" id="cinema-timeline-fill" style="width: 0%"></div>
           </div>
@@ -50,6 +52,7 @@ export class CinematicOverlay {
           <button type="button" class="cinema-transport-btn" data-cinema-action="prev" title="上一幕 (←)">⏮ 上一幕</button>
           <button type="button" class="cinema-transport-btn primary-play" data-cinema-action="toggle-play" id="cinema-play-btn" title="播放/暫停 (Space)">⏸ 暫停</button>
           <button type="button" class="cinema-transport-btn" data-cinema-action="next" title="下一幕 (→)">下一幕 ⏭</button>
+          <button type="button" class="cinema-transport-btn" data-cinema-action="replay" title="重播本站">↻ 重播</button>
           <button type="button" class="cinema-transport-btn" data-cinema-action="speed" id="cinema-speed-btn" title="播放速度">1.0x</button>
         </nav>
       </div>
@@ -65,13 +68,24 @@ export class CinematicOverlay {
   }
 
   render(state: Readonly<CinematicState>): void {
+    const wasPlaying = this.#state?.isPlaying ?? false;
+    const changedAct = this.#state?.currentAct.id !== state.currentAct.id || this.#state?.currentAct.hotspotId !== state.currentAct.hotspotId;
     this.#state = state;
     if (!state.isPlaying) {
       this.element.classList.add('is-hidden');
+      if (wasPlaying) {
+        const returnFocus = this.#returnFocus;
+        this.#returnFocus = null;
+        if (returnFocus?.isConnected) returnFocus.focus();
+      }
       return;
     }
 
     this.element.classList.remove('is-hidden');
+    if (!wasPlaying) {
+      this.#returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      queueMicrotask(() => this.element.querySelector<HTMLButtonElement>('.cinema-close-btn')?.focus());
+    }
 
     const actTitle = this.element.querySelector('#cinema-act-title');
     const hebrewTerm = this.element.querySelector('#cinema-hebrew-term');
@@ -84,11 +98,19 @@ export class CinematicOverlay {
     const dimLabel = this.element.querySelector('#cinema-dim-label');
     const unitLabel = this.element.querySelector('#cinema-unit-label');
     const speedBtn = this.element.querySelector('#cinema-speed-btn');
+    const hotspots = this.element.querySelector<HTMLElement>('#cinema-hotspots');
 
     if (actTitle) actTitle.textContent = state.currentAct.title;
     if (hebrewTerm) hebrewTerm.textContent = state.currentAct.hebrewTerm ?? '';
-    if (verseRef) verseRef.textContent = state.currentAct.scriptureReference;
-    if (verseText) verseText.textContent = state.currentAct.scriptureText;
+    if (verseRef) verseRef.textContent = `${state.currentAct.scriptureReference} · 節錄`;
+    const lines = state.currentAct.scriptureText.split('\n').filter(Boolean);
+    if (verseText) verseText.textContent = lines.find((line) => !line.endsWith('說：')) ?? lines[0] ?? '';
+    const fullText = this.element.querySelector('#cinema-full-text');
+    if (fullText) fullText.textContent = state.currentAct.scriptureText;
+    if (changedAct) {
+      const drawer = this.element.querySelector<HTMLDetailsElement>('.cinema-full-scripture');
+      if (drawer) drawer.open = false;
+    }
     if (actCounter) actCounter.textContent = `${state.currentAct.actNumber} / ${state.currentAct.totalActs}`;
     if (timelineFill) timelineFill.style.width = `${Math.round(state.progressRatio * 100)}%`;
 
@@ -104,6 +126,11 @@ export class CinematicOverlay {
           : '英吋 (in)';
     }
     if (speedBtn) speedBtn.textContent = `${state.playbackSpeed.toFixed(1)}x`;
+    if (hotspots) {
+      hotspots.innerHTML = state.currentAct.hotspots.length
+        ? state.currentAct.hotspots.map((hotspot) => `<button type="button" data-cinema-action="hotspot" data-hotspot-id="${escapeAttribute(hotspot.id)}" aria-pressed="${String(state.currentAct.hotspotId === hotspot.id)}" class="${state.currentAct.hotspotId === hotspot.id ? 'is-active' : ''}">${escapeHtml(hotspot.label)}</button>`).join('')
+        : '';
+    }
   }
 
   dispose(): void {
@@ -138,6 +165,10 @@ export class CinematicOverlay {
     } else if (action === 'speed') {
       const nextSpeed = this.#state?.playbackSpeed === 1.0 ? 1.5 : 1.0;
       this.#kernel.setCinematicSpeed(nextSpeed);
+    } else if (action === 'replay') {
+      this.#kernel.replayCinematicTour();
+    } else if (action === 'hotspot') {
+      this.#kernel.selectCinematicHotspot(target.dataset.hotspotId ?? null);
     }
   };
 
@@ -153,7 +184,7 @@ export class CinematicOverlay {
     } else if (e.code === 'ArrowLeft') {
       e.preventDefault();
       this.#kernel.prevCinematicAct();
-    } else if (e.code === 'Escape') {
+    } else if (e.code === 'Escape' && isTopOverlay(this.element)) {
       e.preventDefault();
       this.#kernel.stopCinematicTour();
     } else if (e.code === 'KeyD') {
@@ -162,3 +193,11 @@ export class CinematicOverlay {
     }
   };
 }
+
+function isTopOverlay(element: HTMLElement): boolean {
+  const overlays = Array.from(document.querySelectorAll<HTMLElement>('.cinematic-overlay:not(.is-hidden), .settings-modal-overlay:not(.is-hidden), .scripture-modal-overlay:not(.is-hidden), .credits-sheet'));
+  return overlays[overlays.length - 1] === element;
+}
+
+function escapeHtml(value: string): string { return value.replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] ?? character); }
+function escapeAttribute(value: string): string { return escapeHtml(value); }

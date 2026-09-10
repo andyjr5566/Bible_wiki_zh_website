@@ -1,0 +1,649 @@
+{
+  "startedAt": "2026-09-09T22:57:21.403Z",
+  "baseCommit": "685da044",
+  "browser": "Chrome extension",
+  "initialTransientTimeout": true,
+  "items": [
+    {
+      "name": "約櫃",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "2",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-ark-alternative",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "已就緒 · 已載入 2 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        }
+      ]
+    },
+    {
+      "name": "陳設餅桌",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "1",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-table-shewbread-detail",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "載入中 · 已載入 1 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        }
+      ]
+    },
+    {
+      "name": "金燈臺",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "2",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-menorah-detail",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "已就緒 · 已載入 2 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        },
+        {
+          "id": "9eca6065046f0de3",
+          "kind": "other",
+          "name": "table-shewbread.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/table-shewbread.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "b3a4ab9a87f22c88",
+          "kind": "other",
+          "name": "lampstand-menorah.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/lampstand-menorah.glb?rev=20260910-r10-1"
+        }
+      ]
+    },
+    {
+      "name": "香壇",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "1",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-incense-altar-detail",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "載入中 · 已載入 1 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        },
+        {
+          "id": "9eca6065046f0de3",
+          "kind": "other",
+          "name": "table-shewbread.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/table-shewbread.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "b3a4ab9a87f22c88",
+          "kind": "other",
+          "name": "lampstand-menorah.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/lampstand-menorah.glb?rev=20260910-r10-1"
+        }
+      ]
+    },
+    {
+      "name": "燔祭壇",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "1",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-burnt-altar-detail",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "載入中 · 已載入 1 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            },
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        },
+        {
+          "id": "9eca6065046f0de3",
+          "kind": "other",
+          "name": "table-shewbread.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/table-shewbread.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "b3a4ab9a87f22c88",
+          "kind": "other",
+          "name": "lampstand-menorah.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/lampstand-menorah.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "347409d653ee7d5d",
+          "kind": "other",
+          "name": "altar-incense.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-incense.glb?rev=20260910-r10-1"
+        }
+      ]
+    },
+    {
+      "name": "洗濯盆",
+      "state": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "dataset": {
+          "activeAssetCount": "2",
+          "runtimeProfile": "desktop-structural",
+          "selectedAsset": "tabernacle-laver-detail",
+          "testid": "asset-status"
+        },
+        "panel": {
+          "bottom": 816,
+          "height": 720,
+          "left": 24,
+          "right": 464,
+          "top": 96,
+          "width": 440,
+          "x": 24,
+          "y": 96
+        },
+        "status": "已就緒 · 已載入 2 項模型"
+      },
+      "resources": [
+        {
+          "id": "247a92d4af4915a6",
+          "kind": "other",
+          "name": "tabernacle-main.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-main.glb"
+        },
+        {
+          "id": "5ed5de9fffb43461",
+          "kind": "other",
+          "name": "tabernacle-framework.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/tabernacle-framework.glb"
+        },
+        {
+          "id": "3cdb4464f0088089",
+          "kind": "other",
+          "name": "altar-burnt-offering.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            },
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-burnt-offering.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "4286eac48d838b28",
+          "kind": "other",
+          "name": "ark-alternative.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/ark-alternative.glb?rev=20260910-r08-gold-1"
+        },
+        {
+          "id": "9eca6065046f0de3",
+          "kind": "other",
+          "name": "table-shewbread.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/table-shewbread.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "b3a4ab9a87f22c88",
+          "kind": "other",
+          "name": "lampstand-menorah.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/lampstand-menorah.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "347409d653ee7d5d",
+          "kind": "other",
+          "name": "altar-incense.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/altar-incense.glb?rev=20260910-r10-1"
+        },
+        {
+          "id": "d409819d6e41baad",
+          "kind": "other",
+          "name": "copper-laver.glb",
+          "sources": [
+            {
+              "kind": "resource",
+              "property": "fetch"
+            }
+          ],
+          "url": "http://127.0.0.1:4173/models/copper-laver.glb?rev=20260910-r10-1"
+        }
+      ]
+    }
+  ],
+  "overviewAfterDetail": {
+    "dataset": {
+      "activeAssetCount": "2",
+      "runtimeProfile": "desktop-structural",
+      "selectedAsset": "tabernacle-ark-alternative",
+      "testid": "asset-status"
+    },
+    "status": "已就緒 · 已載入 2 項模型"
+  }
+}

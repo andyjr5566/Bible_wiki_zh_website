@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { RitualStep } from '../types/rituals';
 
 export class RitualVisualSystem {
   readonly #root = new THREE.Group();
@@ -7,7 +8,7 @@ export class RitualVisualSystem {
   #activeRitualId: string | null = null;
 
   constructor(parent: THREE.Object3D) {
-    this.#root.name = 'ritual-visuals'; parent.add(this.#root);
+    this.#root.name = 'ritual-visuals'; this.#washing.name = 'ritual-washing'; this.#incense.name = 'ritual-incense'; parent.add(this.#root);
     for (let index = 0; index < 3; index += 1) {
       const ring = new THREE.Mesh(new THREE.RingGeometry(0.38 + index * 0.16, 0.42 + index * 0.16, 48), new THREE.MeshBasicMaterial({ color: 0x76d6e8, transparent: true, opacity: 0.46 - index * 0.1, side: THREE.DoubleSide }));
       ring.rotation.x = -Math.PI / 2; ring.position.set(0, 0.06 + index * 0.01, 0); ring.scale.setScalar(0.4); this.#washing.add(ring);
@@ -20,7 +21,12 @@ export class RitualVisualSystem {
     this.#incense.position.set(0, 0, -5.2); this.#root.add(this.#incense); this.stop();
   }
 
-  play(ritualId: string): void { this.#activeRitualId = ritualId; this.#washing.visible = ritualId === 'priestly-washing'; this.#incense.visible = ritualId === 'incense-service'; }
+  play(ritualId: string, step?: RitualStep): void { this.#activeRitualId = ritualId; this.#washing.visible = ritualId === 'priestly-washing'; this.#incense.visible = ritualId === 'incense-service' && (!step || step.id !== 'incense-boundary'); }
+  setStep(step: RitualStep): void {
+    if (!this.#activeRitualId) return;
+    if (this.#activeRitualId === 'incense-service') this.#incense.visible = step.id !== 'incense-boundary';
+    if (this.#activeRitualId === 'priestly-washing') this.#washing.visible = true;
+  }
   pause(): void { this.#washing.visible = false; this.#incense.visible = false; }
   stop(): void { this.#activeRitualId = null; this.pause(); }
   update(timeSeconds: number): void {

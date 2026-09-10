@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 export type AtmosphereMode = 'dawn' | 'midday' | 'night';
+export const DEFAULT_ATMOSPHERE_MODE: AtmosphereMode = 'midday';
 
 export class DesertEnvironment {
   readonly #root = new THREE.Group();
@@ -16,7 +17,7 @@ export class DesertEnvironment {
   #holyPlaceGlow: THREE.PointLight | null = null;
   #arkLight: THREE.SpotLight | null = null;
 
-  #currentMode: AtmosphereMode = 'midday';
+  #currentMode: AtmosphereMode = DEFAULT_ATMOSPHERE_MODE;
 
   constructor(scene: THREE.Scene) {
     this.#scene = scene;
@@ -65,8 +66,8 @@ export class DesertEnvironment {
       this.#warmFillLight.color.setHex(0xdf8450);
       this.#warmFillLight.intensity = 0.6;
 
-      this.#holyPlaceGlow.intensity = 16;
-      this.#arkLight.intensity = 38;
+      this.#holyPlaceGlow.intensity = 4.4;
+      this.#arkLight.intensity = 6.2;
       if (this.#starfield) this.#starfield.visible = false;
     } else if (mode === 'night') {
       this.#scene.fog = new THREE.Fog(0x101524, 45, 140);
@@ -86,8 +87,8 @@ export class DesertEnvironment {
       this.#warmFillLight.color.setHex(0x2d3a58);
       this.#warmFillLight.intensity = 0.2;
 
-      this.#holyPlaceGlow.intensity = 28;
-      this.#arkLight.intensity = 55;
+      this.#holyPlaceGlow.intensity = 5.0;
+      this.#arkLight.intensity = 7.5;
       if (this.#starfield) this.#starfield.visible = true;
     } else {
       // Midday (Default)
@@ -108,8 +109,10 @@ export class DesertEnvironment {
       this.#warmFillLight.color.setHex(0xe8b87a);
       this.#warmFillLight.intensity = 0.52;
 
-      this.#holyPlaceGlow.intensity = 18;
-      this.#arkLight.intensity = 42;
+      // Detail views place the camera close to the ark. Keep the dedicated
+      // highlight readable without washing out the model or nearby ground.
+      this.#holyPlaceGlow.intensity = 4.5;
+      this.#arkLight.intensity = 6.5;
       if (this.#starfield) this.#starfield.visible = false;
     }
   }
@@ -197,8 +200,8 @@ export class DesertEnvironment {
     const geometry = new THREE.PlaneGeometry(230, 230, 112, 112);
     const positions = geometry.getAttribute('position');
     const colors = new Float32Array(positions.count * 3);
-    const low = new THREE.Color(0x9a6a3d);
-    const high = new THREE.Color(0xd2aa6d);
+    const low = new THREE.Color(0x806c58);
+    const high = new THREE.Color(0xb9a27d);
     const color = new THREE.Color();
     for (let index = 0; index < positions.count; index += 1) {
       const x = positions.getX(index);
@@ -233,10 +236,10 @@ export class DesertEnvironment {
 
   private installMountains(): void {
     const ridges = [
-      { name: 'north-near', seed: 17, color: 0x76523a, position: [0, 0, -94] as const, rotationY: 0, height: 1 },
-      { name: 'north-far', seed: 73, color: 0x8a684e, position: [0, 0, -126] as const, rotationY: 0, height: 1.28 },
-      { name: 'west', seed: 31, color: 0x79563f, position: [-105, 0, 0] as const, rotationY: Math.PI / 2, height: 0.9 },
-      { name: 'east', seed: 59, color: 0x79563f, position: [105, 0, 0] as const, rotationY: -Math.PI / 2, height: 0.9 },
+      { name: 'north-near', seed: 17, color: 0x625a54, position: [0, 0, -94] as const, rotationY: 0, height: 1 },
+      { name: 'north-far', seed: 73, color: 0x716962, position: [0, 0, -126] as const, rotationY: 0, height: 1.28 },
+      { name: 'west', seed: 31, color: 0x68605a, position: [-105, 0, 0] as const, rotationY: Math.PI / 2, height: 0.9 },
+      { name: 'east', seed: 59, color: 0x68605a, position: [105, 0, 0] as const, rotationY: -Math.PI / 2, height: 0.9 },
     ];
     ridges.forEach((definition) => {
       const ridge = new THREE.Mesh(
@@ -253,17 +256,18 @@ export class DesertEnvironment {
 
   private installCamp(): void {
     const tentGeometry = createTentGeometry();
-    const tentMaterials = [0x664a35, 0x7d5b3d, 0x92704b].map((color) => new THREE.MeshStandardMaterial({ color, roughness: 1, flatShading: true }));
+    const tentMaterials = [0x514b46, 0x625a53, 0x716860].map((color) => new THREE.MeshStandardMaterial({ color, roughness: 1, flatShading: true }));
+    const instancesPerGroup = 12;
     const tents = tentMaterials.map((material, group) => {
-      const mesh = new THREE.InstancedMesh(tentGeometry.clone(), material, 24);
+      const mesh = new THREE.InstancedMesh(tentGeometry.clone(), material, instancesPerGroup);
       mesh.name = `camp-tents-${group + 1}`; mesh.castShadow = true; mesh.receiveShadow = true; this.#root.add(mesh); return mesh;
     });
     const random = seededRandom(20260811);
     const dummy = new THREE.Object3D();
     const counts = [0, 0, 0];
     for (let ring = 0; ring < 3; ring += 1) {
-      for (let index = 0; index < 24; index += 1) {
-        const angle = index / 24 * Math.PI * 2 + ring * 0.09 + (random() - 0.5) * 0.12;
+      for (let index = 0; index < instancesPerGroup; index += 1) {
+        const angle = index / instancesPerGroup * Math.PI * 2 + ring * 0.09 + (random() - 0.5) * 0.12;
         const radius = 35 + ring * 11 + (random() - 0.5) * 4;
         const x = Math.sin(angle) * radius;
         const z = Math.cos(angle) * radius;
@@ -280,12 +284,12 @@ export class DesertEnvironment {
     tents.forEach((tent) => { tent.instanceMatrix.needsUpdate = true; });
 
     const fireGeometry = new THREE.SphereGeometry(0.18, 8, 6);
-    const fireMaterial = new THREE.MeshStandardMaterial({ color: 0xffb05e, emissive: 0xff6a22, emissiveIntensity: 2.2 });
-    const fires = new THREE.InstancedMesh(fireGeometry, fireMaterial, 10);
+    const fireMaterial = new THREE.MeshStandardMaterial({ color: 0x806a54, emissive: 0x362b20, emissiveIntensity: 0.35 });
+    const fires = new THREE.InstancedMesh(fireGeometry, fireMaterial, 6);
     fires.name = 'camp-embers';
-    for (let index = 0; index < 10; index += 1) {
-      const angle = index / 10 * Math.PI * 2 + 0.23;
-      const radius = 38 + (index % 3) * 10;
+    for (let index = 0; index < 6; index += 1) {
+      const angle = index / 6 * Math.PI * 2 + 0.23;
+      const radius = 42 + (index % 3) * 12;
       dummy.position.set(Math.sin(angle) * radius, 0.16, Math.cos(angle) * radius);
       dummy.scale.setScalar(0.8 + random() * 0.6); dummy.rotation.set(0, 0, 0); dummy.updateMatrix(); fires.setMatrixAt(index, dummy.matrix);
     }
@@ -310,12 +314,12 @@ export class DesertEnvironment {
     this.#warmFillLight.position.set(34, 16, -42);
     this.#root.add(this.#warmFillLight);
 
-    this.#holyPlaceGlow = new THREE.PointLight(0xffca82, 18, 13, 2);
+    this.#holyPlaceGlow = new THREE.PointLight(0xffca82, 4.5, 13, 2);
     this.#holyPlaceGlow.name = 'holy-place-warm-glow';
     this.#holyPlaceGlow.position.set(0, 3.2, -4.7);
     this.#root.add(this.#holyPlaceGlow);
 
-    this.#arkLight = new THREE.SpotLight(0xffd58f, 42, 16, Math.PI / 7, 0.72, 1.7);
+    this.#arkLight = new THREE.SpotLight(0xffd58f, 6.5, 16, Math.PI / 7, 0.72, 1.7);
     this.#arkLight.name = 'most-holy-focused-light';
     this.#arkLight.position.set(-1.2, 7.2, -6.7);
     this.#arkLight.target.position.set(0, 0.6, -9.1);

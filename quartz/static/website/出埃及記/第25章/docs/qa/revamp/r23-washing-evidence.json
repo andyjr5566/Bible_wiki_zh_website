@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-09T22:34:10.978Z",
+  "pauseButtonCountAfterPause": 1,
+  "step2": {
+    "region": "PLAYING · 步驟 2/3\n祭司洗濯\n洗手洗腳\n\n祭司在盆中洗手洗腳；使用兩個非寫實標記，不播放寫實身體動畫。\n\n以手與腳的文字標記說明洗濯範圍。\n\nExodus 30:18-21 · Exodus 40:31\n\n未詳：洗濯順序與時間長度未詳載。\n\n← 上一步\n暫停\n下一步 →\n重播\n退出",
+    "runtime": {
+      "errors": "0",
+      "warnings": "0"
+    }
+  },
+  "afterExit": {
+    "hasRitual": false,
+    "runtime": {
+      "errors": "0",
+      "warnings": "0"
+    }
+  }
+}

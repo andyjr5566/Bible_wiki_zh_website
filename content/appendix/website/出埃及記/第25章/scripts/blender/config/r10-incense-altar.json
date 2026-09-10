@@ -1,0 +1,29 @@
+{
+  "assetId": "tabernacle-incense-altar-detail",
+  "stageId": "r10",
+  "sceneName": "EX25_R10_IncenseAltar_Work",
+  "collection": "EX25_R10_IncenseAltar",
+  "rootObject": "Root",
+  "autoCameras": true,
+  "sourceRelative": "assets/source/sketchfab/altar-of-incense/altar_of_incense_of_the_tabernacle.glb",
+  "stagingRelative": "assets/staging/blender/r10/tabernacle-incense-altar-detail/tabernacle-incense-altar-detail.staged.glb",
+  "processedRelative": "assets/processed/sketchfab/altar-of-incense/altar-incense.glb",
+  "publicRelative": "public/models/altar-incense.glb",
+  "blendRelative": "assets/staging/blender/r10/tabernacle-incense-altar-detail/tabernacle-incense-altar-detail.blend",
+  "units": { "system": "METRIC", "scaleLength": 1.0 },
+  "axes": { "forward": "-Z", "up": "Y" },
+  "origin": [0.0, 0.0, 0.0],
+  "materials": [
+    { "name": "Gold", "baseColor": [0.8, 0.45, 0.08], "metallic": 0.28, "roughness": 0.34 },
+    { "name": "Copper-Brass", "baseColor": [0.36, 0.11, 0.04], "metallic": 0.62, "roughness": 0.32 },
+    { "name": "Frankincense.001", "baseColor": [0.18, 0.1, 0.03], "metallic": 0.0, "roughness": 0.78 },
+    { "name": "Gold.012", "baseColor": [0.8, 0.45, 0.08], "metallic": 0.28, "roughness": 0.34 }
+  ],
+  "parts": [
+    { "id": "incense-altar-body", "label": "香壇本體", "object": "Crown_0", "mappingStatus": "object-level", "claimIds": ["C-EX30-INCENSE"] },
+    { "id": "incense-altar-corners", "label": "角", "object": "Crown_1", "mappingStatus": "source-node", "claimIds": ["C-EX30-INCENSE"] },
+    { "id": "incense-altar-poles", "label": "杠", "object": "Crown_2", "mappingStatus": "source-node", "claimIds": ["C-EX30-INCENSE"] }
+  ],
+  "section": { "label": "香壇", "note": "四個來源節點的具體部位對應保留為 source-node，不把名稱推成確定形制" },
+  "light": { "energy": 780, "size": 4.0 }
+}

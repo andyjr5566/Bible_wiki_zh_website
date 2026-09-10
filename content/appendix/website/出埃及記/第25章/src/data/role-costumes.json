@@ -1,0 +1,40 @@
+{
+  "roles": [
+    {
+      "id": "role-priest",
+      "role": "Priest",
+      "label": "普通祭司／亞倫子孫",
+      "defaultGarmentState": "daily-priest",
+      "allowedGarmentStates": ["daily-priest", "unspecified"],
+      "forbiddenGarmentStates": ["daily-high-priest", "atonement-linen", "post-atonement-garments"],
+      "responsibilitySummary": ["洗手洗腳後進入會幕或走近壇", "料理燈、陳設餅與日常獻香", "依祭種執行灑血、放火與處理祭肉"],
+      "sourceClaimIds": ["C-EX28-ROLE-GARMENT", "C-EX30-LAVER", "C-EX30-INCENSE", "C-LV24-LAMP"],
+      "visualPolicy": "technical-base-with-label",
+      "disclosure": "以授權的技術基底配合文字部件標籤；外貌、版型與動作是教學重建，不宣稱歷史復原。"
+    },
+    {
+      "id": "role-high-priest",
+      "role": "HighPriest",
+      "label": "大祭司亞倫／承接者",
+      "defaultGarmentState": "daily-high-priest",
+      "allowedGarmentStates": ["daily-high-priest", "atonement-linen", "post-atonement-garments", "unspecified"],
+      "forbiddenGarmentStates": [],
+      "responsibilitySummary": ["按指定日常情境穿著大祭司聖衣", "贖罪日穿細麻衣進入聖所與至聖所", "完成贖罪日指定步驟後換回聖衣並獻燔祭"],
+      "sourceClaimIds": ["C-EX28-ROLE-GARMENT", "C-LV16-DAY"],
+      "visualPolicy": "technical-base-with-label",
+      "disclosure": "角色標籤沿用經文職分；臉孔與身形使用低細節教學基底，不把模型命名為歷史人物肖像。"
+    },
+    {
+      "id": "role-levite-helper",
+      "role": "LeviteHelper",
+      "label": "利未人／協助者",
+      "defaultGarmentState": "unspecified",
+      "allowedGarmentStates": ["unspecified"],
+      "forbiddenGarmentStates": ["daily-priest", "daily-high-priest", "atonement-linen", "post-atonement-garments"],
+      "responsibilitySummary": ["在祭司遮蓋與交付後搬運會幕物件", "按家族職分協助看守與搬運", "不自動執行燈、餅、香或至聖所步驟"],
+      "sourceClaimIds": ["C-NM-ROLES"],
+      "visualPolicy": "abstract-role-marker",
+      "disclosure": "本輪沒有核准利未人服裝外觀；畫面使用角色位置示意與職責標籤，不套用祭司聖衣。"
+    }
+  ]
+}

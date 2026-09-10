@@ -1,0 +1,94 @@
+{
+  "date": "2026-09-09T22:29:54.154Z",
+  "stations": [
+    {
+      "index": 1,
+      "headings": [
+        "東門：從院子進入",
+        "⚙️ 探索體驗與環境設定"
+      ],
+      "nextEnabled": true,
+      "panelText": "",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "index": 2,
+      "headings": [
+        "燔祭壇：獻祭之處",
+        "⚙️ 探索體驗與環境設定"
+      ],
+      "nextEnabled": true,
+      "panelText": "",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "index": 3,
+      "headings": [
+        "洗濯盆：進入前的潔淨",
+        "⚙️ 探索體驗與環境設定"
+      ],
+      "nextEnabled": true,
+      "panelText": "",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "index": 4,
+      "headings": [
+        "聖所：三個器物熱點",
+        "⚙️ 探索體驗與環境設定"
+      ],
+      "nextEnabled": true,
+      "panelText": "",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "index": 5,
+      "headings": [
+        "至聖所：約櫃與施恩座",
+        "⚙️ 探索體驗與環境設定"
+      ],
+      "nextEnabled": false,
+      "panelText": "",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    }
+  ],
+  "holyPlace": {
+    "heading": "聖所：三個器物熱點",
+    "hotspots": [
+      {
+        "id": "holy-place-menorah",
+        "label": "燈臺",
+        "pressed": "false"
+      },
+      {
+        "id": "holy-place-shewbread",
+        "label": "陳設餅桌",
+        "pressed": "false"
+      },
+      {
+        "id": "holy-place-incense",
+        "label": "香壇",
+        "pressed": "false"
+      }
+    ],
+    "runtime": {
+      "errors": "0",
+      "warnings": "0"
+    }
+  }
+}

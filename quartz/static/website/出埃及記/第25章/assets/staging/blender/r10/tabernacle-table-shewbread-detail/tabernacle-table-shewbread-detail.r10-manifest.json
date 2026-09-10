@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "r10",
+  "assetId": "tabernacle-table-shewbread-detail",
+  "generatedAt": "2026-09-09T19:32:38.923521+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/table-of-shewbread/table_of_shewbread_of_the_tabernacle.glb",
+    "sha256": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+    "bytes": 3619276
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\tabernacle-table-shewbread-detail.staged.glb",
+    "sha256": "13bb50b123b68bdac6b8075fab6cf5ea076086613830d8829e7cdc38c1de1266",
+    "bytes": 3177568
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\tabernacle-table-shewbread-detail.optimized.glb",
+    "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+    "bytes": 2726120
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "Gold",
+      "baseColor": [
+        0.8,
+        0.45,
+        0.08
+      ],
+      "metallic": 0.28,
+      "roughness": 0.34
+    },
+    {
+      "name": "Material.002",
+      "baseColor": [
+        0.44,
+        0.25,
+        0.1
+      ],
+      "metallic": 0.0,
+      "roughness": 0.72
+    }
+  ],
+  "parts": [
+    {
+      "id": "shewbread-table-body",
+      "label": "桌體",
+      "object": "Border.002_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX25-TABLE"
+      ]
+    },
+    {
+      "id": "shewbread-table-surface",
+      "label": "桌面材質",
+      "object": "Border.002_1",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX25-TABLE"
+      ]
+    },
+    {
+      "id": "shewbread-twelve-breads",
+      "label": "十二個餅的陳設",
+      "object": "Border.002_1",
+      "mappingStatus": "unresolved-source-mesh",
+      "claimIds": [
+        "C-LV24-BREAD"
+      ]
+    }
+  ],
+  "section": {
+    "label": "陳設餅桌",
+    "note": "來源節點未提供可獨立核對的餅堆；數量與擺列由 R14 資料層說明"
+  },
+  "buildMetrics": {
+    "objectCount": 4,
+    "meshCount": 2,
+    "triangleCount": 80151,
+    "bounds": {
+      "min": [
+        -3.4983601570129395,
+        -2.0256900787353516,
+        -1.0364799499511719
+      ],
+      "max": [
+        3.5016398429870605,
+        -0.0007500052452087402,
+        0.1710900366306305
+      ],
+      "size": [
+        7.0,
+        2.024940073490143,
+        1.2075699865818024
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "Gold",
+      "Material"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 4,
+    "meshCount": 2,
+    "triangleCount": 80151,
+    "bounds": {
+      "min": [
+        -3.4983601570129395,
+        -2.025503635406494,
+        -1.0364121198654175
+      ],
+      "max": [
+        3.5016398429870605,
+        -0.0009362697601318359,
+        0.1710221767425537
+      ],
+      "size": [
+        7.0,
+        2.0245673656463623,
+        1.2074342966079712
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "Gold",
+      "Material"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\before-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\before-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\before-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\before-Close.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\after-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\after-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\after-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-table-shewbread-detail\\previews\\after-Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/table-of-shewbread/table-shewbread.glb",
+      "public/models/table-shewbread.glb"
+    ]
+  }
+}

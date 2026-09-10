@@ -1,0 +1,1229 @@
+{
+  "schemaVersion": "r12",
+  "generatedAt": "2026-09-09T22:47:04.675Z",
+  "sourceHashMeaning": "source.sha256 always hashes sourceFile; derived.sha256 hashes processedFile; runtime.sha256 hashes runtimeFile.",
+  "measurementNotes": {
+    "gpuUploadEstimateBytes": "conservative lower-bound estimate equal to derived GLB bytes; no GPU profiler claim",
+    "bounds": "asset-local baseline geometry bounds; not biblical dimensions",
+    "reimport": "NodeIO parser successfully read each processed GLB; unchanged assets compare to the baseline, while R07/R10 stage metrics are retained separately because Blender counts instanced objects"
+  },
+  "entries": [
+    {
+      "assetId": "tabernacle-main",
+      "source": {
+        "path": "assets/source/sketchfab/biblical-tabernacle-mishkan/biblical_tabernacle_mishkan.glb",
+        "sha256": "a729c973e473bd2d094eddf2e698713ff0fa59aec0b3fee521375b4d024c8727",
+        "bytes": 18519376
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/biblical-tabernacle-mishkan/tabernacle-main.glb",
+        "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+        "bytes": 10394200
+      },
+      "runtime": {
+        "path": "public/models/tabernacle-main.glb",
+        "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 179,
+        "objectCount": 779,
+        "triangleCount": 189869,
+        "materialCount": 16,
+        "textureCount": 16,
+        "animationCount": 1,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -66.76996775303007,
+            -0.13748000275135758,
+            -35.91621712841034
+          ],
+          "max": [
+            66.76996775303007,
+            10.565915020000153,
+            35.91621712841034
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 10394200,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "tabernacle-framework",
+      "source": {
+        "path": "assets/source/sketchfab/framework-of-tabernacle-tent/framework_of_the_tabernacle_tent.glb",
+        "sha256": "018f5d4543b2a754bd70841b23a5ad8189dc43f17daee13b6ee50be59eb41427",
+        "bytes": 12538344
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/framework-of-tabernacle-tent/tabernacle-framework.glb",
+        "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+        "bytes": 5078284
+      },
+      "runtime": {
+        "path": "public/models/tabernacle-framework.glb",
+        "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 6,
+        "objectCount": 12,
+        "triangleCount": 199741,
+        "materialCount": 1,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -5.755360176356657,
+            -0.0004400000002560134,
+            -17.012599984226227
+          ],
+          "max": [
+            5.758200176356658,
+            10.040479660034181,
+            15.362251845750134
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 5078284,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "tabernacle-lowpoly",
+      "source": {
+        "path": "assets/source/sketchfab/tabernacle-jamethy-lowpoly/tabernacle.glb",
+        "sha256": "2a5f1f63112398e3f7c1a1602535be0b53b67b5eb24f3438a861e65b1dc9d155",
+        "bytes": 3070652
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/tabernacle-jamethy-lowpoly/tabernacle-lowpoly.glb",
+        "sha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+        "bytes": 3026208
+      },
+      "runtime": {
+        "path": "public/models/tabernacle-lowpoly.glb",
+        "sha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 4,
+        "objectCount": 4,
+        "triangleCount": 3034,
+        "materialCount": 4,
+        "textureCount": 3,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -11.863774422892561,
+            -1.6604949845482828,
+            -12.489736678167022
+          ],
+          "max": [
+            13.041948557724822,
+            19.055636484684793,
+            12.349098774684792
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 3026208,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "tabernacle-ark-alternative",
+      "source": {
+        "path": "assets/source/sketchfab/ark-of-the-covenant-alternative/ark_of_the_covenant_alternative.glb",
+        "sha256": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+        "bytes": 4183752
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/ark-of-the-covenant-alternative/ark-alternative.glb",
+        "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+        "bytes": 2109944
+      },
+      "runtime": {
+        "path": "public/models/ark-alternative.glb",
+        "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 3,
+        "objectCount": 3,
+        "triangleCount": 41380,
+        "materialCount": 2,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -4.4986001355573535,
+            0.00595726498286564,
+            -0.917154544424375
+          ],
+          "max": [
+            4.5013998644426465,
+            2.151833767619385,
+            0.9373941757680507
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 4,
+          "meshCount": 3,
+          "triangleCount": 41380,
+          "bounds": {
+            "min": [
+              -4.503260135650635,
+              -1.3961100578308105,
+              -0.9283999800682068
+            ],
+            "max": [
+              4.496739864349365,
+              0.75,
+              0.9262199997901917
+            ],
+            "size": [
+              9,
+              2.1461100578308105,
+              1.8546199798583984
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "ArkAcaciaWoodImproved",
+            "ArkGoldImproved"
+          ]
+        },
+        "reimport": {
+          "objectCount": 4,
+          "meshCount": 3,
+          "triangleCount": 41380,
+          "bounds": {
+            "min": [
+              -4.503260135650635,
+              -1.3960838317871094,
+              -0.9283643960952759
+            ],
+            "max": [
+              4.496739864349365,
+              0.7497925758361816,
+              0.9261844158172607
+            ],
+            "size": [
+              9,
+              2.145876407623291,
+              1.8545488119125366
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "ArkAcaciaWoodImproved",
+            "ArkGoldImproved"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 2109944,
+      "nodeMapVersion": "r07",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-burnt-altar-detail",
+      "source": {
+        "path": "assets/source/sketchfab/altar-of-burnt-offering/altar_of_burnt_offering_of_the_tabernacle.glb",
+        "sha256": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+        "bytes": 1926536
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/altar-of-burnt-offering/altar-burnt-offering.glb",
+        "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+        "bytes": 1162556
+      },
+      "runtime": {
+        "path": "public/models/altar-burnt-offering.glb",
+        "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 7,
+        "objectCount": 7,
+        "triangleCount": 53166,
+        "materialCount": 1,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -8.80087107216155,
+            -0.0038976525728095235,
+            -5.531140099182129
+          ],
+          "max": [
+            8.836344959947663,
+            3.6018869977221666,
+            5.468859900817871
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 15,
+          "meshCount": 7,
+          "triangleCount": 53166,
+          "bounds": {
+            "min": [
+              -8.872769355773926,
+              -3.601710081100464,
+              -5.468859672546387
+            ],
+            "max": [
+              10.37757682800293,
+              0.05935908108949661,
+              5.531140327453613
+            ],
+            "size": [
+              19.250346183776855,
+              3.6610691621899605,
+              11
+            ]
+          },
+          "materialCount": 1,
+          "materials": [
+            "Copper-Brass"
+          ]
+        },
+        "reimport": {
+          "objectCount": 15,
+          "meshCount": 7,
+          "triangleCount": 53166,
+          "bounds": {
+            "min": [
+              -8.872779846191406,
+              -3.6018872261047363,
+              -5.468859672546387
+            ],
+            "max": [
+              10.377517700195312,
+              0.05934138596057892,
+              5.531140327453613
+            ],
+            "size": [
+              19.25029754638672,
+              3.6612286120653152,
+              11
+            ]
+          },
+          "materialCount": 1,
+          "materials": [
+            "Copper-Brass"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 1162556,
+      "nodeMapVersion": "r10",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-table-shewbread-detail",
+      "source": {
+        "path": "assets/source/sketchfab/table-of-shewbread/table_of_shewbread_of_the_tabernacle.glb",
+        "sha256": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+        "bytes": 3619276
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/table-of-shewbread/table-shewbread.glb",
+        "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+        "bytes": 2726120
+      },
+      "runtime": {
+        "path": "public/models/table-shewbread.glb",
+        "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 2,
+        "objectCount": 2,
+        "triangleCount": 80151,
+        "materialCount": 2,
+        "textureCount": 1,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -3.498360096359253,
+            0.0009362823215461891,
+            -0.17102217046636803
+          ],
+          "max": [
+            3.501639903854492,
+            2.0255036824497243,
+            1.0364121384419849
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 4,
+          "meshCount": 2,
+          "triangleCount": 80151,
+          "bounds": {
+            "min": [
+              -3.4983601570129395,
+              -2.0256900787353516,
+              -1.0364799499511719
+            ],
+            "max": [
+              3.5016398429870605,
+              -0.0007500052452087402,
+              0.1710900366306305
+            ],
+            "size": [
+              7,
+              2.024940073490143,
+              1.2075699865818024
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "Gold",
+            "Material"
+          ]
+        },
+        "reimport": {
+          "objectCount": 4,
+          "meshCount": 2,
+          "triangleCount": 80151,
+          "bounds": {
+            "min": [
+              -3.4983601570129395,
+              -2.025503635406494,
+              -1.0364121198654175
+            ],
+            "max": [
+              3.5016398429870605,
+              -0.0009362697601318359,
+              0.1710221767425537
+            ],
+            "size": [
+              7,
+              2.0245673656463623,
+              1.2074342966079712
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "Gold",
+            "Material"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 2726120,
+      "nodeMapVersion": "r10",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-incense-altar-detail",
+      "source": {
+        "path": "assets/source/sketchfab/altar-of-incense/altar_of_incense_of_the_tabernacle.glb",
+        "sha256": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+        "bytes": 1802064
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/altar-of-incense/altar-incense.glb",
+        "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+        "bytes": 1063712
+      },
+      "runtime": {
+        "path": "public/models/altar-incense.glb",
+        "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 4,
+        "objectCount": 4,
+        "triangleCount": 72040,
+        "materialCount": 3,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -0.7467789608829926,
+            -0.0006690418753159122,
+            -3.4999999999999996
+          ],
+          "max": [
+            0.7469189669102142,
+            2.404158986323787,
+            3.5000000000000004
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 6,
+          "meshCount": 4,
+          "triangleCount": 72040,
+          "bounds": {
+            "min": [
+              -0.7469800114631653,
+              -2.403980016708374,
+              -3.5
+            ],
+            "max": [
+              0.7471199631690979,
+              0.0004900693893432617,
+              3.5
+            ],
+            "size": [
+              1.4940999746322632,
+              2.4044700860977173,
+              7
+            ]
+          },
+          "materialCount": 3,
+          "materials": [
+            "Copper-Brass",
+            "Frankincense",
+            "Gold"
+          ]
+        },
+        "reimport": {
+          "objectCount": 6,
+          "meshCount": 4,
+          "triangleCount": 72040,
+          "bounds": {
+            "min": [
+              -0.7467789649963379,
+              -2.4041590690612793,
+              -3.5
+            ],
+            "max": [
+              0.7469189167022705,
+              0.0006690025329589844,
+              3.5
+            ],
+            "size": [
+              1.4936978816986084,
+              2.4048280715942383,
+              7
+            ]
+          },
+          "materialCount": 3,
+          "materials": [
+            "Copper-Brass",
+            "Frankincense",
+            "Gold"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 1063712,
+      "nodeMapVersion": "r10",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-menorah-detail",
+      "source": {
+        "path": "assets/source/sketchfab/lampstand-menorah/lampstand_menorah_of_the_tabernacle.glb",
+        "sha256": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+        "bytes": 1856960
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/lampstand-menorah/lampstand-menorah.glb",
+        "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+        "bytes": 800612
+      },
+      "runtime": {
+        "path": "public/models/lampstand-menorah.glb",
+        "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 6,
+        "objectCount": 12,
+        "triangleCount": 33984,
+        "materialCount": 1,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -1.9767875696082537,
+            -0.10187631552623762,
+            -1.072176791111435
+          ],
+          "max": [
+            1.9922075967688984,
+            5.109969987134933,
+            2.008910010795593
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 25,
+          "meshCount": 12,
+          "triangleCount": 55632,
+          "bounds": {
+            "min": [
+              -2.0225400924682617,
+              -5.1099700927734375,
+              -2.092909812927246
+            ],
+            "max": [
+              2.001939296722412,
+              0.4013383686542511,
+              1.0721499919891357
+            ],
+            "size": [
+              4.024479389190674,
+              5.511308461427689,
+              3.165059804916382
+            ]
+          },
+          "materialCount": 1,
+          "materials": [
+            "Gold"
+          ]
+        },
+        "reimport": {
+          "objectCount": 25,
+          "meshCount": 12,
+          "triangleCount": 55632,
+          "bounds": {
+            "min": [
+              -2.022515296936035,
+              -5.1099700927734375,
+              -2.0928947925567627
+            ],
+            "max": [
+              2.0019288063049316,
+              0.4012996256351471,
+              1.0721766948699951
+            ],
+            "size": [
+              4.024444103240967,
+              5.511269718408585,
+              3.165071487426758
+            ]
+          },
+          "materialCount": 1,
+          "materials": [
+            "Gold"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 800612,
+      "nodeMapVersion": "r10",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-laver-detail",
+      "source": {
+        "path": "assets/source/sketchfab/copper-laver/copper_laver_of_the_tabernacle.glb",
+        "sha256": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+        "bytes": 188240
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/copper-laver/copper-laver.glb",
+        "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+        "bytes": 110788
+      },
+      "runtime": {
+        "path": "public/models/copper-laver.glb",
+        "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 2,
+        "objectCount": 2,
+        "triangleCount": 7672,
+        "materialCount": 2,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1
+        },
+        "bounds": {
+          "min": [
+            -0.5236911038544877,
+            0.00004497434565542413,
+            -0.5265711038544872
+          ],
+          "max": [
+            0.5252911038544877,
+            2.0000449743456556,
+            0.5224111038544882
+          ]
+        }
+      },
+      "registeredStageMetrics": {
+        "build": {
+          "objectCount": 5,
+          "meshCount": 2,
+          "triangleCount": 7672,
+          "bounds": {
+            "min": [
+              -0.5237299799919128,
+              -2.000040054321289,
+              -0.5224499702453613
+            ],
+            "max": [
+              0.5253300070762634,
+              -0.000049948692321777344,
+              0.5266100168228149
+            ],
+            "size": [
+              1.0490599870681763,
+              1.9999901056289673,
+              1.0490599870681763
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "Copper-Brass",
+            "Meta-water"
+          ]
+        },
+        "reimport": {
+          "objectCount": 5,
+          "meshCount": 2,
+          "triangleCount": 7672,
+          "bounds": {
+            "min": [
+              -0.5236911177635193,
+              -2.00004506111145,
+              -0.5224111080169678
+            ],
+            "max": [
+              0.5252911448478699,
+              -0.00004506111145019531,
+              0.5265711545944214
+            ],
+            "size": [
+              1.0489822626113892,
+              2,
+              1.0489822626113892
+            ]
+          },
+          "materialCount": 2,
+          "materials": [
+            "Copper-Brass",
+            "Meta-water"
+          ]
+        }
+      },
+      "gpuUploadEstimateBytes": 110788,
+      "nodeMapVersion": "r10",
+      "blenderVersion": "5.2.1 LTS",
+      "optimizer": "glTF Transform 4.4.2"
+    },
+    {
+      "assetId": "tabernacle-law-tablets-library",
+      "source": {
+        "path": "assets/source/sketchfab/ten-commandments/the_ten_commandments_of_the_tabernacle.glb",
+        "sha256": "6b8f6b289dec9cb4e3940a1c54e9fa7c9c053ee8ccb7c123a03876095fc73186",
+        "bytes": 546676
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/ten-commandments/ten-commandments.glb",
+        "sha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+        "bytes": 544236
+      },
+      "runtime": {
+        "path": "public/models/ten-commandments.glb",
+        "sha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 2,
+        "objectCount": 2,
+        "triangleCount": 24,
+        "materialCount": 1,
+        "textureCount": 2,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -1.3933858651434197,
+            -0.011278725879711378,
+            -0.7275000214576721
+          ],
+          "max": [
+            1.3645058651434196,
+            0.011278725879711378,
+            0.7275000214576721
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 544236,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "priest-arab-man-library",
+      "source": {
+        "path": "assets/source/sketchfab/arab-man-rigged/arab_man_rigged.glb",
+        "sha256": "11f799ba8d290d1a681c9b69841377eb10d4d41a109611ca26af93aaf9012527",
+        "bytes": 2675616
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/arab-man-rigged/arab-man-rigged.glb",
+        "sha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+        "bytes": 2369652
+      },
+      "runtime": {
+        "path": "public/models/arab-man-rigged.glb",
+        "sha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 10,
+        "objectCount": 10,
+        "triangleCount": 12586,
+        "materialCount": 9,
+        "textureCount": 16,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -1,
+            -1,
+            -1
+          ],
+          "max": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 2369652,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "priest-basic-human-library",
+      "source": {
+        "path": "assets/source/sketchfab/basic-human-male/basic_human_male.glb",
+        "sha256": "c21339d10f1b64ca9e3e4d5d438718c662172b94ffa9c00dddcd94c1a9b3ccee",
+        "bytes": 564580
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/basic-human-male/basic-human-male.glb",
+        "sha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+        "bytes": 290288
+      },
+      "runtime": {
+        "path": "public/models/basic-human-male.glb",
+        "sha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 1,
+        "objectCount": 1,
+        "triangleCount": 15064,
+        "materialCount": 1,
+        "textureCount": 0,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -1,
+            -0.533402508621479,
+            -0.15527817621387371
+          ],
+          "max": [
+            1,
+            0.533402508621479,
+            0.15527817621387371
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 290288,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "priest-medieval-outfit-library",
+      "source": {
+        "path": "assets/source/sketchfab/medieval-peasant-outfit/medieval_peasant_outfit_free.glb",
+        "sha256": "11b2225af2b9bdc561a20436e630e80ba979bfc8b0cd98e5bcf521950b6033bd",
+        "bytes": 49731280
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/medieval-peasant-outfit/medieval-peasant-outfit.glb",
+        "sha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+        "bytes": 49468124
+      },
+      "runtime": {
+        "path": "public/models/medieval-peasant-outfit.glb",
+        "sha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 4,
+        "objectCount": 4,
+        "triangleCount": 14141,
+        "materialCount": 4,
+        "textureCount": 12,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -0.5580095547882564,
+            0.0018773083446897987,
+            -0.2920152845308794
+          ],
+          "max": [
+            0.5580095547882564,
+            2.2935619129700244,
+            0.31245825517163767
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 49468124,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "priest-tunic-library",
+      "source": {
+        "path": "assets/source/sketchfab/tunic-medieval-animation/tunic_medieval_for_animation.glb",
+        "sha256": "dce088d1e5bd0c5fd7b8b3655148f8af4b9fb2f6125308a6a8ce325abab445ca",
+        "bytes": 8319560
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/tunic-medieval-animation/tunic-medieval-animation.glb",
+        "sha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+        "bytes": 7999420
+      },
+      "runtime": {
+        "path": "public/models/tunic-medieval-animation.glb",
+        "sha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 1,
+        "objectCount": 1,
+        "triangleCount": 18476,
+        "materialCount": 1,
+        "textureCount": 3,
+        "animationCount": 0,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -45.07724711882401,
+            -18.592520376527446,
+            -22.87893593631912
+          ],
+          "max": [
+            38.85233256804276,
+            73.75848443188445,
+            16.42386145291253
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 7999420,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "sheep-library",
+      "source": {
+        "path": "assets/source/sketchfab/sheep/sheep.glb",
+        "sha256": "7cb00f4eccc7a3869e08c4a7155aafdb074813e34e8fae55ea495e1ec4b9fb6a",
+        "bytes": 13041260
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/sheep/sheep.glb",
+        "sha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+        "bytes": 12824552
+      },
+      "runtime": {
+        "path": "public/models/sheep.glb",
+        "sha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 1,
+        "objectCount": 1,
+        "triangleCount": 2290,
+        "materialCount": 1,
+        "textureCount": 3,
+        "animationCount": 1,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -0.2960600604266488,
+            -0.7331156346324046,
+            -1
+          ],
+          "max": [
+            0.2960600604266488,
+            0.7517014069032868,
+            1
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 12824552,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "cow-npc-library",
+      "source": {
+        "path": "assets/source/sketchfab/cow-npc/cow_npc.glb",
+        "sha256": "2d690ecfd806b87179fac6fa45f2b74a9a4dcc23adb2825b023af5599874e10f",
+        "bytes": 4058388
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/cow-npc/cow-npc.glb",
+        "sha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+        "bytes": 3848840
+      },
+      "runtime": {
+        "path": "public/models/cow-npc.glb",
+        "sha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 1,
+        "objectCount": 1,
+        "triangleCount": 2986,
+        "materialCount": 1,
+        "textureCount": 3,
+        "animationCount": 1,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -1,
+            -0.5491500595110935,
+            -0.22351756340220344
+          ],
+          "max": [
+            1,
+            0.5637989440595721,
+            0.22351756340220344
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 3848840,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    },
+    {
+      "assetId": "bull-library",
+      "source": {
+        "path": "assets/source/sketchfab/bull/bull.glb",
+        "sha256": "31bb235bf05166bc9c52dd559b7abe27a9ccd709a615d1be995e509c0e701a32",
+        "bytes": 3228400
+      },
+      "derived": {
+        "path": "assets/processed/sketchfab/bull/bull.glb",
+        "sha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+        "bytes": 2654124
+      },
+      "runtime": {
+        "path": "public/models/bull.glb",
+        "sha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9"
+      },
+      "reimport": {
+        "status": "passed",
+        "meshCount": 6,
+        "objectCount": 6,
+        "triangleCount": 15644,
+        "materialCount": 6,
+        "textureCount": 3,
+        "animationCount": 3,
+        "axes": {
+          "forward": "-Z",
+          "up": "Y",
+          "source": "existing manifest"
+        },
+        "units": {
+          "system": "METRIC",
+          "scaleLength": 1,
+          "source": "existing manifest"
+        },
+        "bounds": {
+          "min": [
+            -0.9999999776482582,
+            -0.9999999670710016,
+            -0.9999999434033083
+          ],
+          "max": [
+            0.9999999776482582,
+            0.9999999434197101,
+            0.9999999434525135
+          ]
+        }
+      },
+      "registeredStageMetrics": null,
+      "gpuUploadEstimateBytes": 2654124,
+      "nodeMapVersion": "baseline-v1",
+      "blenderVersion": "unchanged processed asset",
+      "optimizer": "existing processed asset (no R12 re-export)"
+    }
+  ]
+}

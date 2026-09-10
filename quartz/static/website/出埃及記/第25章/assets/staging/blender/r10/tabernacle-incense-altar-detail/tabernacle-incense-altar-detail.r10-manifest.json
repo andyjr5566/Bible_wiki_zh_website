@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "r10",
+  "assetId": "tabernacle-incense-altar-detail",
+  "generatedAt": "2026-09-09T19:32:02.772574+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/altar-of-incense/altar_of_incense_of_the_tabernacle.glb",
+    "sha256": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+    "bytes": 1802064
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\tabernacle-incense-altar-detail.staged.glb",
+    "sha256": "6ae6e80004d200d96721a393cb400fd89c6f7e2296f5352eca3344f15247761c",
+    "bytes": 1380608
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\tabernacle-incense-altar-detail.optimized.glb",
+    "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+    "bytes": 1063712
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "Gold",
+      "baseColor": [
+        0.8,
+        0.45,
+        0.08
+      ],
+      "metallic": 0.28,
+      "roughness": 0.34
+    },
+    {
+      "name": "Copper-Brass",
+      "baseColor": [
+        0.36,
+        0.11,
+        0.04
+      ],
+      "metallic": 0.62,
+      "roughness": 0.32
+    },
+    {
+      "name": "Frankincense.001",
+      "baseColor": [
+        0.18,
+        0.1,
+        0.03
+      ],
+      "metallic": 0.0,
+      "roughness": 0.78
+    },
+    {
+      "name": "Gold.012",
+      "baseColor": [
+        0.8,
+        0.45,
+        0.08
+      ],
+      "metallic": 0.28,
+      "roughness": 0.34
+    }
+  ],
+  "parts": [
+    {
+      "id": "incense-altar-body",
+      "label": "香壇本體",
+      "object": "Crown_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX30-INCENSE"
+      ]
+    },
+    {
+      "id": "incense-altar-corners",
+      "label": "角",
+      "object": "Crown_1",
+      "mappingStatus": "source-node",
+      "claimIds": [
+        "C-EX30-INCENSE"
+      ]
+    },
+    {
+      "id": "incense-altar-poles",
+      "label": "杠",
+      "object": "Crown_2",
+      "mappingStatus": "source-node",
+      "claimIds": [
+        "C-EX30-INCENSE"
+      ]
+    }
+  ],
+  "section": {
+    "label": "香壇",
+    "note": "四個來源節點的具體部位對應保留為 source-node，不把名稱推成確定形制"
+  },
+  "buildMetrics": {
+    "objectCount": 6,
+    "meshCount": 4,
+    "triangleCount": 72040,
+    "bounds": {
+      "min": [
+        -0.7469800114631653,
+        -2.403980016708374,
+        -3.5
+      ],
+      "max": [
+        0.7471199631690979,
+        0.0004900693893432617,
+        3.5
+      ],
+      "size": [
+        1.4940999746322632,
+        2.4044700860977173,
+        7.0
+      ]
+    },
+    "materialCount": 3,
+    "materials": [
+      "Copper-Brass",
+      "Frankincense",
+      "Gold"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 6,
+    "meshCount": 4,
+    "triangleCount": 72040,
+    "bounds": {
+      "min": [
+        -0.7467789649963379,
+        -2.4041590690612793,
+        -3.5
+      ],
+      "max": [
+        0.7469189167022705,
+        0.0006690025329589844,
+        3.5
+      ],
+      "size": [
+        1.4936978816986084,
+        2.4048280715942383,
+        7.0
+      ]
+    },
+    "materialCount": 3,
+    "materials": [
+      "Copper-Brass",
+      "Frankincense",
+      "Gold"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\before-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\before-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\before-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\before-Close.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\after-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\after-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\after-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-incense-altar-detail\\previews\\after-Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/altar-of-incense/altar-incense.glb",
+      "public/models/altar-incense.glb"
+    ]
+  }
+}

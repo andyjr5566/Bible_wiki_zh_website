@@ -1,0 +1,5 @@
+
+> interactive-biblical-tabernacle@1.0.0 verify:derived
+> node scripts/verify-derived-assets.mjs
+
+Derived asset verification passed for 17 assets; source hashes unchanged and processed/runtime pairs match.

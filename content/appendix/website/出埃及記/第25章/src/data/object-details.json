@@ -1,0 +1,334 @@
+{
+  "objects": [
+    {
+      "id": "ark",
+      "name": "約櫃",
+      "locationId": "most-holy-place",
+      "confidence": "textual",
+      "summary": "皂莢木櫃內外包精金，上有施恩座與相對的基路伯。",
+      "dimensions": {
+        "status": "verified",
+        "lengthCubits": 2.5,
+        "widthCubits": 1.5,
+        "heightCubits": 1.5,
+        "sourceClaimIds": [
+          "C-EX25-ARK-SPEC"
+        ],
+        "displayNote": "尺寸來自出埃及記的製作吩咐；金包覆厚度與木芯比例未詳。"
+      },
+      "materials": [
+        "皂莢木",
+        "精金"
+      ],
+      "parts": [
+        {
+          "id": "ark-body",
+          "label": "櫃體",
+          "claimIds": [
+            "C-EX25-ARK-SPEC"
+          ]
+        },
+        {
+          "id": "mercy-seat",
+          "label": "施恩座",
+          "claimIds": [
+            "C-EX25-ARK-CHERUB"
+          ]
+        },
+        {
+          "id": "cherubim",
+          "label": "基路伯",
+          "claimIds": [
+            "C-EX25-ARK-CHERUB"
+          ]
+        },
+        {
+          "id": "poles",
+          "label": "杠",
+          "claimIds": [
+            "C-EX25-ARK-SPEC"
+          ]
+        },
+        {
+          "id": "rings",
+          "label": "金環",
+          "claimIds": [
+            "C-EX25-ARK-SPEC"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX25-ARK-SPEC",
+        "C-EX25-ARK-CHERUB"
+      ],
+      "center": {
+        "x": 0,
+        "y": 0.72,
+        "z": -9.18
+      },
+      "scriptureReferences": [
+        "Exodus 25:10-22"
+      ]
+    },
+    {
+      "id": "shewbread-table",
+      "name": "陳設餅桌",
+      "locationId": "holy-place",
+      "confidence": "textual",
+      "summary": "皂莢木桌包精金，供放置陳設餅與相關器皿。",
+      "dimensions": {
+        "status": "verified",
+        "lengthCubits": 2,
+        "widthCubits": 1,
+        "heightCubits": 1.5,
+        "sourceClaimIds": [
+          "C-EX25-TABLE"
+        ],
+        "displayNote": "桌的三向尺寸有明文；器皿排列未指定唯一幾何。"
+      },
+      "materials": [
+        "皂莢木",
+        "精金"
+      ],
+      "parts": [
+        {
+          "id": "table-top",
+          "label": "桌面",
+          "claimIds": [
+            "C-EX25-TABLE"
+          ]
+        },
+        {
+          "id": "table-crown",
+          "label": "金牙邊",
+          "claimIds": [
+            "C-EX25-TABLE"
+          ]
+        },
+        {
+          "id": "showbread",
+          "label": "陳設餅",
+          "claimIds": [
+            "C-EX25-TABLE",
+            "C-LV24-BREAD"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX25-TABLE",
+        "C-LV24-BREAD"
+      ],
+      "center": {
+        "x": 1.2,
+        "y": 0.78,
+        "z": -4.35
+      },
+      "scriptureReferences": [
+        "Exodus 25:23-30",
+        "Leviticus 24:5-9"
+      ]
+    },
+    {
+      "id": "menorah",
+      "name": "金燈臺",
+      "locationId": "holy-place",
+      "confidence": "textual",
+      "summary": "一他連得精金錘出的燈臺，有七盞燈及枝、杯、球、花等部件。",
+      "dimensions": {
+        "status": "unresolved",
+        "lengthCubits": null,
+        "widthCubits": null,
+        "heightCubits": null,
+        "sourceClaimIds": [
+          "C-EX25-MENORAH"
+        ],
+        "displayNote": "經文未載總高度、寬度或枝條弧度，畫面不顯示數值尺寸。"
+      },
+      "materials": [
+        "精金",
+        "清橄欖油"
+      ],
+      "parts": [
+        {
+          "id": "branches",
+          "label": "枝與杯",
+          "claimIds": [
+            "C-EX25-MENORAH"
+          ]
+        },
+        {
+          "id": "seven-lamps",
+          "label": "七盞燈",
+          "claimIds": [
+            "C-EX25-MENORAH",
+            "C-LV24-LAMP"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX25-MENORAH",
+        "C-LV24-LAMP"
+      ],
+      "center": {
+        "x": -1.2,
+        "y": 0.82,
+        "z": -4.35
+      },
+      "scriptureReferences": [
+        "Exodus 25:31-40",
+        "Exodus 27:20-21"
+      ]
+    },
+    {
+      "id": "incense-altar",
+      "name": "香壇",
+      "locationId": "holy-place",
+      "confidence": "textual",
+      "summary": "皂莢木包精金的香壇，置於法櫃前幔外，早晚燒香。",
+      "dimensions": {
+        "status": "verified",
+        "lengthCubits": 1,
+        "widthCubits": 1,
+        "heightCubits": 2,
+        "sourceClaimIds": [
+          "C-EX30-INCENSE"
+        ],
+        "displayNote": "壇的長、寬、高有明文；香煙表現屬教學 cue。"
+      },
+      "materials": [
+        "皂莢木",
+        "精金"
+      ],
+      "parts": [
+        {
+          "id": "horns",
+          "label": "四角",
+          "claimIds": [
+            "C-EX30-INCENSE"
+          ]
+        },
+        {
+          "id": "gold-ring",
+          "label": "金環與杠",
+          "claimIds": [
+            "C-EX30-INCENSE"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX30-INCENSE"
+      ],
+      "center": {
+        "x": 0,
+        "y": 1,
+        "z": -5.85
+      },
+      "scriptureReferences": [
+        "Exodus 30:1-10"
+      ]
+    },
+    {
+      "id": "burnt-altar",
+      "name": "燔祭壇",
+      "locationId": "burnt-altar-location",
+      "confidence": "textual",
+      "summary": "皂莢木壇包銅，長寬各五肘、高三肘，設有角、網與杠。",
+      "dimensions": {
+        "status": "verified",
+        "lengthCubits": 5,
+        "widthCubits": 5,
+        "heightCubits": 3,
+        "sourceClaimIds": [
+          "C-EX27-BURNT-ALTAR"
+        ],
+        "displayNote": "主體三向尺寸有明文；網與角的細部尺寸未詳。"
+      },
+      "materials": [
+        "皂莢木",
+        "銅"
+      ],
+      "parts": [
+        {
+          "id": "altar-horns",
+          "label": "四角",
+          "claimIds": [
+            "C-EX27-BURNT-ALTAR"
+          ]
+        },
+        {
+          "id": "altar-grating",
+          "label": "銅網",
+          "claimIds": [
+            "C-EX27-BURNT-ALTAR"
+          ]
+        },
+        {
+          "id": "altar-poles",
+          "label": "杠",
+          "claimIds": [
+            "C-EX27-BURNT-ALTAR"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX27-BURNT-ALTAR"
+      ],
+      "center": {
+        "x": 0,
+        "y": 1.05,
+        "z": 9
+      },
+      "scriptureReferences": [
+        "Exodus 27:1-8"
+      ]
+    },
+    {
+      "id": "laver",
+      "name": "洗濯盆",
+      "locationId": "laver-location",
+      "confidence": "textual",
+      "summary": "銅製洗濯盆和盆座，供祭司洗手洗腳後進入會幕或就近壇。",
+      "dimensions": {
+        "status": "unresolved",
+        "lengthCubits": null,
+        "widthCubits": null,
+        "heightCubits": null,
+        "sourceClaimIds": [
+          "C-EX30-LAVER"
+        ],
+        "displayNote": "經文未載盆的尺寸、形狀與水量，畫面不標示任意數值。"
+      },
+      "materials": [
+        "銅"
+      ],
+      "parts": [
+        {
+          "id": "basin",
+          "label": "盆",
+          "claimIds": [
+            "C-EX30-LAVER"
+          ]
+        },
+        {
+          "id": "basin-base",
+          "label": "盆座",
+          "claimIds": [
+            "C-EX30-LAVER"
+          ]
+        }
+      ],
+      "claimIds": [
+        "C-EX30-LAVER"
+      ],
+      "center": {
+        "x": 0,
+        "y": 0.7,
+        "z": 0
+      },
+      "scriptureReferences": [
+        "Exodus 30:17-21",
+        "Exodus 40:30-32"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # 參考資料使用紀錄
 
+> 2026-09-10：保留本文件及使用者原素材作研究歷史。圖像重建、舊runtime採納紀錄與本輪核准事實分開；新主張必須依 [證據契約](planning/REVAMP_EVIDENCE.md) 核對，不能以「先前AI已採用」作證。
+
 本專案收到的 `docs/addition_info/` 檔案是**設計與空間閱讀參考**，不是已納入網站的圖片或 3D 資產。所有網站內的模型、文字與儀式說明仍須分別以經文和 `src/data/*.json` 驗證，並標示 `textual`、`reconstructed` 或 `interpretive`。
 
 ## 提供檔案

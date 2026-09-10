@@ -1,0 +1,78 @@
+
+> interactive-biblical-tabernacle@1.0.0 build
+> npm run verify && vite build
+
+
+> interactive-biblical-tabernacle@1.0.0 verify
+> npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets
+
+
+> interactive-biblical-tabernacle@1.0.0 typecheck
+> tsc --noEmit
+
+
+> interactive-biblical-tabernacle@1.0.0 test
+> vitest run
+
+
+ RUN  v2.1.9 C:/Obsidian/Hermes/scripture/appendix/website/出埃及記/第25章
+
+ ✓ src/components/ExperiencePanel.test.ts (5 tests) 5ms
+ ✓ src/systems/TourManager.test.ts (2 tests) 2ms
+ ✓ src/systems/CinematicTourController.test.ts (6 tests) 4ms
+ ✓ src/characters/CharacterAppearanceResolver.test.ts (3 tests) 4ms
+ ✓ src/data/ProjectData.test.ts (10 tests) 25ms
+ ✓ src/rituals/RitualPlaybackController.test.ts (6 tests) 33ms
+ ✓ src/systems/assets/AssetRuntimeManager.test.ts (4 tests) 32ms
+ ✓ src/diagnostics/PerformanceRecorder.test.ts (2 tests) 5ms
+ ✓ src/systems/assets/AssetManifest.test.ts (3 tests) 4ms
+ ✓ src/systems/assets/AssetLoader.test.ts (2 tests) 15ms
+ ✓ src/systems/MapModeManager.test.ts (3 tests) 25ms
+ ✓ src/scene/WorldAlignment.test.ts (2 tests) 20ms
+ ✓ src/ui/UIStateManager.test.ts (3 tests) 3ms
+ ✓ src/scene/ParticleEffects.test.ts (1 test) 5ms
+ ✓ src/scene/CameraManager.test.ts (3 tests) 15ms
+ ✓ src/controls/InputManager.test.ts (2 tests) 3ms
+ ✓ src/rituals/RitualVisualSystem.test.ts (1 test) 16ms
+ ✓ src/controls/PlayerController.test.ts (2 tests) 2ms
+ ✓ src/systems/InteractionSystem.test.ts (1 test) 2ms
+ ✓ src/systems/CollisionWorld.test.ts (2 tests) 3ms
+ ✓ src/scripture/ScriptureMappingService.test.ts (2 tests) 3ms
+
+ Test Files  21 passed (21)
+      Tests  65 passed (65)
+   Start at  06:55:46
+   Duration  1.65s (transform 825ms, setup 0ms, collect 2.52s, tests 225ms, environment 3ms, prepare 1.63s)
+
+
+> interactive-biblical-tabernacle@1.0.0 verify:architecture
+> node scripts/verify-architecture.mjs
+
+Architecture boundaries verified across 104 TypeScript modules.
+
+> interactive-biblical-tabernacle@1.0.0 verify:assets
+> node scripts/verify-assets.mjs
+
+Asset strategy verified for 17 assets across source, processed, and runtime layers.
+vite v5.4.21 building for production...
+transforming...
+✓ 88 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                      1.94 kB │ gzip:   1.13 kB
+dist/assets/index-CALFD7l9.css      32.39 kB │ gzip:   7.39 kB
+dist/assets/index-CnRS8X9a.js       54.30 kB │ gzip:  19.95 kB │ map:   113.28 kB
+dist/assets/AppKernel-DWu7LItq.js  814.82 kB │ gzip: 223.98 kB │ map: 2,757.69 kB
+node.exe : 
+At C:\Users\andyj_adknr2z\AppData\Local\hermes\node\npm.ps1:16 char:5
++     & "$basedir/node$exe"  "$basedir/node_modules/npm/bin/npm-cli.js" ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-m
+anualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.49s

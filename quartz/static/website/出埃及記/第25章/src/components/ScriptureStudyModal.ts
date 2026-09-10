@@ -5,6 +5,7 @@ export class ScriptureStudyModal {
   #isOpen = false;
   #appKernel: AppKernel | null = null;
   #unitMode: 'cubit' | 'cm' | 'inch' = 'cubit';
+  #returnFocus: HTMLElement | null = null;
 
   constructor(container: HTMLElement) {
     this.element = document.createElement('div');
@@ -126,6 +127,7 @@ export class ScriptureStudyModal {
 
     container.appendChild(this.element);
     this.element.addEventListener('click', this.#onClick);
+    window.addEventListener('keydown', this.#onKeyDown);
   }
 
   bind(kernel: AppKernel): void {
@@ -133,13 +135,20 @@ export class ScriptureStudyModal {
   }
 
   open(): void {
+    if (this.#isOpen) return;
+    this.#returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     this.#isOpen = true;
     this.element.classList.remove('is-hidden');
+    queueMicrotask(() => this.element.querySelector<HTMLButtonElement>('.scripture-close-btn')?.focus());
   }
 
   close(): void {
+    if (!this.#isOpen) return;
     this.#isOpen = false;
     this.element.classList.add('is-hidden');
+    const returnFocus = this.#returnFocus;
+    this.#returnFocus = null;
+    if (returnFocus?.isConnected) returnFocus.focus();
   }
 
   toggle(): void {
@@ -181,8 +190,21 @@ export class ScriptureStudyModal {
     });
   }
 
+  readonly #onKeyDown = (e: KeyboardEvent): void => {
+    if (this.#isOpen && e.key === 'Escape' && isTopOverlay(this.element)) {
+      e.preventDefault();
+      this.close();
+    }
+  };
+
   dispose(): void {
     this.element.removeEventListener('click', this.#onClick);
+    window.removeEventListener('keydown', this.#onKeyDown);
     this.element.remove();
   }
+}
+
+function isTopOverlay(element: HTMLElement): boolean {
+  const overlays = Array.from(document.querySelectorAll<HTMLElement>('.cinematic-overlay:not(.is-hidden), .settings-modal-overlay:not(.is-hidden), .scripture-modal-overlay:not(.is-hidden), .credits-sheet'));
+  return overlays[overlays.length - 1] === element;
 }

@@ -1,0 +1,117 @@
+{
+  "snapshots": [
+    {
+      "label": "390-收合",
+      "dom": "- main:\n  - generic \"可拖曳旋轉、滾輪縮放的 3D 會幕場景\"\n  - paragraph: 3D 場景提供同等的文字操作：使用上方四個入口切換場景總覽、五站導覽、器物與經文、服事程序；器物、程序步驟和來源會在左側面板列出。鍵盤可用 Tab 選取按鈕，Escape 關閉目前最上層的視窗。\n  - heading \"聖經會幕 · 空間研讀\" [level=1]\n  - navigation \"體驗模式\":\n    - button \"場景總覽模式\":\n      - generic: 場景總覽\n    - button \"五站導覽模式\":\n      - generic: 五站導覽\n    - button \"器物與經文模式\" [pressed]:\n      - generic: 器物與經文\n    - button \"服事程序模式\":\n      - generic: 服事程序\n  - button \"▶ 逐幕 3D 導覽\"\n  - button \"切換音效\": 🔊\n  - button \"開啟設定與大氣氛圍\": ⚙️\n  - button \"資料來源\"\n  - complementary \"研讀與操作面板\":\n    - button \"展開控制\":\n      - generic: ↑\n      - generic: 展開控制",
+      "rects": {
+        "canvas": {
+          "bottom": 900,
+          "height": 900,
+          "left": 0,
+          "right": 1440,
+          "top": 0,
+          "width": 1440,
+          "x": 0,
+          "y": 0
+        },
+        "panel": {
+          "bottom": 888,
+          "height": 44,
+          "left": 12,
+          "right": 378,
+          "top": 844,
+          "width": 366,
+          "x": 12,
+          "y": 844
+        },
+        "viewport": [
+          390,
+          844,
+          1
+        ],
+        "width": 1440
+      }
+    },
+    {
+      "label": "390-半展",
+      "dom": "- main:\n  - generic \"可拖曳旋轉、滾輪縮放的 3D 會幕場景\"\n  - paragraph: 3D 場景提供同等的文字操作：使用上方四個入口切換場景總覽、五站導覽、器物與經文、服事程序；器物、程序步驟和來源會在左側面板列出。鍵盤可用 Tab 選取按鈕，Escape 關閉目前最上層的視窗。\n  - heading \"聖經會幕 · 空間研讀\" [level=1]\n  - navigation \"體驗模式\":\n    - button \"場景總覽模式\":\n      - generic: 場景總覽\n    - button \"五站導覽模式\":\n      - generic: 五站導覽\n    - button \"器物與經文模式\" [pressed]:\n      - generic: 器物與經文\n    - button \"服事程序模式\":\n      - generic: 服事程序\n  - button \"▶ 逐幕 3D 導覽\"\n  - button \"切換音效\": 🔊\n  - button \"開啟設定與大氣氛圍\": ⚙️\n  - button \"資料來源\"\n  - complementary \"研讀與操作面板\":\n    - button \"展開完整閱讀面板\" [expanded] [active]:\n      - generic: ↕\n      - generic: 半展面板\n    - region \"約櫃\":\n      - paragraph: 器物空間研讀 · 考據探索\n      - heading \"約櫃\" [level=2]\n      - generic: 經文明載\n      - paragraph: 模型檢視：框架剖面 · 教學重建\n      - paragraph: 📍 位置：至聖所\n      - paragraph: 皂莢木櫃內外包精金，上有施恩座與相對的基路伯。\n      - paragraph:\n        - strong: 用途／角色：\n        - text: 約櫃以皂莢木製作，長二肘半、寬一肘半、高一肘半，內外包精金。\n      - generic: 尺寸：\n      - strong: 長 2.5 肘 × 寬 1.5 肘 × 高 1.5 肘（長度單位：肘）\n      - paragraph: 尺寸來自出埃及記的製作吩咐；金包覆厚度與木芯比例未詳。\n      - generic: 材料：\n      - strong: 皂莢木、精金\n      - heading \"可點部件\" [level=3]\n      - button \"清除焦點\"\n      - list:\n        - button \"櫃體 重建／未詳\":\n          - strong: 櫃體\n          - generic: 重建／未詳\n        - button \"施恩座 重建／未詳\":\n          - strong: 施恩座\n          - generic: 重建／未詳\n        - button \"基路伯 重建／未詳\":\n          - strong: 基路伯\n          - generic: 重建／未詳\n        - button \"杠 重建／未詳\":\n          - strong: 杠\n          - generic: 重建／未詳\n        - button \"金環 重建／未詳\":\n          - strong: 金環\n          - generic: 重建／未詳\n      - navigation \"器物選擇\":\n        - button \"約櫃\"\n        - button \"陳設餅桌\"\n        - button \"金燈臺\"\n        - button \"香壇\"\n        - button \"燔祭壇\"\n        - button \"洗濯盆\"\n      - generic \"經文、來源與事奉規範\"\n    - generic \"模型檢視選項\"",
+      "rects": {
+        "canvas": {
+          "bottom": 844,
+          "height": 844,
+          "left": 0,
+          "right": 390,
+          "top": 0,
+          "width": 390,
+          "x": 0,
+          "y": 0
+        },
+        "panel": {
+          "bottom": 832,
+          "height": 354.46875,
+          "left": 12,
+          "right": 378,
+          "top": 477.53125,
+          "width": 366,
+          "x": 12,
+          "y": 477.53125
+        },
+        "width": 390
+      }
+    },
+    {
+      "label": "390-閱讀",
+      "dom": "- main:\n  - generic \"可拖曳旋轉、滾輪縮放的 3D 會幕場景\"\n  - paragraph: 3D 場景提供同等的文字操作：使用上方四個入口切換場景總覽、五站導覽、器物與經文、服事程序；器物、程序步驟和來源會在左側面板列出。鍵盤可用 Tab 選取按鈕，Escape 關閉目前最上層的視窗。\n  - heading \"聖經會幕 · 空間研讀\" [level=1]\n  - navigation \"體驗模式\":\n    - button \"場景總覽模式\":\n      - generic: 場景總覽\n    - button \"五站導覽模式\":\n      - generic: 五站導覽\n    - button \"器物與經文模式\" [pressed]:\n      - generic: 器物與經文\n    - button \"服事程序模式\":\n      - generic: 服事程序\n  - button \"▶ 逐幕 3D 導覽\"\n  - button \"切換音效\": 🔊\n  - button \"開啟設定與大氣氛圍\": ⚙️\n  - button \"資料來源\"\n  - complementary \"研讀與操作面板\":\n    - button \"收合研讀面板\" [expanded] [active]:\n      - generic: ↓\n      - generic: 收合控制\n    - region \"約櫃\":\n      - paragraph: 器物空間研讀 · 考據探索\n      - heading \"約櫃\" [level=2]\n      - generic: 經文明載\n      - paragraph: 模型檢視：框架剖面 · 教學重建\n      - paragraph: 📍 位置：至聖所\n      - paragraph: 皂莢木櫃內外包精金，上有施恩座與相對的基路伯。\n      - paragraph:\n        - strong: 用途／角色：\n        - text: 約櫃以皂莢木製作，長二肘半、寬一肘半、高一肘半，內外包精金。\n      - generic: 尺寸：\n      - strong: 長 2.5 肘 × 寬 1.5 肘 × 高 1.5 肘（長度單位：肘）\n      - paragraph: 尺寸來自出埃及記的製作吩咐；金包覆厚度與木芯比例未詳。\n      - generic: 材料：\n      - strong: 皂莢木、精金\n      - heading \"可點部件\" [level=3]\n      - button \"清除焦點\"\n      - list:\n        - button \"櫃體 重建／未詳\":\n          - strong: 櫃體\n          - generic: 重建／未詳\n        - button \"施恩座 重建／未詳\":\n          - strong: 施恩座\n          - generic: 重建／未詳\n        - button \"基路伯 重建／未詳\":\n          - strong: 基路伯\n          - generic: 重建／未詳\n        - button \"杠 重建／未詳\":\n          - strong: 杠\n          - generic: 重建／未詳\n        - button \"金環 重建／未詳\":\n          - strong: 金環\n          - generic: 重建／未詳\n      - navigation \"器物選擇\":\n        - button \"約櫃\"\n        - button \"陳設餅桌\"\n        - button \"金燈臺\"\n        - button \"香壇\"\n        - button \"燔祭壇\"\n        - button \"洗濯盆\"\n      - generic \"經文、來源與事奉規範\"\n      - paragraph: 文字、尺寸與材料只取自已核准資料；模型外觀若屬重建，會保留清楚標示。\n      - region \"經文證據與限制\":\n        - heading \"經文證據與限制\" [level=3]\n        - generic: 每項主張分開追溯\n        - generic \"經文 C-EX25-ARK-SPEC 已核准\":\n          - generic: 經文\n          - strong: C-EX25-ARK-SPEC\n          - generic: 已核准\n        - generic \"經文 C-EX25-ARK-CHERUB 已核准\":\n          - generic: 經文\n          - strong: C-EX25-ARK-CHERUB\n          - generic: 已核准\n        - heading \"考古／研究比較\" [level=4]\n        - paragraph: 目前沒有本器物可核准的考古比較主張。\n      - heading \"相關程序\" [level=3]\n      - button \"播放儀式：atonement-entry\"\n      - list:\n        - generic: 製作指示\n        - strong: Exodus 25:1-9\n        - generic: 奉獻材料與建造目的\n        - generic: 這段先列出金、銀、銅、織物、皮料、木材、油與香料，並以建造聖所、按所示樣式製作作為整體前言。場景中的顏色與細節仍屬視覺重建。\n        - generic \"展開和合本原文\"\n        - generic: 製作指示\n        - strong: Exodus 25:10-22\n        - generic: 約櫃與施恩座的製作指示\n        - generic: 經文交代皂莢木櫃體、內外包金、金環與槓，以及施恩座和兩基路伯；尺寸以肘為單位，換算成公制仍取決於採用的肘長。\n        - generic \"展開和合本原文\"\n        - generic: 空間配置\n        - strong: Exodus 26:31-35\n        - generic: 幔子與內部器物配置\n        - generic: 幔子分隔聖所與至聖所；約櫃置於幔內，桌與燈臺在幔外相對兩側。這是本網站內部定位的主要文本依據。\n        - generic \"展開和合本原文\"\n        - generic: 實作記錄\n        - strong: Exodus 37:1-9\n        - generic: 比撒列製作約櫃\n        - generic: 這一段重述約櫃、槓、施恩座與基路伯的實際製作，和第 25 章的指示形成『命令—完成』對照。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Numbers 7:89\n        - generic: 會幕設立後的約櫃敘事\n        - generic: 經文把摩西在會幕中領受話語的位置，連到施恩座上兩基路伯之間；這補充了器物在敘事中的功能，不是外觀描述。\n        - generic \"展開和合本原文\"\n        - generic: 後世回顧\n        - strong: Hebrews 9:3-5\n        - generic: 後世文本對至聖所的回顧\n        - generic: 《希伯來書》回顧幔內、約櫃與基路伯等元素。這是後世神學性回顧，介面特別與《出埃及記》的製作指示分開標示。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Leviticus 16:1-34\n        - generic: 贖罪日條例\n        - generic: 全章限定大祭司進入幔內的時機、預備與禮儀；網站不把至聖所設計成可自由進出的遊戲空間。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Leviticus 16:12-13\n        - generic: 贖罪日的香與雲\n        - generic: 這裡描述大祭司把香與火炭帶入幔內，使香的煙雲遮掩施恩座；它屬特殊禮儀，不應和每日在香壇上的燒香混為一談。\n        - generic \"展開和合本原文\"\n        - generic: 後世回顧\n        - strong: Hebrews 9:1-12\n        - generic: 會幕分區與禮儀的神學回顧\n        - generic: 這是後世基督教文本對前後兩層帳幕與大祭司進入的回顧；它提供接受史與神學脈絡，不取代《出埃及記》的製作描述。\n        - generic \"展開和合本原文\"\n      - generic \"人物與服飾考據\"\n      - heading \"大祭司亞倫／承接者（教學重建）\" [level=3]\n      - generic: 大祭司亞倫／承接者\n      - paragraph: 服裝狀態：大祭司日常聖衣 · 技術基底：priest-basic-human-library\n      - paragraph: 技術基底＋經文部件標籤，屬教學重建。\n      - list:\n        - listitem: 按指定日常情境穿著大祭司聖衣\n        - listitem: 贖罪日穿細麻衣進入聖所與至聖所\n        - listitem: 完成贖罪日指定步驟後換回聖衣並獻燔祭\n      - list:\n        - strong: 以弗得\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一件\n        - strong: 決斷的胸牌\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一件，安放十二塊寶石\n        - strong: 以弗得的外袍\n        - generic: 藍色線 · 一件\n        - strong: 內袍\n        - generic: 細麻布 · 一件\n        - strong: 歸耶和華為聖的金牌\n        - generic: 精金 · 一面\n        - strong: 冠冕／裹頭巾\n        - generic: 細麻布 · 一件\n        - strong: 繡花腰帶\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一條\n        - strong: 細麻布褲\n        - generic: 細麻布 · 一條\n      - paragraph: 角色標籤沿用經文職分；臉孔與身形使用低細節教學基底，不把模型命名為歷史人物肖像。\n    - generic \"模型檢視選項\"",
+      "rects": {
+        "canvas": {
+          "bottom": 844,
+          "height": 844,
+          "left": 0,
+          "right": 390,
+          "top": 0,
+          "width": 390,
+          "x": 0,
+          "y": 0
+        },
+        "panel": {
+          "bottom": 832,
+          "height": 658.3125,
+          "left": 12,
+          "right": 378,
+          "top": 173.6875,
+          "width": 366,
+          "x": 12,
+          "y": 173.6875
+        },
+        "width": 390
+      }
+    },
+    {
+      "label": "360-閱讀",
+      "dom": "- main:\n  - generic \"可拖曳旋轉、滾輪縮放的 3D 會幕場景\"\n  - paragraph: 3D 場景提供同等的文字操作：使用上方四個入口切換場景總覽、五站導覽、器物與經文、服事程序；器物、程序步驟和來源會在左側面板列出。鍵盤可用 Tab 選取按鈕，Escape 關閉目前最上層的視窗。\n  - heading \"聖經會幕 · 空間研讀\" [level=1]\n  - navigation \"體驗模式\":\n    - button \"場景總覽模式\":\n      - generic: 場景總覽\n    - button \"五站導覽模式\":\n      - generic: 五站導覽\n    - button \"器物與經文模式\" [pressed]:\n      - generic: 器物與經文\n    - button \"服事程序模式\":\n      - generic: 服事程序\n  - button \"▶ 逐幕 3D 導覽\"\n  - button \"切換音效\": 🔊\n  - button \"開啟設定與大氣氛圍\": ⚙️\n  - button \"資料來源\"\n  - complementary \"研讀與操作面板\":\n    - button \"收合研讀面板\" [expanded] [active]:\n      - generic: ↓\n      - generic: 收合控制\n    - region \"約櫃\":\n      - paragraph: 器物空間研讀 · 考據探索\n      - heading \"約櫃\" [level=2]\n      - generic: 經文明載\n      - paragraph: 模型檢視：框架剖面 · 教學重建\n      - paragraph: 📍 位置：至聖所\n      - paragraph: 皂莢木櫃內外包精金，上有施恩座與相對的基路伯。\n      - paragraph:\n        - strong: 用途／角色：\n        - text: 約櫃以皂莢木製作，長二肘半、寬一肘半、高一肘半，內外包精金。\n      - generic: 尺寸：\n      - strong: 長 2.5 肘 × 寬 1.5 肘 × 高 1.5 肘（長度單位：肘）\n      - paragraph: 尺寸來自出埃及記的製作吩咐；金包覆厚度與木芯比例未詳。\n      - generic: 材料：\n      - strong: 皂莢木、精金\n      - heading \"可點部件\" [level=3]\n      - button \"清除焦點\"\n      - list:\n        - button \"櫃體 重建／未詳\":\n          - strong: 櫃體\n          - generic: 重建／未詳\n        - button \"施恩座 重建／未詳\":\n          - strong: 施恩座\n          - generic: 重建／未詳\n        - button \"基路伯 重建／未詳\":\n          - strong: 基路伯\n          - generic: 重建／未詳\n        - button \"杠 重建／未詳\":\n          - strong: 杠\n          - generic: 重建／未詳\n        - button \"金環 重建／未詳\":\n          - strong: 金環\n          - generic: 重建／未詳\n      - navigation \"器物選擇\":\n        - button \"約櫃\"\n        - button \"陳設餅桌\"\n        - button \"金燈臺\"\n        - button \"香壇\"\n        - button \"燔祭壇\"\n        - button \"洗濯盆\"\n      - generic \"經文、來源與事奉規範\"\n      - paragraph: 文字、尺寸與材料只取自已核准資料；模型外觀若屬重建，會保留清楚標示。\n      - region \"經文證據與限制\":\n        - heading \"經文證據與限制\" [level=3]\n        - generic: 每項主張分開追溯\n        - generic \"經文 C-EX25-ARK-SPEC 已核准\":\n          - generic: 經文\n          - strong: C-EX25-ARK-SPEC\n          - generic: 已核准\n        - generic \"經文 C-EX25-ARK-CHERUB 已核准\":\n          - generic: 經文\n          - strong: C-EX25-ARK-CHERUB\n          - generic: 已核准\n        - heading \"考古／研究比較\" [level=4]\n        - paragraph: 目前沒有本器物可核准的考古比較主張。\n      - heading \"相關程序\" [level=3]\n      - button \"播放儀式：atonement-entry\"\n      - list:\n        - generic: 製作指示\n        - strong: Exodus 25:1-9\n        - generic: 奉獻材料與建造目的\n        - generic: 這段先列出金、銀、銅、織物、皮料、木材、油與香料，並以建造聖所、按所示樣式製作作為整體前言。場景中的顏色與細節仍屬視覺重建。\n        - generic \"展開和合本原文\"\n        - generic: 製作指示\n        - strong: Exodus 25:10-22\n        - generic: 約櫃與施恩座的製作指示\n        - generic: 經文交代皂莢木櫃體、內外包金、金環與槓，以及施恩座和兩基路伯；尺寸以肘為單位，換算成公制仍取決於採用的肘長。\n        - generic \"展開和合本原文\"\n        - generic: 空間配置\n        - strong: Exodus 26:31-35\n        - generic: 幔子與內部器物配置\n        - generic: 幔子分隔聖所與至聖所；約櫃置於幔內，桌與燈臺在幔外相對兩側。這是本網站內部定位的主要文本依據。\n        - generic \"展開和合本原文\"\n        - generic: 實作記錄\n        - strong: Exodus 37:1-9\n        - generic: 比撒列製作約櫃\n        - generic: 這一段重述約櫃、槓、施恩座與基路伯的實際製作，和第 25 章的指示形成『命令—完成』對照。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Numbers 7:89\n        - generic: 會幕設立後的約櫃敘事\n        - generic: 經文把摩西在會幕中領受話語的位置，連到施恩座上兩基路伯之間；這補充了器物在敘事中的功能，不是外觀描述。\n        - generic \"展開和合本原文\"\n        - generic: 後世回顧\n        - strong: Hebrews 9:3-5\n        - generic: 後世文本對至聖所的回顧\n        - generic: 《希伯來書》回顧幔內、約櫃與基路伯等元素。這是後世神學性回顧，介面特別與《出埃及記》的製作指示分開標示。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Leviticus 16:1-34\n        - generic: 贖罪日條例\n        - generic: 全章限定大祭司進入幔內的時機、預備與禮儀；網站不把至聖所設計成可自由進出的遊戲空間。\n        - generic \"展開和合本原文\"\n        - generic: 事奉規範\n        - strong: Leviticus 16:12-13\n        - generic: 贖罪日的香與雲\n        - generic: 這裡描述大祭司把香與火炭帶入幔內，使香的煙雲遮掩施恩座；它屬特殊禮儀，不應和每日在香壇上的燒香混為一談。\n        - generic \"展開和合本原文\"\n        - generic: 後世回顧\n        - strong: Hebrews 9:1-12\n        - generic: 會幕分區與禮儀的神學回顧\n        - generic: 這是後世基督教文本對前後兩層帳幕與大祭司進入的回顧；它提供接受史與神學脈絡，不取代《出埃及記》的製作描述。\n        - generic \"展開和合本原文\"\n      - generic \"人物與服飾考據\"\n      - heading \"大祭司亞倫／承接者（教學重建）\" [level=3]\n      - generic: 大祭司亞倫／承接者\n      - paragraph: 服裝狀態：大祭司日常聖衣 · 技術基底：priest-basic-human-library\n      - paragraph: 技術基底＋經文部件標籤，屬教學重建。\n      - list:\n        - listitem: 按指定日常情境穿著大祭司聖衣\n        - listitem: 贖罪日穿細麻衣進入聖所與至聖所\n        - listitem: 完成贖罪日指定步驟後換回聖衣並獻燔祭\n      - list:\n        - strong: 以弗得\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一件\n        - strong: 決斷的胸牌\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一件，安放十二塊寶石\n        - strong: 以弗得的外袍\n        - generic: 藍色線 · 一件\n        - strong: 內袍\n        - generic: 細麻布 · 一件\n        - strong: 歸耶和華為聖的金牌\n        - generic: 精金 · 一面\n        - strong: 冠冕／裹頭巾\n        - generic: 細麻布 · 一件\n        - strong: 繡花腰帶\n        - generic: 金線、藍色線、紫色線、朱紅色線、撚的細麻 · 一條\n        - strong: 細麻布褲\n        - generic: 細麻布 · 一條\n      - paragraph: 角色標籤沿用經文職分；臉孔與身形使用低細節教學基底，不把模型命名為歷史人物肖像。\n    - generic \"模型檢視選項\"",
+      "rects": {
+        "canvas": {
+          "bottom": 800,
+          "height": 800,
+          "left": 0,
+          "right": 360,
+          "top": 0,
+          "width": 360,
+          "x": 0,
+          "y": 0
+        },
+        "panel": {
+          "bottom": 788,
+          "height": 624,
+          "left": 12,
+          "right": 348,
+          "top": 164,
+          "width": 336,
+          "x": 12,
+          "y": 164
+        },
+        "width": 360
+      }
+    }
+  ]
+}

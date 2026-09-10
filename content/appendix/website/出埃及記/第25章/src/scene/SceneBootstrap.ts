@@ -4,6 +4,8 @@ import { DesertEnvironment } from './DesertEnvironment';
 import { ParticleEffects } from './ParticleEffects';
 import { DimensionVisualizer } from './DimensionVisualizer';
 import type { AtmosphereMode } from '../types/atmosphere';
+import type { DimensionSpec } from '../types/dimensions';
+import type { PerformanceRecorderApi } from '../diagnostics/PerformanceRecorder';
 
 export interface SceneContext {
   scene: THREE.Scene;
@@ -22,9 +24,10 @@ export class SceneBootstrap {
   #lastTime = 0;
   #elapsedTime = 0;
   #update: (deltaSeconds: number) => void = () => undefined;
+  #performanceRecorder: PerformanceRecorderApi | null = null;
   readonly #canvas: HTMLCanvasElement;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, dimensionSpecs: readonly DimensionSpec[] = []) {
     this.#canvas = canvas;
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -34,7 +37,8 @@ export class SceneBootstrap {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    // Neutral reading baseline; local highlights carry material separation.
+    renderer.toneMappingExposure = 0.98;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -49,10 +53,10 @@ export class SceneBootstrap {
     assetRoot.name = 'runtime-assets';
     worldRoot.add(assetRoot);
 
-    const cameraManager = new CameraManager(1, canvas);
+    const cameraManager = new CameraManager(1, canvas, dimensionSpecs);
     const environment = new DesertEnvironment(scene);
     const particles = new ParticleEffects(worldRoot);
-    const dimensions = new DimensionVisualizer(worldRoot);
+    const dimensions = new DimensionVisualizer(worldRoot, dimensionSpecs);
 
     this.context = {
       scene,
@@ -88,6 +92,11 @@ export class SceneBootstrap {
 
   setUpdate(update: (deltaSeconds: number) => void): void {
     this.#update = update;
+  }
+
+  /** Enables opt-in QA collection; normal rendering does not collect metrics. */
+  setPerformanceRecorder(recorder: PerformanceRecorderApi | null): void {
+    this.#performanceRecorder = recorder;
   }
 
   start(): void {
@@ -126,6 +135,11 @@ export class SceneBootstrap {
     this.context.particles.update(deltaSeconds, this.#elapsedTime);
     this.context.cameraManager.update(deltaSeconds);
     this.context.renderer.render(this.context.scene, this.context.cameraManager.camera);
+    if (import.meta.env.DEV) {
+      this.#canvas.dataset.cameraPosition = JSON.stringify(this.context.cameraManager.pose.position);
+      this.#canvas.dataset.cameraFlying = String(this.context.cameraManager.isFlying);
+    }
+    this.#performanceRecorder?.recordFrame(time);
     this.#animationFrame = requestAnimationFrame(this.#tick);
   };
 }

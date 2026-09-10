@@ -1,0 +1,899 @@
+{
+  "generatedAt": "2026-09-09T23:11:37.493407+00:00",
+  "basis": "685da044",
+  "assets": [
+    {
+      "id": "tabernacle-main",
+      "url": "models/tabernacle-main.glb",
+      "hashes": {
+        "sourceFile": "a729c973e473bd2d094eddf2e698713ff0fa59aec0b3fee521375b4d024c8727",
+        "processedFile": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+        "runtimeFile": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77"
+      },
+      "distHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-framework",
+      "url": "models/tabernacle-framework.glb",
+      "hashes": {
+        "sourceFile": "018f5d4543b2a754bd70841b23a5ad8189dc43f17daee13b6ee50be59eb41427",
+        "processedFile": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+        "runtimeFile": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65"
+      },
+      "distHash": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-lowpoly",
+      "url": "models/tabernacle-lowpoly.glb",
+      "hashes": {
+        "sourceFile": "2a5f1f63112398e3f7c1a1602535be0b53b67b5eb24f3438a861e65b1dc9d155",
+        "processedFile": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+        "runtimeFile": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56"
+      },
+      "distHash": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-ark-alternative",
+      "url": "models/ark-alternative.glb?rev=20260910-r08-gold-1",
+      "hashes": {
+        "sourceFile": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+        "processedFile": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+        "runtimeFile": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033"
+      },
+      "distHash": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-burnt-altar-detail",
+      "url": "models/altar-burnt-offering.glb?rev=20260910-r10-1",
+      "hashes": {
+        "sourceFile": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+        "processedFile": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+        "runtimeFile": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33"
+      },
+      "distHash": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-table-shewbread-detail",
+      "url": "models/table-shewbread.glb?rev=20260910-r10-1",
+      "hashes": {
+        "sourceFile": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+        "processedFile": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+        "runtimeFile": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f"
+      },
+      "distHash": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-incense-altar-detail",
+      "url": "models/altar-incense.glb?rev=20260910-r10-1",
+      "hashes": {
+        "sourceFile": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+        "processedFile": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+        "runtimeFile": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af"
+      },
+      "distHash": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-menorah-detail",
+      "url": "models/lampstand-menorah.glb?rev=20260910-r10-1",
+      "hashes": {
+        "sourceFile": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+        "processedFile": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+        "runtimeFile": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197"
+      },
+      "distHash": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-laver-detail",
+      "url": "models/copper-laver.glb?rev=20260910-r10-1",
+      "hashes": {
+        "sourceFile": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+        "processedFile": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+        "runtimeFile": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21"
+      },
+      "distHash": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "tabernacle-law-tablets-library",
+      "url": "models/ten-commandments.glb",
+      "hashes": {
+        "sourceFile": "6b8f6b289dec9cb4e3940a1c54e9fa7c9c053ee8ccb7c123a03876095fc73186",
+        "processedFile": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+        "runtimeFile": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49"
+      },
+      "distHash": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "priest-arab-man-library",
+      "url": "models/arab-man-rigged.glb",
+      "hashes": {
+        "sourceFile": "11f799ba8d290d1a681c9b69841377eb10d4d41a109611ca26af93aaf9012527",
+        "processedFile": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+        "runtimeFile": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee"
+      },
+      "distHash": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "priest-basic-human-library",
+      "url": "models/basic-human-male.glb",
+      "hashes": {
+        "sourceFile": "c21339d10f1b64ca9e3e4d5d438718c662172b94ffa9c00dddcd94c1a9b3ccee",
+        "processedFile": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+        "runtimeFile": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8"
+      },
+      "distHash": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "priest-medieval-outfit-library",
+      "url": "models/medieval-peasant-outfit.glb",
+      "hashes": {
+        "sourceFile": "11b2225af2b9bdc561a20436e630e80ba979bfc8b0cd98e5bcf521950b6033bd",
+        "processedFile": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+        "runtimeFile": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2"
+      },
+      "distHash": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "priest-tunic-library",
+      "url": "models/tunic-medieval-animation.glb",
+      "hashes": {
+        "sourceFile": "dce088d1e5bd0c5fd7b8b3655148f8af4b9fb2f6125308a6a8ce325abab445ca",
+        "processedFile": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+        "runtimeFile": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6"
+      },
+      "distHash": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "sheep-library",
+      "url": "models/sheep.glb",
+      "hashes": {
+        "sourceFile": "7cb00f4eccc7a3869e08c4a7155aafdb074813e34e8fae55ea495e1ec4b9fb6a",
+        "processedFile": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+        "runtimeFile": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7"
+      },
+      "distHash": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "cow-npc-library",
+      "url": "models/cow-npc.glb",
+      "hashes": {
+        "sourceFile": "2d690ecfd806b87179fac6fa45f2b74a9a4dcc23adb2825b023af5599874e10f",
+        "processedFile": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+        "runtimeFile": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5"
+      },
+      "distHash": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+      "derivedMatchesDeclaration": true
+    },
+    {
+      "id": "bull-library",
+      "url": "models/bull.glb",
+      "hashes": {
+        "sourceFile": "31bb235bf05166bc9c52dd559b7abe27a9ccd709a615d1be995e509c0e701a32",
+        "processedFile": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+        "runtimeFile": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9"
+      },
+      "distHash": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+      "sourceMatchesDeclaration": true,
+      "processedPublicDistMatch": true,
+      "declaredDerivedHash": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+      "derivedMatchesDeclaration": true
+    }
+  ],
+  "assetCount": 17,
+  "allSourceDeclarationsMatch": true,
+  "allProcessedPublicDistMatch": true,
+  "allDerivedDeclarationsMatch": true,
+  "sourceLedger": [
+    {
+      "id": "S-EX25",
+      "path": "C:/Obsidian/Hermes/scripture/raw_scripture/出埃及記/第25章.txt",
+      "declared": "91feb090e31de955c29bc8eb6529469fce572502bbbb2a7d12a3cea427d96bd7",
+      "actual": "91feb090e31de955c29bc8eb6529469fce572502bbbb2a7d12a3cea427d96bd7",
+      "matches": true
+    },
+    {
+      "id": "S-EX26",
+      "path": "raw_scripture/出埃及記/第26章.txt",
+      "declared": "427b99c3d9bdf83827d57697a0d4f6e3dfa2fd9ef6d8d29aaf678c748db3503e",
+      "actual": "427b99c3d9bdf83827d57697a0d4f6e3dfa2fd9ef6d8d29aaf678c748db3503e",
+      "matches": true
+    },
+    {
+      "id": "S-EX27",
+      "path": "raw_scripture/出埃及記/第27章.txt",
+      "declared": "29e3cc3bf9961f17326be23d9d35293166b186a8695b5fb1e82b2f011274bbc4",
+      "actual": "29e3cc3bf9961f17326be23d9d35293166b186a8695b5fb1e82b2f011274bbc4",
+      "matches": true
+    },
+    {
+      "id": "S-EX28",
+      "path": "raw_scripture/出埃及記/第28章.txt",
+      "declared": "91e887da17c4d2546887b3b982d3ef0859e4e07fecba57c20f2221e573f0ac9e",
+      "actual": "91e887da17c4d2546887b3b982d3ef0859e4e07fecba57c20f2221e573f0ac9e",
+      "matches": true
+    },
+    {
+      "id": "S-EX30",
+      "path": "raw_scripture/出埃及記/第30章.txt",
+      "declared": "b32ed946334b2eea2895a01124763546d94dff636a7b54ce03aa54ba48f7bf08",
+      "actual": "b32ed946334b2eea2895a01124763546d94dff636a7b54ce03aa54ba48f7bf08",
+      "matches": true
+    },
+    {
+      "id": "S-EX35",
+      "path": "raw_scripture/出埃及記/第35章.txt",
+      "declared": "337bf7388fa1c33210805196b47906ae8a175baad70ac3f256168fcdab9ed0b2",
+      "actual": "337bf7388fa1c33210805196b47906ae8a175baad70ac3f256168fcdab9ed0b2",
+      "matches": true
+    },
+    {
+      "id": "S-EX36",
+      "path": "raw_scripture/出埃及記/第36章.txt",
+      "declared": "a0fbab9ac9a5c846576d48d729e7d60b5426de6995f7b901f3217c9c8c5277b2",
+      "actual": "a0fbab9ac9a5c846576d48d729e7d60b5426de6995f7b901f3217c9c8c5277b2",
+      "matches": true
+    },
+    {
+      "id": "S-EX37",
+      "path": "raw_scripture/出埃及記/第37章.txt",
+      "declared": "91433c76abebaff94586d40199d6e245d59adc031f411993bc117a51e260f9ef",
+      "actual": "91433c76abebaff94586d40199d6e245d59adc031f411993bc117a51e260f9ef",
+      "matches": true
+    },
+    {
+      "id": "S-EX38",
+      "path": "raw_scripture/出埃及記/第38章.txt",
+      "declared": "e32ff5fe81c897bfadae8f5326284856fbf25e19284fdf7582e2be98f85688f6",
+      "actual": "e32ff5fe81c897bfadae8f5326284856fbf25e19284fdf7582e2be98f85688f6",
+      "matches": true
+    },
+    {
+      "id": "S-EX39",
+      "path": "raw_scripture/出埃及記/第39章.txt",
+      "declared": "6b23e83a87050f5c3e2a1223f0038272522f3c6c7441d5687bb08de4ff785971",
+      "actual": "6b23e83a87050f5c3e2a1223f0038272522f3c6c7441d5687bb08de4ff785971",
+      "matches": true
+    },
+    {
+      "id": "S-EX40",
+      "path": "raw_scripture/出埃及記/第40章.txt",
+      "declared": "b4ad62571e31eac33ddaf8117bf083b1a3164eee811818501cdfa023bc9c2029",
+      "actual": "b4ad62571e31eac33ddaf8117bf083b1a3164eee811818501cdfa023bc9c2029",
+      "matches": true
+    },
+    {
+      "id": "S-EX16",
+      "path": "raw_scripture/出埃及記/第16章.txt",
+      "declared": "9bf2332e7fa74f0ed6edb9470e310f93643ba03d54d75f1396bcb109e013d9a9",
+      "actual": "9bf2332e7fa74f0ed6edb9470e310f93643ba03d54d75f1396bcb109e013d9a9",
+      "matches": true
+    },
+    {
+      "id": "S-LV01",
+      "path": "raw_scripture/利未記/第1章.txt",
+      "declared": "00d4bf83ffa9787d28c419b61928410098e85ce0554e60e0115b8bc1f2108a6f",
+      "actual": "00d4bf83ffa9787d28c419b61928410098e85ce0554e60e0115b8bc1f2108a6f",
+      "matches": true
+    },
+    {
+      "id": "S-LV02",
+      "path": "raw_scripture/利未記/第2章.txt",
+      "declared": "fca20c05a6f09128c1dddf06a66aa4f1f337212df6fa1a90d2620c857b9401f7",
+      "actual": "fca20c05a6f09128c1dddf06a66aa4f1f337212df6fa1a90d2620c857b9401f7",
+      "matches": true
+    },
+    {
+      "id": "S-LV03",
+      "path": "raw_scripture/利未記/第3章.txt",
+      "declared": "a5728fe37952592e18964aedc3b40a01380d7f1f3b38fc05eeee6f708d8c2579",
+      "actual": "a5728fe37952592e18964aedc3b40a01380d7f1f3b38fc05eeee6f708d8c2579",
+      "matches": true
+    },
+    {
+      "id": "S-LV04",
+      "path": "raw_scripture/利未記/第4章.txt",
+      "declared": "262a98981c17b5c8f86744617e08ab86aaeaafbdb29acecd20ed6d1df9844777",
+      "actual": "262a98981c17b5c8f86744617e08ab86aaeaafbdb29acecd20ed6d1df9844777",
+      "matches": true
+    },
+    {
+      "id": "S-LV05",
+      "path": "raw_scripture/利未記/第5章.txt",
+      "declared": "d82c6057fee8549d2054731adcbf1447ae18ed7c85bfc70ebeafb456f1658852",
+      "actual": "d82c6057fee8549d2054731adcbf1447ae18ed7c85bfc70ebeafb456f1658852",
+      "matches": true
+    },
+    {
+      "id": "S-LV06",
+      "path": "raw_scripture/利未記/第6章.txt",
+      "declared": "57010290b5fc08c70053984d05d72155b580d830d949992cab4edfd313cca37a",
+      "actual": "57010290b5fc08c70053984d05d72155b580d830d949992cab4edfd313cca37a",
+      "matches": true
+    },
+    {
+      "id": "S-LV07",
+      "path": "raw_scripture/利未記/第7章.txt",
+      "declared": "c2b2faf66ab676a5ee8d5a0d40032c5fef2e130842ec85f7b26a8cda69499e59",
+      "actual": "c2b2faf66ab676a5ee8d5a0d40032c5fef2e130842ec85f7b26a8cda69499e59",
+      "matches": true
+    },
+    {
+      "id": "S-LV08",
+      "path": "raw_scripture/利未記/第8章.txt",
+      "declared": "f533ff9b2b3b0ab3f2107b133d6511de89acc879089eb5fdedc84bd06a624a5b",
+      "actual": "f533ff9b2b3b0ab3f2107b133d6511de89acc879089eb5fdedc84bd06a624a5b",
+      "matches": true
+    },
+    {
+      "id": "S-LV16",
+      "path": "raw_scripture/利未記/第16章.txt",
+      "declared": "4b45aa656a4562c2a242bb982b2d8cf094506939bf3b35571f5334da4a299baf",
+      "actual": "4b45aa656a4562c2a242bb982b2d8cf094506939bf3b35571f5334da4a299baf",
+      "matches": true
+    },
+    {
+      "id": "S-LV24",
+      "path": "raw_scripture/利未記/第24章.txt",
+      "declared": "5de748f582f1bd28a370174cab4ecf4e73103012f00d6b4606ec3a075095ac51",
+      "actual": "5de748f582f1bd28a370174cab4ecf4e73103012f00d6b4606ec3a075095ac51",
+      "matches": true
+    },
+    {
+      "id": "S-NM03",
+      "path": "raw_scripture/民數記/第3章.txt",
+      "declared": "cf167d4265c5bf381bcc7559774a8f040e6651b0c7a4e7cc0c76e128b103ffc7",
+      "actual": "cf167d4265c5bf381bcc7559774a8f040e6651b0c7a4e7cc0c76e128b103ffc7",
+      "matches": true
+    },
+    {
+      "id": "S-NM04",
+      "path": "raw_scripture/民數記/第4章.txt",
+      "declared": "b8291f117906fb5ab7f5b961e1104fc6724f46f84c7c9348b59f9ebf4f801ae2",
+      "actual": "b8291f117906fb5ab7f5b961e1104fc6724f46f84c7c9348b59f9ebf4f801ae2",
+      "matches": true
+    },
+    {
+      "id": "S-NM18",
+      "path": "raw_scripture/民數記/第18章.txt",
+      "declared": "d2b2a64f4a435d153fb28a98122ada4ccad513cd2252071398f5670526ea1de6",
+      "actual": "d2b2a64f4a435d153fb28a98122ada4ccad513cd2252071398f5670526ea1de6",
+      "matches": true
+    },
+    {
+      "id": "S-NM17",
+      "path": "raw_scripture/民數記/第17章.txt",
+      "declared": "2e97de6b0407925b002b46201f9fb88cf23e18efe6030be6a4ba3731f512dd0a",
+      "actual": "2e97de6b0407925b002b46201f9fb88cf23e18efe6030be6a4ba3731f512dd0a",
+      "matches": true
+    },
+    {
+      "id": "S-HB09",
+      "path": "raw_scripture/希伯來書/第9章.txt",
+      "declared": "085b20cfd196947dc2267d91dd58c27972791cd8a60be7c58ff3f73ac64d5cbe",
+      "actual": "085b20cfd196947dc2267d91dd58c27972791cd8a60be7c58ff3f73ac64d5cbe",
+      "matches": true
+    }
+  ],
+  "sourceLedgerMismatchCount": 0,
+  "excerptsSameIgnoringGeneratedAt": true,
+  "excerptCount": 9,
+  "dist": {
+    "files": [
+      {
+        "path": "assets/AppKernel-DWu7LItq.js",
+        "bytes": 858976,
+        "sha256": "9572c66b795d0fffdf0222c7b3c0efac3aafe690e582d35c89d2d01cbef002c6"
+      },
+      {
+        "path": "assets/AppKernel-DWu7LItq.js.map",
+        "bytes": 2757903,
+        "sha256": "7226b566b0c398544be362cba2ec6d9d79585e9f14f4f2709362c245f1cfa0da"
+      },
+      {
+        "path": "assets/index-CALFD7l9.css",
+        "bytes": 32390,
+        "sha256": "b3be0b153abe4c4978b1204f66b7ec0b055ac465a0dfb349d6c6f5e81068e665"
+      },
+      {
+        "path": "assets/index-CnRS8X9a.js",
+        "bytes": 60089,
+        "sha256": "380cb48f4e1794bd1bb517841a1c1980afa5859943c365850b5e64ff268e19ea"
+      },
+      {
+        "path": "assets/index-CnRS8X9a.js.map",
+        "bytes": 119061,
+        "sha256": "b34246c91f68856f9e956924b6f6106490faefb1a5be5ff280e6ce6e8d868640"
+      },
+      {
+        "path": "audio/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "fonts/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "index.html",
+        "bytes": 2148,
+        "sha256": "d980c101b04567344f0bde8e2515b7fd6de526ca7a4a84b8b72e4785ec7732a9"
+      },
+      {
+        "path": "models/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "models/altar-burnt-offering.glb",
+        "bytes": 1162556,
+        "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33"
+      },
+      {
+        "path": "models/altar-incense.glb",
+        "bytes": 1063712,
+        "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af"
+      },
+      {
+        "path": "models/arab-man-rigged.glb",
+        "bytes": 2369652,
+        "sha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee"
+      },
+      {
+        "path": "models/ark-alternative.glb",
+        "bytes": 2109944,
+        "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033"
+      },
+      {
+        "path": "models/basic-human-male.glb",
+        "bytes": 290288,
+        "sha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8"
+      },
+      {
+        "path": "models/bull.glb",
+        "bytes": 2654124,
+        "sha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9"
+      },
+      {
+        "path": "models/copper-laver.glb",
+        "bytes": 110788,
+        "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21"
+      },
+      {
+        "path": "models/cow-npc.glb",
+        "bytes": 3848840,
+        "sha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5"
+      },
+      {
+        "path": "models/derived-manifest.json",
+        "bytes": 36019,
+        "sha256": "36d7ad045782956b0d5a9dcd46d57e829db3e4da3d1b86eadf3ec04eedc9e6fe"
+      },
+      {
+        "path": "models/lampstand-menorah.glb",
+        "bytes": 800612,
+        "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197"
+      },
+      {
+        "path": "models/manifest.json",
+        "bytes": 23011,
+        "sha256": "883d615312ded6775643366cd0f9eee4f5d62fc5d3bb1f7d365a98df84b439ef"
+      },
+      {
+        "path": "models/medieval-peasant-outfit.glb",
+        "bytes": 49468124,
+        "sha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2"
+      },
+      {
+        "path": "models/sheep.glb",
+        "bytes": 12824552,
+        "sha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7"
+      },
+      {
+        "path": "models/tabernacle-framework.glb",
+        "bytes": 5078284,
+        "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65"
+      },
+      {
+        "path": "models/tabernacle-lowpoly.glb",
+        "bytes": 3026208,
+        "sha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56"
+      },
+      {
+        "path": "models/tabernacle-main.glb",
+        "bytes": 10394200,
+        "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77"
+      },
+      {
+        "path": "models/table-shewbread.glb",
+        "bytes": 2726120,
+        "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f"
+      },
+      {
+        "path": "models/ten-commandments.glb",
+        "bytes": 544236,
+        "sha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49"
+      },
+      {
+        "path": "models/tunic-medieval-animation.glb",
+        "bytes": 7999420,
+        "sha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6"
+      },
+      {
+        "path": "textures/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    ],
+    "forbidden": []
+  },
+  "ritualInventory": [
+    {
+      "id": "priestly-washing",
+      "name": "祭司洗濯",
+      "steps": 3
+    },
+    {
+      "id": "burnt-offering-service",
+      "name": "燔祭",
+      "steps": 3
+    },
+    {
+      "id": "burnt-offering-sheep-service",
+      "name": "燔祭／羊分支",
+      "steps": 3
+    },
+    {
+      "id": "burnt-offering-goat-service",
+      "name": "燔祭／山羊分支",
+      "steps": 2
+    },
+    {
+      "id": "burnt-offering-bird-service",
+      "name": "燔祭／鳥分支",
+      "steps": 2
+    },
+    {
+      "id": "incense-service",
+      "name": "獻香",
+      "steps": 3
+    },
+    {
+      "id": "lampstand-care",
+      "name": "整理燈臺",
+      "steps": 3
+    },
+    {
+      "id": "shewbread-service",
+      "name": "陳設餅",
+      "steps": 4
+    },
+    {
+      "id": "atonement-entry",
+      "name": "贖罪日進入至聖所（教學重建）",
+      "steps": 14
+    }
+  ],
+  "runtimeArchaeologySources": [],
+  "visiblePartMappings": [
+    {
+      "objectId": "ark",
+      "partId": "ark-body",
+      "mappingStatus": "unresolved"
+    },
+    {
+      "objectId": "ark",
+      "partId": "mercy-seat",
+      "mappingStatus": "unresolved"
+    },
+    {
+      "objectId": "ark",
+      "partId": "cherubim",
+      "mappingStatus": "unresolved"
+    },
+    {
+      "objectId": "ark",
+      "partId": "poles",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "ark",
+      "partId": "rings",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "shewbread-table",
+      "partId": "table-top",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "shewbread-table",
+      "partId": "table-crown",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "shewbread-table",
+      "partId": "showbread",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "menorah",
+      "partId": "branches",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "menorah",
+      "partId": "seven-lamps",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "incense-altar",
+      "partId": "horns",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "incense-altar",
+      "partId": "gold-ring",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "burnt-altar",
+      "partId": "altar-horns",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "burnt-altar",
+      "partId": "altar-grating",
+      "mappingStatus": "verified"
+    },
+    {
+      "objectId": "burnt-altar",
+      "partId": "altar-poles",
+      "mappingStatus": "missing"
+    },
+    {
+      "objectId": "laver",
+      "partId": "basin",
+      "mappingStatus": "verified"
+    },
+    {
+      "objectId": "laver",
+      "partId": "basin-base",
+      "mappingStatus": "unresolved"
+    }
+  ],
+  "httpSuccessfulModels": [
+    {
+      "time": "2026-09-09T23:04:38.556160+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/tabernacle-main.glb",
+      "status": 200,
+      "bytes": 10394200,
+      "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "injected": false,
+      "distPath": "models/tabernacle-main.glb",
+      "distHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:05.433159+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/tabernacle-main.glb",
+      "status": 200,
+      "bytes": 10394200,
+      "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "injected": false,
+      "distPath": "models/tabernacle-main.glb",
+      "distHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:08.642894+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/tabernacle-framework.glb",
+      "status": 200,
+      "bytes": 5078284,
+      "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "injected": false,
+      "distPath": "models/tabernacle-framework.glb",
+      "distHash": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:08.804707+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/altar-burnt-offering.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 1162556,
+      "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "injected": false,
+      "distPath": "models/altar-burnt-offering.glb",
+      "distHash": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:11.658561+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/ark-alternative.glb?rev=20260910-r08-gold-1",
+      "status": 200,
+      "bytes": 2109944,
+      "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "injected": false,
+      "distPath": "models/ark-alternative.glb",
+      "distHash": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:14.679113+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/table-shewbread.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 2726120,
+      "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "injected": false,
+      "distPath": "models/table-shewbread.glb",
+      "distHash": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:17.701298+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/lampstand-menorah.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 800612,
+      "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "injected": false,
+      "distPath": "models/lampstand-menorah.glb",
+      "distHash": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:20.719463+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/altar-incense.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 1063712,
+      "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "injected": false,
+      "distPath": "models/altar-incense.glb",
+      "distHash": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:23.752381+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/altar-burnt-offering.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 1162556,
+      "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "injected": false,
+      "distPath": "models/altar-burnt-offering.glb",
+      "distHash": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:05:26.768774+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/copper-laver.glb?rev=20260910-r10-1",
+      "status": 200,
+      "bytes": 110788,
+      "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "injected": false,
+      "distPath": "models/copper-laver.glb",
+      "distHash": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:06:08.130070+00:00",
+      "url": "/hero-failure/models/tabernacle-lowpoly.glb",
+      "status": 200,
+      "bytes": 3026208,
+      "sha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "injected": false,
+      "distPath": "models/tabernacle-lowpoly.glb",
+      "distHash": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:06:08.883271+00:00",
+      "url": "/detail-failure/models/tabernacle-main.glb",
+      "status": 200,
+      "bytes": 10394200,
+      "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "injected": false,
+      "distPath": "models/tabernacle-main.glb",
+      "distHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:06:12.115275+00:00",
+      "url": "/detail-failure/models/tabernacle-framework.glb",
+      "status": 200,
+      "bytes": 5078284,
+      "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "injected": false,
+      "distPath": "models/tabernacle-framework.glb",
+      "distHash": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:06:15.116780+00:00",
+      "url": "/detail-failure/models/ark-alternative.glb?rev=20260910-r08-gold-1",
+      "status": 200,
+      "bytes": 2109944,
+      "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "injected": false,
+      "distPath": "models/ark-alternative.glb",
+      "distHash": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "responseMatchesDist": true
+    },
+    {
+      "time": "2026-09-09T23:10:07.769505+00:00",
+      "url": "/%E9%A9%97%E6%94%B6/models/tabernacle-main.glb",
+      "status": 200,
+      "bytes": 10394200,
+      "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "injected": false,
+      "distPath": "models/tabernacle-main.glb",
+      "distHash": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "responseMatchesDist": true
+    }
+  ],
+  "allSuccessfulModelResponsesMatchDist": true,
+  "partStatusCounts": {
+    "verified": 5,
+    "unresolved": 7
+  }
+}

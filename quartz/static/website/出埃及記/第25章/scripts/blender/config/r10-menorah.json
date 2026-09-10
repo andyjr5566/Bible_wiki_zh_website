@@ -1,0 +1,40 @@
+{
+  "assetId": "tabernacle-menorah-detail",
+  "stageId": "r10",
+  "sceneName": "EX25_R10_Menorah_Work",
+  "collection": "EX25_R10_Menorah",
+  "rootObject": "Root",
+  "autoCameras": true,
+  "sourceRelative": "assets/source/sketchfab/lampstand-menorah/lampstand_menorah_of_the_tabernacle.glb",
+  "stagingRelative": "assets/staging/blender/r10/tabernacle-menorah-detail/tabernacle-menorah-detail.staged.glb",
+  "processedRelative": "assets/processed/sketchfab/lampstand-menorah/lampstand-menorah.glb",
+  "publicRelative": "public/models/lampstand-menorah.glb",
+  "blendRelative": "assets/staging/blender/r10/tabernacle-menorah-detail/tabernacle-menorah-detail.blend",
+  "units": { "system": "METRIC", "scaleLength": 1.0 },
+  "axes": { "forward": "-Z", "up": "Y" },
+  "origin": [0.0, 0.0, 0.0],
+  "materials": [
+    { "name": "Gold", "baseColor": [0.8, 0.45, 0.08], "metallic": 0.28, "roughness": 0.34 }
+  ],
+  "materialAssignments": [
+    { "object": "Lamp.008_0", "material": "Gold" },
+    { "object": "Lamp.007_0", "material": "Gold" },
+    { "object": "Lamp.006_0", "material": "Gold" },
+    { "object": "Lamp.005_0", "material": "Gold" },
+    { "object": "Lamp.004_0", "material": "Gold" },
+    { "object": "Lamp.003_0", "material": "Gold" },
+    { "object": "Lamp.002_0", "material": "Gold" },
+    { "object": "Tweezers_0", "material": "Gold" },
+    { "object": "Utensils_0", "material": "Gold" },
+    { "object": "LampStand.001_0", "material": "Gold" },
+    { "object": "Tweezers.001_0", "material": "Gold" },
+    { "object": "Utensils.001_0", "material": "Gold" }
+  ],
+  "parts": [
+    { "id": "menorah-seven-lamps", "label": "七盞燈", "object": "Lamp.008_0", "mappingStatus": "instanced-source-node", "claimIds": ["C-EX25-MENORAH", "C-LV24-LAMP"] },
+    { "id": "menorah-shaft", "label": "燈臺本體", "object": "LampStand.001_0", "mappingStatus": "object-level", "claimIds": ["C-EX25-MENORAH"] },
+    { "id": "menorah-tools", "label": "修剪工具", "object": "Tweezers_0", "mappingStatus": "source-node", "claimIds": ["C-LV24-LAMP"] }
+  ],
+  "section": { "label": "金燈臺與服事工具", "note": "七盞燈數量可核對；未載高度不自行補值" },
+  "light": { "energy": 860, "size": 4.5 }
+}

@@ -1,0 +1,492 @@
+{
+  "generatedAt": "2026-09-10T00:00:00Z",
+  "assetCount": 17,
+  "allHashesMatch": true,
+  "attributionComplete": true,
+  "assets": [
+    {
+      "id": "tabernacle-main",
+      "sourceFile": "assets/source/sketchfab/biblical-tabernacle-mishkan/biblical_tabernacle_mishkan.glb",
+      "processedFile": "assets/processed/sketchfab/biblical-tabernacle-mishkan/tabernacle-main.glb",
+      "runtimeFile": "public/models/tabernacle-main.glb",
+      "sourceSha256": "a729c973e473bd2d094eddf2e698713ff0fa59aec0b3fee521375b4d024c8727",
+      "declaredSha256": "a729c973e473bd2d094eddf2e698713ff0fa59aec0b3fee521375b4d024c8727",
+      "processedSha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "runtimeSha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77",
+      "publicSha256": "a729c973e473bd2d094eddf2e698713ff0fa59aec0b3fee521375b4d024c8727",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/biblical-tabernacle-mishkan-41d3c771c13a4cbcbc10353536ffec91",
+      "url": "models/tabernacle-main.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-framework",
+      "sourceFile": "assets/source/sketchfab/framework-of-tabernacle-tent/framework_of_the_tabernacle_tent.glb",
+      "processedFile": "assets/processed/sketchfab/framework-of-tabernacle-tent/tabernacle-framework.glb",
+      "runtimeFile": "public/models/tabernacle-framework.glb",
+      "sourceSha256": "018f5d4543b2a754bd70841b23a5ad8189dc43f17daee13b6ee50be59eb41427",
+      "declaredSha256": "018f5d4543b2a754bd70841b23a5ad8189dc43f17daee13b6ee50be59eb41427",
+      "processedSha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "runtimeSha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65",
+      "publicSha256": "018f5d4543b2a754bd70841b23a5ad8189dc43f17daee13b6ee50be59eb41427",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/framework-of-the-tabernacle-tent-13cc215d3f404c4c85d2adb037626517",
+      "url": "models/tabernacle-framework.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-lowpoly",
+      "sourceFile": "assets/source/sketchfab/tabernacle-jamethy-lowpoly/tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/tabernacle-jamethy-lowpoly/tabernacle-lowpoly.glb",
+      "runtimeFile": "public/models/tabernacle-lowpoly.glb",
+      "sourceSha256": "2a5f1f63112398e3f7c1a1602535be0b53b67b5eb24f3438a861e65b1dc9d155",
+      "declaredSha256": "2a5f1f63112398e3f7c1a1602535be0b53b67b5eb24f3438a861e65b1dc9d155",
+      "processedSha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "runtimeSha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56",
+      "publicSha256": "2a5f1f63112398e3f7c1a1602535be0b53b67b5eb24f3438a861e65b1dc9d155",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/tabernacle-2c9627a1b3334e0c8fb48078376b94c9",
+      "url": "models/tabernacle-lowpoly.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-ark-alternative",
+      "sourceFile": "assets/source/sketchfab/ark-of-the-covenant-alternative/ark_of_the_covenant_alternative.glb",
+      "processedFile": "assets/processed/sketchfab/ark-of-the-covenant-alternative/ark-alternative.glb",
+      "runtimeFile": "public/models/ark-alternative.glb",
+      "sourceSha256": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+      "declaredSha256": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+      "processedSha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "runtimeSha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033",
+      "publicSha256": "d8be215800501c9e39d7dc48b0552db75b3a86d11e73216d374aa47ef327e50a",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/ark-of-the-covenant-alternative-48d613a98e964200932c1395c1d34f68",
+      "url": "models/ark-alternative.glb?rev=20260910-r08-gold-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-burnt-altar-detail",
+      "sourceFile": "assets/source/sketchfab/altar-of-burnt-offering/altar_of_burnt_offering_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/altar-of-burnt-offering/altar-burnt-offering.glb",
+      "runtimeFile": "public/models/altar-burnt-offering.glb",
+      "sourceSha256": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+      "declaredSha256": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+      "processedSha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "runtimeSha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+      "publicSha256": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/altar-of-burnt-offering-of-the-tabernacle-bf23feae192b4cd6a4e8d7ca74417099",
+      "url": "models/altar-burnt-offering.glb?rev=20260910-r10-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-table-shewbread-detail",
+      "sourceFile": "assets/source/sketchfab/table-of-shewbread/table_of_shewbread_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/table-of-shewbread/table-shewbread.glb",
+      "runtimeFile": "public/models/table-shewbread.glb",
+      "sourceSha256": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+      "declaredSha256": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+      "processedSha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "runtimeSha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f",
+      "publicSha256": "3568f0a6208701a1fe34d7a43e691474037e5025496d35de65969ae9fbbb0160",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/table-of-shewbread-of-the-tabernacle-8464709d407f49f49c55415e246b6fe5",
+      "url": "models/table-shewbread.glb?rev=20260910-r10-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-incense-altar-detail",
+      "sourceFile": "assets/source/sketchfab/altar-of-incense/altar_of_incense_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/altar-of-incense/altar-incense.glb",
+      "runtimeFile": "public/models/altar-incense.glb",
+      "sourceSha256": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+      "declaredSha256": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+      "processedSha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "runtimeSha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af",
+      "publicSha256": "03b8863c97c51c007ea02268fcd1b3de5f31df927e1f25acd2bed64e6b2028fb",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/altar-of-incense-of-the-tabernacle-18632101cc3744c7a6202be9ee1bf1e2",
+      "url": "models/altar-incense.glb?rev=20260910-r10-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-menorah-detail",
+      "sourceFile": "assets/source/sketchfab/lampstand-menorah/lampstand_menorah_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/lampstand-menorah/lampstand-menorah.glb",
+      "runtimeFile": "public/models/lampstand-menorah.glb",
+      "sourceSha256": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+      "declaredSha256": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+      "processedSha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "runtimeSha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197",
+      "publicSha256": "eebae6562001cf9470e15d09da96061050da4f435d07401d1e8d4a81ff2252a8",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/lampstand-menorah-of-the-tabernacle-5a3ae34b9f744163bb63222577f5e238",
+      "url": "models/lampstand-menorah.glb?rev=20260910-r10-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-laver-detail",
+      "sourceFile": "assets/source/sketchfab/copper-laver/copper_laver_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/copper-laver/copper-laver.glb",
+      "runtimeFile": "public/models/copper-laver.glb",
+      "sourceSha256": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+      "declaredSha256": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+      "processedSha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "runtimeSha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+      "publicSha256": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/copper-laver-of-the-tabernacle-8856b0d10cf24d93bad7f4800bdf9b03",
+      "url": "models/copper-laver.glb?rev=20260910-r10-1",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "tabernacle-law-tablets-library",
+      "sourceFile": "assets/source/sketchfab/ten-commandments/the_ten_commandments_of_the_tabernacle.glb",
+      "processedFile": "assets/processed/sketchfab/ten-commandments/ten-commandments.glb",
+      "runtimeFile": "public/models/ten-commandments.glb",
+      "sourceSha256": "6b8f6b289dec9cb4e3940a1c54e9fa7c9c053ee8ccb7c123a03876095fc73186",
+      "declaredSha256": "6b8f6b289dec9cb4e3940a1c54e9fa7c9c053ee8ccb7c123a03876095fc73186",
+      "processedSha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+      "runtimeSha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49",
+      "publicSha256": "6b8f6b289dec9cb4e3940a1c54e9fa7c9c053ee8ccb7c123a03876095fc73186",
+      "attribution": true,
+      "license": "CC Attribution-NonCommercial",
+      "sourceUrl": "https://sketchfab.com/3d-models/the-ten-commandments-of-the-tabernacle-69674e1002a94efc8452581836814849",
+      "url": "models/ten-commandments.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "priest-arab-man-library",
+      "sourceFile": "assets/source/sketchfab/arab-man-rigged/arab_man_rigged.glb",
+      "processedFile": "assets/processed/sketchfab/arab-man-rigged/arab-man-rigged.glb",
+      "runtimeFile": "public/models/arab-man-rigged.glb",
+      "sourceSha256": "11f799ba8d290d1a681c9b69841377eb10d4d41a109611ca26af93aaf9012527",
+      "declaredSha256": "11f799ba8d290d1a681c9b69841377eb10d4d41a109611ca26af93aaf9012527",
+      "processedSha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+      "runtimeSha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee",
+      "publicSha256": "11f799ba8d290d1a681c9b69841377eb10d4d41a109611ca26af93aaf9012527",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/arab-man-rigged-0f87f4c0885346ad8f99ba5ccafd153e",
+      "url": "models/arab-man-rigged.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "priest-basic-human-library",
+      "sourceFile": "assets/source/sketchfab/basic-human-male/basic_human_male.glb",
+      "processedFile": "assets/processed/sketchfab/basic-human-male/basic-human-male.glb",
+      "runtimeFile": "public/models/basic-human-male.glb",
+      "sourceSha256": "c21339d10f1b64ca9e3e4d5d438718c662172b94ffa9c00dddcd94c1a9b3ccee",
+      "declaredSha256": "c21339d10f1b64ca9e3e4d5d438718c662172b94ffa9c00dddcd94c1a9b3ccee",
+      "processedSha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+      "runtimeSha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8",
+      "publicSha256": "c21339d10f1b64ca9e3e4d5d438718c662172b94ffa9c00dddcd94c1a9b3ccee",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/basic-human-male-598d1d1866df48f999fabadb017429d1",
+      "url": "models/basic-human-male.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "priest-medieval-outfit-library",
+      "sourceFile": "assets/source/sketchfab/medieval-peasant-outfit/medieval_peasant_outfit_free.glb",
+      "processedFile": "assets/processed/sketchfab/medieval-peasant-outfit/medieval-peasant-outfit.glb",
+      "runtimeFile": "public/models/medieval-peasant-outfit.glb",
+      "sourceSha256": "11b2225af2b9bdc561a20436e630e80ba979bfc8b0cd98e5bcf521950b6033bd",
+      "declaredSha256": "11b2225af2b9bdc561a20436e630e80ba979bfc8b0cd98e5bcf521950b6033bd",
+      "processedSha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+      "runtimeSha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2",
+      "publicSha256": "11b2225af2b9bdc561a20436e630e80ba979bfc8b0cd98e5bcf521950b6033bd",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/medieval-peasant-outfit-free-e7aa183b848646558ceb3a3f449e344b",
+      "url": "models/medieval-peasant-outfit.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "priest-tunic-library",
+      "sourceFile": "assets/source/sketchfab/tunic-medieval-animation/tunic_medieval_for_animation.glb",
+      "processedFile": "assets/processed/sketchfab/tunic-medieval-animation/tunic-medieval-animation.glb",
+      "runtimeFile": "public/models/tunic-medieval-animation.glb",
+      "sourceSha256": "dce088d1e5bd0c5fd7b8b3655148f8af4b9fb2f6125308a6a8ce325abab445ca",
+      "declaredSha256": "dce088d1e5bd0c5fd7b8b3655148f8af4b9fb2f6125308a6a8ce325abab445ca",
+      "processedSha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+      "runtimeSha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6",
+      "publicSha256": "dce088d1e5bd0c5fd7b8b3655148f8af4b9fb2f6125308a6a8ce325abab445ca",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/tunic-medieval-for-animation-b3cf100c7fed4468a193e0133002cc03",
+      "url": "models/tunic-medieval-animation.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "sheep-library",
+      "sourceFile": "assets/source/sketchfab/sheep/sheep.glb",
+      "processedFile": "assets/processed/sketchfab/sheep/sheep.glb",
+      "runtimeFile": "public/models/sheep.glb",
+      "sourceSha256": "7cb00f4eccc7a3869e08c4a7155aafdb074813e34e8fae55ea495e1ec4b9fb6a",
+      "declaredSha256": "7cb00f4eccc7a3869e08c4a7155aafdb074813e34e8fae55ea495e1ec4b9fb6a",
+      "processedSha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+      "runtimeSha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7",
+      "publicSha256": "7cb00f4eccc7a3869e08c4a7155aafdb074813e34e8fae55ea495e1ec4b9fb6a",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/sheep-08b05ae799d947f1a68c49b2d661eb53",
+      "url": "models/sheep.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "cow-npc-library",
+      "sourceFile": "assets/source/sketchfab/cow-npc/cow_npc.glb",
+      "processedFile": "assets/processed/sketchfab/cow-npc/cow-npc.glb",
+      "runtimeFile": "public/models/cow-npc.glb",
+      "sourceSha256": "2d690ecfd806b87179fac6fa45f2b74a9a4dcc23adb2825b023af5599874e10f",
+      "declaredSha256": "2d690ecfd806b87179fac6fa45f2b74a9a4dcc23adb2825b023af5599874e10f",
+      "processedSha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+      "runtimeSha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5",
+      "publicSha256": "2d690ecfd806b87179fac6fa45f2b74a9a4dcc23adb2825b023af5599874e10f",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/cow-npc-now-free-to-download-2ca1db4e890e4b24a68624597e7d2fc8",
+      "url": "models/cow-npc.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    },
+    {
+      "id": "bull-library",
+      "sourceFile": "assets/source/sketchfab/bull/bull.glb",
+      "processedFile": "assets/processed/sketchfab/bull/bull.glb",
+      "runtimeFile": "public/models/bull.glb",
+      "sourceSha256": "31bb235bf05166bc9c52dd559b7abe27a9ccd709a615d1be995e509c0e701a32",
+      "declaredSha256": "31bb235bf05166bc9c52dd559b7abe27a9ccd709a615d1be995e509c0e701a32",
+      "processedSha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+      "runtimeSha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9",
+      "publicSha256": "31bb235bf05166bc9c52dd559b7abe27a9ccd709a615d1be995e509c0e701a32",
+      "attribution": true,
+      "license": "CC Attribution",
+      "sourceUrl": "https://sketchfab.com/3d-models/bull-d0f2ff31252a4c9cb084b1ac3a2e4d8b",
+      "url": "models/bull.glb",
+      "hashesMatch": true,
+      "sourceHashMatch": true,
+      "derivedPairMatch": true
+    }
+  ],
+  "dist": {
+    "fileCount": 29,
+    "forbidden": [],
+    "files": [
+      {
+        "path": "index.html",
+        "bytes": 2148,
+        "sha256": "d980c101b04567344f0bde8e2515b7fd6de526ca7a4a84b8b72e4785ec7732a9"
+      },
+      {
+        "path": "assets/AppKernel-DWu7LItq.js",
+        "bytes": 858976,
+        "sha256": "9572c66b795d0fffdf0222c7b3c0efac3aafe690e582d35c89d2d01cbef002c6"
+      },
+      {
+        "path": "assets/AppKernel-DWu7LItq.js.map",
+        "bytes": 2757903,
+        "sha256": "7226b566b0c398544be362cba2ec6d9d79585e9f14f4f2709362c245f1cfa0da"
+      },
+      {
+        "path": "assets/index-CALFD7l9.css",
+        "bytes": 32390,
+        "sha256": "b3be0b153abe4c4978b1204f66b7ec0b055ac465a0dfb349d6c6f5e81068e665"
+      },
+      {
+        "path": "assets/index-CnRS8X9a.js",
+        "bytes": 60089,
+        "sha256": "380cb48f4e1794bd1bb517841a1c1980afa5859943c365850b5e64ff268e19ea"
+      },
+      {
+        "path": "assets/index-CnRS8X9a.js.map",
+        "bytes": 119061,
+        "sha256": "b34246c91f68856f9e956924b6f6106490faefb1a5be5ff280e6ce6e8d868640"
+      },
+      {
+        "path": "audio/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "fonts/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "models/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      },
+      {
+        "path": "models/altar-burnt-offering.glb",
+        "bytes": 1162556,
+        "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33"
+      },
+      {
+        "path": "models/altar-incense.glb",
+        "bytes": 1063712,
+        "sha256": "dd433e4ccedd1c29212ebcb17003db0b206cb4580fad7c173c8744c0f37a20af"
+      },
+      {
+        "path": "models/arab-man-rigged.glb",
+        "bytes": 2369652,
+        "sha256": "99c78ea242573e4767e5e778ac6fd139c64236a850ab098550b639d61f0491ee"
+      },
+      {
+        "path": "models/ark-alternative.glb",
+        "bytes": 2109944,
+        "sha256": "af381eea2d374e2d63342610878c1d61f890409fae9b407af8c5fd57344d7033"
+      },
+      {
+        "path": "models/basic-human-male.glb",
+        "bytes": 290288,
+        "sha256": "112755d4bb4b9a14b4d478fb29fe3736775e274d7ccb68126c588d0a51e02ff8"
+      },
+      {
+        "path": "models/bull.glb",
+        "bytes": 2654124,
+        "sha256": "612d21030feaa9f3cd41f2ebff50ed6a8a270d345bdecf2e4bc64aa99b79c3d9"
+      },
+      {
+        "path": "models/copper-laver.glb",
+        "bytes": 110788,
+        "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21"
+      },
+      {
+        "path": "models/cow-npc.glb",
+        "bytes": 3848840,
+        "sha256": "c2226e45a96b22ab41294409079de33e8def888c681e9b1eabe341dfe55261f5"
+      },
+      {
+        "path": "models/derived-manifest.json",
+        "bytes": 36019,
+        "sha256": "18c44d69b4e033f4122df986915135f6ffbdb48a20025859524fd07fc25c59f5"
+      },
+      {
+        "path": "models/lampstand-menorah.glb",
+        "bytes": 800612,
+        "sha256": "7f9f8d43e486f653b7f25572aa1cb5d50466beb00540956376299ebf02cad197"
+      },
+      {
+        "path": "models/manifest.json",
+        "bytes": 23011,
+        "sha256": "883d615312ded6775643366cd0f9eee4f5d62fc5d3bb1f7d365a98df84b439ef"
+      },
+      {
+        "path": "models/medieval-peasant-outfit.glb",
+        "bytes": 49468124,
+        "sha256": "4e64a7cf55a356c8b04c226d32e635b0ec7a651118efe26eefc091d42609ccd2"
+      },
+      {
+        "path": "models/sheep.glb",
+        "bytes": 12824552,
+        "sha256": "a756e695a2cba59ef5c857d743e419e12ad122f991b600fc0b5954fac68464f7"
+      },
+      {
+        "path": "models/tabernacle-framework.glb",
+        "bytes": 5078284,
+        "sha256": "692aaa62d4e810f480f380f392c2b89afb59f8cb4e8e3ece7c8af2f94748ff65"
+      },
+      {
+        "path": "models/tabernacle-lowpoly.glb",
+        "bytes": 3026208,
+        "sha256": "f2032479483c5aeac7b84dd7b1517d302b79aebfc391252e6fef25e4ea99ff56"
+      },
+      {
+        "path": "models/tabernacle-main.glb",
+        "bytes": 10394200,
+        "sha256": "7f3c431f1e621f9413f475e20b7c8974ef671caaba208411f344f92b41fa7d77"
+      },
+      {
+        "path": "models/table-shewbread.glb",
+        "bytes": 2726120,
+        "sha256": "51cbaa81c1670fd8ad7f78f4e05c335f3298b4dc3268cc9bd74216a3de9e5d1f"
+      },
+      {
+        "path": "models/ten-commandments.glb",
+        "bytes": 544236,
+        "sha256": "0c3afedfe744ebabafd064932ba7af8397f60c7bc10362373aa90b2209a46a49"
+      },
+      {
+        "path": "models/tunic-medieval-animation.glb",
+        "bytes": 7999420,
+        "sha256": "12f91bd24339711d1b4e321632f5c996d25d36429eca79b9a1547e86ef2059e6"
+      },
+      {
+        "path": "textures/.gitkeep",
+        "bytes": 1,
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+      }
+    ],
+    "forbiddenPathEntries": [],
+    "embeddedSourceReferences": {
+      "files": [
+        "assets/AppKernel-DWu7LItq.js",
+        "assets/AppKernel-DWu7LItq.js.map"
+      ],
+      "patterns": [
+        "raw_scripture"
+      ],
+      "note": "production bundle/source map 含應用程式引用與 source map；dist 沒有 raw/blend 檔案。R24 應決定是否關閉 sourcemap。"
+    }
+  },
+  "scriptureExcerpts": {
+    "sameContentIgnoringGeneratedAt": true,
+    "excerptCount": 9,
+    "sourcePaths": [
+      "raw_scripture/出埃及記/第25章.txt",
+      "raw_scripture/出埃及記/第26章.txt",
+      "raw_scripture/出埃及記/第27章.txt",
+      "raw_scripture/出埃及記/第30章.txt"
+    ],
+    "sourceHashes": [
+      "29E3CC3BF9961F17326BE23D9D35293166B186A8695B5FB1E82B2F011274BBC4",
+      "427B99C3D9BDF83827D57697A0D4F6E3DFA2FD9EF6D8D29AAF678C748DB3503E",
+      "91FEB090E31DE955C29BC8EB6529469FCE572502BBBB2A7D12A3CEA427D96BD7",
+      "B32ED946334B2EEA2895A01124763546D94DFF636A7B54CE03AA54BA48F7BF08"
+    ]
+  }
+}

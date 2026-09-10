@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-09-09T17:41:13.642Z",
+  "root": "assets/processed/sketchfab",
+  "count": 17,
+  "measurement": {
+    "triangles": "indexed primitive index count divided by 3; non-indexed POSITION count divided by 3",
+    "bounds": "glTF scene geometry bounds in asset-local units; not biblical dimensions",
+    "materials": "unique glTF materials in the document",
+    "textures": "unique glTF textures in the document"
+  },
+  "rows": [
+    {"path":"assets/processed/sketchfab/altar-of-burnt-offering/altar-burnt-offering.glb","bytes":1180420,"triangles":53166,"materials":1,"textures":0,"bounds":{"min":[-8.80087107216155,-0.0038976525728095235,-5.531140099182129],"max":[8.836344959947663,3.6018869977221666,5.468859900817871]}},
+    {"path":"assets/processed/sketchfab/altar-of-incense/altar-incense.glb","bytes":1058956,"triangles":72040,"materials":4,"textures":0,"bounds":{"min":[-0.7467789608829926,-0.0006690418753159122,-3.4999999999999996],"max":[0.7469189669102142,2.404158986323787,3.5000000000000004]}},
+    {"path":"assets/processed/sketchfab/arab-man-rigged/arab-man-rigged.glb","bytes":2369652,"triangles":12586,"materials":9,"textures":16,"bounds":{"min":[-1,-1,-1],"max":[1,1,1]}},
+    {"path":"assets/processed/sketchfab/ark-of-the-covenant-alternative/ark-alternative.glb","bytes":2110012,"triangles":41380,"materials":2,"textures":0,"bounds":{"min":[-4.4986001355573535,0.00595726498286564,-0.917154544424375],"max":[4.5013998644426465,2.151833767619385,0.9373941757680507]}},
+    {"path":"assets/processed/sketchfab/basic-human-male/basic-human-male.glb","bytes":290288,"triangles":15064,"materials":1,"textures":0,"bounds":{"min":[-1,-0.533402508621479,-0.15527817621387371],"max":[1,0.533402508621479,0.15527817621387371]}},
+    {"path":"assets/processed/sketchfab/biblical-tabernacle-mishkan/tabernacle-main.glb","bytes":10394200,"triangles":189869,"materials":16,"textures":16,"bounds":{"min":[-66.76996775303007,-0.13748000275135758,-35.91621712841034],"max":[66.76996775303007,10.565915020000153,35.91621712841034]}},
+    {"path":"assets/processed/sketchfab/bull/bull.glb","bytes":2654124,"triangles":15644,"materials":6,"textures":3,"bounds":{"min":[-0.9999999776482582,-0.9999999670710016,-0.9999999434033083],"max":[0.9999999776482582,0.9999999434197101,0.9999999434525135]}},
+    {"path":"assets/processed/sketchfab/copper-laver/copper-laver.glb","bytes":111048,"triangles":7672,"materials":2,"textures":0,"bounds":{"min":[-0.5236911038544877,0.00004497434565542413,-0.5265711038544872],"max":[0.5252911038544877,2.0000449743456556,0.5224111038544882]}},
+    {"path":"assets/processed/sketchfab/cow-npc/cow-npc.glb","bytes":3848840,"triangles":2986,"materials":1,"textures":3,"bounds":{"min":[-1,-0.5491500595110935,-0.22351756340220344],"max":[1,0.5637989440595721,0.22351756340220344]}},
+    {"path":"assets/processed/sketchfab/framework-of-tabernacle-tent/tabernacle-framework.glb","bytes":5078284,"triangles":199741,"materials":1,"textures":0,"bounds":{"min":[-5.755360176356657,-0.0004400000002560134,-17.012599984226227],"max":[5.758200176356658,10.040479660034181,15.362251845750134]}},
+    {"path":"assets/processed/sketchfab/lampstand-menorah/lampstand-menorah.glb","bytes":797260,"triangles":33984,"materials":1,"textures":0,"bounds":{"min":[-1.9767875696082537,-0.10187631552623762,-1.072176791111435],"max":[1.9922075967688984,5.109969987134933,2.008910010795593]}},
+    {"path":"assets/processed/sketchfab/medieval-peasant-outfit/medieval-peasant-outfit.glb","bytes":49468124,"triangles":14141,"materials":4,"textures":12,"bounds":{"min":[-0.5580095547882564,0.0018773083446897987,-0.2920152845308794],"max":[0.5580095547882564,2.2935619129700244,0.31245825517163767]}},
+    {"path":"assets/processed/sketchfab/sheep/sheep.glb","bytes":12824552,"triangles":2290,"materials":1,"textures":3,"bounds":{"min":[-0.2960600604266488,-0.7331156346324046,-1],"max":[0.2960600604266488,0.7517014069032868,1]}},
+    {"path":"assets/processed/sketchfab/tabernacle-jamethy-lowpoly/tabernacle-lowpoly.glb","bytes":3026208,"triangles":3034,"materials":4,"textures":3,"bounds":{"min":[-11.863774422892561,-1.6604949845482828,-12.489736678167022],"max":[13.041948557724822,19.055636484684792,12.349098774684792]}},
+    {"path":"assets/processed/sketchfab/table-of-shewbread/table-shewbread.glb","bytes":2699844,"triangles":80279,"materials":2,"textures":1,"bounds":{"min":[-3.498360096359253,0.0009362823215461891,-0.17102217046636803],"max":[3.501639903854492,2.0255036824497243,1.0364121384419849]}},
+    {"path":"assets/processed/sketchfab/ten-commandments/ten-commandments.glb","bytes":544236,"triangles":24,"materials":1,"textures":2,"bounds":{"min":[-1.3933858651434197,-0.011278725879711378,-0.7275000214576721],"max":[1.3645058651434197,0.011278725879711378,0.7275000214576721]}},
+    {"path":"assets/processed/sketchfab/tunic-medieval-animation/tunic-medieval-animation.glb","bytes":7999420,"triangles":18476,"materials":1,"textures":3,"bounds":{"min":[-45.07724711882401,-18.592520376527446,-22.87893593631912],"max":[38.85233256804276,73.75848443188445,16.42386145291253]}}
+  ]
+}

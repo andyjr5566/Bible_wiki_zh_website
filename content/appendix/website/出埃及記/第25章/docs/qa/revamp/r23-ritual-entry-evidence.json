@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-09T22:35:26.461Z",
+  "items": [
+    {
+      "branches": [],
+      "object": "金燈臺",
+      "ritualButtons": [
+        {
+          "id": "lampstand-care",
+          "label": "播放儀式：lampstand-care"
+        }
+      ],
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "branches": [],
+      "object": "陳設餅桌",
+      "ritualButtons": [
+        {
+          "id": "shewbread-service",
+          "label": "播放儀式：shewbread-service"
+        }
+      ],
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "branches": [],
+      "object": "燔祭壇",
+      "ritualButtons": [
+        {
+          "id": "burnt-offering-service",
+          "label": "燔祭／牛"
+        },
+        {
+          "id": "burnt-offering-sheep-service",
+          "label": "燔祭／羊"
+        },
+        {
+          "id": "burnt-offering-bird-service",
+          "label": "燔祭／鳥"
+        }
+      ],
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    }
+  ]
+}

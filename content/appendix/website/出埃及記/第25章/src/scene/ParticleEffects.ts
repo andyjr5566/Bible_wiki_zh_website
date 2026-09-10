@@ -1,48 +1,46 @@
 import * as THREE from 'three';
 
+/** Narrative effects are opt-in; R13–R15 may enable these from verified cues. */
+export type ParticleCue = 'menorah-flames' | 'incense-smoke' | 'burnt-offering-fire';
+
 export class ParticleEffects {
   readonly root = new THREE.Group();
 
   // Effects groups
-  readonly #shekinahGroup = new THREE.Group();
   readonly #menorahFlamesGroup = new THREE.Group();
   readonly #incenseSmokeGroup = new THREE.Group();
   readonly #altarFireGroup = new THREE.Group();
   readonly #dustMotesGroup = new THREE.Group();
-  readonly #pillarOfFireGroup = new THREE.Group();
 
   // Flame lights
   readonly #menorahLights: THREE.PointLight[] = [];
   readonly #altarLight: THREE.PointLight;
   readonly #incenseLight: THREE.PointLight;
-  readonly #shekinahLight: THREE.PointLight;
 
   // Particle systems
   #dustPoints: THREE.Points | null = null;
   readonly #incenseParticles: THREE.Mesh[] = [];
   #altarEmbers: THREE.Points | null = null;
-  #pillarMesh: THREE.Mesh | null = null;
 
   #nightMode = false;
+  #learningDetailFocus = false;
+  #reducedMotion = false;
+  readonly #activeCues = new Set<ParticleCue>();
 
   constructor(parent: THREE.Object3D) {
     this.root.name = 'biblical-particle-effects';
     parent.add(this.root);
 
     this.root.add(
-      this.#shekinahGroup,
       this.#menorahFlamesGroup,
       this.#incenseSmokeGroup,
       this.#altarFireGroup,
-      this.#dustMotesGroup,
-      this.#pillarOfFireGroup
+      this.#dustMotesGroup
     );
-
-    // Setup Shekinah Glory in Most Holy Place (Ark at approx x: 0, y: 0.72, z: -9.18)
-    this.#shekinahLight = new THREE.PointLight(0xfff4d6, 3.5, 9, 1.8);
-    this.#shekinahLight.position.set(0, 2.2, -9.18);
-    this.#shekinahGroup.add(this.#shekinahLight);
-    this.#buildShekinahRays();
+    this.#menorahFlamesGroup.name = 'cue-menorah-flames';
+    this.#incenseSmokeGroup.name = 'cue-incense-smoke';
+    this.#altarFireGroup.name = 'cue-burnt-offering-fire';
+    this.#dustMotesGroup.name = 'ambient-dust-motes';
 
     // Setup Menorah 7-Lamp Flames (Menorah at approx x: -1.2, y: 0.82, z: -4.35)
     this.#buildMenorahFlames();
@@ -52,54 +50,53 @@ export class ParticleEffects {
     this.#incenseLight.position.set(0, 1.65, -5.85);
     this.#incenseSmokeGroup.add(this.#incenseLight);
     this.#buildIncenseSmoke();
+    this.#incenseSmokeGroup.visible = false;
 
     // Setup Altar of Burnt Offering Fire (Altar at approx x: 0, y: 1.05, z: 9.0)
-    this.#altarLight = new THREE.PointLight(0xff8822, 5.0, 12, 1.6);
+    this.#altarLight = new THREE.PointLight(0xff8822, 0, 12, 1.6);
     this.#altarLight.position.set(0, 1.8, 9.0);
     this.#altarFireGroup.add(this.#altarLight);
     this.#buildAltarFire();
+    this.#altarFireGroup.visible = false;
 
     // Setup Atmospheric Dust Motes inside Holy Place
     this.#buildDustMotes();
 
-    // Setup Pillar of Fire above Tabernacle (Exodus 40:38)
-    this.#buildPillarOfFire();
+    // Narrative smoke/fire effects stay hidden until a verified cue enables them.
+    this.#syncCueVisibility();
   }
 
   setAtmosphere(mode: 'dawn' | 'midday' | 'night'): void {
     this.#nightMode = mode === 'night';
-    this.#pillarOfFireGroup.visible = this.#nightMode;
-    this.#shekinahLight.intensity = this.#nightMode ? 5.5 : 3.5;
-    this.#altarLight.intensity = this.#nightMode ? 7.0 : 4.5;
+    this.#syncCueVisibility();
   }
 
-  #buildShekinahRays(): void {
-    // Volumetric Shekinah Light Shaft
-    const rayGeo = new THREE.CylinderGeometry(0.18, 1.4, 3.8, 24, 1, true);
-    const rayMat = new THREE.MeshBasicMaterial({
-      color: 0xfffae0,
-      transparent: true,
-      opacity: 0.38,
-      side: THREE.DoubleSide,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const rayMesh = new THREE.Mesh(rayGeo, rayMat);
-    rayMesh.position.set(0, 2.4, -9.18);
-    this.#shekinahGroup.add(rayMesh);
+  /** Enable a narrative particle effect only after its source event is verified. */
+  setCue(cue: ParticleCue, enabled = true): void {
+    if (enabled) this.#activeCues.add(cue);
+    else this.#activeCues.delete(cue);
+    this.#syncCueVisibility();
+  }
 
-    // Glowing Cherubim Aura Sphere
-    const auraGeo = new THREE.SphereGeometry(0.85, 20, 16);
-    const auraMat = new THREE.MeshBasicMaterial({
-      color: 0xffeed4,
-      transparent: true,
-      opacity: 0.22,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const auraMesh = new THREE.Mesh(auraGeo, auraMat);
-    auraMesh.position.set(0, 1.5, -9.18);
-    this.#shekinahGroup.add(auraMesh);
+  clearNarrativeCues(): void {
+    this.#activeCues.clear();
+    this.#syncCueVisibility();
+  }
+
+  setLearningDetailFocus(focused: boolean): void {
+    this.#learningDetailFocus = focused;
+    this.#syncCueVisibility();
+  }
+
+  #syncCueVisibility(): void {
+    this.#reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canShowNarrativeCue = !this.#learningDetailFocus && !this.#reducedMotion;
+    this.#menorahFlamesGroup.visible = canShowNarrativeCue && this.#activeCues.has('menorah-flames');
+    const altarActive = this.#activeCues.has('burnt-offering-fire');
+    this.#incenseSmokeGroup.visible = canShowNarrativeCue && this.#activeCues.has('incense-smoke');
+    this.#altarFireGroup.visible = canShowNarrativeCue && altarActive;
+    this.#dustMotesGroup.visible = !this.#reducedMotion;
+    this.#altarLight.intensity = altarActive ? (this.#nightMode ? 5.5 : 3.5) : 0;
   }
 
   #buildMenorahFlames(): void {
@@ -151,19 +148,8 @@ export class ParticleEffects {
   }
 
   #buildAltarFire(): void {
-    // Altar fire base geometry
-    const fireConeGeo = new THREE.ConeGeometry(0.7, 1.1, 12);
-    const fireConeMat = new THREE.MeshBasicMaterial({
-      color: 0xff7711,
-      transparent: true,
-      opacity: 0.72,
-      blending: THREE.AdditiveBlending,
-    });
-    const fireCone = new THREE.Mesh(fireConeGeo, fireConeMat);
-    fireCone.position.set(0, 1.65, 9.0);
-    this.#altarFireGroup.add(fireCone);
-
-    // Glowing Embers
+    // Embers are retained as a cue-driven primitive; the former cone fire was
+    // too coarse for a reading view and implied an unsupported default event.
     const emberCount = 35;
     const emberGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(emberCount * 3);
@@ -206,24 +192,15 @@ export class ParticleEffects {
     this.#dustMotesGroup.add(this.#dustPoints);
   }
 
-  #buildPillarOfFire(): void {
-    // Exodus 40:38 Pillar of Fire / Cloud extending to the heavens
-    const pillarGeo = new THREE.CylinderGeometry(1.2, 2.4, 45, 24, 1, true);
-    const pillarMat = new THREE.MeshBasicMaterial({
-      color: 0xff9933,
-      transparent: true,
-      opacity: 0.35,
-      side: THREE.DoubleSide,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    this.#pillarMesh = new THREE.Mesh(pillarGeo, pillarMat);
-    this.#pillarMesh.position.set(0, 22, -4.5);
-    this.#pillarOfFireGroup.add(this.#pillarMesh);
-    this.#pillarOfFireGroup.visible = false;
-  }
-
   update(deltaSeconds: number, timeSeconds: number): void {
+    const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion !== this.#reducedMotion) this.#syncCueVisibility();
+    if (reducedMotion) {
+      this.#menorahLights.forEach((light) => { light.intensity = 0; });
+      this.#altarLight.intensity = 0;
+      return;
+    }
+
     // Flicker Menorah lights & flames
     const flicker = Math.sin(timeSeconds * 12.0) * 0.08 + Math.cos(timeSeconds * 23.0) * 0.05;
     this.#menorahLights.forEach((light, i) => {
@@ -232,7 +209,9 @@ export class ParticleEffects {
 
     // Flicker Altar fire light
     const altarFlicker = Math.sin(timeSeconds * 8.0) * 0.4 + Math.sin(timeSeconds * 19.0) * 0.3;
-    this.#altarLight.intensity = (this.#nightMode ? 7.0 : 4.5) + altarFlicker;
+    this.#altarLight.intensity = this.#activeCues.has('burnt-offering-fire')
+      ? (this.#nightMode ? 5.5 : 3.5) + altarFlicker * 0.45
+      : 0;
 
     // Animate Incense smoke
     this.#incenseParticles.forEach((puff, i) => {
@@ -283,12 +262,6 @@ export class ParticleEffects {
       posAttr.needsUpdate = true;
     }
 
-    // Animate Pillar of Fire pulsating
-    if (this.#pillarMesh && this.#pillarOfFireGroup.visible) {
-      this.#pillarMesh.rotation.y = timeSeconds * 0.08;
-      const pulse = 1.0 + Math.sin(timeSeconds * 1.8) * 0.06;
-      this.#pillarMesh.scale.set(pulse, 1.0, pulse);
-    }
   }
 
   dispose(): void {

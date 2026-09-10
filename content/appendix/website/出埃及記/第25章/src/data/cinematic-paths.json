@@ -1,0 +1,234 @@
+[
+  {
+    "cameraStart": {
+      "position": {
+        "x": 18,
+        "y": 15,
+        "z": 32
+      },
+      "target": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0
+      },
+      "fov": 52
+    },
+    "cameraEnd": {
+      "position": {
+        "x": 0,
+        "y": 3.2,
+        "z": 24
+      },
+      "target": {
+        "x": 0,
+        "y": 1.4,
+        "z": 10
+      },
+      "fov": 46
+    },
+    "durationSeconds": 10
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": 3.2,
+        "y": 2.6,
+        "z": 15.5
+      },
+      "target": {
+        "x": 0,
+        "y": 1.1,
+        "z": 9
+      },
+      "fov": 44
+    },
+    "cameraEnd": {
+      "position": {
+        "x": 1.5,
+        "y": 2,
+        "z": 12
+      },
+      "target": {
+        "x": 0,
+        "y": 1.05,
+        "z": 9
+      },
+      "fov": 40
+    },
+    "durationSeconds": 11
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": -2.5,
+        "y": 2.2,
+        "z": 5.2
+      },
+      "target": {
+        "x": 0,
+        "y": 0.85,
+        "z": 0
+      },
+      "fov": 44
+    },
+    "cameraEnd": {
+      "position": {
+        "x": -1.1,
+        "y": 1.6,
+        "z": 2.6
+      },
+      "target": {
+        "x": 0,
+        "y": 0.8,
+        "z": 0
+      },
+      "fov": 40
+    },
+    "durationSeconds": 9
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": 0.8,
+        "y": 2.8,
+        "z": 8
+      },
+      "target": {
+        "x": 0,
+        "y": 1.8,
+        "z": -1
+      },
+      "fov": 48
+    },
+    "cameraEnd": {
+      "position": {
+        "x": 0,
+        "y": 1.8,
+        "z": 1.8
+      },
+      "target": {
+        "x": 0,
+        "y": 1.6,
+        "z": -3.5
+      },
+      "fov": 45
+    },
+    "durationSeconds": 11
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": 0.28,
+        "y": 1.5,
+        "z": -2.45
+      },
+      "target": {
+        "x": -1.2,
+        "y": 0.82,
+        "z": -4.35
+      },
+      "fov": 40
+    },
+    "cameraEnd": {
+      "position": {
+        "x": -0.45,
+        "y": 1.35,
+        "z": -3.6
+      },
+      "target": {
+        "x": -1.2,
+        "y": 0.85,
+        "z": -4.35
+      },
+      "fov": 36
+    },
+    "durationSeconds": 12
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": -0.28,
+        "y": 1.5,
+        "z": -2.45
+      },
+      "target": {
+        "x": 1.2,
+        "y": 0.78,
+        "z": -4.35
+      },
+      "fov": 40
+    },
+    "cameraEnd": {
+      "position": {
+        "x": 0.45,
+        "y": 1.35,
+        "z": -3.6
+      },
+      "target": {
+        "x": 1.2,
+        "y": 0.8,
+        "z": -4.35
+      },
+      "fov": 36
+    },
+    "durationSeconds": 11
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": 0.35,
+        "y": 1.6,
+        "z": -3.6
+      },
+      "target": {
+        "x": 0,
+        "y": 1,
+        "z": -5.85
+      },
+      "fov": 41
+    },
+    "cameraEnd": {
+      "position": {
+        "x": 0.1,
+        "y": 1.4,
+        "z": -4.6
+      },
+      "target": {
+        "x": 0,
+        "y": 1.05,
+        "z": -5.85
+      },
+      "fov": 38
+    },
+    "durationSeconds": 11
+  },
+  {
+    "cameraStart": {
+      "position": {
+        "x": -0.5,
+        "y": 1.35,
+        "z": -8
+      },
+      "target": {
+        "x": 0,
+        "y": 0.72,
+        "z": -9.18
+      },
+      "fov": 44
+    },
+    "cameraEnd": {
+      "position": {
+        "x": -1.1,
+        "y": 1.15,
+        "z": -8.3
+      },
+      "target": {
+        "x": 0,
+        "y": 0.72,
+        "z": -9.18
+      },
+      "fov": 40
+    },
+    "durationSeconds": 14
+  }
+]

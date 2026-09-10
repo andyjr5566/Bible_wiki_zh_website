@@ -1,0 +1,13 @@
+{
+  "excerpts": [
+    { "id": "tour-1-court", "book": "出埃及記", "chapter": 27, "ranges": [{ "startVerse": 9, "endVerse": 19 }] },
+    { "id": "tour-2-altar", "book": "出埃及記", "chapter": 27, "ranges": [{ "startVerse": 1, "endVerse": 8 }] },
+    { "id": "tour-3-laver", "book": "出埃及記", "chapter": 30, "ranges": [{ "startVerse": 17, "endVerse": 21 }] },
+    { "id": "tour-4-curtains", "book": "出埃及記", "chapter": 26, "ranges": [{ "startVerse": 1, "endVerse": 14 }, { "startVerse": 36, "endVerse": 37 }] },
+    { "id": "tour-5-menorah", "book": "出埃及記", "chapter": 25, "ranges": [{ "startVerse": 31, "endVerse": 40 }] },
+    { "id": "tour-6-table", "book": "出埃及記", "chapter": 25, "ranges": [{ "startVerse": 23, "endVerse": 30 }] },
+    { "id": "tour-7-incense", "book": "出埃及記", "chapter": 30, "ranges": [{ "startVerse": 1, "endVerse": 10 }] },
+    { "id": "tour-7-veil", "book": "出埃及記", "chapter": 26, "ranges": [{ "startVerse": 31, "endVerse": 35 }] },
+    { "id": "tour-8-ark", "book": "出埃及記", "chapter": 25, "ranges": [{ "startVerse": 10, "endVerse": 22 }] }
+  ]
+}

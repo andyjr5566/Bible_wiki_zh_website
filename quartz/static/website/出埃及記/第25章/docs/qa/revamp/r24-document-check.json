@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-09-09T23:17:50.921861+00:00",
+  "missingLocalLinks": [],
+  "jsonParsed": [
+    "r24-detail-evidence.json",
+    "r24-detail-ready.json",
+    "r24-document-check.json",
+    "r24-excerpts.json",
+    "r24-fault-evidence.json",
+    "r24-handoff.json",
+    "r24-mobile-evidence.json",
+    "r24-nested-startup.json",
+    "r24-ritual-evidence.json",
+    "r24-source-keyboard-evidence.json",
+    "r24-static-audit.json",
+    "r24-tour-evidence.json"
+  ],
+  "pythonSyntax": "PASS",
+  "verdict": "NEEDS_CHANGES",
+  "qaCounts": {
+    "FAIL": 8,
+    "UNVERIFIED": 10,
+    "PASS": 0
+  },
+  "delivery": "提交與 push 結果另記 r24-handoff.json"
+}

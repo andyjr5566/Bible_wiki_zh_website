@@ -1,0 +1,73 @@
+{
+  "states": [
+    {
+      "id": "daily-priest",
+      "label": "普通祭司日常聖衣",
+      "role": "Priest",
+      "parts": [
+        { "id": "priest-tunic", "label": "內袍", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "祭司供職時穿著的聖衣部件。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:40-43", "出39:27-29"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["版型、縫法與衣長未詳。"] },
+        { "id": "priest-sash", "label": "腰帶", "claimedMaterials": ["細麻布"], "quantity": "一條", "function": "繫束內袍的部件。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:40-43", "出39:29"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["繫法、寬度與色彩未詳。"] },
+        { "id": "priest-headdress", "label": "裹頭巾", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "祭司聖衣中的頭部部件。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:40", "出39:28"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["包裹方式與外形未詳。"] },
+        { "id": "priest-linen-breeches", "label": "細麻布褲", "claimedMaterials": ["細麻布"], "quantity": "一條", "function": "遮蓋下體，供祭司在聖所與壇前供職。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:42-43", "出39:28"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["剪裁、長度與穿著層次未詳。"] }
+      ],
+      "sourceClaimIds": ["C-EX28-ROLE-GARMENT"],
+      "scriptureReferences": ["出28:40-43", "出39:27-29"],
+      "transitionNote": "普通祭司的日常聖衣，供洗濯、燈、餅、香與按祭種執行的服事情境使用。",
+      "unknowns": ["經文沒有提供可直接套用的版型、身高、鞋履或臉孔。"]
+    },
+    {
+      "id": "daily-high-priest",
+      "label": "大祭司日常聖衣",
+      "role": "HighPriest",
+      "parts": [
+        { "id": "high-priest-ephod", "label": "以弗得", "claimedMaterials": ["金線", "藍色線", "紫色線", "朱紅色線", "撚的細麻"], "quantity": "一件", "function": "大祭司聖衣的核心部件，與肩帶、胸牌相連。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:6-14", "出39:2-7"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["織紋密度、剪裁與寶石品種未詳。"] },
+        { "id": "high-priest-breastpiece", "label": "決斷的胸牌", "claimedMaterials": ["金線", "藍色線", "紫色線", "朱紅色線", "撚的細麻"], "quantity": "一件，安放十二塊寶石", "function": "安放在以弗得上，作為決斷的胸牌。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:15-30", "出39:8-21"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["十二種寶石的現代礦物對應與 RGB 未指定。"] },
+        { "id": "high-priest-robe", "label": "以弗得的外袍", "claimedMaterials": ["藍色線"], "quantity": "一件", "function": "穿在以弗得之下的外袍部件。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:31-35", "出39:22-26"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["袍邊與鈴鐺的幾何比例未詳。"] },
+        { "id": "high-priest-tunic", "label": "內袍", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "大祭司聖衣的內層部件。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:39", "出39:27"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["版型與衣長未詳。"] },
+        { "id": "high-priest-gold-plate", "label": "歸耶和華為聖的金牌", "claimedMaterials": ["精金"], "quantity": "一面", "function": "繫在冠冕前，標示歸耶和華為聖。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:36-38", "出39:30-31"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["字樣字體、牌的厚度與固定方式未詳。"] },
+        { "id": "high-priest-turban", "label": "冠冕／裹頭巾", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "大祭司頭部聖衣，金牌繫於其上。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:39", "出39:28"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["纏裹方式與外形未詳。"] },
+        { "id": "high-priest-sash", "label": "繡花腰帶", "claimedMaterials": ["金線", "藍色線", "紫色線", "朱紅色線", "撚的細麻"], "quantity": "一條", "function": "繫束大祭司聖衣。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:8", "出39:29"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["織紋與繫法未詳。"] },
+        { "id": "high-priest-linen-breeches", "label": "細麻布褲", "claimedMaterials": ["細麻布"], "quantity": "一條", "function": "遮蓋下體，屬祭司聖衣規定。", "sourceClaimIds": ["C-EX28-ROLE-GARMENT"], "scriptureReferences": ["出28:42", "出39:28"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["剪裁、長度與穿著層次未詳。"] }
+      ],
+      "sourceClaimIds": ["C-EX28-ROLE-GARMENT"],
+      "scriptureReferences": ["出28:1-43", "出39:1-31"],
+      "transitionNote": "日常大祭司聖衣只在相應的日常服事情境使用；贖罪日進入前切換為細麻衣。",
+      "unknowns": ["經文未提供完整肖像、寶石現代名稱、固定色碼或走動姿勢。"]
+    },
+    {
+      "id": "atonement-linen",
+      "label": "贖罪日細麻衣",
+      "role": "HighPriest",
+      "parts": [
+        { "id": "atonement-tunic", "label": "細麻布內袍", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "大祭司贖罪日洗身後穿著，進入聖所與至聖所。", "sourceClaimIds": ["C-LV16-DAY"], "scriptureReferences": ["利16:3-4", "利16:32"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["麻衣版型與顏色深淺未詳。"] },
+        { "id": "atonement-breeches", "label": "細麻布褲", "claimedMaterials": ["細麻布"], "quantity": "一條", "function": "贖罪日細麻衣的一部分。", "sourceClaimIds": ["C-LV16-DAY"], "scriptureReferences": ["利16:4", "利16:32"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["剪裁與穿著層次未詳。"] },
+        { "id": "atonement-sash", "label": "細麻布腰帶", "claimedMaterials": ["細麻布"], "quantity": "一條", "function": "束起贖罪日細麻衣。", "sourceClaimIds": ["C-LV16-DAY"], "scriptureReferences": ["利16:4", "利16:32"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["繫法與寬度未詳。"] },
+        { "id": "atonement-turban", "label": "細麻布冠冕", "claimedMaterials": ["細麻布"], "quantity": "一件", "function": "贖罪日穿上的頭部細麻衣。", "sourceClaimIds": ["C-LV16-DAY"], "scriptureReferences": ["利16:4", "利16:32"], "confidence": "textual", "assetId": null, "visualPolicy": "text-label", "unknowns": ["纏裹方式與外形未詳。"] }
+      ],
+      "sourceClaimIds": ["C-LV16-DAY"],
+      "scriptureReferences": ["利16:3-4", "利16:23-24", "利16:32"],
+      "transitionNote": "大祭司進入贖罪日程序前洗身並穿細麻衣；完成幔內、血與活羊步驟後，依程序脫下並洗身換衣。",
+      "unknowns": ["經文未詳載麻衣的剪裁、繫法、色彩與動作幾何。"]
+    },
+    {
+      "id": "post-atonement-garments",
+      "label": "贖罪日後換回的聖衣",
+      "role": "HighPriest",
+      "parts": [],
+      "sourceClaimIds": ["C-LV16-DAY", "C-EX28-ROLE-GARMENT"],
+      "scriptureReferences": ["利16:23-24", "出28:1-43"],
+      "transitionNote": "贖罪日完成指定步驟後脫下細麻衣、洗身，再穿回日常聖衣並獻燔祭；不另造經文未列的新服裝。",
+      "unknowns": ["利16沒有逐項重列換回衣服的外觀，沿用日常大祭司 claim。"]
+    },
+    {
+      "id": "unspecified",
+      "label": "經文未詳的服裝",
+      "role": "unspecified",
+      "parts": [],
+      "sourceClaimIds": ["C-LV01-BRANCHES"],
+      "scriptureReferences": ["利1:3-17"],
+      "transitionNote": "指定程序沒有服裝描述時，只顯示沒有身份暗示的角色位置示意。",
+      "unknowns": ["不可套用祭司聖衣、贖罪日麻衣或中世紀服裝。"]
+    }
+  ]
+}

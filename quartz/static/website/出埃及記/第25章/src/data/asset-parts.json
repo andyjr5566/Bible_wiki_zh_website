@@ -1,0 +1,10 @@
+{
+  "mappings": [
+    { "assetId": "tabernacle-ark-alternative", "objectId": "ark", "parts": [{ "partId": "ark-body", "nodeNames": ["Ark_0", "Ark_0.001", "Ark_1", "Ark"], "status": "unresolved" }, { "partId": "mercy-seat", "nodeNames": [], "status": "unresolved" }, { "partId": "cherubim", "nodeNames": [], "status": "unresolved" }] },
+    { "assetId": "tabernacle-burnt-altar-detail", "objectId": "burnt-altar", "parts": [{ "partId": "altar-grating", "nodeNames": ["Grate2.002", "Grate2.002_0"], "status": "verified" }, { "partId": "altar-utensils", "nodeNames": ["SprinklingSpoon.001", "SprinklingBowl.001", "FleshHook1.001", "FirePan.001", "CoalShovel.002", "AshPot2.001"], "status": "verified" }] },
+    { "assetId": "tabernacle-laver-detail", "objectId": "laver", "parts": [{ "partId": "basin", "nodeNames": ["LaverWater", "LaverWater_0"], "status": "verified" }, { "partId": "basin-base", "nodeNames": ["Sphere.003", "Sphere.003_0"], "status": "unresolved" }] },
+    { "assetId": "tabernacle-incense-altar-detail", "objectId": "incense-altar", "parts": [{ "partId": "altar-crown", "nodeNames": ["Crown", "Crown_0", "Crown_1", "Crown_2", "Crown_3"], "status": "unresolved" }] },
+    { "assetId": "tabernacle-menorah-detail", "objectId": "menorah", "parts": [{ "partId": "lamps", "nodeNames": ["Lamp.008", "Lamp.007", "Lamp.006", "Lamp.005", "Lamp.004", "Lamp.003", "Lamp.002"], "status": "verified" }, { "partId": "lampstand", "nodeNames": ["LampStand.001"], "status": "verified" }, { "partId": "utensils", "nodeNames": ["Tweezers", "Utensils", "Tweezers.001", "Utensils.001"], "status": "unresolved" }] },
+    { "assetId": "tabernacle-table-shewbread-detail", "objectId": "shewbread-table", "parts": [{ "partId": "table-border", "nodeNames": ["Border.002", "Border.002_0", "Border.002_1"], "status": "unresolved" }] }
+  ]
+}

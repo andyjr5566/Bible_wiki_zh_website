@@ -1,0 +1,11 @@
+{
+  "specs": [
+    { "id": "ark", "name": "約櫃", "status": "verified", "center": { "x": 0, "y": 0.72, "z": -9.18 }, "sizeCubits": { "x": 2.5, "y": 1.5, "z": 1.5 } },
+    { "id": "shewbread-table", "name": "陳設餅桌", "status": "verified", "center": { "x": 1.2, "y": 0.78, "z": -4.35 }, "sizeCubits": { "x": 2, "y": 1.5, "z": 1 } },
+    { "id": "menorah", "name": "金燈臺", "status": "unresolved", "center": { "x": -1.2, "y": 0.82, "z": -4.35 }, "sizeCubits": null },
+    { "id": "incense-altar", "name": "香壇", "status": "verified", "center": { "x": 0, "y": 1, "z": -5.85 }, "sizeCubits": { "x": 1, "y": 2, "z": 1 } },
+    { "id": "burnt-altar", "name": "燔祭壇", "status": "verified", "center": { "x": 0, "y": 1.05, "z": 9 }, "sizeCubits": { "x": 5, "y": 3, "z": 5 } },
+    { "id": "laver", "name": "洗濯盆", "status": "unresolved", "center": { "x": 0, "y": 0.7, "z": 0 }, "sizeCubits": null },
+    { "id": "outer-court", "name": "外院圍欄", "status": "verified", "center": { "x": 0, "y": 1.4, "z": 0 }, "sizeCubits": { "x": 50, "y": 5, "z": 100 } }
+  ]
+}

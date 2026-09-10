@@ -1,5 +1,7 @@
 # Runtime Asset Pipeline
 
+> 2026-09-10：以下為既有實作紀錄。新detail按需載入與競態修復依 [R05](../planning/REVAMP_TASKS.md)；實際程式與 [現況核對](../planning/REVAMP_BASELINE.md) 優先於歷史PASS。
+
 更新日期：2026-08-11  
 範圍：真實 GLTF runtime loading；不改寫 source GLB。
 

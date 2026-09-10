@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "r10",
+  "assetId": "tabernacle-laver-detail",
+  "generatedAt": "2026-09-09T19:31:46.725687+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/copper-laver/copper_laver_of_the_tabernacle.glb",
+    "sha256": "e50a5b0d54d39bab61abbbdad24dd00a731089eea218197ae45d376b0c7c15f3",
+    "bytes": 188240
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\tabernacle-laver-detail.staged.glb",
+    "sha256": "03909f61d06fb2d6d143118fa2fae2dcb63eb1b417c458f452eb5258a59c354b",
+    "bytes": 141848
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\tabernacle-laver-detail.optimized.glb",
+    "sha256": "22c827c69062080a510f6268f8f2413ab8569eed4deccd29c21f98e446403c21",
+    "bytes": 110788
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "Copper-Brass",
+      "baseColor": [
+        0.36,
+        0.11,
+        0.04
+      ],
+      "metallic": 0.62,
+      "roughness": 0.32
+    },
+    {
+      "name": "Meta-water",
+      "baseColor": [
+        0.03,
+        0.12,
+        0.18
+      ],
+      "metallic": 0.05,
+      "roughness": 0.2
+    }
+  ],
+  "parts": [
+    {
+      "id": "laver-basin",
+      "label": "盆體",
+      "object": "LaverWater_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX30-LAVER"
+      ]
+    },
+    {
+      "id": "laver-base",
+      "label": "座",
+      "object": "Sphere.003_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX30-LAVER"
+      ]
+    }
+  ],
+  "section": {
+    "label": "洗濯盆與座",
+    "note": "來源含水面示意；尺寸狀態仍依 typed evidence"
+  },
+  "buildMetrics": {
+    "objectCount": 5,
+    "meshCount": 2,
+    "triangleCount": 7672,
+    "bounds": {
+      "min": [
+        -0.5237299799919128,
+        -2.000040054321289,
+        -0.5224499702453613
+      ],
+      "max": [
+        0.5253300070762634,
+        -4.9948692321777344e-05,
+        0.5266100168228149
+      ],
+      "size": [
+        1.0490599870681763,
+        1.9999901056289673,
+        1.0490599870681763
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "Copper-Brass",
+      "Meta-water"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 5,
+    "meshCount": 2,
+    "triangleCount": 7672,
+    "bounds": {
+      "min": [
+        -0.5236911177635193,
+        -2.00004506111145,
+        -0.5224111080169678
+      ],
+      "max": [
+        0.5252911448478699,
+        -4.506111145019531e-05,
+        0.5265711545944214
+      ],
+      "size": [
+        1.0489822626113892,
+        2.0,
+        1.0489822626113892
+      ]
+    },
+    "materialCount": 2,
+    "materials": [
+      "Copper-Brass",
+      "Meta-water"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\before-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\before-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\before-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\before-Close.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\after-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\after-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\after-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-laver-detail\\previews\\after-Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/copper-laver/copper-laver.glb",
+      "public/models/copper-laver.glb"
+    ]
+  }
+}

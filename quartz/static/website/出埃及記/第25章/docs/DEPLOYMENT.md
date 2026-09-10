@@ -2,6 +2,8 @@
 
 ## 為什麼不能直接部署根目錄 `index.html`
 
+目前 R00–R21 的程式與資料會先經 `npm run build` 的 typecheck、測試、架構與資產驗證；R22–R24 的收尾結果仍以進度檔為準。
+
 根目錄的 `index.html` 載入 `/src/main.ts`，它是 Vite 的開發入口，不是瀏覽器可
 直接從靜態主機執行的檔案。`npm run build` 會把 TypeScript、CSS 和 `public/`
 底下的模型複製到 `dist/`，因此部署時必須發布 `dist/` 的內容。

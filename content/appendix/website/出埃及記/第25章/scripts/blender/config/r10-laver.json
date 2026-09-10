@@ -1,0 +1,26 @@
+{
+  "assetId": "tabernacle-laver-detail",
+  "stageId": "r10",
+  "sceneName": "EX25_R10_Laver_Work",
+  "collection": "EX25_R10_Laver",
+  "rootObject": "Root",
+  "autoCameras": true,
+  "sourceRelative": "assets/source/sketchfab/copper-laver/copper_laver_of_the_tabernacle.glb",
+  "stagingRelative": "assets/staging/blender/r10/tabernacle-laver-detail/tabernacle-laver-detail.staged.glb",
+  "processedRelative": "assets/processed/sketchfab/copper-laver/copper-laver.glb",
+  "publicRelative": "public/models/copper-laver.glb",
+  "blendRelative": "assets/staging/blender/r10/tabernacle-laver-detail/tabernacle-laver-detail.blend",
+  "units": { "system": "METRIC", "scaleLength": 1.0 },
+  "axes": { "forward": "-Z", "up": "Y" },
+  "origin": [0.0, 0.0, 0.0],
+  "materials": [
+    { "name": "Copper-Brass", "baseColor": [0.36, 0.11, 0.04], "metallic": 0.62, "roughness": 0.32 },
+    { "name": "Meta-water", "baseColor": [0.03, 0.12, 0.18], "metallic": 0.05, "roughness": 0.2 }
+  ],
+  "parts": [
+    { "id": "laver-basin", "label": "盆體", "object": "LaverWater_0", "mappingStatus": "object-level", "claimIds": ["C-EX30-LAVER"] },
+    { "id": "laver-base", "label": "座", "object": "Sphere.003_0", "mappingStatus": "object-level", "claimIds": ["C-EX30-LAVER"] }
+  ],
+  "section": { "label": "洗濯盆與座", "note": "來源含水面示意；尺寸狀態仍依 typed evidence" },
+  "light": { "energy": 760, "size": 4.0 }
+}

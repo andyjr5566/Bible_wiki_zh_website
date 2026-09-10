@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runStatus": "unverified",
+  "recordedAt": "2026-09-10T00:00:00+08:00",
+  "build": {
+    "hash": "C3TztiRQ",
+    "source": "dist/index.html",
+    "command": "npm run build"
+  },
+  "device": {
+    "browser": "unverified",
+    "gpu": "unverified",
+    "webgl": "unverified",
+    "viewport": { "width": 1440, "height": 900 },
+    "devicePixelRatio": 1,
+    "profile": "desktop-high",
+    "cache": "unverified",
+    "network": "unverified"
+  },
+  "scenarios": [
+    { "name": "hero", "status": "unverified", "measurement": null },
+    { "name": "detail-ark", "status": "unverified", "measurement": null },
+    { "name": "detail-burnt-altar", "status": "unverified", "measurement": null },
+    { "name": "detail-table-shewbread", "status": "unverified", "measurement": null },
+    { "name": "detail-incense-altar", "status": "unverified", "measurement": null },
+    { "name": "detail-menorah", "status": "unverified", "measurement": null },
+    { "name": "detail-laver", "status": "unverified", "measurement": null },
+    { "name": "atonement", "status": "unverified", "measurement": null }
+  ],
+  "limitations": [
+    "尚未在指定實體裝置完成每個情境三次、每次 60 秒量測。",
+    "rAF interval 不是 GPU 真實時間；未使用 EXT_disjoint_timer_query。",
+    "未以 browser repeated load/unload profiler 證實資源沒有持續增長。",
+    "正常網路請求、重試與備援的實機數據待 Browser smoke run。"
+  ]
+}

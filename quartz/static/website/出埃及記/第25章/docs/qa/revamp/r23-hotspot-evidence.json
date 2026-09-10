@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-09T22:30:09.869Z",
+  "items": [
+    {
+      "active": [
+        "燈臺"
+      ],
+      "heading": "聖所：三個器物熱點",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "active": [
+        "陳設餅桌"
+      ],
+      "heading": "聖所：三個器物熱點",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    },
+    {
+      "active": [
+        "香壇"
+      ],
+      "heading": "聖所：三個器物熱點",
+      "runtime": {
+        "errors": "0",
+        "warnings": "0"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "assetId": "tabernacle-ark-alternative",
+  "sceneName": "EX25_R07_Work",
+  "collection": "EX25_R07_Ark",
+  "rootObject": "Ark",
+  "sourceRelative": "assets/source/sketchfab/ark-of-the-covenant-alternative/ark_of_the_covenant_alternative.glb",
+  "stagingRelative": "assets/staging/blender/r07/ark-alternative.staged.glb",
+  "processedRelative": "assets/processed/sketchfab/ark-of-the-covenant-alternative/ark-alternative.glb",
+  "publicRelative": "public/models/ark-alternative.glb",
+  "blendRelative": "assets/staging/blender/r07/ark-alternative-r07.blend",
+  "units": { "system": "METRIC", "scaleLength": 1.0 },
+  "axes": { "forward": "-Z", "up": "Y" },
+  "origin": [0.0, 0.0, 0.0],
+  "materials": [
+    { "name": "ArkGoldImproved", "baseColor": [0.8, 0.45, 0.08], "metallic": 0.28, "roughness": 0.34 },
+    { "name": "ArkAcaciaWoodImproved", "baseColor": [0.12, 0.035, 0.01], "metallic": 0.0, "roughness": 0.72 }
+  ],
+  "materialAssignments": [
+    { "object": "Ark_0", "material": "ArkGoldImproved", "regionMaterial": "ArkAcaciaWoodImproved", "region": { "min": [-1.22, -1.35, -0.72], "max": [1.22, 0.4, 0.72] } },
+    { "object": "Ark_0.001", "material": "ArkGoldImproved" },
+    { "object": "Ark_1", "material": "ArkGoldImproved" }
+  ],
+  "parts": [
+    { "id": "ark-body", "label": "櫃體（木芯剖面示意）", "object": "Ark_0", "mappingStatus": "source-bounds-region", "claimIds": ["C-EX25-ARK-SPEC"] },
+    { "id": "mercy-seat", "label": "施恩座", "object": "Ark_1", "mappingStatus": "object-level", "claimIds": ["C-EX25-ARK-CHERUB"] },
+    { "id": "cherubim", "label": "二基路伯", "object": "Ark_0.001", "mappingStatus": "object-level", "claimIds": ["C-EX25-ARK-CHERUB"] },
+    { "id": "rings", "label": "四個環（來源未分離節點）", "object": "Ark_0", "mappingStatus": "unresolved", "claimIds": ["C-EX25-ARK-SPEC"] },
+    { "id": "poles", "label": "兩根杠（來源未分離節點）", "object": "Ark_0", "mappingStatus": "unresolved", "claimIds": ["C-EX25-ARK-SPEC"] }
+  ],
+  "section": { "label": "剖面示意：木芯與精金包覆", "note": "教學示意；不代表古物原貌或考古剖面" },
+  "cameras": [
+    { "name": "R07_Front", "location": [0.0, -6.0, 2.4], "rotation": [1.42, 0.0, 0.0], "lens": 52 },
+    { "name": "R07_Side", "location": [6.0, 0.0, 2.4], "rotation": [1.42, 0.0, 1.57], "lens": 52 },
+    { "name": "R07_Top", "location": [0.0, 0.0, 8.0], "rotation": [0.0, 0.0, 0.0], "lens": 55 },
+    { "name": "R07_Close", "location": [2.2, -2.2, 1.8], "rotation": [1.2, 0.0, 0.78], "lens": 70 }
+  ],
+  "light": { "location": [3.0, -4.0, 5.0], "rotation": [0.45, 0.0, 0.6], "energy": 900, "size": 5.0 }
+}

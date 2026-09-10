@@ -1,6 +1,8 @@
 # 資產與授權紀錄
 
-更新日期：2026-08-11  
+> 2026-09-10 規劃複核：本文件保留素材歸屬與處理歷史。下方約櫃木色櫃面的衍生處理未獲最終驗收；出25:11的成品包金要求及真實detail載入證據依 [R08與現況缺口](planning/REVAMP_BASELINE.md) 修正。素材有授權不等於造型符合經文。整站工作從 [總規格](planning/REVAMP_MASTER.md) 開始。
+
+更新日期：2026-09-09
 使用限制：本網站與所有部署版本只作非商業教育／研讀使用。
 
 ## 權威資料來源
@@ -33,6 +35,10 @@
 | [`sheep-library`](https://sketchfab.com/3d-models/sheep-08b05ae799d947f1a68c49b2d661eb53) | kenchoo | CC Attribution | 2026-08-11 | deferred animal library |
 | [`cow-npc-library`](https://sketchfab.com/3d-models/cow-npc-now-free-to-download-2ca1db4e890e4b24a68624597e7d2fc8) | Owlish Media | CC Attribution | 2026-08-11 | deferred animal library |
 | [`bull-library`](https://sketchfab.com/3d-models/bull-d0f2ff31252a4c9cb084b1ac3a2e4d8b) | stealth86 | CC Attribution | 2026-08-11 | deferred animal library |
+
+### 約櫃 detail 的衍生處理
+
+`tabernacle-ark-alternative` 的原始 GLB 保留在 `assets/source/`；本批以 Blender 5.2.1 讀取來源並保存可編輯工作檔 `ark-alternative-improved.blend`。為了讓研讀者辨認出經文中的材質關係，衍生檔將胸箱面分配為 `ArkAcaciaWoodImproved`，將金色包覆、蓋、基路伯與抬槓分配為 `ArkGoldImproved`；幾何階層、節點名稱、runtime transform 與 CC BY-NC 歸屬保留。之後使用 glTF Transform 4.4.2 做 hierarchy-preserving quantize／dedup／weld／resample／prune／sparse，未使用 flatten、join、instance 或 simplify，也沒有貼圖可壓縮。
 
 ## Runtime 分層
 

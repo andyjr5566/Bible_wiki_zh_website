@@ -1,0 +1,98 @@
+[
+  {
+    "name": "約櫃",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-ark-alternative",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  },
+  {
+    "name": "陳設餅桌",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-table-shewbread-detail",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  },
+  {
+    "name": "金燈臺",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-menorah-detail",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  },
+  {
+    "name": "香壇",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-incense-altar-detail",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  },
+  {
+    "name": "燔祭壇",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-burnt-altar-detail",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  },
+  {
+    "name": "洗濯盆",
+    "state": {
+      "asset": {
+        "activeAssetCount": "2",
+        "runtimeProfile": "desktop-structural",
+        "selectedAsset": "tabernacle-laver-detail",
+        "testid": "asset-status"
+      },
+      "runtime": {
+        "runtimeErrors": "0",
+        "runtimeWarnings": "0"
+      },
+      "status": "已就緒 · 已載入 2 項模型"
+    }
+  }
+]

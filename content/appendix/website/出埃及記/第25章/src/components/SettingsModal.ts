@@ -5,6 +5,7 @@ export class SettingsModal {
   readonly element: HTMLElement;
   #isOpen = false;
   #appKernel: AppKernel | null = null;
+  #returnFocus: HTMLElement | null = null;
 
   constructor(container: HTMLElement) {
     this.element = document.createElement('div');
@@ -20,11 +21,11 @@ export class SettingsModal {
           <!-- Atmosphere Switcher -->
           <section class="settings-section">
             <h3>🌄 大氣氛圍與時間 (Atmosphere)</h3>
-            <p class="settings-desc">切換曠野的時間光影與上帝同在的火柱顯現（出 40:38）。</p>
+            <p class="settings-desc">切換三種已校準的時間光影；預設採用中性、清楚的閱讀光照。</p>
             <div class="settings-btn-group" data-group="atmosphere">
               <button type="button" class="settings-opt-btn" data-atmosphere="dawn">🌅 晨曦 (Dawn)</button>
               <button type="button" class="settings-opt-btn is-active" data-atmosphere="midday">☀️ 曠野正午 (Midday)</button>
-              <button type="button" class="settings-opt-btn" data-atmosphere="night">✨ 聖夜火柱 (Night / Fire)</button>
+              <button type="button" class="settings-opt-btn" data-atmosphere="night">✨ 夜間照明 (Night)</button>
             </div>
           </section>
 
@@ -70,6 +71,7 @@ export class SettingsModal {
     container.appendChild(this.element);
     this.element.addEventListener('click', this.#onClick);
     this.element.addEventListener('input', this.#onInput);
+    window.addEventListener('keydown', this.#onKeyDown);
   }
 
   bind(kernel: AppKernel): void {
@@ -77,13 +79,20 @@ export class SettingsModal {
   }
 
   open(): void {
+    if (this.#isOpen) return;
+    this.#returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     this.#isOpen = true;
     this.element.classList.remove('is-hidden');
+    queueMicrotask(() => this.element.querySelector<HTMLButtonElement>('.settings-close-btn')?.focus());
   }
 
   close(): void {
+    if (!this.#isOpen) return;
     this.#isOpen = false;
     this.element.classList.add('is-hidden');
+    const returnFocus = this.#returnFocus;
+    this.#returnFocus = null;
+    if (returnFocus?.isConnected) returnFocus.focus();
   }
 
   toggle(): void {
@@ -140,9 +149,22 @@ export class SettingsModal {
     }
   };
 
+  readonly #onKeyDown = (e: KeyboardEvent): void => {
+    if (this.#isOpen && e.key === 'Escape' && isTopOverlay(this.element)) {
+      e.preventDefault();
+      this.close();
+    }
+  };
+
   dispose(): void {
     this.element.removeEventListener('click', this.#onClick);
     this.element.removeEventListener('input', this.#onInput);
+    window.removeEventListener('keydown', this.#onKeyDown);
     this.element.remove();
   }
+}
+
+function isTopOverlay(element: HTMLElement): boolean {
+  const overlays = Array.from(document.querySelectorAll<HTMLElement>('.cinematic-overlay:not(.is-hidden), .settings-modal-overlay:not(.is-hidden), .scripture-modal-overlay:not(.is-hidden), .credits-sheet'));
+  return overlays[overlays.length - 1] === element;
 }

@@ -1,0 +1,54 @@
+{
+  "date": "2026-09-10",
+  "participant": "scripted agent walk-through; no human new reader",
+  "questions": [
+    {
+      "question": 1,
+      "action": "開啟平面圖，辨認外院、聖所、至聖所",
+      "status": "PASS",
+      "evidence": "r23 viewport browser DOM"
+    },
+    {
+      "question": 2,
+      "action": "器物模式→約櫃→材料／出25引用",
+      "status": "PASS",
+      "evidence": "r23 detail evidence"
+    },
+    {
+      "question": 3,
+      "action": "尋找普通祭司、獻祭者、大祭司、利未人職責",
+      "status": "UNVERIFIED",
+      "evidence": "介面走查未能在同一可見學習路徑找到四者；需 R24 決定是否補入口"
+    },
+    {
+      "question": 4,
+      "action": "選擇燔祭分支並比較牛、羊、鳥",
+      "status": "PASS",
+      "evidence": "r23-offering-branches-evidence.json"
+    },
+    {
+      "question": 5,
+      "action": "比較日常獻香與贖罪日帶香入幔",
+      "status": "UNVERIFIED",
+      "evidence": "資料有分流，但本次瀏覽器狀態切換逾時，未宣稱完成"
+    },
+    {
+      "question": 6,
+      "action": "贖罪日尋找麻衣、兩羊、退出／曠野",
+      "status": "PASS",
+      "evidence": "r23-atonement-evidence.json；14步、空房、曠野、換衣"
+    },
+    {
+      "question": 7,
+      "action": "指出燈臺／盆未詳尺寸與肘換算",
+      "status": "PASS",
+      "evidence": "燈臺／洗濯盆面板顯示未詳及肘單位"
+    },
+    {
+      "question": 8,
+      "action": "由考古比較條目說明限制",
+      "status": "PASS",
+      "evidence": "器物面板顯示沒有本器物可核准的考古比較主張"
+    }
+  ]
+}

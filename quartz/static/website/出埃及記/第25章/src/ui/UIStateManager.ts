@@ -2,7 +2,7 @@ import type { ExperienceMode, UIState } from '../types/ui';
 import { EventChannel, type Unsubscribe } from '../utils/EventChannel';
 
 const initialState: UIState = {
-  mode: 'overview', previousMode: null, selectedEntityId: null, activePanel: 'none', transitionReason: 'application-start',
+  mode: 'overview', previousMode: null, selectedEntityId: null, activePanel: 'none', transitionReason: 'application-start', selectedRitualId: null, selectedBranchId: null, selectedStepId: null, overlay: 'none', playbackOwner: 'none',
 };
 
 export class UIStateManager {
@@ -27,4 +27,12 @@ export class UIStateManager {
     this.#state = { ...this.#state, selectedEntityId, activePanel: selectedEntityId ? activePanel : 'none' };
     this.#changes.emit(this.snapshot);
   }
+
+  selectRitual(selectedRitualId: string | null, selectedBranchId: string | null = null, selectedStepId: string | null = null): void {
+    this.#state = { ...this.#state, selectedRitualId, selectedBranchId, selectedStepId, activePanel: selectedRitualId ? 'ritual' : this.#state.activePanel };
+    this.#changes.emit(this.snapshot);
+  }
+
+  setPlaybackOwner(playbackOwner: UIState['playbackOwner']): void { this.#state = { ...this.#state, playbackOwner }; this.#changes.emit(this.snapshot); }
+  setOverlay(overlay: UIState['overlay']): void { this.#state = { ...this.#state, overlay }; this.#changes.emit(this.snapshot); }
 }

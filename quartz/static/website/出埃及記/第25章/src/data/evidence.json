@@ -1,0 +1,43 @@
+{
+  "sources": [
+    { "id": "S-EX25", "title": "《出埃及記》第25章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出25:1-40", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX26", "title": "《出埃及記》第26章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出26:1-37", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX27", "title": "《出埃及記》第27章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出27:1-21", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX28", "title": "《出埃及記》第28章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出28:1-43", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX30", "title": "《出埃及記》第30章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出30:1-38", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX37", "title": "《出埃及記》第37章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出37:1-29", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX38", "title": "《出埃及記》第38章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出38:1-31", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX39", "title": "《出埃及記》第39章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出39:1-43", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-EX40", "title": "《出埃及記》第40章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "出40:1-38", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-LV01", "title": "《利未記》第1章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "利1:1-17", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-LV02-07", "title": "《利未記》第2至7章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "利2-7全章", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-LV16", "title": "《利未記》第16章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "利16:1-34", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-LV24", "title": "《利未記》第24章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "利24:1-23", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-NM03", "title": "《民數記》第3章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "民3:1-51", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-NM04", "title": "《民數記》第4章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "民4全章", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-NM18", "title": "《民數記》第18章／和合本檔案", "sourceType": "scripture", "date": "2026-09-10", "scope": "民18:1-32", "url": null, "attribution": "本地 raw_scripture 正式經文；離線來源摘要。" },
+    { "id": "S-ENG-DIMENSION", "title": "DimensionVisualizer 工程換算假設", "sourceType": "engineering", "date": "2026-09-10", "scope": "一肘約45公分的教學換算選項", "url": null, "attribution": "本站工程假設；不是經文指定的歷史長度。" }
+  ],
+  "claims": [
+    { "id": "C-EX25-ARK-SPEC", "entityId": "ark", "statement": "約櫃以皂莢木製作，長二肘半、寬一肘半、高一肘半，內外包精金。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX25", "locator": "出25:10-16" }, { "sourceId": "S-EX37", "locator": "出37:1-5" }], "limits": ["木芯與金包覆的剖面表現仍屬教學示意。"] },
+    { "id": "C-EX25-ARK-CHERUB", "entityId": "ark", "statement": "施恩座兩端有基路伯，翅膀向上遮掩施恩座，彼此相對。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX25", "locator": "出25:17-22" }, { "sourceId": "S-EX37", "locator": "出37:6-9" }], "limits": ["經文沒有提供臉孔細節或造型比例。"] },
+    { "id": "C-EX25-TABLE", "entityId": "shewbread-table", "statement": "陳設餅桌以皂莢木製作並包精金，長二肘、寬一肘、高一肘半。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX25", "locator": "出25:23-30" }, { "sourceId": "S-EX37", "locator": "出37:10-16" }], "limits": ["器皿外形與餅的排列細節未由本資料補足。"] },
+    { "id": "C-LV24-BREAD", "entityId": "shewbread-table", "statement": "每安息日擺上十二個餅，祭司在聖處吃換下的餅。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-LV24", "locator": "利24:5-9" }], "limits": ["經文沒有指定烘焙或排列的唯一幾何。"] },
+    { "id": "C-EX25-MENORAH", "entityId": "menorah", "statement": "燈臺用一他連得精金錘出，有七盞燈，以及枝、杯、球、花等部件。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX25", "locator": "出25:31-40" }, { "sourceId": "S-EX37", "locator": "出37:17-24" }], "limits": ["經文未載燈臺總高度、枝條弧度或燈盞幾何。"] },
+    { "id": "C-LV24-LAMP", "entityId": "menorah", "statement": "燈要用清橄欖油，使燈常常點著；亞倫在會幕中料理燈。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX27", "locator": "出27:20-21" }, { "sourceId": "S-LV24", "locator": "利24:1-4" }], "limits": ["畫面亮度與燃燒動作仍是介面 cue。"] },
+    { "id": "C-EX27-BURNT-ALTAR", "entityId": "burnt-altar", "statement": "燔祭壇以皂莢木製作，長寬各五肘、高三肘，包銅並有角、網與杠。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX27", "locator": "出27:1-8" }, { "sourceId": "S-EX38", "locator": "出38:1-7" }], "limits": ["網眼、角的幾何與附屬物尺寸未詳。"] },
+    { "id": "C-EX30-LAVER", "entityId": "laver", "statement": "洗濯盆和盆座供祭司洗手洗腳後進入會幕或就近壇。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX30", "locator": "出30:17-21" }, { "sourceId": "S-EX40", "locator": "出40:30-32" }], "limits": ["洗濯盆尺寸、形狀與水量未詳。"] },
+    { "id": "C-EX30-INCENSE", "entityId": "incense-altar", "statement": "香壇以皂莢木包精金，位於法櫃前幔外；祭司早晚燒香。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX30", "locator": "出30:1-10,34-38" }, { "sourceId": "S-EX37", "locator": "出37:25-29" }], "limits": ["煙霧密度與香爐外形未詳。"] },
+    { "id": "C-EX26-ZONES", "entityId": "tabernacle-main", "statement": "會幕由聖所與至聖所分區，中間有幔子。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX26", "locator": "出26:1-37" }, { "sourceId": "S-EX40", "locator": "出40:20-28" }], "limits": ["實際採光與遮擋程度未詳。"] },
+    { "id": "C-EX27-COURT", "entityId": "outer-court", "statement": "院子東面有門，院子長一百肘、寬五十肘、高五肘。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX27", "locator": "出27:9-19" }], "limits": ["院外營地帳幕數量與分布未詳。"] },
+    { "id": "C-EX28-ROLE-GARMENT", "entityId": "priest", "statement": "亞倫及其子承擔祭司職分，聖衣包含胸牌、以弗得、外袍、內袍、冠冕與腰帶等部件。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX28", "locator": "出28:1-43" }, { "sourceId": "S-EX39", "locator": "出39:1-31" }], "limits": ["人物身高、臉孔與布料色值未詳。"] },
+    { "id": "C-NM-ROLES", "entityId": "priest", "statement": "祭司、利未人與指定家族的職分和搬運責任不同。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-NM03", "locator": "民3:5-10,25-37" }, { "sourceId": "S-NM04", "locator": "民4全章" }, { "sourceId": "S-NM18", "locator": "民18:1-7" }], "limits": ["未指定的畫面動作應維持觀察標籤。"] },
+    { "id": "C-LV01-BRANCHES", "entityId": "burnt-offering", "statement": "燔祭依牛、羊／山羊、鳥分成不同供物分支，獻祭者與祭司的動作不同。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-LV01", "locator": "利1:1-17" }], "limits": ["不把未載的寫實屠宰細節加入畫面。"] },
+    { "id": "C-LV02-07-FIVE", "entityId": "five-sacrifices", "statement": "素祭、平安祭、贖罪祭、贖愆祭與燔祭的材料、目的與處理不同。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-LV02-07", "locator": "利2-7全章" }], "limits": ["各祭的神學延伸與象徵另行標示，不由此 claim 自動推導。"] },
+    { "id": "C-LV16-DAY", "entityId": "day-of-atonement", "statement": "贖罪日包括細麻衣預備、牛與兩隻公山羊、香、血、潔淨、活羊、換衣與營外處理。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-LV16", "locator": "利16:1-34" }], "limits": ["血點次數與動作位置只按經文文字提示，不補足未載的幾何。"] },
+    { "id": "C-EX40-CLOUD-FIRE", "entityId": "divine-presence-event", "statement": "會幕立起後，雲彩遮蓋會幕，夜間雲中有火。", "kind": "scripture", "status": "verified", "references": [{ "sourceId": "S-EX40", "locator": "出40:34-38" }], "limits": ["只在事件 cue 中呈現，不固定成永久光柱。"] },
+    { "id": "C-ENG-CUBIT-45", "entityId": "dimension-system", "statement": "一肘約以45公分作為本網站的教學換算選項。", "kind": "engineering", "status": "unresolved", "references": [{ "sourceId": "S-ENG-DIMENSION", "locator": "DimensionVisualizer 的工程假設" }], "limits": ["不是經文指定的歷史長度，需在介面明示為換算假設。"] },
+    { "id": "C-REJECT-ARK-WOOD-EXTERIOR", "entityId": "ark", "statement": "約櫃成品主要呈現裸木外觀。", "kind": "engineering", "status": "rejected", "references": [{ "sourceId": "S-EX25", "locator": "出25:11-13" }], "limits": ["與內外包金的經文衝突，木芯只能在剖面示意中出現。"] },
+    { "id": "C-REJECT-MENORAH-SIZE", "entityId": "menorah", "statement": "把燈臺任意高度或寬度寫成經文尺寸。", "kind": "engineering", "status": "rejected", "references": [{ "sourceId": "S-EX25", "locator": "出25:31-40" }], "limits": ["經文未載總高度與寬度。"] }
+  ]
+}

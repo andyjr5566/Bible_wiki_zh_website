@@ -1,5 +1,7 @@
 # Canonical World Alignment
 
+> 2026-09-10：本文件保存舊座標與量測，供 [R06校準](../planning/REVAMP_TASKS.md) 對照。Walking／player等舊體驗不再構成需求；模型比例、內部錨點與框架對齐尚須重新驗收，不以此表替代新量測。
+
 更新日期：2026-08-11  
 用途：非商業會幕空間研讀。
 

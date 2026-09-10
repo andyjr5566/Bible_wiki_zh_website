@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "r10",
+  "assetId": "tabernacle-burnt-altar-detail",
+  "generatedAt": "2026-09-09T19:31:24.512469+00:00",
+  "blenderVersion": "5.2.1 LTS",
+  "source": {
+    "path": "assets/source/sketchfab/altar-of-burnt-offering/altar_of_burnt_offering_of_the_tabernacle.glb",
+    "sha256": "cfce6b18f5467ddecf325e0883f8aa6400bcd7cd99ab1a5640a84a8918bdd14b",
+    "bytes": 1926536
+  },
+  "staging": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\tabernacle-burnt-altar-detail.staged.glb",
+    "sha256": "ed55ac30825908e262559fe6f04cf6fa7637193411f8c3c7ba64a9e15aeb07d8",
+    "bytes": 1654016
+  },
+  "optimized": {
+    "path": "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\tabernacle-burnt-altar-detail.optimized.glb",
+    "sha256": "5b2c307d1272eb14c535d4a516ed14003e965333c55442b21755997fd412aa33",
+    "bytes": 1162556
+  },
+  "units": {
+    "system": "METRIC",
+    "scaleLength": 1.0
+  },
+  "axes": {
+    "forward": "-Z",
+    "up": "Y"
+  },
+  "origin": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "materials": [
+    {
+      "name": "Copper-Brass",
+      "baseColor": [
+        0.36,
+        0.11,
+        0.04
+      ],
+      "metallic": 0.62,
+      "roughness": 0.32
+    }
+  ],
+  "parts": [
+    {
+      "id": "burnt-altar-body",
+      "label": "燔祭壇本體",
+      "object": "Grate2.002_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX27-BURNT-ALTAR"
+      ]
+    },
+    {
+      "id": "altar-tools",
+      "label": "配套器具",
+      "object": "SprinklingSpoon.001_0",
+      "mappingStatus": "object-level",
+      "claimIds": [
+        "C-EX27-BURNT-ALTAR"
+      ]
+    }
+  ],
+  "section": {
+    "label": "燔祭壇與配套器具",
+    "note": "模型為教學重建；來源未分離的用途細節不作歷史斷言"
+  },
+  "buildMetrics": {
+    "objectCount": 15,
+    "meshCount": 7,
+    "triangleCount": 53166,
+    "bounds": {
+      "min": [
+        -8.872769355773926,
+        -3.601710081100464,
+        -5.468859672546387
+      ],
+      "max": [
+        10.37757682800293,
+        0.05935908108949661,
+        5.531140327453613
+      ],
+      "size": [
+        19.250346183776855,
+        3.6610691621899605,
+        11.0
+      ]
+    },
+    "materialCount": 1,
+    "materials": [
+      "Copper-Brass"
+    ]
+  },
+  "reimportMetrics": {
+    "objectCount": 15,
+    "meshCount": 7,
+    "triangleCount": 53166,
+    "bounds": {
+      "min": [
+        -8.872779846191406,
+        -3.6018872261047363,
+        -5.468859672546387
+      ],
+      "max": [
+        10.377517700195312,
+        0.05934138596057892,
+        5.531140327453613
+      ],
+      "size": [
+        19.25029754638672,
+        3.6612286120653152,
+        11.0
+      ]
+    },
+    "materialCount": 1,
+    "materials": [
+      "Copper-Brass"
+    ]
+  },
+  "previews": [
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\before-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\before-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\before-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\before-Close.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\after-Front.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\after-Side.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\after-Top.png",
+    "assets\\staging\\blender\\r10\\tabernacle-burnt-altar-detail\\previews\\after-Close.png"
+  ],
+  "promotion": {
+    "status": "promoted",
+    "files": [
+      "assets/processed/sketchfab/altar-of-burnt-offering/altar-burnt-offering.glb",
+      "public/models/altar-burnt-offering.glb"
+    ]
+  }
+}

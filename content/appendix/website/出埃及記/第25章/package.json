@@ -13,8 +13,10 @@
     "test:watch": "vitest",
     "verify:architecture": "node scripts/verify-architecture.mjs",
     "verify:assets": "node scripts/verify-assets.mjs",
+    "verify:derived": "node scripts/verify-derived-assets.mjs",
     "verify": "npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets",
-    "process:assets": "node scripts/process-sketchfab-assets.mjs"
+    "process:assets": "node scripts/process-sketchfab-assets.mjs",
+    "build:excerpts": "node scripts/build-scripture-excerpts.mjs"
   },
   "dependencies": {
     "three": "^0.162.0",

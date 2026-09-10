@@ -118,11 +118,19 @@
 ## 🎞️ 相關影片
 
 ### 大衛鮑森講座
-聖經解析
-	舊約綜覽系列
-- https://www.youtube.com/playlist?list=PLZfkFcz5Qd08O-lWINo2CowDGHw3jBA6x
-	新約綜覽系列
-- https://www.youtube.com/playlist?list=PLZfkFcz5Qd08819jIw0Vo3q_ob7-dumbW
+#### 聖經解析
+
+- 舊約綜覽系列
+https://www.youtube.com/playlist?list=PLZfkFcz5Qd08O-lWINo2CowDGHw3jBA6x
+- 新約綜覽系列
+https://www.youtube.com/playlist?list=PLZfkFcz5Qd08819jIw0Vo3q_ob7-dumbW
+
+#### Bibleproject
+
+- 舊約導覽
+https://www.youtube.com/playlist?list=PLH0Szn1yYNeeVFodkI9J_WEATHQCwRZ0u
+- 新約導覽
+https://www.youtube.com/playlist?list=PLH0Szn1yYNecanpQqdixWAm3zHdhY2kPR
 
 ---
 
@@ -131,6 +139,7 @@
 - [[README]] — 專案概述
 - [[INSTALL_COMPUTER]] — 電腦端 Obsidian 開啟方式
 - [[INSTALL_MOBILE]] — 手機端 Obsidian 開啟方式
+- [[專案流程說明]] — 專案設計流程
 - [📝 讀者反饋與勘誤問卷 (Google 表單)](https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform) — 線上回報問題與使用建議
 
 ---

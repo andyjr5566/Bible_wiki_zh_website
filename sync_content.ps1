@@ -58,7 +58,7 @@ function Sync-WithRobocopy {
 
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 
-$items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md')
+$items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md','專案流程說明.md')
 foreach ($item in $items) {
     $itemPath = Join-Path $source $item
     if (Test-Path $itemPath) {

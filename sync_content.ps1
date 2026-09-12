@@ -180,8 +180,8 @@ if (Test-Path $contentIndexPath) {
 
 ---
 "@
-        if ($indexContent -match '(?m)^## .*?作者的話') {
-            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n" + $Matches[0])
+        if ($indexContent -match '(?m)^## ✍️ 作者的話') {
+            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n## ✍️ 作者的話")
         }
         else {
             $indexContent += "`r`n" + $guideSection

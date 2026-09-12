@@ -169,3 +169,4 @@ if (document.readyState === "loading") {
   setupExplorerObserver()
   updateBreadcrumbsLinks()
 }
+

@@ -10,6 +10,8 @@ import popoverScript from "../../components/scripts/popover.inline"
 import collapsibleScript from "../../components/scripts/collapsible.inline"
 // @ts-ignore
 import bookNavScript from "../../components/scripts/bookNavigation.inline"
+// @ts-ignore
+import pureModeScript from "../../components/scripts/pureMode.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -100,6 +102,10 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
   // Book navigation (書卷目錄直達「全書目錄及綱要」)
   componentResources.beforeDOMLoaded.push(bookNavScript)
   componentResources.afterDOMLoaded.push(bookNavScript)
+
+  // Pure mode (素色黑白 / 古典紙質底色切換)
+  componentResources.beforeDOMLoaded.push(pureModeScript)
+  componentResources.afterDOMLoaded.push(pureModeScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

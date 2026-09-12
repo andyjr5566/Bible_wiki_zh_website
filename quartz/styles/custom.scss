@@ -654,3 +654,124 @@ details.collapsible-subheading {
     font-size: 0.92rem;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   素色黑白 / 古典紙質底色切換 (Pure Mode: 純素白／極黑 OLED)
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1. 工具列切換按鈕 (與 .darkmode / .readermode 完美對齊) */
+.puremode {
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  background: none;
+  border: none;
+  width: 20px;
+  height: 32px;
+  margin: 0;
+  text-align: inherit;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  & svg {
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    top: calc(50% - 9.5px);
+    fill: none;
+    stroke: var(--darkgray);
+    stroke-width: 1.8;
+    transition: opacity 0.15s ease, stroke 0.15s ease;
+
+    text {
+      font-family: var(--headerFont), "Noto Serif TC", "Songti TC", serif;
+      user-select: none;
+      pointer-events: none;
+      fill: var(--darkgray);
+      stroke: none;
+      transition: fill 0.15s ease;
+    }
+  }
+
+  &:hover svg {
+    stroke: var(--secondary);
+
+    text {
+      fill: var(--secondary);
+    }
+  }
+}
+
+:root[data-bg="pure"] .puremode {
+  & > .pureIcon {
+    display: none;
+  }
+  & > .paperIcon {
+    display: inline;
+  }
+}
+
+:root .puremode {
+  & > .pureIcon {
+    display: inline;
+  }
+  & > .paperIcon {
+    display: none;
+  }
+}
+
+/* 2. 素白模式（微暖象牙米白，柔和不刺眼） */
+:root[data-bg="pure"] {
+  --light: #FAF6ED;
+  --lightgray: #EFECE3;
+  --background-primary: #FAF6ED;
+  --background-primary-alt: #FAF6ED;
+  --background-secondary: #EFECE3;
+  --background-modifier-border: #E5E0D5;
+
+  blockquote {
+    background: rgba(180, 140, 80, 0.08) !important;
+  }
+}
+
+/* 3. 極致純黑模式（OLED 像素全黑深邃底色） */
+:root[saved-theme="dark"][data-bg="pure"] {
+  --light: #000000;
+  --lightgray: #161618;
+  --gray: #71717a;
+  --darkgray: #d4d4d8;
+  --dark: #f4f4f5;
+  --background-primary: #000000;
+  --background-primary-alt: #000000;
+  --background-secondary: #161618;
+  --background-modifier-border: #262626;
+
+  blockquote {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  details.collapsible-subheading {
+    background-color: #0d0d0d;
+    border-color: #262626;
+
+    &:hover {
+      border-color: #404040;
+    }
+  }
+}
+
+/* 4. 移除羊皮紙背景圖與磨砂層，切換為乾淨俐落的純實色 */
+html[data-bg="pure"] body,
+:root[data-bg="pure"] body {
+  background: var(--light) !important;
+  background-image: none !important;
+}
+
+html[data-bg="pure"] .page > div#quartz-body div.center,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar.left,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
+  background-color: var(--light) !important;
+}

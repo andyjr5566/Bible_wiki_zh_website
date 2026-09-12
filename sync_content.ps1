@@ -79,6 +79,60 @@ Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' 
 
 Write-Host 'Content sync completed.'
 
+# ── Ensure Book Directory Index (全書目錄及綱要 -> index.md) ────
+Get-ChildItem -Path $target -Directory | Where-Object { $_.Name -match '^[0-9]' } | ForEach-Object {
+    $outlineFile = Join-Path $_.FullName '全書目錄及綱要.md'
+    $indexFile = Join-Path $_.FullName 'index.md'
+    if (Test-Path $outlineFile) {
+        $content = Get-Content -LiteralPath $outlineFile -Raw -Encoding UTF8
+        $cleanBookName = $_.Name -replace '^[0-9]+\s*', ''
+        if ($content -notmatch '^---\r?\n') {
+            $header = @"
+---
+title: $($_.Name)
+aliases:
+  - 全書目錄及綱要
+  - $($_.Name)/全書目錄及綱要
+---
+
+"@
+            $content = $header + $content
+        }
+        Set-Content -LiteralPath $indexFile -Value $content -Encoding UTF8
+    }
+}
+Write-Host 'Book directory index.md generation completed.'
+
+# ── Compile config/collapse-rules.txt to quartz/static/collapse-rules.json ──
+$rulesTxtPath = Join-Path $repoPath 'config\collapse-rules.txt'
+$staticDir = Join-Path $repoPath 'quartz\static'
+New-Item -ItemType Directory -Path $staticDir -Force | Out-Null
+$rulesJsonTarget = Join-Path $staticDir 'collapse-rules.json'
+
+if (Test-Path $rulesTxtPath) {
+    $ruleLines = Get-Content -LiteralPath $rulesTxtPath -Encoding UTF8
+    $sections = @()
+    foreach ($line in $ruleLines) {
+        $trimmed = $line.Trim()
+        if ([string]::IsNullOrWhiteSpace($trimmed) -or $trimmed.StartsWith('#')) {
+            continue
+        }
+        $hasSub = $trimmed -match '->\s*subheadings'
+        $title = ($trimmed -replace '->\s*subheadings', '').Trim()
+        if ($title.Length -gt 0) {
+            $sections += [PSCustomObject]@{
+                title = $title
+                subheadings = $hasSub
+            }
+        }
+    }
+    $rulesJson = [PSCustomObject]@{
+        sections = $sections
+    } | ConvertTo-Json -Depth 4
+    Set-Content -LiteralPath $rulesJsonTarget -Value $rulesJson -Encoding UTF8
+    Write-Host 'Generated quartz/static/collapse-rules.json from config/collapse-rules.txt.'
+}
+
 # ── Sync static website assets to quartz/static/website ────────
 $websiteSource = Join-Path $source 'appendix\website'
 $staticWebsiteTarget = Join-Path $repoPath 'quartz\static\website'
@@ -126,8 +180,8 @@ if (Test-Path $contentIndexPath) {
 
 ---
 "@
-        if ($indexContent -match '(?m)^## ✍️ 作者的話') {
-            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n## ✍️ 作者的話")
+        if ($indexContent -match '(?m)^## .*?作者的話') {
+            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n" + $Matches[0])
         }
         else {
             $indexContent += "`r`n" + $guideSection

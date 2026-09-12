@@ -1,6 +1,9 @@
-/* Bible Wiki Quartz UI hotfix */
+/* 隱藏 FolderPage 的自動列表（此資料夾下有 XX 條筆記），由 index.md 全書目錄及綱要全面接管 */
+.page-listing {
+  display: none !important;
+}
 
-/* éš±è— ç« ç¯€é  æ¨™é¡Œä¸‹æ–¹æ—¥æœŸ / read time */
+/* 隱藏章節頁標題下方日期 / read time */
 .content-meta {
   display: none !important;
 }
@@ -458,4 +461,196 @@ html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
   color: #B45309 !important; /* 滑鼠移過去的字體顏色 (目前: 棕橘色) */
   background-color: rgba(180, 83, 9, 0.15) !important; /* 滑鼠移過去的底部顏色變深 */
   text-decoration: none;
+}
+
+/* ==========================================================================
+   📖 聖經研讀知識庫：素雅段落折疊與雙層手風琴樣式 (Collapsible Sections)
+   ========================================================================== */
+
+details.collapsible-section {
+  margin: 1.4rem 0;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background-color: rgba(var(--light-rgb, 250, 247, 240), 0.4);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--gray);
+  }
+
+  & > summary.collapsible-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    border-radius: 7px;
+    transition: background-color 0.15s ease;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    .collapsible-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--secondary);
+      font-family: var(--headerFont);
+      display: inline-flex;
+      align-items: center;
+
+      /* 素雅純 CSS 小箭頭 */
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 0.38rem;
+        height: 0.38rem;
+        border-right: 2px solid var(--secondary);
+        border-bottom: 2px solid var(--secondary);
+        transform: rotate(-45deg);
+        margin-right: 0.75rem;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+    }
+
+    .collapsible-badge {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--gray);
+      background-color: var(--lightgray);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      margin-left: 0.75rem;
+      white-space: nowrap;
+    }
+  }
+
+  &[open] {
+    & > summary.collapsible-summary {
+      border-bottom: 1px solid var(--lightgray);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: var(--highlight);
+
+      .collapsible-title::before {
+        transform: rotate(45deg);
+        margin-top: -2px;
+      }
+    }
+  }
+
+  .collapsible-content {
+    padding: 1rem 1.25rem;
+
+    /* 分類子標題（例如：神學／創造、人與婚姻、人物、地點）微調間距 */
+    h3 {
+      font-size: 1.05rem;
+      margin: 1.1rem 0 0.35rem 0 !important;
+      color: var(--secondary);
+      border-bottom: none;
+
+      &:first-child {
+        margin-top: 0.2rem !important;
+      }
+    }
+  }
+
+  /* 針對知識節點等條目清單：採用素雅的橫向緊湊排列（符合用戶喜歡的排版 idea，無多餘裝飾） */
+  &:not(.collapsible-nested) .collapsible-content ul {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.45rem 0.65rem !important;
+    padding-left: 0 !important;
+    margin: 0.3rem 0 1rem 0 !important;
+    list-style: none !important;
+
+    li {
+      display: inline-flex !important;
+      align-items: center !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 1.4 !important;
+      font-size: 0.98rem !important;
+
+      &::before {
+        display: none !important;
+      }
+
+      a {
+        padding: 2px 6px;
+      }
+    }
+  }
+}
+
+/* 第二層：子書卷收合（例如按書卷累積內部的各書卷） */
+details.collapsible-subheading {
+  margin: 0.6rem 0;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  background-color: var(--light);
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--gray);
+  }
+
+  & > summary.collapsible-sub-summary {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dark);
+    font-family: var(--headerFont);
+    border-radius: 5px;
+    transition: background-color 0.15s ease;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    .collapsible-sub-title {
+      display: inline-flex;
+      align-items: center;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 0.32rem;
+        height: 0.32rem;
+        border-right: 2px solid var(--darkgray);
+        border-bottom: 2px solid var(--darkgray);
+        transform: rotate(-45deg);
+        margin-right: 0.6rem;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  &[open] {
+    & > summary.collapsible-sub-summary {
+      border-bottom: 1px solid var(--lightgray);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: rgba(0, 0, 0, 0.02);
+
+      .collapsible-sub-title::before {
+        transform: rotate(45deg);
+        margin-top: -2px;
+      }
+    }
+  }
+
+  .collapsible-sub-content {
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+  }
 }

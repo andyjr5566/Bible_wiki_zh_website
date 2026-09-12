@@ -79,29 +79,6 @@ Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' 
 
 Write-Host 'Content sync completed.'
 
-# ── Ensure Book Directory Index (全書目錄及綱要 -> index.md) ────
-Get-ChildItem -Path $target -Directory | Where-Object { $_.Name -match '^[0-9]' } | ForEach-Object {
-    $outlineFile = Join-Path $_.FullName '全書目錄及綱要.md'
-    $indexFile = Join-Path $_.FullName 'index.md'
-    if (Test-Path $outlineFile) {
-        $content = Get-Content -LiteralPath $outlineFile -Raw -Encoding UTF8
-        $cleanBookName = $_.Name -replace '^[0-9]+\s*', ''
-        if ($content -notmatch '^---\r?\n') {
-            $header = @"
----
-title: $($_.Name)
-aliases:
-  - 全書目錄及綱要
-  - $($_.Name)/全書目錄及綱要
----
-
-"@
-            $content = $header + $content
-        }
-        Set-Content -LiteralPath $indexFile -Value $content -Encoding UTF8
-    }
-}
-Write-Host 'Book directory index.md generation completed.'
 
 # ── Compile config/collapse-rules.txt to quartz/static/collapse-rules.json ──
 $rulesTxtPath = Join-Path $repoPath 'config\collapse-rules.txt'

@@ -8,6 +8,8 @@ import spaRouterScript from "../../components/scripts/spa.inline"
 import popoverScript from "../../components/scripts/popover.inline"
 // @ts-ignore
 import collapsibleScript from "../../components/scripts/collapsible.inline"
+// @ts-ignore
+import bookNavScript from "../../components/scripts/bookNavigation.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -94,6 +96,10 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Collapsible sections (素雅手風琴段落折疊)
   componentResources.afterDOMLoaded.push(collapsibleScript)
+
+  // Book navigation (書卷目錄直達「全書目錄及綱要」)
+  componentResources.beforeDOMLoaded.push(bookNavScript)
+  componentResources.afterDOMLoaded.push(bookNavScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

@@ -10,8 +10,26 @@ function Sync-WithRobocopy {
         [Parameter(Mandatory = $true)]
         [string]$DestinationPath,
 
-        [string]$FileName
+        [string]$FileName,
+
+        # Mirror mode: also delete files in the destination that no longer exist
+        # in the source (renamed / removed in Obsidian). Without this, robocopy
+        # only adds and overwrites, so stale files pile up in the repo and can
+        # break the CI build (e.g. old TypeScript files left after a project swap).
+        [switch]$Mirror,
+
+        # Extra directory names to skip (matched at any depth, never purged).
+        [string[]]$ExcludeDir = @()
     )
+
+    if ($Mirror -and -not $FileName) {
+        # Safety: an empty/unreadable source must never wipe the destination.
+        $hasFiles = Get-ChildItem -LiteralPath $SourcePath -Recurse -File -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+        if (-not $hasFiles) {
+            throw "Refusing to mirror: source is empty: $SourcePath"
+        }
+    }
 
     New-Item -ItemType Directory -Path $DestinationPath -Force | Out-Null
 
@@ -36,10 +54,23 @@ function Sync-WithRobocopy {
         )
     }
     else {
+        if ($Mirror) {
+            # /PURGE deletes extras in the destination. Directories/files named in
+            # /XD and /XF are neither copied nor purged, so local build output
+            # (node_modules, dist) is left alone on both sides. /XO is omitted so
+            # the destination always converges to the source, even if the source
+            # file is older.
+            $robocopyArgs += @('/E', '/PURGE', '/XD')
+            $robocopyArgs += @('.tmp', 'node_modules', 'dist', '__pycache__')
+            $robocopyArgs += $ExcludeDir
+            $robocopyArgs += @('/XF', '*.pyc')
+        }
+        else {
+            $robocopyArgs += @('/E', '/XD', '.tmp')
+            $robocopyArgs += $ExcludeDir
+            $robocopyArgs += '/XO'
+        }
         $robocopyArgs += @(
-            '/E',
-            '/XD', '.tmp',
-            '/XO',
             '/R:2',
             '/W:1',
             '/NFL',
@@ -64,7 +95,18 @@ foreach ($item in $items) {
     if (Test-Path $itemPath) {
         if ((Get-Item -LiteralPath $itemPath).PSIsContainer) {
             $destination = Join-Path $target $item
-            Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination
+            if ($item -eq 'appendix') {
+                # Everything under appendix/ except the website apps is additive;
+                # the website apps are mirrored separately below.
+                Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination -ExcludeDir 'website'
+                $websiteSrc = Join-Path $itemPath 'website'
+                if (Test-Path -LiteralPath $websiteSrc) {
+                    Sync-WithRobocopy -SourcePath $websiteSrc -DestinationPath (Join-Path $destination 'website') -Mirror
+                }
+            }
+            else {
+                Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination
+            }
         }
         else {
             Sync-WithRobocopy -SourcePath $source -DestinationPath $target -FileName $item
@@ -74,7 +116,7 @@ foreach ($item in $items) {
 
 Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' } | ForEach-Object {
     $destination = Join-Path $target $_.Name
-    Sync-WithRobocopy -SourcePath $_.FullName -DestinationPath $destination
+    Sync-WithRobocopy -SourcePath $_.FullName -DestinationPath $destination -Mirror
 }
 
 Write-Host 'Content sync completed.'
@@ -115,7 +157,7 @@ $websiteSource = Join-Path $source 'appendix\website'
 $staticWebsiteTarget = Join-Path $repoPath 'quartz\static\website'
 
 if (Test-Path $websiteSource) {
-    Sync-WithRobocopy -SourcePath $websiteSource -DestinationPath $staticWebsiteTarget
+    Sync-WithRobocopy -SourcePath $websiteSource -DestinationPath $staticWebsiteTarget -Mirror
     Write-Host 'Static website assets synced to quartz/static/website.'
 }
 

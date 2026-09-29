@@ -1,82 +1,239 @@
-npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
-npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
-added 273 packages, and audited 274 packages in 4s
+added 55 packages, and audited 56 packages in 2s
 
-65 packages are looking for funding
+12 packages are looking for funding
   run `npm fund` for details
 
-7 vulnerabilities (3 moderate, 3 high, 1 critical)
+5 vulnerabilities (3 moderate, 1 high, 1 critical)
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
 
 Run `npm audit` for details.
 
-> interactive-biblical-tabernacle@1.0.0 build
+> exodus-tabernacle-pattern@1.0.0 build
 > npm run verify && vite build
 
 
-> interactive-biblical-tabernacle@1.0.0 verify
-> npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets
+> exodus-tabernacle-pattern@1.0.0 verify
+> npm run typecheck && npm run test
 
 
-> interactive-biblical-tabernacle@1.0.0 typecheck
+> exodus-tabernacle-pattern@1.0.0 typecheck
 > tsc --noEmit
 
-
-> interactive-biblical-tabernacle@1.0.0 test
-> vitest run
-
-
-[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章[39m
-
- [32m✓[39m src/systems/CinematicTourController.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 16[2mms[22m[39m
- [32m✓[39m src/data/ProjectData.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 12[2mms[22m[39m
- [32m✓[39m src/systems/assets/AssetRuntimeManager.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 21[2mms[22m[39m
- [32m✓[39m src/systems/assets/AssetLoader.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 18[2mms[22m[39m
- [32m✓[39m src/systems/assets/AssetManifest.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 8[2mms[22m[39m
- [32m✓[39m src/systems/MapModeManager.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 23[2mms[22m[39m
- [32m✓[39m src/scene/WorldAlignment.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 23[2mms[22m[39m
- [32m✓[39m src/scene/CameraManager.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 6[2mms[22m[39m
- [32m✓[39m src/controls/InputManager.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 5[2mms[22m[39m
- [32m✓[39m src/controls/PlayerController.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 7[2mms[22m[39m
- [32m✓[39m src/systems/TourManager.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 4[2mms[22m[39m
- [32m✓[39m src/systems/CollisionWorld.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
- [32m✓[39m src/ui/UIStateManager.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 9[2mms[22m[39m
- [32m✓[39m src/scripture/ScriptureMappingService.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 5[2mms[22m[39m
- [32m✓[39m src/rituals/RitualPlaybackController.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 11[2mms[22m[39m
- [32m✓[39m src/systems/InteractionSystem.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
-
-[2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
-[2m      Tests [22m [1m[32m33 passed[39m[22m[90m (33)[39m
-[2m   Start at [22m 01:44:50
-[2m   Duration [22m 2.38s[2m (transform 531ms, setup 0ms, collect 1.75s, tests 175ms, environment 3ms, prepare 1.59s)[22m
-
-
-> interactive-biblical-tabernacle@1.0.0 verify:architecture
-> node scripts/verify-architecture.mjs
-
-Architecture boundaries verified across 81 TypeScript modules.
-
-> interactive-biblical-tabernacle@1.0.0 verify:assets
-> node scripts/verify-assets.mjs
-
-node:internal/fs/promises:639
-  return new FileHandle(await PromisePrototypeThen(
-                        ^
-
-Error: ENOENT: no such file or directory, open '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章/public/models/manifest.json'
-    at async open (node:internal/fs/promises:639:25)
-    at async readFile (node:internal/fs/promises:1252:14)
-    at async file:///home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/%E5%87%BA%E5%9F%83%E5%8F%8A%E8%A8%98/%E7%AC%AC25%E7%AB%A0/scripts/verify-assets.mjs:8:35 {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章/public/models/manifest.json'
-}
-
-Node.js v22.23.2
+src/app/AppKernel.ts(41,71): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/app/AppKernel.ts(41,74): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/app/AppKernel.ts(41,104): error TS7006: Parameter 'tour' implicitly has an 'any' type.
+src/app/AppKernel.ts(251,48): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(251,94): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(251,98): error TS7031: Binding element 'label' implicitly has an 'any' type.
+src/app/AppKernel.ts(251,105): error TS7031: Binding element 'ritualId' implicitly has an 'any' type.
+src/app/AppKernel.ts(251,115): error TS7031: Binding element 'instruction' implicitly has an 'any' type.
+src/app/AppKernel.ts(267,79): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(268,75): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(268,125): error TS7006: Parameter 'excerpt' implicitly has an 'any' type.
+src/app/AppKernel.ts(268,171): error TS7006: Parameter 'text' implicitly has an 'any' type.
+src/app/AppKernel.ts(281,105): error TS7006: Parameter 'excerpt' implicitly has an 'any' type.
+src/app/AppKernel.ts(302,66): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(302,70): error TS7031: Binding element 'name' implicitly has an 'any' type.
+src/app/AppKernel.ts(305,73): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(308,52): error TS7006: Parameter 'claim' implicitly has an 'any' type.
+src/app/AppKernel.ts(308,122): error TS7006: Parameter 'claim' implicitly has an 'any' type.
+src/app/AppKernel.ts(314,47): error TS7006: Parameter 'reference' implicitly has an 'any' type.
+src/app/AppKernel.ts(315,63): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(321,64): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(322,80): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(328,40): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/app/AppKernel.ts(328,44): error TS7031: Binding element 'label' implicitly has an 'any' type.
+src/app/AppKernel.ts(328,51): error TS7031: Binding element 'claimIds' implicitly has an 'any' type.
+src/app/AppKernel.ts(329,51): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/app/AppKernel.ts(401,58): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(402,49): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/app/AppKernel.ts(406,59): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(407,45): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/app/AppKernel.ts(473,44): error TS7006: Parameter 'source' implicitly has an 'any' type.
+src/app/AppKernel.ts(598,54): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/app/AppKernel.ts(654,57): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/audio/AudioManager.ts(7,3): error TS6133: '#lastPosition' is declared but its value is never read.
+src/audio/AudioSynthesizer.ts(15,3): error TS6133: '#windSource' is declared but its value is never read.
+src/components/AppShell.ts(182,11): error TS6133: 'isMobile' is declared but its value is never read.
+src/components/ExperiencePanel.ts(6,7): error TS6133: 'confidenceLabels' is declared but its value is never read.
+src/components/ExperiencePanel.ts(13,7): error TS6133: 'scriptureContextLabels' is declared but its value is never read.
+src/components/ExperiencePanel.ts(23,7): error TS6133: 'profileLabels' is declared but its value is never read.
+src/components/ExperiencePanel.ts(112,10): error TS6133: 'renderParts' is declared but its value is never read.
+src/components/ExperiencePanel.ts(130,10): error TS6133: 'renderOfferingComparison' is declared but its value is never read.
+src/components/ExperiencePanel.ts(136,10): error TS6133: 'renderCharacter' is declared but its value is never read.
+src/components/ExperiencePanel.ts(152,10): error TS6133: 'renderRitual' is declared but its value is never read.
+src/components/MiniMap.ts(12,3): error TS6133: '#playerCone' is declared but its value is never read.
+src/data/ProjectData.test.ts(10,53): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(11,54): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(12,60): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(13,51): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(14,48): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(20,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(23,38): error TS7006: Parameter 'object' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(24,35): error TS7006: Parameter 'ritual' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(26,29): error TS7006: Parameter 'step' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(26,115): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(26,186): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(26,259): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(26,292): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(28,39): error TS7006: Parameter 'passage' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(30,40): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(31,40): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(32,42): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(33,43): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(35,58): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(36,35): error TS7006: Parameter 'claim' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(38,35): error TS7031: Binding element 'sourceId' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(40,71): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(41,41): error TS7006: Parameter 'detail' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(44,29): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+src/data/ProjectData.test.ts(45,29): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+src/data/ProjectData.test.ts(46,29): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(46,60): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'Set<string>'.
+  Type 'unknown' is not assignable to type 'string'.
+src/data/ProjectData.test.ts(49,31): error TS7006: Parameter 'tour' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(52,32): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(54,39): error TS7006: Parameter 'mapping' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(57,30): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(59,47): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(60,47): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(63,59): error TS7031: Binding element 'role' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(64,40): error TS7031: Binding element 'slot' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(67,58): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(68,56): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(69,57): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(70,40): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(71,35): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(72,37): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(73,28): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(73,66): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(75,37): error TS7006: Parameter 'animal' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(76,38): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(80,38): error TS7006: Parameter 'branch' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(81,53): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(85,44): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(86,44): error TS7031: Binding element 'animalId' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(87,43): error TS7031: Binding element 'ritualId' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(93,38): error TS7006: Parameter 'branch' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(97,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(98,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(99,36): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(106,38): error TS7031: Binding element 'actorRole' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(110,58): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(111,61): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(114,41): error TS7006: Parameter 'comparison' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(115,42): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(119,47): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(120,47): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(124,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(126,36): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(140,76): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(185,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(186,38): error TS7031: Binding element 'characterIds' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(186,91): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(192,43): error TS7031: Binding element 'actorRole' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(193,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/ProjectData.test.ts(195,52): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/schemas/assetParts.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/assets.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/characters.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/dimensions.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/evidence.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/garments.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/locations.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/objectDetails.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/offerings.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/rituals.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/scriptureEvidence.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/scriptures.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/shared.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/tabernacle.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/schemas/tours.ts(1,19): error TS2307: Cannot find module 'zod' or its corresponding type declarations.
+src/data/validateProjectData.ts(24,62): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(25,78): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(26,74): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(27,9): error TS6133: 'roleIds' is declared but its value is never read.
+src/data/validateProjectData.ts(27,73): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(28,77): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(29,78): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(30,89): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(31,70): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(32,80): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(33,79): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(34,66): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(35,82): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(36,89): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(37,76): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(38,73): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(39,73): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(47,36): error TS7006: Parameter 'object' implicitly has an 'any' type.
+src/data/validateProjectData.ts(51,39): error TS7006: Parameter 'detail' implicitly has an 'any' type.
+src/data/validateProjectData.ts(54,60): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(57,27): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/data/validateProjectData.ts(60,33): error TS7006: Parameter 'claim' implicitly has an 'any' type.
+src/data/validateProjectData.ts(62,31): error TS7006: Parameter 'reference' implicitly has an 'any' type.
+src/data/validateProjectData.ts(64,39): error TS7006: Parameter 'character' implicitly has an 'any' type.
+src/data/validateProjectData.ts(68,52): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(70,33): error TS7006: Parameter 'garment' implicitly has an 'any' type.
+src/data/validateProjectData.ts(71,40): error TS7006: Parameter 'role' implicitly has an 'any' type.
+src/data/validateProjectData.ts(73,33): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/data/validateProjectData.ts(74,72): error TS7006: Parameter 'role' implicitly has an 'any' type.
+src/data/validateProjectData.ts(76,59): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(77,26): error TS7006: Parameter 'part' implicitly has an 'any' type.
+src/data/validateProjectData.ts(82,36): error TS7006: Parameter 'role' implicitly has an 'any' type.
+src/data/validateProjectData.ts(84,40): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/data/validateProjectData.ts(85,42): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/data/validateProjectData.ts(87,41): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/data/validateProjectData.ts(91,35): error TS7006: Parameter 'animal' implicitly has an 'any' type.
+src/data/validateProjectData.ts(96,36): error TS7006: Parameter 'branch' implicitly has an 'any' type.
+src/data/validateProjectData.ts(100,51): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(103,39): error TS7006: Parameter 'comparison' implicitly has an 'any' type.
+src/data/validateProjectData.ts(105,37): error TS7006: Parameter 'mapping' implicitly has an 'any' type.
+src/data/validateProjectData.ts(108,74): error TS7031: Binding element 'partId' implicitly has an 'any' type.
+src/data/validateProjectData.ts(114,65): error TS7031: Binding element 'assetId' implicitly has an 'any' type.
+src/data/validateProjectData.ts(116,33): error TS7006: Parameter 'ritual' implicitly has an 'any' type.
+src/data/validateProjectData.ts(118,60): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(119,47): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(120,44): error TS7031: Binding element 'order' implicitly has an 'any' type.
+src/data/validateProjectData.ts(120,69): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/data/validateProjectData.ts(120,72): error TS7006: Parameter 'b' implicitly has an 'any' type.
+src/data/validateProjectData.ts(121,25): error TS7006: Parameter 'order' implicitly has an 'any' type.
+src/data/validateProjectData.ts(121,32): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/data/validateProjectData.ts(122,27): error TS7006: Parameter 'step' implicitly has an 'any' type.
+src/data/validateProjectData.ts(124,31): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(125,34): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(126,33): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(126,85): error TS2345: Argument of type 'Set<unknown>' is not assignable to parameter of type 'ReadonlySet<string>'.
+  Types of property 'forEach' are incompatible.
+    Type '(callbackfn: (value: unknown, value2: unknown, set: Set<unknown>) => void, thisArg?: any) => void' is not assignable to type '(callbackfn: (value: string, value2: string, set: ReadonlySet<string>) => void, thisArg?: any) => void'.
+      Types of parameters 'callbackfn' and 'callbackfn' are incompatible.
+        Types of parameters 'value' and 'value' are incompatible.
+          Type 'unknown' is not assignable to type 'string'.
+src/data/validateProjectData.ts(136,32): error TS7031: Binding element 'stepId' implicitly has an 'any' type.
+src/data/validateProjectData.ts(140,27): error TS7006: Parameter 'step' implicitly has an 'any' type.
+src/data/validateProjectData.ts(146,37): error TS7006: Parameter 'passage' implicitly has an 'any' type.
+src/data/validateProjectData.ts(147,38): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(148,38): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(149,40): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(150,41): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(152,29): error TS7006: Parameter 'tour' implicitly has an 'any' type.
+src/data/validateProjectData.ts(155,30): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(158,55): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(159,23): error TS7006: Parameter 'hotspot' implicitly has an 'any' type.
+src/data/validateProjectData.ts(161,35): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/data/validateProjectData.ts(165,34): error TS7006: Parameter 'spec' implicitly has an 'any' type.
+src/data/validateProjectData.ts(166,44): error TS7006: Parameter 'excerpt' implicitly has an 'any' type.
+src/data/validateProjectData.ts(167,29): error TS7006: Parameter 'range' implicitly has an 'any' type.
+src/rituals/RitualVisualSystem.test.ts(10,62): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/scene/CameraManager.ts(25,12): error TS6133: '#dimensionSpecs' is declared but its value is never read.
+src/scene/WorldAlignment.test.ts(16,58): error TS7031: Binding element 'id' implicitly has an 'any' type.
+src/systems/MapModeManager.test.ts(12,30): error TS7006: Parameter 'location' implicitly has an 'any' type.
+src/systems/assets/AssetLoader.test.ts(18,64): error TS7031: Binding element 'id' implicitly has an 'any' type.
 [依賴] static/website/出埃及記/第25章
 [建置] static/website/出埃及記/第25章
 Traceback (most recent call last):
@@ -89,4 +246,4 @@ Traceback (most recent call last):
     subprocess.run([npm_command, "run", "build"], cwd=app, check=True)
   File "/usr/lib/python3.12/subprocess.py", line 571, in run
     raise CalledProcessError(retcode, process.args,
-subprocess.CalledProcessError: Command '['npm', 'run', 'build']' returned non-zero exit status 1.
+subprocess.CalledProcessError: Command '['npm', 'run', 'build']' returned non-zero exit status 2.

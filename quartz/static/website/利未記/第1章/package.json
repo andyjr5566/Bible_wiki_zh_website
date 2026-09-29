@@ -1,0 +1,29 @@
+{
+  "name": "leviticus-offerings-guide",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "利未記 1–9 章五祭與祭司承接聖職的互動導覽（非商業教育用途）",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 3011",
+    "build": "npm run verify && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4181",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "verify": "npm run typecheck && npm run test",
+    "verses": "node scripts/build-verses.mjs"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "rollup": "4.62.4"
+  }
+}

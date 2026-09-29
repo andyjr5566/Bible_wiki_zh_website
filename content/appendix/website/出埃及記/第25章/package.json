@@ -1,32 +1,29 @@
 {
-  "name": "interactive-biblical-tabernacle",
+  "name": "exodus-tabernacle-pattern",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Non-commercial high-fidelity interactive Biblical Tabernacle architecture skeleton",
+  "description": "出埃及記 25–27 章會幕的互動導覽（非商業教育用途）",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 3001",
+    "dev": "vite --host 127.0.0.1 --port 3021",
     "build": "npm run verify && vite build",
-    "preview": "vite preview --host 127.0.0.1",
+    "preview": "vite preview --host 127.0.0.1 --port 4191",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "verify:architecture": "node scripts/verify-architecture.mjs",
-    "verify:assets": "node scripts/verify-assets.mjs",
-    "verify:derived": "node scripts/verify-derived-assets.mjs",
-    "verify": "npm run typecheck && npm run test && npm run verify:architecture && npm run verify:assets",
-    "process:assets": "node scripts/process-sketchfab-assets.mjs",
-    "build:excerpts": "node scripts/build-scripture-excerpts.mjs"
+    "verify": "npm run typecheck && npm run test",
+    "verses": "node scripts/build-verses.mjs"
   },
   "dependencies": {
-    "three": "^0.162.0",
-    "zod": "^3.23.8"
+    "three": "^0.170.0"
   },
   "devDependencies": {
-    "@gltf-transform/cli": "^4.2.0",
-    "@types/three": "^0.162.0",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.0",
-    "vitest": "^2.0.5"
+    "@types/node": "^22.10.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "rollup": "4.62.4"
   }
 }

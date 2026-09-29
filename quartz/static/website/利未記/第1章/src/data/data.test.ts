@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -8,6 +8,13 @@ import type { Ref } from './types';
 
 /** vault 根目錄：appendix/website/利未記/第1章/src/data → 上六層 */
 const ROOT = resolve(__dirname, '../../../../../..');
+
+/**
+ * 這幾項要對照 vault 裡的 raw_scripture 和章節主檔，只有在 vault 內才跑得動。
+ * repo（CI）只帶著已產生的 verses.json，沒有這些來源檔，所以在那裡略過，
+ * 不然 CI 會因為找不到檔案而建置失敗。經文一致性由 vault 內的本機測試把關。
+ */
+const IN_VAULT = existsSync(resolve(ROOT, 'raw_scripture', '利未記'));
 const BOOKS: Record<string, string> = { 利: '利未記', 出: '出埃及記' };
 
 const chapterCache = new Map<string, string[]>();
@@ -46,7 +53,7 @@ describe('經文出處與逐字引文', () => {
     expect(items.length).toBeGreaterThan(150);
   });
 
-  it('每個出處都指向存在的經節', () => {
+  it.skipIf(!IN_VAULT)('每個出處都指向存在的經節', () => {
     const bad: string[] = [];
     for (const it of items) for (const r of it.refs ?? []) {
       try {
@@ -58,7 +65,7 @@ describe('經文出處與逐字引文', () => {
     expect(bad).toEqual([]);
   });
 
-  it('每一段「」摘句都逐字出現在所引經節（和合本 raw_scripture）', () => {
+  it.skipIf(!IN_VAULT)('每一段「」摘句都逐字出現在所引經節（和合本 raw_scripture）', () => {
     const bad: string[] = [];
     for (const it of items) {
       if (!it.q) continue;
@@ -79,7 +86,7 @@ describe('經文出處與逐字引文', () => {
 });
 
 describe('註釋家的話', () => {
-  it('每一句引用都逐字出現在利未記該章主檔', () => {
+  it.skipIf(!IN_VAULT)('每一句引用都逐字出現在利未記該章主檔', () => {
     const bad: string[] = [];
     for (const v of allVoices()) {
       if (!v.quote) continue;
@@ -113,7 +120,7 @@ describe('分支結構', () => {
 });
 
 describe('verses.json', () => {
-  it('和 raw_scripture 完全一致（改了經文檔要重跑 npm run verses）', async () => {
+  it.skipIf(!IN_VAULT)('和 raw_scripture 完全一致（改了經文檔要重跑 npm run verses）', async () => {
     // @ts-expect-error — plain .mjs helper without types
     const { buildVerses } = await import('../../scripts/build-verses.mjs');
     const onDisk = JSON.parse(readFileSync(resolve(__dirname, 'verses.json'), 'utf8'));

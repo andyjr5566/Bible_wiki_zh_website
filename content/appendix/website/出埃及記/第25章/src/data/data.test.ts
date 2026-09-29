@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -8,6 +8,13 @@ import type { Ref } from './types';
 
 /** vault 根目錄：appendix/website/出埃及記/第25章/src/data → 上六層 */
 const ROOT = resolve(__dirname, '../../../../../..');
+
+/**
+ * 這幾項要對照 vault 裡的 raw_scripture 和章節主檔，只有在 vault 內才跑得動。
+ * repo（CI）只帶著已產生的 verses.json，沒有這些來源檔，所以在那裡略過，
+ * 不然 CI 會因為找不到檔案而建置失敗。經文一致性由 vault 內的本機測試把關。
+ */
+const IN_VAULT = existsSync(resolve(ROOT, 'raw_scripture', '出埃及記'));
 
 const cache = new Map<number, string[]>();
 function verses(ch: number): string[] {
@@ -41,14 +48,14 @@ function chapterMd(ch: number): string {
 describe('經文出處與逐字引文', () => {
   const facts = allFacts();
   it('有資料可以檢查', () => expect(facts.length).toBeGreaterThan(80));
-  it('每個出處都指向存在的經節', () => {
+  it.skipIf(!IN_VAULT)('每個出處都指向存在的經節', () => {
     const bad: string[] = [];
     for (const f of facts) for (const r of f.refs ?? []) {
       try { refText(r); } catch (e) { bad.push(`${(e as Error).message}（${f.text}）`); }
     }
     expect(bad).toEqual([]);
   });
-  it('每一段摘句都逐字出現在所引經節（和合本 raw_scripture）', () => {
+  it.skipIf(!IN_VAULT)('每一段摘句都逐字出現在所引經節（和合本 raw_scripture）', () => {
     const bad = facts.filter((f) => f.q && !(f.refs ?? []).map(refText).join('').includes(f.q)).map((f) => `「${f.q}」不在 ${f.refs?.join('、')}`);
     expect(bad).toEqual([]);
   });
@@ -58,7 +65,7 @@ describe('經文出處與逐字引文', () => {
 });
 
 describe('註釋家的話', () => {
-  it('引號裡的話逐字出現在出埃及記該章主檔的「」內', () => {
+  it.skipIf(!IN_VAULT)('引號裡的話逐字出現在出埃及記該章主檔的「」內', () => {
     const bad: string[] = [];
     for (const v of allVoices()) {
       if (!v.quote) continue;
@@ -79,7 +86,7 @@ describe('導覽', () => {
 });
 
 describe('verses.json', () => {
-  it('和 raw_scripture 完全一致（改了經文檔要重跑 npm run verses）', async () => {
+  it.skipIf(!IN_VAULT)('和 raw_scripture 完全一致（改了經文檔要重跑 npm run verses）', async () => {
     // @ts-expect-error — plain .mjs helper without types
     const { buildVerses } = await import('../../scripts/build-verses.mjs');
     expect(JSON.parse(readFileSync(resolve(__dirname, 'verses.json'), 'utf8'))).toEqual(buildVerses());

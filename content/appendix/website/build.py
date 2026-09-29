@@ -35,6 +35,9 @@ from pathlib import Path
 from typing import Iterable
 
 CATEGORY_NAME = "互動網站"
+# 宣告這個就會讓 util/build_appendix_links.py 把本類連結也依章節順序整理進
+# 各卷的「全書目錄及綱要.md」（值是那一段的標題）。不想進目錄頁就刪掉這一行。
+BOOK_INDEX_HEADING = "🕹️ 互動網站"
 CATEGORY_DIR = Path(__file__).resolve().parent
 REPOSITORY_ROOT = CATEGORY_DIR.parent.parent
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE | re.DOTALL)

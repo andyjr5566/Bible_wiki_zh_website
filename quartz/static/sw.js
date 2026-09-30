@@ -1,11 +1,15 @@
 const CACHE_NAME = "bible-wiki-zh-v1"
 
+// Resolved relative to this script's own location so caching still works
+// when the site is deployed under a subpath (e.g. GitHub Pages).
+const ROOT_URL = new URL("../", self.location).href
+
 const APP_SHELL = [
-  "/",
-  "/static/manifest.json",
-  "/static/icons/icon-192.png",
-  "/static/icons/icon-512.png",
-  "/static/icons/apple-touch-icon.png",
+  ROOT_URL,
+  "./manifest.json",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/apple-touch-icon.png",
 ]
 
 self.addEventListener("install", (event) => {
@@ -37,7 +41,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone))
           return response
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/"))),
+        .catch(() => caches.match(request).then((cached) => cached || caches.match(ROOT_URL))),
     )
     return
   }

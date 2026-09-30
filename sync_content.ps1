@@ -183,30 +183,42 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
 }
 
 # ── Inject website guide navigation into content/index.md ────────
+# The vault's index.md has no guide section; it is owned by this script.
+# index.md is copied with /XO, so an older injected section can survive a sync:
+# always replace an existing section with the current text instead of skipping.
 $contentIndexPath = Join-Path $target 'index.md'
 if (Test-Path $contentIndexPath) {
     $indexContent = Get-Content -Path $contentIndexPath -Raw -Encoding UTF8
-    if ($indexContent -notmatch '功能教學與新手指南') {
-        $guideSection = @"
-
+    $guideSection = @"
 ## 🧭 功能教學與新手指南
 
-- [[教學/快速入門|🚀 快速入門（5 分鐘核心功能與導航導覽）]]
-- [[教學/如何查一個主題|🔍 如何查一個主題（全文、標籤、語意、反向連結）]]
-- [[教學/如何跨書卷找相關條目|🔗 如何跨書卷找相關條目（互文與圖譜探索）]]
-- [[教學/熱鍵與功能速查|⌨️ 熱鍵與功能速查（快捷鍵及 UI 對照表）]]
+> 第一次來？點頁面最上方的「開始互動導覽」，或在任何一頁按 ``?`` 打開說明中心。
+
+- [[教學/快速入門|🚀 快速入門（核心功能、延伸探索與常見問題）]]
+- [[教學/如何查一個主題|🔍 如何查一個主題（搜尋、分類資料夾、按書卷累積、反向連結）]]
+- [[教學/如何跨書卷找相關條目|🔗 如何跨書卷找相關條目（互文與關係圖譜）]]
+- [[教學/熱鍵與功能速查|⌨️ 熱鍵與功能速查（快捷鍵及畫面元件對照）]]
 - [[教學/註釋來源怎麼讀|📚 註釋來源怎麼讀（CT / GT / KC / BH / STEP 深度對照）]]
 
 ---
 "@
-        if ($indexContent -match '(?m)^## ✍️ 作者的話') {
-            $indexContent = $indexContent -replace '(?m)^## ✍️ 作者的話', ($guideSection + "`r`n`r`n## ✍️ 作者的話")
-        }
-        else {
-            $indexContent += "`r`n" + $guideSection
-        }
-        Set-Content -Path $contentIndexPath -Value $indexContent -Encoding UTF8
-        Write-Host 'Website guide navigation preserved in content/index.md.'
+    $guideSection = ($guideSection -replace "`r?`n", "`r`n") + "`r`n"
+    $evaluator = [System.Text.RegularExpressions.MatchEvaluator] { param($m) $guideSection }
+    $sectionPattern = '(?ms)^## 🧭 功能教學與新手指南\r?\n.*?^---[ \t]*\r?\n'
+
+    if ($indexContent -match $sectionPattern) {
+        $updated = [regex]::Replace($indexContent, $sectionPattern, $evaluator)
+    }
+    elseif ($indexContent -match '(?m)^## ✍️ 作者的話') {
+        $updated = [regex]::Replace($indexContent, '(?m)^## ✍️ 作者的話', [System.Text.RegularExpressions.MatchEvaluator] { param($m) $guideSection + "`r`n## ✍️ 作者的話" })
+    }
+    else {
+        $updated = $indexContent + "`r`n" + $guideSection
+    }
+
+    if ($updated -ne $indexContent) {
+        Set-Content -Path $contentIndexPath -Value $updated -Encoding UTF8 -NoNewline
+        Write-Host 'Website guide navigation updated in content/index.md.'
     }
 }
 

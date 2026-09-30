@@ -1,0 +1,37 @@
+{
+  "name": "聖經研讀知識庫",
+  "short_name": "聖經知識庫",
+  "description": "中文聖經研讀知識庫，串連經文、人物、地點、原文、歷史背景與神學主題。",
+  "lang": "zh-TW",
+  "dir": "ltr",
+
+  "start_url": "/",
+  "scope": "/",
+
+  "display": "standalone",
+  "orientation": "portrait",
+
+  "background_color": "#FAF7F0",
+  "theme_color": "#7A1C1C",
+
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

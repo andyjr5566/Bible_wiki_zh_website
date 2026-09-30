@@ -92,6 +92,15 @@ export default (() => {
         )}
 
         <link rel="icon" href={iconPath} />
+        <link rel="manifest" href={joinSegments(baseDir, "static/manifest.json")} />
+        <link
+          rel="apple-touch-icon"
+          href={joinSegments(baseDir, "static/icons/apple-touch-icon.png")}
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="聖經知識庫" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="theme-color" content="#7A1C1C" />
         <meta name="description" content={description} />
         <meta name="generator" content="Quartz" />
 
@@ -106,6 +115,21 @@ export default (() => {
             return resource
           }
         })}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ("serviceWorker" in navigator) {
+                window.addEventListener("load", function () {
+                  navigator.serviceWorker
+                    .register("${joinSegments(baseDir, "static/sw.js")}", { scope: "${baseDir}" })
+                    .catch(function (error) {
+                      console.error("Bible Wiki Service Worker registration failed:", error);
+                    });
+                });
+              }
+            `,
+          }}
+        />
         {fileData.slug === "index" && (
           <script
             dangerouslySetInnerHTML={{

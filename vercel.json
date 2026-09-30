@@ -1,5 +1,13 @@
 {
   "buildCommand": "node -e \"require('fs').rmSync('.quartz/plugins/semantic-search',{recursive:true,force:true})\" && npx quartz build",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/static/sw.js",
+      "headers": [
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    }
+  ]
 }

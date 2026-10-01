@@ -39,7 +39,7 @@ export function readingMore(read: { ch: number; from: number; to: number; title:
     const ps: HTMLElement[] = [];
     for (let v = r.from; v <= r.to; v++) {
       const t = verses[`利${r.ch}:${v}`];
-      if (t) ps.push(h('span', { class: 'rv' }, h('sup', null, `${r.ch}:${v}`), t));
+      if (t) ps.push(h('span', { class: 'rverse' }, h('sup', null, `${r.ch}:${v}`), t));
     }
     return h('section', null, h('h4', null, r.title), h('p', null, ...ps));
   }));

@@ -119,7 +119,7 @@ details.more[open] > summary { border-bottom: 1px solid var(--line); }
 .reading section + section { margin-top: 18px; }
 .reading h4 { font: 700 0.85em var(--sans); color: var(--bronze); margin-bottom: 6px; }
 .reading p { font-family: var(--serif); line-height: 2; margin: 0; }
-.reading .rv sup { font-family: var(--sans); color: var(--ink-3); font-size: 0.68em; margin: 0 3px 0 6px; }
+.reading .rverse sup { font-family: var(--sans); color: var(--ink-3); font-size: 0.68em; margin: 0 3px 0 6px; }
 .reading .src { font-family: var(--sans); font-size: 0.78em; color: var(--ink-3); margin-top: 10px; }
 
 .thing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }

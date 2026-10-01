@@ -22,7 +22,7 @@ const TourLauncher = ((() => {
         </span>
         <div class="wiki-tour-launcher-body">
           <strong>第一次來嗎？</strong>
-          <span>跟著讀一段〈出埃及記 12 章〉，約 2 分鐘學會搜尋、連結預覽、追主題和查來源。</span>
+          <span>跟著讀一段〈出埃及記 12 章〉，約 4 分鐘學會搜尋、連結預覽、追主題、查來源，還有一章的整理與地圖。</span>
         </div>
         <div class="wiki-tour-launcher-actions">
           <button class="bwz-btn primary" type="button" data-tour-open="true">

@@ -22,6 +22,10 @@ interface Step {
   gate?: boolean // 需要讀者操作才前進
   desktopOnly?: boolean // 需要滑鼠懸停
   side?: boolean // 泡泡優先放在目標旁邊（避開連結預覽）
+  match?: (slug: string) => boolean // 多個頁面都算「在這一站」，例如任何一張地圖
+  ensure?: () => void // 進站後（每次重新對位時）呼叫，用來展開折疊區之類
+  then?: string // 按「下一步」後直接帶到這一頁
+  nextLabel?: string
   targets: () => Element[]
   title: () => string
   text: () => string
@@ -40,12 +44,16 @@ const SLUG = {
   entry: "link_folder/歷史/逾越節羔羊",
   outline: "02-出埃及記/全書目錄及綱要",
   maps: "appendix/fhl_maps/地圖索引",
+  map: "appendix/fhl_maps/maps/018",
 }
+
+const MAP_PREFIX = "appendix/fhl_maps/maps/"
 
 const PAGE_TITLE: Record<string, string> = {
   [SLUG.home]: "首頁",
   [SLUG.ch12]: "出埃及記 第12章",
   [SLUG.entry]: "逾越節羔羊",
+  [SLUG.map]: "聖經地圖",
 }
 
 const TUTORIALS = [
@@ -149,6 +157,28 @@ const searchQuery = () => $<HTMLInputElement>(".search-bar")?.value ?? ""
 const lambLink = () =>
   $$<HTMLAnchorElement>(`article a.internal[data-slug="${SLUG.entry}"]`).find(visible) ?? null
 
+// 折疊區（本章知識節點、來源依據、按書卷累積）由 collapsible.inline.ts 包成 <details>，標題 h2 會被收進去
+const collapsible = (title: string) =>
+  $$<HTMLDetailsElement>("article details.collapsible-section").find(
+    (d) => $(".collapsible-title", d)?.textContent?.trim() === title,
+  ) ?? null
+
+const flowchart = () =>
+  $$("article code.mermaid")
+    .map((c) => c.closest("pre") ?? c)
+    .find(visible) ?? null
+
+const comparisonTable = () =>
+  $$("article .table-container").find((c) => visible(c) && !/前一章/.test(c.textContent ?? "")) ?? null
+
+const refsBlock = () =>
+  $$("article strong")
+    .find((x) => x.textContent?.trim() === "參考資料")
+    ?.closest("p") ?? null
+
+const onMapPage = (slug: string) => slug.startsWith(MAP_PREFIX)
+
+let nodesOpened = false
 let toolTouched = false
 let lambHovered = false
 let navSinceStep = false
@@ -205,7 +235,7 @@ const STEPS: Step[] = [
       const ol = $("article ol")
       return ol ? Array.from(ol.children).slice(0, 3) : []
     },
-    title: () => "紅字都可以點",
+    title: () => "有底色的詞都可以點",
     text: () =>
       "經文裡的人名、地名、原文詞和概念，各自連到一個知識條目。光是這一章就有 60 多個。",
   },
@@ -259,10 +289,101 @@ const STEPS: Step[] = [
     id: "sources",
     page: SLUG.entry,
     skill: "來源查證",
-    targets: () => withNext(document.getElementById("來源依據")).filter(visible),
+    targets: () => {
+      const d = collapsible("來源依據")
+      return (d ? [d] : withNext(document.getElementById("來源依據"))).filter(visible)
+    },
     title: () => "每句話都有出處",
     text: () =>
-      "條目最後列出經文出處和原始網址（CT、GT、KC、BH、STEP），可以自己回去核對。",
+      "條目最後的「來源依據」列出經文出處和原始網址（CT、GT、KC、BH、STEP），可以自己回去核對。這一區平常是收起來的，點標題就能展開。",
+    nextLabel: "回到第12章",
+    then: SLUG.ch12,
+  },
+  {
+    id: "nodes",
+    page: SLUG.ch12,
+    skill: "知識節點",
+    ensure: () => {
+      if (nodesOpened) return
+      const d = collapsible("本章知識節點")
+      if (!d) return
+      d.open = true
+      nodesOpened = true
+    },
+    targets: () => {
+      const d = collapsible("本章知識節點")
+      if (!d) return []
+      const h3 = $("h3", d)
+      return [$("summary", d), h3, h3?.nextElementSibling].filter(visible)
+    },
+    title: () => "這一章連到的條目，全收在這裡",
+    text: () =>
+      "「本章知識節點」把經文裡的連結依主題、歷史、原文、神學、人物、地點、文化、解經爭議、互文分類，一次看完。跟條目頁的「來源依據」一樣，平常是收起來的，點標題可以展開或收合。",
+  },
+  {
+    id: "digest",
+    page: SLUG.ch12,
+    skill: "本章整理",
+    targets: () => {
+      const h = document.getElementById("本章整理")
+      if (!h) return []
+      const paras: Element[] = []
+      for (let n = h.nextElementSibling; n && n.tagName === "P" && paras.length < 2; n = n.nextElementSibling)
+        paras.push(n)
+      return [h, ...paras].filter(visible)
+    },
+    title: () => "一章讀下來的重點",
+    text: () =>
+      "「本章整理」先交代 CT、GT、KC 怎麼切分這一章，再依經文分段（標題後面的 v1-14 是節數）。每段都標明是哪一家的說法，原文詞旁邊附 Strong 編號。",
+  },
+  {
+    id: "diagram",
+    page: SLUG.ch12,
+    skill: "圖表",
+    targets: () => [flowchart()].filter(visible),
+    title: () => "事件順序，畫成流程圖",
+    text: () =>
+      "有些段落附上流程圖，把先後次序畫出來：正月初十取羊、十四日黃昏宰羊、當夜塗血吃羊、半夜擊殺長子、十五日出埃及。",
+  },
+  {
+    id: "table",
+    page: SLUG.ch12,
+    targets: () => [comparisonTable()].filter(visible),
+    title: () => "看法不同，並排比一比",
+    text: () =>
+      "註釋家意見分歧的地方，會整理成比較表。例如「以色列人在埃及住了多久」，不同主張、算法和憑據並排對照。表格較寬時可以左右捲動。",
+  },
+  {
+    id: "refs",
+    page: SLUG.ch12,
+    skill: "參考資料",
+    targets: () => [refsBlock()].filter(visible),
+    title: () => "想看原文，從這裡點過去",
+    text: () =>
+      "每章整理的最後附上這一章用到的 CT、GT、KC、BH 原始網址。想讀註釋全文，或核對上面整理的內容，就從這裡點過去。",
+  },
+  {
+    id: "maps",
+    page: SLUG.ch12,
+    skill: "相關地圖",
+    gate: true,
+    targets: () => {
+      const h2 = document.getElementById("附錄")
+      const h3 = document.getElementById("相關地圖")
+      return [h2, h3, h3?.nextElementSibling].filter(visible)
+    },
+    title: () => "章節附的地圖",
+    text: () => "章節最下方的「附錄」放著這一章的相關地圖。點一張進去看看。",
+    done: () => onMapPage(currentSlug()),
+  },
+  {
+    id: "mapview",
+    page: SLUG.map,
+    match: onMapPage,
+    targets: () => $$("article img").filter(visible).slice(0, 1),
+    title: () => "附錄裡的聖經地圖",
+    text: () =>
+      "這是信望愛聖經地圖。圖下面的「地圖解說」依經文逐段說明，並連回相關章節。附錄目前還在整理中，內容和位置之後可能調整。",
   },
   {
     id: "comfort",
@@ -285,7 +406,7 @@ const STEPS: Step[] = [
     title: () => "還有更多可以探索",
     text: () =>
       "每卷書〈全書目錄及綱要〉的最下方有<b>互動網站</b>和導讀影片，例如出埃及記的「照山上的樣式」。" +
-      `${isMobile() ? "選單裡" : "左邊"}的 appendix（附錄）則收了聖經地圖等延伸資料，目前還在整理中。`,
+      `${isMobile() ? "選單裡" : "左邊"}的 appendix（附錄）除了剛剛看到的地圖，之後還會放進其他延伸資料，目前還在整理中。`,
   },
 ]
 
@@ -309,9 +430,9 @@ function ensureDom(): HTMLElement {
     <div class="bwz-welcome" role="dialog" aria-label="第一次來訪提示" hidden>
       <div class="bwz-welcome-head">
         <span class="bwz-seal" aria-hidden="true">導</span>
-        <div><h3>第一次來嗎？</h3><div class="bwz-kicker">約 2 分鐘 · 可以隨時暫停</div></div>
+        <div><h3>第一次來嗎？</h3><div class="bwz-kicker">約 4 分鐘 · 可以隨時暫停</div></div>
       </div>
-      <p>跟著讀一段〈出埃及記 12 章〉，順手學會搜尋、連結預覽、追主題和查來源。</p>
+      <p>跟著讀一段〈出埃及記 12 章〉，順手學會搜尋、連結預覽、追主題、查來源，還有一章的整理與地圖。</p>
       <div class="bwz-row">
         <button class="bwz-btn primary" type="button" data-w="start">開始導覽</button>
         <button class="bwz-btn" type="button" data-w="later">之後再說</button>
@@ -413,6 +534,13 @@ function advance(skipped: boolean) {
     return
   }
   save()
+  const dest = !skipped && s.then ? s.then : null
+  const next = cur()
+  if (dest && next && currentSlug() !== dest) {
+    renderLeaving(next)
+    go(dest)
+    return
+  }
   show()
 }
 
@@ -454,9 +582,11 @@ function resetStepFlags(s: Step) {
   lastStepId = s.id
   navSinceStep = false
   lambHovered = false
+  nodesOpened = false
 }
 
-const onPage = (s: Step) => s.page === "any" || s.page === currentSlug()
+const onPage = (s: Step) =>
+  s.match ? s.match(currentSlug()) : s.page === "any" || s.page === currentSlug()
 
 function show() {
   if (st.status !== "active") return
@@ -477,6 +607,7 @@ function show() {
   }
 
   renderBubble(s)
+  s.ensure?.()
   bringIntoView(s.targets()[0])
   place(s)
 }
@@ -552,7 +683,7 @@ function renderBubble(s: Step) {
         ${
           s.gate
             ? `<button class="bwz-btn" type="button" data-t="skip">跳過這步</button>`
-            : `<button class="bwz-btn primary" type="button" data-t="next">${last ? "完成" : "下一步"}</button>`
+            : `<button class="bwz-btn primary" type="button" data-t="next">${last ? "完成" : (s.nextLabel ?? "下一步")}</button>`
         }
       </div>
     </div>`
@@ -580,6 +711,17 @@ function renderDetour(s: Step) {
       <button class="bwz-btn" type="button" data-t="pause">先暫停</button>
       <button class="bwz-btn primary" type="button" data-t="goto" data-page="${s.page}">帶我過去</button>
     </div></div>`
+}
+
+// 按「下一步」就要換頁時，先把泡泡換成過場，避免舊的聚光圈停在原地
+function renderLeaving(s: Step) {
+  setHole(null, true)
+  const b = el(".bwz-bubble")
+  b.className = "bwz-bubble bwz-dock"
+  b.style.left = ""
+  b.style.top = ""
+  b.dataset.step = "detour"
+  b.innerHTML = `<p class="bwz-text">正在回到〈${PAGE_TITLE[s.page] ?? s.page}〉…</p>`
 }
 
 function unionRect(els: Element[]) {
@@ -628,6 +770,7 @@ function place(s: Step) {
   if (st.status !== "active" || !onPage(s)) return
   const b = el(".bwz-bubble")
   if (b.dataset.step !== s.id) renderBubble(s)
+  s.ensure?.()
   // 文字會隨搜尋框開關而變，順手更新
   const textEl = $(".bwz-text", b)
   if (textEl && textEl.innerHTML !== s.text()) textEl.innerHTML = s.text()
@@ -722,6 +865,10 @@ function onBubbleClick(e: Event) {
         advance(true)
         if (cur()?.id === "result") advance(true)
         go(SLUG.ch12)
+      } else if (s.id === "maps") {
+        // 沒點地圖就不必看地圖頁，直接跳到下一個主題
+        advance(true)
+        if (cur()?.id === "mapview") advance(true)
       } else {
         advance(true)
         s.onSkip?.()
@@ -802,7 +949,7 @@ function openHelp() {
       ? `已完成 · 掌握 ${got} / ${total} 項技能`
       : st.status === "paused"
         ? `暫停在第 ${pausedAt} 站 · 已掌握 ${got} 項`
-        : `約 2 分鐘 · ${total} 項核心技能`
+        : `約 4 分鐘 · ${total} 項核心技能`
   const actions =
     st.status === "paused"
       ? `<button class="bwz-btn primary" type="button" data-h="resume">繼續</button><button class="bwz-btn" type="button" data-h="restart">從頭開始</button>`
@@ -818,7 +965,7 @@ function openHelp() {
     <div class="bwz-route">
       <div class="bwz-route-body">
         <div class="bwz-route-title">逾越節之旅</div>
-        <div class="bwz-route-meta">搜尋、經文連結、預覽、條目頁、反向連結、來源查證、閱讀設定。${status}</div>
+        <div class="bwz-route-meta">搜尋、經文連結、預覽、條目頁、反向連結、來源查證、本章整理、參考資料、相關地圖、閱讀設定。${status}</div>
         ${st.status === "paused" || st.status === "done" ? `<div class="bwz-meter"><span class="bwz-meter-fill" style="width:${pct}%"></span></div>` : ""}
       </div>
       <div class="bwz-row">${actions}</div>

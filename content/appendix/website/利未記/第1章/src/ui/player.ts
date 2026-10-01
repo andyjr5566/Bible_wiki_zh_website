@@ -1,6 +1,6 @@
 import type { Step, Variant } from '../data/types';
-import { fill, h, motionOff, svg } from './dom';
-import { badge, refChips } from './evidence';
+import { fill, h, animOff, svg } from './dom';
+import { quietBadge, refChips } from './evidence';
 import { ICONS } from './icons';
 import { createMap, type MapApi } from './map';
 import { ACTOR, PLACE_LABEL } from './meta';
@@ -113,7 +113,7 @@ export class Player {
     while (this.playing && my === this.token && this.i < this.steps.length - 1) {
       await this.go(this.i + 1);
       if (my !== this.token) return;
-      await new Promise((r) => setTimeout(r, motionOff() ? 1600 : 1100));
+      await new Promise((r) => setTimeout(r, animOff() ? 1600 : 1100));
     }
     if (my === this.token) this.stop();
   }
@@ -134,7 +134,7 @@ export class Player {
           const lr = this.list.getBoundingClientRect();
           const br = b.getBoundingClientRect();
           if (br.top < lr.top || br.bottom > lr.bottom) {
-            this.list.scrollTo({ top: this.list.scrollTop + br.top - lr.top - lr.height / 2 + br.height / 2, behavior: motionOff() ? 'auto' : 'smooth' });
+            this.list.scrollTo({ top: this.list.scrollTop + br.top - lr.top - lr.height / 2 + br.height / 2, behavior: animOff() ? 'auto' : 'smooth' });
           }
         }
       } else b.removeAttribute('aria-current');
@@ -167,7 +167,9 @@ export class Player {
         h('span', { style: 'margin-left:auto;font-weight:400;color:var(--ink-3)' }, `${i + 1} / ${steps.length}`)),
       h('div', { class: 'text' }, st.text),
       st.q ? h('div', null, h('span', { class: 'q' }, st.q), ' ', ...refChips(st.refs, st.q)) : h('div', null, ...refChips(st.refs)),
-      h('div', null, badge(st.status), st.later ? h('span', { style: 'font-size:.8em;color:var(--ink-3);margin-left:8px' }, '（事後／隔天）') : null),
+      st.status !== 'explicit' || st.later
+        ? h('div', null, quietBadge(st.status), st.later ? h('span', { style: 'font-size:.8em;color:var(--ink-3);margin-left:8px' }, '（事後／隔天）') : null)
+        : null,
       st.note ? h('div', { class: 'note' }, st.note) : null,
     );
     this.live.textContent = `第 ${i + 1} 步：${a.label}。${st.text}`;

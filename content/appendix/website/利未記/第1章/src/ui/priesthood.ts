@@ -1,12 +1,8 @@
-import VERSES from '../data/verses.json';
 import {
-  AARON_ORDER, BODY_MARKS, BODY_VOICES, EIGHTH_DAY, EIGHTH_DAY_ORDER_VOICES, GARMENTS, GARMENT_FACTS, GARMENT_VOICES,
-  ORDINATION, SEVEN_DAYS, SONS_ORDER, type TimelineItem,
+  AARON_ORDER, BODY_MARKS, BODY_VOICES, GARMENTS, GARMENT_FACTS, GARMENT_VOICES, SONS_ORDER, type TimelineItem,
 } from '../data/priesthood';
-import { fill, h, motionOff, svg, wait } from './dom';
+import { fill, h, svg } from './dom';
 import { factLine, interpHeading, refChips, voiceBlock } from './evidence';
-import { ICONS } from './icons';
-import { Player } from './player';
 
 /* ------------------------------------------------------------ 人物 SVG */
 
@@ -73,7 +69,7 @@ function figureSvg(): string {
 
 /* ------------------------------------------------------------ 穿聖衣 */
 
-function mountDress(host: HTMLElement) {
+export function mountDress(host: HTMLElement) {
   let who: 'aaron' | 'sons' = 'aaron';
   let worn: string[] = [];
   const fig = svg(figureSvg());
@@ -140,7 +136,7 @@ function mountDress(host: HTMLElement) {
 
 /* ------------------------------------------------------------ 抹血三處 */
 
-function mountMarks(host: HTMLElement) {
+export function mountMarks(host: HTMLElement) {
   const fig = svg(figureSvg());
   fig.removeAttribute('aria-hidden');
   fig.querySelectorAll<SVGGElement>('[data-g="tunic"],[data-g="sash"]').forEach((g) => g.classList.remove('off'));
@@ -162,116 +158,7 @@ function mountMarks(host: HTMLElement) {
 
 /* ------------------------------------------------------------ 第八天與那把火 */
 
-function timeline(items: TimelineItem[]) {
+export function timeline(items: TimelineItem[]) {
   return h('div', { class: 'timeline' }, ...items.map((t) => h('div', { class: 'tl', 'data-who': t.who ?? '', 'data-id': t.id },
     h('div', { class: 'day' }, t.day), h('h4', null, t.title), h('p', null, factLine(t.fact)))));
-}
-
-function finaleSvg(): string {
-  const people = Array.from({ length: 11 }, (_, i) => {
-    const x = 30 + i * 52;
-    return `<g class="person" data-i="${i}" transform="translate(${x} 250)"><circle cx="0" cy="-34" r="8" fill="var(--ink-2)"/><path d="M-10 0l4-26h12l4 26z" fill="var(--ink-2)"/></g>`;
-  }).join('');
-  return `
-<svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="第八天：火從耶和華面前出來，燒盡壇上的燔祭">
-  <defs>
-    <linearGradient id="sky8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2238"/><stop offset="1" stop-color="#8a5a3a"/></linearGradient>
-    <radialGradient id="glory"><stop offset="0" stop-color="#fff4c2"/><stop offset=".5" stop-color="#ffd27a" stop-opacity=".6"/><stop offset="1" stop-color="#ffb14a" stop-opacity="0"/></radialGradient>
-  </defs>
-  <rect width="600" height="300" fill="url(#sky8)"/>
-  <rect y="230" width="600" height="70" fill="#6b5236"/>
-  <g id="tent"><rect x="70" y="110" width="170" height="120" fill="#4a3a2e"/><rect x="70" y="104" width="170" height="10" fill="#8c3b2e"/><rect x="226" y="120" width="14" height="110" fill="#3553a0"/></g>
-  <circle id="glow8" cx="240" cy="160" r="10" fill="url(#glory)" opacity="0"/>
-  <g id="altar8" transform="translate(380 176)">
-    <rect x="-50" y="0" width="100" height="56" fill="#9a5a2a" stroke="#6e4526" stroke-width="3"/>
-    <path d="M-50 0l-6-14 12 0zM50 0l6-14-12 0z" fill="#b0703a"/>
-    <rect x="-34" y="-10" width="68" height="10" rx="3" fill="#c98a52"/>
-  </g>
-  <path id="bolt" d="M240 160 C 300 100, 340 110, 380 166" fill="none" stroke="#ffd27a" stroke-width="10" stroke-linecap="round" opacity="0"/>
-  <g id="fire8" transform="translate(380 170)" opacity="0">
-    <path d="M0-80c10 22 38 36 38 70A38 38 0 0 1-38-10c0-20 14-28 14-42 8 8 12 16 16 24 8-16 8-36 8-52z" fill="#ff8a2a"/>
-    <path d="M0-50c6 14 22 22 22 42A22 22 0 0 1-22-8c0-12 8-16 8-24 5 5 7 10 9 14 5-9 5-20 5-32z" fill="#ffe08a"/>
-  </g>
-  ${people}
-</svg>`;
-}
-
-function mountFinale(host: HTMLElement) {
-  const fig = svg(finaleSvg());
-  fig.removeAttribute('aria-hidden');
-  const v = (VERSES as Record<string, string>)['利9:24'];
-  const caption = h('div', { class: 'caption' }, h('span', { class: 'q' }, v), ' ', ...refChips(['利9:24']));
-  const play = h('button', { class: 'btn primary play', type: 'button', onclick: () => go() }, svg(ICONS.fire), '看第八天的結局');
-  const box = h('div', { class: 'card finale' }, fig, play, caption);
-  host.append(box);
-
-  async function go() {
-    box.classList.add('go');
-    const tl = host.closest('.pr-block')?.querySelectorAll<HTMLElement>('.tl') ?? [];
-    for (const t of tl) { t.classList.add('lit'); await wait(180); }
-    const glow = fig.querySelector<SVGCircleElement>('#glow8')!;
-    const bolt = fig.querySelector<SVGPathElement>('#bolt')!;
-    const fire = fig.querySelector<SVGGElement>('#fire8')!;
-    if (motionOff()) {
-      glow.setAttribute('opacity', '1'); glow.setAttribute('r', '120'); fire.setAttribute('opacity', '1');
-      fig.querySelectorAll<SVGGElement>('.person').forEach((p) => p.setAttribute('transform', p.getAttribute('transform') + ' rotate(70 0 0)'));
-      return;
-    }
-    glow.animate([{ opacity: 0, r: '10' }, { opacity: 1, r: '140' }], { duration: 1400, fill: 'forwards', easing: 'ease-out' });
-    await wait(900);
-    const len = bolt.getTotalLength();
-    bolt.style.strokeDasharray = `${len}`;
-    bolt.animate([{ strokeDashoffset: len, opacity: 1 }, { strokeDashoffset: 0, opacity: 1 }, { opacity: 0 }], { duration: 900, fill: 'forwards' });
-    await wait(700);
-    fire.animate([{ opacity: 0, transform: 'translate(380px,170px) scale(.2)' }, { opacity: 1, transform: 'translate(380px,170px) scale(1)' }, { opacity: 1, transform: 'translate(380px,170px) scale(.8)' }], { duration: 900, fill: 'forwards' });
-    await wait(800);
-    fig.querySelectorAll<SVGGElement>('.person').forEach((p, i) => {
-      const base = p.getAttribute('transform')!;
-      const x = +/translate\((\d+)/.exec(base)![1];
-      p.animate([{ transform: `translate(${x}px,250px)` }, { transform: `translate(${x}px,250px) translateY(-6px)` }, { transform: `translate(${x}px,262px) rotate(75deg)` }],
-        { duration: 1100, delay: i * 60, fill: 'forwards', easing: 'ease-in-out' });
-    });
-  }
-}
-
-/* ------------------------------------------------------------ mount */
-
-export function mountPriesthood(host: HTMLElement) {
-  // 1. 七天
-  const seven = h('div', { class: 'card', style: 'padding:16px' }, h('h3', { style: 'font-size:1.1em;margin-bottom:8px' }, '承接聖職的七天（利8）'), timeline(SEVEN_DAYS));
-  const dressHost = h('div');
-  mountDress(dressHost);
-  host.append(h('div', { class: 'pr-grid' }, seven, dressHost));
-
-  // 2. 三隻祭牲：摩西擔任祭司
-  const player = new Player({ compactList: true });
-  const choose = h('div', { class: 'axis', role: 'group', 'aria-label': '選一隻祭牲' }, h('span', null, '三隻祭牲'));
-  const load = (i: number) => {
-    choose.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-pressed', String(i === j)));
-    player.load(ORDINATION[i], 'var(--priest)');
-  };
-  ORDINATION.forEach((v, i) => choose.append(h('button', { class: 'opt', type: 'button', onclick: () => load(i) }, `${i + 1}. ${v.label}`)));
-  host.append(h('h3', { style: 'margin:30px 0 6px' }, '三隻祭牲，由摩西來獻'),
-    h('p', { style: 'color:var(--ink-2);font-size:.92em;max-width:760px' }, '亞倫和他兒子還沒有承接聖職，這一天由摩西做祭司的工作。先贖罪祭，再燔祭，最後是承接聖職的羊。'),
-    h('div', { class: 'axes' }, choose), player.el);
-  load(0);
-
-  // 3. 抹血
-  const marksHost = h('div', { style: 'margin-top:16px' });
-  mountMarks(marksHost);
-
-  // 4. 第八天
-  const eighth = h('div', { class: 'card pr-block', style: 'padding:16px' },
-    h('h3', { style: 'font-size:1.1em;margin-bottom:4px' }, '第八天：亞倫第一次獻祭（利9）'),
-    h('p', { style: 'font-size:.85em;color:var(--ink-2)' }, h('span', { style: 'color:var(--sin);font-weight:700' }, '■ 先為自己'), '　', h('span', { style: 'color:var(--peace);font-weight:700' }, '■ 再為百姓')),
-    timeline(EIGHTH_DAY), interpHeading(), ...EIGHTH_DAY_ORDER_VOICES.map(voiceBlock));
-  const finaleHost = h('div', { style: 'display:grid;gap:12px;align-content:start' });
-  mountFinale(finaleHost);
-  finaleHost.append(h('p', { style: 'font-size:.85em;color:var(--ink-3)' }, '這把火從哪裡來？經文沒說。註釋家有四種讀法，見下一區「經文沒說的事」。'));
-  eighth.append(finaleHost);
-  host.append(marksHost, h('div', { style: 'margin-top:16px' }, eighth));
-  // 讓 finale 能點亮第八天的時間軸
-  finaleHost.classList.add('pr-block');
-  const fin = finaleHost.querySelector('.finale')!;
-  fin.addEventListener('click', () => eighth.querySelectorAll('.tl').forEach((t, i) => setTimeout(() => t.classList.add('lit'), motionOff() ? 0 : i * 180)), { once: true });
 }

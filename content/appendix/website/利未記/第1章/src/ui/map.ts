@@ -1,5 +1,5 @@
 import type { Actor, Item, Move, PlaceId } from '../data/types';
-import { motionOff, s, wait } from './dom';
+import { animOff, s, wait } from './dom';
 import { ACTOR, ITEM_LABEL, PLACE_LABEL } from './meta';
 
 /**
@@ -122,14 +122,15 @@ export function createMap(): MapApi {
     // 營中、營外
     base.append(rect(862, 40, 128, 250, { rx: 14, fill: 'var(--surface)', stroke: 'var(--line-2)', 'stroke-dasharray': '6 5' }));
     base.append(text([926, 72], '營中', 'zone-label'));
-    base.append(text([926, 72], '獻祭者的家', 'small', 'middle', 22));
+    base.append(text([926, 72], '獻祭者的家', 'small', 'middle', 27));
     for (const [tx, ty] of [[892, 150], [950, 130], [910, 215], [960, 230]] as Pt[]) {
       const [x, y] = P([tx, ty]);
       base.append(s('path', { d: `M${x - 16} ${y + 10}L${x} ${y - 12}L${x + 16} ${y + 10}Z`, fill: 'var(--bg-2)', stroke: 'var(--line-2)' }));
     }
     base.append(rect(862, 330, 128, 250, { rx: 14, fill: 'color-mix(in srgb, var(--ink-3) 14%, var(--surface))', stroke: 'var(--line-2)', 'stroke-dasharray': '6 5' }));
     base.append(text([926, 362], '營外', 'zone-label'));
-    base.append(text([926, 362], '潔淨之地・倒灰之所', 'small', 'middle', 22));
+    base.append(text([926, 362], '潔淨之地', 'small', 'middle', 27));
+    base.append(text([926, 362], '倒灰之所', 'small', 'middle', 52));
     const [ox, oy] = P([926, 500]);
     base.append(s('ellipse', { cx: ox, cy: oy, rx: 34, ry: 12, fill: '#9a948d', opacity: 0.6 }));
 
@@ -169,8 +170,8 @@ export function createMap(): MapApi {
 
     // 院子（聖處）吃祭物的區域
     base.append(rect(372, 86, 120, 78, { rx: 12, fill: 'none', stroke: 'var(--line-2)', 'stroke-dasharray': '5 4' }));
-    base.append(text([432, 112], '會幕的院子', 'small'));
-    base.append(text([432, 112], '（聖處・祭司吃）', 'small', 'middle', 19));
+    base.append(text([372, 112], '會幕的院子', 'small'));
+    base.append(text([372, 112], '（聖處・祭司吃）', 'small', 'middle', 24));
 
     // 壇北邊
     base.append(rect(530, 150, 120, 58, { rx: 10, fill: 'none', stroke: 'var(--line-2)', 'stroke-dasharray': '5 4' }));
@@ -190,8 +191,8 @@ export function createMap(): MapApi {
     base.append(s('ellipse', { cx: ax, cy: ay, rx: 18, ry: 12, fill: '#9a948d', opacity: 0.7 }));
     base.append(text([724, 330], '倒灰處', 'small'));
     // 會幕門口（壇前）
-    base.append(text([770, 480], '會幕門口', 'small'));
-    base.append(text([770, 480], '（壇前）', 'small', 'middle', 19));
+    base.append(text([770, 508], '會幕門口', 'small'));
+    base.append(text([770, 508], '（壇前）', 'small', 'middle', 24));
 
     // 方位
     const [nx, ny] = P([60, 520]);
@@ -210,7 +211,7 @@ export function createMap(): MapApi {
     const flame = s('path', { d: FLAME, transform: `translate(${fx} ${fy + 8}) scale(1.1)`, fill: 'var(--fire)', opacity: 0.9 });
     const inner = s('path', { d: FLAME, transform: `translate(${fx} ${fy + 12}) scale(.6)`, fill: '#ffd27a' });
     fire.append(flame, inner);
-    if (!motionOff()) {
+    if (!animOff()) {
       flame.animate([{ opacity: 0.75 }, { opacity: 1 }, { opacity: 0.8 }], { duration: 900, iterations: Infinity });
     }
     fire.style.opacity = '0.35';
@@ -241,7 +242,7 @@ export function createMap(): MapApi {
       const label = ITEM_LABEL[item] ?? item;
       const w = 16 + label.length * 14;
       g.append(s('rect', { x: -w / 2, y: -12, width: w, height: 24, rx: 12, fill: st.fill, stroke: 'rgb(0 0 0 / 25%)' }));
-      g.append(s('text', { y: 5, 'text-anchor': 'middle', style: `font-size:13px;font-weight:700;fill:${st.ink}` }, label));
+      g.append(s('text', { y: 5, 'text-anchor': 'middle', style: `font-size:16px;font-weight:700;fill:${st.ink}` }, label));
     }
     return g;
   }
@@ -294,7 +295,7 @@ export function createMap(): MapApi {
       } else {
         el = s('path', { d: DROP, transform: `translate(${x} ${y}) scale(${to === 'veil' || to === 'incense' ? 0.8 : 0.9})`, fill: 'var(--blood)' });
       }
-      if (animate && !motionOff()) {
+      if (animate && !animOff()) {
         el.style.opacity = '0';
         el.animate([{ opacity: 0, transform: el.getAttribute('transform') + ' scale(0.2)' }, { opacity: 1 }], {
           duration: 260, delay: (to === 'veil' ? 380 : 55) * i, fill: 'forwards',
@@ -309,7 +310,7 @@ export function createMap(): MapApi {
       const counter = s('text', { x: cx, y: cy, 'text-anchor': 'middle', class: 'zone-label', style: 'fill:var(--blood)' }, animate ? '1' : `${count} 次`);
       marks.append(counter);
       if (animate) {
-        for (let i = 1; i <= count; i++) setTimeout(() => (counter.textContent = i === count ? `${count} 次` : String(i)), motionOff() ? 0 : 380 * (i - 1));
+        for (let i = 1; i <= count; i++) setTimeout(() => (counter.textContent = i === count ? `${count} 次` : String(i)), animOff() ? 0 : 380 * (i - 1));
       }
     }
   }
@@ -351,9 +352,9 @@ export function createMap(): MapApi {
         // 換了一個人：內容換掉，輕輕跳一下
         actorG.replaceChildren(
           s('circle', { r: 22, fill: a.color, stroke: 'var(--surface)', 'stroke-width': 3 }),
-          s('text', { y: 6, 'text-anchor': 'middle', style: 'font-size:17px' }, a.glyph),
-          s('text', { y: 42, 'text-anchor': 'middle', style: 'fill:var(--ink);font-size:17px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:5px' }, a.label));
-        if (!motionOff() && !fresh) actorG.firstElementChild?.animate([{ transform: 'scale(.6)' }, { transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { duration: 420 });
+          s('text', { y: 7, 'text-anchor': 'middle', style: 'font-size:20px' }, a.glyph),
+          s('text', { y: 46, 'text-anchor': 'middle', style: 'fill:var(--ink);font-size:21px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:5px' }, a.label));
+        if (!animOff() && !fresh) actorG.firstElementChild?.animate([{ transform: 'scale(.6)' }, { transform: 'scale(1.15)' }, { transform: 'scale(1)' }], { duration: 420 });
         actorKey = actor;
       }
       if (fresh) {
@@ -384,7 +385,7 @@ export function createMap(): MapApi {
         const g = token('smoke');
         at(g, [to[0] + 6, to[1] - 26]);
         tokens.append(g);
-        if (animate && !motionOff()) {
+        if (animate && !animOff()) {
           g.animate([{ opacity: 0, transform: `translate(${to[0] + 6}px, ${to[1] - 10}px)` }, { opacity: 1, transform: `translate(${to[0] + 6}px, ${to[1] - 30}px)` }], { duration: 900, fill: 'forwards' });
           await wait(900);
         }
@@ -407,7 +408,7 @@ export function createMap(): MapApi {
             marks.append(f);
           }
         }
-        if (animate && !motionOff()) {
+        if (animate && !animOff()) {
           await g.animate([{ transform: g.style.transform, opacity: 1 }, { transform: `translate(${to[0]}px, ${to[1]}px) scale(.6)`, opacity: 0 }], { duration: 800, easing: 'ease-in', fill: 'forwards' }).finished;
         }
         g.remove();
@@ -423,7 +424,7 @@ export function createMap(): MapApi {
           tokens.append(g);
           placed.set(`${move.to}|${move.item}`, g);
         }
-        if (animate && !motionOff()) {
+        if (animate && !animOff()) {
           const base = g.style.transform;
           await g.animate([{ transform: base }, { transform: base + ' translateX(-14px)' }, { transform: base + ' translateX(14px)' }, { transform: base }], { duration: 900, iterations: 2 }).finished;
         }
@@ -436,7 +437,7 @@ export function createMap(): MapApi {
           at(g, P(PLACES[move.from ?? move.to]));
           tokens.append(g);
         } else placed.delete(existing[0]);
-        if (animate && !motionOff()) {
+        if (animate && !animOff()) {
           await g.animate([{ transform: g.style.transform }, { transform: `translate(${to[0]}px, ${to[1]}px)` }], { duration: 700, easing: 'ease-in-out', fill: 'forwards' }).finished;
           await g.animate([{ opacity: 1 }, { opacity: 0.25 }], { duration: 500, fill: 'forwards' }).finished;
         }
@@ -450,7 +451,7 @@ export function createMap(): MapApi {
         const pos = target ? target[1].style.transform : `translate(${to[0]}px, ${to[1]}px)`;
         g.style.transform = pos + ' translate(12px, -22px)';
         overlay.append(g);
-        if (animate && !motionOff()) {
+        if (animate && !animOff()) {
           await g.animate([{ transform: pos + ' translate(12px, -46px)', opacity: 0 }, { transform: pos + ' translate(12px, -22px)', opacity: 1 }], { duration: 500 }).finished;
           await wait(500);
         }
@@ -474,7 +475,7 @@ export function createMap(): MapApi {
       const off = jitter(move.to);
       const dest: Pt = [to[0] + off[0], to[1] + off[1]];
       placed.set(key, g);
-      if (animate && !motionOff()) {
+      if (animate && !animOff()) {
         await g.animate([{ transform: g.style.transform }, { transform: `translate(${dest[0]}px, ${dest[1]}px)` }], { duration: 750, easing: 'cubic-bezier(.4,.1,.2,1)', fill: 'forwards' }).finished;
       }
       at(g, dest);

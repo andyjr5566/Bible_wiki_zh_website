@@ -14,7 +14,8 @@ interface State {
   variant: Variant;
 }
 
-export function mountSimulator(host: HTMLElement) {
+/** only：故事線裡每一幕只放自己那一種祭，不顯示五祭分頁和祭名卡 */
+export function mountSimulator(host: HTMLElement, opts: { only?: OfferingId } = {}) {
   const player = new Player();
   const tabs = h('div', { class: 'otabs', role: 'tablist', 'aria-label': '選一種祭' });
   const reveal = h('div', { class: 'card reveal' });
@@ -22,11 +23,13 @@ export function mountSimulator(host: HTMLElement) {
   const fpBody = h('div', { class: 'fp' });
   const fpNote = h('div', { class: 'diffnote', 'aria-live': 'polite' });
   const rulesEl = h('div', { style: 'padding:12px 14px;border-top:1px solid var(--line);display:grid;gap:6px;font-size:.92em' });
+  // 故事線裡「不管怎麼獻都一樣的規矩」另有自己的一段，這裡不重複
   const fp = h('div', { class: 'card sim-extra' },
-    h('div', { class: 'fp-head' }, h('h3', null, '這一次的「結果」'), fpNote), fpBody, rulesEl);
+    h('div', { class: 'fp-head' }, h('h3', null, '這一次的「結果」'), fpNote), fpBody, opts.only ? null : rulesEl);
 
   player.el.append(fp);
-  host.append(tabs, reveal, axesEl, player.el);
+  if (opts.only) host.append(axesEl, player.el);
+  else host.append(tabs, reveal, axesEl, player.el);
 
   let state: State;
   let prev: { outcome: Outcome; label: string; changed: string } | null = null;
@@ -105,7 +108,7 @@ export function mountSimulator(host: HTMLElement) {
       ...state.offering.rules.map((r) => h('div', null, '・', factLine(r))));
   }
 
-  on('choose-offering', (d: { offering: OfferingId; pick?: Record<string, string> }) => {
+  if (!opts.only) on('choose-offering', (d: { offering: OfferingId; pick?: Record<string, string> }) => {
     prev = null;
     set(d.offering, d.pick, '');
     prev = null;
@@ -113,7 +116,16 @@ export function mountSimulator(host: HTMLElement) {
     document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
   });
 
-  set('burnt');
+  set(opts.only ?? 'burnt');
   prev = null;
   renderFingerprint();
+  return {
+    /** 從外面指定分支（例如重點卡上點了「斑鳩或雛鴿」） */
+    choose(pick: Record<string, string>) {
+      prev = null;
+      set(state.offering.id, pick, '');
+      prev = null;
+      renderFingerprint();
+    },
+  };
 }

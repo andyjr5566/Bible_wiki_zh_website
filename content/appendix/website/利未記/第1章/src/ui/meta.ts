@@ -31,6 +31,7 @@ export const ACTOR: Record<Actor, { label: string; color: string; glyph: string 
   moses: { label: '摩西', color: '#8a3f2e', glyph: '摩' },
   aaron: { label: '亞倫和他兒子', color: '#6b4ea2', glyph: '亞' },
   sons: { label: '亞倫的兒子', color: '#5a7fa8', glyph: '子' },
+  people: { label: '眾民', color: '#7b6b3a', glyph: '民' },
   unstated: { label: '經文沒說是誰', color: '#9d8f7b', glyph: '？' },
 };
 

@@ -34,9 +34,15 @@ export function refChips(refs: Ref[] = [], q?: string): HTMLElement[] {
   return refs.map((r) => refChip(r, q));
 }
 
-/** 一行事實：文字＋證據標籤＋經節 */
+/** 只有不是「經文明說」的才掛標籤；沒有標籤＝經文直接這樣寫 */
+export function quietBadge(status: Status): HTMLElement | null {
+  return status === 'explicit' ? null : badge(status);
+}
+
+/** 一行事實：文字＋（必要時的）證據標籤＋經節 */
 export function factLine(fact: Fact, opts: { showQuote?: boolean } = {}): HTMLElement {
-  const el = h('span', { class: 'fact' }, fact.text, ' ', badge(fact.status), ' ', ...refChips(fact.refs, fact.q));
+  const b = quietBadge(fact.status);
+  const el = h('span', { class: 'fact' }, fact.text, ' ', b, b ? ' ' : null, ...refChips(fact.refs, fact.q));
   if (opts.showQuote && fact.q) el.append(h('span', { class: 'q', style: 'display:block;font-size:.92em;margin-top:2px' }, fact.q));
   if (fact.note) el.append(h('span', { style: 'display:block;font-size:.82em;color:var(--ink-3)' }, fact.note));
   return el;
@@ -98,7 +104,6 @@ export function openVerses(anchor: HTMLElement, refs: Ref[], q?: string) {
   pop = h('div', { class: 'pop fade-in', role: 'dialog', 'aria-label': `經文 ${refs.join('、')}` },
     h('h4', null, `${BOOK_NAME[book]} ${refs.join('、').replace(/[利出]/g, '')}`, close),
     body,
-    h('div', { class: 'src' }, '和合本（取自本庫 raw_scripture）'),
   );
   document.body.append(pop);
   const r = anchor.getBoundingClientRect();
@@ -106,7 +111,9 @@ export function openVerses(anchor: HTMLElement, refs: Ref[], q?: string) {
   const ph = pop.offsetHeight;
   let left = Math.min(Math.max(12, r.left + r.width / 2 - pw / 2), innerWidth - pw - 12);
   let top = r.bottom + 8;
-  if (top + ph > innerHeight - 12) top = Math.max(12, r.top - ph - 8);
+  if (top + ph > innerHeight - 12) top = r.top - ph - 8;
+  // 上下都放不下：貼著畫面，不超出
+  if (top < 12) top = Math.max(12, innerHeight - ph - 12);
   pop.style.left = `${left}px`;
   pop.style.top = `${top}px`;
   close.focus();

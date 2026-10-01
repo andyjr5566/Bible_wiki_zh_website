@@ -7,6 +7,8 @@ import {
   BODY_MARKS, BODY_VOICES, EIGHTH_DAY, EIGHTH_DAY_ORDER_VOICES, GARMENTS, GARMENT_FACTS, GARMENT_VOICES, ORDINATION,
   PRIESTHOOD_FACTS, SEVEN_DAYS,
 } from './priesthood';
+import { EIGHTH_VARIANT, laterFacts } from './later';
+import { storyFacts } from './story';
 import type { Fact, Outcome, Step, Voice } from './types';
 
 const outcomeFacts = (o: Outcome): Fact[] => Object.values(o);
@@ -28,11 +30,12 @@ export function allFacts(): Fact[] {
   for (const o of OBJECTS) out.push(...o.facts);
   for (const r of COMPARE) out.push(...Object.values(r.cells));
   out.push(...allEntryFacts(), { text: '題辭', status: 'explicit', refs: [EPIGRAPH.ref], q: EPIGRAPH.text });
+  out.push(...storyFacts(), ...laterFacts());
   return out;
 }
 
 export function allSteps(): Step[] {
-  return [...OFFERINGS.flatMap((o) => o.variants), ...ORDINATION].flatMap((v) => v.steps);
+  return [...OFFERINGS.flatMap((o) => o.variants), ...ORDINATION, EIGHTH_VARIANT].flatMap((v) => v.steps);
 }
 
 export function allVoices(): Voice[] {

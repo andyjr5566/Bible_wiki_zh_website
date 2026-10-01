@@ -56,7 +56,14 @@ export const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '
 export const motionOff = () =>
   document.documentElement.dataset.motion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export const wait = (ms: number) => new Promise((r) => setTimeout(r, motionOff() ? 0 : ms));
+/**
+ * 使用者自己按下的播放（走一次、3D 演練）只看本站的「減少動態」開關，不看作業系統的偏好：
+ * 這台機器的作業系統開著減少動態，若跟著它，播放就會變成一格一格跳。
+ * 裝飾性的動畫（自動旋轉、捲動動畫）才用 motionOff()。
+ */
+export const animOff = () => document.documentElement.dataset.motion === 'off';
+
+export const wait = (ms: number) => new Promise((r) => setTimeout(r, animOff() ? 0 : ms));
 
 /** 簡單的事件匯流排：跨區塊溝通（例如首頁選了動機→模擬器切換） */
 type Handler = (detail: any) => void;

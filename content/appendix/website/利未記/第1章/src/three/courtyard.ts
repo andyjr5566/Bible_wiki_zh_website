@@ -16,6 +16,13 @@ export interface LabelSpec {
 }
 
 export interface Courtyard {
+  /** 給 3D 演練用：場景、相機、每格更新 */
+  scene: THREE.Scene;
+  model: THREE.Object3D;
+  flyTo(pos: THREE.Vector3, target: THREE.Vector3, instant?: boolean): void;
+  onTick(fn: (t: number, dt: number) => void): void;
+  /** 3D 座標 → 畫面座標（px） */
+  project(v: THREE.Vector3): { x: number; y: number; hidden: boolean };
   focus(node: string): void;
   overview(): void;
   setRoof(open: boolean): void;
@@ -138,7 +145,7 @@ export async function createCourtyard(
   labelsHost: HTMLElement,
   labels: LabelSpec[],
   onLabel: (id: string) => void,
-  opts: { reducedMotion: boolean; lowPower: boolean },
+  opts: { reducedMotion: boolean; lowPower: boolean; heroOffset?: boolean; autoRotate?: boolean; drift?: boolean },
 ): Promise<Courtyard> {
   const renderer = new THREE.WebGLRenderer({ antialias: !opts.lowPower, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, opts.lowPower ? 1 : 1.75));
@@ -211,7 +218,7 @@ export async function createCourtyard(
   controls.maxPolarAngle = Math.PI * 0.47;
   controls.minDistance = 6;
   controls.maxDistance = 190;
-  controls.autoRotate = !opts.reducedMotion;
+  controls.autoRotate = !opts.reducedMotion && opts.autoRotate !== false;
   controls.autoRotateSpeed = 0.35;
   controls.enablePan = true;
   controls.screenSpacePanning = false;
@@ -234,10 +241,11 @@ export async function createCourtyard(
 
   // 相機移動
   let tween: { from: View; to: View; t: number } | null = null;
-  function flyTo(v: View) {
+  function flyTo(v: View, instant = false) {
     controls.autoRotate = false;
-    tween = { from: { pos: camera.position.clone(), target: controls.target.clone() }, to: v, t: opts.reducedMotion ? 1 : 0 };
+    tween = { from: { pos: camera.position.clone(), target: controls.target.clone() }, to: v, t: opts.reducedMotion || instant ? 1 : 0 };
   }
+  const tickers: ((t: number, dt: number) => void)[] = [];
 
   let running = true;
   let visible = true;
@@ -251,7 +259,7 @@ export async function createCourtyard(
     camera.aspect = w / Math.max(1, hh);
     camera.fov = w < 640 ? 50 : 38;
     // 寬螢幕：左邊是直排標題、下方是填空句，把院子往右上推一點
-    if (w >= 1000) camera.setViewOffset(w, hh, -w * 0.06, hh * 0.1, w, hh);
+    if (w >= 1000 && opts.heroOffset !== false) camera.setViewOffset(w, hh, -w * 0.06, hh * 0.1, w, hh);
     else camera.clearViewOffset();
     camera.updateProjectionMatrix();
   };
@@ -263,13 +271,23 @@ export async function createCourtyard(
     if (!running) return;
     requestAnimationFrame(frame);
     if (!visible || document.hidden) return;
-    const t = clock.getElapsedTime();
+    // dt 夾在 0–0.25 秒：背景分頁回來時不要一次跳太大，慢機器也不會變成慢動作
+    const dt = Math.max(0, Math.min(0.25, clock.getDelta()));
+    const t = clock.elapsedTime;
+    for (const fn of tickers) fn(t, dt);
     if (tween) {
-      tween.t = Math.min(1, tween.t + 0.018);
+      tween.t = Math.min(1, tween.t + dt / 1.7);
       const e = tween.t < 0.5 ? 4 * tween.t ** 3 : 1 - (-2 * tween.t + 2) ** 3 / 2;
       camera.position.lerpVectors(tween.from.pos, tween.to.pos, e);
       controls.target.lerpVectors(tween.from.target, tween.to.target, e);
-      if (tween.t >= 1) tween = null;
+      if (tween.t >= 1) {
+        tween = null;
+        // 演練時鏡頭到位後慢慢繞，畫面不會停住
+        if (opts.drift && !opts.reducedMotion) {
+          controls.autoRotateSpeed = 0.22;
+          controls.autoRotate = true;
+        }
+      }
     }
     controls.update();
     fire.tick(t);
@@ -289,6 +307,22 @@ export async function createCourtyard(
   void altar;
 
   return {
+    scene,
+    model,
+    flyTo(pos, target, instant) {
+      flyTo({ pos: pos.clone(), target: target.clone() }, instant);
+    },
+    onTick(fn) {
+      tickers.push(fn);
+    },
+    project(v) {
+      tmp.copy(v).project(camera);
+      return {
+        x: ((tmp.x + 1) / 2) * host.clientWidth,
+        y: ((1 - tmp.y) / 2) * host.clientHeight,
+        hidden: tmp.z > 1 || Math.abs(tmp.x) > 1.05 || Math.abs(tmp.y) > 1.05,
+      };
+    },
     focus(node) {
       const v = VIEWS[node];
       if (!v) return;

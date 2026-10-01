@@ -305,12 +305,12 @@ section.block { padding: 64px 0 24px; }
 
 /* map */
 .map text { font-family: var(--sans); fill: var(--ink-2); }
-.map .zone-label { font-size: 21px; font-weight: 700; fill: var(--ink); }
-.map .small { font-size: 16px; fill: var(--ink-2); font-weight: 700; paint-order: stroke; stroke: color-mix(in srgb, var(--linen) 70%, var(--bg)); stroke-width: 4px; }
+.map .zone-label { font-size: 27px; font-weight: 700; fill: var(--ink); }
+.map .small { font-size: 21px; fill: var(--ink-2); font-weight: 700; paint-order: stroke; stroke: color-mix(in srgb, var(--linen) 70%, var(--bg)); stroke-width: 4px; }
 .map .place-hl { fill: none; stroke: var(--c, var(--bronze)); stroke-width: 3; stroke-dasharray: 6 5; animation: march 1s linear infinite; }
 @keyframes march { to { stroke-dashoffset: -22; } }
-.map .actor text { font-size: 13px; font-weight: 700; fill: #fff; }
-.map .pill text { font-size: 13px; font-weight: 700; }
+.map .actor text { font-size: 17px; font-weight: 700; fill: #fff; }
+.map .pill text { font-size: 17px; font-weight: 700; }
 
 /* ============================================================ compare */
 .matrix-wrap { overflow-x: auto; border-radius: var(--r); }

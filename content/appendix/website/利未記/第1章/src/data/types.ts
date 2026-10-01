@@ -38,6 +38,7 @@ export type Actor =
   | 'moses'
   | 'aaron'
   | 'sons'
+  | 'people'
   | 'unstated';
 
 export type PlaceId =
@@ -90,6 +91,8 @@ export interface Move {
   how: Motion;
   /** 彈血次數等 */
   count?: number;
+  /** 只取其中一部分（例如素祭抓一把燒在壇上，其餘留著） */
+  part?: boolean;
 }
 
 export interface Step {
@@ -104,6 +107,8 @@ export interface Step {
   note?: string;
   /** 這一步放在事後（例如隔天清灰），畫面上以虛線區隔 */
   later?: boolean;
+  /** 3D 演練的演出提示（平面圖不用）：宰、切塊、洗、撕開。只影響畫面，不是經文內容 */
+  act?: 'slay' | 'cut' | 'wash' | 'tear' | 'change' | 'bake' | 'mark' | 'gather' | 'bless' | 'glory' | 'godfire';
 }
 
 /** 一次獻祭的「結果指紋」，用來做比較與「只改一件事」的差異 */

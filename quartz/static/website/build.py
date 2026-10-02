@@ -129,6 +129,10 @@ def _chapter_html_entries(
             # The source index.html points to /src/main.ts and is not a
             # deployable page.  Only expose the production entry point.
             _append_entry(entries, key, built_index)
+            # 一個網站涵蓋好幾章時，在專案根目錄放 appendix-chapters.json，
+            # 例如 ["第12章", "第13章"]，其他章的附錄也會列出同一個入口。
+            for extra in _extra_chapters(chapter_dir):
+                _append_entry(entries, f"{book}/{extra}", built_index)
 
         # A Vite chapter may also contain hand-authored static pages.  Keep
         # those links, but never expose the Vite source index as a live page.
@@ -137,6 +141,18 @@ def _chapter_html_entries(
 
     for html_file in sorted(html_files, key=lambda path: path.name.lower()):
         _append_entry(entries, key, html_file)
+
+
+def _extra_chapters(chapter_dir: Path) -> list[str]:
+    """讀 ``appendix-chapters.json``：這個網站也要掛在哪些章節。"""
+    config = chapter_dir / "appendix-chapters.json"
+    if not config.is_file():
+        return []
+    try:
+        data = json.loads(config.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    return [str(x) for x in data if isinstance(x, str)] if isinstance(data, list) else []
 
 
 def _root_static_pages(chapter_dir: Path) -> list[Path]:

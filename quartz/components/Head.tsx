@@ -261,19 +261,19 @@ export default (() => {
             __html: `
               (function () {
                 try {
-                  var isStandalone =
-                    window.matchMedia("(display-mode: standalone)").matches ||
-                    window.navigator.standalone === true;
-                  if (isStandalone) return;
-
                   var ua = navigator.userAgent || "";
                   var isIOS = /iPhone|iPad|iPod/i.test(ua) && !window.MSStream;
                   var isAndroid = /Android/i.test(ua);
-                  if (!isIOS && !isAndroid) return;
+                  var isMobile = isIOS || isAndroid;
+
+                  function isStandaloneApp() {
+                    return (
+                      window.matchMedia("(display-mode: standalone)").matches ||
+                      window.navigator.standalone === true
+                    );
+                  }
 
                   var DISMISS_KEY = "pwa_install_guide_dismissed_v1";
-                  if (localStorage.getItem(DISMISS_KEY)) return;
-                  if (document.getElementById("pwa-install-guide")) return;
 
                   var deferredPrompt = null;
                   window.addEventListener("beforeinstallprompt", function (e) {
@@ -340,6 +340,8 @@ export default (() => {
                     "</svg>";
 
                   function render() {
+                    if (!isMobile) return;
+                    if (isStandaloneApp()) return;
                     if (document.getElementById("pwa-install-guide")) return;
 
                     var wrapper = document.createElement("div");
@@ -396,14 +398,21 @@ export default (() => {
                     }
                   }
 
-                  function schedule() {
+                  // Re-openable any time (e.g. from the "?" help center) even after
+                  // the user dismissed the auto-shown guide once.
+                  window.__pwaInstallGuide = { show: render, isMobile: isMobile };
+
+                  function autoShowOnce() {
+                    if (!isMobile) return;
+                    if (isStandaloneApp()) return;
+                    if (localStorage.getItem(DISMISS_KEY)) return;
                     setTimeout(render, 1800);
                   }
 
                   if (document.readyState === "complete" || document.readyState === "interactive") {
-                    schedule();
+                    autoShowOnce();
                   } else {
-                    document.addEventListener("DOMContentLoaded", schedule);
+                    document.addEventListener("DOMContentLoaded", autoShowOnce);
                   }
                 } catch (e) {}
               })();

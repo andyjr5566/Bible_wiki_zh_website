@@ -954,6 +954,17 @@ function openHelp() {
     st.status === "paused"
       ? `<button class="bwz-btn primary" type="button" data-h="resume">繼續</button><button class="bwz-btn" type="button" data-h="restart">從頭開始</button>`
       : `<button class="bwz-btn primary" type="button" data-h="restart">${st.status === "done" ? "再走一次" : "開始"}</button>`
+  const pwaGuide = (window as any).__pwaInstallGuide
+  const pwaGuideBlock = pwaGuide?.isMobile
+    ? `<h4>加入主畫面</h4>
+    <div class="bwz-route">
+      <div class="bwz-route-body">
+        <div class="bwz-route-title">把網站變成手機 App</div>
+        <div class="bwz-route-meta">加入主畫面後，像一般 App 一樣從桌面直接打開，不用再透過瀏覽器。</div>
+      </div>
+      <div class="bwz-row"><button class="bwz-btn primary" type="button" data-h="install-guide">查看教學</button></div>
+    </div>`
+    : ""
   const card = $(".bwz-modal-card", el('[data-modal="help"]'))!
   card.innerHTML = `
     <div class="bwz-modal-head">
@@ -961,6 +972,7 @@ function openHelp() {
       <div><h2>說明中心</h2><div class="bwz-kicker">隨時按 <kbd>?</kbd> 打開或關閉</div></div>
       <button class="bwz-x" type="button" data-h="close" aria-label="關閉">✕</button>
     </div>
+    ${pwaGuideBlock}
     <h4>互動導覽</h4>
     <div class="bwz-route">
       <div class="bwz-route-body">
@@ -1024,6 +1036,10 @@ function onHelpClick(e: Event) {
     case "doc":
       closeHelp()
       go(btn.dataset.slug!)
+      break
+    case "install-guide":
+      closeHelp()
+      ;(window as any).__pwaInstallGuide?.show?.()
       break
   }
 }

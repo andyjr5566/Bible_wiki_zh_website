@@ -130,7 +130,7 @@ function buildSteps(): Step[] {
     {
       chapter: 1, title: '經文自己說的理由', at: (r) => r.name === 'compare', goHash: href('compare', [DEMO_LAW, DEMO_WHY_LAW, 'deut15-12'].join(',')),
       target: `.lm-compare-cols a[href="${href('law', DEMO_WHY_LAW)}"]`,
-      ask: `點中間那一欄的標題「${whyLaw.title}」。`,
+      ask: `點最右邊那一欄的標題「${whyLaw.title}」。`,
       done: onLaw(DEMO_WHY_LAW),
       say: [
         '「一句話」下面多了一塊「經文給的理由」，是經文自己寫的原句，網站只是把那一節標出來。',

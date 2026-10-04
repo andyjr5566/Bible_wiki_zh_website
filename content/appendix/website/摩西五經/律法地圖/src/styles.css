@@ -475,3 +475,29 @@ details.lm-layer[open] .lm-preview { display: none; }
 .lm-coach-pin-edge { transform: translateX(-50%); cursor: pointer; white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { .lm-coach-hl, .lm-coach-check, .lm-coach-flash { animation: none; } }
 @media (max-width: 560px) { .lm-coach { left: 8px; right: 8px; padding: 8px 14px 12px; } .lm-coach-prog li span { font-size: 0.68rem; } }
+
+/* 觸控裝置：小按鈕補到 44px 的可點範圍（不改變看起來的大小） */
+@media (pointer: coarse) {
+  .lm-icon-btn, .lm-top-guide, .lm-chip, .lm-link-btn { position: relative; }
+  .lm-icon-btn::after, .lm-top-guide::after, .lm-chip::after, .lm-link-btn::after { content: ''; position: absolute; inset: -6px -4px; }
+  .lm-reason-go, .lm-rib-name, .lm-legend-key, .lm-ext { padding-block: 9px; }
+}
+
+/* 手機頂列收成一排 */
+@media (max-width: 560px) {
+  .lm-top-row { gap: 6px 8px; }
+  .lm-brand { font-size: 1rem; gap: 7px; }
+  .lm-top-guide { margin-right: 4px; padding: 3px 11px; }
+  .lm-top-nav { display: flex; align-items: center; }
+}
+
+/* 動效：只用在「換了一步」「冒出一個提示」「展開一塊」；開了系統的減少動態就全部不播 */
+@keyframes lm-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes lm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lm-pin-in { from { opacity: 0; transform: translateY(6px) scale(0.85); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .lm-coach:not(.lm-coach-flash) { animation: lm-rise 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .lm-coach-title, .lm-coach-body, .lm-coach-ask { animation: lm-fade 0.28s ease-out; }
+  .lm-coach-pin:not(.lm-coach-pin-edge) { animation: lm-pin-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1.2) 0.12s backwards; }
+  :where(details[open] > :not(summary)) { animation: lm-rise 0.24s ease-out; }
+}

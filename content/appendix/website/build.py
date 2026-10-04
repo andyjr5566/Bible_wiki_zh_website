@@ -40,12 +40,18 @@ CATEGORY_NAME = "互動網站"
 BOOK_INDEX_HEADING = "🕹️ 互動網站"
 CATEGORY_DIR = Path(__file__).resolve().parent
 REPOSITORY_ROOT = CATEGORY_DIR.parent.parent
-BOOK_ORDER = {
-    book: index
-    for index, book in enumerate(
-        json.loads((REPOSITORY_ROOT / "_config" / "bible_books.json").read_text(encoding="utf-8"))
-    )
-}
+def _load_book_order() -> dict[str, int]:
+    # 這份程式也會被複製到 Quartz 網站專案的 quartz/static/website/ 在 CI 執行，
+    # 那裡沒有 _config/bible_books.json，找不到就退回五經的順序，不要讓部署當掉。
+    config = REPOSITORY_ROOT / "_config" / "bible_books.json"
+    try:
+        books = list(json.loads(config.read_text(encoding="utf-8")))
+    except (OSError, ValueError):
+        books = ["創世記", "出埃及記", "利未記", "民數記", "申命記"]
+    return {book: index for index, book in enumerate(books)}
+
+
+BOOK_ORDER = _load_book_order()
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE | re.DOTALL)
 VITE_CONFIG_NAMES = ("vite.config.ts", "vite.config.js", "vite.config.mjs")
 BACKUP_MARKER = "_backup_"
@@ -337,6 +343,33 @@ def _print_entries(entries: dict[str, list[dict[str, str]]]) -> None:
             print(f"      - {item['title']} → {item['path']}")
 
 
+def _format_chapter_ranges(chapter_keys: list[str]) -> str:
+    """把 ``書名/第N章`` 依書卷合併連續章號，例如「出埃及記 第19–23、25–31章」。"""
+    by_book: dict[str, list[int | str]] = {}
+    for key in chapter_keys:
+        book, chapter = key.split("/", 1)
+        match = re.fullmatch(r"第(\d+)章", chapter)
+        by_book.setdefault(book, []).append(int(match.group(1)) if match else chapter)
+
+    parts: list[str] = []
+    for book, items in by_book.items():
+        numbers = sorted({item for item in items if isinstance(item, int)})
+        spans: list[str] = []
+        start = previous = None
+        for number in [*numbers, None]:
+            if start is not None and number == previous + 1:
+                previous = number
+                continue
+            if start is not None:
+                spans.append(str(start) if start == previous else f"{start}–{previous}")
+            start = previous = number
+        spans.extend(str(item) for item in items if not isinstance(item, int))
+        all_numeric = all(isinstance(item, int) for item in items)
+        label = f"第{'、'.join(spans)}章" if all_numeric else "、".join(spans)
+        parts.append(f"{book} {label}")
+    return "、".join(parts)
+
+
 def render_index_markdown(entries: dict[str, list[dict[str, str]]]) -> str:
     """Render the website directory index from the discovered entry points."""
     lines = ["# 互動網站", ""]
@@ -365,12 +398,8 @@ def render_index_markdown(entries: dict[str, list[dict[str, str]]]) -> str:
     for path in sorted(chapters_by_path, key=entry_order_key):
         target = REPOSITORY_ROOT / path
         relative_path = os.path.relpath(target, CATEGORY_DIR).replace("\\", "/")
-        chapters = "、".join(
-            f"{book} {chapter}"
-            for book, chapter in (
-                key.split("/", 1)
-                for key in sorted(chapters_by_path[path], key=chapter_order_key)
-            )
+        chapters = _format_chapter_ranges(
+            sorted(chapters_by_path[path], key=chapter_order_key)
         )
         lines.append(f"- [{titles[path]}](<{relative_path}>)（{chapters}）")
     return "\n".join(lines).rstrip() + "\n"

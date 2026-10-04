@@ -343,11 +343,16 @@ export function renderOutputs(result) {
 }
 
 function main() {
+  const check = process.argv.includes('--check');
   if (!IN_VAULT) {
+    if (check) {
+      // 部署時（CI）只有網站本身，沒有 vault；explorer.json 已隨專案提交，直接用它。
+      console.log('找不到 vault，略過資料新鮮度檢查（使用已提交的 explorer.json）。');
+      return;
+    }
     console.error('找不到 vault（raw_scripture、link_folder）。這個腳本要在 scripture 專案裡跑。');
     process.exit(1);
   }
-  const check = process.argv.includes('--check');
   const result = buildAll();
   for (const w of result.warnings) console.warn(`警告 ${w}`);
   for (const c of result.coverage) {

@@ -1,11 +1,240 @@
+
+added 55 packages, and audited 56 packages in 2s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (3 moderate, 1 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> exodus-tabernacle-pattern@1.0.0 build
+> npm run verify && vite build
+
+
+> exodus-tabernacle-pattern@1.0.0 verify
+> npm run typecheck && npm run test
+
+
+> exodus-tabernacle-pattern@1.0.0 typecheck
+> tsc --noEmit
+
+
+> exodus-tabernacle-pattern@1.0.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章[39m
+
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
+[2m   Start at [22m 20:36:50
+[2m   Duration [22m 450ms[2m (transform 131ms, setup 0ms, collect 133ms, tests 5ms, environment 0ms, prepare 74ms)[22m
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 26 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                          [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.77 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-CVegIydT.css           [39m[1m[2m 35.90 kB[22m[1m[22m[2m │ gzip:   8.67 kB[22m
+[2mdist/[22m[2massets/[22m[36mdetail-Cyig4yrc.js           [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
+[2mdist/[22m[2massets/[22m[36mtabernacle-DMGMVV3S.js       [39m[1m[2m  6.90 kB[22m[1m[22m[2m │ gzip:   3.43 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-D8ewySLN.js            [39m[1m[2m 53.89 kB[22m[1m[22m[2m │ gzip:  31.15 kB[22m
+[2mdist/[22m[2massets/[22m[36mRoomEnvironment-sd-MvLcI.js  [39m[1m[2m587.96 kB[22m[1m[22m[2m │ gzip: 149.85 kB[22m
+[32m✓ built in 1.51s[39m
+
+added 55 packages, and audited 56 packages in 7s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (3 moderate, 1 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> leviticus-purity-guide@1.0.0 build
+> npm run verify && vite build
+
+
+> leviticus-purity-guide@1.0.0 verify
+> npm run typecheck && npm run test
+
+
+> leviticus-purity-guide@1.0.0 typecheck
+> tsc --noEmit
+
+
+> leviticus-purity-guide@1.0.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/利未記/第11章[39m
+
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
+[2m   Start at [22m 20:37:04
+[2m   Duration [22m 576ms[2m (transform 249ms, setup 0ms, collect 275ms, tests 4ms, environment 0ms, prepare 84ms)[22m
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 42 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  1.16 kB[22m[1m[22m[2m │ gzip:   0.83 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-4IkJfk7_.css  [39m[1m[2m 83.07 kB[22m[1m[22m[2m │ gzip:  17.01 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-gEpeeogz.js   [39m[1m[2m263.85 kB[22m[1m[22m[2m │ gzip: 136.73 kB[22m
+[2mdist/[22m[2massets/[22m[36mcamp-Dej68AUv.js    [39m[1m[2m654.55 kB[22m[1m[22m[2m │ gzip: 172.28 kB[22m
+[32m✓ built in 1.93s[39m
+
+added 55 packages, and audited 56 packages in 2s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (3 moderate, 1 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> leviticus-offerings-guide@1.0.0 build
+> npm run verify && vite build
+
+
+> leviticus-offerings-guide@1.0.0 verify
+> npm run typecheck && npm run test
+
+
+> leviticus-offerings-guide@1.0.0 typecheck
+> tsc --noEmit
+
+
+> leviticus-offerings-guide@1.0.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/利未記/第1章[39m
+
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
+[2m   Start at [22m 20:37:12
+[2m   Duration [22m 583ms[2m (transform 246ms, setup 0ms, collect 275ms, tests 5ms, environment 0ms, prepare 75ms)[22m
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 41 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                    [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.75 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-DBJfcAyS.css     [39m[1m[2m 41.79 kB[22m[1m[22m[2m │ gzip:   9.54 kB[22m
+[2mdist/[22m[2massets/[22m[36mrehearsal-D_11aEF1.js  [39m[1m[2m 27.32 kB[22m[1m[22m[2m │ gzip:  10.57 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-DWhEiakq.js      [39m[1m[2m157.98 kB[22m[1m[22m[2m │ gzip:  76.22 kB[22m
+[2mdist/[22m[2massets/[22m[36mcourtyard-BBfoErIm.js  [39m[1m[2m615.77 kB[22m[1m[22m[2m │ gzip: 158.60 kB[22m
+[32m✓ built in 1.97s[39m
+
+added 55 packages, and audited 56 packages in 2s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (3 moderate, 1 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> genesis-ark@1.0.0 build
+> npm run verify && vite build
+
+
+> genesis-ark@1.0.0 verify
+> npm run typecheck && npm run test
+
+
+> genesis-ark@1.0.0 typecheck
+> tsc --noEmit
+
+
+> genesis-ark@1.0.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/創世記/第6章[39m
+
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
+[2m   Start at [22m 20:37:20
+[2m   Duration [22m 446ms[2m (transform 127ms, setup 0ms, collect 143ms, tests 4ms, environment 0ms, prepare 85ms)[22m
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 47 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                 [39m[1m[2m  1.22 kB[22m[1m[22m[2m │ gzip:   0.88 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-DC3kye34.css  [39m[1m[2m 26.82 kB[22m[1m[22m[2m │ gzip:   6.97 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-CiadjPY1.js   [39m[1m[2m766.16 kB[22m[1m[22m[2m │ gzip: 224.06 kB[22m
+[32m✓ built in 1.90s[39m
+
+added 55 packages, and audited 56 packages in 1s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+8 vulnerabilities (3 moderate, 4 high, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> pentateuch-law-map@0.1.0 build
+> npm run verify && vite build
+
+
+> pentateuch-law-map@0.1.0 verify
+> npm run data:check && npm run typecheck && npm run test
+
+
+> pentateuch-law-map@0.1.0 data:check
+> node scripts/build-data.mjs --check
+
+找不到 vault（raw_scripture、link_folder）。這個腳本要在 scripture 專案裡跑。
+[依賴] static/website/出埃及記/第25章
+[建置] static/website/出埃及記/第25章
+[依賴] static/website/利未記/第11章
+[建置] static/website/利未記/第11章
+[依賴] static/website/利未記/第1章
+[建置] static/website/利未記/第1章
+[依賴] static/website/創世記/第6章
+[建置] static/website/創世記/第6章
+[依賴] static/website/摩西五經/律法地圖
+[建置] static/website/摩西五經/律法地圖
 Traceback (most recent call last):
-  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 46, in <module>
-    json.loads((REPOSITORY_ROOT / "_config" / "bible_books.json").read_text(encoding="utf-8"))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
-    with self.open(mode='r', encoding=encoding, errors=errors) as f:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
-    return io.open(self, mode, buffering, encoding, errors, newline)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/_config/bible_books.json'
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 452, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 432, in main
+    build_vite_apps(apps, install_dependencies=True)
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 238, in build_vite_apps
+    subprocess.run([npm_command, "run", "build"], cwd=app, check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['npm', 'run', 'build']' returned non-zero exit status 1.

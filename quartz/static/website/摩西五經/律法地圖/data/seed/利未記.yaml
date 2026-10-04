@@ -1,0 +1,617 @@
+# 段落草稿（自動產生，網站不讀）。整理後搬進 data/laws/利未記.yaml。
+book: 利未記
+chapters:
+  - chapter: 1
+    verse_count: 17
+    excluded: []
+    sections:
+      - id: TODO-1-1
+        title: 神從會幕裡說話
+        verses: 1-2
+        laws: []
+      - id: TODO-1-2
+        title: 三級祭牲：按家境分，還是按認識分？
+        verses: 3-17
+        laws: []
+      - id: TODO-1-3
+        title: 一隻祭牲要經過的七個步驟
+        verses: 3-17
+        laws: []
+      - id: TODO-1-4
+        title: 馨香的火祭：神真的喜歡那個氣味嗎？
+        verses: 9,13,17
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+  - chapter: 2
+    verse_count: 16
+    excluded: []
+    sections:
+      - id: TODO-2-1
+        title: 素祭是什麼：唯一不流血的祭
+        verses: 1-3
+        laws: []
+      - id: TODO-2-2
+        title: 幾種做法？三樣還是五種
+        verses: 4-10
+        laws: []
+      - id: TODO-2-3
+        title: 誰吃、在哪裡吃：至聖的規矩
+        verses: 3,10
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-2-4
+        title: 不可有酵與蜜
+        verses: 11-12
+        laws: []
+      - id: TODO-2-5
+        title: 不可缺立約的鹽
+        verses: "13"
+        laws: []
+      - id: TODO-2-6
+        title: 初熟之物的素祭
+        verses: 14-16
+        laws: []
+  - chapter: 3
+    verse_count: 17
+    excluded: []
+    sections:
+      - id: TODO-3-1
+        title: 一頓飯形狀的祭
+        verses: 1-17
+        laws: []
+      - id: TODO-3-2
+        title: 三種祭牲、一套程序
+        verses: 1-16
+        laws: []
+      - id: TODO-3-3
+        title: 誰做哪一步
+        verses: 2,8,13
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-3-4
+        title: 燒給神的是哪幾樣
+        verses: 3-5,9-11,14-16
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-3-5
+        title: 「神的食物」——一個容易被誤會的說法
+        verses: 11,16
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-3-6
+        title: 從祭壇搬進廚房
+        verses: 16-17
+        laws: []
+  - chapter: 4
+    verse_count: 35
+    excluded: []
+    sections:
+      - id: TODO-4-1
+        title: 從甘心到必須
+        verses: 1-2
+        laws: []
+      - id: TODO-4-2
+        title: 「誤犯」畫出的範圍
+        verses: "2"
+        laws: []
+      - id: TODO-4-3
+        title: 四個階層，四種祭牲
+        verses: 3-35
+        laws: []
+      - id: TODO-4-4
+        title: 兩個不同的「燒」
+        verses: 8-12,19-21
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-4-5
+        title: 四次相同的結語
+        verses: 20,26,31,35
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+  - chapter: 5
+    verse_count: 19
+    excluded: []
+    sections:
+      - id: TODO-5-1
+        title: 一章兩個祭名
+        verses: 1-19
+        laws: []
+      - id: TODO-5-2
+        title: 三件具體的過犯
+        verses: 1-4
+        laws: []
+      - id: TODO-5-3
+        title: 先認罪，再獻祭
+        verses: "5"
+        laws: []
+      - id: TODO-5-4
+        title: 獻不起怎麼辦
+        verses: 6-13
+        laws: []
+      - id: TODO-5-5
+        title: 贖愆祭：先賠償，再獻祭
+        verses: 14-19
+        laws: []
+  - chapter: 6
+    verse_count: 30
+    excluded: []
+    sections:
+      - id: TODO-6-1
+        title: 欺負鄰舍，聖經算成得罪神
+        verses: 1-7
+        laws: []
+      - id: TODO-6-2
+        title: 從第8節起，說話的對象換人了
+        verses: 8-13
+        laws: []
+      - id: TODO-6-3
+        title: 換一件衣服：界線畫在場合上
+        verses: 10-11
+        laws: []
+      - id: TODO-6-4
+        title: 素祭：祭司吃的那一份
+        verses: 14-18
+        laws: []
+      - id: TODO-6-5
+        title: 大祭司自己的那一份，一點都不能吃
+        verses: 19-23
+        laws: []
+      - id: TODO-6-6
+        title: 贖罪祭：吃下去，然後處理鍋子和衣服
+        verses: 24-30
+        laws: []
+  - chapter: 7
+    verse_count: 38
+    excluded: []
+    sections:
+      - id: TODO-7-1
+        title: 贖愆祭：怎麼獻，誰吃
+        verses: 1-10
+        laws: []
+      - id: TODO-7-2
+        title: 平安祭分三類，吃法各不相同
+        verses: 11-18
+        laws: []
+      - id: TODO-7-3
+        title: 誰能上這張桌子
+        verses: 19-21
+        laws: []
+      - id: TODO-7-4
+        title: 脂油和血：神留給自己的兩樣
+        verses: 22-27
+        laws: []
+      - id: TODO-7-5
+        title: 搖的胸與舉的腿
+        verses: 28-36
+        laws: []
+      - id: TODO-7-6
+        title: 跋語：七章條例的落款
+        verses: 37-38
+        laws: []
+  - chapter: 8
+    verse_count: 36
+    excluded: []
+    sections:
+      - id: TODO-8-1
+        title: 條例講完了，現在照著做
+        verses: 1-5
+        laws: []
+      - id: TODO-8-2
+        title: 洗、穿、膏：三個動作把人分別出來
+        verses: 6-13
+        laws: []
+      - id: TODO-8-3
+        title: 三隻祭牲，一場就職禮
+        verses: 14-30
+        laws: []
+      - id: TODO-8-4
+        title: 「承接聖職」的原文，是「把手裝滿」
+        verses: 27-36
+        laws: []
+  - chapter: 9
+    verse_count: 24
+    excluded: []
+    sections:
+      - id: TODO-9-1
+        title: 第八天：制度開始運作的那一天
+        verses: 1-7
+        laws: []
+      - id: TODO-9-2
+        title: 先為自己，再為別人
+        verses: 8-14
+        laws: []
+      - id: TODO-9-3
+        title: 為百姓獻的四樣祭
+        verses: 15-21
+        laws: []
+      - id: TODO-9-4
+        title: 祝福、榮光，和那把火
+        verses: 22-24
+        laws: []
+  - chapter: 10
+    verse_count: 20
+    excluded: []
+    sections:
+      - id: TODO-10-1
+        title: 獻上一把神沒有吩咐的火
+        verses: 1-3
+        laws: []
+      - id: TODO-10-2
+        title: 屍體、哀哭，與一條不准跨出的門檻
+        verses: 4-7
+        laws: []
+      - id: TODO-10-3
+        title: 神親自對亞倫說話：不可喝酒，要會分辨
+        verses: 8-11
+        laws: []
+      - id: TODO-10-4
+        title: 該吃的沒有吃
+        verses: 12-20
+        laws: []
+  - chapter: 11
+    verse_count: 47
+    excluded: []
+    sections:
+      - id: TODO-11-1
+        title: 一章寫給全體百姓的食物條例
+        verses: 1-2
+        laws: []
+      - id: TODO-11-2
+        title: 走獸：兩個條件，缺一不可
+        verses: 3-8
+        laws: []
+      - id: TODO-11-3
+        title: 水族、飛鳥、昆蟲：三種不同的立法手法
+        verses: 9-23
+        laws: []
+      - id: TODO-11-4
+        title: 摸到死的怎麼辦
+        verses: 24-40
+        laws: []
+      - id: TODO-11-5
+        title: 理由寫在最後：因為我是聖潔的
+        verses: 41-47
+        laws: []
+  - chapter: 12
+    verse_count: 8
+    excluded: []
+    sections:
+      - id: TODO-12-1
+        title: 兩段不潔，兩個數字
+        verses: 1-5
+        laws: []
+      - id: TODO-12-2
+        title: 第八天的割禮
+        verses: "3"
+        laws: []
+      - id: TODO-12-3
+        title: 潔淨期滿要獻的兩樣祭
+        verses: 6-8
+        laws: []
+  - chapter: 13
+    verse_count: 59
+    excluded: []
+    sections:
+      - id: TODO-13-1
+        title: 這一章到底在判什麼
+        verses: 1-8
+        laws: []
+      - id: TODO-13-2
+        title: 舊病、全身變白與紅肉
+        verses: 9-17
+        laws: []
+      - id: TODO-13-3
+        title: 瘡、火毒、頭疥與禿頭
+        verses: 18-44
+        laws: []
+      - id: TODO-13-4
+        title: 患者的喪服與獨居營外
+        verses: 45-46
+        laws: []
+      - id: TODO-13-5
+        title: 衣服上的災病
+        verses: 47-59
+        laws: []
+  - chapter: 14
+    verse_count: 57
+    excluded: []
+    sections:
+      - id: TODO-14-1
+        title: 從營外走回營裡
+        verses: 1-9
+        laws: []
+      - id: TODO-14-2
+        title: 第八天的四樣祭
+        verses: 10-20
+        laws: []
+      - id: TODO-14-3
+        title: 貧窮人的條例
+        verses: 21-32
+        laws: []
+      - id: TODO-14-4
+        title: 房屋的災病
+        verses: 33-53
+        laws: []
+      - id: TODO-14-5
+        title: 這一章與鄰邦的異同、以及兩章的收束
+        verses: 54-57
+        laws: []
+  - chapter: 15
+    verse_count: 33
+    excluded: []
+    sections:
+      - id: TODO-15-1
+        title: 男人的漏症：不潔怎麼傳、怎麼止
+        verses: 1-15
+        laws: []
+      - id: TODO-15-2
+        title: 精液與同房：沒有罪咎，卻仍要洗
+        verses: 16-18
+        laws: []
+      - id: TODO-15-3
+        title: 女人：月經與血漏
+        verses: 19-30
+        laws: []
+      - id: TODO-15-4
+        title: 為什麼要有這一章
+        verses: 31-33
+        laws: []
+  - chapter: 16
+    verse_count: 34
+    excluded: []
+    sections:
+      - id: TODO-16-1
+        title: 立法的起點：兩個祭司之死
+        verses: 1-2
+        laws: []
+      - id: TODO-16-2
+        title: 大祭司的預備與這一天的實際規模
+        verses: 3-5
+        laws: []
+      - id: TODO-16-3
+        title: 拈鬮、燒香與彈血
+        verses: 6-19
+        laws: []
+      - id: TODO-16-4
+        title: 送走的那隻羊：阿撒瀉勒是誰
+        verses: 8,10,20-22
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-16-5
+        title: 善後、刻苦己心與永遠的定例
+        verses: 23-34
+        laws: []
+  - chapter: 17
+    verse_count: 16
+    excluded: []
+    sections:
+      - id: TODO-17-1
+        title: 這一章在利未記裡的位置
+        verses: 1-2
+        laws: []
+      - id: TODO-17-2
+        title: 宰牲必須帶到會幕門口
+        verses: 3-7
+        laws: []
+      - id: TODO-17-3
+        title: 獻祭的地點與吃血的禁令
+        verses: 8-14
+        laws: []
+      - id: TODO-17-4
+        title: 獵物的血與誤吃自死之物
+        verses: 13-16
+        laws: []
+  - chapter: 18
+    verse_count: 30
+    excluded: []
+    sections:
+      - id: TODO-18-1
+        title: 兩個地名劃出的界線
+        verses: 1-5
+        laws: []
+      - id: TODO-18-2
+        title: 亂倫禁令與它的原文用語
+        verses: 6-18
+        laws: []
+      - id: TODO-18-3
+        title: 摩洛、同性性行為與人獸性行為
+        verses: 19-23
+        laws: []
+      - id: TODO-18-4
+        title: 地會把人吐出來
+        verses: 24-30
+        laws: []
+  - chapter: 19
+    verse_count: 37
+    excluded: []
+    sections:
+      - id: TODO-19-1
+        title: 聖潔生活的總綱
+        verses: 1-2
+        laws: []
+      - id: TODO-19-2
+        title: 向著神的聖潔生活
+        verses: 3-8
+        laws: []
+      - id: TODO-19-3
+        title: 向著人的聖潔生活
+        verses: 9-18
+        laws: []
+      - id: TODO-19-4
+        title: 不可混雜、不可效法外邦
+        verses: 19-31
+        laws: []
+      - id: TODO-19-5
+        title: 敬畏神、愛人、行公義
+        verses: 32-37
+        laws: []
+  - chapter: 20
+    verse_count: 27
+    excluded: []
+    sections:
+      - id: TODO-20-1
+        title: 這一章在利未記裡的位置
+        verses: "1"
+        laws: []
+      - id: TODO-20-2
+        title: 從摩洛說起：拜偶像與交鬼的死刑
+        verses: 1-6,27
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-20-3
+        title: 「凡咒罵父母的」與刑罰為什麼這麼重
+        verses: 7-9
+        laws: []
+      - id: TODO-20-4
+        title: 刑度不是一條線：本章的五種處置
+        verses: 10-21
+        laws: []
+      - id: TODO-20-5
+        title: 分別為聖，免得被地吐出
+        verses: 22-26
+        laws: []
+  - chapter: 21
+    verse_count: 24
+    excluded: []
+    sections:
+      - id: TODO-21-1
+        title: 祭司的喪禮界線與外表
+        verses: 1-6
+        laws: []
+      - id: TODO-21-2
+        title: 祭司與大祭司的婚姻和家庭
+        verses: 7-15
+        laws: []
+      - id: TODO-21-3
+        title: 身體殘疾與事奉資格
+        verses: 16-24
+        laws: []
+  - chapter: 22
+    verse_count: 33
+    excluded: []
+    sections:
+      - id: TODO-22-1
+        title: 祭司與聖物之間的潔淨界線
+        verses: 1-9
+        laws: []
+      - id: TODO-22-2
+        title: 誰可以吃，誰不可以吃
+        verses: 10-16
+        laws: []
+      - id: TODO-22-3
+        title: 祭牲的無殘疾要求
+        verses: 17-25
+        laws: []
+      - id: TODO-22-4
+        title: 從第八天起、母子不同日
+        verses: 26-33
+        laws: []
+  - chapter: 23
+    verse_count: 44
+    excluded: []
+    sections:
+      - id: TODO-23-1
+        title: 節期屬於誰，以及安息日為何單獨列出
+        verses: 1-4
+        laws: []
+      - id: TODO-23-2
+        title: 一個中文看不出來的分級：什麼工，還是什麼勞碌的工
+        verses: 3,7,28
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-23-3
+        title: 春季四節：逾越節、無酵節、初熟、七七節
+        verses: 5-22
+        laws: []
+      - id: TODO-23-4
+        title: 秋季三節：吹角、贖罪、住棚
+        verses: 23-43
+        laws: []
+  - chapter: 24
+    verse_count: 23
+    excluded: []
+    sections:
+      - id: TODO-24-1
+        title: 每天點的燈，每週換的餅
+        verses: 1-9
+        laws: []
+      - id: TODO-24-2
+        title: 一件突發的事，和一條臨時求來的律法
+        verses: 10-16
+        laws: []
+      - id: TODO-24-3
+        title: 三級傷害，一個標準
+        verses: 17-22
+        laws: []
+  - chapter: 25
+    verse_count: 55
+    excluded: []
+    sections:
+      - id: TODO-25-1
+        title: 地也要守安息
+        verses: 1-7
+        laws: []
+      - id: TODO-25-2
+        title: 第五十年：宣告自由
+        verses: 8-17
+        laws: []
+      - id: TODO-25-3
+        title: 不撒種要吃什麼
+        verses: 18-22
+        laws: []
+      - id: TODO-25-4
+        title: 地是我的
+        verses: 23-38
+        laws: []
+      - id: TODO-25-5
+        title: 因為他們是我的僕人
+        verses: 39-55
+        laws: []
+  - chapter: 26
+    verse_count: 46
+    excluded: []
+    sections:
+      - id: TODO-26-1
+        title: 兩條前提：不可造偶像，要守安息日
+        verses: 1-2
+        laws: []
+      - id: TODO-26-2
+        title: 順服的七層祝福
+        verses: 3-13
+        laws: []
+      - id: TODO-26-3
+        title: 悖逆的五層咒詛
+        verses: 14-39
+        laws: []
+      - id: TODO-26-4
+        title: 地的安息與百姓的認罪
+        verses: 34-45
+        laws: []
+      - id: TODO-26-5
+        title: 全書的結語與跨章脈絡
+        verses: "46"
+        laws: []
+  - chapter: 27
+    verse_count: 34
+    excluded: []
+    sections:
+      - id: TODO-27-1
+        title: 許願是什麼，為什麼要立法管它
+        verses: 1-2
+        laws: []
+      - id: TODO-27-2
+        title: 人的估價：一張表與兩種讀法
+        verses: 3-8
+        laws: []
+      - id: TODO-27-3
+        title: 牲畜、房屋、田地：三種對象，一套機制
+        verses: 9-25
+        laws: []
+      - id: TODO-27-4
+        title: 三樣不可以許的：本來就是神的
+        verses: 26-33
+        laws: []
+      - id: TODO-27-5
+        title: 十分之一與全書的結語
+        verses: 30-34
+        laws: []

@@ -1,0 +1,179 @@
+# 出埃及記1–19 章（以色列在埃及、十災、過紅海、曠野的敘事不收；逾越節的規矩、頭生的、安息日與嗎哪、西乃山下的預備）。
+book: 出埃及記
+chapters:
+  - chapter: 1
+    excluded:
+      - { verses: "1-22", reason: 雅各的子孫在埃及人數增多、被法老苦待的敘事 }
+    sections: []
+  - chapter: 2
+    excluded:
+      - { verses: "1-25", reason: 摩西出生、逃到米甸的敘事 }
+    sections: []
+  - chapter: 3
+    excluded:
+      - { verses: "1-22", reason: 神在荊棘中向摩西顯現、呼召的敘事 }
+    sections: []
+  - chapter: 4
+    excluded:
+      - { verses: "1-31", reason: 摩西的神蹟、亞倫同去，以及割禮的敘事 }
+    sections: []
+  - chapter: 5
+    excluded:
+      - { verses: "1-23", reason: 摩西見法老、法老加重工作的敘事 }
+    sections: []
+  - chapter: 6
+    excluded:
+      - { verses: "1-30", reason: 神重申應許、摩西亞倫的家譜 }
+    sections: []
+  - chapter: 7
+    excluded:
+      - { verses: "1-25", reason: 亞倫的杖變蛇、尼羅河水變血的敘事 }
+    sections: []
+  - chapter: 8
+    excluded:
+      - { verses: "1-32", reason: 青蛙、虱子、蒼蠅之災的敘事 }
+    sections: []
+  - chapter: 9
+    excluded:
+      - { verses: "1-35", reason: 瘟疫、瘡、雹災的敘事 }
+    sections: []
+  - chapter: 10
+    excluded:
+      - { verses: "1-29", reason: 蝗災、黑暗之災的敘事 }
+    sections: []
+  - chapter: 11
+    excluded:
+      - { verses: "1-10", reason: 預告擊殺埃及頭生的敘事 }
+    sections: []
+  - chapter: 12
+    excluded:
+      - { verses: "1", reason: 耶和華在埃及地曉諭摩西、亞倫的引言 }
+      - { verses: "28-42", reason: 以色列人照所吩咐行、擊殺埃及頭生的和離開埃及的敘事 }
+      - { verses: "50-51", reason: 以色列人照所吩咐行了、當日出埃及的敘事 }
+    sections:
+      - id: ex12-s1
+        title: 逾越節
+        verses: 2-27
+        laws:
+          - id: ex12-02
+            title: 以本月為正月，為一年之首
+            refs: ["2"]
+            topics: [passover]
+            summary: 你們要以本月為正月，為一年之首。
+            basis: [2]
+          - id: ex12-03
+            title: 初十日取羊羔，十四日黃昏宰了，塗血在門框上，當夜烤了吃
+            refs: ["3-13"]
+            topics: [passover, offerings]
+            summary: 初十按家取羊羔，人少可與鄰舍共取，照人數飯量計；要一歲無殘疾公羔，十四日黃昏宰，塗血在門框門楣；當夜烤吃，與無酵餅苦菜同吃，不留早晨。
+            basis: [3, 5, 6, 7, 8, 10, 11]
+            why: [13]
+            entries: [逾越節羔羊, 逾越節的吃法, 逾越節血記, 逾越節]
+          - id: ex12-14
+            title: 記念這日，吃無酵餅七日，除去家中的酵
+            refs: ["14-20"]
+            topics: [passover]
+            summary: 要記念此日守耶和華的節，世世代代作定例；吃無酵餅七日，首日除酵，首末日有聖會，不可做工（除預備吃的）；本地人或寄居者吃有酵物必剪除。
+            basis: [14, 15, 16, 19, 20]
+            why: [17]
+            entries: [無酵節, 逾越節]
+          - id: ex12-21
+            title: 長老按家口取羊羔宰逾越節的祭，兒女問時要講給他們聽
+            refs: ["21-27"]
+            topics: [passover, parents]
+            summary: 長老按家取羊羔宰逾越節祭，用牛膝草蘸血塗門楣、門框；不可出門直到早晨，要守為世代定例；兒女問起，告訴他們耶和華越過以色列家、救了各家。
+            basis: [21, 22, 24, 26, 27]
+            why: [23]
+            entries: [逾越節定為永遠定例, 逾越節的吃法, 逾越節]
+      - id: ex12-s2
+        title: 逾越節的例
+        verses: 43-49
+        laws:
+          - id: ex12-43
+            title: 逾越節的例：外人不可吃，在一個房子裡吃，骨頭不可折斷
+            refs: ["43-49"]
+            topics: [passover, sojourner]
+            summary: 外邦人不可吃羊羔；受割禮的買來奴僕可以吃，寄居者、雇工不可吃；要在一屋吃，不可帶出，也不可折骨；外人願守，男子受割禮後可吃，本地人與寄居者同例。
+            basis: [43, 44, 45, 46, 48, 49]
+            entries: [逾越節條例（外邦人與寄居者）, 逾越節]
+  - chapter: 13
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "17-22", reason: 以色列人離開埃及，神用雲柱火柱引導的敘事 }
+    sections:
+      - id: ex13-s1
+        title: 頭生的與無酵節
+        verses: 2-16
+        laws:
+          - id: ex13-02
+            title: 以色列中凡頭生的，無論人或牲畜，都歸耶和華
+            refs: ["2"]
+            topics: [firstborn]
+            summary: 以色列中凡頭生的，無論是人是牲畜，都是耶和華的，要分別為聖歸他。
+            basis: [2]
+            why: [2]
+          - id: ex13-03
+            title: 記念出埃及的日子，吃無酵餅七日，要告訴兒子
+            refs: ["3-10"]
+            topics: [passover, parents]
+            summary: 你們要記念從埃及出來的這日，吃無酵餅七日，到第七日要向耶和華守節，在你四境之內不可見有酵的餅；當那日要告訴兒子，這是因耶和華在我出埃及的時候為我所行的；每年要按著日期守這例。
+            basis: [3, 6, 7, 8, 10]
+            why: [3, 9]
+            entries: [無酵節]
+          - id: ex13-11
+            title: 頭生的牲畜歸耶和華；頭生的驢用羊羔代贖；頭生的兒子都要贖出來
+            refs: ["11-16"]
+            topics: [firstborn, offerings]
+            summary: 到了迦南地，要將一切頭生的和牲畜中頭生的公的歸給耶和華；頭生的驢要用羊羔代贖，若不代贖就要打折牠的頸項；凡兒子中頭生的都要贖出來；兒子問起，就告訴他耶和華用大能的手領我們出埃及。
+            basis: [11, 12, 13, 14]
+            why: [15]
+            entries: [頭生歸神為聖, 驢用羊羔代贖]
+  - chapter: 14
+    excluded:
+      - { verses: "1-31", reason: 過紅海、埃及軍兵被淹沒的敘事 }
+    sections: []
+  - chapter: 15
+    excluded:
+      - { verses: "1-27", reason: 摩西之歌、瑪拉的苦水與以琳的敘事 }
+    sections: []
+  - chapter: 16
+    excluded:
+      - { verses: "1-22", reason: 百姓在汛的曠野發怨言、神降嗎哪的敘事 }
+      - { verses: "31-36", reason: 嗎哪的樣子與留一罐在法櫃前的敘事 }
+    sections:
+      - id: ex16-s1
+        title: 安息日與嗎哪
+        verses: 23-30
+        laws:
+          - id: ex16-23
+            title: 第六天收雙倍的食物，第七天是聖安息日，不可出去收
+            refs: ["23-30"]
+            topics: [sabbath]
+            summary: 明日是聖安息日，烤煮的預備好，所剩留到早晨；六日收取，第七日沒有嗎哪，不可出去收；第六日耶和華賜雙份食物。
+            basis: [23, 25, 26, 27, 29]
+            why: [29]
+            entries: [安息日收取規定, 安息日]
+  - chapter: 17
+    excluded:
+      - { verses: "1-16", reason: 磐石出水與擊敗亞瑪力人的敘事 }
+    sections: []
+  - chapter: 18
+    excluded:
+      - { verses: "1-27", reason: 葉忒羅來見摩西、設立審判官的敘事 }
+    sections: []
+  - chapter: 19
+    excluded:
+      - { verses: "1-9", reason: 以色列人到了西乃山、耶和華說要立約的敘事 }
+      - { verses: "16-25", reason: 神降臨在西乃山、百姓聽見角聲的敘事 }
+    sections:
+      - id: ex19-s1
+        title: 在西乃山下預備
+        verses: 10-15
+        laws:
+          - id: ex19-10
+            title: 百姓要自潔，洗衣服，不可上山，不可親近女人
+            refs: ["10-15"]
+            topics: [corpse, one-god]
+            summary: 叫百姓今天明天自潔、洗衣，預備第三天耶和華降臨西乃山；山四圍定界，不可上山或摸山，違者治死；角聲拖長才可到山根；不可親近女人。
+            basis: [10, 11, 12, 13, 14, 15]
+            why: [11]

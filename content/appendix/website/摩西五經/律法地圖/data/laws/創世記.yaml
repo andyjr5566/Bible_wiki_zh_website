@@ -1,0 +1,277 @@
+# 創世記1–50 章（敘事、家譜與預言大多不收；只收其中明文的命令與後來律法回頭引用的規定）。
+book: 創世記
+chapters:
+  - chapter: 1
+    excluded:
+      - { verses: "1-27", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+      - { verses: "31", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections:
+      - id: gen01-s1
+        title: 生養眾多
+        verses: 28-30
+        laws:
+          - id: gen01-28
+            title: 生養眾多，治理這地；蔬菜果子作人的食物
+            refs: ["28-30"]
+            topics: [clean-food]
+            summary: 神賜福給人，要生養眾多、遍滿地面、治理並管理活物；把結種子的菜蔬和有核果子賜人作食物，青草賜地上活物作食物。
+            basis: [28, 29, 30]
+  - chapter: 2
+    excluded:
+      - { verses: "1", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+      - { verses: "4-23", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+      - { verses: "25", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections:
+      - id: gen02-s1
+        title: 神在第七日歇了工
+        verses: 2-24
+        laws:
+          - id: gen02-02
+            title: 神在第七日歇了工，賜福給第七日，定為聖日
+            refs: ["2-3"]
+            topics: [sabbath]
+            summary: 到第七日，神造物的工已經完畢，就歇了工；神賜福給第七日，定為聖日，因他在這日歇了創造的工。
+            basis: [2, 3]
+            why: [3]
+          - id: gen02-24
+            title: 人要離開父母，與妻子連合，二人成為一體
+            refs: ["24"]
+            topics: [marriage]
+            summary: 人要離開父母，與妻子連合，二人成為一體。
+            basis: [24]
+            why: [24]
+  - chapter: 3
+    excluded:
+      - { verses: "1-24", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 4
+    excluded:
+      - { verses: "1-26", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 5
+    excluded:
+      - { verses: "1-32", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 6
+    excluded:
+      - { verses: "1-22", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 7
+    excluded:
+      - { verses: "1-24", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 8
+    excluded:
+      - { verses: "1-22", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 9
+    excluded:
+      - { verses: "1-2", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+      - { verses: "7-29", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections:
+      - id: gen09-s1
+        title: 活著的動物都可以吃
+        verses: 3-6
+        laws:
+          - id: gen09-03
+            title: 活著的動物都可以吃，只是肉帶著血不可吃
+            refs: ["3-4"]
+            topics: [clean-food, blood-fat]
+            summary: 凡活著的動物都可以作你們的食物，如同菜蔬一樣；惟獨肉帶著血，那就是他的生命，你們不可吃。
+            basis: [3, 4]
+            why: [4]
+          - id: gen09-05
+            title: 流人血的，他的血也必被人所流
+            refs: ["5-6"]
+            topics: [homicide]
+            summary: 流你們血、害你們命的，無論是獸是人，神必討他的罪；凡流人血的，他的血也必被人所流，因為神造人是照自己的形像造的。
+            basis: [5, 6]
+            why: [6]
+  - chapter: 10
+    excluded:
+      - { verses: "1-32", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 11
+    excluded:
+      - { verses: "1-32", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 12
+    excluded:
+      - { verses: "1-20", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 13
+    excluded:
+      - { verses: "1-18", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 14
+    excluded:
+      - { verses: "1-24", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 15
+    excluded:
+      - { verses: "1-21", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 16
+    excluded:
+      - { verses: "1-16", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 17
+    excluded:
+      - { verses: "1-8", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+      - { verses: "15-27", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections:
+      - id: gen17-s1
+        title: 男子都要受割禮
+        verses: 9-14
+        laws:
+          - id: gen17-09
+            title: 男子都要受割禮，生下來第八日，作永遠的約
+            refs: ["9-14"]
+            entries: [割禮作為立約記號]
+            topics: [body-discharge]
+            summary: 你們所有的男子都要受割禮，這是神與亞伯拉罕和他後裔所立約的證據；世世代代的男子，家裡生的或用銀子買的，生下來第八日都要受割禮；不受割禮的男子必從民中剪除，因他背了神的約。
+            basis: [10, 11, 12, 14]
+            why: [11]
+  - chapter: 18
+    excluded:
+      - { verses: "1-33", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 19
+    excluded:
+      - { verses: "1-38", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 20
+    excluded:
+      - { verses: "1-18", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 21
+    excluded:
+      - { verses: "1-34", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 22
+    excluded:
+      - { verses: "1-24", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 23
+    excluded:
+      - { verses: "1-20", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 24
+    excluded:
+      - { verses: "1-67", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 25
+    excluded:
+      - { verses: "1-34", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 26
+    excluded:
+      - { verses: "1-35", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 27
+    excluded:
+      - { verses: "1-46", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 28
+    excluded:
+      - { verses: "1-22", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 29
+    excluded:
+      - { verses: "1-35", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 30
+    excluded:
+      - { verses: "1-43", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 31
+    excluded:
+      - { verses: "1-55", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 32
+    excluded:
+      - { verses: "1-31", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections:
+      - id: gen32-s1
+        title: 以色列人不吃大腿窩的筋
+        verses: 32
+        laws:
+          - id: gen32-32
+            title: 以色列人不吃大腿窩的筋
+            refs: ["32"]
+            topics: [clean-food]
+            summary: 以色列人不吃大腿窩的筋，直到今日，因為那人摸了雅各大腿窩的筋。
+            basis: [32]
+            why: [32]
+  - chapter: 33
+    excluded:
+      - { verses: "1-20", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 34
+    excluded:
+      - { verses: "1-31", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 35
+    excluded:
+      - { verses: "1-29", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 36
+    excluded:
+      - { verses: "1-43", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 37
+    excluded:
+      - { verses: "1-36", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 38
+    excluded:
+      - { verses: "1-30", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 39
+    excluded:
+      - { verses: "1-23", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 40
+    excluded:
+      - { verses: "1-23", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 41
+    excluded:
+      - { verses: "1-57", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 42
+    excluded:
+      - { verses: "1-38", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 43
+    excluded:
+      - { verses: "1-34", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 44
+    excluded:
+      - { verses: "1-34", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 45
+    excluded:
+      - { verses: "1-28", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 46
+    excluded:
+      - { verses: "1-34", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 47
+    excluded:
+      - { verses: "1-31", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 48
+    excluded:
+      - { verses: "1-22", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 49
+    excluded:
+      - { verses: "1-33", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []
+  - chapter: 50
+    excluded:
+      - { verses: "1-26", reason: 創世記的敘事、家譜或預言，沒有要百姓遵行的條文 }
+    sections: []

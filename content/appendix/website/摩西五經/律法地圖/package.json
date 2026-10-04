@@ -1,0 +1,29 @@
+{
+  "name": "pentateuch-law-map",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "摩西五經律法地圖：從主題、書卷、經文、人物地點走讀五經律法（非商業教育用途）",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 3051",
+    "data": "node scripts/build-data.mjs",
+    "data:check": "node scripts/build-data.mjs --check",
+    "seed": "node scripts/seed-sections.mjs",
+    "build": "npm run verify && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4197",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "verify": "npm run data:check && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-singlefile": "^2.0.3",
+    "vitest": "^2.1.8",
+    "yaml": "^2.6.1"
+  },
+  "overrides": {
+    "rollup": "4.62.4"
+  }
+}

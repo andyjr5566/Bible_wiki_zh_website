@@ -1,0 +1,107 @@
+# 段落草稿（自動產生，網站不讀）。整理後搬進 data/laws/出埃及記.yaml。
+book: 出埃及記
+chapters:
+  - chapter: 20
+    verse_count: 26
+    excluded: []
+    sections:
+      - id: TODO-20-1
+        title: 引言：我是耶和華你的神
+        verses: "2"
+        laws: []
+      - id: TODO-20-2
+        title: 向著神的四誡
+        verses: 3-11
+        laws: []
+      - id: TODO-20-3
+        title: 向著人的六誡
+        verses: 12-17
+        laws: []
+      - id: TODO-20-4
+        title: 百姓懼怕神的顯現與摩西就近幽暗
+        verses: 18-21
+        laws: []
+      - id: TODO-20-5
+        title: 神指示築壇獻祭
+        verses: 22-26
+        laws: []
+  - chapter: 21
+    verse_count: 36
+    excluded: []
+    sections:
+      - id: TODO-21-1
+        title: 希伯來奴僕的律例
+        verses: 1-6
+        laws: []
+      - id: TODO-21-2
+        title: 希伯來女僕的律例
+        verses: 7-11
+        laws: []
+      - id: TODO-21-3
+        title: 殺人與傷人的律例
+        verses: 12-27
+        laws: []
+      - id: TODO-21-4
+        title: 牛觸死人的律例
+        verses: 28-32
+        laws: []
+      - id: TODO-21-5
+        title: 財產損失的律例
+        verses: 33-36
+        laws: []
+  - chapter: 22
+    verse_count: 31
+    excluded: []
+    sections:
+      - id: TODO-22-1
+        title: 偷竊賠償的律例
+        verses: 1-4
+        laws: []
+      - id: TODO-22-2
+        title: 財物受損的律例
+        verses: 5-6
+        laws: []
+      - id: TODO-22-3
+        title: 受託看管的律例
+        verses: 7-15
+        laws: []
+      - id: TODO-22-4
+        title: 道德與宗教的律例
+        verses: 16-20
+        laws: []
+      - id: TODO-22-5
+        title: 保護弱者的律例
+        verses: 21-27
+        laws: []
+      - id: TODO-22-6
+        title: 禮儀的律例
+        verses: 28-31
+        laws: []
+  - chapter: 23
+    verse_count: 33
+    excluded: []
+    sections:
+      - id: TODO-23-1
+        title: 司法公正
+        verses: 1-9
+        laws: []
+      - id: TODO-23-2
+        title: 愛仇敵律例
+        verses: 4-5
+        laws: []
+      - id: TODO-23-3
+        title: 安息年與安息日
+        verses: 10-13
+        laws: []
+      - id: TODO-23-4
+        title: 三大節期
+        verses: 14-19
+        laws: []
+      - id: TODO-23-5
+        title: 使者引導與征服應許
+        verses: 20-31
+        laws: []
+      - id: TODO-23-6
+        title: 立約禁令
+        verses: 32-33
+        laws: []

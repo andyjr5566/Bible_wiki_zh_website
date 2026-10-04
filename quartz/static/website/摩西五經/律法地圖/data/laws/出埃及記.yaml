@@ -1,0 +1,526 @@
+# 出埃及記的律法段落與條文（手寫 source of truth）。出20–23 全章收錄；勸勉、敘事與應許寫進 excluded。
+# 每條的 summary 只重述經文；why 只標「經文自己交代理由」的節號，畫面上顯示和合本原句。
+book: 出埃及記
+chapters:
+  - chapter: 20
+    excluded:
+      - { verses: "1-2", reason: 神說話的引言與自我介紹 }
+      - { verses: "18-22", reason: 百姓懼怕、摩西就近神的敘事，以及神再吩咐摩西的引言 }
+    sections:
+      - id: ex20-s1
+        title: 向著神的四誡
+        verses: 3-11
+        laws:
+          - id: ex20-03
+            title: 除了耶和華，不可有別的神
+            refs: ["3"]
+            topics: [idolatry]
+            summary: 除了耶和華以外，不可有別的神。
+            basis: [3]
+            entries: [除了我以外你不可有別的神]
+          - id: ex20-04
+            title: 不可雕刻偶像，也不可跪拜
+            refs: ["4-6"]
+            topics: [idolatry]
+            summary: 不可為自己雕刻偶像，也不可做天上、地下、水中百物的形像，不可跪拜事奉，因為耶和華是忌邪的神。
+            basis: [4, 5]
+            why: [5]
+            entries: [不可為自己雕刻偶像]
+          - id: ex20-07
+            title: 不可妄稱耶和華的名
+            refs: ["7"]
+            topics: [divine-name]
+            summary: 不可妄稱耶和華你神的名，因為妄稱耶和華名的，耶和華必不以他為無罪。
+            basis: [7]
+            why: [7]
+            entries: [不可妄稱耶和華你神的名]
+          - id: ex20-08
+            title: 守安息日為聖日
+            refs: ["8-11"]
+            topics: [sabbath]
+            summary: 要記念安息日守為聖日：六日勞碌做工，第七日全家、僕婢、牲畜和寄居的客旅都不可做工，因為耶和華六日造天地，第七日便安息。
+            basis: [8, 9, 10, 11]
+            why: [11]
+            entries: [安息日]
+      - id: ex20-s2
+        title: 向著人的六誡
+        verses: 12-17
+        laws:
+          - id: ex20-12
+            title: 孝敬父母
+            refs: ["12"]
+            topics: [parents]
+            summary: 要孝敬父母，使你的日子在耶和華所賜的地上得以長久。
+            basis: [12]
+            why: [12]
+            entries: [當孝敬父母]
+          - id: ex20-13
+            title: 不可殺人
+            refs: ["13"]
+            topics: [homicide]
+            summary: 不可殺人。
+            basis: [13]
+            entries: [不可殺人]
+          - id: ex20-14
+            title: 不可姦淫
+            refs: ["14"]
+            topics: [sexual, marriage]
+            summary: 不可姦淫。
+            basis: [14]
+            entries: [不可姦淫]
+          - id: ex20-15
+            title: 不可偷盜
+            refs: ["15"]
+            topics: [theft]
+            summary: 不可偷盜。
+            basis: [15]
+            entries: [不可偷盜]
+          - id: ex20-16
+            title: 不可作假見證陷害人
+            refs: ["16"]
+            topics: [courts]
+            summary: 不可作假見證陷害人。
+            basis: [16]
+            entries: [不可作假見證陷害人]
+          - id: ex20-17
+            title: 不可貪戀人的房屋、妻子和一切所有
+            refs: ["17"]
+            topics: [animals-property]
+            summary: 不可貪戀人的房屋，也不可貪戀人的妻子、僕婢、牛驢，和他一切所有的。
+            basis: [17]
+            entries: [不可貪戀]
+      - id: ex20-s3
+        title: 築壇的規定
+        verses: 22-26
+        laws:
+          - id: ex20-23
+            title: 不可做神像與耶和華相配
+            refs: ["23"]
+            topics: [idolatry]
+            summary: 不可做什麼神像與耶和華相配，也不可為自己做金銀的神像。
+            basis: [23]
+            entries: [不可為自己雕刻偶像]
+          - id: ex20-24
+            title: 築土壇獻燔祭和平安祭
+            refs: ["24"]
+            topics: [altar-tabernacle, burnt-offering, peace-offering]
+            summary: 要為耶和華築土壇，在上面以牛羊獻為燔祭和平安祭；凡記下他名的地方，他必到那裡賜福。
+            basis: [24]
+            entries: [燔祭, 平安祭]
+          - id: ex20-25
+            title: 石壇不可用鑿成的石頭，上壇不可用臺階
+            refs: ["25-26"]
+            topics: [altar-tabernacle]
+            summary: 若築石壇，不可用鑿成的石頭；上壇也不可用臺階，免得露出下體。
+            basis: [25, 26]
+            why: [25]
+  - chapter: 21
+    excluded:
+      - { verses: "1", reason: 典章的引言 }
+    sections:
+      - id: ex21-s1
+        title: 希伯來奴僕的律例
+        verses: 1-6
+        laws:
+          - id: ex21-02
+            title: 希伯來男僕第七年自由
+            refs: ["2-6"]
+            topics: [slavery]
+            summary: 買來的希伯來男僕服事六年，第七年可以白白地出去；若他自己不願意走，就要穿耳，永遠服事主人。
+            basis: [2, 5, 6]
+            entries: [希伯來奴僕的律例]
+      - id: ex21-s2
+        title: 希伯來女僕的律例
+        verses: 7-11
+        laws:
+          - id: ex21-07
+            title: 被賣作婢女的女子的保障
+            refs: ["7-11"]
+            topics: [slavery, marriage]
+            summary: 被賣作婢女的女子不像男僕那樣出去；主人若不供給他吃食、衣服和好合的事，他就可以不用錢贖，白白地出去。
+            basis: [7, 10, 11]
+            entries: [希伯來女僕的律例]
+      - id: ex21-s3
+        title: 殺人與傷人的律例
+        verses: 12-27
+        laws:
+          - id: ex21-12
+            title: 故意殺人要處死，誤殺可逃往所設的地方
+            refs: ["12-14"]
+            topics: [homicide]
+            summary: 打人致死的，要處死；人若沒有埋伏，是神交在他手中，可以逃到所設的地方；任意用詭計殺人的，逃到壇那裡也要捉去處死。
+            basis: [12, 13, 14]
+            entries: [逃城]
+          - id: ex21-15
+            title: 打罵父母的要處死
+            refs: ["15", "17"]
+            topics: [parents]
+            summary: 打父母的，咒罵父母的，必要處死。
+            basis: [15, 17]
+          - id: ex21-16
+            title: 拐帶人口的要處死
+            refs: ["16"]
+            topics: [slavery]
+            summary: 拐帶人口，或是把人賣了，或是留在自己手下，必要處死。
+            basis: [16]
+          - id: ex21-18
+            title: 打傷人要賠誤工並醫好
+            refs: ["18-19"]
+            topics: [injury]
+            summary: 人彼此相爭，一人打傷另一人，沒有死，躺臥在床後又能扶杖起來，打人的算無罪，但要賠他耽誤的工夫，並要全然醫好他。
+            basis: [18, 19]
+          - id: ex21-20
+            title: 打死奴僕或婢女要受刑
+            refs: ["20-21"]
+            topics: [slavery, injury]
+            summary: 用棍子打奴僕或婢女，立時死在手下，必要受刑；若過一兩天才死，可以不受刑，因為是用錢買的。
+            basis: [20, 21]
+            why: [21]
+          - id: ex21-22
+            title: 爭鬥傷了有孕的婦人
+            refs: ["22-23"]
+            topics: [injury]
+            summary: 人彼此爭鬥，傷害有孕的婦人，甚至墜胎，若無別害，照婦人的丈夫所要的、審判官所斷的受罰；若有別害，就要以命償命。
+            basis: [22, 23]
+          - id: ex21-24
+            title: 以眼還眼，以牙還牙
+            refs: ["24-25"]
+            topics: [injury]
+            summary: 以眼還眼，以牙還牙，以手還手，以腳還腳，以烙還烙，以傷還傷，以打還打。
+            basis: [24, 25]
+          - id: ex21-26
+            title: 打壞奴僕的眼睛或牙齒，要放他自由
+            refs: ["26-27"]
+            topics: [slavery, injury]
+            summary: 打壞奴僕或婢女的一隻眼，或打掉一個牙，就要因他的眼、他的牙放他去得以自由。
+            basis: [26, 27]
+      - id: ex21-s4
+        title: 牛觸人的律例
+        verses: 28-32
+        laws:
+          - id: ex21-28
+            title: 牛觸死人，牛要打死
+            refs: ["28"]
+            topics: [animals-property, homicide]
+            summary: 牛觸死男人或女人，總要用石頭打死那牛，不可吃牠的肉；牛的主人算無罪。
+            basis: [28]
+          - id: ex21-29
+            title: 素來觸人的牛，主人不拴著
+            refs: ["29-31"]
+            topics: [animals-property, homicide]
+            summary: 牛素來觸人，有人報告了牛主，他竟不把牛拴著，以致觸死人，牛要打死，牛主也必處死；若罰他贖命的價銀，就照所罰的贖命。
+            basis: [29, 30, 31]
+          - id: ex21-32
+            title: 牛觸了奴僕或婢女
+            refs: ["32"]
+            topics: [animals-property, slavery]
+            summary: 牛若觸了奴僕或婢女，要將三十舍客勒銀子給他們的主人，也要用石頭把牛打死。
+            basis: [32]
+      - id: ex21-s5
+        title: 牲畜造成損失的律例
+        verses: 33-36
+        laws:
+          - id: ex21-33
+            title: 敞著井口，牲畜掉進去
+            refs: ["33-34"]
+            topics: [animals-property]
+            summary: 人敞著井口，或挖井不遮蓋，有牛或驢掉在裡頭，井主要拿錢賠還本主人，死牲畜歸自己。
+            basis: [33, 34]
+          - id: ex21-35
+            title: 牛傷了別人的牛
+            refs: ["35-36"]
+            topics: [animals-property]
+            summary: 這人的牛傷了那人的牛以至於死，要賣了活牛平分價值，死牛也平分；若知道這牛素來觸人，主人竟不拴著，必要以牛還牛，死牛歸自己。
+            basis: [35, 36]
+  - chapter: 22
+    excluded: []
+    sections:
+      - id: ex22-s1
+        title: 偷竊賠償的律例
+        verses: 1-4
+        laws:
+          - id: ex22-01
+            title: 偷牛羊要賠五倍、四倍
+            refs: ["1"]
+            topics: [theft]
+            summary: 人偷牛或羊，無論宰了或賣了，要以五牛賠一牛，四羊賠一羊。
+            basis: [1]
+          - id: ex22-02
+            title: 夜間遇賊挖窟窿，與賊被拿
+            refs: ["2-3"]
+            topics: [theft, homicide]
+            summary: 遇見賊挖窟窿，把賊打死，打的人沒有流血的罪；若太陽已經出來，就有流血的罪。賊被拿，總要賠還；一無所有，就被賣，頂所偷的物。
+            basis: [2, 3]
+          - id: ex22-04
+            title: 偷的牲畜還在手下，要加倍賠還
+            refs: ["4"]
+            topics: [theft]
+            summary: 所偷的牛、驢或羊，仍在他手下存活，他就要加倍賠還。
+            basis: [4]
+      - id: ex22-s2
+        title: 財物受損的律例
+        verses: 5-6
+        laws:
+          - id: ex22-05
+            title: 牲畜吃了別人的田要賠
+            refs: ["5"]
+            topics: [animals-property]
+            summary: 人在田間或葡萄園裡放牲畜，任憑牲畜上別人的田裡去吃，就必拿自己田間上好的和葡萄園上好的賠還。
+            basis: [5]
+          - id: ex22-06
+            title: 點火燒了別人的禾稼要賠
+            refs: ["6"]
+            topics: [animals-property]
+            summary: 點火焚燒荊棘，以致將別人堆積的禾捆、站著的禾稼或是田園都燒盡了，那點火的必要賠還。
+            basis: [6]
+      - id: ex22-s3
+        title: 受託看管的律例
+        verses: 7-15
+        laws:
+          - id: ex22-07
+            title: 交付鄰舍看守的銀錢家具被偷
+            refs: ["7-8"]
+            topics: [theft]
+            summary: 將銀錢或家具交付鄰舍看守，從他家被偷去：找到賊，賊要加倍賠還；找不到賊，家主要就近審判官，看看他有沒有拿原主的物件。
+            basis: [7, 8]
+          - id: ex22-09
+            title: 兩人爭執失物的歸屬
+            refs: ["9"]
+            topics: [theft, courts]
+            summary: 兩個人為牛、驢、羊、衣裳或什麼失掉之物，有一人說這是我的，兩造要將案件稟告審判官；審判官定誰有罪，誰就要加倍賠還。
+            basis: [9]
+          - id: ex22-10
+            title: 交付鄰舍看守的牲畜死傷
+            refs: ["10-11"]
+            topics: [theft, animals-property]
+            summary: 將牲畜交付鄰舍看守，牲畜死了、傷了或被趕去而無人看見，看守的要憑著耶和華起誓沒有拿鄰舍的物，本主就罷休，看守的不必賠還。
+            basis: [10, 11]
+          - id: ex22-12
+            title: 看守的牲畜被偷或被野獸撕碎
+            refs: ["12-13"]
+            topics: [theft, animals-property]
+            summary: 牲畜若從看守的那裡被偷去，他要賠還本主；若被野獸撕碎，看守的要把撕碎的帶來當作證據，就不必賠還。
+            basis: [12, 13]
+          - id: ex22-14
+            title: 向鄰舍借來的東西受傷或死了
+            refs: ["14-15"]
+            topics: [theft, loans]
+            summary: 向鄰舍借什麼，所借的受傷或死了，本主沒有同在一處，借的人總要賠還；本主同在一處，或是雇來的，就不必賠還。
+            basis: [14, 15]
+            why: [15]
+      - id: ex22-s4
+        title: 婚姻、邪術與祭祀別神的律例
+        verses: 16-20
+        laws:
+          - id: ex22-16
+            title: 引誘沒有受聘的處女
+            refs: ["16-17"]
+            topics: [marriage, sexual]
+            summary: 人引誘沒有受聘的處女，與他行淫，總要交出聘禮，娶他為妻；若女子的父親決不肯將女子給他，他就要按處女的聘禮交出錢來。
+            basis: [16, 17]
+            entries: [引誘處女的律例]
+          - id: ex22-18
+            title: 行邪術的女人不可容他存活
+            refs: ["18"]
+            topics: [witchcraft]
+            summary: 行邪術的女人，不可容他存活。
+            basis: [18]
+          - id: ex22-19
+            title: 與獸淫合的要治死
+            refs: ["19"]
+            topics: [sexual]
+            summary: 凡與獸淫合的，總要把他治死。
+            basis: [19]
+          - id: ex22-20
+            title: 祭祀別神的要滅絕
+            refs: ["20"]
+            topics: [idolatry]
+            summary: 祭祀別神，不單單祭祀耶和華的，那人必要滅絕。
+            basis: [20]
+      - id: ex22-s5
+        title: 保護弱者的律例
+        verses: 21-27
+        laws:
+          - id: ex22-21
+            title: 不可虧負、欺壓寄居的
+            refs: ["21"]
+            topics: [sojourner]
+            summary: 不可虧負寄居的，也不可欺壓他。
+            basis: [21]
+            why: [21]
+          - id: ex22-22
+            title: 不可苦待寡婦和孤兒
+            refs: ["22-24"]
+            topics: [sojourner]
+            summary: 不可苦待寡婦和孤兒；若苦待他們，他們一哀求，耶和華總要聽，並要發烈怒，用刀殺人，使他們的妻子為寡婦，兒女為孤兒。
+            basis: [22, 23, 24]
+            why: [23]
+          - id: ex22-25
+            title: 借錢給窮人不可取利
+            refs: ["25"]
+            topics: [loans, poor]
+            summary: 我民中有貧窮人與你同住，你若借錢給他，不可如放債的向他取利。
+            basis: [25]
+          - id: ex22-26
+            title: 拿鄰舍的衣服作當頭，日落以先要歸還
+            refs: ["26-27"]
+            topics: [loans, poor]
+            summary: 拿鄰舍的衣服作當頭，必在日落以先歸還他，因為那是他蓋身的衣服。
+            basis: [26, 27]
+            why: [27]
+      - id: ex22-s6
+        title: 敬畏與歸給神的律例
+        verses: 28-31
+        laws:
+          - id: ex22-28
+            title: 不可毀謗神，也不可毀謗官長
+            refs: ["28"]
+            topics: [leaders]
+            summary: 不可毀謗神，也不可毀謗你百姓的官長。
+            basis: [28]
+          - id: ex22-29
+            title: 莊稼、酒和頭生的要歸給耶和華
+            refs: ["29-30"]
+            topics: [tithes, firstborn]
+            summary: 莊稼中的穀和酒醡中的酒要拿來獻上，不可遲延；頭生的兒子要歸給耶和華；牛羊頭生的，七天跟著母，第八天要歸給耶和華。
+            basis: [29, 30]
+          - id: ex22-31
+            title: 不可吃田間被野獸撕裂的肉
+            refs: ["31"]
+            topics: [clean-food]
+            summary: 你們要在耶和華面前為聖潔的人；田間被野獸撕裂牲畜的肉，不可吃，要丟給狗吃。
+            basis: [31]
+            why: [31]
+  - chapter: 23
+    excluded:
+      - { verses: "20-23", reason: 差遣使者保護引領的應許與警告 }
+      - { verses: "26-31", reason: 順服之後的應許與預告 }
+    sections:
+      - id: ex23-s1
+        title: 公正與善待
+        verses: 1-9
+        laws:
+          - id: ex23-01
+            title: 不可散布謠言，不可作假見證
+            refs: ["1"]
+            topics: [courts]
+            summary: 不可隨夥散布謠言；不可與惡人連手妄作見證。
+            basis: [1]
+          - id: ex23-02
+            title: 爭訟時不可隨眾偏行
+            refs: ["2-3"]
+            topics: [courts, poor]
+            summary: 不可隨眾行惡；在爭訟的事上，不可隨眾偏行，作見證屈枉正直，也不可偏護窮人。
+            basis: [2, 3]
+          - id: ex23-04
+            title: 仇敵的牛驢失迷或壓倒，要幫助
+            refs: ["4-5"]
+            topics: [animals-property]
+            summary: 遇見仇敵的牛或驢失迷了路，總要牽回來交給他；看見恨你的人的驢壓臥在重馱之下，不可走開，要和驢主一同抬開重馱。
+            basis: [4, 5]
+          - id: ex23-06
+            title: 不可屈枉窮人爭訟的事
+            refs: ["6"]
+            topics: [courts, poor]
+            summary: 不可在窮人爭訟的事上屈枉正直。
+            basis: [6]
+          - id: ex23-07
+            title: 遠離虛假，不可殺無辜的人
+            refs: ["7"]
+            topics: [courts, homicide]
+            summary: 當遠離虛假的事；不可殺無辜和有義的人，因為耶和華必不以惡人為義。
+            basis: [7]
+            why: [7]
+          - id: ex23-08
+            title: 不可受賄賂
+            refs: ["8"]
+            topics: [courts]
+            summary: 不可受賄賂。
+            basis: [8]
+            why: [8]
+          - id: ex23-09
+            title: 不可欺壓寄居的
+            refs: ["9"]
+            topics: [sojourner]
+            summary: 不可欺壓寄居的。
+            basis: [9]
+            why: [9]
+      - id: ex23-s2
+        title: 第七年與第七日
+        verses: 10-13
+        laws:
+          - id: ex23-10
+            title: 第七年要叫地歇息
+            refs: ["10-11"]
+            topics: [sabbath-year, poor]
+            summary: 六年耕種田地，收藏土產；第七年要叫地歇息，不耕不種，使民中的窮人有吃的；葡萄園和橄欖園也要照樣辦理。
+            basis: [10, 11]
+            why: [11]
+          - id: ex23-12
+            title: 六日做工，第七日要安息
+            refs: ["12"]
+            topics: [sabbath]
+            summary: 六日要做工，第七日要安息，使牛、驢可以歇息，並使婢女的兒子和寄居的都可以舒暢。
+            basis: [12]
+            why: [12]
+            entries: [安息日]
+          - id: ex23-13
+            title: 謹守耶和華的話，別神的名不可提
+            refs: ["13"]
+            topics: [divine-name]
+            summary: 凡耶和華所說的話，你們要謹守；別神的名不可提，也不可從口中傳說。
+            basis: [13]
+      - id: ex23-s3
+        title: 一年三次的節期
+        verses: 14-19
+        laws:
+          - id: ex23-14
+            title: 一年三次守節，朝見耶和華
+            refs: ["14", "17"]
+            topics: [three-feasts]
+            summary: 一年三次，要向耶和華守節；一切的男丁要一年三次朝見主耶和華。
+            basis: [14, 17]
+            entries: [三大節期]
+          - id: ex23-15
+            title: 守除酵節
+            refs: ["15"]
+            topics: [passover]
+            summary: 要守除酵節，在亞筆月內所定的日期，吃無酵餅七天；誰也不可空手朝見耶和華。
+            basis: [15]
+            why: [15]
+          - id: ex23-16
+            title: 守收割節和收藏節
+            refs: ["16"]
+            topics: [weeks, booths]
+            summary: 要守收割節，所收的是田間所種、勞碌得來初熟之物；並在年底收藏的時候，要守收藏節。
+            basis: [16]
+            entries: [三大節期]
+          - id: ex23-18
+            title: 祭牲的血與有酵的餅，節上祭牲的脂油
+            refs: ["18"]
+            topics: [blood-fat, offerings]
+            summary: 不可將祭牲的血和有酵的餅一同獻上；節上祭牲的脂油，也不可留到早晨。
+            basis: [18]
+          - id: ex23-19
+            title: 初熟之物與不可煮山羊羔
+            refs: ["19"]
+            topics: [tithes, clean-food]
+            summary: 地裡首先初熟之物，要送到耶和華你神的殿；不可用山羊羔母的奶煮山羊羔。
+            basis: [19]
+      - id: ex23-s4
+        title: 不可效法迦南人
+        verses: 24-33
+        laws:
+          - id: ex23-24
+            title: 不可跪拜迦南人的神，要事奉耶和華
+            refs: ["24-25"]
+            topics: [idolatry]
+            summary: 不可跪拜他們的神，不可事奉他，也不可效法他們的行為，要把神像盡行拆毀，打碎他們的柱像；要事奉耶和華你們的神。
+            basis: [24, 25]
+          - id: ex23-32
+            title: 不可和迦南人立約，不可讓他們住在你的地上
+            refs: ["32-33"]
+            topics: [war, idolatry]
+            summary: 不可和他們並他們的神立約；他們不可住在你的地上，恐怕他們使你得罪耶和華。
+            basis: [32, 33]
+            why: [33]

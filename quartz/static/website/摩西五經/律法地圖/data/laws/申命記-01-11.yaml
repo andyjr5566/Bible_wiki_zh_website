@@ -1,0 +1,370 @@
+# 申命記1–11 章（歷史回顧與勸勉大多不收；收其中的誡命：十誡、示馬、不可效法外邦）。
+book: 申命記
+chapters:
+  - chapter: 1
+    excluded:
+      - { verses: "1-46", reason: 摩西回顧西乃山起行、派探子、百姓悖逆的敘事 }
+    sections: []
+  - chapter: 2
+    excluded:
+      - { verses: "1-37", reason: 摩西回顧繞行曠野、經過以東、摩押、亞捫和擊敗西宏的敘事 }
+    sections: []
+  - chapter: 3
+    excluded:
+      - { verses: "1-29", reason: 摩西回顧擊敗巴珊王噩、河東分地和摩西不得過河的敘事 }
+    sections: []
+  - chapter: 4
+    excluded:
+      - { verses: "1", reason: 勸百姓聽從遵行律例典章的引言 }
+      - { verses: "3-14", reason: 回顧巴力毘珥與何烈山的歷史，說明律例典章的智慧 }
+      - { verses: "20-22", reason: 神領出埃及與摩西不得過約旦河的敘事 }
+      - { verses: "25-49", reason: 預告背約的後果與回頭的應許、河東三座逃城的敘事，以及下一篇講章的序言 }
+    sections:
+      - id: deut04-s1
+        title: 不可加減，不可雕刻偶像
+        verses: 2-24
+        laws:
+          - id: deut04-02
+            title: 神所吩咐的話，不可加添，也不可刪減
+            refs: ["2"]
+            topics: [one-god]
+            summary: 所吩咐你們的話，你們不可加添，也不可刪減，好叫你們遵守耶和華你們神的命令。
+            basis: [2]
+            why: [2]
+          - id: deut04-15
+            title: 不可敗壞自己，雕刻偶像
+            refs: ["15-19"]
+            topics: [idolatry]
+            summary: 你們要分外謹慎，因為耶和華在何烈山從火中對你們說話的那日，你們沒有看見什麼形像；惟恐你們雕刻偶像，彷彿男像女像、走獸、飛鳥、爬物、水中魚的像，又恐你向天觀看，被引誘去敬拜日月星。
+            basis: [15, 16, 17, 18, 19]
+            why: [15, 16]
+          - id: deut04-23
+            title: 不可忘記耶和華所立的約，為自己雕刻偶像
+            refs: ["23-24"]
+            topics: [idolatry]
+            summary: 你們要謹慎，免得忘記耶和華你們神與你們所立的約，為自己雕刻偶像，就是耶和華你神所禁止的，因為耶和華你的神乃是烈火，是忌邪的神。
+            basis: [23, 24]
+            why: [24]
+  - chapter: 5
+    excluded:
+      - { verses: "1-6", reason: 摩西召聚以色列人與十誡的引言 }
+      - { verses: "22-33", reason: 百姓懼怕、求摩西代聽神話的敘事與勸勉 }
+    sections:
+      - id: deut5-s2
+        title: 向著神的四誡
+        verses: 7-15
+        laws:
+          - id: deut5-07
+            title: 除了耶和華，不可有別的神
+            refs: ["7"]
+            topics: [idolatry]
+            summary: 除了耶和華以外，不可有別的神。
+            basis: [7]
+            entries: [除了我以外你不可有別的神]
+          - id: deut5-08
+            title: 不可雕刻偶像，也不可跪拜
+            refs: ["8-10"]
+            topics: [idolatry]
+            summary: 不可為自己雕刻偶像，也不可做天上、地下、水中百物的形像，不可跪拜事奉，因為耶和華是忌邪的神。
+            basis: [8, 9]
+            why: [9]
+            entries: [不可為自己雕刻偶像]
+          - id: deut5-11
+            title: 不可妄稱耶和華的名
+            refs: ["11"]
+            topics: [one-god]
+            summary: 不可妄稱耶和華你神的名，因為妄稱耶和華名的，耶和華必不以他為無罪。
+            basis: [11]
+            why: [11]
+            entries: [不可妄稱耶和華你神的名]
+          - id: deut5-12
+            title: 照神的吩咐守安息日
+            refs: ["12-15"]
+            topics: [sabbath]
+            summary: 要照神的吩咐守安息日：六日做工，第七日連僕婢、牛驢和寄居的客旅都不可做工，使僕婢可以和你一樣安息；也要記念你在埃及地作過奴僕。
+            basis: [12, 13, 14, 15]
+            why: [15]
+            entries: [安息日]
+      - id: deut5-s3
+        title: 向著人的六誡
+        verses: 16-21
+        laws:
+          - id: deut5-16
+            title: 孝敬父母
+            refs: ["16"]
+            topics: [parents]
+            summary: 要照耶和華你神所吩咐的孝敬父母，使你得福，並使你的日子在耶和華所賜的地上得以長久。
+            basis: [16]
+            why: [16]
+            entries: [當孝敬父母]
+          - id: deut5-17
+            title: 不可殺人
+            refs: ["17"]
+            topics: [homicide]
+            summary: 不可殺人。
+            basis: [17]
+            entries: [不可殺人]
+          - id: deut5-18
+            title: 不可姦淫
+            refs: ["18"]
+            topics: [sexual, marriage]
+            summary: 不可姦淫。
+            basis: [18]
+            entries: [不可姦淫]
+          - id: deut5-19
+            title: 不可偷盜
+            refs: ["19"]
+            topics: [theft]
+            summary: 不可偷盜。
+            basis: [19]
+            entries: [不可偷盜]
+          - id: deut5-20
+            title: 不可作假見證陷害人
+            refs: ["20"]
+            topics: [courts]
+            summary: 不可作假見證陷害人。
+            basis: [20]
+            entries: [不可作假見證陷害人]
+          - id: deut5-21
+            title: 不可貪戀人的妻子、房屋和一切所有
+            refs: ["21"]
+            topics: [animals-property]
+            summary: 不可貪戀人的妻子；也不可貪圖人的房屋、田地、僕婢、牛、驢，和他一切所有的。
+            basis: [21]
+            entries: [不可貪戀]
+  - chapter: 6
+    excluded:
+      - { verses: "1-3", reason: 這些誡命的目的與引言 }
+    sections:
+      - id: deut06-s1
+        title: 示馬與愛耶和華
+        verses: 4-9
+        laws:
+          - id: deut06-04
+            title: 耶和華是獨一的主，要盡心、盡性、盡力愛他
+            refs: ["4-5"]
+            topics: [one-god]
+            summary: 以色列啊，你要聽！耶和華我們神是獨一的主。你要盡心、盡性、盡力愛耶和華你的神。
+            basis: [4, 5]
+          - id: deut06-06
+            title: 把話記在心上，教訓兒女，繫在手上、寫在門框上
+            refs: ["6-9"]
+            topics: [one-god]
+            summary: 我今日所吩咐的話都要記在心上，也要殷勤教訓你的兒女；無論坐在家裡、行在路上、躺下、起來，都要談論；要繫在手上為記號，戴在額上為經文，寫在房屋的門框上和城門上。
+            basis: [6, 7, 8, 9]
+      - id: deut06-s2
+        title: 進了美地之後
+        verses: 10-25
+        laws:
+          - id: deut06-10
+            title: 吃得飽足時，謹慎不忘記耶和華
+            refs: ["10-12"]
+            topics: [one-god]
+            summary: 耶和華領你進入所應許的地，有你所沒有建造的城邑、裝滿美物的房屋、鑿成的水井，你吃得飽足的時候，要謹慎，免得忘記將你從埃及地領出來的耶和華。
+            basis: [10, 11, 12]
+            why: [12]
+          - id: deut06-13
+            title: 要敬畏事奉耶和華，指著他的名起誓，不可隨從別神
+            refs: ["13-15"]
+            topics: [one-god, divine-name]
+            summary: 你要敬畏耶和華你的神，事奉他，指著他的名起誓；不可隨從四圍國民的別神，因為在你們中間的耶和華你神是忌邪的神。
+            basis: [13, 14]
+            why: [15]
+          - id: deut06-16
+            title: 不可試探耶和華你們的神
+            refs: ["16"]
+            topics: [one-god]
+            summary: 你們不可試探耶和華你們的神，像你們在瑪撒那樣試探他。
+            basis: [16]
+          - id: deut06-17
+            title: 留意遵守誡命，行耶和華眼中看為正、為善的
+            refs: ["17-19"]
+            topics: [one-god]
+            summary: 要留意遵守耶和華你們神所吩咐的誡命、法度、律例；耶和華眼中看為正、看為善的，你都要遵行，使你可以享福，並可以進去得所應許的美地。
+            basis: [17, 18]
+            why: [18]
+          - id: deut06-20
+            title: 兒子問起這些律例，要告訴他救贖的故事
+            refs: ["20-25"]
+            topics: [one-god, parents]
+            summary: 日後兒子問這些法度、律例、典章是什麼意思，你就告訴他：我們在埃及作過法老的奴僕，耶和華用大能的手領我們出來；他吩咐我們遵行這一切律例，我們若謹守遵行，這就是我們的義了。
+            basis: [20, 21, 24, 25]
+            why: [21, 24]
+  - chapter: 7
+    excluded:
+      - { verses: "6-10", reason: 說明以色列是聖潔的民、耶和華守約的信實 }
+      - { verses: "12-15", reason: 聽從典章之後的福分應許 }
+      - { verses: "17-24", reason: 不要懼怕、神要漸漸趕出七族的勸勉與應許 }
+    sections:
+      - id: deut07-s1
+        title: 對待迦南七族
+        verses: 1-5
+        laws:
+          - id: deut07-01
+            title: 滅絕七族，不可與他們立約、結親，要拆毀他們的祭壇
+            refs: ["1-5"]
+            topics: [war, marriage, idolatry]
+            summary: 耶和華把七族交給你擊殺，你要把他們滅絕淨盡，不可與他們立約，也不可憐恤他們；不可與他們結親，不可嫁女兒給他們的兒子，也不可娶他們的女兒；要拆毀他們的祭壇，打碎柱像。
+            basis: [1, 2, 3, 5]
+            why: [4]
+      - id: deut07-s2
+        title: 要謹守誡命與除滅偶像
+        verses: 11-26
+        laws:
+          - id: deut07-11
+            title: 謹守遵行誡命、律例、典章
+            refs: ["11"]
+            topics: [one-god]
+            summary: 你要謹守遵行我今日所吩咐你的誡命、律例、典章。
+            basis: [11]
+          - id: deut07-16
+            title: 要除滅耶和華交給你的人民，不可事奉他們的神
+            refs: ["16"]
+            topics: [war, idolatry]
+            summary: 耶和華你神所要交給你的一切人民，你要將他們除滅；你眼不可顧惜他們，也不可事奉他們的神。
+            basis: [16]
+            why: [16]
+          - id: deut07-25
+            title: 雕刻的神像要用火焚燒，金銀不可貪圖，可憎的物不可帶進家
+            refs: ["25-26"]
+            topics: [idolatry]
+            summary: 他們雕刻的神像，你們要用火焚燒；其上的金銀，你不可貪圖，也不可收取；可憎的物，你不可帶進家去，不然就成了當毀滅的，與那物一樣。
+            basis: [25, 26]
+            why: [25]
+  - chapter: 8
+    excluded:
+      - { verses: "2-5", reason: 記念神在曠野四十年的引導與管教 }
+      - { verses: "7-9", reason: 描述所要進入的美地 }
+    sections:
+      - id: deut08-s1
+        title: 謹守誡命，不忘記耶和華
+        verses: 1-20
+        laws:
+          - id: deut08-01
+            title: 謹守遵行一切誡命，好叫你們存活
+            refs: ["1"]
+            topics: [one-god]
+            summary: 我今日所吩咐的一切誡命，你們要謹守遵行，好叫你們存活，人數增多，並且進去得耶和華向你們列祖所起誓應許的地。
+            basis: [1]
+            why: [1]
+          - id: deut08-06
+            title: 謹守誡命，遵行耶和華的道，敬畏他
+            refs: ["6"]
+            topics: [one-god]
+            summary: 你要謹守耶和華你神的誡命，遵行他的道，敬畏他。
+            basis: [6]
+          - id: deut08-10
+            title: 吃得飽足，就要稱頌耶和華
+            refs: ["10"]
+            topics: [one-god]
+            summary: 你吃得飽足，就要稱頌耶和華你的神，因他將那美地賜給你了。
+            basis: [10]
+            why: [10]
+          - id: deut08-11
+            title: 興旺的時候，不可忘記耶和華，不可隨從別神
+            refs: ["11-20"]
+            topics: [one-god]
+            summary: 你要謹慎，免得忘記耶和華你的神；吃得飽足、房屋美好、牛羊金銀增添的時候，不可心高氣傲，不可說這貨財是我力量得來的；要記念得貨財的力量是他給的；你若忘記他，隨從別神，必定滅亡。
+            basis: [11, 12, 13, 14, 17, 18, 19]
+            why: [18]
+  - chapter: 9
+    excluded:
+      - { verses: "1-3", reason: 預告要趕出比以色列強大的國民 }
+      - { verses: "7-29", reason: 摩西回顧以色列在曠野和何烈山悖逆、鑄牛犢的歷史與代求 }
+    sections:
+      - id: deut09-s1
+        title: 得地不是因為你的義
+        verses: 4-6
+        laws:
+          - id: deut09-04
+            title: 不可說得地是因我的義
+            refs: ["4-6"]
+            topics: [one-god]
+            summary: 耶和華把這些國民從你面前攆出以後，你心裡不可說：耶和華帶我進來得這地，是因我的義；你得他們的地，並不是因你的義，也不是因你心裡正直。
+            basis: [4, 5, 6]
+            why: [5]
+  - chapter: 10
+    excluded:
+      - { verses: "1-11", reason: 重刻石版、約櫃、利未支派分別出來的敘事 }
+      - { verses: "14-15", reason: 天地萬有屬耶和華、揀選列祖的宣告 }
+      - { verses: "17", reason: 描述耶和華至大的屬性 }
+      - { verses: "21-22", reason: 耶和華所做大事的回顧 }
+    sections:
+      - id: deut10-s1
+        title: 耶和華向你所要的
+        verses: 12-20
+        laws:
+          - id: deut10-12
+            title: 敬畏、遵行他的道、愛他、盡心事奉，遵守他的誡命
+            refs: ["12-13"]
+            topics: [one-god]
+            summary: 耶和華你神向你所要的，只要你敬畏他，遵行他的道，愛他，盡心盡性事奉他，遵守他的誡命律例，就是我今日所吩咐你的，為要叫你得福。
+            basis: [12, 13]
+            why: [13]
+          - id: deut10-16
+            title: 要將心裡的污穢除掉，不可再硬著頸項
+            refs: ["16"]
+            topics: [one-god]
+            summary: 你們要將心裡的污穢除掉，不可再硬著頸項。
+            basis: [16]
+          - id: deut10-18
+            title: 要憐愛寄居的，因為你們也作過寄居的
+            refs: ["18-19"]
+            topics: [sojourner]
+            summary: 耶和華為孤兒寡婦伸冤，又憐愛寄居的，賜給他衣食；所以你們要憐愛寄居的，因為你們在埃及地也作過寄居的。
+            basis: [18, 19]
+            why: [18, 19]
+          - id: deut10-20
+            title: 要敬畏耶和華，事奉他，專靠他，指著他的名起誓
+            refs: ["20"]
+            topics: [one-god]
+            summary: 你要敬畏耶和華你的神，事奉他，專靠他，也要指著他的名起誓。
+            basis: [20]
+  - chapter: 11
+    excluded:
+      - { verses: "2-7", reason: 回顧神在埃及和曠野所行的事，這是親眼看見的 }
+      - { verses: "10-15", reason: 所要進入的地與順服之後降雨的應許 }
+      - { verses: "22-25", reason: 謹守遵行之後趕出國民、得地的應許 }
+      - { verses: "26-31", reason: 把祝福與咒詛擺在百姓面前，以及基利心山與以巴路山的指示 }
+    sections:
+      - id: deut11-s1
+        title: 愛耶和華，謹守誡命
+        verses: 1-21
+        laws:
+          - id: deut11-01
+            title: 愛耶和華你的神，常守他的吩咐
+            refs: ["1"]
+            topics: [one-god]
+            summary: 你要愛耶和華你的神，常守他的吩咐、律例、典章、誡命。
+            basis: [1]
+          - id: deut11-08
+            title: 守一切的誡命，使你們膽壯，能進去得地
+            refs: ["8-9"]
+            topics: [one-god]
+            summary: 你們要守我今日所吩咐的一切誡命，使你們膽壯，能以進去，得你們要過去得的地，並使你們的日子在所應許給列祖的地上得以長久。
+            basis: [8, 9]
+            why: [8, 9]
+          - id: deut11-16
+            title: 謹慎，免得心中受迷惑去事奉別神
+            refs: ["16-17"]
+            topics: [idolatry]
+            summary: 你們要謹慎，免得心中受迷惑，就偏離正路，去事奉敬拜別神；耶和華的怒氣向你們發作，就使天閉塞不下雨，地也不出產。
+            basis: [16, 17]
+            why: [16]
+          - id: deut11-18
+            title: 把話存在心內，繫在手上，教訓兒女，寫在門框上
+            refs: ["18-21"]
+            topics: [one-god]
+            summary: 你們要將我這話存在心內，留在意中，繫在手上為記號，戴在額上為經文；也要教訓你們的兒女，無論坐在家裡、行在路上、躺下、起來，都要談論；又要寫在房屋的門框上和城門上。
+            basis: [18, 19, 20]
+            why: [21]
+      - id: deut11-s2
+        title: 謹守遵行律例典章
+        verses: 32
+        laws:
+          - id: deut11-32
+            title: 謹守遵行今日所陳明的一切律例典章
+            refs: ["32"]
+            topics: [one-god]
+            summary: 你們要謹守遵行我今日在你們面前所陳明的一切律例典章。
+            basis: [32]

@@ -1,0 +1,329 @@
+# 出埃及記24–40 章（立約與金牛犢、製造會幕的敘事不收；會幕與祭司的規格、贖命銀、安息日、更新之約的條文）。
+book: 出埃及記
+chapters:
+  - chapter: 24
+    excluded:
+      - { verses: "1-18", reason: 神與以色列人立約、摩西上山四十晝夜的敘事 }
+    sections: []
+  - chapter: 25
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: ex25-s1
+        title: 會幕與祭司的規格
+        verses: 2-40
+        laws:
+          - id: ex25-02
+            title: 為會幕送禮物，凡心裡樂意的都可以
+            refs: ["2-9"]
+            topics: [altar-tabernacle, offerings]
+            summary: 告訴以色列人為耶和華送禮物來，凡樂意的都可以收；要收的有金、銀、銅，藍色、紫色、朱紅色線，細麻，山羊毛，皂莢木，油，香料和寶石；要照所指示的樣式製造帳幕和其中的一切器具。
+            basis: [2, 3, 8, 9]
+          - id: ex25-10
+            title: 做皂莢木的櫃，包上精金，櫃上安施恩座
+            refs: ["10-22"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要用皂莢木做櫃，裡外包上精金，四圍鑲上金牙邊，做兩根槓穿在環內，常在櫃的環內不可抽出來；用精金做施恩座，兩頭各做一個基路伯，安在櫃的上邊。
+            basis: [10, 11, 13, 15, 16, 17, 18, 21]
+            entries: [約櫃, 施恩座]
+          - id: ex25-23
+            title: 做皂莢木的桌子，桌子上常擺陳設餅
+            refs: ["23-30"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要用皂莢木做一張桌子，包上精金，四圍鑲上金牙邊，做環子和槓以便抬桌子；要做桌子上的盤子、調羹和奠酒的瓶爵；桌子上要常擺陳設餅在耶和華面前。
+            basis: [23, 24, 29, 30]
+            entries: [陳設餅桌子]
+          - id: ex25-31
+            title: 用精金錘出燈臺，做七個燈盞
+            refs: ["31-40"]
+            topics: [altar-tabernacle]
+            summary: 要用精金做一個燈臺，座和幹都是錘出來的，兩旁各出三個枝子，枝子上有杏花形的杯、球和花；做七個燈盞，祭司要點這燈；要照山上指示的樣式做。
+            basis: [31, 32, 37, 39, 40]
+            entries: [金燈臺]
+  - chapter: 26
+    excluded:
+    sections:
+      - id: ex26-s1
+        title: 會幕與祭司的規格
+        verses: 1-37
+        laws:
+          - id: ex26-01
+            title: 用十幅幔子做帳幕，用山羊毛織十一幅幔子作罩棚
+            refs: ["1-14"]
+            topics: [altar-tabernacle]
+            summary: 要用十幅幔子做帳幕，每幅長二十八肘，寬四肘，幅幅相連，用鈕扣和金鉤連成一幅；用山羊毛織十一幅幔子作帳幕以上的罩棚，用銅鉤連成一幅；又要用染紅的公羊皮和海狗皮做罩棚的蓋。
+            basis: [1, 2, 3, 6, 7, 14]
+          - id: ex26-15
+            title: 用皂莢木做帳幕的豎板，帶卯的銀座，並橫閂
+            refs: ["15-30"]
+            topics: [altar-tabernacle]
+            summary: 要用皂莢木做帳幕的豎板，每塊有兩榫；南北兩面各二十塊板，每塊板底下有兩個帶卯的銀座；後面用六塊板，拐角用兩塊；要做五閂，板和閂都用金子包裹；帳幕要照山上指示的樣式立起來。
+            basis: [15, 17, 19, 26, 27, 29, 30]
+          - id: ex26-31
+            title: 做幔子隔開聖所和至聖所，做簾子作會幕的門
+            refs: ["31-37"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要用藍色、紫色、朱紅色線和撚的細麻織幔子，上面繡基路伯，掛在四根金包的柱子上；把法櫃抬進幔子內，幔子要將聖所和至聖所隔開；桌子安在幔子外北面，燈臺在南面；會幕的門要做簾子。
+            basis: [31, 33, 34, 35, 36]
+  - chapter: 27
+    excluded:
+    sections:
+      - id: ex27-s1
+        title: 會幕與祭司的規格
+        verses: 1-21
+        laws:
+          - id: ex27-01
+            title: 用皂莢木做壇，包上銅，做盆、鏟子等一切器具
+            refs: ["1-8"]
+            topics: [altar-tabernacle, offerings]
+            summary: 要用皂莢木做壇，四方的，四拐角上做四個角，用銅包裹；做盆收去壇上的灰，又做鏟子、盤子、肉叉子、火鼎，壇上的一切器具都要用銅做；做銅網、環子和槓；壇是空的，要照山上指示的做。
+            basis: [1, 2, 3, 8]
+          - id: ex27-09
+            title: 做帳幕的院子，四圍用帷子和柱子圍著
+            refs: ["9-19"]
+            topics: [altar-tabernacle]
+            summary: 要做帳幕的院子，南面和北面各用細麻布帷子，長一百肘，東面寬五十肘；柱子用銅座和銀鉤、銀杆；院子的門用藍色、紫色、朱紅色線和撚的細麻織簾子；帳幕一切的器具和橛子都要用銅。
+            basis: [9, 16, 17, 18, 19]
+          - id: ex27-20
+            title: 以色列人要拿搗成的清橄欖油，使燈常常點著
+            refs: ["20-21"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要吩咐以色列人把為點燈搗成的清橄欖油拿來給你，使燈常常點著；在會幕中法櫃的幔子外，亞倫和他兒子從晚上到早晨在耶和華面前經理這燈，這要作世世代代永遠的定例。
+            basis: [20, 21]
+  - chapter: 28
+    excluded:
+    sections:
+      - id: ex28-s1
+        title: 會幕與祭司的規格
+        verses: 1-43
+        laws:
+          - id: ex28-01
+            title: 使亞倫和他的兒子作祭司，為他們做聖衣
+            refs: ["1-5"]
+            topics: [priest-garments-tools]
+            summary: 要從以色列人中，使你的哥哥亞倫和他的兒子一同近前來，給我供祭司的職分；給亞倫做聖衣為榮耀為華美；吩咐心中有智慧的人做胸牌、以弗得、外袍、雜色的內袍、冠冕、腰帶。
+            basis: [1, 2, 3, 4]
+            why: [3]
+          - id: ex28-06
+            title: 做以弗得，肩帶上安兩塊紅瑪瑙，刻上以色列十二個兒子的名字
+            refs: ["6-14"]
+            topics: [priest-garments-tools]
+            summary: 要用金線和藍色、紫色、朱紅色線並撚的細麻巧工做以弗得；取兩塊紅瑪瑙，在上面刻以色列十二個兒子的名字，安在以弗得的兩條肩帶上，作以色列人的紀念；亞倫要在兩肩上帶著他們的名字。
+            basis: [6, 9, 12]
+            why: [12]
+            entries: [以弗得]
+          - id: ex28-15
+            title: 做決斷的胸牌，鑲十二塊寶石，裡面放烏陵和土明
+            refs: ["15-30"]
+            topics: [priest-garments-tools]
+            summary: 要用巧匠的手工做一個決斷的胸牌，四方的，疊為兩層，鑲寶石四行，十二塊寶石按以色列十二個兒子的名字刻字；亞倫進聖所的時候，要將以色列十二個兒子的名字帶在胸牌上；烏陵和土明放在胸牌裡。
+            basis: [15, 16, 17, 21, 29, 30]
+            why: [29]
+            entries: [胸牌（決斷胸牌）]
+          - id: ex28-31
+            title: 做以弗得的外袍，底邊上有石榴和金鈴鐺
+            refs: ["31-35"]
+            topics: [priest-garments-tools]
+            summary: 要做以弗得的外袍，顏色全是藍的，領口周圍織出邊來；袍子底邊上做石榴，中間有金鈴鐺相間；亞倫供職的時候要穿這袍子，進聖所和出來的時候聽見鈴鐺的響聲，免得他死亡。
+            basis: [31, 33, 34, 35]
+            why: [35]
+          - id: ex28-36
+            title: 用精金做一面牌，刻上「歸耶和華為聖」，繫在冠冕上
+            refs: ["36-38"]
+            topics: [priest-garments-tools]
+            summary: 要用精金做一面牌，在上面刻「歸耶和華為聖」，用一條藍細帶子繫在冠冕前面；這牌必在亞倫的額上，亞倫要擔當干犯聖物條例的罪孽。
+            basis: [36, 37, 38]
+            why: [38]
+          - id: ex28-39
+            title: 做內袍、腰帶、裹頭巾和褲子，給亞倫和他的兒子穿
+            refs: ["39-43"]
+            topics: [priest-garments-tools]
+            summary: 要用雜色細麻線織內袍，用細麻布做裹頭巾，用繡花的手工做腰帶，也給亞倫的兒子做；給他們穿上，膏他們，使他們成聖；又做細麻布褲子遮掩下體；進會幕或就近壇供職的時候要穿，免得擔罪而死。
+            basis: [39, 40, 41, 42, 43]
+            why: [43]
+  - chapter: 29
+    excluded:
+      - { verses: "43-46", reason: 耶和華吩咐的話之外的敘事、說明與應許 }
+    sections:
+      - id: ex29-s1
+        title: 會幕與祭司的規格
+        verses: 1-42
+        laws:
+          - id: ex29-01
+            title: 承接聖職的禮：獻祭，用血和膏油使亞倫和他兒子成聖
+            refs: ["1-37"]
+            topics: [priests, offerings]
+            summary: 使亞倫和他兒子成聖，要取一隻公牛犢、兩隻無殘疾的公綿羊和無酵餅；帶他們到會幕門口用水洗身，給亞倫穿上聖衣，用膏油膏他；宰牲獻上，取羊血抹在他們的右耳垂、右手和右腳的大拇指上。
+            basis: [1, 4, 5, 8, 9, 10, 20, 21]
+            why: [28, 33, 34]
+            entries: [承接聖職（分別為聖）, 七日承接聖職不出會幕門, 聖膏油]
+          - id: ex29-38
+            title: 每天獻兩隻一歲的羊羔，早晨一隻，黃昏一隻，作常獻的燔祭
+            refs: ["38-42"]
+            topics: [burnt-offering]
+            summary: 你每天所要獻在壇上的，就是兩隻一歲的羊羔；早晨獻這一隻，黃昏的時候獻那一隻；同獻細麵伊法十分之一、搗成的油和酒作素祭和奠祭；這要在會幕門口，在耶和華面前，作世世代代常獻的燔祭。
+            basis: [38, 39, 40, 41, 42]
+  - chapter: 30
+    excluded:
+    sections:
+      - id: ex30-s1
+        title: 會幕與祭司的規格
+        verses: 1-38
+        laws:
+          - id: ex30-01
+            title: 做燒香的壇，亞倫早晚燒香，一年一次在壇角上行贖罪禮
+            refs: ["1-10"]
+            topics: [altar-tabernacle, atonement-day, priest-garments-tools]
+            summary: 要用皂莢木做燒香的壇，四方的，包上精金，放在法櫃前的幔子外；亞倫早晨收拾燈和黃昏點燈的時候，在壇上燒馨香料做的香；不可在壇上獻異樣的香；亞倫一年一次要在壇的角上行贖罪之禮。
+            basis: [1, 2, 3, 6, 7, 8, 10]
+            entries: [金香壇（香壇）, 異樣的香與香壇的禁令, 香壇一年一次的贖罪（出30：10）]
+          - id: ex30-11
+            title: 被數點的每人出半舍客勒贖命銀，富足貧窮都一樣
+            refs: ["11-16"]
+            topics: [tithes, poor]
+            summary: 按以色列人被數點的，各人要把自己的生命贖價獻給耶和華，免得數點的時候有災殃；二十歲以外被數的，各人要按聖所的平獻半舍客勒；富足的不可多出，貧窮的不可少出；這贖罪銀要用在會幕的使用。
+            basis: [12, 13, 14, 15, 16]
+            why: [12, 15, 16]
+            entries: [半舍客勒（贖罪銀）]
+          - id: ex30-17
+            title: 做銅洗濯盆，亞倫和他兒子進會幕或供職之前要洗手洗腳
+            refs: ["17-21"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要用銅做洗濯盆和盆座，放在會幕和壇的中間，盛水；亞倫和他兒子要在這盆裡洗手洗腳；他們進會幕或就近壇供職、獻火祭的時候，必用水洗濯，免得死亡；這要作世世代代永遠的定例。
+            basis: [18, 19, 20, 21]
+            why: [20, 21]
+            entries: [洗濯盆（銅盆）]
+          - id: ex30-22
+            title: 用上品香料調製聖膏油；不可倒在人身上，不可仿造
+            refs: ["22-33"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要取上品的香料，用沒藥、香肉桂、菖蒲、桂皮和橄欖油調和作聖膏油；用來抹會幕、法櫃、桌子、燈臺、香壇、燔祭壇、洗濯盆，又膏亞倫和他的兒子；不可倒在別人身上，也不可仿造。
+            basis: [23, 25, 26, 29, 30, 32, 33]
+            why: [29, 32]
+            entries: [聖膏油]
+          - id: ex30-34
+            title: 用香料調製聖香，放在法櫃前；不可為自己仿造
+            refs: ["34-38"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 要取馨香的香料，加上鹽調和成清淨的香；取點搗得極細，放在會幕內法櫃前耶和華與你相會的地方，你們要看為至聖；不可按這調和之法為自己做香；凡做香和這香一樣，為要聞香的，必從民中剪除。
+            basis: [34, 35, 36, 37, 38]
+            entries: [聖香（清淨聖潔的香）]
+  - chapter: 31
+    excluded:
+      - { verses: "1-11", reason: 耶和華選召比撒列、亞何利亞伯做會幕工作的敘事 }
+      - { verses: "18", reason: 耶和華把兩塊法版交給摩西的敘事 }
+    sections:
+      - id: ex31-s1
+        title: 安息日
+        verses: 12-17
+        laws:
+          - id: ex31-12
+            title: 守安息日，作世世代代永遠的證據
+            refs: ["12-17"]
+            topics: [sabbath]
+            summary: 你們務要守我的安息日，因為這是我與你們世世代代之間的證據；凡干犯的必治死，凡這日做工的必從民中剪除；六日要做工，第七日是安息聖日；因為六日之內耶和華造天地，第七日便安息舒暢。
+            basis: [13, 14, 15, 16, 17]
+            why: [17]
+            entries: [安息日]
+  - chapter: 32
+    excluded:
+      - { verses: "1-35", reason: 金牛犢事件與摩西代求的敘事 }
+    sections: []
+  - chapter: 33
+    excluded:
+      - { verses: "1-23", reason: 神說不與百姓同去、摩西見神榮耀的敘事 }
+    sections: []
+  - chapter: 34
+    excluded:
+      - { verses: "1-9", reason: 重刻石版、耶和華在雲中顯現宣告名號的敘事 }
+      - { verses: "24", reason: 神趕出外邦人、保障田地的應許 }
+      - { verses: "27-35", reason: 寫下這些話、摩西在山上四十晝夜、摩西面皮發光的敘事 }
+    sections:
+      - id: ex34-s1
+        title: 更新之約的條文
+        verses: 10-26
+        laws:
+          - id: ex34-10
+            title: 不可與那地的居民立約，要拆毀祭壇，不可敬拜別神
+            refs: ["10-17"]
+            topics: [war, idolatry]
+            summary: 你要謹守耶和華今天吩咐的；不可與你所去那地的居民立約，卻要拆毀他們的祭壇，打碎他們的柱像，砍下他們的木偶；不可敬拜別神，因為耶和華是忌邪的神；不可為自己鑄造神像。
+            basis: [11, 12, 13, 14, 17]
+            why: [14, 15, 16]
+          - id: ex34-18
+            title: 守除酵節，吃無酵餅七天
+            refs: ["18"]
+            topics: [passover]
+            summary: 要守除酵節，照耶和華所吩咐的，在亞筆月內所定的日期吃無酵餅七天，因為你是這亞筆月內出了埃及。
+            basis: [18]
+            why: [18]
+            entries: [無酵節, 逾越節, 三大節期]
+          - id: ex34-19
+            title: 凡頭生的都是耶和華的；頭生的驢和兒子要贖
+            refs: ["19-20"]
+            topics: [firstborn]
+            summary: 凡頭生的都是耶和華的；一切牲畜頭生的，無論是牛是羊，公的都是他的；頭生的驢要用羊羔代贖，若不代贖就要打折牠的頸項；凡頭生的兒子都要贖出來；誰也不可空手朝見耶和華。
+            basis: [19, 20]
+            why: [19]
+          - id: ex34-21
+            title: 六日要做工，第七日要安息，雖在耕種收割的時候也要安息
+            refs: ["21"]
+            topics: [sabbath]
+            summary: 六日要做工，第七日要安息，雖在耕種收割的時候也要安息。
+            basis: [21]
+            entries: [安息日]
+          - id: ex34-22
+            title: 守七七節和收藏節，一年三次朝見主耶和華
+            refs: ["22-23"]
+            topics: [three-feasts, weeks, booths]
+            summary: 在收割初熟麥子的時候要守七七節，又在年底要守收藏節；你們一切男丁要一年三次朝見主耶和華以色列的神。
+            basis: [22, 23]
+            entries: [三大節期]
+          - id: ex34-25
+            title: 祭物的血不可和有酵的餅同獻；逾越節的祭物不可留到早晨
+            refs: ["25"]
+            topics: [passover, blood-fat]
+            summary: 不可將耶和華祭物的血和有酵的餅一同獻上；逾越節的祭物也不可留到早晨。
+            basis: [25]
+            entries: [逾越節]
+          - id: ex34-26
+            title: 初熟之物與不可煮山羊羔
+            refs: ["26"]
+            topics: [tithes, clean-food]
+            summary: 地裡首先初熟之物要送到耶和華你神的殿；不可用山羊羔母的奶煮山羊羔。
+            basis: [26]
+  - chapter: 35
+    excluded:
+      - { verses: "4-35", reason: 摩西招聚會眾，勸百姓為會幕送禮物並派工匠的敘事 }
+    sections:
+      - id: ex35-s1
+        title: 守安息日
+        verses: 1-3
+        laws:
+          - id: ex35-01
+            title: 第七日乃為聖日，做工的必治死，不可在住處生火
+            refs: ["1-3"]
+            topics: [sabbath]
+            summary: 六日要做工，第七日乃為聖日，當向耶和華守為安息聖日；凡這日之內做工的，必把他治死；當安息日，不可在你們一切的住處生火。
+            basis: [2, 3]
+            entries: [安息日]
+  - chapter: 36
+    excluded:
+      - { verses: "1-38", reason: 比撒列、亞何利亞伯和工匠照吩咐建造帳幕的敘事 }
+    sections: []
+  - chapter: 37
+    excluded:
+      - { verses: "1-29", reason: 製造約櫃、桌子、燈臺、香壇的敘事 }
+    sections: []
+  - chapter: 38
+    excluded:
+      - { verses: "1-31", reason: 製造燔祭壇、洗濯盆、院子，以及會幕用料清單的敘事 }
+    sections: []
+  - chapter: 39
+    excluded:
+      - { verses: "1-43", reason: 製造祭司聖衣、摩西察看並祝福的敘事 }
+    sections: []
+  - chapter: 40
+    excluded:
+      - { verses: "1-38", reason: 立起帳幕、雲彩遮蓋會幕、榮光充滿的敘事 }
+    sections: []

@@ -1,0 +1,151 @@
+# 利未記8–12 章（承接聖職的敘事不收；祭司的規矩、食物條例、生產後的潔淨）。
+book: 利未記
+chapters:
+  - chapter: 8
+    excluded:
+      - { verses: "1-36", reason: 照所吩咐為亞倫和他兒子承接聖職的敘事，沒有新的條文 }
+    sections: []
+  - chapter: 9
+    excluded:
+      - { verses: "1-24", reason: 第八天亞倫獻祭、神的榮光顯現的敘事 }
+    sections: []
+  - chapter: 10
+    excluded:
+      - { verses: "1-8", reason: 拿答、亞比戶獻凡火被燒滅，以及摩西對亞倫的吩咐的敘事 }
+      - { verses: "16-20", reason: 摩西查問贖罪祭公山羊的敘事 }
+    sections:
+      - id: lev10-s1
+        title: 祭司的規矩
+        verses: 9-15
+        laws:
+          - id: lev10-09
+            title: 祭司進會幕，清酒濃酒都不可喝
+            refs: ["9-11"]
+            topics: [priests]
+            summary: 亞倫和他兒子進會幕的時候，清酒、濃酒都不可喝，免得死亡；這要作世世代代永遠的定例，使他們可以分別聖的與俗的、潔淨的與不潔淨的，又可以教訓以色列人。
+            basis: [9, 10, 11]
+            why: [10]
+          - id: lev10-12
+            title: 祭司在聖處吃素祭、搖的胸和舉的腿
+            refs: ["12-15"]
+            topics: [grain-offering, peace-offering, priest-portions]
+            summary: 火祭中所剩的素祭，要在壇旁不帶酵而吃，因為是至聖的；搖的胸和舉的腿，祭司和他的兒女要在潔淨地方同吃，這是永得的分。
+            basis: [12, 13, 14, 15]
+            why: [12, 13, 14]
+  - chapter: 11
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西、亞倫說話的引言 }
+    sections:
+      - id: lev11-s1
+        title: 走獸、水族、飛鳥與昆蟲
+        verses: 2-23
+        laws:
+          - id: lev11-02
+            title: 走獸中，蹄分兩瓣又倒嚼的可以吃
+            refs: ["2-3"]
+            topics: [clean-food]
+            summary: 地上一切走獸中，凡蹄分兩瓣、倒嚼的，都可以吃。
+            basis: [3]
+          - id: lev11-04
+            title: 駱駝、沙番、兔子和豬不可吃
+            refs: ["4-8"]
+            topics: [clean-food, corpse]
+            summary: 駱駝、沙番、兔子倒嚼不分蹄，豬蹄分兩瓣卻不倒嚼，都與你們不潔淨；這些獸的肉不可吃，死的也不可摸。
+            basis: [4, 5, 6, 7, 8]
+            why: [4, 7]
+          - id: lev11-09
+            title: 水中有翅有鱗的可以吃
+            refs: ["9"]
+            topics: [clean-food]
+            summary: 水裡、海裡、河裡，凡有翅有鱗的，都可以吃。
+            basis: [9]
+          - id: lev11-10
+            title: 水中無翅無鱗的當以為可憎
+            refs: ["10-12"]
+            topics: [clean-food]
+            summary: 凡水裡游動的活物，無翅無鱗的，都當以為可憎，不可吃牠的肉，死的也當以為可憎。
+            basis: [10, 11, 12]
+          - id: lev11-13
+            title: 鵰、鷹、烏鴉、貓頭鷹等雀鳥不可吃
+            refs: ["13-19"]
+            topics: [clean-food]
+            summary: 雀鳥中當以為可憎、不可吃的有：鵰、狗頭鵰、紅頭鵰、鷂鷹、小鷹、烏鴉、鴕鳥、夜鷹、魚鷹、鷹、鴞鳥、鸕鶿、貓頭鷹、角鴟、鵜鶘、禿鵰、鸛、鷺鷥、戴鵀與蝙蝠，各按其類。
+            basis: [13, 14, 15, 16, 17, 18, 19]
+          - id: lev11-20
+            title: 有翅膀的爬物，蝗蟲、螞蚱可以吃
+            refs: ["20-23"]
+            topics: [clean-food]
+            summary: 有翅膀用四足爬行的物都當以為可憎；只有有足有腿、在地上蹦跳的，如蝗蟲、螞蚱、蟋蟀、蚱蜢各按其類，還可以吃。
+            basis: [20, 21, 22, 23]
+      - id: lev11-s2
+        title: 摸了死的怎麼辦
+        verses: 24-40
+        laws:
+          - id: lev11-24
+            title: 摸了不潔的走獸屍體，不潔到晚上
+            refs: ["24-28"]
+            topics: [corpse]
+            summary: 凡摸了、拿了不潔走獸的屍體，必不潔淨到晚上，拿了的還要洗衣服。
+            basis: [24, 25, 26, 27, 28]
+          - id: lev11-29
+            title: 鼬鼠、蜥蜴等爬物死了，摸了不潔到晚上
+            refs: ["29-31"]
+            topics: [corpse, clean-food]
+            summary: 地上的爬物，如鼬鼠、鼫鼠、蜥蜴、壁虎、龍子、守宮、蛇醫、蝘蜓，都與你們不潔淨；牠死了以後，凡摸了的，必不潔淨到晚上。
+            basis: [29, 30, 31]
+          - id: lev11-32
+            title: 死爬物掉在器皿或食物上
+            refs: ["32-38"]
+            topics: [corpse]
+            summary: 死爬物掉在木器、衣服、皮子、口袋上，要放在水中，不潔淨到晚上；掉在瓦器裡，瓦器要打破；掉在爐子、鍋臺上，要打碎；泉源或聚水的池子仍潔淨；沾水的食物和子粒就不潔淨。
+            basis: [32, 33, 34, 35, 36, 37, 38]
+          - id: lev11-39
+            title: 可吃的走獸自己死了
+            refs: ["39-40"]
+            topics: [corpse, clean-food]
+            summary: 可吃的走獸若是死了，有人摸牠，必不潔淨到晚上；吃牠或拿牠的，必不潔淨到晚上，並要洗衣服。
+            basis: [39, 40]
+      - id: lev11-s3
+        title: 爬物不可吃，與要聖潔的理由
+        verses: 41-47
+        laws:
+          - id: lev11-41
+            title: 地上的爬物不可吃，不可使自己成為可憎
+            refs: ["41-43"]
+            topics: [clean-food]
+            summary: 凡地上的爬物都是可憎的，不可吃；用肚子行走的、四足行走的、有許多足的，都不可吃；不可因這些使自己成為可憎，染了污穢。
+            basis: [41, 42, 43]
+            why: [42]
+          - id: lev11-44
+            title: 要成為聖潔，因為耶和華是聖潔的
+            refs: ["44-47"]
+            topics: [clean-food]
+            summary: 耶和華是你們的神，所以你們要成為聖潔，因為他是聖潔的；要把潔淨的和不潔淨的、可吃的與不可吃的活物分別出來。
+            basis: [44, 47]
+            why: [44, 45]
+  - chapter: 12
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: lev12-s1
+        title: 生產後的潔淨
+        verses: 2-8
+        laws:
+          - id: lev12-02
+            title: 生男孩，不潔七天，第八天行割禮
+            refs: ["2-4"]
+            topics: [body-discharge]
+            summary: 婦人懷孕生男孩，就不潔淨七天；第八天要給嬰孩行割禮；婦人在產血不潔之中，要家居三十三天，潔淨的日子未滿，不可摸聖物，也不可進入聖所。
+            basis: [2, 3, 4]
+          - id: lev12-05
+            title: 生女孩，不潔兩個七天
+            refs: ["5"]
+            topics: [body-discharge]
+            summary: 婦人若生女孩，就不潔淨兩個七天，要在產血不潔之中家居六十六天。
+            basis: [5]
+          - id: lev12-06
+            title: 潔淨的日子滿了，獻燔祭和贖罪祭
+            refs: ["6-8"]
+            topics: [body-discharge, poor, burnt-offering, sin-offering]
+            summary: 滿了潔淨的日子，要把一歲的羊羔為燔祭，一隻雛鴿或斑鳩為贖罪祭，帶到會幕門口交給祭司；力量不夠獻羊羔，可以取兩隻斑鳩或雛鴿，一隻為燔祭，一隻為贖罪祭。
+            basis: [6, 7, 8]

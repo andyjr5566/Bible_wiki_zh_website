@@ -1,0 +1,135 @@
+# 利未記21–22 章（祭司的潔淨與婚姻、聖物與祭牲的條件）。
+book: 利未記
+chapters:
+  - chapter: 21
+    excluded:
+      - { verses: "16", reason: 耶和華對摩西說話的引言 }
+      - { verses: "24", reason: 摩西曉諭亞倫與眾人的敘事 }
+    sections:
+      - id: lev21-s1
+        title: 祭司與喪事、外表、婚姻
+        verses: 1-9
+        laws:
+          - id: lev21-01
+            title: 祭司不可為民中的死人沾染自己
+            refs: ["1-4"]
+            topics: [priests, corpse]
+            summary: 祭司不可為民中的死人沾染自己，除非是為骨肉之親的父母、兒女、弟兄，和未曾出嫁的處女姊妹；祭司既在民中為首，就不可從俗沾染自己。
+            basis: [1, 2, 3, 4]
+            why: [4]
+          - id: lev21-05
+            title: 不可使頭光禿、剃鬍鬚、用刀劃身，要歸神為聖
+            refs: ["5-6"]
+            topics: [priests]
+            summary: 祭司不可使頭光禿，不可剃除鬍鬚的周圍，也不可用刀劃身；要歸神為聖，不可褻瀆神的名，因為耶和華的火祭是他們獻的，所以他們要成為聖。
+            basis: [5, 6]
+            why: [6]
+          - id: lev21-07
+            title: 祭司不可娶妓女、被污的女人或被休的婦人
+            refs: ["7-8"]
+            topics: [priests, marriage]
+            summary: 祭司不可娶妓女或被污的女人為妻，也不可娶被休的婦人為妻，因為祭司是歸神為聖；你要以他為聖，因為他奉獻你神的食物。
+            basis: [7, 8]
+            why: [7]
+          - id: lev21-09
+            title: 祭司的女兒行淫，要用火焚燒
+            refs: ["9"]
+            topics: [priests, sexual]
+            summary: 祭司的女兒若行淫辱沒自己，就辱沒了父親，必用火將他焚燒。
+            basis: [9]
+            why: [9]
+      - id: lev21-s2
+        title: 大祭司的規矩
+        verses: 10-15
+        laws:
+          - id: lev21-10
+            title: 大祭司不可蓬頭散髮、不可挨近死屍、不可出聖所
+            refs: ["10-12"]
+            topics: [priests, corpse]
+            summary: 作大祭司、頭上倒了膏油、穿了聖衣的，不可蓬頭散髮，也不可撕裂衣服；不可挨近死屍，也不可為父母沾染自己；不可出聖所，因為神膏油的冠冕在他頭上。
+            basis: [10, 11, 12]
+            why: [12]
+          - id: lev21-13
+            title: 大祭司要娶本民中的處女為妻
+            refs: ["13-15"]
+            topics: [priests, marriage]
+            summary: 大祭司要娶處女為妻；寡婦、被休的婦人或被污為妓的女人都不可娶，只可娶本民中的處女，不可在民中辱沒他的兒女，因為耶和華叫他成聖。
+            basis: [13, 14, 15]
+            why: [15]
+      - id: lev21-s3
+        title: 有殘疾的祭司後裔
+        verses: 17-23
+        laws:
+          - id: lev21-17
+            title: 有殘疾的祭司後裔不可近前來獻食物，卻可以吃
+            refs: ["17-23"]
+            topics: [priests]
+            summary: 亞倫後裔身有污穢卻親近聖物的，必從民中剪除；患大痲瘋、漏症或摸不潔之物的，要等潔淨才可吃聖物，摸後須洗身、日落才潔淨；自死或被獸撕裂的不可吃。
+            basis: [17, 21, 22, 23]
+            why: [23]
+  - chapter: 22
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+      - { verses: "17", reason: 耶和華對摩西說話的引言 }
+      - { verses: "26", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: lev22-s1
+        title: 聖物與潔淨
+        verses: 2-16
+        laws:
+          - id: lev22-02
+            title: 祭司身上有污穢，不可吃聖物
+            refs: ["2-9"]
+            topics: [offerings, corpse, priest-portions]
+            summary: 亞倫的後裔身上有污穢，或長大痲瘋、有漏症的，不可吃聖物，直等他潔淨了；摸了使他不潔淨的，必不潔淨到晚上，不用水洗身就不可吃聖物，日落時潔淨了才可以吃；自死的或被野獸撕裂的，不可吃。
+            basis: [2, 3, 4, 5, 6, 7, 8]
+            why: [2, 9]
+          - id: lev22-10
+            title: 外人、雇工人不可吃聖物，祭司買的人和家人可以
+            refs: ["10-13"]
+            topics: [offerings, priest-portions]
+            summary: 外人、寄居在祭司家的或雇工人，都不可吃聖物；祭司用錢買的人和生在他家的人可以吃；祭司的女兒若嫁外人，就不可吃舉祭的聖物，若是寡婦或被休的，沒有孩子，歸回父家，就可以吃。
+            basis: [10, 11, 12, 13]
+          - id: lev22-14
+            title: 誤吃聖物，要加五分之一交給祭司
+            refs: ["14-16"]
+            topics: [offerings, priest-portions]
+            summary: 有人誤吃了聖物，要照聖物的原數加上五分之一交給祭司；祭司不可褻瀆以色列人所獻給耶和華的聖物，免得他們在吃聖物上自取罪孽。
+            basis: [14, 15, 16]
+            why: [16]
+      - id: lev22-s2
+        title: 獻上的祭牲
+        verses: 18-33
+        laws:
+          - id: lev22-18
+            title: 獻的牲畜要沒有殘疾，才蒙悅納
+            refs: ["18-25"]
+            topics: [offerings]
+            summary: 許願或甘心獻燔祭、平安祭，要獻無殘疾的公牛、綿羊或山羊；瞎眼、折傷等有殘疾的不可獻，肢體多或少的只可作甘心祭；有殘疾的外來牲畜也不可收。
+            basis: [18, 19, 20, 21, 22, 23, 24, 25]
+            why: [20, 25]
+          - id: lev22-27
+            title: 才生的牲畜，七天跟著母，第八天以後可獻
+            refs: ["27"]
+            topics: [offerings, firstborn]
+            summary: 才生的公牛、綿羊或山羊，七天當跟著母；從第八天以後，可以當供物蒙悅納，作為耶和華的火祭。
+            basis: [27]
+          - id: lev22-28
+            title: 母牛母羊不可同日宰母和子
+            refs: ["28"]
+            topics: [clean-food, animals-property]
+            summary: 無論是母牛是母羊，不可同日宰母和子。
+            basis: [28]
+          - id: lev22-29
+            title: 感謝祭要當天吃，一點不可留到早晨
+            refs: ["29-30"]
+            topics: [peace-offering]
+            summary: 你們獻感謝祭給耶和華，要獻得可蒙悅納；要當天吃，一點不可留到早晨。
+            basis: [29, 30]
+          - id: lev22-31
+            title: 謹守耶和華的誡命，不可褻瀆聖名
+            refs: ["31-33"]
+            topics: [divine-name]
+            summary: 你們要謹守遵行我的誡命；不可褻瀆我的聖名，我在以色列人中卻要被尊為聖；我是叫你們成聖的耶和華，把你們從埃及地領出來，作你們的神。
+            basis: [31, 32, 33]
+            why: [32]

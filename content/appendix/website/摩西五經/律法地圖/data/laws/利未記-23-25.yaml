@@ -1,0 +1,252 @@
+# 利未記23–25 章（節期、聖所的燈與餅、安息年與禧年、地業與奴僕）。
+book: 利未記
+chapters:
+  - chapter: 23
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+      - { verses: "4", reason: 預告下面列出的節期 }
+      - { verses: "9", reason: 耶和華對摩西說話的引言 }
+      - { verses: "23", reason: 耶和華對摩西說話的引言 }
+      - { verses: "26", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "33", reason: 耶和華對摩西說話的引言 }
+      - { verses: "44", reason: 摩西把節期傳給以色列人的敘事 }
+    sections:
+      - id: lev23-s1
+        title: 安息日與聖會
+        verses: 2-3
+        laws:
+          - id: lev23-02
+            title: 耶和華的節期要宣告為聖會
+            refs: ["2"]
+            topics: [three-feasts]
+            summary: 耶和華的節期，你們要宣告為聖會的節期。
+            basis: [2]
+            entries: [耶和華的節期年曆總覽（利未記23章七大節期架構）]
+          - id: lev23-03
+            title: 六日做工，第七日是聖安息日，什麼工都不可做
+            refs: ["3"]
+            topics: [sabbath]
+            summary: 六日要做工，第七日是聖安息日，當有聖會；你們什麼工都不可做，這是在你們一切的住處向耶和華守的安息日。
+            basis: [3]
+            entries: [安息日]
+      - id: lev23-s2
+        title: 春季的節期
+        verses: 5-22
+        laws:
+          - id: lev23-05
+            title: 正月十四日逾越節，十五日起守無酵節七日
+            refs: ["5-8"]
+            topics: [passover]
+            summary: 正月十四日黃昏的時候是耶和華的逾越節；這月十五日是無酵節，要吃無酵餅七日；第一日和第七日當有聖會，什麼勞碌的工都不可做；要將火祭獻給耶和華七日。
+            basis: [5, 6, 7, 8]
+            entries: [逾越節, 無酵節]
+          - id: lev23-10
+            title: 收割莊稼，要把初熟的一捆帶給祭司搖一搖
+            refs: ["10-14"]
+            topics: [tithes, three-feasts]
+            summary: 到了所賜的地，收割莊稼的時候，要將初熟的一捆帶給祭司，在安息日的次日搖一搖；搖這捆的日子，要獻一歲沒有殘疾的公綿羊羔為燔祭，同獻素祭和奠祭；到獻供物的那一天才可以吃新收的餅和子粒。
+            basis: [10, 11, 12, 13, 14]
+            why: [11]
+          - id: lev23-15
+            title: 數七個安息日，第五十天獻新素祭，守七七節
+            refs: ["15-21"]
+            topics: [weeks, three-feasts]
+            summary: 從安息日次日算起，滿七個安息日共五十天，獻新素祭和兩個加酵搖祭餅；另獻一公牛犢、兩公綿羊、七隻一歲公羊羔為燔祭，一公山羊為贖罪祭、兩隻一歲公羊羔為平安祭；當日守聖會，不作勞碌工。
+            basis: [15, 16, 17, 18, 19, 21]
+            entries: [五旬節兩個有酵餅的搖祭條例]
+          - id: lev23-22
+            title: 收割莊稼，不可割盡田角，要留給窮人和寄居的
+            refs: ["22"]
+            topics: [poor, sojourner]
+            summary: 在你們的地收割莊稼，不可割盡田角，也不可拾取所遺落的；要留給窮人和寄居的。
+            basis: [22]
+            why: [22]
+      - id: lev23-s3
+        title: 七月的節期
+        verses: 24-43
+        laws:
+          - id: lev23-24
+            title: 七月初一吹角作紀念，守為聖安息日
+            refs: ["24-25"]
+            topics: [atonement-day]
+            summary: 七月初一，你們要守為聖安息日，要吹角作紀念，當有聖會；什麼勞碌的工都不可做，要將火祭獻給耶和華。
+            basis: [24, 25]
+            entries: [吹角節（七月初一）]
+          - id: lev23-27
+            title: 七月初十日贖罪日，刻苦己心，什麼工都不可做
+            refs: ["27-32"]
+            topics: [atonement-day, sabbath]
+            summary: 七月初十是贖罪日，要守為聖會，刻苦己心，將火祭獻給耶和華；這日什麼工都不可做，因為要在耶和華面前贖罪；不刻苦己心的、做工的，必從民中剪除；從初九日晚上到次日晚上要守為安息日。
+            basis: [27, 28, 29, 30, 31, 32]
+            entries: [大贖罪日（Yom Kippur）條例]
+            why: [28]
+          - id: lev23-34
+            title: 七月十五日起守住棚節七日，第八日有嚴肅會
+            refs: ["34-36"]
+            topics: [booths]
+            summary: 七月十五日是住棚節，要在耶和華面前守這節七日；第一日當有聖會；七日內要將火祭獻給耶和華；第八日當守聖會，是嚴肅會，什麼勞碌的工都不可做。
+            basis: [34, 35, 36]
+            entries: [住棚節第八日的嚴肅會]
+          - id: lev23-37
+            title: 火祭、燔祭、素祭、祭物和奠祭，各歸各日獻上
+            refs: ["37-38"]
+            topics: [booths, burnt-offering, grain-offering]
+            summary: 這是耶和華的節期，要將火祭、燔祭、素祭、祭物並奠祭，各歸各日獻給耶和華；這是在安息日以外，又在供物和所許的願並甘心獻的以外。
+            basis: [37, 38]
+          - id: lev23-39
+            title: 收藏出產之後，守節七日，住在棚裡
+            refs: ["39-43"]
+            topics: [booths]
+            summary: 收藏了地的出產，就從七月十五日起守耶和華的節七日；第一日要拿美好樹上的果子、棕樹枝、茂密樹的枝條和河旁的柳枝，在耶和華面前歡樂七日；以色列家的人都要住在棚裡七日。
+            basis: [39, 40, 41, 42]
+            entries: [住棚節四種植物]
+            why: [43]
+  - chapter: 24
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "10-14", reason: 褻瀆聖名的人被帶到摩西面前的敘事與耶和華的吩咐 }
+      - { verses: "23", reason: 照所吩咐行的敘事 }
+    sections:
+      - id: lev24-s0
+        title: 聖所的燈與陳設餅
+        verses: 2-9
+        laws:
+          - id: lev24-02
+            title: 聖所的燈要常常點著
+            refs: ["2-4"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 以色列人要把為點燈搗成的清橄欖油拿來，使燈常常點著；亞倫從晚上到早晨在耶和華面前經理這燈，要常收拾精金燈臺上的燈，這是世世代代永遠的定例。
+            basis: [2, 3, 4]
+          - id: lev24-05
+            title: 每安息日在桌子上擺十二個餅，歸亞倫和他子孫吃
+            refs: ["5-9"]
+            topics: [altar-tabernacle, priests, sabbath]
+            summary: 要取細麵烤成十二個餅，每餅用麵伊法十分之二，擺成兩行，每行六個，放在耶和華面前精金的桌子上，每行餅上放淨乳香；每安息日要常擺，餅歸亞倫和他子孫，在聖處吃。
+            basis: [5, 6, 7, 8, 9]
+            why: [9]
+            entries: [陳設餅桌子]
+      - id: lev24-s1
+        title: 咒詛神、殺人與傷人的處置
+        verses: 15-22
+        laws:
+          - id: lev24-15
+            title: 咒詛神的擔罪，褻瀆耶和華名的治死
+            refs: ["15-16"]
+            topics: [courts, divine-name]
+            summary: 凡咒詛神的，必擔當他的罪；褻瀆耶和華名的，必被治死，全會眾總要用石頭打死他，不管是寄居的還是本地人。
+            basis: [15, 16]
+          - id: lev24-17
+            title: 打死人要治死，使人殘疾要照樣還
+            refs: ["17-22"]
+            topics: [injury, homicide]
+            summary: 打死人的，必被治死；打死牲畜的，必賠上牲畜；人若使鄰舍的身體有殘疾，他怎樣行，也要照樣向他行：以傷還傷，以眼還眼，以牙還牙。寄居的和本地人同歸一例。
+            basis: [17, 18, 19, 20, 22]
+  - chapter: 25
+    excluded:
+      - { verses: "1", reason: 耶和華在西乃山對摩西說話的引言 }
+      - { verses: "18-22", reason: 遵行律例之後地必出土產、第六年賜福的應許 }
+    sections:
+      - id: lev25-s1
+        title: 安息年
+        verses: 2-7
+        laws:
+          - id: lev25-02
+            title: 第七年地要向耶和華守安息
+            refs: ["2-7"]
+            topics: [sabbath-year, poor]
+            summary: 第七年地要向耶和華守安息，不可耕種田地，也不可修理葡萄園；地在安息年所出的，給僕人、婢女、雇工人、寄居的外人和牲畜走獸當食物。
+            basis: [4, 5, 6, 7]
+            entries: [禧年（第五十年）]
+      - id: lev25-s2
+        title: 第五十年的禧年
+        verses: 8-17
+        laws:
+          - id: lev25-08
+            title: 第五十年作聖年，宣告自由，各人歸自己的產業
+            refs: ["8-13"]
+            topics: [sabbath-year, slavery]
+            summary: 要計算七個安息年，共四十九年；當年七月初十日要大發角聲；第五十年當作聖年，在遍地給一切的居民宣告自由，各人要歸自己的產業，各歸本家；這年不可耕種，不可收割自長的。
+            basis: [8, 9, 10, 11, 13]
+            why: [12]
+            entries: [禧年（第五十年）]
+          - id: lev25-14
+            title: 買賣田地，要按禧年以後的年數算價，彼此不可虧負
+            refs: ["14-17"]
+            topics: [sabbath-year, theft]
+            summary: 賣什麼給鄰舍或向鄰舍買什麼，彼此不可虧負；要按禧年以後的年數買賣，年歲多，價值加添，年歲少，價值減去；只要敬畏你們的神。
+            basis: [14, 15, 16, 17]
+            why: [16, 17]
+            entries: [禧年（第五十年）, 禧年土地贖回計算法（按距禧年年數定價）]
+      - id: lev25-s3
+        title: 地業與房屋的贖回
+        verses: 23-34
+        laws:
+          - id: lev25-23
+            title: 地不可永賣，因為地是耶和華的
+            refs: ["23-24"]
+            topics: [inheritance, sabbath-year]
+            summary: 地不可永賣，因為地是我的，你們在我面前是客旅，是寄居的；在你們所得為業的全地，也要准人將地贖回。
+            basis: [23, 24]
+            entries: [禧年（第五十年）]
+            why: [23]
+          - id: lev25-25
+            title: 窮乏弟兄賣了地業，近親要贖回，到禧年歸回
+            refs: ["25-28"]
+            topics: [inheritance, poor, sabbath-year]
+            summary: 弟兄若漸漸窮乏，賣了幾分地業，他至近的親屬要把所賣的贖回；他自己富足了，也可以算出賣地的年數，還那買主餘剩年數的價值，歸回自己的地業；不能贖回的，到了禧年地業要出買主的手。
+            basis: [25, 26, 27, 28]
+            entries: [禧年（第五十年）, 禧年土地贖回計算法（按距禧年年數定價）]
+          - id: lev25-29
+            title: 城內的住宅一年內可贖回，村莊的房屋到禧年出買主的手
+            refs: ["29-31"]
+            topics: [inheritance, sabbath-year]
+            summary: 賣了城內的住宅，一年之內可以贖回；一整年之內不贖回，就永歸買主，禧年也不得出買主的手；無城牆的村莊裡的房屋，看如鄉下的田地，可以贖回，到了禧年都要出買主的手。
+            basis: [29, 30, 31]
+            entries: [禧年（第五十年）]
+          - id: lev25-32
+            title: 利未人的房屋可以隨時贖回，郊野之地不可賣
+            refs: ["32-34"]
+            topics: [inheritance, levites]
+            summary: 利未人所得為業的城邑，其中的房屋，利未人可以隨時贖回；不贖回的，到了禧年要出買主的手；他們各城郊野之地不可賣，因為是他們永遠的產業。
+            basis: [32, 33, 34]
+            entries: [禧年（第五十年）]
+            why: [33]
+      - id: lev25-s4
+        title: 幫補貧窮的弟兄
+        verses: 35-38
+        laws:
+          - id: lev25-35
+            title: 弟兄漸漸貧窮，要幫補他，不可取利
+            refs: ["35-38"]
+            topics: [loans, poor]
+            summary: 弟兄在你那裡漸漸貧窮，手中缺乏，你就要幫補他，使他與你同住；不可向他取利，也不可向他多要，借錢借糧給他都是這樣。
+            basis: [35, 36, 37]
+            entries: [禧年（第五十年）]
+            why: [36]
+      - id: lev25-s5
+        title: 因為他們是我的僕人
+        verses: 39-55
+        laws:
+          - id: lev25-39
+            title: 窮乏賣身的弟兄不可當奴僕
+            refs: ["39-43"]
+            topics: [slavery, poor, sabbath-year]
+            summary: 弟兄窮乏賣身給你，不可叫他像奴僕服事你，要像雇工人一樣待他；到了禧年，他和兒女要一同離開你，歸回本家。
+            basis: [39, 40, 41]
+            entries: [禧年（第五十年）]
+            why: [42]
+          - id: lev25-44
+            title: 奴僕可以從四圍的國中和寄居的外人買
+            refs: ["44-46"]
+            topics: [slavery]
+            summary: 奴僕、婢女可以從四圍的國中買，也可以從寄居在你們中間的外人和他們的家屬中買；他們要作你們的產業，傳給子孫；只是以色列的弟兄，不可嚴嚴地轄管。
+            basis: [44, 45, 46]
+            entries: [禧年（第五十年）]
+          - id: lev25-47
+            title: 弟兄賣給外人，可以贖回
+            refs: ["47-55"]
+            topics: [slavery, poor]
+            summary: 弟兄窮乏，將自己賣給住在你那裡的外人或寄居的，賣了以後可以贖回；他的弟兄、伯叔或本家近支，或是他自己富足了，都可以贖；若不被贖，到了禧年要和兒女一同出去。
+            basis: [47, 48, 49, 54]
+            entries: [禧年（第五十年）]
+            why: [55]

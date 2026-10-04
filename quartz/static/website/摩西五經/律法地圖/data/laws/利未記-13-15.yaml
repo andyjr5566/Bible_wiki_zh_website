@@ -1,0 +1,162 @@
+# 利未記13–15 章（皮膚病與衣服房屋的災病、身體的漏症）。
+book: 利未記
+chapters:
+  - chapter: 13
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西、亞倫的引言 }
+      - { verses: "59", reason: 這章條例的結語 }
+    sections:
+      - id: lev13-s1
+        title: 人身上的災病
+        verses: 2-46
+        laws:
+          - id: lev13-02
+            title: 癤子、癬、火斑，祭司察看後定潔淨或不潔淨
+            refs: ["2-8"]
+            topics: [skin-disease, priests]
+            summary: 癤子、癬或火斑由祭司察看；災病深於皮且毛變白，定為不潔淨；不深於皮、無白毛的火斑先關鎖七天，未發散再關七天；第二次發暗且未發散，定為潔淨，若發散則不潔淨。
+            basis: [2, 3, 4, 5, 6, 8]
+          - id: lev13-09
+            title: 舊大痲瘋與全身變白
+            refs: ["9-17"]
+            topics: [skin-disease, priests]
+            summary: 皮上長了白癤使毛變白，又有紅瘀肉，是舊大痲瘋，祭司定他為不潔淨，不用關鎖；大痲瘋長滿全身，全身變為白，定為潔淨；紅肉顯在身上就不潔淨，變白了就潔淨。
+            basis: [10, 11, 12, 13, 14, 15, 17]
+            why: [11]
+          - id: lev13-18
+            title: 瘡與火毒的痕跡
+            refs: ["18-28"]
+            topics: [skin-disease, priests]
+            summary: 長瘡治好了又起白癤或火斑，祭司察看：窪於皮、毛變白，定為不潔淨；發暗、無白毛，關鎖七天，發散了定為不潔淨，原處止住便定為潔淨。火毒中的火斑也照樣察看。
+            basis: [18, 19, 20, 21, 22, 23, 25, 26, 27, 28]
+          - id: lev13-29
+            title: 頭上或鬍鬚上的頭疥
+            refs: ["29-37"]
+            topics: [skin-disease, priests]
+            summary: 頭上或鬍鬚的災病深於皮、有細黃毛，定為不潔淨；不深於皮、沒有黑毛的先關鎖七天，剃去鬚髮（不剃患處）再關七天；未發散定為潔淨，後來發散則不潔淨；止住且長黑毛也潔淨。
+            basis: [29, 30, 31, 32, 33, 34, 35, 36, 37]
+          - id: lev13-38
+            title: 白癬與頭禿
+            refs: ["38-44"]
+            topics: [skin-disease, priests]
+            summary: 火斑白中帶黑是白癬，還是潔淨；頭禿或頂門禿還是潔淨；頭禿處若有白中帶紅的災病，像肉皮上大痲瘋的現象，祭司要定他為不潔淨。
+            basis: [38, 39, 40, 41, 42, 43, 44]
+          - id: lev13-45
+            title: 長大痲瘋的人，撕裂衣服、獨居營外
+            refs: ["45-46"]
+            topics: [skin-disease]
+            summary: 身上長大痲瘋災病的，衣服要撕裂，蓬頭散髮，蒙著上唇，喊叫說：不潔淨了！不潔淨了！災病在他身上的日子便是不潔淨，要獨居營外。
+            basis: [45, 46]
+      - id: lev13-s2
+        title: 衣服上的災病
+        verses: 47-58
+        laws:
+          - id: lev13-47
+            title: 衣服和皮子上發綠或發紅的災病
+            refs: ["47-58"]
+            topics: [skin-disease, priests]
+            summary: 衣服或皮子上的災病發綠、發紅要關鎖七天；發散就焚燒；未發散，洗後再關七天，未變色且未消散仍焚燒，發暗就撕去；若又出現要焚燒，災病離開後再洗就潔淨。
+            basis: [47, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58]
+            why: [52]
+  - chapter: 14
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "33", reason: 耶和華曉諭摩西、亞倫的引言 }
+      - { verses: "54-57", reason: 這章條例的結語 }
+    sections:
+      - id: lev14-s1
+        title: 長大痲瘋的人得潔淨
+        verses: 2-32
+        laws:
+          - id: lev14-02
+            title: 大痲瘋痊癒，祭司在營外察看並行潔淨之禮
+            refs: ["2-9"]
+            topics: [skin-disease, priests]
+            summary: 痊癒後祭司在營外察看；用兩隻活鳥、香柏木、朱紅線和牛膝草行潔淨禮，在活水上宰一鳥、灑七次、放走活鳥；求潔淨者洗衣剃毛洗澡，入營後帳棚外住七天，第七天再洗剃。
+            basis: [2, 3, 4, 7, 8, 9]
+          - id: lev14-10
+            title: 第八天獻贖愆祭、贖罪祭、燔祭和素祭
+            refs: ["10-20"]
+            topics: [skin-disease, burnt-offering, grain-offering, guilt-offering, sin-offering, priest-portions]
+            summary: 第八天要取兩隻公羊羔、一隻一歲母羊羔，細麵伊法十分之三調油為素祭，並油一羅革；祭司把贖愆祭牲的血和油抹在求潔淨人的右耳垂、右手和右腳的大拇指上，並獻贖罪祭、燔祭和素祭。
+            basis: [10, 12, 14, 17, 19, 20]
+          - id: lev14-21
+            title: 貧窮人獻較少的祭物
+            refs: ["21-32"]
+            topics: [skin-disease, poor, burnt-offering, grain-offering, guilt-offering, sin-offering]
+            summary: 貧窮不能預備夠數，就取一隻公羊羔作贖愆祭，細麵伊法十分之一調油為素祭，並油一羅革；又照他的力量取兩隻斑鳩或雛鴿，一隻作贖罪祭，一隻作燔祭。
+            basis: [21, 22, 30, 31]
+      - id: lev14-s2
+        title: 房屋上的災病
+        verses: 34-53
+        laws:
+          - id: lev14-34
+            title: 房屋牆上的大痲瘋災病
+            refs: ["34-47"]
+            topics: [skin-disease, priests]
+            summary: 房屋有災病，祭司先令騰空再察看；牆有紅綠凹斑就封鎖七天，發散便挖石、刮牆重墁；重墁後若再發且擴散就拆屋；封鎖時入屋者不潔到晚上，在屋內躺或吃的要洗衣服。
+            basis: [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
+            why: [36]
+          - id: lev14-48
+            title: 房子的災病止住，用鳥行潔淨之禮
+            refs: ["48-53"]
+            topics: [skin-disease, priests]
+            summary: 房子墁了以後，災病沒有發散，祭司定房子為潔淨；要取兩隻鳥、香柏木、朱紅色線和牛膝草，用鳥血和活水潔淨那房子，把活鳥放在城外田野裡。
+            basis: [48, 49, 50, 52, 53]
+            why: [48]
+  - chapter: 15
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西、亞倫說話的引言 }
+      - { verses: "32-33", reason: 這章條例的結語 }
+    sections:
+      - id: lev15-s1
+        title: 男人的漏症
+        verses: 2-15
+        laws:
+          - id: lev15-02
+            title: 患漏症的人，所躺所坐的都不潔淨
+            refs: ["2-12"]
+            topics: [body-discharge]
+            summary: 患漏症的人不潔淨，所躺、所坐、所騎的都不潔淨；摸他、這些物件或他吐到身上的人不潔到晚上，要洗衣服、洗澡；他摸的瓦器打破，木器用水洗。
+            basis: [2, 3, 4, 5, 6, 7, 9, 12]
+          - id: lev15-13
+            title: 漏症痊癒，數七天，第八天獻兩隻鳥
+            refs: ["13-15"]
+            topics: [body-discharge, burnt-offering, sin-offering]
+            summary: 患漏症的人痊癒了，要計算七天，洗衣服，用活水洗身；第八天取兩隻斑鳩或雛鴿，帶到會幕門口交給祭司，一隻為贖罪祭，一隻為燔祭。
+            basis: [13, 14, 15]
+            why: [15]
+      - id: lev15-s2
+        title: 精液與月經
+        verses: 16-30
+        laws:
+          - id: lev15-16
+            title: 夢遺與男女交合，不潔到晚上
+            refs: ["16-18"]
+            topics: [body-discharge, sexual]
+            summary: 人夢遺，必不潔淨到晚上，要用水洗全身；衣服或皮子被精所染，也要用水洗；男女交合，兩個人必不潔淨到晚上，並要用水洗澡。
+            basis: [16, 17, 18]
+          - id: lev15-19
+            title: 女人行經，污穢七天
+            refs: ["19-24"]
+            topics: [body-discharge]
+            summary: 女人行經，必污穢七天，凡摸他的，必不潔淨到晚上；他所躺所坐的物件都不潔淨，摸的人要洗衣服，用水洗澡；男人與他同房，染了污穢，就要七天不潔淨。
+            basis: [19, 20, 21, 22, 24]
+          - id: lev15-25
+            title: 經期以外的血漏，好了數七天，第八天獻兩隻鳥
+            refs: ["25-30"]
+            topics: [body-discharge, burnt-offering, sin-offering]
+            summary: 女人在經期以外患多日的血漏，或經期過長，就不潔淨，所躺所坐的物也不潔淨；血漏好了，計算七天才潔淨；第八天取兩隻斑鳩或雛鴿給祭司，一隻為贖罪祭，一隻為燔祭。
+            basis: [25, 26, 27, 28, 29, 30]
+            why: [30]
+      - id: lev15-s3
+        title: 與污穢隔絕
+        verses: 31
+        laws:
+          - id: lev15-31
+            title: 使以色列人與污穢隔絕，免得玷污帳幕
+            refs: ["31"]
+            topics: [body-discharge]
+            summary: 你們要這樣使以色列人與他們的污穢隔絕，免得他們玷污我的帳幕，就因自己的污穢死亡。
+            basis: [31]
+            why: [31]

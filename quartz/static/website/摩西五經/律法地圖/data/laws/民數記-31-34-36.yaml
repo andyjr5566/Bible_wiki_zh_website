@@ -1,0 +1,66 @@
+# 民數記31–34、36 章（戰事與行程的敘事不收；戰利品與潔淨、趕出迦南居民、女子的產業不可轉到別支派）。35 章在 民數記.yaml。
+book: 民數記
+chapters:
+  - chapter: 31
+    excluded:
+      - { verses: "1-18", reason: 攻擊米甸人、殺了巴蘭與眾王的戰事敘事，以及摩西對軍長的吩咐 }
+      - { verses: "25", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "48-54", reason: 千夫長、百夫長清點軍兵並獻金為舉祭的敘事 }
+    sections:
+      - id: num31-s1
+        title: 打仗回來的潔淨與戰利品的分法
+        verses: 19-47
+        laws:
+          - id: num31-19
+            title: 殺了人或摸了死屍的，在營外七日，第三和第七天潔淨
+            refs: ["19-24"]
+            topics: [war, corpse]
+            summary: 殺了人和摸了被殺的，要在營外駐紮七日，第三天和第七天潔淨自己，連同所擄來的人口；衣服、皮物、木器也要潔淨；能見火的金銀銅鐵錫鉛要經火，再用除污穢的水潔淨；第七日洗衣服，才可進營。
+            basis: [19, 20, 22, 23, 24]
+          - id: num31-26
+            title: 擄物分作兩半，一半歸精兵，一半歸會眾
+            refs: ["26-47"]
+            topics: [war, tithes, levites, priest-portions]
+            summary: 要計算所擄來的人口和牲畜的總數，分作兩半：一半歸出去打仗的精兵，一半歸全會眾；從精兵的一半每五百取一奉給祭司為舉祭，從會眾的一半每五十取一給看守會幕的利未人。
+            basis: [26, 27, 28, 29, 30]
+  - chapter: 32
+    excluded:
+      - { verses: "1-42", reason: 流便、迦得和瑪拿西半個支派要求在約旦河東得地的敘事 }
+    sections: []
+  - chapter: 33
+    excluded:
+      - { verses: "1-49", reason: 以色列人出埃及後在曠野各站行程的記錄 }
+      - { verses: "50", reason: 耶和華在摩押平原曉諭摩西的引言 }
+    sections:
+      - id: num33-s1
+        title: 進迦南地的吩咐
+        verses: 51-56
+        laws:
+          - id: num33-51
+            title: 過約旦河進迦南地，要趕出居民，毀滅偶像，拈鬮分地
+            refs: ["51-56"]
+            topics: [war, inheritance, idolatry]
+            summary: 過約旦河進迦南時要趕出居民，毀石像、偶像、邱壇；按家室拈鬮承受所賜之地，人多多分、人少少分；不趕出的人要作刺、荊棘擾害你們，耶和華照待他們待你們。
+            basis: [51, 52, 53, 54, 55, 56]
+            why: [55]
+  - chapter: 34
+    excluded:
+      - { verses: "1-29", reason: 迦南地四境的邊界，以及分地的人名單 }
+    sections: []
+  - chapter: 36
+    excluded:
+      - { verses: "1-5", reason: 基列子孫的族長來問女兒嫁人後產業會轉到別支派的案件 }
+      - { verses: "10-13", reason: 西羅非哈的女兒照吩咐出嫁的敘事與全卷結語 }
+    sections:
+      - id: num36-s1
+        title: 女子得了產業要嫁同宗
+        verses: 6-9
+        laws:
+          - id: num36-06
+            title: 有產業的女子可以隨意嫁人，只是要嫁同宗支派的人
+            refs: ["6-9"]
+            topics: [inheritance, marriage]
+            summary: 西羅非哈的眾女兒可以隨意嫁人，只是要嫁同宗支派的人；凡在以色列支派中得了產業的女子，必作同宗支派人的妻，這樣以色列人的產業就不從這支派歸到那支派，各守各祖宗支派的產業。
+            basis: [6, 7, 8, 9]
+            why: [7]
+            entries: [女兒承受產業的條例]

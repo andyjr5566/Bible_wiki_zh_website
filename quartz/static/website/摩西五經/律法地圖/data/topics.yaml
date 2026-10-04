@@ -1,0 +1,83 @@
+# 律法主題分類（手寫）。
+# - name：查經／研究層的用語；plain：入門層的白話名稱。
+# - entry：（選填）對應的知識庫條目標題，必須解得到 util/output/link_index.json。
+#   主題頁只放「查看完整條目」連結，不搬條目內容。
+# - color：1–6，對應 styles.css 的 --g1 … --g6。
+groups:
+  - id: worship
+    name: 敬拜與聖所
+    plain: 怎樣敬拜神
+    color: 1
+    topics:
+      - { id: one-god, name: 專一事奉耶和華, plain: 忠心敬拜耶和華 }
+      - { id: idolatry, name: 偶像與別神崇拜, plain: 不可敬拜偶像或別神, entry: 不可為自己雕刻偶像 }
+      - { id: witchcraft, name: 巫術與交鬼, plain: 不可行巫術或交鬼, entry: 不可偏向交鬼行巫術的 }
+      - { id: divine-name, name: 耶和華的名, plain: 尊重耶和華的名 }
+      - { id: altar-tabernacle, name: 祭壇與會幕, plain: 祭壇與會幕 }
+      - { id: priests, name: 祭司職任與聖潔, plain: 祭司的工作和聖潔 }
+      - { id: priest-garments-tools, name: 祭司的衣服與器具, plain: 祭司穿戴和使用的器具 }
+      - { id: priest-portions, name: 祭司所得的分, plain: 祭司可以領取的分, entry: 祭司的分（靠祭物養生） }
+      - { id: levites, name: 利未人的職任與產業, plain: 利未人的工作和產業, entry: 利未支派 }
+      - { id: burnt-offering, name: 燔祭, plain: 全部燒在壇上的祭, entry: 燔祭 }
+      - { id: grain-offering, name: 素祭, plain: 麵和穀物所獻的祭, entry: 素祭（minchah） }
+      - { id: peace-offering, name: 平安祭, plain: 與神分享的祭, entry: 平安祭 }
+      - { id: sin-offering, name: 贖罪祭, plain: 為罪獻上的祭, entry: 贖罪祭 }
+      - { id: guilt-offering, name: 贖愆祭, plain: 為過犯和虧欠所獻的祭, entry: 贖愆祭（asham） }
+      - { id: offerings, name: 一般祭物規定, plain: 祭物的一般規定 }
+      - { id: vows, name: 許願與奉獻, plain: 許願與奉獻 }
+      - { id: tithes, name: 什一與初熟, plain: 十分之一與初熟的果子, entry: 三種什一奉獻的區分 }
+      - { id: firstborn, name: 頭生歸神, plain: 頭生的歸給神 }
+  - id: purity
+    name: 聖潔與潔淨
+    plain: 怎樣保持潔淨
+    color: 2
+    topics:
+      - { id: clean-food, name: 可吃與不可吃, plain: 什麼可以吃, entry: 潔淨與不潔淨 }
+      - { id: blood-fat, name: 血與脂油, plain: 血與脂油 }
+      - { id: skin-disease, name: 皮膚病與大痲瘋, plain: 皮膚病 }
+      - { id: body-discharge, name: 身體的漏症與生產, plain: 身體的不潔 }
+      - { id: corpse, name: 死屍的污穢, plain: 碰到死屍 }
+      - { id: no-mixing, name: 不可混雜, plain: 不可混雜 }
+  - id: holy-time
+    name: 聖日與節期
+    plain: 休息與過節
+    color: 3
+    topics:
+      - { id: sabbath, name: 安息日, plain: 安息日, entry: 安息日 }
+      - { id: sabbath-year, name: 安息年與禧年, plain: 第七年與第五十年, entry: 安息年 }
+      - { id: passover, name: 逾越節與除酵節, plain: 逾越節 }
+      - { id: weeks, name: 七七節, plain: 七七節 }
+      - { id: booths, name: 住棚節, plain: 住棚節 }
+      - { id: atonement-day, name: 吹角節與贖罪日, plain: 吹角節與贖罪日 }
+      - { id: three-feasts, name: 一年三次的節期, plain: 一年三次上聖所, entry: 三大節期 }
+  - id: family
+    name: 家庭與身體
+    plain: 家與身體
+    color: 4
+    topics:
+      - { id: marriage, name: 婚姻與離婚, plain: 結婚與離婚 }
+      - { id: sexual, name: 亂倫與性的禁令, plain: 性的界線 }
+      - { id: parents, name: 孝敬父母, plain: 孝敬父母 }
+      - { id: inheritance, name: 繼承與產業, plain: 產業怎麼傳下去 }
+      - { id: levirate, name: 兄終弟及, plain: 為過世的哥哥立後 }
+  - id: life-property
+    name: 生命、財產與賠償
+    plain: 生命與財產
+    color: 5
+    topics:
+      - { id: homicide, name: 殺人與逃城, plain: 殺人與逃城, entry: 逃城 }
+      - { id: injury, name: 傷害與賠償, plain: 傷了人要賠 }
+      - { id: theft, name: 偷竊與看管, plain: 偷竊與代人保管 }
+      - { id: loans, name: 借貸與利息, plain: 借錢與利息 }
+      - { id: animals-property, name: 牲畜與鄰舍財物, plain: 牲畜與鄰舍的東西 }
+  - id: justice
+    name: 公義、弱勢與治理
+    plain: 公義與照顧弱者
+    color: 6
+    topics:
+      - { id: courts, name: 審判與見證, plain: 審判與作見證 }
+      - { id: sojourner, name: 寄居的、孤兒寡婦, plain: 外地人、孤兒寡婦, entry: 保護弱勢 }
+      - { id: poor, name: 窮人與拾穗, plain: 窮人 }
+      - { id: slavery, name: 奴僕與自由, plain: 奴僕與自由, entry: 奴僕與自由 }
+      - { id: leaders, name: 君王、先知與祭司, plain: 君王與先知 }
+      - { id: war, name: 戰爭, plain: 打仗的規矩 }

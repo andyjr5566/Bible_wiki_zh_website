@@ -1,0 +1,55 @@
+# 民數記的律法段落與條文（手寫 source of truth）。目前只收逃城（與出21:12-14 對照）。
+book: 民數記
+chapters:
+  - chapter: 35
+    excluded:
+      - { verses: "1", reason: 耶和華在摩押平原曉諭摩西的引言 }
+      - { verses: "9", reason: 神吩咐摩西的引言 }
+    sections:
+      - id: num35-s0
+        title: 利未人的城邑
+        verses: 2-8
+        laws:
+          - id: num35-02
+            title: 從所得為業的地中給利未人城邑和四圍的郊野，其中六座是逃城
+            refs: ["2-8"]
+            topics: [inheritance, homicide, levites]
+            summary: 利未人的城從城根四圍量一千肘，另東南西北各量二千肘作界；共有四十八座，其中六座是逃城；支派按產業大小分城。
+            basis: [2, 3, 4, 5, 6, 7, 8]
+            why: [6]
+            entries: [逃城]
+      - id: num35-s1
+        title: 逃城的條例
+        verses: 10-34
+        laws:
+          - id: num35-10
+            title: 分出六座逃城，給誤殺人的
+            refs: ["10-15"]
+            topics: [homicide]
+            summary: 過約旦河進了迦南地，要分出六座城作逃城，河東三座、迦南地三座，使誤殺人的可以逃到那裡，等他站在會眾面前聽審判；這六座城也給外人和寄居的。
+            basis: [11, 12, 13, 14, 15]
+            why: [12]
+            entries: [逃城]
+          - id: num35-16
+            title: 故殺人的必被治死
+            refs: ["16-21"]
+            topics: [homicide]
+            summary: 用鐵器、石頭或木器打死人，是故殺人的，必被治死，報血仇的一遇見就殺他；因怨恨推倒人、埋伏扔物或因仇恨動手打人以致於死，也是故殺人的。
+            basis: [16, 17, 18, 19, 20, 21]
+            entries: [逃城]
+          - id: num35-22
+            title: 誤殺人的住在逃城，直到大祭司死
+            refs: ["22-28"]
+            topics: [homicide]
+            summary: 沒有仇恨、無意害人而殺了人，會眾要審判，救他脫離報血仇人的手，使他住在逃城，直等到受聖膏的大祭司死了；他若出了逃城境外被報血仇的殺了，報血仇的沒有流血之罪。
+            basis: [22, 23, 24, 25, 26, 27, 28]
+            why: [28]
+            entries: [逃城]
+          - id: num35-29
+            title: 憑幾個見證人定罪，不可收贖價代替命
+            refs: ["29-34"]
+            topics: [homicide, courts]
+            summary: 故殺人的，要憑幾個見證人的口把他殺了，不可憑一個見證的口叫人死；故殺人的和逃到逃城的人，都不可收贖價；這樣就不污穢所住之地。
+            basis: [30, 31, 32, 33]
+            why: [33, 34]
+            entries: [逃城]

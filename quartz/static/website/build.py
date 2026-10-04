@@ -40,6 +40,12 @@ CATEGORY_NAME = "互動網站"
 BOOK_INDEX_HEADING = "🕹️ 互動網站"
 CATEGORY_DIR = Path(__file__).resolve().parent
 REPOSITORY_ROOT = CATEGORY_DIR.parent.parent
+BOOK_ORDER = {
+    book: index
+    for index, book in enumerate(
+        json.loads((REPOSITORY_ROOT / "_config" / "bible_books.json").read_text(encoding="utf-8"))
+    )
+}
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE | re.DOTALL)
 VITE_CONFIG_NAMES = ("vite.config.ts", "vite.config.js", "vite.config.mjs")
 BACKUP_MARKER = "_backup_"
@@ -128,11 +134,16 @@ def _chapter_html_entries(
         if built_index.is_file():
             # The source index.html points to /src/main.ts and is not a
             # deployable page.  Only expose the production entry point.
-            _append_entry(entries, key, built_index)
+            # 跨卷網站放在「不是書卷」的資料夾（例如 摩西五經/律法地圖），
+            # 它自己的 key 對不到任何章節；util/book_paths.py 對未知書名會丟錯，
+            # 所以只產生 appendix-chapters.json 列出的章節。
+            if _is_book_folder(book):
+                _append_entry(entries, key, built_index)
             # 一個網站涵蓋好幾章時，在專案根目錄放 appendix-chapters.json，
             # 例如 ["第12章", "第13章"]，其他章的附錄也會列出同一個入口。
+            # 跨卷時寫完整的「書名/第N章」，例如 ["出埃及記/第20章", "申命記/第5章"]。
             for extra in _extra_chapters(chapter_dir):
-                _append_entry(entries, f"{book}/{extra}", built_index)
+                _append_entry(entries, extra if "/" in extra else f"{book}/{extra}", built_index)
 
         # A Vite chapter may also contain hand-authored static pages.  Keep
         # those links, but never expose the Vite source index as a live page.
@@ -141,6 +152,13 @@ def _chapter_html_entries(
 
     for html_file in sorted(html_files, key=lambda path: path.name.lower()):
         _append_entry(entries, key, html_file)
+
+
+def _is_book_folder(book: str) -> bool:
+    """網站的上層資料夾是不是真正的書卷（vault 裡有「NN 書名」或「書名」資料夾）。"""
+    if (REPOSITORY_ROOT / book).is_dir():
+        return True
+    return any(path.is_dir() for path in REPOSITORY_ROOT.glob(f"[0-9][0-9] {book}"))
 
 
 def _extra_chapters(chapter_dir: Path) -> list[str]:
@@ -319,6 +337,45 @@ def _print_entries(entries: dict[str, list[dict[str, str]]]) -> None:
             print(f"      - {item['title']} → {item['path']}")
 
 
+def render_index_markdown(entries: dict[str, list[dict[str, str]]]) -> str:
+    """Render the website directory index from the discovered entry points."""
+    lines = ["# 互動網站", ""]
+    titles: dict[str, str] = {}
+    chapters_by_path: defaultdict[str, set[str]] = defaultdict(set)
+    for chapter_key in sorted(entries):
+        for item in entries[chapter_key]:
+            path = item["path"]
+            titles.setdefault(path, item["title"])
+            chapters_by_path[path].add(chapter_key)
+
+    def chapter_order_key(chapter_key: str) -> tuple[int, int, str, str]:
+        book, chapter = chapter_key.split("/", 1)
+        match = re.search(r"\d+", chapter)
+        return (
+            BOOK_ORDER.get(book, len(BOOK_ORDER)),
+            int(match.group()) if match else 0,
+            book,
+            chapter,
+        )
+
+    def entry_order_key(path: str) -> tuple[tuple[int, int, str, str], str, str]:
+        first_chapter = min(chapters_by_path[path], key=chapter_order_key)
+        return chapter_order_key(first_chapter), titles[path], path
+
+    for path in sorted(chapters_by_path, key=entry_order_key):
+        target = REPOSITORY_ROOT / path
+        relative_path = os.path.relpath(target, CATEGORY_DIR).replace("\\", "/")
+        chapters = "、".join(
+            f"{book} {chapter}"
+            for book, chapter in (
+                key.split("/", 1)
+                for key in sorted(chapters_by_path[path], key=chapter_order_key)
+            )
+        )
+        lines.append(f"- [{titles[path]}](<{relative_path}>)（{chapters}）")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def main(argv: list[str] | None = None) -> int:
     configure_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
@@ -350,7 +407,15 @@ def main(argv: list[str] | None = None) -> int:
         records = export_vite_apps(apps, args.deploy_dir)
         print(f"[部署] 已匯出 {len(records)} 筆網站入口到 {args.deploy_dir.resolve()}")
 
-    _print_entries(scan_all_entries())
+    entries = scan_all_entries()
+    index_path = CATEGORY_DIR / "index.md"
+    index_path.write_text(
+        render_index_markdown(entries),
+        encoding="utf-8",
+        newline="\n",
+    )
+    print(f"[索引] 已更新 {index_path.relative_to(REPOSITORY_ROOT).as_posix()}")
+    _print_entries(entries)
     return 0
 
 

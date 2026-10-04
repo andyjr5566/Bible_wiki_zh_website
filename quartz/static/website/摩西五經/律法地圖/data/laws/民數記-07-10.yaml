@@ -1,0 +1,92 @@
+# 民數記7–10 章（首領獻供物與起行的敘事不收；燈臺、利未人、逾越節、銀號）。
+book: 民數記
+chapters:
+  - chapter: 7
+    excluded:
+      - { verses: "1-89", reason: 立完帳幕後各支派首領獻供物、行奉獻壇之禮的敘事與清單 }
+    sections: []
+  - chapter: 8
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "3-5", reason: 亞倫照所吩咐點燈、燈臺的做法，以及耶和華曉諭摩西的引言 }
+      - { verses: "20-23", reason: 摩西、亞倫和會眾照所吩咐潔淨利未人的敘事，以及耶和華曉諭摩西的引言 }
+    sections:
+      - id: num08-s1
+        title: 燈臺與利未人
+        verses: 2-26
+        laws:
+          - id: num08-02
+            title: 點燈的時候，七盞燈都要向燈臺前面發光
+            refs: ["2"]
+            topics: [altar-tabernacle, priest-garments-tools]
+            summary: 點燈的時候，七盞燈都要向燈臺前面發光。
+            basis: [2]
+          - id: num08-06
+            title: 潔淨利未人：彈除罪水、刮全身、洗衣服，獻上祭牲，奉為搖祭
+            refs: ["6-14"]
+            topics: [burnt-offering, sin-offering, levites]
+            summary: 潔淨利未人，要用除罪水彈身、剃全身、洗衣服；取兩隻公牛和素祭，一隻作贖罪祭、一隻作燔祭；以色列人按手，亞倫將他們當搖祭奉上。
+            basis: [6, 7, 8, 9, 10, 11, 12, 13, 14]
+            why: [11]
+          - id: num08-15
+            title: 利未人代替以色列人中一切頭生的，歸耶和華
+            refs: ["15-19"]
+            topics: [firstborn, levites]
+            summary: 以色列人一切頭生的，連人帶牲畜，都歸耶和華；耶和華取利未人代替他們，賜給亞倫和兒子在會幕辦事，使以色列人免近聖所遭災。
+            basis: [15, 16, 17, 18, 19]
+            why: [17]
+          - id: num08-24
+            title: 利未人二十五歲任職，五十歲退任
+            refs: ["24-26"]
+            topics: [levites]
+            summary: 利未人從二十五歲以外前來任職，辦會幕的事；到了五十歲要停工退任，不再辦事，只要在會幕裡和弟兄一同伺候，謹守所吩咐的。
+            basis: [24, 25, 26]
+  - chapter: 9
+    excluded:
+      - { verses: "1", reason: 出埃及第二年正月耶和華吩咐摩西的引言 }
+      - { verses: "4-9", reason: 摩西吩咐守逾越節、有人因死屍不潔淨來問摩西的敘事 }
+      - { verses: "15-23", reason: 雲彩遮蓋帳幕、以色列人隨雲彩起行安營的敘事 }
+    sections:
+      - id: num09-s1
+        title: 逾越節
+        verses: 2-14
+        laws:
+          - id: num09-02
+            title: 在所定的日期守逾越節
+            refs: ["2-3"]
+            topics: [passover]
+            summary: 以色列人應當在所定的日期守逾越節，就是本月十四日黃昏的時候，要按這節的一切律例典章守。
+            basis: [2, 3]
+            entries: [逾越節]
+          - id: num09-10
+            title: 因死屍不潔淨或在遠方行路的，二月十四日守逾越節
+            refs: ["10-12"]
+            topics: [passover, corpse]
+            summary: 你們和後代中，若有人因死屍而不潔淨，或在遠方行路，還要向耶和華守逾越節，在二月十四日黃昏的時候守，用無酵餅與苦菜和羊羔同吃，一點不可留到早晨，羊羔的骨頭一根也不可折斷。
+            basis: [10, 11, 12]
+            entries: [逾越節, 逾越節羔羊]
+          - id: num09-13
+            title: 潔淨又不行路的人若不守逾越節，要從民中剪除；寄居的也同歸一例
+            refs: ["13-14"]
+            topics: [passover, sojourner]
+            summary: 那潔淨而不行路的人若推辭不守逾越節，那人要從民中剪除，應該擔當他的罪；若有外人寄居，願意向耶和華守逾越節，要照逾越節的律例典章行，寄居的和本地人同歸一例。
+            basis: [13, 14]
+            why: [13]
+            entries: [逾越節]
+  - chapter: 10
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "11-36", reason: 雲彩收上去、以色列人離開西乃曠野起行的敘事與安營次序 }
+    sections:
+      - id: num10-s1
+        title: 銀號
+        verses: 2-10
+        laws:
+          - id: num10-02
+            title: 用銀子做兩枝號，招聚會眾，叫眾營起行，打仗和節期也吹號
+            refs: ["2-10"]
+            topics: [war, three-feasts, priest-garments-tools]
+            summary: 銀子錘兩枝號；招聚全會眾時吹號不吹大聲，單吹一枝聚首領；大聲吹時東營、南營依次起行；祭司要吹號，本地遇敵時、節期和月朔獻祭時也要吹。
+            basis: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+            why: [2, 9]
+            entries: [銀號]

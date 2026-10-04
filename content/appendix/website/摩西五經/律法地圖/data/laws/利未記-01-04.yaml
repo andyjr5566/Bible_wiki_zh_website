@@ -1,0 +1,151 @@
+# 利未記的律法段落與條文（手寫 source of truth）。利未記分成幾個檔案（利未記-xx-yy.yaml），同一個 book，建置時一起讀。
+book: 利未記
+chapters:
+  - chapter: 1
+    excluded:
+      - { verses: "1", reason: 耶和華從會幕中呼叫摩西的引言 }
+    sections:
+      - id: lev01-s1
+        title: 燔祭的條例
+        verses: 2-17
+        laws:
+          - id: lev01-02
+            title: 燔祭用牛，獻沒有殘疾的公牛
+            refs: ["2-9"]
+            topics: [burnt-offering]
+            summary: 若以牛為燔祭，要在會幕門口獻沒有殘疾的公牛；獻的人按手在牛頭上，宰牛，祭司把血灑在壇的周圍，把肉塊和頭並脂油擺在壇上，全燒。
+            basis: [3, 4, 5, 8, 9]
+            why: [3]
+            entries: [燔祭]
+          - id: lev01-10
+            title: 燔祭用羊，獻沒有殘疾的公羊
+            refs: ["10-13"]
+            topics: [burnt-offering]
+            summary: 以綿羊或山羊為燔祭，要獻沒有殘疾的公羊，宰於壇的北邊；祭司把血灑在壇的周圍，肉塊連頭和脂油擺在壇上，臟腑與腿用水洗，全然燒在壇上。
+            basis: [10, 11, 12, 13]
+            entries: [燔祭]
+          - id: lev01-14
+            title: 燔祭用鳥，獻斑鳩或雛鴿
+            refs: ["14-17"]
+            topics: [burnt-offering]
+            summary: 以鳥為燔祭，要獻斑鳩或雛鴿；祭司把鳥拿到壇前，揪下頭來燒在壇上，血流在壇旁，嗉子和髒物丟在倒灰的地方，把鳥撕開，只是不可撕斷。
+            basis: [14, 15, 16, 17]
+            entries: [燔祭]
+  - chapter: 2
+    excluded: []
+    sections:
+      - id: lev02-s1
+        title: 素祭的條例
+        verses: 1-16
+        laws:
+          - id: lev02-01
+            title: 素祭用細麵、油和乳香
+            refs: ["1-3"]
+            topics: [grain-offering, priest-portions]
+            summary: 獻素祭要用細麵澆上油，加上乳香，帶到祭司那裡；祭司取出一把作為紀念燒在壇上，所剩的歸亞倫和他的子孫，是至聖的。
+            basis: [1, 2, 3]
+          - id: lev02-04
+            title: 爐中烤的、鐵鏊上的、煎盤做的素祭
+            refs: ["4-10"]
+            topics: [grain-offering, priest-portions]
+            summary: 素祭若用爐中烤的、鐵鏊上做的或煎盤做的，都要用調油的無酵細麵；祭司取出作為紀念的燒在壇上，所剩的歸亞倫和他的子孫，是至聖的。
+            basis: [4, 5, 7, 9, 10]
+          - id: lev02-11
+            title: 素祭不可有酵與蜜
+            refs: ["11-12"]
+            topics: [clean-food, grain-offering]
+            summary: 凡獻給耶和華的素祭都不可有酵，不可燒一點酵、一點蜜當作火祭；這些物可以作為初熟的供物獻上，只是不可在壇上獻為馨香的祭。
+            basis: [11, 12]
+            entries: [素祭不可有酵與蜜]
+            why: [11]
+          - id: lev02-13
+            title: 素祭要用鹽調和
+            refs: ["13"]
+            topics: [grain-offering]
+            summary: 凡獻為素祭的供物都要用鹽調和，不可缺了你神立約的鹽；一切的供物都要配鹽而獻。
+            basis: [13]
+          - id: lev02-14
+            title: 初熟之物的素祭
+            refs: ["14-16"]
+            topics: [tithes, grain-offering]
+            summary: 向耶和華獻初熟之物為素祭，要獻烘了的禾穗子，抹上油，加上乳香；祭司把作為紀念的穗子、油和所有的乳香都焚燒。
+            basis: [14, 15, 16]
+  - chapter: 3
+    excluded: []
+    sections:
+      - id: lev03-s1
+        title: 平安祭的條例
+        verses: 1-17
+        laws:
+          - id: lev03-01
+            title: 平安祭用牛
+            refs: ["1-5"]
+            topics: [blood-fat, peace-offering]
+            summary: 平安祭若從牛群中獻，公的母的都要沒有殘疾；按手在供物頭上，宰於會幕門口，祭司把血灑在壇的周圍，把脂油、兩個腰子和肝上的網子燒在壇上。
+            basis: [1, 2, 3, 4, 5]
+            entries: [平安祭]
+          - id: lev03-06
+            title: 平安祭用羊
+            refs: ["6-11"]
+            topics: [blood-fat, peace-offering]
+            summary: 平安祭若從羊群中獻，公的母的都要沒有殘疾；按手在供物頭上，宰於會幕前，血灑在壇的周圍，脂油、整肥尾巴、腰子和肝上的網子都由祭司燒在壇上。
+            basis: [6, 7, 8, 9, 10, 11]
+            entries: [平安祭]
+          - id: lev03-12
+            title: 平安祭用山羊
+            refs: ["12-16"]
+            topics: [blood-fat, peace-offering]
+            summary: 平安祭若獻山羊，要按手在山羊頭上，宰於會幕前，血灑在壇的周圍；脂油、腰子和肝上的網子都取下，由祭司在壇上焚燒；脂油都是耶和華的。
+            basis: [12, 13, 14, 16]
+            why: [16]
+            entries: [平安祭]
+          - id: lev03-17
+            title: 脂油和血都不可吃
+            refs: ["17"]
+            topics: [blood-fat]
+            summary: 在你們一切的住處，脂油和血都不可吃；這要成為你們世世代代永遠的定例。
+            basis: [17]
+            entries: [脂油和血都不可吃]
+  - chapter: 4
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: lev04-s1
+        title: 贖罪祭的條例
+        verses: 2-35
+        laws:
+          - id: lev04-02
+            title: 受膏的祭司犯罪，獻公牛犢
+            refs: ["2-12"]
+            topics: [priests, sin-offering]
+            summary: 誤犯了耶和華所吩咐不可行的事，或是受膏的祭司犯罪使百姓陷在罪裡，要獻沒有殘疾的公牛犢為贖罪祭；祭司對著幔子彈血七次，抹在香壇的四角，牛的皮和肉搬到營外燒。
+            basis: [2, 3, 6, 7, 11, 12]
+            entries: [贖罪祭]
+          - id: lev04-13
+            title: 全會眾誤犯，獻公牛犢
+            refs: ["13-21"]
+            topics: [priests, sin-offering]
+            summary: 以色列全會眾誤犯了罪，會眾一知道，就獻一隻公牛犢為贖罪祭，會中的長老按手在牛頭上；祭司為他們贖罪，他們必蒙赦免；牛搬到營外燒了。
+            basis: [13, 14, 15, 20, 21]
+            entries: [贖罪祭]
+          - id: lev04-22
+            title: 官長誤犯，獻公山羊
+            refs: ["22-26"]
+            topics: [leaders, sin-offering]
+            summary: 官長誤犯了罪，自己知道了，要牽一隻沒有殘疾的公山羊為供物，按手在羊頭上，宰在宰燔祭牲的地方；祭司把血抹在燔祭壇的四角，為他贖罪，他必蒙赦免。
+            basis: [22, 23, 24, 25, 26]
+            entries: [贖罪祭]
+          - id: lev04-27
+            title: 平民誤犯，獻母山羊
+            refs: ["27-31"]
+            topics: [sin-offering]
+            summary: 民中有人誤犯了罪，自己知道了，要牽一隻沒有殘疾的母山羊為供物，按手在牲頭上宰了；祭司把血抹在燔祭壇的四角，為他贖罪，他必蒙赦免。
+            basis: [27, 28, 29, 30, 31]
+            entries: [贖罪祭]
+          - id: lev04-32
+            title: 平民誤犯，也可獻母羊羔
+            refs: ["32-35"]
+            topics: [sin-offering]
+            summary: 人若牽一隻綿羊羔為贖罪祭，必要牽一隻沒有殘疾的母羊，按手在牲頭上，宰作贖罪祭；祭司把血抹在燔祭壇的四角，為他贖罪，他必蒙赦免。
+            basis: [32, 33, 34, 35]
+            entries: [贖罪祭]

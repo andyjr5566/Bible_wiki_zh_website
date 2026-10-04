@@ -1,0 +1,106 @@
+# 申命記27–34 章（過河後立石與築壇、十二樣咒詛、每七年念律法；祝福咒詛、歌與祝福、摩西之死不收）。
+book: 申命記
+chapters:
+  - chapter: 27
+    excluded:
+      - { verses: "1", reason: 摩西和長老吩咐百姓遵守誡命的引言 }
+      - { verses: "9-10", reason: 摩西和祭司利未人叫百姓靜聽、成為耶和華的百姓的勸勉 }
+    sections:
+      - id: deut27-s1
+        title: 過約旦河之後立石築壇
+        verses: 2-8
+        laws:
+          - id: deut27-02
+            title: 過約旦河當天立起大石頭，墁上石灰，寫律法的話
+            refs: ["2-4", "8"]
+            topics: [altar-tabernacle]
+            summary: 過約旦河到了所賜的地，當天要立起幾塊大石頭，墁上石灰，把這律法的一切話明明地寫在石頭上；要在以巴路山上照所吩咐的把這些石頭立起來。
+            basis: [2, 3, 4, 8]
+          - id: deut27-05
+            title: 用沒有鑿過的石頭築壇，在壇上獻燔祭和平安祭
+            refs: ["5-7"]
+            topics: [altar-tabernacle, burnt-offering, peace-offering]
+            summary: 要為耶和華你的神築一座石壇，在石頭上不可動鐵器；要用沒有鑿過的石頭築壇，在壇上獻燔祭，又獻平安祭，在那裡吃，在耶和華面前歡樂。
+            basis: [5, 6, 7]
+            entries: [燔祭, 平安祭]
+      - id: deut27-s2
+        title: 基利心山與以巴路山，以及十二樣咒詛
+        verses: 11-26
+        laws:
+          - id: deut27-11
+            title: 六個支派站在基利心山祝福，六個支派站在以巴路山咒詛
+            refs: ["11-13"]
+            topics: [courts]
+            summary: 過了約旦河，西緬、利未、猶大、以薩迦、約瑟、便雅憫六個支派的人要站在基利心山上為百姓祝福；流便、迦得、亞設、西布倫、但、拿弗他利六個支派的人要站在以巴路山上宣布咒詛。
+            basis: [11, 12, 13]
+          - id: deut27-14
+            title: 製造偶像、輕慢父母、挪移地界、屈枉寄居的和孤寡的，必受咒詛
+            refs: ["14-19"]
+            topics: [one-god, parents, poor, sojourner]
+            summary: 利未人要向以色列眾人高聲說：製造偶像的、輕慢父母的、挪移鄰舍地界的、使瞎子走差路的、向寄居的和孤兒寡婦屈枉正直的，必受咒詛；百姓都要說：阿們！
+            basis: [14, 15, 16, 17, 18, 19]
+          - id: deut27-20
+            title: 與繼母、獸、姊妹、岳母行淫的，必受咒詛
+            refs: ["20-23"]
+            topics: [sexual]
+            summary: 與繼母行淫的、與獸淫合的、與異母同父或異父同母的姊妹行淫的、與岳母行淫的，必受咒詛；百姓都要說：阿們！
+            basis: [20, 21, 22, 23]
+            why: [20]
+          - id: deut27-24
+            title: 暗中殺人、受賄賂害死無辜、不堅守律法的，必受咒詛
+            refs: ["24-26"]
+            topics: [homicide, courts]
+            summary: 暗中殺人的、受賄賂害死無辜之人的、不堅守遵行這律法言語的，必受咒詛；百姓都要說：阿們！
+            basis: [24, 25, 26]
+  - chapter: 28
+    excluded:
+      - { verses: "1-68", reason: 遵行與不遵行的祝福和咒詛，是應許與警告，沒有新的條文 }
+    sections: []
+  - chapter: 29
+    excluded:
+      - { verses: "1-29", reason: 在摩押地立約的重申、回顧與勸勉 }
+    sections: []
+  - chapter: 30
+    excluded:
+      - { verses: "1-20", reason: 悔改之後的赦免、誡命不遠，以及生死禍福兩條路的勸勉 }
+    sections: []
+  - chapter: 31
+    excluded:
+      - { verses: "1-9", reason: 摩西交棒給約書亞和將律法書交給祭司的敘事 }
+      - { verses: "14-25", reason: 會幕裡的最後一次顯現與神給摩西的歌 }
+      - { verses: "27-30", reason: 摩西預告百姓悖逆、召聚眾人聽歌的話 }
+    sections:
+      - id: deut31-s1
+        title: 念律法與律法書的存放
+        verses: 10-13
+        laws:
+          - id: deut31-10
+            title: 每逢七年末一年的住棚節，將律法念給眾人聽
+            refs: ["10-13"]
+            topics: [sabbath-year, booths, levites]
+            summary: 每逢七年的末一年，就在豁免年的定期住棚節的時候，以色列眾人來到耶和華所選擇的地方朝見他，要將這律法念給他們聽；招聚男女、孩子和寄居的，使他們聽、學習，好敬畏耶和華，謹守遵行。
+            basis: [10, 11, 12]
+            why: [12]
+      - id: deut31-s2
+        title: 律法書放在約櫃旁
+        verses: 26
+        laws:
+          - id: deut31-26
+            title: 將律法書放在約櫃旁作見證
+            refs: ["26"]
+            topics: [altar-tabernacle]
+            summary: 將這律法書放在耶和華你們神的約櫃旁，可以在那裡見證以色列人的不是。
+            basis: [26]
+            why: [26]
+  - chapter: 32
+    excluded:
+      - { verses: "1-52", reason: 摩西的歌與神吩咐摩西上尼波山的敘事 }
+    sections: []
+  - chapter: 33
+    excluded:
+      - { verses: "1-29", reason: 摩西為各支派的祝福 }
+    sections: []
+  - chapter: 34
+    excluded:
+      - { verses: "1-12", reason: 摩西登尼波山、去世和約書亞接續的敘事 }
+    sections: []

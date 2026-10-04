@@ -1,0 +1,278 @@
+# 利未記19–20 章（聖潔法典的總綱，以及犯罪的刑罰）。
+book: 利未記
+chapters:
+  - chapter: 19
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: lev19-s1
+        title: 向著神的聖潔生活
+        verses: 2-8
+        laws:
+          - id: lev19-02
+            title: 你們要聖潔，因為耶和華是聖潔的
+            refs: ["2"]
+            topics: [one-god]
+            summary: 你們要聖潔，因為我耶和華你們的神是聖潔的。
+            basis: [2]
+            why: [2]
+          - id: lev19-03
+            title: 孝敬父母，守安息日
+            refs: ["3"]
+            topics: [parents, sabbath]
+            summary: 你們各人都當孝敬父母，也要守我的安息日。
+            basis: [3]
+          - id: lev19-04
+            title: 不可偏向虛無的神，不可鑄造神像
+            refs: ["4"]
+            topics: [idolatry]
+            summary: 你們不可偏向虛無的神，也不可為自己鑄造神像。
+            basis: [4]
+          - id: lev19-05
+            title: 平安祭要獻得蒙悅納，第三天不可吃
+            refs: ["5-8"]
+            topics: [peace-offering]
+            summary: 獻平安祭要獻得可蒙悅納；祭物要在獻的那一天和第二天吃，剩到第三天的必用火焚燒；第三天若再吃，就不蒙悅納，吃的人必擔當罪孽，從民中剪除。
+            basis: [5, 6, 7, 8]
+            why: [8]
+      - id: lev19-s2
+        title: 向著人的聖潔生活
+        verses: 9-18
+        laws:
+          - id: lev19-09
+            title: 收割莊稼，不可割盡田角
+            refs: ["9-10"]
+            topics: [poor, sojourner]
+            summary: 在地裡收割莊稼，不可割盡田角，也不可拾取所遺落的；不可摘盡葡萄園的果子，也不可拾取所掉的果子，要留給窮人和寄居的。
+            basis: [9, 10]
+            why: [10]
+          - id: lev19-11
+            title: 不可偷盜、欺騙、彼此說謊
+            refs: ["11"]
+            topics: [theft, courts]
+            summary: 你們不可偷盜，不可欺騙，也不可彼此說謊。
+            basis: [11]
+          - id: lev19-12
+            title: 不可指著耶和華的名起假誓
+            refs: ["12"]
+            topics: [courts, divine-name]
+            summary: 不可指著我的名起假誓，褻瀆你神的名。
+            basis: [12]
+            why: [12]
+          - id: lev19-13
+            title: 不可欺壓鄰舍，雇工的工價不可過夜
+            refs: ["13"]
+            topics: [theft, poor]
+            summary: 不可欺壓你的鄰舍，也不可搶奪他的物；雇工人的工價，不可在你那裡過夜，留到早晨。
+            basis: [13]
+          - id: lev19-14
+            title: 不可咒罵聾子，不可把絆腳石放在瞎子面前
+            refs: ["14"]
+            topics: [poor]
+            summary: 不可咒罵聾子，也不可將絆腳石放在瞎子面前，只要敬畏你的神。
+            basis: [14]
+            why: [14]
+          - id: lev19-15
+            title: 施行審判不可偏護窮人，也不可重看有勢力的人
+            refs: ["15"]
+            topics: [courts, poor]
+            summary: 你們施行審判，不可行不義；不可偏護窮人，也不可重看有勢力的人，只要按著公義審判你的鄰舍。
+            basis: [15]
+          - id: lev19-16
+            title: 不可搬弄是非，不可置鄰舍於死
+            refs: ["16"]
+            topics: [courts]
+            summary: 不可在民中往來搬弄是非，也不可與鄰舍為敵，置之於死。
+            basis: [16]
+          - id: lev19-17
+            title: 不可心裡恨弟兄，要指摘鄰舍
+            refs: ["17"]
+            topics: [courts]
+            summary: 不可心裡恨你的弟兄；總要指摘你的鄰舍，免得因他擔罪。
+            basis: [17]
+            why: [17]
+          - id: lev19-18
+            title: 不可報仇，要愛人如己
+            refs: ["18"]
+            topics: [courts]
+            summary: 不可報仇，也不可埋怨你本國的子民，卻要愛人如己。
+            basis: [18]
+      - id: lev19-s3
+        title: 不可混雜、不可效法外邦
+        verses: 19-31
+        laws:
+          - id: lev19-19
+            title: 牲畜、種子和衣料都不可兩樣攙雜
+            refs: ["19"]
+            topics: [no-mixing]
+            summary: 不可叫你的牲畜與異類配合；不可用兩樣攙雜的種種你的地，也不可用兩樣攙雜的料做衣服穿在身上。
+            basis: [19]
+          - id: lev19-20
+            title: 與許配了丈夫、還沒被贖的婢女行淫
+            refs: ["20-22"]
+            topics: [slavery, sexual, guilt-offering]
+            summary: 婢女許配了丈夫，還沒有被贖、得釋放，人若與他行淫，二人要受刑罰，卻不把他們治死，因為婢女還沒有得自由；那人要牽一隻公綿羊到會幕門口作贖愆祭，他的罪就蒙赦免。
+            basis: [20, 21, 22]
+            why: [20]
+          - id: lev19-23
+            title: 果樹頭三年的果子不可吃，第四年歸耶和華
+            refs: ["23-25"]
+            topics: [tithes]
+            summary: 到了迦南地栽種各樣結果子的樹木，頭三年所結的果子如未受割禮的，不可吃；第四年所結的果子全要成為聖，用以讚美耶和華；第五年才吃，好叫樹結果子更多。
+            basis: [23, 24, 25]
+            why: [25]
+          - id: lev19-26
+            title: 不可吃帶血的物，不可用法術觀兆
+            refs: ["26"]
+            topics: [blood-fat, witchcraft]
+            summary: 你們不可吃帶血的物；不可用法術，也不可觀兆。
+            basis: [26]
+          - id: lev19-27
+            title: 不可剃頭鬍的周圍，不可為死人劃身
+            refs: ["27-28"]
+            topics: [one-god, corpse]
+            summary: 頭的周圍不可剃，鬍鬚的周圍也不可損壞；不可為死人用刀劃身，也不可在身上刺花紋。
+            basis: [27, 28]
+          - id: lev19-29
+            title: 不可辱沒女兒使他為娼妓
+            refs: ["29"]
+            topics: [sexual]
+            summary: 不可辱沒你的女兒，使他為娼妓，恐怕地上的人專向淫亂，地就滿了大惡。
+            basis: [29]
+            why: [29]
+          - id: lev19-30
+            title: 守安息日，敬聖所
+            refs: ["30"]
+            topics: [sabbath, altar-tabernacle]
+            summary: 你們要守我的安息日，敬我的聖所。
+            basis: [30]
+          - id: lev19-31
+            title: 不可偏向交鬼的和行巫術的
+            refs: ["31"]
+            topics: [witchcraft]
+            summary: 不可偏向那些交鬼的和行巫術的，不可求問他們，以致被他們玷污了。
+            basis: [31]
+            why: [31]
+      - id: lev19-s4
+        title: 敬畏神、愛人、行公義
+        verses: 32-37
+        laws:
+          - id: lev19-32
+            title: 在白髮的人面前要站起來
+            refs: ["32"]
+            topics: [parents]
+            summary: 在白髮的人面前，你要站起來；也要尊敬老人，又要敬畏你的神。
+            basis: [32]
+          - id: lev19-33
+            title: 不可欺負同居的外人，要愛他如己
+            refs: ["33-34"]
+            topics: [sojourner]
+            summary: 有外人在你們國中和你同居，就不可欺負他；要看他如本地人一樣，並要愛他如己，因為你們在埃及地也作過寄居的。
+            basis: [33, 34]
+            why: [34]
+          - id: lev19-35
+            title: 尺、秤、升、斗都要公道
+            refs: ["35-37"]
+            topics: [courts, theft]
+            summary: 你們施行審判，不可行不義；在尺、秤、升、斗上也是如此，要用公道天平、公道法碼、公道升斗、公道秤。
+            basis: [35, 36]
+  - chapter: 20
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: lev20-s1
+        title: 拜偶像與交鬼的刑罰
+        verses: 2-8
+        laws:
+          - id: lev20-02
+            title: 把兒女獻給摩洛的，要治死
+            refs: ["2-5"]
+            topics: [homicide, idolatry]
+            summary: 以色列人或寄居的外人，把自己的兒女獻給摩洛的，總要治死，本地人要用石頭把他打死；本地人若佯為不見，不把他治死，耶和華就要把他和一切隨他的人從民中剪除。
+            basis: [2, 3, 4, 5]
+            why: [3]
+          - id: lev20-06
+            title: 偏向交鬼的和行巫術的，要剪除
+            refs: ["6"]
+            topics: [witchcraft]
+            summary: 人偏向交鬼的和行巫術的，隨他們行邪淫，耶和華要向那人變臉，把他從民中剪除。
+            basis: [6]
+          - id: lev20-07
+            title: 要自潔成聖，謹守耶和華的律例
+            refs: ["7-8"]
+            topics: [one-god]
+            summary: 你們要自潔成聖，因為我是耶和華你們的神；要謹守遵行我的律例，我是叫你們成聖的耶和華。
+            basis: [7, 8]
+            why: [7]
+      - id: lev20-s2
+        title: 各樣罪的刑度
+        verses: 9-21
+        laws:
+          - id: lev20-09
+            title: 咒罵父母的，要治死
+            refs: ["9"]
+            topics: [parents, homicide]
+            summary: 凡咒罵父母的，總要治死他；他咒罵了父母，他的罪要歸到他身上。
+            basis: [9]
+            why: [9]
+          - id: lev20-10
+            title: 與鄰舍之妻行淫，姦夫淫婦都要治死
+            refs: ["10"]
+            topics: [sexual, marriage]
+            summary: 與鄰舍之妻行淫的，姦夫淫婦都必治死。
+            basis: [10]
+          - id: lev20-11
+            title: 與繼母、兒婦同房，要治死
+            refs: ["11-12"]
+            topics: [sexual, marriage]
+            summary: 與繼母行淫，就是羞辱了他父親，總要把他們二人治死；與兒婦同房的，也總要把他們二人治死，因為行了逆倫的事。
+            basis: [11, 12]
+            why: [11, 12]
+          - id: lev20-13
+            title: 男人與男人苟合，要治死
+            refs: ["13"]
+            topics: [sexual]
+            summary: 人若與男人苟合，像與女人一樣，他們二人行了可憎的事，總要把他們治死，罪要歸到他們身上。
+            basis: [13]
+            why: [13]
+          - id: lev20-14
+            title: 娶妻並娶其母，要用火焚燒
+            refs: ["14"]
+            topics: [sexual, marriage]
+            summary: 人若娶妻，並娶其母，便是大惡，要把這三人用火焚燒，使你們中間免去大惡。
+            basis: [14]
+            why: [14]
+          - id: lev20-15
+            title: 與獸淫合，人和獸都要殺
+            refs: ["15-16"]
+            topics: [sexual]
+            summary: 人若與獸淫合，總要治死他，也要殺那獸；女人若與獸親近，與牠淫合，要殺那女人和那獸，總要把他們治死。
+            basis: [15, 16]
+          - id: lev20-17
+            title: 娶姊妹、月經時同房、姨姑伯叔母與弟兄之妻
+            refs: ["17-21"]
+            topics: [sexual, marriage]
+            summary: 娶姊妹，必在本民眼前被剪除；婦人有月經與他同房，二人必從民中剪除；露姨母或姑母的下體，二人擔當罪孽；與伯叔之妻同房，或娶弟兄之妻，二人必無子女。
+            basis: [17, 18, 19, 20, 21]
+            why: [19, 21]
+      - id: lev20-s3
+        title: 分別為聖，免得被地吐出
+        verses: 22-26
+        laws:
+          - id: lev20-22
+            title: 謹守律例，不隨從外邦風俗，要歸耶和華為聖
+            refs: ["22-26"]
+            topics: [sexual, clean-food, one-god]
+            summary: 要謹守遵行耶和華一切的律例典章，免得那地把你們吐出；不可隨從所逐出的國民的風俗；要把潔淨和不潔淨的禽獸分別出來；你們要歸耶和華為聖，使你們與萬民有分別。
+            basis: [22, 23, 25, 26]
+            why: [26]
+      - id: lev20-s4
+        title: 交鬼與行巫術的刑罰
+        verses: 27
+        laws:
+          - id: lev20-27
+            title: 交鬼或行巫術的，要用石頭打死
+            refs: ["27"]
+            topics: [witchcraft]
+            summary: 無論男女，是交鬼的或行巫術的，總要治死他們；人必用石頭把他們打死，罪要歸到他們身上。
+            basis: [27]

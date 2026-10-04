@@ -1,0 +1,790 @@
+# 段落草稿（自動產生，網站不讀）。整理後搬進 data/laws/申命記.yaml。
+book: 申命記
+chapters:
+  - chapter: 1
+    verse_count: 46
+    excluded: []
+    sections:
+      - id: TODO-1-1
+        title: 開場的三個座標
+        verses: 1-5
+        laws: []
+      - id: TODO-1-2
+        title: 起行的命令與那地的範圍
+        verses: 6-8
+        laws: []
+      - id: TODO-1-3
+        title: 一個人擔不動的重擔
+        verses: 9-18
+        laws: []
+      - id: TODO-1-4
+        title: 十二探子與一句「是美地」
+        verses: 19-25
+        laws: []
+      - id: TODO-1-5
+        title: 心消化：拒絕上去的那一夜
+        verses: 26-33
+        laws: []
+      - id: TODO-1-6
+        title: 神的誓言與兩個例外
+        verses: 34-40
+        laws: []
+      - id: TODO-1-7
+        title: 爭先與擅自：第二次失敗
+        verses: 41-46
+        laws: []
+  - chapter: 2
+    verse_count: 37
+    excluded: []
+    sections:
+      - id: TODO-2-1
+        title: 繞行夠了，轉向北去
+        verses: 1-3
+        laws: []
+      - id: TODO-2-2
+        title: 三次不可：以東、摩押、亞捫
+        verses: 4-23
+        laws: []
+      - id: TODO-2-3
+        title: 三段插敘：誰住過這些地
+        verses: 10-12,20-23
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-2-4
+        title: 過撒烈溪：三十八年到此為止
+        verses: 13-16
+        laws: []
+      - id: TODO-2-5
+        title: 起首：同一個動詞從禁令變成命令
+        verses: 24-25
+        laws: []
+      - id: TODO-2-6
+        title: 談判、剛硬、開戰
+        verses: 26-33
+        laws: []
+      - id: TODO-2-7
+        title: 盡都毀滅與所得之地
+        verses: 34-37
+        laws: []
+  - chapter: 3
+    verse_count: 29
+    excluded: []
+    sections:
+      - id: TODO-3-1
+        title: 巴珊王噩：比上一仗更大的勝仗
+        verses: 1-11
+        laws: []
+      - id: TODO-3-2
+        title: 河東的地怎麼分
+        verses: 12-17
+        laws: []
+      - id: TODO-3-3
+        title: 先拿到地的人要先過河
+        verses: 18-20
+        laws: []
+      - id: TODO-3-4
+        title: 摩西求過河，神說「罷了」
+        verses: 21-29
+        laws: []
+  - chapter: 4
+    verse_count: 49
+    excluded: []
+    sections:
+      - id: TODO-4-1
+        title: 先講清楚為什麼要聽
+        verses: 1-8
+        laws: []
+      - id: TODO-4-2
+        title: 何烈山那一天：有聲音，沒有形像
+        verses: 9-20
+        laws: []
+      - id: TODO-4-3
+        title: 烈火、忌邪，與回頭的路
+        verses: 21-31
+        laws: []
+      - id: TODO-4-4
+        title: 三個反問，一個結論
+        verses: 32-40
+        laws: []
+      - id: TODO-4-5
+        title: 講章中間插進來的三座城
+        verses: 41-43
+        laws: []
+      - id: TODO-4-6
+        title: 下一篇講章的序言
+        verses: 44-49
+        laws: []
+  - chapter: 5
+    verse_count: 33
+    excluded: []
+    sections:
+      - id: TODO-5-1
+        title: 四十年前那一天，被說成「你們」的事
+        verses: 1-5
+        laws: []
+      - id: TODO-5-2
+        title: 十誡前半：獨一、形像、名與日子
+        verses: 6-15
+        laws: []
+      - id: TODO-5-3
+        title: 十誡後半：從父母到心裡的念頭
+        verses: 16-21
+        laws: []
+      - id: TODO-5-4
+        title: 火中說話，與求一個代聽的人
+        verses: 22-31
+        laws: []
+      - id: TODO-5-5
+        title: 不可偏離左右
+        verses: 32-33
+        laws: []
+  - chapter: 6
+    verse_count: 25
+    excluded: []
+    sections:
+      - id: TODO-6-1
+        title: 講章的總綱：先說目的，再說內容
+        verses: 1-3
+        laws: []
+      - id: TODO-6-2
+        title: 示馬：一句話撐住整章
+        verses: 4-5
+        laws: []
+      - id: TODO-6-3
+        title: 從心到門框：話要放到哪裡去
+        verses: 6-9
+        laws: []
+      - id: TODO-6-4
+        title: 飽足之後最危險
+        verses: 10-19
+        laws: []
+      - id: TODO-6-5
+        title: 兒子發問，父親講故事
+        verses: 20-25
+        laws: []
+  - chapter: 7
+    verse_count: 26
+    excluded: []
+    sections:
+      - id: TODO-7-1
+        title: 七族、審判與信仰界線
+        verses: 1-5
+        laws: []
+      - id: TODO-7-2
+        title: 聖潔、專愛與守約信實
+        verses: 6-11
+        laws: []
+      - id: TODO-7-3
+        title: 土地中的福分與健康應許
+        verses: 12-16
+        laws: []
+      - id: TODO-7-4
+        title: 記念勝過恐懼，征服按步展開
+        verses: 17-24
+        laws: []
+      - id: TODO-7-5
+        title: 偶像的金銀與當毀滅之物
+        verses: 25-26
+        laws: []
+  - chapter: 8
+    verse_count: 20
+    excluded: []
+    sections:
+      - id: TODO-8-1
+        title: 先把四十年講清楚
+        verses: 1-6
+        laws: []
+      - id: TODO-8-2
+        title: 那地到底好在哪裡
+        verses: 7-10
+        laws: []
+      - id: TODO-8-3
+        title: 飽足之後才是真正的考驗
+        verses: 11-18
+        laws: []
+      - id: TODO-8-4
+        title: 忘記走到底是什麼
+        verses: 19-20
+        laws: []
+  - chapter: 9
+    verse_count: 29
+    excluded: []
+    sections:
+      - id: TODO-9-1
+        title: 敵人很大，但問題不在敵人
+        verses: 1-3
+        laws: []
+      - id: TODO-9-2
+        title: 三次說「不是因你的義」
+        verses: 4-6
+        laws: []
+      - id: TODO-9-3
+        title: 悖逆史：從何烈山數起
+        verses: 7-24
+        laws: []
+      - id: TODO-9-4
+        title: 摩西的三個理由
+        verses: 25-29
+        laws: []
+  - chapter: 10
+    verse_count: 22
+    excluded: []
+    sections:
+      - id: TODO-10-1
+        title: 重刻的石版與那只木櫃
+        verses: 1-5
+        laws: []
+      - id: TODO-10-2
+        title: 插進來的四節行程
+        verses: 6-9
+        laws: []
+      - id: TODO-10-3
+        title: 代求蒙允與重新起行
+        verses: 10-11
+        laws: []
+      - id: TODO-10-4
+        title: 那麼神到底要什麼
+        verses: 12-13
+        laws: []
+      - id: TODO-10-5
+        title: 至高的神與沒有靠山的人
+        verses: 14-22
+        laws: []
+  - chapter: 11
+    verse_count: 32
+    excluded: []
+    sections:
+      - id: TODO-11-1
+        title: 愛神，與親眼看見的那一代
+        verses: 1-7
+        laws: []
+      - id: TODO-11-2
+        title: 那塊不像埃及的地
+        verses: 8-12
+        laws: []
+      - id: TODO-11-3
+        title: 兩條路：按時的雨，或閉塞的天
+        verses: 13-17
+        laws: []
+      - id: TODO-11-4
+        title: 存在心內，也放進兒女口中
+        verses: 18-21
+        laws: []
+      - id: TODO-11-5
+        title: 腳掌所踏之地
+        verses: 22-25
+        laws: []
+      - id: TODO-11-6
+        title: 兩座山上的祝福與咒詛
+        verses: 26-32
+        laws: []
+  - chapter: 12
+    verse_count: 32
+    excluded: []
+    sections:
+      - id: TODO-12-1
+        title: 律例典章要拿來做什麼
+        verses: 1-4
+        laws: []
+      - id: TODO-12-2
+        title: 那一個地方
+        verses: 5-14
+        laws: []
+      - id: TODO-12-3
+        title: 城裡可以吃什麼
+        verses: 15-19
+        laws: []
+      - id: TODO-12-4
+        title: 重複一次，把界線講死
+        verses: 20-28
+        laws: []
+      - id: TODO-12-5
+        title: 連打聽都不行
+        verses: 29-32
+        laws: []
+  - chapter: 13
+    verse_count: 18
+    excluded: []
+    sections:
+      - id: TODO-13-1
+        title: 神蹟應驗了也不算
+        verses: 1-5
+        laws: []
+      - id: TODO-13-2
+        title: 最親的人也不例外
+        verses: 6-11
+        laws: []
+      - id: TODO-13-3
+        title: 一整座城背道時
+        verses: 12-18
+        laws: []
+  - chapter: 14
+    verse_count: 29
+    excluded: []
+    sections:
+      - id: TODO-14-1
+        title: 先講身分，再講規矩
+        verses: 1-2
+        laws: []
+      - id: TODO-14-2
+        title: 潔與不潔：一套原則，四張清單
+        verses: 3-21
+        laws: []
+      - id: TODO-14-3
+        title: 十分之一不只一種
+        verses: 22-29
+        laws: []
+  - chapter: 15
+    verse_count: 23
+    excluded: []
+    sections:
+      - id: TODO-15-1
+        title: 第七年讓債歇一歇
+        verses: 1-11
+        laws: []
+      - id: TODO-15-2
+        title: 第七年讓人走出去
+        verses: 12-18
+        laws: []
+      - id: TODO-15-3
+        title: 頭生的歸神
+        verses: 19-23
+        laws: []
+  - chapter: 16
+    verse_count: 22
+    excluded: []
+    sections:
+      - id: TODO-16-1
+        title: 從一塊苦餅開始
+        verses: 1-8
+        laws: []
+      - id: TODO-16-2
+        title: 兩個收成的節期
+        verses: 9-15
+        laws: []
+      - id: TODO-16-3
+        title: 一年三次，不可空手
+        verses: 16-17
+        laws: []
+      - id: TODO-16-4
+        title: 換一個題目：審判
+        verses: 18-22
+        laws: []
+  - chapter: 17
+    verse_count: 20
+    excluded: []
+    sections:
+      - id: TODO-17-1
+        title: 一節接三段
+        verses: "1"
+        laws: []
+      - id: TODO-17-2
+        title: 查清楚才可以動手
+        verses: 2-7
+        laws: []
+      - id: TODO-17-3
+        title: 判不下來的往上送
+        verses: 8-13
+        laws: []
+      - id: TODO-17-4
+        title: 立王：先寫規矩，才有王
+        verses: 14-20
+        laws: []
+  - chapter: 18
+    verse_count: 22
+    excluded: []
+    sections:
+      - id: TODO-18-1
+        title: 靠祭壇吃飯的支派
+        verses: 1-8
+        laws: []
+      - id: TODO-18-2
+        title: 迦南人問前途的九種方法
+        verses: 9-14
+        laws: []
+      - id: TODO-18-3
+        title: 神自己給的管道
+        verses: 15-19
+        laws: []
+      - id: TODO-18-4
+        title: 冒用這個管道的下場
+        verses: 20-22
+        laws: []
+  - chapter: 19
+    verse_count: 21
+    excluded: []
+    sections:
+      - id: TODO-19-1
+        title: 三座城，和通到城的那條路
+        verses: 1-7
+        laws: []
+      - id: TODO-19-2
+        title: 誰進得去，誰進不去
+        verses: 4-13
+        laws: []
+      - id: TODO-19-3
+        title: 中間插進來的那一節
+        verses: "14"
+        laws: []
+      - id: TODO-19-4
+        title: 兩三個人的口
+        verses: 15-21
+        laws: []
+  - chapter: 20
+    verse_count: 20
+    excluded: []
+    sections:
+      - id: TODO-20-1
+        title: 出戰之前，先聽祭司說話
+        verses: 1-4
+        laws: []
+      - id: TODO-20-2
+        title: 官長清點的不是人數，是心
+        verses: 5-9
+        laws: []
+      - id: TODO-20-3
+        title: 兩套攻城規則：遠方的城與迦南的城
+        verses: 10-18
+        laws: []
+      - id: TODO-20-4
+        title: 斧子舉起來之前
+        verses: 19-20
+        laws: []
+  - chapter: 21
+    verse_count: 23
+    excluded: []
+    sections:
+      - id: TODO-21-1
+        title: 田野裡的無名屍
+        verses: 1-9
+        laws: []
+      - id: TODO-21-2
+        title: 從被擄的人到妻子
+        verses: 10-14
+        laws: []
+      - id: TODO-21-3
+        title: 長子的名分不由感情決定
+        verses: 15-17
+        laws: []
+      - id: TODO-21-4
+        title: 頑梗悖逆的兒子
+        verses: 18-21
+        laws: []
+      - id: TODO-21-5
+        title: 掛在木頭上的屍首
+        verses: 22-23
+        laws: []
+  - chapter: 22
+    verse_count: 30
+    excluded: []
+    sections:
+      - id: TODO-22-1
+        title: 撿到就要送回去
+        verses: 1-4
+        laws: []
+      - id: TODO-22-2
+        title: 給別的生命留餘地
+        verses: 6-8
+        laws: []
+      - id: TODO-22-3
+        title: 一塊布決定生死
+        verses: 13-21
+        laws: []
+      - id: TODO-22-4
+        title: 同一件事，四種判法
+        verses: 22-30
+        laws: []
+  - chapter: 23
+    verse_count: 25
+    excluded: []
+    sections:
+      - id: TODO-23-1
+        title: 誰可以站在神面前
+        verses: 1-8
+        laws: []
+      - id: TODO-23-2
+        title: 神在營中行走
+        verses: 9-14
+        laws: []
+      - id: TODO-23-3
+        title: 逃到這裡的人不必回去
+        verses: 15-16
+        laws: []
+      - id: TODO-23-4
+        title: 錢從哪裡來也算數
+        verses: 17-23
+        laws: []
+      - id: TODO-23-5
+        title: 可以吃飽，不可以帶走
+        verses: 24-25
+        laws: []
+  - chapter: 24
+    verse_count: 22
+    excluded: []
+    sections:
+      - id: TODO-24-1
+        title: 一句長句管住的離婚
+        verses: 1-4
+        laws: []
+      - id: TODO-24-2
+        title: 新婚的一年
+        verses: "5"
+        laws: []
+      - id: TODO-24-3
+        title: 抵押品不能拿走人的活路
+        verses: 6,10-13,17
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+      - id: TODO-24-4
+        title: 拐帶與大痲瘋
+        verses: 7-9
+        laws: []
+      - id: TODO-24-5
+        title: 各人為本身的罪
+        verses: "16"
+        laws: []
+      - id: TODO-24-6
+        title: 記念你在埃及作過奴僕
+        verses: 14-15,17-22
+        laws: []
+        note: 本章整理用了不連續的節，請改成連續段落或拆開
+  - chapter: 25
+    verse_count: 19
+    excluded: []
+    sections:
+      - id: TODO-25-1
+        title: 打人也有上限
+        verses: 1-3
+        laws: []
+      - id: TODO-25-2
+        title: 牛也要吃得到
+        verses: "4"
+        laws: []
+      - id: TODO-25-3
+        title: 為死人留一個名
+        verses: 5-10
+        laws: []
+      - id: TODO-25-4
+        title: 護夫，卻越了界
+        verses: 11-12
+        laws: []
+      - id: TODO-25-5
+        title: 囊中與家裡
+        verses: 13-16
+        laws: []
+      - id: TODO-25-6
+        title: 記念，與塗抹
+        verses: 17-19
+        laws: []
+  - chapter: 26
+    verse_count: 19
+    excluded: []
+    sections:
+      - id: TODO-26-1
+        title: 帶一筐果子上去
+        verses: 1-11
+        laws: []
+      - id: TODO-26-2
+        title: 我祖原是一個將亡的亞蘭人
+        verses: 5-10
+        laws: []
+      - id: TODO-26-3
+        title: 分完了，還要說一次
+        verses: 12-15
+        laws: []
+      - id: TODO-26-4
+        title: 你認，我也認
+        verses: 16-19
+        laws: []
+  - chapter: 27
+    verse_count: 26
+    excluded: []
+    sections:
+      - id: TODO-27-1
+        title: 過河那天先做的事
+        verses: 1-8
+        laws: []
+      - id: TODO-27-2
+        title: 你今日成為耶和華─你神的百姓了
+        verses: 9-10
+        laws: []
+      - id: TODO-27-3
+        title: 誰站哪座山
+        verses: 11-13
+        laws: []
+      - id: TODO-27-4
+        title: 十二句咒詛，十二聲阿們
+        verses: 14-26
+        laws: []
+  - chapter: 28
+    verse_count: 68
+    excluded: []
+    sections:
+      - id: TODO-28-1
+        title: 若留意聽從：十二樣祝福
+        verses: 1-14
+        laws: []
+      - id: TODO-28-2
+        title: 咒詛從同一句話開始
+        verses: 15-24
+        laws: []
+      - id: TODO-28-3
+        title: 交錯配列的六組打擊
+        verses: 25-37
+        laws: []
+      - id: TODO-28-4
+        title: 收成、地位與那個真正的原因
+        verses: 38-48
+        laws: []
+      - id: TODO-28-5
+        title: 遠方來的民與城裡的慘況
+        verses: 49-57
+        laws: []
+      - id: TODO-28-6
+        title: 全備的咒詛與最後一句
+        verses: 58-68
+        laws: []
+  - chapter: 29
+    verse_count: 29
+    excluded: []
+    sections:
+      - id: TODO-29-1
+        title: 又一次立約：這是重申，還是另一個約
+        verses: "1"
+        laws: []
+      - id: TODO-29-2
+        title: 立約之前先數算：四十年做過什麼
+        verses: 2-9
+        laws: []
+      - id: TODO-29-3
+        title: 誰站在這裡：一份從上到下、從今到後的名單
+        verses: 10-15
+        laws: []
+      - id: TODO-29-4
+        title: 一條看不見的根
+        verses: 16-21
+        laws: []
+      - id: TODO-29-5
+        title: 後來的人走過這片地
+        verses: 22-28
+        laws: []
+      - id: TODO-29-6
+        title: 隱祕與明顯：立約之後人該做什麼
+        verses: "29"
+        laws: []
+  - chapter: 30
+    verse_count: 20
+    excluded: []
+    sections:
+      - id: TODO-30-1
+        title: 咒詛之後的赦免條款
+        verses: 1-10
+        laws: []
+      - id: TODO-30-2
+        title: 誡命不遠：三句否定與一句肯定
+        verses: 11-14
+        laws: []
+      - id: TODO-30-3
+        title: 兩條路擺在面前
+        verses: 15-20
+        laws: []
+  - chapter: 31
+    verse_count: 30
+    excluded: []
+    sections:
+      - id: TODO-31-1
+        title: 交棒：一百二十歲與剛強壯膽
+        verses: 1-8
+        laws: []
+      - id: TODO-31-2
+        title: 律法書：寫下來、交出去、定期念
+        verses: 9-13
+        laws: []
+      - id: TODO-31-3
+        title: 會幕裡的最後一次顯現
+        verses: 14-21
+        laws: []
+      - id: TODO-31-4
+        title: 兩份見證
+        verses: 19-30
+        laws: []
+  - chapter: 32
+    verse_count: 52
+    excluded: []
+    sections:
+      - id: TODO-32-1
+        title: 開場：叫天地來聽的一首歌
+        verses: 1-6
+        laws: []
+      - id: TODO-32-2
+        title: 追想上古：疆界、瞳人與鷹
+        verses: 7-14
+        laws: []
+      - id: TODO-32-3
+        title: 耶書崙養肥了以後
+        verses: 15-18
+        laws: []
+      - id: TODO-32-4
+        title: 掩面：審判怎麼落下來
+        verses: 19-27
+        laws: []
+      - id: TODO-32-5
+        title: 磐石之爭與封在府庫裡的那一天
+        verses: 28-35
+        laws: []
+      - id: TODO-32-6
+        title: 我，惟有我是神
+        verses: 36-43
+        laws: []
+      - id: TODO-32-7
+        title: 唱完之後：律法、尼波山與遠遠的觀看
+        verses: 44-52
+        laws: []
+  - chapter: 33
+    verse_count: 29
+    excluded: []
+    sections:
+      - id: TODO-33-1
+        title: 序言：神從哪裡來
+        verses: 1-5
+        laws: []
+      - id: TODO-33-2
+        title: 一份缺了一格的名單
+        verses: 6-7
+        laws: []
+      - id: TODO-33-3
+        title: 利未：從咒詛翻成祝福
+        verses: 8-11
+        laws: []
+      - id: TODO-33-4
+        title: 各支派：位置決定了福分的樣子
+        verses: 12-25
+        laws: []
+      - id: TODO-33-5
+        title: 結語：誰像你這蒙拯救的百姓
+        verses: 26-29
+        laws: []
+  - chapter: 34
+    verse_count: 12
+    excluded: []
+    sections:
+      - id: TODO-34-1
+        title: 最後一次登高
+        verses: 1-3
+        laws: []
+      - id: TODO-34-2
+        title: 看得見，進不去
+        verses: "4"
+        laws: []
+      - id: TODO-34-3
+        title: 死與葬
+        verses: 5-8
+        laws: []
+      - id: TODO-34-4
+        title: 交接
+        verses: "9"
+        laws: []
+      - id: TODO-34-5
+        title: 全卷的最後三句
+        verses: 10-12
+        laws: []

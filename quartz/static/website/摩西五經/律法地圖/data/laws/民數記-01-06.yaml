@@ -1,0 +1,105 @@
+# 民數記1–6 章（數點人數與安營的敘事不收；營的潔淨、賠償、疑恨的條例、拿細耳人、祭司的祝福）。
+book: 民數記
+chapters:
+  - chapter: 1
+    excluded:
+      - { verses: "1-54", reason: 西乃曠野數點各支派二十歲以上能出戰之人的敘事與名單 }
+    sections: []
+  - chapter: 2
+    excluded:
+      - { verses: "1-34", reason: 各支派安營、起行次序的敘事與名單 }
+    sections: []
+  - chapter: 3
+    excluded:
+      - { verses: "1-51", reason: 亞倫的兒子、利未人代替以色列人頭生的，以及數點利未人的敘事 }
+    sections: []
+  - chapter: 4
+    excluded:
+      - { verses: "1-49", reason: 數點哥轄、革順、米拉利子孫的人數並分派搬運會幕用具的敘事與名單 }
+    sections: []
+  - chapter: 5
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "4", reason: 以色列人照所吩咐行了的敘事 }
+      - { verses: "5", reason: 耶和華對摩西說話的引言 }
+      - { verses: "11", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: num05-s1
+        title: 營的潔淨與虧負人的賠償
+        verses: 2-10
+        laws:
+          - id: num05-02
+            title: 長大痲瘋的、患漏症的、因死屍不潔淨的，都要出營外去
+            refs: ["2-3"]
+            topics: [skin-disease, body-discharge, corpse]
+            summary: 一切長大痲瘋的、患漏症的，並因死屍不潔淨的，無論男女，都要出營外去，免得污穢他們的營，這營是耶和華所住的。
+            basis: [2, 3]
+            why: [3]
+          - id: num05-06
+            title: 虧負人而得罪耶和華，要承認所犯的罪，如數賠還並加五分之一
+            refs: ["6-8"]
+            topics: [theft, offerings]
+            summary: 男女若虧負人而干犯耶和華，要承認所犯的罪，如數賠還並加五分之一；若無親屬可受賠還，就歸祭司，另獻贖罪公羊。
+            basis: [6, 7, 8]
+            entries: [贖愆祭（asham）]
+          - id: num05-09
+            title: 奉給祭司的舉祭和分別為聖的物，都歸祭司
+            refs: ["9-10"]
+            topics: [offerings, priest-portions]
+            summary: 以色列人一切的聖物中，所奉給祭司的舉祭都要歸與祭司；各人所分別為聖的物，無論是什麼，都要歸給祭司。
+            basis: [9, 10]
+      - id: num05-s2
+        title: 疑恨的條例
+        verses: 12-31
+        laws:
+          - id: num05-12
+            title: 丈夫疑恨妻子，帶到祭司那裡，喝致咒詛的苦水
+            refs: ["12-31"]
+            topics: [marriage, sexual, courts]
+            summary: 丈夫若疑妻暗中行淫且無見證，就帶妻和疑恨素祭見祭司；婦人起誓喝致咒詛的苦水，有罪必受災，清潔則免災且可懷孕。
+            basis: [12, 13, 14, 15, 16, 19, 20, 24, 27, 28]
+            why: [15]
+            entries: [疑恨的素祭（大麥面不加油乳香）]
+  - chapter: 6
+    excluded:
+      - { verses: "1", reason: 耶和華對摩西說話的引言 }
+      - { verses: "22", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: num06-s1
+        title: 拿細耳人
+        verses: 2-21
+        laws:
+          - id: num06-02
+            title: 許拿細耳人的願，離俗的日子不可喝酒、剃頭、挨近死屍
+            refs: ["2-8"]
+            topics: [vows, corpse]
+            summary: 無論男女許了拿細耳人的願，離俗歸耶和華的一切日子，要遠離清酒濃酒，不可吃葡萄樹上結的任何東西，不可用剃頭刀剃頭，不可挨近死屍，連父母兄弟姊妹死了也不可使自己不潔淨。
+            basis: [2, 3, 4, 5, 6, 7, 8]
+            why: [7]
+            entries: [拿細耳人（nazir）, 剃頭刀不可過頭（拿細耳人長髮）, 不可挨近死屍（拿細耳人的潔淨）]
+          - id: num06-09
+            title: 離俗的日子忽然有人死在旁邊，要剃頭，獻鳥和羊羔
+            refs: ["9-12"]
+            topics: [vows, corpse, burnt-offering, guilt-offering, sin-offering]
+            summary: 旁邊忽然有人死了，沾染離俗的頭；第七日潔淨時剃頭，第八日獻兩隻斑鳩或雛鴿，一隻作贖罪祭、一隻作燔祭，另獻一歲公羊羔作贖愆祭；先前日子歸徒然，須重選日子。
+            basis: [9, 10, 11, 12]
+            why: [12]
+            entries: [不可挨近死屍（拿細耳人的潔淨）, 拿細耳人滿期還俗條例]
+          - id: num06-13
+            title: 離俗的日子滿了，獻燔祭、贖罪祭、平安祭，剃頭放在火上
+            refs: ["13-21"]
+            topics: [vows, burnt-offering, grain-offering, peace-offering, sin-offering]
+            summary: 離俗期滿，要到會幕門口獻公羊羔燔祭、母羊羔贖罪祭、公羊平安祭，並獻無酵餅、素祭和奠祭；剃下的頭髮放在平安祭火上，隨後可以喝酒。
+            basis: [13, 14, 15, 16, 17, 18, 20]
+            entries: [拿細耳人滿期還俗條例]
+      - id: num06-s2
+        title: 祭司的祝福
+        verses: 23-27
+        laws:
+          - id: num06-23
+            title: 祭司要這樣為以色列人祝福
+            refs: ["23-27"]
+            topics: [priests]
+            summary: 亞倫和他兒子要這樣為以色列人祝福：願耶和華賜福給你，保護你；願耶和華使他的臉光照你，賜恩給你；願耶和華向你仰臉，賜你平安；他們要如此奉耶和華的名為以色列人祝福。
+            basis: [23, 24, 25, 26, 27]
+            entries: [亞倫的祝福（祭司祝福）]

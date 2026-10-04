@@ -1,0 +1,474 @@
+# 律法之間的關聯（手寫）。每一條都必須有證據，否則不畫線。
+# type：parallel（平行重述）／supplement（補充修訂）／case（案例）／cites（引用）
+# evidence 二選一：
+#   { entry: 知識庫條目標題, quote: 條目 md 裡逐字出現的一句 }
+#   { chapter: "申命記/第15章", quote: 該章「本章整理」裡逐字出現的一句 }
+# 閘門：條目標題＋引句裡解析出的經文參照必須同時蓋到 from 與 to；用章節當證據時，該章本身算一端。
+- from: ex20-08
+  to: deut5-12
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十11以神的創造為基礎
+- from: ex21-02
+  to: deut15-12
+  type: supplement
+  evidence:
+    entry: 申15：12-18
+    quote: 申命記15章補充了出21:2-6的希伯來奴僕釋放條例
+- from: ex21-02
+  to: lev25-39
+  type: supplement
+  evidence:
+    entry: 利25：39-43
+    quote: 此條例補充了出21:2-6的奴僕律例
+- from: ex20-03
+  to: deut5-07
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-04
+  to: deut5-08
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-07
+  to: deut5-11
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-12
+  to: deut5-16
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-13
+  to: deut5-17
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-14
+  to: deut5-18
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-15
+  to: deut5-19
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-16
+  to: deut5-20
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex20-17
+  to: deut5-21
+  type: parallel
+  evidence:
+    entry: 申5：6-21
+    quote: 出二十1-17是十誡的首次頒布
+- from: ex21-12
+  to: num35-10
+  type: supplement
+  evidence:
+    entry: 民35：9-34
+    quote: 為出21:13「誤殺人者可逃往神所指定的地方」提供了完整的制度框架
+- from: ex21-12
+  to: deut19-02
+  type: supplement
+  evidence:
+    entry: 申19：1-13
+    quote: 出21:13 只說神會設下一個地方，民35:9-34 定出六座城與住到大祭司死為止的規則
+- from: ex21-12
+  to: deut19-11
+  type: supplement
+  evidence:
+    entry: 申19：1-13
+    quote: 出21:13 只說神會設下一個地方，民35:9-34 定出六座城與住到大祭司死為止的規則
+- from: ex21-24
+  to: lev24-17
+  type: parallel
+  evidence:
+    entry: 利24：19-20
+    quote: 利未記24:19-20重申出21:24的同態復仇法
+- from: ex22-16
+  to: deut22-28
+  type: supplement
+  evidence:
+    entry: 申22：28-29
+    quote: CT 註解出二十二16 時指出這個男人「必須為此付給女子的父母聘金（參申二十二29）」；GT 丁良才與《啟導本聖經腳註》都指出數額是五十舍客勒銀子，並說明兩處律例並不相同——「在這裡論引誘處女，在那裡論強追處女」。
+- from: ex22-25
+  to: lev25-35
+  type: parallel
+  evidence:
+    entry: 利25：35-37
+    quote: 不可向窮人取利，與出22:25相同規定
+- from: ex22-25
+  to: deut23-19
+  type: supplement
+  evidence:
+    entry: 申23：19-20
+    quote: 出二十二25 的對象是「我民中有貧窮人」，申二十三19-20 則把範圍擴大到一切以色列弟兄
+- from: ex22-25
+  to: deut15-07
+  type: supplement
+  evidence:
+    entry: 申15：1-11
+    quote: 出二十二25 禁止向窮乏的弟兄取利，那是最基本的一條。出二十三10-11 加上第七年地要休耕，自長的留給窮人。申十五1-11 把兩件事合起來推進
+- from: ex22-26
+  to: deut24-10
+  type: parallel
+  evidence:
+    entry: 申24：10-13
+    quote: 取當頭須日落前歸還，與出22:26-27平行
+- from: ex22-28
+  to: lev24-15
+  type: supplement
+  evidence:
+    entry: 利24：16
+    quote: 褻瀆神名者必治死，與出22:28不可毀謗神平行
+- from: ex23-10
+  to: lev25-02
+  type: parallel
+  evidence:
+    entry: 利25：1-7
+    quote: 安息年地歇息，出23:10-11平行
+- from: ex23-10
+  to: deut15-01
+  type: supplement
+  evidence:
+    entry: 申15：1-11
+    quote: 出二十二25 禁止向窮乏的弟兄取利，那是最基本的一條。出二十三10-11 加上第七年地要休耕，自長的留給窮人。申十五1-11 把兩件事合起來推進
+- from: ex20-08
+  to: ex23-12
+  type: supplement
+  evidence:
+    entry: 出20：8-11
+    quote: 出20:8-11與出埃及記第二十三章的關聯：第四誡安息日，出23:12安息日使牛驢僕婢寄居者歇息。
+- from: ex23-19
+  to: ex34-26
+  type: parallel
+  evidence:
+    entry: 出23：19不可用山羊羔母奶煮山羊羔
+    quote: 出二十三19 與出三十四26 都收在節期條款的末尾，緊接著初熟之物的規定
+- from: ex23-19
+  to: deut14-21
+  type: parallel
+  evidence:
+    entry: 出23：19不可用山羊羔母奶煮山羊羔
+    quote: 出二十三19 與出三十四26 都收在節期條款的末尾，緊接著初熟之物的規定；申命記十四21 則收在食物條例的末尾
+- from: ex23-08
+  to: deut16-18
+  type: parallel
+  evidence:
+    entry: 以色列刑罰的節制與程序保障
+    quote: 不可受賄賂（出23:8；申16:19）
+- from: ex22-21
+  to: lev19-33
+  type: parallel
+  evidence:
+    entry: 利19：33-34
+    quote: 不可欺壓寄居的，要愛他如己，與出22:21平行
+- from: ex22-21
+  to: ex23-09
+  type: parallel
+  evidence:
+    entry: 出22：21
+    quote: 出23:9同樣命令但針對審判官
+- from: ex23-02
+  to: lev19-15
+  type: parallel
+  evidence:
+    entry: 利19：15
+    quote: 不可偏護窮人也不可重看有勢力的，出23:3、6平行
+- from: ex23-01
+  to: lev19-16
+  type: parallel
+  evidence:
+    entry: 利19：16
+    quote: 不可隨夥佈散謠言，出23:1平行
+- from: ex21-15
+  to: lev20-09
+  type: parallel
+  evidence:
+    entry: 利20：9
+    quote: 重申出21:17的咒罵父母為死罪律例
+- from: ex22-19
+  to: lev20-15
+  type: parallel
+  evidence:
+    entry: 利20：15-16
+    quote: 與獸淫合的人與獸都要治死，與出22:19平行
+- from: ex22-19
+  to: lev18-23
+  type: parallel
+  evidence:
+    entry: 利18：23
+    quote: 不可與獸淫合，與出22:19平行
+- from: ex22-18
+  to: lev20-27
+  type: parallel
+  evidence:
+    entry: 利20：27
+    quote: 行邪術的必治死，與出22:18平行
+- from: ex22-29
+  to: lev22-27
+  type: parallel
+  evidence:
+    entry: 利22：27
+    quote: 牛羊頭生第八天歸給神，與出22:30平行
+- from: ex22-31
+  to: lev17-15
+  type: parallel
+  evidence:
+    entry: 利17：15
+    quote: 吃自死的或被撕裂的肉不潔淨，與出22:31平行
+- from: ex22-31
+  to: lev07-23
+  type: parallel
+  evidence:
+    entry: 利7：24
+    quote: 死的走獸肉不可吃，與出22:31平行
+- from: ex22-31
+  to: lev11-44
+  type: parallel
+  evidence:
+    entry: 利11：44
+    quote: 「你們要成為聖潔」，與出22:31平行
+- from: lev18-21
+  to: lev20-02
+  type: supplement
+  evidence:
+    entry: 利18：21
+    quote: 禁止使兒女經火歸與摩洛，與利20:2-5平行
+- from: lev18-22
+  to: lev20-13
+  type: supplement
+  evidence:
+    entry: 利18：22
+    quote: 禁止男人與男人苟合，與利20:13平行
+- from: ex20-03
+  to: ex22-20
+  type: case
+  evidence:
+    entry: 出20：3
+    quote: 第一誡「除了我以外不可有別的神」，出22:20祭祀別神處死為其應用
+- from: ex20-12
+  to: ex21-15
+  type: case
+  evidence:
+    entry: 出20：12
+    quote: 為出21:15,17的打父母與咒罵父母為死罪律例
+- from: ex20-13
+  to: ex21-12
+  type: case
+  evidence:
+    entry: 出20：13
+    quote: 為出21:12的殺人償命律例提供誡命基礎
+- from: ex20-14
+  to: ex22-16
+  type: case
+  evidence:
+    entry: 出20：14
+    quote: 第七誡「不可姦淫」，出22:16-17引誘處女為其應用
+- from: ex20-15
+  to: ex21-16
+  type: case
+  evidence:
+    entry: 出20：15
+    quote: 為出21:16的拐帶人口為死罪律例提供誡命基礎
+- from: ex20-16
+  to: ex23-01
+  type: case
+  evidence:
+    entry: 出20：16
+    quote: 第九誡「不可作假見證」，出23:1-3具體化為司法公正律例
+- from: ex20-16
+  to: ex23-02
+  type: case
+  evidence:
+    entry: 出20：16
+    quote: 第九誡「不可作假見證」，出23:1-3具體化為司法公正律例
+- from: ex21-12
+  to: ex22-02
+  type: parallel
+  evidence:
+    entry: 出21：12
+    quote: 打人致死的流血罪，與出22:2-3殺賊的流血罪平行
+- from: ex22-21
+  to: deut10-18
+  type: parallel
+  evidence:
+    entry: 申10：18-19
+    quote: 神為孤兒寡婦伸冤，紀念寄居的，與出22:21-24平行
+- from: ex22-22
+  to: deut10-18
+  type: parallel
+  evidence:
+    entry: 申10：18-19
+    quote: 神為孤兒寡婦伸冤，紀念寄居的，與出22:21-24平行
+- from: ex23-09
+  to: deut10-18
+  type: parallel
+  evidence:
+    entry: 申10：17-19
+    quote: 神不偏待人、愛寄居的，出23:9平行
+- from: ex22-20
+  to: deut12-29
+  type: parallel
+  evidence:
+    entry: 申12：31
+    quote: 不可效法外邦人將兒女焚燒獻祭，與出22:20祭祀別神平行
+- from: ex22-20
+  to: deut13-06
+  type: parallel
+  evidence:
+    entry: 申13：6-10
+    quote: 引誘人拜別神者須治死，與出22:20平行
+- from: ex22-21
+  to: deut14-28
+  type: supplement
+  evidence:
+    entry: 申14：29
+    quote: 利未人、寄居的、孤兒寡婦可吃十分之一，與出22:21-22平行
+- from: ex22-22
+  to: deut14-28
+  type: supplement
+  evidence:
+    entry: 申14：29
+    quote: 利未人、寄居的、孤兒寡婦可吃十分之一，與出22:21-22平行
+- from: ex22-18
+  to: deut18-09
+  type: parallel
+  evidence:
+    entry: 申18：10-12
+    quote: 它與出22:18 平行
+- from: ex21-24
+  to: deut19-16
+  type: parallel
+  evidence:
+    entry: 申19：21
+    quote: 申命記19:21重申出21:24的同態復仇法
+- from: ex21-15
+  to: deut21-18
+  type: supplement
+  evidence:
+    entry: 申21：18-21
+    quote: 此條例擴展出21:15,17的死罪律例
+- from: ex22-16
+  to: deut22-23
+  type: parallel
+  evidence:
+    entry: 申22：23-24
+    quote: 已許配女子行淫須石頭打死，與出22:16-17引誘處女平行
+- from: ex21-33
+  to: deut22-08
+  type: supplement
+  evidence:
+    entry: 申22：8
+    quote: 回應出21:33-36的疏忽責任律例
+- from: ex21-35
+  to: deut22-08
+  type: supplement
+  evidence:
+    entry: 申22：8
+    quote: 回應出21:33-36的疏忽責任律例
+- from: ex22-22
+  to: deut24-17
+  type: parallel
+  evidence:
+    entry: 申24：17
+    quote: 不可向孤兒寡婦屈枉正直，與出22:22平行
+- from: ex22-21
+  to: deut24-19
+  type: supplement
+  evidence:
+    entry: 申24：19-21
+    quote: 留遺穗給寄居的、孤兒寡婦，與出22:21-22平行
+- from: ex22-22
+  to: deut24-19
+  type: supplement
+  evidence:
+    entry: 申24：19-21
+    quote: 留遺穗給寄居的、孤兒寡婦，與出22:21-22平行
+- from: ex21-16
+  to: deut24-07
+  type: parallel
+  evidence:
+    entry: 申24：7
+    quote: 重申出21:16的拐帶人口為死罪律例
+- from: ex22-22
+  to: deut25-05
+  type: case
+  evidence:
+    entry: 申25：5-10
+    quote: 兄終弟及為寡婦留後，與出22:22寡婦保護平行
+- from: ex22-21
+  to: deut26-12
+  type: supplement
+  evidence:
+    entry: 申26：12-13
+    quote: 第三年十分之一給利未人、寄居的、孤兒寡婦，與出22:21-22平行
+- from: ex22-22
+  to: deut26-12
+  type: supplement
+  evidence:
+    entry: 申26：12-13
+    quote: 第三年十分之一給利未人、寄居的、孤兒寡婦，與出22:21-22平行
+- from: ex20-24
+  to: deut12-05
+  type: supplement
+  evidence:
+    entry: 申12：5
+    quote: 此節與出二十24「凡記下我名的地方，我必到那裡賜福給你」互相呼應
+- from: ex22-29
+  to: num18-08
+  type: parallel
+  evidence:
+    entry: 民18：15-16
+    quote: 頭生兒子用贖銀贖出，與出22:29平行
+- from: lev22-02
+  to: num18-26
+  type: parallel
+  evidence:
+    entry: 民18：32
+    quote: GT用以說明利未記22:9「免得輕忽了，因此擔罪而死」的平行經文與神學根據
+- from: ex22-02
+  to: num35-22
+  type: parallel
+  evidence:
+    entry: 民35：22-25
+    quote: 誤殺者可逃到逃城，與出22:2-3自衛殺人原則平行
+- from: ex21-29
+  to: num35-29
+  type: supplement
+  evidence:
+    entry: 民35：31
+    quote: 民數記35:31規定「故殺人的必被治死，你們不可收贖價贖他的命」，限制出21:30的贖命價銀適用範圍
+- from: ex23-14
+  to: ex34-18
+  type: parallel
+  evidence:
+    entry: 三大節期
+    quote: "按經文範圍看，出23:14-17與出34:18-24都記一年三次的節期；利23:1-44列出耶和華的節期和各日；申16:1-17則記述三個節期與朝見地點。"
+- from: ex23-14
+  to: lev23-02
+  type: supplement
+  evidence:
+    entry: 三大節期
+    quote: "按經文範圍看，出23:14-17與出34:18-24都記一年三次的節期；利23:1-44列出耶和華的節期和各日；申16:1-17則記述三個節期與朝見地點。"
+- from: ex23-14
+  to: deut16-16
+  type: supplement
+  evidence:
+    entry: 三大節期
+    quote: "按經文範圍看，出23:14-17與出34:18-24都記一年三次的節期；利23:1-44列出耶和華的節期和各日；申16:1-17則記述三個節期與朝見地點。"

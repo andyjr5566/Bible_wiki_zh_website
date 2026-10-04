@@ -1,0 +1,494 @@
+# 申命記18–26 章（祭司的分、先知、逃城與審判、戰爭、家庭與社會的條例、初熟與十分之一）。
+book: 申命記
+chapters:
+  - chapter: 18
+    excluded: []
+    sections:
+      - id: deut18-s1
+        title: 祭司利未人的分
+        verses: 1-8
+        laws:
+          - id: deut18-01
+            title: 祭司利未人無分無業，吃獻給耶和華的火祭
+            refs: ["1-5"]
+            topics: [tithes, levites, priest-portions]
+            summary: 祭司利未人在以色列中無分無業，所吃用的是獻給耶和華的火祭；百姓要給祭司前腿、兩腮和脾胃，初收的五穀、新酒和油，並初剪的羊毛。
+            basis: [1, 2, 3, 4]
+            why: [5]
+          - id: deut18-06
+            title: 利未人願意到所選擇的地方事奉，可與眾弟兄同得一分
+            refs: ["6-8"]
+            topics: [levites, priest-portions]
+            summary: 利未人無論寄居在哪一座城，一心願意到耶和華所選擇的地方，就可以奉耶和華他神的名事奉，像眾弟兄一樣，並得一分祭物同吃。
+            basis: [6, 7, 8]
+      - id: deut18-s2
+        title: 不可學外邦人，要聽神所興起的先知
+        verses: 9-22
+        laws:
+          - id: deut18-09
+            title: 不可學外邦人行可憎惡的事，要作完全人
+            refs: ["9-14"]
+            topics: [one-god, witchcraft]
+            summary: 不可學那些國民所行可憎惡的事：使兒女經火、占卜、觀兆、用法術、行邪術、交鬼、行巫術、過陰；凡行這些事的都為耶和華所憎惡；你要在耶和華你神面前作完全人。
+            basis: [9, 10, 11, 13]
+            why: [12]
+          - id: deut18-15
+            title: 耶和華要從弟兄中興起一位像摩西的先知，要聽從他
+            refs: ["15-19"]
+            topics: [leaders]
+            summary: 耶和華要從你們弟兄中間給你興起一位像我的先知，你們要聽從他；他要將耶和華所吩咐的一切話告訴他們；誰不聽他奉耶和華名所說的話，耶和華必討誰的罪。
+            basis: [15, 18, 19]
+            why: [16]
+          - id: deut18-20
+            title: 擅敢託耶和華的名說未曾吩咐的話的先知，必治死
+            refs: ["20-22"]
+            topics: [leaders, courts]
+            summary: 先知擅敢託耶和華的名說他未曾吩咐的話，或奉別神的名說話，那先知必治死；先知託耶和華的名說話，所說的若不成就，也無效驗，就是耶和華未曾吩咐的，不必懼怕他。
+            basis: [20, 22]
+  - chapter: 19
+    excluded:
+      - { verses: "1", reason: 進入應許之地的引言 }
+      - { verses: "8-10", reason: 境界擴張後再添三座城的條件式預告 }
+    sections:
+      - id: deut19-s1
+        title: 逃城
+        verses: 2-13
+        laws:
+          - id: deut19-02
+            title: 分定三座逃城，誤殺人的可以逃去
+            refs: ["2-7"]
+            topics: [homicide]
+            summary: 要在耶和華所賜為業的地上分定三座城，預備道路，使誤殺人的可以逃到那裡存活，免得報血仇的追上將他殺死。
+            basis: [2, 3, 4]
+            why: [6]
+            entries: [逃城]
+          - id: deut19-11
+            title: 蓄意殺人的，逃進城也要交出來
+            refs: ["11-13"]
+            topics: [homicide]
+            summary: 人恨鄰舍，埋伏擊殺他，以致於死，又逃進這些城的一座，本城的長老要打發人把他帶出來，交在報血仇的手中治死，眼不可顧惜他。
+            basis: [11, 12, 13]
+            why: [13]
+            entries: [逃城]
+      - id: deut19-s2
+        title: 地界與見證
+        verses: 14-21
+        laws:
+          - id: deut19-14
+            title: 不可挪移鄰舍的地界
+            refs: ["14"]
+            topics: [inheritance, theft]
+            summary: 在耶和華你神所賜你承受為業之地，不可挪移你鄰舍的地界，那是先人所定的。
+            basis: [14]
+            why: [14]
+          - id: deut19-15
+            title: 要憑兩三個人的口作見證才可定案
+            refs: ["15"]
+            topics: [courts]
+            summary: 人無論犯什麼罪，作什麼惡，不可憑一個人的口作見證，總要憑兩三個人的口作見證才可定案。
+            basis: [15]
+            entries: [不可作假見證陷害人]
+          - id: deut19-16
+            title: 作假見證陷害弟兄的，要待他如同他想要待弟兄的
+            refs: ["16-21"]
+            topics: [courts, injury]
+            summary: 凶惡的見證人起來，兩造站在耶和華面前，審判官細細查究，若果然是作假見證陷害弟兄，就待他如同他想要待的弟兄；眼不可顧惜，要以命償命，以眼還眼，以牙還牙，以手還手，以腳還腳。
+            basis: [16, 17, 18, 19, 21]
+            why: [20]
+  - chapter: 20
+    excluded: []
+    sections:
+      - id: deut20-s1
+        title: 出戰的規矩
+        verses: 1-20
+        laws:
+          - id: deut20-01
+            title: 與仇敵爭戰，不要怕，祭司要到百姓面前宣告
+            refs: ["1-4"]
+            topics: [war]
+            summary: 你出去與仇敵爭戰，看見馬匹、車輛，並有比你多的人民，不要怕他們；將要上陣的時候，祭司要到百姓面前宣告：不要膽怯，因為耶和華你們的神與你們同去，要為你們爭戰。
+            basis: [1, 2, 3, 4]
+            why: [4]
+          - id: deut20-05
+            title: 官長宣告，蓋房、種園、聘妻、懼怕的人可以回家
+            refs: ["5-9"]
+            topics: [war]
+            summary: 官長要對百姓宣告：誰建造房屋、種葡萄園、聘定了妻而還沒有享用的，誰懼怕膽怯的，都可以回家去，恐怕他陣亡，別人去享用，或他弟兄的心也消化；宣告完了，就派軍長率領他們。
+            basis: [5, 6, 7, 8, 9]
+            why: [5, 8]
+          - id: deut20-10
+            title: 攻打一座城之前，先宣告和睦
+            refs: ["10-15"]
+            topics: [war]
+            summary: 臨近要攻打的城，先要宣告和睦的話；他們若開城，城裡的人都要服事你；不肯和好，就圍困那城，交付你手，要殺盡男丁，婦女、孩子、牲畜和財物可以取為掠物；離你甚遠的各城都要這樣待他。
+            basis: [10, 11, 12, 13, 14, 15]
+          - id: deut20-16
+            title: 迦南各族的城，凡有氣息的一個不可存留
+            refs: ["16-18"]
+            topics: [war, one-god]
+            summary: 這些國民的城，耶和華既賜你為業，其中凡有氣息的，一個不可存留，要將赫人、亞摩利人、迦南人等滅盡，免得他們教導你們學習一切可憎惡的事，以致你們得罪耶和華。
+            basis: [16, 17, 18]
+            why: [18]
+          - id: deut20-19
+            title: 圍困城的時候，不可砍壞結果子的樹木
+            refs: ["19-20"]
+            topics: [war]
+            summary: 許久圍困、攻打一座城，不可舉斧子砍壞樹木，因為你可以吃那樹上的果子；只有不是結果子的樹木可以砍伐，用以修築營壘。
+            basis: [19, 20]
+            why: [19]
+  - chapter: 21
+    excluded: []
+    sections:
+      - id: deut21-s1
+        title: 田野的無名屍與戰俘
+        verses: 1-14
+        laws:
+          - id: deut21-01
+            title: 田野裡有被殺的人，不知道是誰殺的
+            refs: ["1-9"]
+            topics: [homicide, courts]
+            summary: 田野發現不知被誰殺的人，長老和審判官量到最近城；城長老取未耕、未負軛的母牛犢，在流水未耕的山谷折頸；祭司利未人到場，長老在牛犢上洗手、禱告未流血，除去無辜血罪。
+            basis: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            why: [5]
+          - id: deut21-10
+            title: 娶被擄的美貌女子，要讓他剃頭髮、哀哭父母一個月
+            refs: ["10-14"]
+            topics: [war, marriage]
+            summary: 被擄的人中有美貌的女子，戀慕他要娶為妻，就領他到家裡，他要剃頭髮、修指甲、脫去被擄時的衣服，哀哭父母一個整月，然後可以同房；後來不喜悅他，就由他隨意出去，不可賣他。
+            basis: [10, 11, 12, 13, 14]
+            why: [14]
+      - id: deut21-s2
+        title: 長子、悖逆的兒子與掛在木頭上的屍首
+        verses: 15-23
+        laws:
+          - id: deut21-15
+            title: 長子的名分，不由愛不愛他母親決定
+            refs: ["15-17"]
+            topics: [inheritance, marriage]
+            summary: 人若有二妻，一為所愛，一為所惡，到分產業的時候，不可將所愛之妻生的兒子立為長子；要認所惡之妻生的兒子為長子，將產業多加一分給他。
+            basis: [15, 16, 17]
+            why: [17]
+          - id: deut21-18
+            title: 頑梗悖逆的兒子，父母帶到城門，眾人用石頭打死
+            refs: ["18-21"]
+            topics: [parents, courts]
+            summary: 兒子頑梗悖逆、不聽父母管教，貪食好酒；父母帶他到本城長老面前陳明，城中眾人用石頭打死他，把惡除掉，使眾人聽見害怕。
+            basis: [18, 19, 20, 21]
+            why: [21]
+          - id: deut21-22
+            title: 治死的人掛在木頭上，當日要葬埋
+            refs: ["22-23"]
+            topics: [homicide, corpse]
+            summary: 人犯該死的罪被治死了，你將他掛在木頭上，他的屍首不可留在木頭上過夜，必要當日將他葬埋，免得玷污了耶和華你神所賜你為業的地。
+            basis: [22, 23]
+            why: [23]
+  - chapter: 22
+    excluded: []
+    sections:
+      - id: deut22-s0
+        title: 弟兄的財物與生活的細節
+        verses: 1-12
+        laws:
+          - id: deut22-01
+            title: 弟兄的牛羊驢失迷了，不可佯為不見，要牽回來
+            refs: ["1-4"]
+            topics: [animals-property]
+            summary: 看見弟兄的牛或羊失迷了路，不可佯為不見，總要牽回來交給你的弟兄；弟兄離你遠或你不認識，就牽到你家留著，等他來尋；失落的驢、衣服都要這樣行；看見牛或驢跌倒在路上，要幫助拉起來。
+            basis: [1, 2, 3, 4]
+          - id: deut22-05
+            title: 婦女不可穿戴男子的，男子也不可穿婦女的衣服
+            refs: ["5"]
+            topics: [no-mixing]
+            summary: 婦女不可穿戴男子所穿戴的，男子也不可穿婦女的衣服，因為這樣行都是耶和華你神所憎惡的。
+            basis: [5]
+            why: [5]
+          - id: deut22-06
+            title: 遇見鳥窩，總要放母，只可取雛
+            refs: ["6-7"]
+            topics: [clean-food, animals-property]
+            summary: 路上遇見鳥窩，裡頭有雛或有蛋，母鳥伏在雛上或蛋上，不可連母帶雛一併取去；總要放母，只可取雛，這樣你就可以享福，日子得以長久。
+            basis: [6, 7]
+            why: [7]
+          - id: deut22-08
+            title: 建造房屋，要在房上的四圍安欄杆
+            refs: ["8"]
+            topics: [injury]
+            summary: 你若建造房屋，要在房上的四圍安欄杆，免得有人從房上掉下來，流血的罪就歸於你家。
+            basis: [8]
+            why: [8]
+          - id: deut22-09
+            title: 兩樣種子、牛驢耕地、兩樣料子的衣服，都不可混雜
+            refs: ["9-11"]
+            topics: [no-mixing]
+            summary: 不可把兩樣種子種在葡萄園，免得所撒種的和葡萄園果子都充公；不可牛驢同耕，不可穿羊毛、細麻混料衣服。
+            basis: [9, 10, 11]
+            why: [9]
+          - id: deut22-12
+            title: 所披的外衣四圍要做繸子
+            refs: ["12"]
+            topics: [no-mixing]
+            summary: 你要在所披的外衣上四圍做繸子。
+            basis: [12]
+      - id: deut22-s1
+        title: 婚姻與性的條例
+        verses: 13-30
+        laws:
+          - id: deut22-13
+            title: 丈夫誣告新婦沒有貞潔，要罰一百舍客勒；屬實則打死
+            refs: ["13-21"]
+            topics: [marriage, sexual, courts]
+            summary: 人娶妻同房後恨惡他，說他沒有貞潔的憑據，女子的父母把憑據拿到城門長老那裡，長老要罰那人一百舍客勒銀子給女子的父親，他終身不可休他；這事若是真的，女子要被帶到父家門口，用石頭打死。
+            basis: [13, 14, 15, 18, 19, 20, 21]
+            why: [19, 21]
+          - id: deut22-22
+            title: 與有丈夫的婦人行淫，姦夫淫婦一併治死
+            refs: ["22"]
+            topics: [sexual, marriage]
+            summary: 若遇見人與有丈夫的婦人行淫，就要將姦夫淫婦一併治死，這樣就把那惡從以色列中除掉。
+            basis: [22]
+            why: [22]
+          - id: deut22-23
+            title: 已許配的女子在城裡行淫，二人都打死；在田野被強暴，只治死男子
+            refs: ["23-27"]
+            topics: [sexual, marriage]
+            summary: 處女已經許配丈夫，有人在城裡遇見他與他行淫，要把二人用石頭打死，女子因為在城裡沒有喊叫；若在田野被強與行淫，女子喊叫並無人救他，只要將那男子治死，不可辦女子。
+            basis: [23, 24, 25, 26, 27]
+            why: [24, 27]
+          - id: deut22-28
+            title: 與沒有許配人的處女行淫
+            refs: ["28-29"]
+            topics: [marriage, sexual]
+            summary: 男子遇見沒有許配人的處女，抓住他，與他行淫，被人看見，就要拿五十舍客勒銀子給女子的父親，娶他為妻，終身不可休他。
+            basis: [28, 29]
+            why: [29]
+          - id: deut22-30
+            title: 不可娶繼母為妻
+            refs: ["30"]
+            topics: [sexual, marriage]
+            summary: 人不可娶繼母為妻，不可掀開他父親的衣襟。
+            basis: [30]
+  - chapter: 23
+    excluded: []
+    sections:
+      - id: deut23-s0
+        title: 耶和華的會、營中的潔淨
+        verses: 1-18
+        laws:
+          - id: deut23-01
+            title: 外腎受傷的、私生子、亞捫人和摩押人不可入耶和華的會
+            refs: ["1-8"]
+            topics: [priests, sojourner]
+            summary: 外腎受傷或被閹割的、私生子，不可入耶和華的會；亞捫人或摩押人，雖過十代也不可入；不可憎惡以東人和埃及人，他們第三代子孫可以入耶和華的會。
+            basis: [1, 2, 3, 7, 8]
+            why: [4]
+          - id: deut23-09
+            title: 出兵攻打仇敵，營要潔淨，營外要有便所
+            refs: ["9-14"]
+            topics: [war, corpse]
+            summary: 出兵攻打仇敵，要遠避諸惡；夜間夢遺不潔淨的，要出到營外，傍晚用水洗澡，日落了才可入營；營外要定出便所，預備一把鍬便溺後掩蓋，因為耶和華常在你營中行走，營理當潔淨。
+            basis: [9, 10, 11, 12, 13]
+            why: [14]
+          - id: deut23-15
+            title: 脫了主人的手逃來的奴僕，不可交還，由他選擇居住
+            refs: ["15-16"]
+            topics: [slavery, sojourner]
+            summary: 有奴僕脫了主人的手逃到你那裡，你不可將他交付他的主人；他必在你那裡與你同住，在你的城邑中，要由他選擇一個所喜悅的地方居住，你不可欺負他。
+            basis: [15, 16]
+          - id: deut23-17
+            title: 以色列中不可有妓女和孌童，其所得不可帶入殿還願
+            refs: ["17-18"]
+            topics: [sexual, vows]
+            summary: 以色列的女子中不可有妓女，男子中不可有孌童；娼妓和孌童所得的錢，不可帶入耶和華你神的殿還願，因為這都是耶和華所憎惡的。
+            basis: [17, 18]
+            why: [18]
+      - id: deut23-s1
+        title: 借貸、許願與鄰舍的田
+        verses: 19-25
+        laws:
+          - id: deut23-19
+            title: 借給弟兄不可取利，借給外邦人可以
+            refs: ["19-20"]
+            topics: [loans, poor]
+            summary: 借給弟兄的，錢財或糧食，無論什麼可生利的物，都不可取利；借給外邦人可以取利，只是借給弟兄不可取利。
+            basis: [19, 20]
+            why: [20]
+          - id: deut23-21
+            title: 向耶和華許願，償還不可遲延
+            refs: ["21-23"]
+            topics: [vows]
+            summary: 你向耶和華你的神許願，償還不可遲延，因為他必定向你追討，你就有罪；你若不許願，倒無罪；你口中應許甘心所獻的，要照所許的願謹守遵行。
+            basis: [21, 22, 23]
+            why: [21]
+          - id: deut23-24
+            title: 進鄰舍的葡萄園可吃飽不可裝走；可摘穗子，不可用鐮刀割
+            refs: ["24-25"]
+            topics: [poor, theft]
+            summary: 你進了鄰舍的葡萄園，可以隨意吃飽了葡萄，只是不可裝在器皿中；你進了鄰舍站著的禾稼，可以用手摘穗子，只是不可用鐮刀割取。
+            basis: [24, 25]
+  - chapter: 24
+    excluded: []
+    sections:
+      - id: deut24-s0
+        title: 離婚、婚後、當頭與其他條例
+        verses: 1-9
+        laws:
+          - id: deut24-01
+            title: 休書，前夫不可再娶已嫁別人的前妻
+            refs: ["1-4"]
+            topics: [marriage]
+            summary: 人娶妻後見他有不合理的事，不喜悅他，就可以寫休書交在他手中，打發他離開；婦人離開以後可以嫁別人；後夫休他或死了，前夫不可在婦人玷污之後再娶他，因為這是耶和華所憎惡的。
+            basis: [1, 2, 3, 4]
+            why: [4]
+          - id: deut24-05
+            title: 新娶妻的人，可以在家清閒一年，不從軍出征
+            refs: ["5"]
+            topics: [marriage, war]
+            summary: 新娶妻的人不可從軍出征，也不可託他辦理什麼公事，可以在家清閒一年，使他所娶的妻快樂。
+            basis: [5]
+            why: [5]
+          - id: deut24-06
+            title: 不可拿人的磨石作當頭
+            refs: ["6"]
+            topics: [loans, poor]
+            summary: 不可拿人的全盤磨石或是上磨石作當頭，因為這是拿人的命作當頭。
+            basis: [6]
+            why: [6]
+          - id: deut24-07
+            title: 拐帶以色列人當奴才待或賣了的，要治死
+            refs: ["7"]
+            topics: [slavery, homicide]
+            summary: 若遇見人拐帶以色列中的一個弟兄，當奴才待他，或是賣了他，那拐帶人的必治死，這樣就把那惡從你們中間除掉。
+            basis: [7]
+            why: [7]
+          - id: deut24-08
+            title: 大痲瘋的災病，要照祭司利未人所指教的留意遵行
+            refs: ["8-9"]
+            topics: [skin-disease, levites]
+            summary: 在大痲瘋的災病上，要謹慎，照祭司利未人一切所指教你們的留意遵行；要記念出埃及後，在路上，耶和華你神向米利暗所行的事。
+            basis: [8, 9]
+      - id: deut24-s1
+        title: 當頭、工價與弱者
+        verses: 10-22
+        laws:
+          - id: deut24-10
+            title: 向窮人取當頭，日落時要還他
+            refs: ["10-13"]
+            topics: [loans, poor]
+            summary: 借給鄰舍，不可進他家拿他的當頭，要站在外面等他拿出來；他若是窮人，不可留他的當頭過夜，日落的時候總要還他，使他用那件衣服蓋著睡覺。
+            basis: [10, 11, 12, 13]
+            why: [13]
+          - id: deut24-14
+            title: 困苦窮乏的雇工，要當日給工價
+            refs: ["14-15"]
+            topics: [poor, theft, sojourner]
+            summary: 困苦窮乏的雇工，無論是你的弟兄或在你城裡寄居的，你不可欺負他；要當日給他工價，不可等到日落，恐怕他因你求告耶和華，罪便歸於你。
+            basis: [14, 15]
+            why: [15]
+          - id: deut24-16
+            title: 不可因子殺父，也不可因父殺子
+            refs: ["16"]
+            topics: [courts, homicide]
+            summary: 不可因子殺父，也不可因父殺子；凡被殺的都為本身的罪。
+            basis: [16]
+            why: [16]
+          - id: deut24-17
+            title: 不向寄居的和孤兒屈枉正直，不拿寡婦的衣裳作當頭
+            refs: ["17-18"]
+            topics: [sojourner, loans]
+            summary: 你不可向寄居的和孤兒屈枉正直，也不可拿寡婦的衣裳作當頭；要記念你在埃及作過奴僕，耶和華你的神從那裡將你救贖。
+            basis: [17, 18]
+            why: [18]
+            entries: [孤兒寡婦]
+          - id: deut24-19
+            title: 田間忘下的一捆、橄欖和葡萄所剩的，留給寄居的與孤兒寡婦
+            refs: ["19-22"]
+            topics: [poor, sojourner]
+            summary: 在田間收割莊稼，若忘下一捆，不可回去再取；打橄欖樹和摘葡萄園剩下的，不可再打、再摘；都要留給寄居的與孤兒寡婦；也要記念你在埃及地作過奴僕。
+            basis: [19, 20, 21]
+            why: [22]
+  - chapter: 25
+    excluded: []
+    sections:
+      - id: deut25-s0
+        title: 責打、耕牛與家庭
+        verses: 1-12
+        laws:
+          - id: deut25-01
+            title: 責打惡人，最多四十下
+            refs: ["1-3"]
+            topics: [courts, injury]
+            summary: 人有爭訟來聽審判，審判官要定義人有理，定惡人有罪；惡人若該受責打，要叫他當面伏在地上，照罪責打，只可打他四十下，不可過數，若過數，便是輕賤你的弟兄了。
+            basis: [1, 2, 3]
+            why: [3]
+          - id: deut25-04
+            title: 牛在場上踹穀的時候，不可籠住牠的嘴
+            refs: ["4"]
+            topics: [animals-property]
+            summary: 牛在場上踹穀的時候，不可籠住牠的嘴。
+            basis: [4]
+          - id: deut25-05
+            title: 弟兄同居，哥哥死了沒有兒子，兄弟要娶他的妻
+            refs: ["5-10"]
+            topics: [levirate, marriage, inheritance]
+            summary: 弟兄同居，若死了一個沒有兒子，死人的妻不可出嫁外人，他丈夫的兄弟當盡弟兄的本分娶他，長子歸死兄的名下；那人不願意，他要到城門長老那裡告他，在長老面前脫他的鞋，吐唾沫在他臉上。
+            basis: [5, 6, 7, 9]
+            why: [6]
+          - id: deut25-11
+            title: 二人爭鬥，妻子抓住那人的下體，要砍斷他的手
+            refs: ["11-12"]
+            topics: [injury]
+            summary: 若有二人爭鬥，這人的妻近前來，要救他丈夫脫離那打他丈夫之人的手，抓住那人的下體，就要砍斷婦人的手，眼不可顧惜他。
+            basis: [11, 12]
+      - id: deut25-s1
+        title: 公平的法碼與記念亞瑪力
+        verses: 13-19
+        laws:
+          - id: deut25-13
+            title: 囊中不可有一大一小兩樣的法碼，家裡不可有兩樣的升斗
+            refs: ["13-16"]
+            topics: [theft, courts]
+            summary: 你囊中不可有一大一小兩樣的法碼，家裡不可有一大一小兩樣的升斗；當用對準公平的法碼、公平的升斗，這樣你的日子就可以長久，因為行非義之事的人都是耶和華所憎惡的。
+            basis: [13, 14, 15, 16]
+            why: [15, 16]
+          - id: deut25-17
+            title: 要記念亞瑪力人怎樣待你，要把他們的名從天下塗抹
+            refs: ["17-19"]
+            topics: [war]
+            summary: 要記念出埃及的時候，亞瑪力人在路上趁你疲乏困倦擊殺你後邊軟弱的人，並不敬畏神；耶和華使你安靖之後，你要將亞瑪力的名號從天下塗抹了，不可忘記。
+            basis: [17, 18, 19]
+            why: [18]
+  - chapter: 26
+    excluded:
+      - { verses: "1", reason: 進了所賜之地居住的引言 }
+      - { verses: "17-19", reason: 耶和華與百姓彼此承認、立約的宣告 }
+    sections:
+      - id: deut26-s1
+        title: 初熟的土產與十分之一
+        verses: 2-15
+        laws:
+          - id: deut26-02
+            title: 把初熟的土產盛在筐子裡，到所選擇的居所，並說出祖先的歷史
+            refs: ["2-11"]
+            topics: [tithes, offerings]
+            summary: 初熟土產裝筐帶到所選居所，向祭司明認已進入應許地；在壇前說「我祖是將亡的亞蘭人」，述說寄居埃及、受苦、呼求、蒙耶和華領出並得此地，再獻土產，與利未人和寄居者歡樂。
+            basis: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            entries: [初熟土產的信仰告白]
+          - id: deut26-12
+            title: 每逢三年，十分之一要分給利未人、寄居的、孤兒寡婦
+            refs: ["12-15"]
+            topics: [tithes, sojourner, poor]
+            summary: 每逢三年十分取一，分給利未人、寄居者、孤兒寡婦，使他們飽足；要在耶和華面前宣告已照命令分出聖物，未在哀喪或不潔時吃，也未獻給死人，並求耶和華賜福。
+            basis: [12, 13, 14, 15]
+            why: [12]
+            entries: [三種什一奉獻的區分, 十一奉獻後的宣告]
+      - id: deut26-s2
+        title: 盡心盡性謹守遵行
+        verses: 16
+        laws:
+          - id: deut26-16
+            title: 耶和華今日吩咐行這些律例典章，要盡心盡性謹守遵行
+            refs: ["16"]
+            topics: [one-god]
+            summary: 耶和華你的神今日吩咐你行這些律例典章，所以你要盡心盡性謹守遵行。
+            basis: [16]
+            why: [16]

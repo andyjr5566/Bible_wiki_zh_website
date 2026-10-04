@@ -1,0 +1,191 @@
+# 利未記16–18 章（贖罪日、宰牲與吃血、性的界線）。
+book: 利未記
+chapters:
+  - chapter: 16
+    excluded:
+      - { verses: "1", reason: 亞倫的兩個兒子死了之後，耶和華曉諭摩西的引言 }
+    sections:
+      - id: lev16-s1
+        title: 贖罪日的禮
+        verses: 2-28
+        laws:
+          - id: lev16-02
+            title: 亞倫不可隨時進幔子內，進去要先預備
+            refs: ["2-5"]
+            topics: [atonement-day, priests]
+            summary: 亞倫不可隨時進幔子內、到施恩座前，免得死亡；進聖所要帶一隻公牛犢為贖罪祭、一隻公綿羊為燔祭，穿上細麻布聖服，用水洗身，又從會眾取兩隻公山羊為贖罪祭、一隻公綿羊為燔祭。
+            basis: [2, 3, 4, 5]
+            why: [2]
+            entries: [大贖罪日（Yom Kippur）條例, 施恩座, 聖衣（祭司聖服）]
+          - id: lev16-06
+            title: 公牛為自己贖罪，兩隻公山羊拈鬮
+            refs: ["6-10"]
+            topics: [atonement-day, priests]
+            summary: 亞倫先把贖罪祭的公牛奉上，為自己和本家贖罪；把兩隻公山羊安置在會幕門口拈鬮，一鬮歸與耶和華，獻為贖罪祭，一鬮歸與阿撒瀉勒，活著安置在耶和華面前，打發人送到曠野去。
+            basis: [6, 7, 8, 9, 10]
+            entries: [大贖罪日（Yom Kippur）條例]
+          - id: lev16-11
+            title: 帶香入幔子內，彈血七次，潔淨聖所和壇
+            refs: ["11-19"]
+            topics: [atonement-day, priests]
+            summary: 亞倫宰公牛，用香爐盛火炭帶香入幔子內，使香煙遮掩施恩座，免得死亡；把牛血和為百姓宰的公山羊的血彈在施恩座上和前面，又抹在壇四角，彈七次，潔淨聖所和壇。
+            basis: [11, 12, 13, 14, 15, 18, 19]
+            why: [16]
+            entries: [大贖罪日（Yom Kippur）條例, 施恩座]
+          - id: lev16-20
+            title: 活山羊擔當罪孽，帶到曠野
+            refs: ["20-22"]
+            topics: [atonement-day, priests]
+            summary: 亞倫獻完了贖罪祭，就把活著的公山羊奉上，兩手按在羊頭上，承認以色列人一切的罪孽過犯，歸在羊的頭上，藉所派之人的手送到曠野，帶到無人之地。
+            basis: [20, 21, 22]
+            entries: [大贖罪日（Yom Kippur）條例]
+          - id: lev16-23
+            title: 獻燔祭之後的善後
+            refs: ["23-28"]
+            topics: [atonement-day, priests]
+            summary: 亞倫脫下細麻布衣服，在聖處用水洗身，穿上衣服，獻自己和百姓的燔祭，焚燒贖罪祭牲的脂油；放羊的人和焚燒牛羊的人要洗衣服，用水洗身，然後進營；牛羊的皮、肉、糞搬到營外焚燒。
+            basis: [23, 24, 25, 26, 27, 28]
+            entries: [大贖罪日（Yom Kippur）條例]
+      - id: lev16-s2
+        title: 七月初十日永遠的定例
+        verses: 29-34
+        laws:
+          - id: lev16-29
+            title: 七月初十日刻苦己心，什麼工都不可做
+            refs: ["29-34"]
+            topics: [atonement-day, sabbath]
+            summary: 每逢七月初十日，本地人和寄居的外人都要刻苦己心，什麼工都不可做；這日是聖安息日，因為要為你們贖罪，使你們潔淨；這是永遠的定例，一年一次為以色列人一切的罪贖罪。
+            basis: [29, 30, 31, 34]
+            why: [30]
+            entries: [大贖罪日（Yom Kippur）條例]
+  - chapter: 17
+    excluded:
+      - { verses: "1-2", reason: 耶和華對摩西說話的引言 }
+    sections:
+      - id: lev17-s1
+        title: 宰牲要到會幕門口，不可吃血
+        verses: 3-16
+        laws:
+          - id: lev17-03
+            title: 宰牛羊必須牽到會幕門口獻給耶和華
+            refs: ["3-7"]
+            topics: [offerings, blood-fat, one-god]
+            summary: 宰公牛、綿羊羔或山羊，不論營內營外，都要牽到會幕交祭司獻平安祭；否則流血的罪歸那人，要從民中剪除；不可再獻祭給隨從的鬼魔。
+            basis: [3, 4, 5, 6, 7]
+            why: [5]
+            entries: [平安祭]
+          - id: lev17-08
+            title: 燔祭和平安祭必須帶到會幕門口
+            refs: ["8-9"]
+            topics: [offerings]
+            summary: 以色列家中的人，或寄居的外人，獻燔祭或平安祭，若不帶到會幕門口獻給耶和華，那人必從民中剪除。
+            basis: [8, 9]
+            entries: [平安祭]
+          - id: lev17-10
+            title: 不可吃血，因為生命在血中
+            refs: ["10-12"]
+            topics: [blood-fat]
+            summary: 以色列人和寄居的外人，若吃什麼血，耶和華必向那人變臉，把他從民中剪除；你們都不可吃血，因為活物的生命在血中，這血賜給你們可以在壇上為你們的生命贖罪。
+            basis: [10, 11, 12]
+            why: [11]
+          - id: lev17-13
+            title: 打獵得了禽獸，要放出血來用土掩蓋
+            refs: ["13-14"]
+            topics: [blood-fat, clean-food]
+            summary: 以色列人或寄居的外人獵得可吃的禽獸，必放血、用土掩蓋；一切活物的血都不可吃，因為血中有生命，吃了必被剪除。
+            basis: [13, 14]
+            why: [14]
+          - id: lev17-15
+            title: 吃自死的或被撕裂的，不潔淨到晚上
+            refs: ["15-16"]
+            topics: [clean-food, corpse]
+            summary: 凡吃自死的或被野獸撕裂的，無論本地人或寄居的，必不潔淨到晚上，都要洗衣服，用水洗身；若不洗衣服，也不洗身，就必擔當他的罪孽。
+            basis: [15, 16]
+  - chapter: 18
+    excluded:
+      - { verses: "1-2", reason: 耶和華對摩西說話的引言，吩咐曉諭以色列人 }
+    sections:
+      - id: lev18-s1
+        title: 不可效法埃及和迦南人的行為
+        verses: 2-5
+        laws:
+          - id: lev18-03
+            title: 不可效法埃及和迦南人，要守耶和華的典章律例
+            refs: ["3-5"]
+            topics: [sexual, one-god]
+            summary: 埃及地和迦南地的人的行為，你們不可效法；要遵我的典章，守我的律例，人若遵行，就必因此活著。
+            basis: [3, 4, 5]
+            why: [5]
+      - id: lev18-s2
+        title: 骨肉之親不可露下體
+        verses: 6-19
+        laws:
+          - id: lev18-06
+            title: 母親、繼母、姊妹、孫女，不可露下體
+            refs: ["6-11"]
+            topics: [sexual]
+            summary: 骨肉之親的下體不可露，不可親近他們；母親、繼母、姊妹（無論異母同父或異父同母）、孫女或外孫女，以及繼母從父親生的女兒，都不可露他們的下體。
+            basis: [6, 7, 8, 9, 10, 11]
+            why: [7, 8]
+          - id: lev18-12
+            title: 姑母、姨母、伯叔母，不可親近
+            refs: ["12-14"]
+            topics: [sexual]
+            summary: 不可露你姑母的下體，他是你父親的骨肉之親；不可露你姨母的下體，他是你母親的骨肉之親；不可親近你伯叔之妻。
+            basis: [12, 13, 14]
+            why: [12, 13]
+          - id: lev18-15
+            title: 兒婦、弟兄的妻子、婦人和他的女兒，不可露下體
+            refs: ["15-18"]
+            topics: [sexual, marriage]
+            summary: 不可露你兒婦或弟兄妻子的下體；不可既露了婦人的下體，又露他女兒的下體，也不可娶他的孫女或外孫女；你妻還在的時候，不可另娶他的姊妹作對頭。
+            basis: [15, 16, 17, 18]
+            why: [16, 17]
+          - id: lev18-19
+            title: 女人行經的時候，不可親近
+            refs: ["19"]
+            topics: [sexual, body-discharge]
+            summary: 女人行經不潔淨的時候，不可露他的下體，與他親近。
+            basis: [19]
+      - id: lev18-s3
+        title: 通姦、摩洛、同性與獸淫
+        verses: 20-23
+        laws:
+          - id: lev18-20
+            title: 不可與鄰舍的妻行淫
+            refs: ["20"]
+            topics: [sexual, marriage]
+            summary: 不可與鄰舍的妻行淫，玷污自己。
+            basis: [20]
+            why: [20]
+          - id: lev18-21
+            title: 不可使兒女經火歸與摩洛，也不可褻瀆神的名
+            refs: ["21"]
+            topics: [divine-name, idolatry]
+            summary: 不可使你的兒女經火歸與摩洛，也不可褻瀆你神的名。
+            basis: [21]
+          - id: lev18-22
+            title: 不可與男人苟合，像與女人一樣
+            refs: ["22"]
+            topics: [sexual]
+            summary: 不可與男人苟合，像與女人一樣；這本是可憎惡的。
+            basis: [22]
+            why: [22]
+          - id: lev18-23
+            title: 不可與獸淫合
+            refs: ["23"]
+            topics: [sexual]
+            summary: 不可與獸淫合，玷污自己；女人也不可站在獸前，與牠淫合；這本是逆性的事。
+            basis: [23]
+            why: [23]
+      - id: lev18-s4
+        title: 地會把人吐出來
+        verses: 24-30
+        laws:
+          - id: lev18-24
+            title: 不可玷污自己，免得地把你們吐出
+            refs: ["24-30"]
+            topics: [sexual, one-god]
+            summary: 在這一切的事上都不可玷污自己，因為列邦在這些事上玷污了自己，連地也玷污了；本地人和外人都不可行這些可憎惡的事，免得地把你們吐出；行其中一件的，必從民中剪除。
+            basis: [24, 26, 28, 29]
+            why: [24, 28]

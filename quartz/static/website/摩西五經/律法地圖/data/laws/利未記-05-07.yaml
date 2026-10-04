@@ -1,0 +1,170 @@
+# 利未記5–7 章（贖罪祭、贖愆祭與各祭的祭司之分）。
+book: 利未記
+chapters:
+  - chapter: 5
+    excluded:
+      - { verses: "14", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: lev05-s1
+        title: 贖罪祭與力量不夠的人
+        verses: 1-13
+        laws:
+          - id: lev05-01
+            title: 不說出所知道的、摸了不潔的、冒失發誓
+            refs: ["1-4"]
+            topics: [courts, sin-offering]
+            summary: 聽見發誓的聲音，本是見證卻不把所看見、所知道的說出來，就有罪；摸了不潔的死獸或別人的污穢，或嘴裡冒失發誓，一知道了就有罪。
+            basis: [1, 2, 3, 4]
+          - id: lev05-05
+            title: 承認所犯的罪，獻母羊、羊羔或山羊
+            refs: ["5-6"]
+            topics: [sin-offering]
+            summary: 有了罪的時候，要承認所犯的罪，把羊群中的母羊、羊羔或山羊牽到耶和華面前為贖罪祭；祭司要為他贖罪。
+            basis: [5, 6]
+            entries: [贖罪祭]
+          - id: lev05-07
+            title: 力量不夠獻羊羔，可獻兩隻鳥
+            refs: ["7-10"]
+            topics: [poor, sin-offering]
+            summary: 力量不夠獻羊羔，就帶兩隻斑鳩或兩隻雛鴿，一隻作贖罪祭，一隻作燔祭；祭司先獻贖罪祭，從鳥的頸項揪下頭來，不可撕斷；第二隻照例獻為燔祭。
+            basis: [7, 8, 10]
+            entries: [贖罪祭]
+          - id: lev05-11
+            title: 力量不夠獻鳥，可獻細麵
+            refs: ["11-13"]
+            topics: [poor, sin-offering]
+            summary: 力量不夠獻兩隻斑鳩或雛鴿，就帶細麵伊法十分之一為贖罪祭，不可加上油和乳香；祭司取出一把作為紀念燒在壇上，剩下的麵歸與祭司，和素祭一樣。
+            basis: [11, 12, 13]
+            why: [11]
+            entries: [贖罪祭]
+      - id: lev05-s2
+        title: 贖愆祭
+        verses: 15-19
+        laws:
+          - id: lev05-15
+            title: 在聖物上誤犯，獻公綿羊並加五分之一償還
+            refs: ["15-16"]
+            topics: [guilt-offering]
+            summary: 在耶和華的聖物上誤犯了罪，要照所估的價，把一隻沒有殘疾的公綿羊牽到耶和華面前為贖愆祭；因在聖物上的差錯要償還，另外加五分之一，都給祭司。
+            basis: [15, 16]
+            entries: [贖愆祭（asham）]
+          - id: lev05-17
+            title: 行了不可行的事，雖不知道也有罪
+            refs: ["17-19"]
+            topics: [guilt-offering]
+            summary: 行了耶和華所吩咐不可行的事，雖然不知道，還是有了罪，要擔當罪孽；要照所估定的價，牽一隻沒有殘疾的公綿羊給祭司作贖愆祭，祭司為他贖罪，他必蒙赦免。
+            basis: [17, 18]
+            why: [19]
+            entries: [贖愆祭（asham）]
+  - chapter: 6
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "8", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "19", reason: 耶和華曉諭摩西的引言 }
+      - { verses: "24", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: lev06-s1
+        title: 欺詐鄰舍的贖愆祭
+        verses: 2-7
+        laws:
+          - id: lev06-02
+            title: 欺詐鄰舍，要如數歸還並加五分之一
+            refs: ["2-7"]
+            topics: [theft, guilt-offering]
+            summary: 在交付的物上、交易上行詭詐，搶奪、欺壓鄰舍，或撿了遺失的物說謊起誓，要如數歸還，另外加上五分之一，交還本主；又要牽一隻沒有殘疾的公綿羊為贖愆祭，祭司為他贖罪。
+            basis: [2, 3, 4, 5, 6, 7]
+            entries: [贖愆祭（asham）]
+      - id: lev06-s2
+        title: 祭司辦理各祭的條例
+        verses: 9-30
+        laws:
+          - id: lev06-09
+            title: 壇上的火常常燒著，不可熄滅
+            refs: ["9-13"]
+            topics: [altar-tabernacle, priests]
+            summary: 燔祭放在壇的柴上，從晚上到天亮；祭司穿細麻布衣服，把灰收起倒在壇旁，換衣服後把灰拿到營外潔淨之處；壇上的火要常常燒著，不可熄滅。
+            basis: [9, 10, 11, 12, 13]
+            entries: [燔祭]
+          - id: lev06-14
+            title: 素祭所剩的，祭司在聖處不帶酵地吃
+            refs: ["14-18"]
+            topics: [grain-offering, priest-portions]
+            summary: 祭司從素祭取一把，加上油和乳香，燒在壇上作紀念；所剩下的，亞倫和他子孫要在聖處、會幕的院子裡不帶酵地吃；亞倫子孫中的男丁都要吃這一分，直到萬代。
+            basis: [14, 15, 16, 17, 18]
+          - id: lev06-20
+            title: 亞倫受膏之日的常獻素祭，全燒不吃
+            refs: ["20-23"]
+            topics: [grain-offering, priest-portions]
+            summary: 亞倫受膏的日子要獻細麵伊法十分之一為常獻的素祭，早晨一半，晚上一半；接續他為受膏祭司的，要把這素祭全燒給耶和華；祭司的素祭都要燒了，不可吃。
+            basis: [20, 22, 23]
+          - id: lev06-25
+            title: 贖罪祭至聖，祭司在聖處吃，帶血進會幕的不可吃
+            refs: ["25-30"]
+            topics: [sin-offering, priest-portions]
+            summary: 贖罪祭要在宰燔祭牲的地方宰，是至聖的；祭司要在會幕的院子裡吃，摸這祭肉的要成為聖；煮祭物的瓦器要打碎，銅器要擦磨涮淨；血若帶進會幕在聖所贖罪，那肉不可吃，要用火焚燒。
+            basis: [25, 26, 27, 28, 30]
+            entries: [贖罪祭]
+  - chapter: 7
+    excluded:
+      - { verses: "22", reason: 耶和華對摩西說話的引言 }
+      - { verses: "28", reason: 耶和華對摩西說話的引言 }
+      - { verses: "37-38", reason: 全部祭的條例的結語 }
+    sections:
+      - id: lev07-s1
+        title: 贖愆祭與祭司所得的分
+        verses: 1-10
+        laws:
+          - id: lev07-01
+            title: 贖愆祭至聖，與贖罪祭同一個條例
+            refs: ["1-7"]
+            topics: [guilt-offering, priest-portions]
+            summary: 贖愆祭是至聖的，在宰燔祭牲的地方宰，血灑在壇的周圍，脂油、腰子和肝上的網子由祭司在壇上焚燒；祭司中的男丁都可以在聖處吃；贖罪祭怎樣，贖愆祭也怎樣，獻祭贖罪的祭司要得這祭物。
+            basis: [1, 2, 3, 5, 6, 7]
+            entries: [贖愆祭（asham）]
+          - id: lev07-08
+            title: 燔祭的皮與各樣素祭歸祭司
+            refs: ["8-10"]
+            topics: [grain-offering, priest-portions]
+            summary: 獻燔祭的祭司要得所獻燔祭牲的皮；在爐中烤的、煎盤中做的、鐵鏊上做的素祭，歸那獻祭的祭司；其餘的素祭，無論油調和的或乾的，歸亞倫的子孫大家均分。
+            basis: [8, 9, 10]
+            entries: [燔祭]
+      - id: lev07-s2
+        title: 平安祭的條例
+        verses: 11-36
+        laws:
+          - id: lev07-11
+            title: 感謝的平安祭，當天吃完
+            refs: ["11-15"]
+            topics: [peace-offering]
+            summary: 為感謝獻平安祭，要用無酵餅、無酵薄餅和調油的細麵餅，並有酵的餅一同獻上；從中把一個餅作為舉祭歸給灑血的祭司；祭肉要在獻的日子吃，一點不可留到早晨。
+            basis: [12, 13, 14, 15]
+            entries: [平安祭]
+          - id: lev07-16
+            title: 還願或甘心獻的平安祭，第三天要焚燒
+            refs: ["16-18"]
+            topics: [vows, peace-offering]
+            summary: 為還願或甘心獻的平安祭，要在獻祭的日子吃，所剩下的第二天也可以吃；剩下的祭肉到第三天要用火焚燒，第三天若吃了，這祭必不蒙悅納，吃的人必擔當他的罪孽。
+            basis: [16, 17, 18]
+            entries: [平安祭]
+          - id: lev07-19
+            title: 挨了污穢的肉不可吃，不潔淨的人不可吃平安祭
+            refs: ["19-21"]
+            topics: [corpse, peace-offering]
+            summary: 挨了污穢物的肉不可吃，要用火焚燒；平安祭的肉，潔淨的人都要吃；人若不潔淨而吃了獻與耶和華的平安祭的肉，這人必從民中剪除。
+            basis: [19, 20, 21]
+            entries: [平安祭]
+          - id: lev07-23
+            title: 脂油和血都不可吃
+            refs: ["23-27"]
+            topics: [blood-fat]
+            summary: 牛、綿羊、山羊的脂油都不可吃；自死的和被野獸撕裂的，脂油可以做別的使用，只是萬不可吃；在一切的住處，雀鳥的血、野獸的血都不可吃；吃血或吃火祭牲畜脂油的人，必從民中剪除。
+            basis: [23, 24, 25, 26, 27]
+            entries: [脂油和血都不可吃]
+          - id: lev07-29
+            title: 搖的胸與舉的右腿，歸給祭司
+            refs: ["29-36"]
+            topics: [peace-offering, priest-portions]
+            summary: 獻平安祭的，要把脂油和胸帶來，胸在耶和華面前搖一搖；脂油由祭司在壇上焚燒，胸歸亞倫和他的子孫；右腿作舉祭奉給祭司，是祭司世世代代永得的分。
+            basis: [29, 30, 31, 32, 33, 34]
+            why: [34]
+            entries: [平安祭]

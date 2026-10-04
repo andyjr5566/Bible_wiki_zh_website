@@ -1,0 +1,166 @@
+# 民數記20–30 章（曠野後期的敘事不收；女兒的產業、各節期的祭物、許願）。
+book: 民數記
+chapters:
+  - chapter: 20
+    excluded:
+      - { verses: "1-29", reason: 米利暗之死、磐石出水、以東不容借路、亞倫之死的敘事 }
+    sections: []
+  - chapter: 21
+    excluded:
+      - { verses: "1-35", reason: 銅蛇、行程與擊敗西宏、噩的敘事與詩歌 }
+    sections: []
+  - chapter: 22
+    excluded:
+      - { verses: "1-41", reason: 巴勒請巴蘭咒詛以色列的敘事 }
+    sections: []
+  - chapter: 23
+    excluded:
+      - { verses: "1-30", reason: 巴蘭為以色列說的話 }
+    sections: []
+  - chapter: 24
+    excluded:
+      - { verses: "1-25", reason: 巴蘭的預言 }
+    sections: []
+  - chapter: 25
+    excluded:
+      - { verses: "1-18", reason: 巴力毘珥的事與非尼哈的敘事，以及擾害米甸人的吩咐 }
+    sections: []
+  - chapter: 26
+    excluded:
+      - { verses: "1-65", reason: 曠野後期再次數點人數、按人數分地的敘事與名單 }
+    sections: []
+  - chapter: 27
+    excluded:
+      - { verses: "1-7", reason: 西羅非哈的女兒來求產業的案件 }
+      - { verses: "12-23", reason: 摩西望見應許之地、約書亞接續領袖的敘事 }
+    sections:
+      - id: num27-s1
+        title: 沒有兒子的人，產業歸誰
+        verses: 8-11
+        laws:
+          - id: num27-08
+            title: 人死了沒有兒子，產業依次歸給女兒、弟兄、伯叔、近親
+            refs: ["8-11"]
+            topics: [inheritance]
+            summary: 人若死了沒有兒子，就要把他的產業歸給他的女兒；沒有女兒，歸給他的弟兄；沒有弟兄，歸給他父親的弟兄；父親若沒有弟兄，歸給他族中最近的親屬，這要作以色列人的律例典章。
+            basis: [8, 9, 10, 11]
+            entries: [女兒承受產業的條例]
+  - chapter: 28
+    excluded:
+      - { verses: "1", reason: 耶和華曉諭摩西的引言 }
+    sections:
+      - id: num28-s1
+        title: 每日、安息日與月朔的祭
+        verses: 2-15
+        laws:
+          - id: num28-02
+            title: 每天早晨和黃昏各獻一隻沒有殘疾的公羊羔，作常獻的燔祭
+            refs: ["2-8"]
+            topics: [burnt-offering]
+            summary: 獻給耶和華的火祭，要在所定的日期獻：沒有殘疾、一歲的公羊羔，早晨獻一隻，黃昏獻一隻，用細麵伊法十分之一調油作素祭，同獻酒一欣四分之一作奠祭，這是常獻的燔祭。
+            basis: [2, 3, 4, 5, 6, 7, 8]
+            entries: [每日獻祭（常獻燔祭）]
+          - id: num28-09
+            title: 安息日要另獻兩隻公羊羔
+            refs: ["9-10"]
+            topics: [sabbath, burnt-offering]
+            summary: 當安息日，要獻兩隻沒有殘疾、一歲的公羊羔，並用調油的細麵伊法十分之二作素祭，和同獻的奠祭；這是每安息日獻的燔祭，常獻的燔祭和奠祭在外。
+            basis: [9, 10]
+          - id: num28-11
+            title: 每月朔獻公牛犢、公綿羊、公羊羔和公山羊
+            refs: ["11-15"]
+            topics: [burnt-offering, sin-offering]
+            summary: 每月朔要獻兩隻公牛犢、一隻公綿羊、七隻沒有殘疾、一歲的公羊羔作燔祭，各用細麵作素祭、酒作奠祭，又獻一隻公山羊為贖罪祭，獻在常獻的燔祭之外。
+            basis: [11, 12, 13, 14, 15]
+      - id: num28-s2
+        title: 春季節期的祭
+        verses: 16-31
+        laws:
+          - id: num28-16
+            title: 逾越節與無酵節，七日每日獻公牛犢、公綿羊、公羊羔和公山羊
+            refs: ["16-25"]
+            topics: [passover, burnt-offering, sin-offering]
+            summary: 正月十四日是逾越節，十五日起吃無酵餅七日，第一日和第七日當有聖會，什麼勞碌的工都不可做；一連七日，每日要獻公牛犢兩隻、公綿羊一隻、公羊羔七隻作火祭，連同素祭，並一隻公山羊作贖罪祭。
+            basis: [16, 17, 18, 19, 22, 24, 25]
+            entries: [逾越節, 無酵節]
+          - id: num28-26
+            title: 七七節初熟的日子，獻新素祭，當有聖會
+            refs: ["26-31"]
+            topics: [weeks, burnt-offering, grain-offering, peace-offering, sin-offering]
+            summary: 七七節莊稼初熟，獻新素祭，當有聖會，不做工；另獻兩公牛犢、一公綿羊、七隻一歲無殘疾羊羔作燔祭，一隻公山羊贖罪，皆在常獻祭以外。
+            basis: [26, 27, 30, 31]
+            entries: [七七節（五旬節）, 新素祭, 燔祭平安祭同獻的素祭與奠祭比例]
+  - chapter: 29
+    excluded:
+      - { verses: "40", reason: 摩西照所吩咐的告訴以色列人 }
+    sections:
+      - id: num29-s1
+        title: 七月的節期的祭
+        verses: 1-39
+        laws:
+          - id: num29-01
+            title: 七月初一日有聖會，獻公牛犢、公綿羊、公羊羔和公山羊
+            refs: ["1-6"]
+            topics: [atonement-day, burnt-offering, sin-offering]
+            summary: 七月初一日當有聖會，什麼勞碌的工都不可做，是你們當守為吹角的日子；要獻公牛犢一隻、公綿羊一隻、公羊羔七隻作燔祭，連同素祭，並一隻公山羊作贖罪祭，在月朔和常獻的燔祭之外。
+            basis: [1, 2, 3, 4, 5, 6]
+            entries: [吹角節（七月初一）]
+          - id: num29-07
+            title: 七月初十日有聖會，刻苦己心，獻燔祭和贖罪祭
+            refs: ["7-11"]
+            topics: [atonement-day, burnt-offering, sin-offering]
+            summary: 七月初十日當有聖會，要刻苦己心，什麼工都不可做；要獻公牛犢一隻、公綿羊一隻、公羊羔七隻作燔祭，連同素祭，並一隻公山羊為贖罪祭，在贖罪祭和常獻的燔祭之外。
+            basis: [7, 8, 9, 10, 11]
+            entries: [大贖罪日（Yom Kippur）條例, 贖罪日的節期獻祭（民29：7-11）]
+          - id: num29-12
+            title: 七月十五日守住棚節七日，每日獻的公牛逐日減少
+            refs: ["12-38"]
+            topics: [booths, burnt-offering, grain-offering, sin-offering]
+            summary: 七月十五日守節七天，首日當聖會、不做工，獻公牛13、公綿羊2、羊羔14，公山羊每日1；七日公牛逐日少1；第八日嚴肅會、不做工，獻公牛1、公羊1、羊羔7。
+            basis: [12, 13, 35, 36]
+            entries: [住棚節公牛逐日遞減, 住棚節第八日的嚴肅會]
+          - id: num29-39
+            title: 這些祭要在節期獻，在所許的願和甘心所獻的以外
+            refs: ["39"]
+            topics: [offerings, vows]
+            summary: 這些祭要在你們的節期獻給耶和華，都在所許的願和甘心所獻的燔祭、素祭、奠祭、平安祭以外。
+            basis: [39]
+  - chapter: 30
+    excluded:
+      - { verses: "1", reason: 摩西曉諭各支派首領的引言 }
+      - { verses: "16", reason: 這些許願條例的結語 }
+    sections:
+      - id: num30-s1
+        title: 許願與起誓
+        verses: 2-15
+        laws:
+          - id: num30-02
+            title: 向耶和華許願或起誓，就不可食言
+            refs: ["2"]
+            topics: [vows]
+            summary: 人若向耶和華許願或起誓，要約束自己，就不可食言，必要按口中所出的一切話行。
+            basis: [2]
+            entries: [許願, 許願條例為何插在民29 與民31 之間]
+          - id: num30-03
+            title: 年幼的女子在父家許願，父親聽見不應承，就不得為定
+            refs: ["3-5"]
+            topics: [vows, parents]
+            summary: 女子年幼、還在父家的時候，若向耶和華許願，父親聽見卻默默不言，所許的願都要為定；父親聽見的日子若不應承，所許的願就都不得為定，耶和華也必赦免他。
+            basis: [3, 4, 5]
+            why: [5]
+            entries: [許願, 許願條例為何插在民29 與民31 之間]
+          - id: num30-06
+            title: 出嫁的婦人許的願，丈夫聽見默默不言就為定，不應承就算廢了
+            refs: ["6-8"]
+            topics: [vows, marriage]
+            summary: 女子出嫁後所許的願或冒失約束自己的話，丈夫聽見當日默不作聲就為定；若不應承，就作廢，耶和華也赦免。
+            basis: [6, 7, 8]
+            entries: [許願, 許願條例為何插在民29 與民31 之間]
+          - id: num30-09
+            title: 寡婦或被休的婦人許的願要為定；丈夫可以堅定，也可以廢去
+            refs: ["9-15"]
+            topics: [vows, marriage]
+            summary: 寡婦或被休的婦人所許的願都要為定；在丈夫家裡許的願，丈夫聽見默默不言就為定，聽見的日子全廢了就不為定；若天天默默不言，就算堅定，聽見以後才廢去，要擔當婦人的罪孽。
+            basis: [9, 10, 11, 12, 13, 14, 15]
+            why: [12, 14]
+            entries: [許願, 寡婦與被休的婦人可以自主許願, 許願條例為何插在民29 與民31 之間]

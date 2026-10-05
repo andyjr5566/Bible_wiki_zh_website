@@ -120,11 +120,17 @@ def _append_entry(
     entries: defaultdict[str, list[dict[str, str]]],
     key: str,
     html_file: Path,
+    *,
+    toc_only: bool = False,
 ) -> None:
-    entries[key].append({
+    item = {
         "title": extract_title(html_file),
         "path": _relative_path(html_file),
-    })
+    }
+    if toc_only:
+        # 只列在各卷「全書目錄及綱要」，不寫進章節檔的附錄區塊
+        item["toc_only"] = True
+    entries[key].append(item)
 
 
 def _chapter_html_entries(
@@ -148,11 +154,20 @@ def _chapter_html_entries(
             # 一個網站涵蓋好幾章時，在專案根目錄放 appendix-chapters.json，
             # 例如 ["第12章", "第13章"]，其他章的附錄也會列出同一個入口。
             # 跨卷時寫完整的「書名/第N章」，例如 ["出埃及記/第20章", "申命記/第5章"]。
-            # 跨卷網站（例如 摩西五經的律法）涵蓋近百章，不掛到章節附錄與各卷全書目錄，
-            # 只列在本資料夾的 index.md（見 scan_cross_book_entries）。
-            if _is_book_folder(book):
-                for extra in _extra_chapters(chapter_dir):
-                    _append_entry(entries, extra if "/" in extra else f"{book}/{extra}", built_index)
+            # 一個網站涵蓋好幾章時，在專案根目錄放 appendix-chapters.json，
+            # 例如 ["第12章", "第13章"]，其他章的附錄也會列出同一個入口。
+            # 跨卷（網站放在非書卷的資料夾）時寫完整的「書名/第N章」，
+            # 例如 ["出埃及記/第20章", "申命記/第5章"]。
+            # 涵蓋章數很多、不想掛進每個章節檔時，改寫成
+            # {"toc_only": true, "chapters": [...]}：只列在各卷全書目錄。
+            chapters, toc_only = _extra_chapters(chapter_dir)
+            for extra in chapters:
+                _append_entry(
+                    entries,
+                    extra if "/" in extra else f"{book}/{extra}",
+                    built_index,
+                    toc_only=toc_only,
+                )
 
         # A Vite chapter may also contain hand-authored static pages.  Keep
         # those links, but never expose the Vite source index as a live page.
@@ -170,16 +185,21 @@ def _is_book_folder(book: str) -> bool:
     return any(path.is_dir() for path in REPOSITORY_ROOT.glob(f"[0-9][0-9] {book}"))
 
 
-def _extra_chapters(chapter_dir: Path) -> list[str]:
-    """讀 ``appendix-chapters.json``：這個網站也要掛在哪些章節。"""
+def _extra_chapters(chapter_dir: Path) -> tuple[list[str], bool]:
+    """讀 ``appendix-chapters.json``：這個網站也要掛在哪些章節，以及是否只列在全書目錄。"""
     config = chapter_dir / "appendix-chapters.json"
     if not config.is_file():
-        return []
+        return [], False
     try:
         data = json.loads(config.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return []
-    return [str(x) for x in data if isinstance(x, str)] if isinstance(data, list) else []
+        return [], False
+    toc_only = False
+    if isinstance(data, dict):
+        toc_only = data.get("toc_only") is True
+        data = data.get("chapters")
+    chapters = [str(x) for x in data if isinstance(x, str)] if isinstance(data, list) else []
+    return chapters, toc_only
 
 
 def _root_static_pages(chapter_dir: Path) -> list[Path]:
@@ -199,21 +219,6 @@ def scan_all_entries() -> dict[str, list[dict[str, str]]]:
     entries: defaultdict[str, list[dict[str, str]]] = defaultdict(list)
     for book, chapter, chapter_dir in iter_chapters():
         _chapter_html_entries(entries, book, chapter, chapter_dir)
-    return dict(entries)
-
-
-def scan_cross_book_entries() -> dict[str, list[dict[str, str]]]:
-    """跨卷網站（放在非書卷資料夾）涵蓋的章節；只供 index.md 使用，附錄工具看不到。"""
-    entries: defaultdict[str, list[dict[str, str]]] = defaultdict(list)
-    for book, _chapter, chapter_dir in iter_chapters():
-        if _is_book_folder(book) or not is_vite_app(chapter_dir):
-            continue
-        built_index = chapter_dir / "dist" / "index.html"
-        if not built_index.is_file():
-            continue
-        for extra in _extra_chapters(chapter_dir):
-            if "/" in extra:
-                _append_entry(entries, extra, built_index)
     return dict(entries)
 
 
@@ -429,16 +434,6 @@ def render_index_markdown(entries: dict[str, list[dict[str, str]]]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _merge_entries(
-    *groups: dict[str, list[dict[str, str]]],
-) -> dict[str, list[dict[str, str]]]:
-    merged: defaultdict[str, list[dict[str, str]]] = defaultdict(list)
-    for group in groups:
-        for key, items in group.items():
-            merged[key].extend(items)
-    return dict(merged)
-
-
 def main(argv: list[str] | None = None) -> int:
     configure_stdio()
     parser = argparse.ArgumentParser(description=__doc__)
@@ -473,7 +468,7 @@ def main(argv: list[str] | None = None) -> int:
     entries = scan_all_entries()
     index_path = CATEGORY_DIR / "index.md"
     index_path.write_text(
-        render_index_markdown(_merge_entries(entries, scan_cross_book_entries())),
+        render_index_markdown(entries),
         encoding="utf-8",
         newline="\n",
     )

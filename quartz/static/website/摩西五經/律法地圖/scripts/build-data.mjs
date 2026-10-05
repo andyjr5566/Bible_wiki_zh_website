@@ -293,8 +293,11 @@ export function buildAll() {
     motto, verses, links, entries: entryMap, relations, questions, tours, glossary, coverage,
   };
 
-  const chaptersJson = [...new Set(laws.map((l) => `${l.book}/第${l.chapter}章`))]
-    .sort((a, b) => sortKey(a) - sortKey(b));
+  // toc_only：涵蓋近百章，只列在各卷全書目錄，不寫進每個章節檔的附錄
+  const chaptersJson = {
+    toc_only: true,
+    chapters: [...new Set(laws.map((l) => `${l.book}/第${l.chapter}章`))].sort((a, b) => sortKey(a) - sortKey(b)),
+  };
 
   const review = reviewSheet(laws, verses, abbr);
   return { data, errors, warnings, coverage, chaptersJson, review };

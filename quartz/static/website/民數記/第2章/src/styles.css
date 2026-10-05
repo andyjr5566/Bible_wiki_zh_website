@@ -1,19 +1,20 @@
 /* ============================================================ tokens */
 :root {
-  --bg: #f5efe3;
-  --bg-2: #ede4d3;
-  --surface: #fffaf1;
-  --surface-2: #f8f1e4;
-  --ink: #2a2017;
-  --ink-2: #5b4d3e;
-  --ink-3: #8a7a66;
-  --line: #ddd0bb;
-  --line-2: #c9b89c;
-  --bronze: #9a5a2a;
-  --gold: #b88a1c;
-  --blood: #8e1c2c;
-  --fire: #e2711d;
-  --focus: #1f6feb;
+  /* 淺色：石灰岩白、墨色字；強調色只有一個：火光琥珀（--bronze）。四營與利未的顏色是資料用色 */
+  --bg: oklch(97.2% 0.007 85);
+  --bg-2: oklch(94% 0.012 82);
+  --surface: oklch(99.2% 0.004 85);
+  --surface-2: oklch(95.6% 0.01 82);
+  --ink: oklch(23% 0.02 60);
+  --ink-2: oklch(41% 0.02 60);
+  --ink-3: oklch(54% 0.02 65);
+  --line: oklch(89.5% 0.014 75);
+  --line-2: oklch(82% 0.02 75);
+  --bronze: oklch(50% 0.13 48);
+  --gold: oklch(66% 0.13 78);
+  --blood: oklch(45% 0.15 20);
+  --fire: oklch(68% 0.17 50);
+  --focus: oklch(55% 0.19 255);
 
   /* 四營：顏色＋形狀（圓、三角、方、菱）一起用，色盲也分得出來 */
   --c-east: #c2410c;
@@ -30,35 +31,48 @@
   --ev-interp: #5b3f86;
   --ev-unsaid: #7a6a58;
 
-  --shadow: 0 1px 2px rgb(60 40 20 / 8%), 0 8px 24px rgb(60 40 20 / 8%);
-  --shadow-lg: 0 2px 4px rgb(60 40 20 / 10%), 0 20px 48px rgb(60 40 20 / 16%);
+  --shadow: 0 1px 2px oklch(30% 0.03 60 / 8%), 0 10px 28px oklch(30% 0.03 60 / 8%);
+  --shadow-lg: 0 2px 4px oklch(30% 0.03 60 / 10%), 0 24px 56px oklch(30% 0.03 60 / 16%);
   --r: 14px;
   --fs: 16px;
   --serif: 'Noto Serif TC', 'Source Han Serif TC', 'Songti TC', 'PMingLiU', serif;
   --sans: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  /* 經文一律用楷書，和內文的黑體分開：看到楷書就知道是和合本原文 */
+  --kai: 'LXGW WenKai TC', 'BiauKai', 'DFKai-SB', 'Kaiti TC', var(--serif);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+
+  /* 故事區永遠是夜景：自己一組顏色，不跟著淺色／深色主題 */
+  --st-bg: #070b18;
+  --st-ink: oklch(95% 0.012 85);
+  --st-ink-2: oklch(84% 0.015 80);
+  --st-ink-3: oklch(70% 0.02 260);
+  --st-glass: oklch(17% 0.03 265 / 66%);
+  --st-line: oklch(100% 0 0 / 12%);
+  --st-accent: oklch(80% 0.13 68);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #15110d; --bg-2: #1d1812; --surface: #221c16; --surface-2: #2a231b;
-    --ink: #f1e8d8; --ink-2: #cdbfa9; --ink-3: #9d8f7b; --line: #3b3127; --line-2: #54473a;
-    --bronze: #d9914f; --gold: #e0b44a; --blood: #e0566a; --fire: #ff9a45;
+    /* 深色：曠野的夜空，靛黑底、暖白字、火光琥珀 */
+    --bg: oklch(15.5% 0.024 265); --bg-2: oklch(18.5% 0.028 265); --surface: oklch(20.5% 0.028 265); --surface-2: oklch(23.5% 0.03 265);
+    --ink: oklch(94% 0.012 85); --ink-2: oklch(81% 0.015 80); --ink-3: oklch(66% 0.022 262); --line: oklch(29% 0.03 265); --line-2: oklch(37% 0.032 265);
+    --bronze: oklch(79% 0.12 66); --gold: oklch(82% 0.13 80); --blood: oklch(70% 0.15 18); --fire: oklch(76% 0.16 55);
     --c-east: #f07a3c; --c-south: #ea6f89; --c-west: #7f9ae8; --c-north: #5fbf7d; --levi: #b19ae3; --cloth-blue: #8fb4f5; --sealskin: #d2b48c;
     --ev-explicit: #7fcf9b; --ev-synthesis: #e0c26a; --ev-interp: #c2a6f0; --ev-unsaid: #b6a78f;
-    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 30%);
-    --shadow-lg: 0 2px 4px rgb(0 0 0 / 40%), 0 20px 48px rgb(0 0 0 / 45%);
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 10px 28px rgb(0 0 0 / 32%);
+    --shadow-lg: 0 2px 4px rgb(0 0 0 / 40%), 0 24px 56px rgb(0 0 0 / 48%);
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
-  --bg: #15110d; --bg-2: #1d1812; --surface: #221c16; --surface-2: #2a231b;
-  --ink: #f1e8d8; --ink-2: #cdbfa9; --ink-3: #9d8f7b; --line: #3b3127; --line-2: #54473a;
-  --bronze: #d9914f; --gold: #e0b44a; --blood: #e0566a; --fire: #ff9a45;
+  --bg: oklch(15.5% 0.024 265); --bg-2: oklch(18.5% 0.028 265); --surface: oklch(20.5% 0.028 265); --surface-2: oklch(23.5% 0.03 265);
+  --ink: oklch(94% 0.012 85); --ink-2: oklch(81% 0.015 80); --ink-3: oklch(66% 0.022 262); --line: oklch(29% 0.03 265); --line-2: oklch(37% 0.032 265);
+  --bronze: oklch(79% 0.12 66); --gold: oklch(82% 0.13 80); --blood: oklch(70% 0.15 18); --fire: oklch(76% 0.16 55);
   --c-east: #f07a3c; --c-south: #ea6f89; --c-west: #7f9ae8; --c-north: #5fbf7d; --levi: #b19ae3; --cloth-blue: #8fb4f5; --sealskin: #d2b48c;
   --ev-explicit: #7fcf9b; --ev-synthesis: #e0c26a; --ev-interp: #c2a6f0; --ev-unsaid: #b6a78f;
-  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 30%);
-  --shadow-lg: 0 2px 4px rgb(0 0 0 / 40%), 0 20px 48px rgb(0 0 0 / 45%);
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 10px 28px rgb(0 0 0 / 32%);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 40%), 0 24px 56px rgb(0 0 0 / 48%);
   color-scheme: dark;
 }
 
@@ -116,10 +130,10 @@ a { color: var(--bronze); }
 @media (max-width: 800px) { .hero .wrap { grid-template-columns: 1fr; } .hero-art { order: -1; } .hero-art svg { width: min(300px, 100%); } }
 
 /* ============================================================ sections */
-section.block { padding: 64px 0 24px; }
-.sec-head { display: grid; gap: 6px; margin-bottom: 22px; max-width: 780px; }
-.sec-head h2 { font-size: clamp(1.45rem, 3.4vw, 2rem); }
-.sec-head p { color: var(--ink-2); margin: 0; }
+section.block { padding: clamp(72px, 10vw, 120px) 0 24px; }
+.sec-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 760px; }
+.sec-head h2 { font: 900 clamp(1.9rem, 4.4vw, 3rem) / 1.15 var(--serif); letter-spacing: .03em; overflow-wrap: anywhere; min-width: 0; }
+.sec-head p { color: var(--ink-2); margin: 0; font-size: 1.04em; max-width: 40em; }
 .sec-num { font: 700 0.78em var(--sans); color: var(--bronze); letter-spacing: .14em; }
 
 /* marks */
@@ -139,12 +153,12 @@ section.block { padding: 64px 0 24px; }
 .ev.not_stated { color: var(--ev-unsaid); border-style: dashed; }
 .ref { display: inline-block; border: 0; background: color-mix(in srgb, var(--bronze) 12%, transparent); color: var(--bronze); border-radius: 6px; padding: 0 6px; font-size: 0.78em; font-weight: 700; cursor: pointer; margin: 0 2px; line-height: 1.7; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ref:hover { background: color-mix(in srgb, var(--bronze) 22%, transparent); }
-.q { font-family: var(--serif); color: var(--ink); }
+.q { font-family: var(--kai); color: var(--ink); }
 .q::before { content: '「'; } .q::after { content: '」'; }
 .voice { border-left: 3px solid var(--ev-interp); padding: 4px 0 4px 12px; margin: 8px 0; font-size: 0.92em; }
 .voice .who { font-weight: 700; color: var(--ev-interp); font-size: 0.85em; }
 .voice .says { color: var(--ink); }
-.voice .quote { display: block; color: var(--ink-2); font-family: var(--serif); margin-top: 2px; }
+.voice .quote { display: block; color: var(--ink-2); font-family: var(--kai); margin-top: 2px; }
 :root[data-interp='off'] .interp-layer { display: none !important; }
 .facts { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 8px; }
 .facts li { font-size: .93em; line-height: 1.65; }
@@ -154,9 +168,9 @@ section.block { padding: 64px 0 24px; }
 
 .pop { position: fixed; z-index: 90; width: min(420px, calc(100vw - 24px)); background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 14px 16px 12px; font-size: 0.95em; }
 .pop h4 { font: 700 0.85em var(--sans); color: var(--bronze); margin-bottom: 6px; display: flex; justify-content: space-between; }
-.pop .v { margin: 0 0 6px; font-family: var(--serif); }
+.pop .v { margin: 0 0 6px; font-family: var(--kai); font-size: 1.06em; line-height: 1.75; }
 .pop .v sup { color: var(--ink-3); font-family: var(--sans); font-size: 0.7em; margin-right: 3px; }
-.pop mark { background: color-mix(in srgb, var(--gold) 35%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.pop mark { background: none; color: var(--bronze); font-weight: 700; box-shadow: inset 0 -.32em 0 color-mix(in srgb, var(--bronze) 22%, transparent); }
 .pop .close { border: 0; background: none; cursor: pointer; color: var(--ink-3); font-size: 1.1em; line-height: 1; }
 .pop .src { font-size: 0.75em; color: var(--ink-3); margin-top: 4px; }
 
@@ -461,3 +475,11 @@ footer { padding: 40px 0 60px; color: var(--ink-3); font-size: 0.82em; }
 
 /* 手機上，3D 畫面允許直向捲動頁面，才不會被畫布卡住；橫向拖曳仍是旋轉 */
 @media (max-width: 720px) { .three-wrap canvas { touch-action: pan-y; } }
+
+/* ============================================================ 故事之後的頁面 */
+/* 故事是夜景；接到淺色頁面時用一段漸層過場，不要硬切 */
+main { position: relative; }
+main::before { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(var(--st-bg), var(--bg)); pointer-events: none; }
+main > section.block:first-child { padding-top: clamp(112px, 11vw, 136px); }
+.topbar { transition: background .4s, border-color .4s; }
+.brand span { letter-spacing: .12em; }

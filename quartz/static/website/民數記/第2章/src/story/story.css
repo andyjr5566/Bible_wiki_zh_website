@@ -1,0 +1,156 @@
+/* ============================================================ 捲動故事
+ * 舞台用 position: sticky 固定在畫面上，卡片在上面捲過去。沒有捲動劫持：
+ * 捲軸照常動，只是捲動的位置決定鏡頭、天色與哪一營立起來。
+ */
+.story {
+  position: relative;
+  background: var(--st-bg);
+  color: var(--st-ink);
+  /* 故事區裡的元件（證據標籤、經節按鈕）一律用夜間配色 */
+  --ink: var(--st-ink); --ink-2: var(--st-ink-2); --ink-3: var(--st-ink-3);
+  --surface: oklch(22% 0.03 265); --surface-2: oklch(25% 0.03 265);
+  --line: var(--st-line); --line-2: oklch(100% 0 0 / 22%);
+  --bronze: var(--st-accent); --gold: oklch(82% 0.13 80);
+  --c-east: #f07a3c; --c-south: #ea6f89; --c-west: #8fa8f0; --c-north: #66c785; --levi: #b9a3ea;
+  --ev-explicit: #86d6a2; --ev-synthesis: #e6c870; --ev-interp: #c9aef4; --ev-unsaid: #bcae96;
+}
+
+.story-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; isolation: isolate; }
+.story-poster, .story-stage .three-wrap, .story-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+.story-poster { object-fit: cover; z-index: 0; transition: opacity 1.2s var(--ease-out); }
+.story-stage.is-live .story-poster { opacity: 0; }
+.story-stage .three-wrap { z-index: 1; border: 0; border-radius: 0; box-shadow: none; background: transparent; min-height: 0; }
+.story-stage .three-wrap canvas { touch-action: pan-y; }
+.story-stage .three-wrap.is-explore canvas { touch-action: none; }
+
+/* 卡片在左邊時，左半邊壓暗一點，字才讀得清楚；手機改成下方 */
+.story-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, oklch(10% 0.03 265 / 62%) 0%, oklch(10% 0.03 265 / 28%) 34%, transparent 58%),
+    linear-gradient(0deg, oklch(10% 0.03 265 / 45%) 0%, transparent 22%); }
+@media (max-width: 720px) {
+  .story-scrim { background: linear-gradient(0deg, oklch(10% 0.03 265 / 70%) 0%, oklch(10% 0.03 265 / 30%) 42%, transparent 62%); }
+}
+
+.story-loading { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; z-index: 4; background: oklch(100% 0 0 / 8%); transition: opacity .6s; }
+.story-loading-bar { display: block; height: 100%; background: var(--st-accent); transform: scaleX(.04); transform-origin: left; transition: transform .4s var(--ease-out); }
+.story-stage.is-live .story-loading, .story-stage.is-fallback .story-loading { opacity: 0; }
+
+.story-fallback[hidden] { display: none; }
+.story-fallback { z-index: 1; display: grid; place-items: center; padding: 72px 16px 16px; background: var(--st-bg); }
+.story-fallback .campmap { min-width: 0; max-width: 900px; opacity: .9; }
+
+/* ---- 右上角的工具 ---- */
+.story-tools { position: absolute; z-index: 5; top: 68px; right: clamp(12px, 3vw, 28px); display: flex; gap: 8px; }
+.sbtn { height: 38px; min-width: 38px; border-radius: 999px; border: 1px solid var(--st-line); background: oklch(17% 0.03 265 / 55%); backdrop-filter: blur(10px); color: var(--st-ink); display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; cursor: pointer; font: 500 .86rem var(--sans); transition: background .2s, border-color .2s, transform .15s; }
+.sbtn svg { width: 18px; height: 18px; }
+.sbtn:hover { border-color: oklch(100% 0 0 / 35%); background: oklch(22% 0.03 265 / 70%); }
+.sbtn:active { transform: scale(.96); }
+.sbtn[aria-pressed='true'] { background: var(--st-accent); color: var(--st-bg); border-color: var(--st-accent); }
+.sbtn:disabled { opacity: .45; cursor: progress; }
+.sbtn-text { padding: 0 14px 0 12px; }
+
+/* ---- 右側進度軌 ---- */
+.story-rail { position: absolute; z-index: 5; right: clamp(10px, 2.4vw, 26px); justify-items: end; top: 50%; transform: translateY(-50%); list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.story-rail button { display: flex; align-items: center; justify-content: flex-end; gap: 10px; border: 0; background: none; color: var(--st-ink-3); font: 500 .78rem var(--sans); padding: 5px 0; cursor: pointer; flex-direction: row-reverse; justify-content: flex-start; width: 100%; }
+.rail-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .55; transition: transform .3s var(--ease-out), opacity .3s, background .3s; }
+.rail-t { opacity: 0; transform: translateX(6px); transition: opacity .25s, transform .25s var(--ease-out); white-space: nowrap; }
+.story-rail:hover .rail-t, .story-rail button:focus-visible .rail-t, .story-rail button.on .rail-t { opacity: 1; transform: none; }
+.story-rail button.past { color: var(--st-ink-2); }
+.story-rail button.on { color: var(--st-accent); font-weight: 700; }
+.story-rail button.on .rail-dot { transform: scale(1.7); opacity: 1; }
+@media (max-width: 720px) { .story-rail { display: none; } }
+
+/* ---- 捲過去的卡片 ---- */
+.story-steps { position: relative; z-index: 3; margin-top: -100vh; margin-top: -100svh; pointer-events: none; }
+.story-step { min-height: calc(var(--len, 100) * 1vh); min-height: calc(var(--len, 100) * 1svh); display: flex; align-items: center; padding: 0 clamp(16px, 6vw, 88px); }
+.story-step:first-child { min-height: 100svh; }
+.story-step:last-child { padding-bottom: 8vh; }
+.scard { pointer-events: auto; width: min(460px, 100%); background: var(--st-glass); backdrop-filter: blur(16px) saturate(1.15); -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid var(--st-line); border-radius: 16px; padding: 22px 24px 20px; box-shadow: 0 24px 60px oklch(5% 0.03 265 / 45%), inset 0 1px 0 oklch(100% 0 0 / 7%);
+  opacity: .38; transform: translateY(14px) scale(.985); transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
+.story-step.is-active .scard { opacity: 1; transform: none; }
+@media (prefers-reduced-transparency: reduce) { .scard { background: oklch(17% 0.03 265); backdrop-filter: none; } }
+@media (max-width: 720px) {
+  .story-step { align-items: flex-end; padding: 0 12px 6svh; }
+  .scard { padding: 18px 18px 16px; }
+}
+
+/* 標題那一幕不用玻璃卡：大字直接壓在夜景上 */
+.story-step.is-title .scard { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; box-shadow: none; width: min(640px, 100%); padding: 0; }
+.scard-title h1 { font: 900 clamp(3.2rem, 9.5vw, 7.2rem) / 1.02 var(--serif); letter-spacing: .14em; margin: 0 0 .28em -.04em; text-shadow: 0 2px 30px oklch(5% 0.03 265 / 60%); }
+.scard-title .slede { max-width: 30em; color: var(--st-ink-2); text-shadow: 0 1px 12px oklch(5% 0.03 265 / 80%); }
+.sskip { display: inline-block; margin-top: 10px; color: var(--st-ink-3); font-size: .86rem; text-underline-offset: 4px; }
+.sskip:hover { color: var(--st-ink); }
+@media (max-width: 720px) {
+  /* 手機：標題放在下半部，上半部留給火柱與星空；捲過去的卡片淡到幾乎看不見，頂列下面不殘留字 */
+  .story-step.is-title { align-items: flex-end; padding-bottom: 9svh; }
+  .scard-title h1 { font-size: clamp(2.8rem, 15vw, 4rem); }
+  .scard { opacity: .12; }
+}
+
+/* ---- 經文：整節楷書，摘句加亮 ---- */
+.sv-fig { margin: 0 0 14px; }
+.sv { margin: 0; font-family: var(--kai); color: var(--st-ink); line-height: 1.7; quotes: '「' '」'; }
+.sv::before { content: open-quote; margin-left: -.5em; }
+.sv::after { content: close-quote; }
+.sv-xl { font-size: clamp(1.25rem, 2.6vw, 1.7rem); line-height: 1.6; text-shadow: 0 1px 16px oklch(5% 0.03 265 / 80%); }
+.sv-lg { font-size: clamp(1.15rem, 2vw, 1.38rem); }
+.sv-md { font-size: 1.08rem; }
+.sv mark { background: none; color: var(--st-accent); font-weight: 700; box-shadow: inset 0 -.32em 0 oklch(80% 0.13 68 / 22%); }
+.sv-v + .sv-v::before { content: ' '; }
+.sv-fig figcaption { margin-top: 4px; }
+
+/* ---- 卡片裡的元件 ---- */
+.sk { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font: 700 .8rem var(--sans); letter-spacing: .12em; color: var(--c, var(--st-accent)); }
+.sh { font: 900 clamp(1.7rem, 3.4vw, 2.3rem) / 1.2 var(--serif); margin: 0 0 12px; letter-spacing: .04em; }
+.sh-sm { font-size: clamp(1.25rem, 2.4vw, 1.55rem); }
+.scard-camp, .scard-step { border-left: 3px solid var(--c); margin-left: -24px; padding-left: 21px; }
+@media (max-width: 720px) { .scard-camp, .scard-step { margin-left: -18px; padding-left: 15px; } }
+.stribes { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.stribes li { display: grid; padding: 8px 10px; border-radius: 10px; background: oklch(100% 0 0 / 5%); border: 1px solid var(--st-line); }
+.stribes b { font: 700 1.05rem var(--serif); }
+.stribe-n { font-variant-numeric: tabular-nums; color: var(--st-ink-2); font-size: .9rem; }
+.stribes small { color: var(--st-ink-3); font-size: .74rem; }
+.stotal { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0; color: var(--st-ink-2); }
+.stotal .count { font: 900 2.2rem / 1 var(--serif); color: var(--c, var(--st-accent)); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.stotal-xl .count { font-size: clamp(3rem, 7vw, 4.6rem); color: var(--st-accent); }
+.stotal-xl { margin-bottom: 14px; }
+.snum { width: 26px; height: 26px; border-radius: 50%; background: var(--c); color: var(--st-bg); display: grid; place-items: center; font-size: .82rem; letter-spacing: 0; }
+.scarry { margin: 0 0 8px; color: var(--st-ink-2); font-size: .92rem; }
+.snote { margin: 8px 0 0; color: var(--st-ink-3); font-size: .84rem; }
+.sfacts { list-style: none; margin: 0; padding: 12px 0 0; border-top: 1px solid var(--st-line); display: grid; gap: 7px; font-size: .88rem; color: var(--st-ink-2); }
+.slede { color: var(--st-ink-2); margin: 0 0 12px; }
+.send-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.send-actions .btn { background: oklch(100% 0 0 / 8%); color: var(--st-ink); border-color: var(--st-line); }
+.send-actions .btn.primary { background: var(--st-accent); color: var(--st-bg); border-color: var(--st-accent); }
+.send-note { margin: 14px 0 0; font-size: .78rem; color: var(--st-ink-3); }
+
+/* ---- 立體場景裡的名牌：故事模式是安靜的小字，不能點 ---- */
+.story .tlabel { background: oklch(14% 0.03 265 / 72%); color: var(--st-ink); border-color: oklch(100% 0 0 / 18%); backdrop-filter: blur(6px); font-size: .76rem; padding: 2px 10px; }
+.story .is-story .tlabel { pointer-events: none; animation: tl-in .5s var(--ease-out) both; }
+@keyframes tl-in { from { opacity: 0; } }
+.story .is-story .three-bar, .story .is-story .three-caption { display: none; }
+
+/* ---- 自由探索：立體營地鋪滿整個畫面 ---- */
+.story-stage .three-wrap.is-explore { position: fixed; inset: 0; z-index: 200; background: var(--st-bg); }
+.story-stage .three-wrap.is-explore .three-bar { top: max(12px, env(safe-area-inset-top)); }
+.story .three-bar .chipbtn { background: oklch(17% 0.03 265 / 72%); color: var(--st-ink); border-color: oklch(100% 0 0 / 18%); backdrop-filter: blur(8px); }
+.story .three-bar .chipbtn[aria-pressed='true'] { background: var(--st-ink); color: var(--st-bg); }
+.story .three-bar .x-close { margin-left: auto; background: var(--st-accent); color: var(--st-bg); border-color: var(--st-accent); }
+.story .three-caption { background: oklch(14% 0.03 265 / 80%); color: var(--st-ink); backdrop-filter: blur(10px); border: 1px solid var(--st-line); }
+:root.three-explore { overflow: hidden; }
+:root.three-explore .topbar { visibility: hidden; }
+
+/* ---- 頂列：在故事上是透明的 ---- */
+:root.on-story .topbar { background: linear-gradient(to bottom, oklch(8% 0.03 265 / 70%), transparent); border-bottom-color: transparent; backdrop-filter: none; }
+:root.on-story .topbar .brand, :root.on-story .topbar .nav a { color: oklch(92% 0.012 85); }
+:root.on-story .topbar .nav a:hover, :root.on-story .topbar .nav a[aria-current='true'] { background: oklch(100% 0 0 / 12%); color: #fff; }
+:root.on-story .topbar .iconbtn { background: oklch(17% 0.03 265 / 50%); border-color: oklch(100% 0 0 / 18%); color: oklch(92% 0.012 85); }
+:root.on-story .topbar .iconbtn[aria-pressed='true'] { background: oklch(92% 0.012 85); color: #0b1020; }
+
+/* 自由探索時：舞台蓋過卡片層（舞台本身是獨立的堆疊情境，裡面的 fixed 畫布出不去） */
+:root.three-explore .story-stage { z-index: 300; }
+:root.three-explore .story-steps, :root.three-explore .story-tools, :root.three-explore .story-rail, :root.three-explore .story-scrim { visibility: hidden; }
+
+/* 故事捲完時畫布的底邊不要硬切：淡進夜色，再由頁面的漸層接到淺色 */
+.story-stage::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12vh; z-index: 2; pointer-events: none; background: linear-gradient(transparent, var(--st-bg)); }

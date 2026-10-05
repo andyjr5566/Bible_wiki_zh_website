@@ -6,6 +6,8 @@ import type { CampId, ClanId, TribeId } from '../data/types';
 import { BANNER_POS, CLAN_RECT, COURT, TENT_COLS, TRIBE_RECT, center, tentsFor, toWorld } from '../layout';
 import type { Rect } from '../layout';
 import type { Selection } from '../store';
+import { createCloud } from './cloud';
+import type { Cloud } from './cloud';
 import { BANNER_TRADITION, CAMP_HEX, CAMP_STYLE } from '../ui/meta';
 
 export interface Assets {
@@ -13,23 +15,37 @@ export interface Assets {
   wagon: THREE.Object3D;
   loads: Record<string, THREE.Object3D>;
   bull: THREE.Object3D;
+  /** Blender 做的曠野地形（scripts/blender/build_wilderness.py）；頂點色，沒有法線 */
+  terrain: THREE.BufferGeometry;
+  /** Blender 做的帳棚；頂點色只分明暗，營的顏色由 instance color 染 */
+  tent: THREE.BufferGeometry;
 }
 
 const base = import.meta.env.BASE_URL;
 
 export async function loadAssets(onProgress?: (n: number, total: number) => void): Promise<Assets> {
   const loader = new GLTFLoader();
-  const names = ['courtyard', 'wagon', 'loads', 'bull'] as const;
+  const names = ['courtyard', 'wagon', 'loads', 'bull', 'terrain', 'tent'] as const;
   let done = 0;
   const load = async (n: string) => {
     const g = await loader.loadAsync(`${base}models/${n}.glb`);
     onProgress?.(++done, names.length);
     return g;
   };
-  const [c, w, l, b] = await Promise.all(names.map(load));
+  const [c, w, l, b, tr, tn] = await Promise.all(names.map(load));
+  const firstGeo = (o: THREE.Object3D): THREE.BufferGeometry => {
+    let g: THREE.BufferGeometry | null = null;
+    o.traverse((x) => { if (!g && (x as THREE.Mesh).isMesh) g = (x as THREE.Mesh).geometry; });
+    return g!;
+  };
+  const terrain = firstGeo(tr.scene);
+  terrain.computeVertexNormals();
+  // Blender 裡門朝北（glTF 的 −z）；網站的排法要門在 +z，再由 layTents 轉向會幕
+  // 縮窄一點，排在一起時一頂一頂分得出來（排法的間距照舊）
+  const tent = firstGeo(tn.scene).clone().rotateY(Math.PI).scale(0.8, 1, 0.84);
   const loads: Record<string, THREE.Object3D> = {};
   l.scene.traverse((o) => { if (o.name.startsWith('load_') && !o.name.includes('__')) loads[o.name] = o; });
-  return { courtyard: c.scene, wagon: w.scene, loads, bull: b.scene };
+  return { courtyard: c.scene, wagon: w.scene, loads, bull: b.scene, terrain, tent };
 }
 
 /* ------------------------------------------------------------ 幾何 */
@@ -74,15 +90,15 @@ export interface World {
   leviMat: THREE.MeshStandardMaterial;
   courtGroup: THREE.Group;
   courtFootprint: THREE.LineLoop;
-  cloud: THREE.Group;
-  cloudMat: THREE.MeshStandardMaterial;
-  fire: THREE.PointLight;
-  flags: Record<CampId, { mesh: THREE.Mesh; day: THREE.CanvasTexture; trad: THREE.CanvasTexture }>;
+  cloud: Cloud;
+  flags: Record<CampId, { mesh: THREE.Mesh; pole: THREE.Mesh; day: THREE.CanvasTexture; trad: THREE.CanvasTexture }>;
   decals: { mesh: THREE.Mesh; sel: Selection; camp?: CampId; tribe?: TribeId; clan?: ClanId; court?: boolean }[];
   hitboxes: THREE.Object3D[];
   labels: { key: string; text: string; pos: THREE.Vector3; sel: Selection }[];
   rectWorld: (r: Rect) => { cx: number; cz: number; w: number; d: number };
-  hill: THREE.Mesh;
+  terrain: THREE.Mesh;
+  /** 0 = not yet pitched (invisible), 1 = fully standing. Every key defaults to 1 (current behaviour unchanged). */
+  setRise(key: CampId | 'levi' | 'court', r: number): void;
 }
 
 const wRect = (r: Rect) => {
@@ -111,11 +127,16 @@ function flagTexture(bg: string, glyph: string): THREE.CanvasTexture {
   return t;
 }
 
+const smoothstep = (a: number, b: number, x: number): number => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+
 export function buildWorld(scene: THREE.Scene, assets: Assets): World {
   const root = new THREE.Group();
   scene.add(root);
 
-  const tentGeo = tentGeometry();
+  const tentGeo = assets.tent;
   const cream = new THREE.Color(0xf1e6cc);
   const mkMat = () => new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, emissive: new THREE.Color(0xffb04a), emissiveIntensity: 0 });
   const campMats = {} as Record<CampId, THREE.MeshStandardMaterial>;
@@ -125,6 +146,7 @@ export function buildWorld(scene: THREE.Scene, assets: Assets): World {
   const tribeGroups = {} as Record<TribeId, THREE.Group>;
   const tribeTents = {} as Record<TribeId, THREE.InstancedMesh>;
   const clanGroups = {} as Record<ClanId, THREE.Group>;
+  const tentBases = new Map<THREE.InstancedMesh, THREE.Matrix4[]>();
   const decals: World['decals'] = [];
   const hitboxes: THREE.Object3D[] = [];
   const labels: World['labels'] = [];
@@ -152,6 +174,7 @@ export function buildWorld(scene: THREE.Scene, assets: Assets): World {
     mesh.name = name;
     const rows = Math.ceil(n / cols);
     const m4 = new THREE.Matrix4();
+    const bases: THREE.Matrix4[] = [];
     const q = new THREE.Quaternion();
     const col = new THREE.Color();
     for (let i = 0; i < n; i++) {
@@ -165,11 +188,13 @@ export function buildWorld(scene: THREE.Scene, assets: Assets): World {
       q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ang);
       m4.compose(new THREE.Vector3(x, 0, z), q, new THREE.Vector3(1, 1, 1));
       mesh.setMatrixAt(i, m4);
+      bases.push(m4.clone());
       col.copy(tint).lerp(cream, 0.4 + Math.random() * 0.16);
       mesh.setColorAt(i, col);
     }
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    tentBases.set(mesh, bases);
     return mesh;
   };
 
@@ -230,21 +255,10 @@ export function buildWorld(scene: THREE.Scene, assets: Assets): World {
   addDecal(COURT, 0xb88a1c, { kind: 'tabernacle' }, { court: true }, 6);
   labels.push({ key: 'court', text: '會幕', pos: new THREE.Vector3(cw.cx, 26, cw.cz), sel: { kind: 'tabernacle' } });
 
-  /* ---- 雲彩與火 ---- */
-  const cloud = new THREE.Group();
-  const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, transparent: true, opacity: 0.94, emissive: new THREE.Color(0xff7a1a), emissiveIntensity: 0 });
-  const puffs: [number, number, number, number][] = [[0, 36, 0, 15], [-16, 32, 4, 11], [16, 34, -3, 12], [6, 46, 2, 9], [-8, 42, -6, 8], [24, 30, 8, 8], [-24, 30, -4, 8]];
-  for (const [x, y, z, r] of puffs) {
-    const m = new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), cloudMat);
-    m.position.set(x, y, z);
-    m.scale.set(1.25, 0.8, 1.05);
-    cloud.add(m);
-  }
-  cloud.position.set(cw.cx, 0, cw.cz);
-  root.add(cloud);
-  const fire = new THREE.PointLight(0xff8a3c, 0, 420, 1.6);
-  fire.position.set(cw.cx, 34, cw.cz);
-  root.add(fire);
+  /* ---- 雲彩：日間遮蓋帳幕，夜間形狀如火（民9:15-16）---- */
+  const cloud = createCloud();
+  cloud.group.position.set(cw.cx, 0, cw.cz);
+  root.add(cloud.group);
 
   /* ---- 四面纛 ---- */
   const flags = {} as World['flags'];
@@ -264,33 +278,101 @@ export function buildWorld(scene: THREE.Scene, assets: Assets): World {
     flag.castShadow = true;
     g.add(pole, flag);
     root.add(g);
-    flags[c.id] = { mesh: flag, day, trad };
+    flags[c.id] = { mesh: flag, pole, day, trad };
     labels.push({ key: `b-${c.id}`, text: c.bannerName, pos: new THREE.Vector3(bx, 50, bz), sel: { kind: 'camp', id: c.id } });
   }
 
-  /* ---- 行進的路（方向為示意）與營外的高處 ---- */
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(2600, 34), new THREE.MeshStandardMaterial({ color: 0xb59f74, roughness: 1 }));
+  /* ---- 行進的路（方向為示意）：往東穿過山口 ---- */
+  const roadMat = new THREE.MeshStandardMaterial({ color: 0xb59f74, roughness: 1, transparent: true, opacity: 0.85 });
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(1150, 34), roadMat);
   road.rotation.x = -Math.PI / 2;
-  road.position.set(390 + 1300, 0.12, 0);
+  road.position.set(390 + 575, 0.12, 0);
   road.receiveShadow = true;
   root.add(road);
 
-  const hillGeo = new THREE.ConeGeometry(230, 142, 28, 7);
-  const pos = hillGeo.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const y = pos.getY(i);
-    if (y > -70) {
-      pos.setX(i, pos.getX(i) * (1 + (Math.sin(i * 1.7) * 0.06)));
-      pos.setZ(i, pos.getZ(i) * (1 + (Math.cos(i * 2.3) * 0.06)));
-      pos.setY(i, y + Math.sin(i * 3.1) * 3);
-    }
-  }
-  hillGeo.computeVertexNormals();
-  const hill = new THREE.Mesh(hillGeo, new THREE.MeshStandardMaterial({ color: 0x9c8a63, roughness: 1, flatShading: true }));
-  hill.position.set(668, 71, -382);
-  hill.castShadow = true;
-  hill.receiveShadow = true;
-  root.add(hill);
+  /* ---- 曠野地形與營外的高處（Blender 做的，全是示意）---- */
+  const terrain = new THREE.Mesh(assets.terrain, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 1 }));
+  terrain.receiveShadow = true;
+  terrain.castShadow = true;
+  root.add(terrain);
 
-  return { root, tribeGroups, tribeTents, clanGroups, campMats, leviMat, courtGroup, courtFootprint: fp, cloud, cloudMat, fire, flags, decals, hitboxes, labels, rectWorld: wRect, hill };
+  type TentRise = { mesh: THREE.InstancedMesh; group: THREE.Group; bases: THREE.Matrix4[]; stagger: number[] };
+  const campTents = {} as Record<CampId, TentRise[]>;
+  for (const camp of CAMPS) {
+    const entries: TentRise[] = TRIBES.filter((tribe) => tribe.camp === camp.id).map((tribe) => ({
+      mesh: tribeTents[tribe.id],
+      group: tribeGroups[tribe.id],
+      bases: tentBases.get(tribeTents[tribe.id])!,
+      stagger: [],
+    }));
+    campTents[camp.id] = entries;
+  }
+  const leviTents: TentRise[] = CLANS.map((clan) => ({
+    mesh: clanGroups[clan.id].children[0] as THREE.InstancedMesh,
+    group: clanGroups[clan.id],
+    bases: tentBases.get(clanGroups[clan.id].children[0] as THREE.InstancedMesh)!,
+    stagger: [],
+  }));
+  const setStaggers = (entries: TentRise[]) => {
+    const distances = entries.flatMap((entry) => entry.bases.map((baseMatrix) => {
+      const p = new THREE.Vector3().setFromMatrixPosition(baseMatrix).add(entry.group.position);
+      return Math.hypot(p.x, p.z);
+    }));
+    const min = Math.min(...distances);
+    const max = Math.max(...distances);
+    let index = 0;
+    for (const entry of entries) {
+      entry.stagger = entry.bases.map(() => (distances[index++] - min) / Math.max(max - min, 1e-9));
+    }
+  };
+  for (const entries of Object.values(campTents)) setStaggers(entries);
+  setStaggers(leviTents);
+
+  const rises: Record<CampId | 'levi' | 'court', number> = {
+    judah: 1, reuben: 1, ephraim: 1, dan: 1, levi: 1, court: 1,
+  };
+  const risePosition = new THREE.Vector3();
+  const quat = new THREE.Quaternion();
+  const scale = new THREE.Vector3();
+  const nextScale = new THREE.Vector3();
+  const matrix = new THREE.Matrix4();
+  const applyTents = (entries: TentRise[], r: number) => {
+    for (const entry of entries) {
+      for (let i = 0; i < entry.bases.length; i++) {
+        const ri = smoothstep(0, 1, r * 1.8 - entry.stagger[i] * 0.8);
+        entry.bases[i].decompose(risePosition, quat, scale);
+        risePosition.y -= (1 - ri) * 0.6;
+        if (ri < 0.001) nextScale.set(0, 0, 0);
+        else nextScale.set(1, ri, 1);
+        matrix.compose(risePosition, quat, nextScale);
+        entry.mesh.setMatrixAt(i, matrix);
+      }
+      entry.mesh.instanceMatrix.needsUpdate = true;
+    }
+  };
+  const setRise = (key: CampId | 'levi' | 'court', value: number) => {
+    const r = Math.min(1, Math.max(0, value));
+    if (rises[key] === r) return;
+    rises[key] = r;
+    if (key === 'court') {
+      const rc = Math.max(smoothstep(0, 1, r), 0.001);
+      model.scale.y = k * rc;
+      fp.visible = r >= 0.01;
+      return;
+    }
+    if (key === 'levi') {
+      applyTents(leviTents, r);
+      return;
+    }
+    applyTents(campTents[key], r);
+    const rf = smoothstep(0.55, 1, r);
+    const banner = flags[key];
+    banner.pole.scale.y = Math.max(rf, 0.001);
+    banner.pole.position.y = 23 * rf;
+    banner.mesh.position.y = 39 * rf;
+    banner.mesh.scale.setScalar(Math.max(rf, 0.001));
+    banner.mesh.visible = rf > 0.01;
+  };
+
+  return { root, tribeGroups, tribeTents, clanGroups, campMats, leviMat, courtGroup, courtFootprint: fp, cloud, flags, decals, hitboxes, labels, rectWorld: wRect, terrain, setRise };
 }

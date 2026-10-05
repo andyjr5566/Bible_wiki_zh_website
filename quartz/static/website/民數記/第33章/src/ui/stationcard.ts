@@ -1,7 +1,7 @@
 import { DATES, TIMED_EXACT, stationMonths, timeLabel } from '../data/dates';
 import { EVENTS, KIND_LABEL } from '../data/events';
 import PLACES from '../data/places.json';
-import { FHL_STATEMENTS, LEVEL_HELP, LEVEL_LABEL, SITES, SITE_VOICES, candLabel, entryUrl, obUrl } from '../data/sites';
+import { DISPUTES, FHL_STATEMENTS, LEVEL_HELP, LEVEL_LABEL, SITES, SITE_VOICES, candLabel, entryUrl, obUrl } from '../data/sites';
 import type { Level } from '../data/sites';
 import { station, stationRef } from '../data/stations';
 import { OVERVIEW_FACTS } from '../data/voices';
@@ -114,6 +114,9 @@ function stationCard(n: number): HTMLElement {
         h('p', { class: 'fine' }, `知識庫條目「${st.entry}」的定義（節錄）。`, ' ',
           h('a', { href: entryUrl(st.entry), target: '_blank', rel: 'noopener' }, '查看完整條目（另開網頁）')))
       : h('p', { class: 'small-p muted' }, badge('not_stated'), st.key === 'moab' ? '' : ' 知識庫還沒有這個地名的條目；它只出現在民數記 33 章的清單裡。'),
+
+    // 有爭議的站：地圖標的是較有公信力的說法，其他說法放在最後
+    DISPUTES[n] ? h('div', { class: 'dispute' }, h('h4', { class: 'sub' }, '補充說明：還有哪些說法'), h('p', { class: 'small-p' }, DISPUTES[n])) : null,
 
     h('div', { class: 'panel-foot' },
       h('button', { class: 'panel-close', type: 'button', onclick: () => store.selectStation(null) }, svg(ICONS.x), '回到總覽'),

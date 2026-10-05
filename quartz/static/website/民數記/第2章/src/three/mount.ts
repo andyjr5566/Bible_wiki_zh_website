@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { BALAAM_FACTS } from '../data/center';
 import { CLANS } from '../data/levites';
 import { MATRIARCH, TRIBES, camp, fmt, tribe } from '../data/tribes';
+import type { CampId } from '../data/types';
 import type { SignalId } from '../data/trumpets';
 import { phasesOf, viewAt } from '../phases';
 import * as store from '../store';
@@ -10,31 +11,50 @@ import { factLine } from '../ui/evidence';
 import { ICONS } from '../ui/icons';
 import { CAMP_HEX } from '../ui/meta';
 import { selLabel } from '../ui/campmap';
-import { revealPanel } from '../ui/panel';
 import { tentsFor } from '../layout';
 import { buildEntities } from './entities';
 import { PRESETS, createStage } from './scene';
-import type { CamPreset } from './scene';
+import type { CamPreset, Stage } from './scene';
 import { buildWorld, loadAssets } from './world';
+import type { World } from './world';
 
 const PRESET_LABEL: Record<CamPreset, string> = { top: '俯視', orbit: '繞著看', ground: '營地地面', balaam: '營外高處' };
 const SIG_COLOR: Record<SignalId, number> = { both: 0xb88a1c, one: 0xb88a1c, alarm1: CAMP_HEX.judah, alarm2: CAMP_HEX.reuben };
 
-export async function mountThree(wrap: HTMLElement): Promise<void> {
+export type RiseKey = CampId | 'levi' | 'court';
+
+/** 給捲動故事與頁面用的控制介面 */
+export interface ThreeCtl {
+  stage: Stage;
+  world: World;
+  /** 故事模式：鏡頭由捲動決定、不能點選、工具列收起、名牌只顯示 setLabels 指定的 */
+  setStory(on: boolean): void;
+  pose(pos: readonly [number, number, number], target: readonly [number, number, number]): void;
+  setTod(t: number, immediate?: boolean): void;
+  setRise(key: RiseKey, r: number): void;
+  /** 名牌的 key：t-支派、c-利未族、court、b-營；null＝全部 */
+  setLabels(keys: readonly string[] | null): void;
+  /** 全螢幕自由探索 */
+  explore(on: boolean): void;
+  isExploring(): boolean;
+}
+
+export async function mountThree(wrap: HTMLElement, opts: { onExplore?: (on: boolean) => void; onProgress?: (n: number, total: number) => void } = {}): Promise<ThreeCtl> {
   // 先確認這台裝置有 WebGL
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('no webgl');
 
-  const assets = await loadAssets((n, total) => {
-    wrap.replaceChildren(h('div', { class: 'three-msg' }, `載入立體營地… ${n}/${total}`));
-  });
-  wrap.replaceChildren();
+  const assets = await loadAssets(opts.onProgress);
 
   const stage = createStage(wrap);
   const world = buildWorld(stage.scene, assets);
   const entities = buildEntities(world, assets);
 
-  /* ---- 介面：鏡頭、日夜、拔營、標籤 ---- */
+  let storyOn = false;
+  let exploring = false;
+  let labelFilter: Set<string> | null = null;
+
+  /* ---- 自由探索的工具列：鏡頭、日夜、拔營、名稱、離開 ---- */
   let preset: CamPreset = 'orbit';
   const presetBtns = (Object.keys(PRESETS) as CamPreset[]).map((p) => h('button', {
     class: 'chipbtn', type: 'button', 'aria-pressed': String(p === preset), onclick: () => setPreset(p),
@@ -53,13 +73,14 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
     labelBtn.setAttribute('aria-pressed', String(showLabels));
     labelLayer.style.display = showLabels ? '' : 'none';
   } }, '名稱');
-  const bar = h('div', { class: 'three-bar' }, ...presetBtns, nightBtn, playBtn, resetBtn, labelBtn);
+  const closeBtn = h('button', { class: 'chipbtn x-close', type: 'button', onclick: () => api.explore(false) }, svg(ICONS.x), '回到故事');
+  const bar = h('div', { class: 'three-bar', role: 'toolbar', 'aria-label': '立體營地的鏡頭與播放' }, ...presetBtns, nightBtn, playBtn, resetBtn, labelBtn, closeBtn);
   const caption = h('div', { class: 'three-caption', 'aria-live': 'polite' });
   const labelLayer = h('div', { class: 'three-labels', 'aria-hidden': 'true' });
   wrap.append(labelLayer, bar, caption);
 
   const labelEls = world.labels.map((l) => {
-    const el = h('button', { class: 'tlabel', type: 'button', tabindex: -1, onclick: () => store.set({ sel: l.sel }) }, l.text);
+    const el = h('button', { class: 'tlabel', type: 'button', tabindex: -1, 'data-k': l.key, onclick: () => { if (!storyOn) store.set({ sel: l.sel }); } }, l.text);
     labelLayer.append(el);
     return { el, l };
   });
@@ -71,14 +92,14 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
     renderCaption();
   }
 
-  /* ---- 點選 ---- */
+  /* ---- 點選（只有自由探索時） ---- */
   const ray = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
   let down: { x: number; y: number; t: number } | null = null;
   const dom = stage.renderer.domElement;
   dom.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
   dom.addEventListener('pointerup', (e) => {
-    if (!down) return;
+    if (!down || storyOn) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
     const quick = performance.now() - down.t < 500;
     down = null;
@@ -110,24 +131,23 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
 
   const selWorld = (sel: store.Selection): THREE.Vector3 | null => {
     if (!sel) return null;
-    const d = world.decals.find((x) => {
-      if (sel.kind === 'tribe') return x.tribe === sel.id;
-      if (sel.kind === 'clan') return x.clan === sel.id;
-      if (sel.kind === 'tabernacle') return x.court;
-      return false;
-    });
     if (sel.kind === 'camp') {
       const ds = world.decals.filter((x) => x.camp === sel.id && x.tribe);
       const v = new THREE.Vector3();
       ds.forEach((x) => v.add(x.mesh.position));
       return v.multiplyScalar(1 / Math.max(1, ds.length));
     }
+    const d = world.decals.find((x) => {
+      if (sel.kind === 'tribe') return x.tribe === sel.id;
+      if (sel.kind === 'clan') return x.clan === sel.id;
+      return !!x.court;
+    });
     return d ? d.mesh.position.clone() : null;
   };
 
   let visible = true;
   store.subscribe((st, prev) => {
-    stage.setNight(st.night);
+    if (!storyOn) stage.setNight(st.night);
     nightBtn.setAttribute('aria-pressed', String(st.night));
     if (st.layers.banner !== prev.layers.banner) {
       for (const f of Object.values(world.flags)) {
@@ -141,8 +161,8 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
     if (st.playing !== prev.playing) {
       playBtn.replaceChildren(svg(st.playing ? ICONS.pause : ICONS.play), st.playing ? '暫停' : '拔營');
     }
-    // 選了東西，而且 3D 在畫面上：鏡頭慢慢移過去（保持目前的視角）
-    if (visible && st.sel && (st.sel.kind !== prev.sel?.kind || ('id' in st.sel && 'id' in (prev.sel ?? {}) ? (st.sel as { id: string }).id !== (prev.sel as { id: string }).id : true))) {
+    // 自由探索時選了東西：鏡頭慢慢移過去（保持目前的視角）
+    if (exploring && visible && st.sel && !store.sameSel(st.sel, prev.sel)) {
       const p = selWorld(st.sel);
       if (p && preset !== 'balaam') {
         const off = stage.camera.position.clone().sub(stage.controls.target);
@@ -161,7 +181,6 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
       bits.push(h('div', null, h('b', null, '站在營外的高處往下看。'), ' 山的位置與高度是示意；經文寫的是：'),
         ...BALAAM_FACTS.map((f) => h('div', null, factLine(f))));
     } else {
-      // 行軍中：這一步是誰在走
       if (st.phase > 0) {
         const phases = phasesOf(st.mode);
         const p = phases[Math.min(st.phase, phases.length - 1)];
@@ -180,8 +199,7 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
           const n = CLANS.find((c) => c.id === sel.id)?.count?.n;
           extra = n ? `　${fmt(n)} 名` : '';
         }
-        bits.push(h('div', null, h('b', null, selLabel(sel)), extra, '　',
-          h('button', { class: 'cap-link', type: 'button', onclick: revealPanel }, '看完整資料 ↑')));
+        bits.push(h('div', null, h('b', null, selLabel(sel)), extra));
       }
       if (!bits.length) bits.push('拖曳旋轉、滾輪或雙指縮放。點一個區塊選取；上面的「拔營」可以看整個營怎麼動起來。');
     }
@@ -191,6 +209,7 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
 
   /* ---- 號聲的圈圈 ---- */
   const rings: { mesh: THREE.Mesh; t0: number }[] = [];
+  let blink: { id: SignalId; t0: number } | null = null;
   function pulse(id: SignalId) {
     const cw = world.rectWorld({ x: 344, y: 239, w: 140, h: 70 });
     const mesh = new THREE.Mesh(new THREE.RingGeometry(3, 3.8, 72), new THREE.MeshBasicMaterial({ color: SIG_COLOR[id], transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false }));
@@ -200,32 +219,29 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
     rings.push({ mesh, t0: performance.now() });
     blink = { id, t0: performance.now() };
   }
-  let blink: { id: SignalId; t0: number } | null = null;
 
   /* ---- 每一格 ---- */
   const v3 = new THREE.Vector3();
-  let nightMix = 0;
+  let lift = 0;
   stage.onFrame((dt, t) => {
     const st = store.get();
     entities.update(dt, st);
     const view = viewAt(st.mode, st.phase);
 
-    // 雲彩：住營時遮蓋帳幕，收上去就往上飄走；夜間是火
-    const targetY = view.cloudLifted ? 170 : 0;
-    world.cloud.position.y += (targetY - world.cloud.position.y) * Math.min(1, dt * 1.6);
-    const cy = world.cloud.position.y;
-    nightMix += ((st.night ? 1 : 0) - nightMix) * Math.min(1, dt * 2.2);
-    world.cloudMat.opacity = 0.94 * (1 - Math.min(1, cy / 150));
-    world.cloudMat.emissiveIntensity = nightMix * 1.1;
-    world.cloud.visible = world.cloudMat.opacity > 0.02;
-    world.fire.intensity = nightMix * 2600 * (world.cloud.visible ? 1 : 0.2);
-    world.fire.position.y = 34 + cy;
+    // 雲彩：住營時遮蓋帳幕，收上去就往上飄走；越接近夜裡越像火
+    const liftTarget = view.cloudLifted ? 1 : 0;
+    const step = dt / 2.6;
+    lift += Math.max(-step, Math.min(step, liftTarget - lift));
+    const tod = stage.tod();
+    const night = 1 - THREE.MathUtils.smoothstep(tod, 0.32, 0.62);
+    world.cloud.update(dt, { lift, night, t });
 
-    // 旗子飄動
-    for (const f of Object.values(world.flags)) f.mesh.rotation.y = Math.sin(t * 2 + f.mesh.id) * 0.12;
+    // 旗子飄動（裝飾動態：作業系統要求減少動態時不飄）
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'off';
+    if (!still) for (const f of Object.values(world.flags)) f.mesh.rotation.y = Math.sin(t * 2 + f.mesh.id) * 0.12;
 
-    // 選取的高亮
-    const sel = st.sel;
+    // 選取的高亮（故事模式不顯示）
+    const sel = storyOn ? null : st.sel;
     for (const d of world.decals) {
       let target = 0;
       if (sel) {
@@ -261,20 +277,22 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
     const w = wrap.clientWidth;
     const hh = wrap.clientHeight;
     for (const { el, l } of labelEls) {
-      v3.copy(l.pos);
-      // 已經出發的：原地只剩空地，標籤也收起來
+      const allowed = !labelFilter || labelFilter.has(l.key);
       const ls = l.sel;
+      // 已經出發或還沒立起來的：標籤收起來
       const gone = !!ls && (
         ls.kind === 'tabernacle' ? !world.courtGroup.visible
           : ls.kind === 'tribe' ? !world.tribeGroups[ls.id].visible
             : ls.kind === 'clan' ? !world.clanGroups[ls.id].visible
-              : !world.flags[ls.id].mesh.parent!.visible);
-      v3.project(stage.camera);
-      const on = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05 && !gone;
+              : !world.flags[ls.id].mesh.visible || !world.flags[ls.id].mesh.parent!.visible);
+      let on = allowed && !gone;
+      if (on) {
+        v3.copy(l.pos).project(stage.camera);
+        on = v3.z < 1 && Math.abs(v3.x) < 1.05 && Math.abs(v3.y) < 1.05;
+      }
       el.style.display = on ? '' : 'none';
       if (on) el.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * hh}px) translate(-50%, -50%)`;
-      const isSel = !!sel && sel.kind === l.sel?.kind && ('id' in sel && l.sel && 'id' in l.sel ? sel.id === l.sel.id : true);
-      el.classList.toggle('sel', isSel);
+      el.classList.toggle('sel', !!sel && store.sameSel(sel, l.sel));
     }
   });
 
@@ -282,13 +300,53 @@ export async function mountThree(wrap: HTMLElement): Promise<void> {
   const io = new IntersectionObserver((entries) => {
     visible = entries.some((e) => e.isIntersecting);
     if (visible && !document.hidden) stage.start(); else stage.stop();
-  }, { threshold: 0.05 });
+  }, { threshold: 0.01 });
   io.observe(wrap);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stage.stop(); else if (visible) stage.start();
   });
 
+  const desired = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
+  const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && exploring) api.explore(false); };
+
+  const api: ThreeCtl = {
+    stage, world,
+    setStory(on) {
+      storyOn = on;
+      wrap.classList.toggle('is-story', on);
+      stage.follow(on ? desired : null);
+      if (!on) stage.setNight(store.get().night);
+    },
+    pose(pos, target) {
+      desired.pos.set(...pos);
+      desired.target.set(...target);
+    },
+    setTod(t, immediate) { if (storyOn) stage.setTod(t, immediate); },
+    setRise(key, r) { world.setRise(key, r); },
+    setLabels(keys) { labelFilter = keys ? new Set(keys) : null; },
+    explore(on) {
+      if (on === exploring) return;
+      exploring = on;
+      wrap.classList.toggle('is-explore', on);
+      document.documentElement.classList.toggle('three-explore', on);
+      if (on) {
+        api.setStory(false);
+        labelFilter = null;
+        // 從故事的哪一幕進來都一樣：整個營都立好
+        for (const k of ['court', 'levi', 'judah', 'reuben', 'ephraim', 'dan'] as RiseKey[]) world.setRise(k, 1);
+        setPreset('orbit');
+        addEventListener('keydown', onKey);
+        closeBtn.focus();
+      } else {
+        removeEventListener('keydown', onKey);
+      }
+      opts.onExplore?.(on);
+    },
+    isExploring: () => exploring,
+  };
+
   // 除錯：__num2.cam('ground') 直接切鏡頭
-  Object.assign((window as unknown as { __num2?: object }).__num2 ?? {}, { cam: setPreset, stage, world });
+  Object.assign((window as unknown as { __num2?: object }).__num2 ?? {}, { cam: setPreset, three: api });
   stage.start();
+  return api;
 }

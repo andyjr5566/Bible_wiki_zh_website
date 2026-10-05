@@ -10,7 +10,7 @@ import { DATES, monthsSince } from './dates';
 import { DEBATES } from './debates';
 import { EVENTS } from './events';
 import { allFacts, allVoices } from './registry';
-import { LEVEL_LABEL, OB_DATA, PICK, SITES, ZONE_MIN_R_KM, candLabel, entryUrl, kmBetween, levelOf, zoneOf } from './sites';
+import { DISPUTES, LEVEL_LABEL, OB_DATA, PICK, SITES, ZONE_MIN_R_KM, ZONE_SKIP, candLabel, entryUrl, kmBetween, levelOf, zoneOf } from './sites';
 import { LANDMARKS, SEGMENTS, STATIONS, departedFrom, station } from './stations';
 import type { Ref } from './types';
 import { GT_PATTERNS } from './voices';
@@ -317,6 +317,53 @@ describe('位置', () => {
     }
     // 其他站不是 zone
     expect(SITES.filter((s) => s.mode === 'zone')).toHaveLength(16);
+  });
+  it('相鄰兩站不會相隔超過 200 公里：擋住跟清單先後接不起來的離群候選（第 4→5 站之間是過海，民33:8 又走了三天，不在此限）', () => {
+    const placed = SITES.filter((s) => !Number.isNaN(s.lat));
+    for (let i = 1; i < placed.length; i++) {
+      const a = placed[i - 1];
+      const b = placed[i];
+      if (a.n === 4 && b.n === 5) continue;
+      expect(kmBetween(a.lon, a.lat, b.lon, b.lat), `第${a.n}→${b.n}站`).toBeLessThanOrEqual(200);
+    }
+  });
+  it('補充說明：只寫在真的有的站、不是空的；說「在候選中」的地名真的在該站的候選裡', () => {
+    for (const [k, text] of Object.entries(DISPUTES)) {
+      const n = Number(k);
+      expect(n >= 1 && n <= 42, `第${k}站`).toBe(true);
+      expect(text.length, `第${k}站`).toBeGreaterThan(20);
+    }
+    // 補充說明裡提到「在候選表／也在候選中」的地名（OpenBible 的寫法）
+    const claimed: Record<number, string[]> = {
+      3: ['Ismailia', 'another name for Pithom'],
+      4: ['Tell el Herr'],
+      8: ['Debbet er Ramleh', 'El Marka'],
+      9: ['Serabit el Khadim'],
+      12: ['Jebel Musa'],
+      16: ['another name for Rimmon 2'],
+      17: ['along Wadi el Beidha', 'another name for Laban'],
+      26: ['another name for Heshmon', 'another name for Azmon', 'Qoseimeh'],
+      30: ['Taba', 'Et Taba', 'Ein Yotvata'],
+      32: ['Jezirat Faraun', 'Tell el Kheleifeh'],
+      34: ['Har Zin'],
+      38: ['Medeineh'],
+    };
+    expect(Object.keys(claimed).sort()).toEqual(Object.keys(DISPUTES).sort());
+    for (const [k, names] of Object.entries(claimed)) {
+      const have = SITES[Number(k) - 1].cands.map((c) => c.name);
+      for (const name of names) expect(have, `第${k}站 ${name}`).toContain(name);
+    }
+  });
+  it('排開的候選：真的在候選清單裡、真的沒有計入、資訊卡有寫理由', () => {
+    for (const [key, sk] of Object.entries(ZONE_SKIP)) {
+      const s = SITES.find((x) => x.key === key)!;
+      expect(s.mode).toBe('zone');
+      for (const name of sk.names) {
+        expect(s.cands.some((c) => c.name === name), `${key} ${name}`).toBe(true);
+        expect(s.zone!.used.some((c) => c.name === name), `${key} ${name}`).toBe(false);
+      }
+      expect(s.why).toBe(sk.why);
+    }
   });
   it('zoneOf：低分雜訊不計入、加權平均、N 公里內的圈至少 N 公里', () => {
     const c = (name: string, lon: number, lat: number, score: number, kind = 'point') => ({ name, lon, lat, kind, score });

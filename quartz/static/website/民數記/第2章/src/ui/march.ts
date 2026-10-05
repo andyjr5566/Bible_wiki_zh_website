@@ -10,7 +10,7 @@ import { phasesOf, viewAt } from '../phases';
 import type { Phase } from '../phases';
 import * as store from '../store';
 import { CAMP_RECT, CLAN_RECT, CX } from '../layout';
-import { centerMapOn, createCampMap } from './campmap';
+import { centerMapOn } from './campmap';
 import { fill, h, svg } from './dom';
 import { badge, factLine, interpHeading, refChips, voiceBlock } from './evidence';
 import { ICONS } from './icons';
@@ -45,15 +45,22 @@ const chipFor = (step: MarchStep): HTMLElement => {
   return h('span', { class: 'chip-inner' }, mark, h('b', null, name));
 };
 
-export function mountMarch(host: HTMLElement) {
-  const map = createCampMap({ label: '拔營示意圖：依次序出發的營與族會變成虛線' });
+export interface MarchUI {
+  /** controls row: 民10/民2 segmented buttons + reset/prev/play/next/night/sound (the current `.march-top`) */
+  top: HTMLElement;
+  /** the current `.stage-caption` line ("住營：雲彩遮蓋帳幕" …) */
+  caption: HTMLElement;
+  /** the current right column `.march-side` (details card with phase list, trumpets card) */
+  side: HTMLElement;
+  /** the current `.strip` (起行 → chips) */
+  strip: HTMLElement;
+}
+
+export function createMarchUI(opts: { scroller: HTMLElement; stage: HTMLElement }): MarchUI {
   const caption = h('div', { class: 'stage-caption', 'aria-live': 'polite' });
   const details = h('div', { class: 'phase-detail' });
   const list = h('ol', { class: 'phase-list' });
   const strip = h('div', { class: 'strip', role: 'list', 'aria-label': '行軍縱隊（前進方向為示意，經文沒有記）' });
-  const scroller = h('div', { class: 'map-scroll' }, map.el);
-  const stage = h('div', { class: 'card stage' }, scroller, h('p', { class: 'swipe-hint' }, '← 左右滑動看整張圖 →'), caption);
-
   /** 手機上地圖比畫面寬：跟著正在出發的營／族左右捲 */
   function follow(st: Readonly<store.State>, smooth: boolean) {
     const s = viewAt(st.mode, st.phase).step;
@@ -64,7 +71,7 @@ export function mountMarch(host: HTMLElement) {
     } else if (s?.clans?.length) {
       x = s.clans.reduce((a, c) => a + CLAN_RECT[c].x + CLAN_RECT[c].w / 2, 0) / s.clans.length;
     }
-    centerMapOn(scroller, x, smooth);
+    centerMapOn(opts.scroller, x, smooth);
   }
 
   /* ---- 控制列 ---- */
@@ -117,7 +124,7 @@ export function mountMarch(host: HTMLElement) {
     const secs = playSignal(id, st.sound);
     sigNote.textContent = `${sg.how}：${sg.effect}（${sg.ref}）`;
     // 窄螢幕的號聲面板在地圖下面：捲回地圖，才看得到誰聽到了
-    const r = stage.getBoundingClientRect();
+    const r = opts.stage.getBoundingClientRect();
     if (matchMedia('(max-width: 980px)').matches && (r.bottom < 120 || r.top > innerHeight - 120)) smoothScrollTo(r.top + scrollY - 70, 500);
     store.set({ pulse: { id, t: Date.now() }, playing: false });
     // 兩次大聲各自對應一個營起行：把行列跳到那一步
@@ -251,9 +258,12 @@ export function mountMarch(host: HTMLElement) {
   });
   render(store.get());
 
-  host.append(ctrl,
-    h('div', { class: 'march-grid' }, stage,
-      h('div', { class: 'march-side' }, h('div', { class: 'card' }, details, h('h4', { class: 'sub' }, '每一步'), list), trumpets)),
-    strip);
+  const side = h('div', { class: 'march-side', hidden: true },
+    h('p', { class: 'muted' }, '雲彩收上去，銀號吹響，一批一批出發。可以切換民10 實際上路的行列，和民2 宣告的安營次序，看兩邊差在哪裡。'),
+    h('div', { class: 'card' }, details, h('h4', { class: 'sub' }, '每一步'), list), trumpets);
+  ctrl.hidden = true;
+  caption.hidden = true;
+  strip.hidden = true;
   requestAnimationFrame(() => follow(store.get(), false));
+  return { top: ctrl, caption, side, strip };
 }

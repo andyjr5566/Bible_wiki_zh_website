@@ -20,6 +20,8 @@ import * as playhead from './playhead';
  */
 
 interface View { x: number; y: number; w: number }
+/** scripts/blender/build_relief.py 的渲染範圍：地圖範圍四邊各多一度 */
+export const RELIEF = { x: -142.894, y: -165, w: 1286.048, h: 1154.588 };
 const MIN_W = W * 0.05;
 /** 最大縮小：容器很扁時，要放得下整條路線得縮得更小 */
 const MAX_W = W * 1.7;
@@ -67,6 +69,16 @@ export function createJourneyMap(): JourneyMapApi {
   /* ---------------------------------------------------------------- 底圖 */
   const gBase = s('g', { class: 'basemap', 'aria-hidden': 'true' });
   gBase.append(s('rect', { x: -W, y: -H, width: W * 3, height: H * 3, class: 'sea' }));
+  gBase.append(
+    s('image', {
+      class: 'relief relief-light', href: `${import.meta.env.BASE_URL}relief/relief-light.webp`,
+      x: RELIEF.x, y: RELIEF.y, width: RELIEF.w, height: RELIEF.h, preserveAspectRatio: 'none', decoding: 'async',
+    }),
+    s('image', {
+      class: 'relief relief-dark', href: `${import.meta.env.BASE_URL}relief/relief-dark.webp`,
+      x: RELIEF.x, y: RELIEF.y, width: RELIEF.w, height: RELIEF.h, preserveAspectRatio: 'none', decoding: 'async',
+    }),
+  );
   for (const poly of BASEMAP.land) {
     gBase.append(s('path', { d: poly.map(ringPath).join(''), class: 'land', 'fill-rule': 'evenodd' }));
   }

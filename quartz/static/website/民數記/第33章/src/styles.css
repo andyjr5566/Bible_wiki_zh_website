@@ -36,6 +36,9 @@
   --fs: 16px;
   --serif: 'Noto Serif TC', 'Source Han Serif TC', 'Songti TC', 'PMingLiU', serif;
   --sans: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  /* 經文一律用楷書，和內文的黑體分開：看到楷書就知道是和合本原文 */
+  --kai: 'LXGW WenKai TC', 'BiauKai', 'DFKai-SB', 'Kaiti TC', var(--serif);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
   color-scheme: light;
 }
 
@@ -116,10 +119,10 @@ a { color: var(--bronze); }
 @media (max-width: 800px) { .hero .wrap { grid-template-columns: 1fr; } .hero-art { order: -1; } .hero-art svg { width: min(300px, 100%); } }
 
 /* ============================================================ sections */
-section.block { padding: 64px 0 24px; }
-.sec-head { display: grid; gap: 6px; margin-bottom: 22px; max-width: 780px; }
-.sec-head h2 { font-size: clamp(1.45rem, 3.4vw, 2rem); }
-.sec-head p { color: var(--ink-2); margin: 0; }
+section.block { padding: clamp(72px, 10vw, 120px) 0 24px; }
+.sec-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 760px; }
+.sec-head h2 { font: 900 clamp(1.9rem, 4.4vw, 3rem) / 1.15 var(--serif); letter-spacing: .03em; overflow-wrap: anywhere; min-width: 0; }
+.sec-head p { color: var(--ink-2); margin: 0; font-size: 1.04em; max-width: 40em; }
 .sec-num { font: 700 0.78em var(--sans); color: var(--bronze); letter-spacing: .14em; }
 
 /* marks */
@@ -139,12 +142,12 @@ section.block { padding: 64px 0 24px; }
 .ev.not_stated { color: var(--ev-unsaid); border-style: dashed; }
 .ref { display: inline-block; border: 0; background: color-mix(in srgb, var(--bronze) 12%, transparent); color: var(--bronze); border-radius: 6px; padding: 0 6px; font-size: 0.78em; font-weight: 700; cursor: pointer; margin: 0 2px; line-height: 1.7; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ref:hover { background: color-mix(in srgb, var(--bronze) 22%, transparent); }
-.q { font-family: var(--serif); color: var(--ink); }
+.q { font-family: var(--kai); color: var(--ink); }
 .q::before { content: '「'; } .q::after { content: '」'; }
 .voice { border-left: 3px solid var(--ev-interp); padding: 4px 0 4px 12px; margin: 8px 0; font-size: 0.92em; }
 .voice .who { font-weight: 700; color: var(--ev-interp); font-size: 0.85em; }
 .voice .says { color: var(--ink); }
-.voice .quote { display: block; color: var(--ink-2); font-family: var(--serif); margin-top: 2px; }
+.voice .quote { display: block; color: var(--ink-2); font-family: var(--kai); margin-top: 2px; }
 :root[data-interp='off'] .interp-layer { display: none !important; }
 .facts { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 8px; }
 .facts li { font-size: .93em; line-height: 1.65; }
@@ -154,9 +157,9 @@ section.block { padding: 64px 0 24px; }
 
 .pop { position: fixed; z-index: 90; width: min(420px, calc(100vw - 24px)); background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 14px 16px 12px; font-size: 0.95em; }
 .pop h4 { font: 700 0.85em var(--sans); color: var(--bronze); margin-bottom: 6px; display: flex; justify-content: space-between; }
-.pop .v { margin: 0 0 6px; font-family: var(--serif); }
+.pop .v { margin: 0 0 6px; font-family: var(--kai); font-size: 1.06em; line-height: 1.75; }
 .pop .v sup { color: var(--ink-3); font-family: var(--sans); font-size: 0.7em; margin-right: 3px; }
-.pop mark { background: color-mix(in srgb, var(--gold) 35%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.pop mark { background: none; color: var(--bronze); font-weight: 700; box-shadow: inset 0 -.32em 0 color-mix(in srgb, var(--bronze) 22%, transparent); }
 .pop .close { border: 0; background: none; cursor: pointer; color: var(--ink-3); font-size: 1.1em; line-height: 1; }
 .pop .src { font-size: 0.75em; color: var(--ink-3); margin-top: 4px; }
 
@@ -193,3 +196,7 @@ footer { padding: 40px 0 60px; color: var(--ink-3); font-size: 0.82em; }
 
 /* 手機上，3D 畫面允許直向捲動頁面，才不會被畫布卡住；橫向拖曳仍是旋轉 */
 @media (max-width: 720px) { .three-wrap canvas { touch-action: pan-y; } }
+
+/* ============================================================ 故事之後的頁面 */
+main > section.block:first-child { padding-top: clamp(96px, 10vw, 128px); }
+.brand span { letter-spacing: .12em; }

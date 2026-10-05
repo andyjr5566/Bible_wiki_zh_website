@@ -6,6 +6,7 @@ import { h } from './dom';
 import { factLine, refChips } from './evidence';
 import { CAMP_STYLE } from './meta';
 import { revealPanel } from './panel';
+import './dumbbell.css';
 
 const ORDERED = CAMPS.flatMap((c) => tribesOf(c.id));
 
@@ -46,26 +47,38 @@ function orderTable(): HTMLElement {
 }
 
 function countBars(): HTMLElement {
-  const max = Math.max(...TRIBES.map((t) => Math.max(t.c2.n, t.c26.n)));
+  const peak = Math.max(...TRIBES.map((t) => Math.max(t.c2.n, t.c26.n)));
+  const max = peak >= 80000 ? Math.ceil(peak / 10000) * 10000 : 80000;
+  const ticks = Array.from({ length: Math.floor(max / 20000) + 1 }, (_, i) => i * 20000);
   const deltas = TRIBES.map((t) => ({ t, d: t.c26.n - t.c2.n }));
   const drop = deltas.reduce((a, b) => (b.d < a.d ? b : a));
   const gain = deltas.reduce((a, b) => (b.d > a.d ? b : a));
   const rows = ORDERED.map((t) => {
     const d = t.c26.n - t.c2.n;
-    return h('div', { class: 'cb-row', style: `--c:${CAMP_STYLE[t.camp].color}` },
-      h('span', { class: 'cb-name' }, t.name),
-      h('span', { class: 'cb-bars' },
-        h('span', { class: 'cb-bar a', style: `width:${(t.c2.n / max) * 100}%`, title: `民2 ${fmt(t.c2.n)}` }),
-        h('span', { class: 'cb-bar b', style: `width:${(t.c26.n / max) * 100}%`, title: `民26 ${fmt(t.c26.n)}` })),
-      h('span', { class: 'cb-n' }, fmt(t.c2.n), ' → ', fmt(t.c26.n)),
-      h('span', { class: `cb-d ${d >= 0 ? 'up' : 'down'}` }, `${d >= 0 ? '▲' : '▼'}${fmt(Math.abs(d))}`));
+    const a = (t.c2.n / max) * 100;
+    const b = (t.c26.n / max) * 100;
+    return h('div', { class: 'db-row', role: 'listitem', style: `--c:${CAMP_STYLE[t.camp].color}` },
+      h('span', { class: 'db-name' }, t.name),
+      h('span', { class: 'db-track' },
+        ...ticks.map((tick) => h('span', { class: 'db-grid', style: `left:${(tick / max) * 100}%` })),
+        h('span', { class: `db-link ${d >= 0 ? 'up' : 'down'}`, style: `left:${Math.min(a, b)}%;width:${Math.abs(b - a)}%` }),
+        h('span', { class: 'db-a', style: `left:${a}%`, title: `民2 ${fmt(t.c2.n)}` }),
+        h('span', { class: 'db-b', style: `left:${b}%`, title: `民26 ${fmt(t.c26.n)}` })),
+      h('span', { class: 'db-n' }, fmt(t.c2.n), ' → ', fmt(t.c26.n)),
+      h('span', { class: `db-d cb-d ${d >= 0 ? 'up' : 'down'}` }, `${d >= 0 ? '▲' : '▼'}${fmt(Math.abs(d))}`));
   });
+  const columns = '4.5em minmax(0, 1fr) auto 5.5em';
+  const axis = h('div', { class: 'db-axis', style: `--db-columns:${columns}` },
+    h('span', null),
+    h('span', { class: 'db-axis-track' }, ...ticks.map((tick) => h('span', { class: `db-tick${tick === max ? ' db-tick-end' : ''}`, style: `left:${(tick / max) * 100}%` }, fmt(tick)))),
+    h('span', null), h('span', null));
   const totalD = TOTAL_26.n - TOTAL_2.n;
-  return h('div', { class: 'count-bars' },
-    h('div', { class: 'cb-legend' },
-      h('span', null, h('i', { class: 'lg a' }), '民2（也是民1）'),
-      h('span', null, h('i', { class: 'lg b' }), '民26 第二次數點')),
-    ...rows,
+  return h('div', { class: 'db', style: `--db-columns:${columns}` },
+    h('div', { class: 'db-legend' },
+      h('span', null, h('i', { class: 'db-swatch-a' }), '民2（也是民1）'),
+      h('span', null, h('i', { class: 'db-swatch-b' }), '民26 第二次數點')),
+    axis,
+    h('div', { class: 'db-rows', role: 'list', 'aria-label': '十二支派兩次數點的人數' }, ...rows),
     h('div', { class: 'cb-total' },
       h('b', null, '合計'), ' ', fmt(TOTAL_1.n), ' → ', fmt(TOTAL_26.n),
       h('span', { class: 'cb-d down' }, ` ▼${fmt(Math.abs(totalD))}`)),

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { createSky, horizonColor } from './sky';
 
 export type CamPreset = 'top' | 'ground' | 'balaam' | 'orbit';
 
@@ -7,21 +8,28 @@ export const PRESETS: Record<CamPreset, { pos: [number, number, number]; target:
   top: { pos: [0, 760, 60], target: [0, 0, 0] },
   orbit: { pos: [-330, 330, 470], target: [0, 0, 0] },
   ground: { pos: [430, 14, 90], target: [0, 8, 0] },
-  balaam: { pos: [640, 140, -360], target: [0, 0, 0] },
+  // 站在營外高處的山頂（山頂約 142 高）往下看
+  balaam: { pos: [640, 178, -360], target: [0, 0, 0] },
 };
 
-const DAY = { sky: new THREE.Color(0xcfe0ee), fog: new THREE.Color(0xe6dcc4), hemi: 1.0, sun: 2.4, ground: new THREE.Color(0xd8c59a) };
-const NIGHT = { sky: new THREE.Color(0x0b1226), fog: new THREE.Color(0x121a30), hemi: 0.28, sun: 0.32, ground: new THREE.Color(0x4d4638) };
+export interface Pose { pos: THREE.Vector3; target: THREE.Vector3 }
 
 export interface Stage {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   controls: OrbitControls;
+  /** 目前太陽的方向（單位向量），雲彩、旗子等可以拿來用 */
+  sunDir: THREE.Vector3;
   onFrame(fn: (dt: number, t: number) => void): void;
   flyTo(p: CamPreset, ms?: number): void;
   flyCustom(pos: THREE.Vector3, target: THREE.Vector3, ms?: number): void;
+  /** 一天裡的時刻：0 深夜、0.5 黎明（太陽剛從東邊出來）、1 白天 */
+  setTod(target: number, immediate?: boolean): void;
+  tod(): number;
   setNight(n: boolean): void;
+  /** 故事模式：鏡頭跟著捲動給的位置走（帶阻尼），不接受拖曳；null 交還給 OrbitControls */
+  follow(pose: Pose | null): void;
   start(): void;
   stop(): void;
   dispose(): void;
@@ -40,23 +48,58 @@ function sandTexture(): THREE.CanvasTexture {
   }
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.repeat.set(120, 120);
+  t.repeat.set(46, 46);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
 
+const smooth = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+/**
+ * 太陽的位置只是氣氛：黎明時從正東的地平線出來（民2:3「在東邊，向日出之地」），
+ * 白天升高並偏向南邊。經文沒有記任何時刻，這是示意。
+ */
+function sunDirection(tod: number, out: THREE.Vector3): THREE.Vector3 {
+  let elev: number;
+  if (tod < 0.4) elev = lerp(-25, -6, tod / 0.4);
+  else if (tod < 0.55) elev = lerp(-6, 6, (tod - 0.4) / 0.15);
+  else elev = lerp(6, 58, smooth(0.55, 1, tod));
+  const az = THREE.MathUtils.degToRad(lerp(-4, 38, smooth(0.45, 1, tod)));
+  const e = THREE.MathUtils.degToRad(elev);
+  return out.set(Math.cos(e) * Math.cos(az), Math.sin(e), Math.cos(e) * Math.sin(az)).normalize();
+}
+
+/** 三個關鍵時刻的顏色，中間線性內插 */
+const key3 = (night: string, dawn: string, day: string) => [new THREE.Color(night), new THREE.Color(dawn), new THREE.Color(day)] as const;
+function at3(c: readonly [THREE.Color, THREE.Color, THREE.Color], tod: number, out: THREE.Color) {
+  return tod < 0.5 ? out.copy(c[0]).lerp(c[1], tod / 0.5) : out.copy(c[1]).lerp(c[2], (tod - 0.5) / 0.5);
+}
+const HEMI_SKY = key3('#27315a', '#e7ad86', '#fff3dc');
+const HEMI_GROUND = key3('#1a1713', '#7a5c46', '#b9a47a');
+const GROUND = key3('#4a4336', '#c9ad84', '#d8c59a');
+const MOON = new THREE.Color('#8fa6ff');
+const SUN_LOW = new THREE.Color('#ffb070');
+const SUN_HIGH = new THREE.Color('#fff0d0');
+const MOON_DIR = new THREE.Vector3(-0.45, 0.8, -0.35).normalize();
+
 export function createStage(container: HTMLElement): Stage {
+  const small = matchMedia('(max-width: 720px)').matches;
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.5 : 1.75));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
   container.prepend(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.background = DAY.sky.clone();
-  scene.fog = new THREE.Fog(DAY.fog.clone(), 900, 3200);
+  scene.fog = new THREE.Fog(0x16203b, 700, 3000);
+  const sky = createSky(5200);
+  scene.add(sky.mesh);
 
   const camera = new THREE.PerspectiveCamera(42, 1, 1, 7000);
   const start = PRESETS.orbit;
@@ -71,91 +114,140 @@ export function createStage(container: HTMLElement): Stage {
   controls.maxPolarAngle = Math.PI / 2 - 0.02;
   controls.update();
 
-  const hemi = new THREE.HemisphereLight(0xfff3dc, 0xb9a47a, DAY.hemi);
-  const sun = new THREE.DirectionalLight(0xfff0d0, DAY.sun);
-  sun.position.set(260, 420, 160);
+  const hemi = new THREE.HemisphereLight(0xfff3dc, 0xb9a47a, 1);
+  const sun = new THREE.DirectionalLight(0xfff0d0, 2.4);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
   const sc = sun.shadow.camera;
-  sc.left = -480; sc.right = 480; sc.top = 380; sc.bottom = -380; sc.near = 50; sc.far = 1400;
+  sc.left = -520; sc.right = 520; sc.top = 420; sc.bottom = -420; sc.near = 50; sc.far = 1600;
   sun.shadow.bias = -0.0006;
   scene.add(hemi, sun, sun.target);
 
-  const groundMat = new THREE.MeshStandardMaterial({ color: DAY.ground.clone(), map: sandTexture(), roughness: 1 });
-  const ground = new THREE.Mesh(new THREE.CircleGeometry(4200, 64), groundMat);
+  // 營地附近的地面；更外圈由 Blender 做的地形接手（world.ts）
+  const groundMat = new THREE.MeshStandardMaterial({ color: 0xd8c59a, map: sandTexture(), roughness: 1 });
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(1600, 72), groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   scene.add(ground);
 
   const frameFns: ((dt: number, t: number) => void)[] = [];
+  let followPose: Pose | null = null;
   let raf = 0;
   let running = false;
   let last = 0;
-  let nightTarget = 0;
-  let nightMix = 0;
+  let todTarget = 1;
+  let todNow = 1;
   let fly: { from: THREE.Vector3; fromT: THREE.Vector3; to: THREE.Vector3; toT: THREE.Vector3; t0: number; ms: number } | null = null;
+  const sunDir = new THREE.Vector3();
+  const lightDir = new THREE.Vector3();
 
   const resize = () => {
     const w = Math.max(1, container.clientWidth);
     const h = Math.max(1, container.clientHeight);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    // 直式螢幕把視角放寬，營地才放得進畫面
+    camera.fov = camera.aspect < 0.8 ? 58 : 42;
+    frame0();
   };
+  /**
+   * 故事的鏡頭是照橫幅、卡片在左邊構圖的。直式螢幕的卡片在下半部，
+   * 故事模式時把投影中心往上移到約 32% 的高度，主體就落在卡片上方。
+   */
+  function frame0() {
+    const w = Math.max(1, container.clientWidth);
+    const h = Math.max(1, container.clientHeight);
+    if (followPose && w / h < 0.8) camera.setViewOffset(w, h * 1.36, 0, h * 0.36, w, h);
+    else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+  }
   const ro = new ResizeObserver(resize);
   ro.observe(container);
   resize();
 
   const tmpC = new THREE.Color();
-  function applyNight() {
-    (scene.background as THREE.Color).copy(DAY.sky).lerp(NIGHT.sky, nightMix);
-    (scene.fog as THREE.Fog).color.copy(DAY.fog).lerp(NIGHT.fog, nightMix);
-    hemi.intensity = DAY.hemi + (NIGHT.hemi - DAY.hemi) * nightMix;
-    sun.intensity = DAY.sun + (NIGHT.sun - DAY.sun) * nightMix;
-    sun.color.set(0xfff0d0).lerp(tmpC.set(0x8fa6ff), nightMix);
-    groundMat.color.copy(DAY.ground).lerp(NIGHT.ground, nightMix);
+  function applyTod() {
+    const tod = todNow;
+    sunDirection(tod, sunDir);
+    const up = smooth(-0.06, 0.08, sunDir.y);
+    lightDir.copy(MOON_DIR).lerp(sunDir, up).normalize();
+    sun.position.copy(lightDir).multiplyScalar(700);
+    sun.color.copy(MOON).lerp(tmpC.copy(SUN_LOW).lerp(SUN_HIGH, smooth(0.05, 0.5, sunDir.y)), up);
+    sun.intensity = lerp(0.32, 0.5 + 2.1 * smooth(-0.02, 0.4, sunDir.y), up);
+    at3(HEMI_SKY, tod, hemi.color);
+    at3(HEMI_GROUND, tod, hemi.groundColor);
+    hemi.intensity = tod < 0.5 ? lerp(0.32, 0.62, tod / 0.5) : lerp(0.62, 1.0, (tod - 0.5) / 0.5);
+    at3(GROUND, tod, groundMat.color);
+    const fog = scene.fog as THREE.Fog;
+    horizonColor(tod, fog.color);
+    fog.near = lerp(600, 1100, tod);
+    fog.far = lerp(2600, 5600, tod);
   }
+  applyTod();
 
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const motionOff = () => document.documentElement.dataset.motion === 'off';
 
   function frame(now: number) {
     if (!running) return;
     raf = requestAnimationFrame(frame);
-    const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+    // rAF 的時間戳可能比 last 早一點，dt 夾在 0–0.25 秒，避免負值或背景分頁回來的大跳
+    const dt = Math.min(0.25, Math.max(0, (now - last) / 1000));
     last = now;
-    if (Math.abs(nightTarget - nightMix) > 0.002) {
-      nightMix += (nightTarget - nightMix) * Math.min(1, dt * 2.2);
-      applyNight();
+    if (Math.abs(todTarget - todNow) > 0.0005) {
+      todNow += (todTarget - todNow) * Math.min(1, dt * (motionOff() ? 30 : 2.4));
+      applyTod();
     }
-    if (fly) {
-      const k = Math.min(1, (now - fly.t0) / fly.ms);
-      const e = ease(k);
-      camera.position.lerpVectors(fly.from, fly.to, e);
-      controls.target.lerpVectors(fly.fromT, fly.toT, e);
-      if (k >= 1) fly = null;
+    if (followPose) {
+      // 故事模式：阻尼跟隨，捲得快時鏡頭也不會跳
+      const k = 1 - Math.exp(-dt * (motionOff() ? 30 : 3.2));
+      camera.position.lerp(followPose.pos, k);
+      controls.target.lerp(followPose.target, k);
+      camera.lookAt(controls.target);
+    } else {
+      if (fly) {
+        const k = Math.min(1, (now - fly.t0) / fly.ms);
+        const e = ease(k);
+        camera.position.lerpVectors(fly.from, fly.to, e);
+        controls.target.lerpVectors(fly.fromT, fly.toT, e);
+        if (k >= 1) fly = null;
+      }
+      controls.update();
     }
-    controls.update();
+    sky.mesh.position.copy(camera.position);
+    sky.update({ sunDir, tod: todNow, t: now / 1000 });
     for (const fn of frameFns) fn(dt, now / 1000);
     renderer.render(scene, camera);
   }
 
+  const reduce = () => motionOff() || matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return {
-    renderer, scene, camera, controls,
+    renderer, scene, camera, controls, sunDir,
     onFrame: (fn) => { frameFns.push(fn); },
     flyTo(p, ms = 1400) {
       const pr = PRESETS[p];
-      const reduce = document.documentElement.dataset.motion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches;
       fly = {
         from: camera.position.clone(), fromT: controls.target.clone(),
         to: new THREE.Vector3(...pr.pos), toT: new THREE.Vector3(...pr.target),
-        t0: performance.now(), ms: reduce ? 1 : ms,
+        t0: performance.now(), ms: reduce() ? 1 : ms,
       };
     },
     flyCustom(pos, target, ms = 1100) {
-      const reduce = document.documentElement.dataset.motion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches;
-      fly = { from: camera.position.clone(), fromT: controls.target.clone(), to: pos.clone(), toT: target.clone(), t0: performance.now(), ms: reduce ? 1 : ms };
+      fly = { from: camera.position.clone(), fromT: controls.target.clone(), to: pos.clone(), toT: target.clone(), t0: performance.now(), ms: reduce() ? 1 : ms };
     },
-    setNight(n) { nightTarget = n ? 1 : 0; },
+    setTod(target, immediate = false) {
+      todTarget = Math.min(1, Math.max(0, target));
+      if (immediate) { todNow = todTarget; applyTod(); }
+    },
+    tod: () => todNow,
+    setNight(n) { todTarget = n ? 0 : 1; },
+    follow(pose) {
+      followPose = pose;
+      controls.enabled = !pose;
+      if (!pose) fly = null;
+      frame0();
+    },
     start() {
       if (running) return;
       running = true;

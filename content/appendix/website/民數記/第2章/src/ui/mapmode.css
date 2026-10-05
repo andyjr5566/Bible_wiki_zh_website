@@ -1,0 +1,6 @@
+#map [hidden] { display: none !important; }
+#map .stage .march-top { margin: 2px 0 10px; }
+@media (min-width: 981px) {
+  #map .map-layout.is-march > .stage { position: sticky; top: 68px; }
+}
+#map .map-layout + .strip { margin-top: 14px; }

@@ -113,18 +113,27 @@
 @media (max-width: 980px) { .jmap-wrap { height: 36vh; min-height: 220px; max-height: 340px; } }
 .jmap { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
 .jmap.grabbing { cursor: grabbing; }
+.jmap .relief-light { display: inline; }
+.jmap .relief-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .jmap .relief-light { display: none; }
+  :root:not([data-theme='light']) .jmap .relief-dark { display: inline; }
+}
+:root[data-theme='dark'] .jmap .relief-light { display: none; }
+:root[data-theme='dark'] .jmap .relief-dark { display: inline; }
 .jmap .sea { fill: var(--sea); }
-.jmap .land { fill: var(--land); stroke: color-mix(in srgb, var(--route) 45%, var(--land)); stroke-width: .9; stroke-linejoin: round; }
-.jmap .lake { fill: var(--sea); stroke: color-mix(in srgb, var(--route) 30%, var(--sea)); stroke-width: .6; }
-.jmap .river { fill: none; stroke: var(--river); stroke-width: 1.6; stroke-linecap: round; }
-.jmap .grid-line { stroke: var(--grid); stroke-width: .6; stroke-dasharray: 3 5; opacity: .7; }
-.jmap .geo-label { fill: var(--ink-3); text-anchor: middle; font-family: var(--serif); pointer-events: none; opacity: .8; }
+.jmap .land { fill: none; stroke: color-mix(in srgb, var(--route) 35%, transparent); stroke-width: .7px; stroke-linejoin: round; }
+.jmap .lake { fill: none; stroke: color-mix(in srgb, var(--sea) 70%, transparent); stroke-width: .6px; }
+.jmap .river { fill: none; stroke: var(--river); stroke-width: 1.6; stroke-linecap: round; opacity: .8; }
+.jmap .grid-line { stroke: var(--grid); stroke-width: .6; stroke-dasharray: 3 5; opacity: .35; }
+.jmap .geo-label { fill: var(--ink-3); text-anchor: middle; font-family: var(--serif); pointer-events: none; opacity: .8; paint-order: stroke; stroke: color-mix(in srgb, var(--sea) 75%, transparent); stroke-width: 3px; stroke-linejoin: round; }
 .jmap .geo-label.sea, .jmap .geo-label.river { font-style: italic; letter-spacing: .08em; }
 .jmap .geo-label.region { letter-spacing: .25em; }
 .jmap .scale-line { stroke: var(--ink-2); stroke-width: 1.6; fill: none; }
-.jmap .scale-text { font: 400 12px var(--sans); fill: var(--ink-2); text-anchor: middle; paint-order: stroke; stroke: var(--sea); stroke-width: 3px; }
-.jmap.night .sea { fill: #101a30; } .jmap.night .land { fill: #262436; stroke: #4a4763; } .jmap.night .lake { fill: #101a30; }
-.jmap.night .geo-label { fill: #a9b4d0; } .jmap.night .grid-line { stroke: #2b3a5c; }
+.jmap .scale-text { font: 400 12px var(--sans); fill: var(--ink-2); text-anchor: middle; paint-order: stroke; stroke: color-mix(in srgb, var(--sea) 75%, transparent); stroke-width: 3px; stroke-linejoin: round; }
+.jmap.night .sea { fill: #101a30; } .jmap.night .land { stroke: #4a4763; } .jmap.night .lake { fill: none; stroke: #101a30; }
+.jmap.night .relief { filter: brightness(.45) saturate(.6) hue-rotate(195deg); }
+.jmap.night .geo-label { fill: #a9b4d0; stroke: #101a30; } .jmap.night .grid-line { stroke: #2b3a5c; }
 .jmap.night .scale-text { fill: #cfd6ea; stroke: #101a30; } .jmap.night .scale-line { stroke: #cfd6ea; }
 
 .jmap .leg { fill: none; stroke: var(--s0); stroke-width: 3.4; stroke-linecap: round; opacity: .9; }
@@ -401,7 +410,7 @@ tr.date-row:hover td, tr.date-row:hover th { background: color-mix(in srgb, var(
 .jmap .trail-glow { stroke-width: 11px; }
 .jmap .span-line { stroke-width: 9px; }
 .jmap .river { stroke-width: 1.4px; }
-.jmap .land { stroke-width: .8px; }
+.jmap .land { stroke-width: .7px; }
 .jmap .lake { stroke-width: .6px; }
 .jmap .grid-line { stroke-width: .7px; stroke-dasharray: 3 6; }
 .jmap .cand-link { stroke-width: 1.8px; stroke-dasharray: 5 4; }
@@ -414,3 +423,8 @@ tr.date-row:hover td, tr.date-row:hover th { background: color-mix(in srgb, var(
 .hero-walker { fill: var(--fire); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 0 8px var(--fire)); }
 @media (prefers-reduced-motion: reduce) { .hero-route { animation: none; } }
 :root[data-motion='off'] .hero-route { animation: none; }
+
+/* 資訊卡最後的補充說明：有爭議的站，其他說法放這裡 */
+.dispute { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border-left: 3px solid var(--ev-unsaid); }
+.dispute .sub { margin-top: 0; }
+.dispute p { margin: 0; color: var(--ink-2); }

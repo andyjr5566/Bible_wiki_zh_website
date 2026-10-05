@@ -11,7 +11,7 @@ import { PEOPLE_PER_TENT } from '../layout';
 import { linkFor, selToHash } from '../deeplink';
 import * as store from '../store';
 import { selLabel } from './campmap';
-import { fill, h, svg } from './dom';
+import { emit, fill, h, svg } from './dom';
 import { factLine, interpHeading, refChips, voiceBlock } from './evidence';
 import { ICONS } from './icons';
 import { CAMP_STYLE, SIDE_NAME } from './meta';
@@ -33,9 +33,11 @@ const voiceList = (topics: VoiceTopic[]) => {
 const batchOf = (id: CampId) => MARCH_NUM10.findIndex((s) => s.camps?.includes(id)) + 1;
 
 function goMarch() {
+  emit('mapmode', 'march');
   store.set({ mode: 'num10', phase: 1, playing: true });
-  const el = document.getElementById('march');
-  if (el) smoothScrollTo(el.getBoundingClientRect().top + scrollY - 64, 700);
+  if (!narrow()) return;
+  const stage = document.querySelector<HTMLElement>('#map .stage');
+  if (stage && stage.getBoundingClientRect().top < 0) smoothScrollTo(stage.getBoundingClientRect().top + scrollY - 70, 500);
 }
 
 const narrow = () => matchMedia('(max-width: 980px)').matches;

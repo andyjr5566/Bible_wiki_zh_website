@@ -1,0 +1,305 @@
+/* 註釋家比較（vx-）與經文沒說的事（ux-）的版面；class 都加前綴，避開全站的短名稱 */
+.vx,
+.ux {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.vx-intro {
+  margin: 0 0 20px;
+  line-height: 1.7;
+}
+
+.vx-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.vx-topics {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 8px;
+  scroll-snap-type: x mandatory;
+}
+
+.vx-tab {
+  flex: 0 0 auto;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+  padding: 12px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  text-align: left;
+  scroll-snap-align: start;
+  transition: background 150ms, color 150ms;
+}
+
+.vx-tab:hover {
+  background: var(--surface-2);
+}
+
+.vx-tab.vx-selected {
+  border-left-color: var(--bronze);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.vx-panel {
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.vx-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.vx-heading h3 {
+  margin: 0;
+  font-family: var(--serif);
+}
+
+.vx-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vx-cell {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--surface);
+}
+
+.vx-code {
+  margin-bottom: 12px;
+  color: var(--ev-interp);
+  font: 900 1.6rem/1 var(--serif);
+  letter-spacing: .04em;
+}
+
+.vx-entry + .vx-entry {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+}
+
+.vx-who {
+  color: var(--ink-2);
+  font-size: .86rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.vx-says {
+  margin: 8px 0 0;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.vx-quote {
+  margin: 8px 0 0;
+  border-left: 2px solid var(--ev-interp);
+  padding-left: 12px;
+  color: var(--ink);
+  font-family: var(--kai);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.vx-empty {
+  color: var(--ink-3);
+}
+
+.vx-empty-text {
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.ux-desktop {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.ux-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ux-row {
+  min-width: 0;
+}
+
+.ux-tab {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 14px;
+  padding: 12px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  transition: background 150ms, color 150ms;
+}
+
+.ux-tab:hover {
+  background: var(--surface-2);
+}
+
+.ux-tab.ux-selected {
+  border-left-color: var(--ev-unsaid);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.ux-title {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ux-ask {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: .86rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ux-detail {
+  position: sticky;
+  top: 76px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  background: var(--surface);
+}
+
+.ux-detail h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+.ux-detail > .ask {
+  margin: 12px 0 16px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+.ux-detail .facts,
+.ux-mobile-detail .facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.ux-interpretation {
+  margin-top: 16px;
+}
+
+.ux-detail > .shown,
+.ux-mobile-detail > .shown {
+  margin: 16px 0 0;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+.ux-mobile {
+  display: none;
+}
+
+.ux-item {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface);
+}
+
+.ux-item + .ux-item {
+  margin-top: 8px;
+}
+
+.ux-item summary {
+  cursor: pointer;
+}
+
+.ux-mobile-detail {
+  padding-top: 16px;
+}
+
+@container (min-width: 900px) {
+  .vx-layout {
+    grid-template-columns: minmax(200px, 15rem) minmax(0, 1fr);
+  }
+
+  .vx-topics {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  .vx-tab {
+    width: 100%;
+  }
+}
+
+@container (max-width: 639px) {
+  .vx-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container (min-width: 900px) {
+  .ux-desktop {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr);
+  }
+
+  .ux-mobile {
+    display: none;
+  }
+}
+
+@container (max-width: 899px) {
+  .ux-desktop {
+    display: none;
+  }
+
+  .ux-mobile {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vx-tab,
+  .ux-tab {
+    transition: none;
+  }
+}

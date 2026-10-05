@@ -1,11 +1,9 @@
 import './styles.css';
 import './journey.css';
 import { parseHash } from './deeplink';
-import { STATIONS } from './data/stations';
 import { SITE_SOURCES } from './data/sites';
-import { H, POSITIONS, W, landPaths } from './geo';
 import * as store from './store';
-import { emit, h, motionOff, svg } from './ui/dom';
+import { emit, h, svg } from './ui/dom';
 import { badge } from './ui/evidence';
 import { ICONS } from './ui/icons';
 import { createJourneyMap } from './ui/journeymap';
@@ -21,6 +19,7 @@ import { mountQuiz } from './ui/quiz';
 import { createStationCard } from './ui/stationcard';
 import { createLeftPane } from './ui/stationlist';
 import { createTimeline } from './ui/timeline';
+import { createStory } from './story/story';
 
 /* ------------------------------------------------------------ 使用者設定（只存在這台裝置） */
 const root = document.documentElement;
@@ -78,41 +77,21 @@ const SECTIONS = [
     lede: '試試看：誰先誰後？這件事在哪一站？' },
 ];
 
-const nav = h('nav', { class: 'nav', 'aria-label': '章節' }, ...SECTIONS.map((s) => h('a', { href: `#${s.id}` }, s.short)), h('a', { href: '#about' }, '關於'));
+const nav = h('nav', { class: 'nav', 'aria-label': '章節' }, h('a', { href: '#top' }, '故事'), ...SECTIONS.map((s) => h('a', { href: `#${s.id}` }, s.short)), h('a', { href: '#about' }, '關於'));
 const brand = h('a', { class: 'brand', href: '#top' }, svg(ICONS.map), h('span', null, '曠野四十二站'));
 const topbar = h('header', { class: 'topbar' }, h('div', { class: 'wrap' }, brand, nav, tools));
 
-/* ------------------------------------------------------------ 開場：整條路線的小圖 */
-const heroPts = [1, 12, 33, 42].map((n) => ({ n, p: POSITIONS[n - 1], name: STATIONS[n - 1].name }));
-const heroLabels: Record<number, [number, number, string]> = { 1: [16, -16, 'start'], 12: [-16, 6, 'end'], 33: [-18, 14, 'end'], 42: [-14, -16, 'end'] };
-const heroRoute = `M${POSITIONS.map((p) => `${p.x.toFixed(0)} ${p.y.toFixed(0)}`).join('L')}`;
-const heroArt = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="從埃及蘭塞，經西乃、加低斯，到約但河東岸摩押平原的路線示意圖">
-  <g class="hero-land">${landPaths().map((d) => `<path d="${d}" fill-rule="evenodd"/>`).join('')}</g>
-  <path class="hero-route" d="${heroRoute}"/>
-  ${motionOff() ? '' : `<circle class="hero-walker" r="13"><animateMotion dur="18s" repeatCount="indefinite" path="${heroRoute}"/></circle>`}
-  ${heroPts.map(({ n, p, name }) => {
-    const [dx, dy, anchor] = heroLabels[n];
-    return `<circle class="hero-dot" cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="9"/><text class="hero-label" x="${(p.x + dx).toFixed(0)}" y="${(p.y + dy).toFixed(0)}" text-anchor="${anchor}">${n} ${name}</text>`;
-  }).join('')}
-</svg>`;
-
-const hero = h('section', { class: 'hero', id: 'top', 'aria-label': '開始' }, h('div', { class: 'wrap' },
-  h('div', null,
-    h('h1', null, '曠野四十二站'),
-    h('p', { class: 'epi' }, '「', h('span', null, '摩西遵著耶和華的吩咐記載他們所行的路程。'), '」 ', h('span', { class: 'epi-ref' }, '民33:2')),
-    h('p', { class: 'lede' }, '民數記 33 章把以色列人從蘭塞到摩押平原的路，一站一站記了下來：四十二個站口，大多數只有名字。這個網站把它們放上地圖，也把「經文沒說的事」老實標出來。'),
-    h('div', { class: 'hero-stats' },
-      h('div', null, h('b', null, '42'), h('span', null, '個站口（蘭塞到摩押平原）')),
-      h('div', null, h('b', null, '11 天'), h('span', null, '從何烈山到加低斯巴尼亞的路程（申1:2）')),
-      h('div', null, h('b', null, '38 年'), h('span', null, '離開加低斯巴尼亞到過撒烈溪（申2:14）'))),
-    h('div', { class: 'hero-cta' },
-      h('a', { class: 'btn primary', href: '#journey' }, svg(ICONS.map), '看旅程地圖'),
-      h('button', { class: 'btn', type: 'button', onclick: () => {
-        store.set({ playing: true, follow: true, at: 1, sel: 1 });
-        const el = document.getElementById('journey');
-        if (el) smoothScrollTo(el.getBoundingClientRect().top + scrollY - 64, 700);
-      } }, svg(ICONS.play), '開始走'))),
-  h('div', { class: 'hero-art', html: heroArt })));
+/* ------------------------------------------------------------ 開場：捲動故事 */
+const base = import.meta.env.BASE_URL;
+const story = createStory({
+  heroSrc: `${base}relief/relief-hero.webp`,
+  reliefSrc: { light: `${base}relief/relief-light.webp`, dark: `${base}relief/relief-dark.webp` },
+  onPlay: () => {
+    store.set({ playing: true, follow: true, at: 1, sel: 1 });
+    const el = document.getElementById('journey');
+    if (el) smoothScrollTo(el.getBoundingClientRect().top + scrollY - 64, 700);
+  },
+});
 
 /* ------------------------------------------------------------ 各區骨架 */
 const main = h('main');
@@ -121,7 +100,7 @@ for (const s of SECTIONS) {
   const body = h('div');
   blocks[s.id] = body;
   main.append(h('section', { class: 'block', id: s.id, 'aria-labelledby': `${s.id}-h` }, h('div', { class: 'wrap' },
-    h('div', { class: 'sec-head' }, h('div', { class: 'sec-num' }, s.num), h('h2', { id: `${s.id}-h` }, s.title), h('p', null, s.lede)),
+    h('div', { class: 'sec-head' }, h('h2', { id: `${s.id}-h` }, s.title), h('p', null, s.lede)),
     body)));
 }
 
@@ -162,7 +141,7 @@ mountQuiz(blocks.quiz);
 const ob = SITE_SOURCES.openbible;
 const ne = SITE_SOURCES.naturalEarth;
 const about = h('section', { class: 'block', id: 'about', 'aria-labelledby': 'about-h' }, h('div', { class: 'wrap' },
-  h('div', { class: 'sec-head' }, h('div', { class: 'sec-num' }, '08'), h('h2', { id: 'about-h' }, '這個網站怎麼做的'),
+  h('div', { class: 'sec-head' }, h('h2', { id: 'about-h' }, '這個網站怎麼做的'),
     h('p', null, '每一句話都標了它的根據。看到標籤，就知道那句話是經文寫的，還是整理出來的，或是註釋家的讀法。')),
   h('div', { class: 'about-grid' },
     h('div', { class: 'card' }, h('h3', null, '四種標籤'), h('div', { class: 'evlist' },
@@ -175,7 +154,10 @@ const about = h('section', { class: 'block', id: 'about', 'aria-labelledby': 'ab
       h('p', null, '經文沒有座標。每一站的候選現代地點與分數，取自 ', h('a', { href: ob.url, rel: 'noopener' }, ob.name), `（${ob.license}）；本站只取了其中與這四十二站有關的資料，並標示候選的分數與種類。`),
       h('p', null, '分數是 OpenBible 的綜合分數（網友投票加路線時間一致性），只表示各候選之間的相對可信度。三十八年那一段大多數站的位置本來就不明。'),
       h('p', null, '三十八年那一段（第 16–31 站）的位置多半無法確定，候選又分散。所以每一站畫在可信候選的中間值（依分數加權，分數低於最高分 35% 的不計入），一個很淡的圈圈出候選散布的範圍；站牌外的淡虛線環表示「只是可能在這一帶」。選到或走到那一站時，才會浮現它自己的圈和圈裡的候選點。'),
-      h('p', null, '底圖：', h('a', { href: ne.url, rel: 'noopener' }, ne.name), `（${ne.license}）的海岸線、湖與河，是現代地形，不是三千多年前的樣子；蘇伊士運河等現代工程不在圖上。`)),
+      h('p', null, '底圖：', h('a', { href: ne.url, rel: 'noopener' }, ne.name), `（${ne.license}）的海岸線、湖與河，是現代地形，不是三千多年前的樣子；蘇伊士運河等現代工程不在圖上。`),
+      h('p', null, '地形暈渲：本站用 Blender 從高程資料渲染（',
+        h('a', { href: 'https://github.com/tilezen/joerd/blob/master/docs/attribution.md', rel: 'noopener' }, 'AWS Terrain Tiles'),
+        '，整合 SRTM、ETOPO1 等公開資料），投影和地圖相同；高度有誇大（地圖約 5 倍、開場的斜視圖約 8 倍），一樣是現代地形。')),
     h('div', { class: 'card' }, h('h3', null, '哪些是示意'),
       h('p', null, '所有座標、路線的走法、西乃山與過海地點的預設選擇、地區名稱的位置，都只是示意；三十八年那一段的站更只是候選的中間值。'),
       h('p', null, '時間軸上只有幾站的日期是經文給的，其他站在兩個日期之間平均分配；三十八年裡每一站停多久，經文沒有寫。'),
@@ -199,7 +181,7 @@ const footer = h('footer', null, h('div', { class: 'wrap' },
   h('br'), '曠野四十二站・民數記 33 章互動旅程地圖',
   h('br'), `地理資料：${ob.name}（${ob.license}）；${ne.name}（${ne.license}）。`));
 
-document.body.prepend(topbar, hero, main, footer);
+document.body.prepend(topbar, story.el, main, footer);
 
 // 各區的卡片捲進畫面時浮上來
 reveal(document.querySelectorAll('.cmp-block, .pattern-layout > *, .deb-grid > *, .quiz-grid > *, .about-grid > *, .crossing'));

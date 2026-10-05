@@ -168,7 +168,9 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
     if ($fileContent -match 'appendix/website/') {
         $relDir = [System.IO.Path]::GetDirectoryName($filePath).Substring($target.Length).TrimStart('\', '/')
         $depth = if ($relDir.Length -gt 0) { ($relDir -split '[\\/]').Count } else { 0 }
-        $prefix = if ($depth -gt 0) { (1..$depth | ForEach-Object { '..' }) -join '/' } else { '.' }
+        # Quartz 發佈時會自己依頁面深度重算相對路徑，只認開頭的一個 "../"；
+        # 依層數累加 ".." 會在深度 2 以上（例如 appendix/website/index.md）多跳出站台根目錄而 404。
+        $prefix = if ($depth -gt 0) { '..' } else { '.' }
 
         $updated = [regex]::Replace($fileContent, '\[([^\]]+)\]\((?:\./)?(?:.*?/)?appendix/website/([^)]+)\)', {
             param($match)

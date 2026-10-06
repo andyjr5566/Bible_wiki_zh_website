@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createSky, horizonColor } from './sky';
+import { animOff } from '../ui/dom';
 
 export type CamPreset = 'top' | 'ground' | 'balaam' | 'orbit';
 
@@ -186,7 +187,6 @@ export function createStage(container: HTMLElement): Stage {
   applyTod();
 
   const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-  const motionOff = () => document.documentElement.dataset.motion === 'off';
 
   function frame(now: number) {
     if (!running) return;
@@ -195,12 +195,12 @@ export function createStage(container: HTMLElement): Stage {
     const dt = Math.min(0.25, Math.max(0, (now - last) / 1000));
     last = now;
     if (Math.abs(todTarget - todNow) > 0.0005) {
-      todNow += (todTarget - todNow) * Math.min(1, dt * (motionOff() ? 30 : 2.4));
+      todNow += (todTarget - todNow) * Math.min(1, dt * (animOff() ? 30 : 2.4));
       applyTod();
     }
     if (followPose) {
       // 故事模式：阻尼跟隨，捲得快時鏡頭也不會跳
-      const k = 1 - Math.exp(-dt * (motionOff() ? 30 : 3.2));
+      const k = 1 - Math.exp(-dt * (animOff() ? 30 : 3.2));
       camera.position.lerp(followPose.pos, k);
       controls.target.lerp(followPose.target, k);
       camera.lookAt(controls.target);
@@ -220,7 +220,8 @@ export function createStage(container: HTMLElement): Stage {
     renderer.render(scene, camera);
   }
 
-  const reduce = () => motionOff() || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 換視角、選了東西才飛過去：使用者自己按的，只看本站開關
+  const reduce = animOff;
 
   return {
     renderer, scene, camera, controls, sunDir,

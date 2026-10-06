@@ -461,12 +461,15 @@ function head(chapter: number, finished: boolean, nth = 0, total = 0): HTMLEleme
       h('button', { type: 'button', class: 'lm-coach-x', 'aria-label': '結束教學', onclick: () => stopCoach() }, '×')));
 }
 
-/** 把目標帶進畫面：矮的放中間，高的（整個區塊）對齊上緣並留出空間 */
+/**
+ * 把目標帶進畫面：矮的放中間，高的（整個區塊）對齊上緣並留出空間。
+ * 這是使用者換了一步／按了「捲過去」才捲的，一律平滑捲動，不看作業系統的減少動態
+ * （很多 Windows 關了動畫效果卻不自知，跟著它就會變成瞬間跳走、看不出往哪裡去）；本站沒有自己的減少動態開關。
+ */
 function scrollTo(el: HTMLElement) {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tall = el.getBoundingClientRect().height > window.innerHeight * 0.55;
   el.style.scrollMarginTop = '84px';
-  el.scrollIntoView({ block: tall ? 'start' : 'center', behavior: reduce ? 'auto' : 'smooth' });
+  el.scrollIntoView({ block: tall ? 'start' : 'center', behavior: 'smooth' });
 }
 
 /** 標示按鈕：在畫面內就貼在目標旁邊寫「點這裡」；在畫面外就在邊緣放一顆按鈕，按了才捲過去 */

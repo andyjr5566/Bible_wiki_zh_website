@@ -145,7 +145,11 @@ export async function createCourtyard(
   labelsHost: HTMLElement,
   labels: LabelSpec[],
   onLabel: (id: string) => void,
-  opts: { reducedMotion: boolean; lowPower: boolean; heroOffset?: boolean; autoRotate?: boolean; drift?: boolean },
+  /**
+   * reducedMotion：裝飾性的自動旋轉、鏡頭到位後的慢繞。
+   * instantCamera：使用者點了才移動的鏡頭要不要直接跳到位；沒給就沿用 reducedMotion。
+   */
+  opts: { reducedMotion: boolean; lowPower: boolean; heroOffset?: boolean; autoRotate?: boolean; drift?: boolean; instantCamera?: () => boolean },
 ): Promise<Courtyard> {
   const renderer = new THREE.WebGLRenderer({ antialias: !opts.lowPower, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, opts.lowPower ? 1 : 1.75));
@@ -243,7 +247,7 @@ export async function createCourtyard(
   let tween: { from: View; to: View; t: number } | null = null;
   function flyTo(v: View, instant = false) {
     controls.autoRotate = false;
-    tween = { from: { pos: camera.position.clone(), target: controls.target.clone() }, to: v, t: opts.reducedMotion || instant ? 1 : 0 };
+    tween = { from: { pos: camera.position.clone(), target: controls.target.clone() }, to: v, t: (opts.instantCamera ? opts.instantCamera() : opts.reducedMotion) || instant ? 1 : 0 };
   }
   const tickers: ((t: number, dt: number) => void)[] = [];
 

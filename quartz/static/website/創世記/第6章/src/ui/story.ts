@@ -3,7 +3,7 @@ import type { Scene } from '../data/types';
 import type { Engine } from '../three/engine';
 import type { Sound } from '../audio/sound';
 import { factLine, refChip, voiceBlock } from './evidence';
-import { h, motionOff, svg } from './dom';
+import { animOff, h, svg } from './dom';
 import { ICONS } from './icons';
 import { reveal, smoothScrollTo } from './motion';
 
@@ -149,7 +149,7 @@ export function mountStory(root: HTMLElement, engine: Engine, sound: Sound, labe
     const dt = Math.min(0.05, (now - autoLast) / 1000);
     autoLast = now;
     const sceneH = secs[1].getBoundingClientRect().height;
-    scrollBy(0, (sceneH / SECONDS_PER_SCENE) * dt * (motionOff() ? 3 : 1));
+    scrollBy(0, (sceneH / SECONDS_PER_SCENE) * dt * (animOff() ? 3 : 1));
     const endTop = end.getBoundingClientRect().top;
     if (endTop < innerHeight * 0.5) return stopAuto();
     auto = requestAnimationFrame(stepAuto);

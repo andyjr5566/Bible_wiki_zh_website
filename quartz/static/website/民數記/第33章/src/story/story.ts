@@ -3,7 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SEGMENTS, STATIONS } from '../data/stations';
 import { TIMED_EXACT, TOTAL_MONTHS, stationMonths, timeLabel } from '../data/dates';
 import { H, POSITIONS, W, pointAt, pos, trailD } from '../geo';
-import { h, motionOff, s } from '../ui/dom';
+import { animOff, h, s } from '../ui/dom';
 import { monthsAt } from '../ui/playhead';
 import { smoothScrollTo } from '../ui/motion';
 import { buildBeats } from './beats';
@@ -184,7 +184,7 @@ export function createStory(opts: { heroSrc: string; reliefSrc: { light: string;
   function frame(now: number) {
     const dt = Math.min(0.25, Math.max(0, (now - last) / 1000));
     last = now;
-    const k = motionOff() && document.documentElement.dataset.motion === 'off' ? 1 : 1 - Math.exp(-dt * 5);
+    const k = animOff() ? 1 : 1 - Math.exp(-dt * 5);
     cur.x = lerp(cur.x, target.x, k);
     cur.y = lerp(cur.y, target.y, k);
     cur.w = lerp(cur.w, target.w, k);

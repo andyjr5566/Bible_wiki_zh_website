@@ -5,7 +5,7 @@ import { OBJECTS } from '../data/objects';
 import { OFFERING_BY_ID } from '../data/offerings';
 import { GROUP_LABEL, OFFERING_KEYS, SCENES, SCENE_BY_ID, type KeyCard, type LaneStep } from '../data/story';
 import type { OfferingId } from '../data/types';
-import { h, motionOff, on, svg } from './dom';
+import { animOff, h, on, svg } from './dom';
 import { factLine, refChips } from './evidence';
 import { EV_ICON, ICONS } from './icons';
 import { ACTOR, OFFERING_STYLE } from './meta';
@@ -112,7 +112,7 @@ export function buildOffering(id: OfferingId): HTMLElement {
     onclick: () => {
       theater.choose({ [o.axes[0].id]: op.id });
       sim?.choose({ [o.axes[0].id]: op.id });
-      theater.el.scrollIntoView({ behavior: motionOff() ? 'auto' : 'smooth', block: 'start' });
+      theater.el.scrollIntoView({ behavior: animOff() ? 'auto' : 'smooth', block: 'start' });
     },
   }, op.label)), h('small', { class: 'tiers-hint' }, '點一種，在上面的 3D 院子看它怎麼獻'));
 

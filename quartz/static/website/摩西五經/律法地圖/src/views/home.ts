@@ -32,7 +32,9 @@ export function homeView(): HTMLElement {
 
 /** 標語：詩1:2 的和合本原句（build-data 逐字讀 raw_scripture） */
 function motto(): HTMLElement {
-  return h('blockquote', { class: 'lm-motto' }, h('p', null, DB.motto.text), h('cite', null, DB.motto.ref));
+  // 在逗號後面換行：直排時一個分句一行，像掛軸的寫法（字一個都不改）
+  const clauses = DB.motto.text.split(/(?<=[，；])/).map((c) => h('span', { class: 'lm-motto-line' }, c));
+  return h('blockquote', { class: 'lm-motto' }, h('p', null, ...clauses), h('cite', null, DB.motto.ref));
 }
 
 function quickTopics(): HTMLElement | null {
@@ -169,7 +171,7 @@ function restated(): HTMLElement | null {
     h('a', { class: 'lm-thread', href: href('compare', c.map((l) => l.id).join(',')), 'data-laws': c.map((l) => l.id).join(' ') },
       h('span', { class: 'lm-thread-title' }, c[0].title),
       h('span', { class: 'lm-thread-line' }, ...books.filter((b) => c.some((l) => l.book === b.name)).map((b) =>
-        h('span', { class: 'lm-thread-node' }, h('b', null, b.name), c.filter((l) => l.book === b.name).map(refText).join('、')))))));
+        h('span', { class: 'lm-thread-node', 'data-book': b.abbr }, h('b', null, b.name), c.filter((l) => l.book === b.name).map(refText).join('、')))))));
   const rest = clusters.length - FIRST_THREADS;
   const more = rest > 0
     ? h('button', { type: 'button', class: 'lm-btn lm-more-q', onclick: (e: MouseEvent) => {

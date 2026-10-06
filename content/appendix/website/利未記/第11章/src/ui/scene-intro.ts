@@ -3,13 +3,23 @@ import { animOff, h, motionOff, s, svg } from './dom';
 import { badge, factLine, quoteLine, refChip, refChips, voiceBlock } from './evidence';
 import { ICONS } from './icons';
 import { layer } from './common';
+import { flythrough } from './flythrough';
 import { sceneHref, sceneNav } from './shell';
 
-/** 開場的大 3D 營地：慢慢繞，標出會幕、這一家的帳棚、營外 */
+/**
+ * 開場：先放一張 Blender 渲染的黃昏營地（會幕上方雲中有火，出40:38），不必等 3D 載入；
+ * 按「轉動 3D 營地」才換成可以拖曳的 3D 場景（標出會幕、這一家的帳棚、營外）。
+ */
 function heroCamp(): HTMLElement {
   const canvas = h('div', { class: 'th-canvas' });
   const tags = h('div', { class: 'labels3d' });
-  const poster = h('div', { class: 'hero-poster' }, ringsSvg(true));
+  const img = h('img', {
+    class: 'hero-render', alt: '黃昏的以色列營地示意圖：中間是會幕和院子，四周是帳棚，會幕上方的雲柱裡有火光。',
+    src: 'images/camp-dusk-1920.jpg', srcset: 'images/camp-dusk-960.jpg 960w, images/camp-dusk-1920.jpg 1920w', sizes: '100vw',
+    decoding: 'async', fetchpriority: 'high',
+  });
+  const pic = h('picture', null, h('source', { media: '(max-width: 720px)', srcset: 'images/camp-dusk-portrait.jpg' }), img);
+  const poster = h('div', { class: 'hero-poster hero-poster-render' }, pic);
   const el = h('div', { class: 'hero-camp' }, canvas, tags, poster);
   const canWebGL = (() => {
     try {
@@ -20,17 +30,24 @@ function heroCamp(): HTMLElement {
     }
   })();
   if (canWebGL) {
-    const idle = (window as unknown as { requestIdleCallback?: (f: () => void) => void }).requestIdleCallback ?? ((f: () => void) => setTimeout(f, 120));
-    idle(async () => {
+    const go = h('button', { class: 'hero-3d', type: 'button' }, svg(ICONS.tent), '轉動 3D 營地');
+    go.addEventListener('click', async () => {
+      go.disabled = true;
+      go.textContent = '載入中…';
       try {
         const { createCamp } = await import('../three/camp');
         const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4 || matchMedia('(max-width: 560px)').matches;
         await createCamp(canvas, tags, { reducedMotion: motionOff() || animOff(), lowPower, hero: true });
+        el.classList.add('is-3d');
         poster.remove();
+        go.remove();
       } catch (e) {
         console.error(e);
+        go.disabled = false;
+        go.textContent = '轉動 3D 營地';
       }
     });
+    el.append(go);
   }
   return el;
 }
@@ -94,6 +111,8 @@ export function buildIntro(): HTMLElement {
     h('h1', { 'aria-label': '潔淨與不潔淨' }, ...[...'潔淨與不潔淨'].map((c, i) => h('span', { class: 'ch', style: `--i:${i}`, 'aria-hidden': 'true' }, c))),
     h('div', { class: 'epi' }, h('p', { class: 'epigraph' }, `「${EPIGRAPH.q}」`), refChip(EPIGRAPH.refs![0], EPIGRAPH.q))));
   hero.append(h('p', { class: 'hero-hint' }, '拖曳可以轉動；營地的大小與帳棚數目是示意。'));
+  // 渲染圖的說明：畫的是哪一節，以及這是示意
+  hero.append(h('p', { class: 'hero-cap' }, factLine(CLOUD), h('span', null, '營地的大小與帳棚數目是示意。')));
 
   const cast = h('div', { class: 'cast' }, ...CAST.map((c) => h('div', { class: `cast-card card who-${c.id}` },
     h('span', { class: 'cast-dot' }), h('b', null, c.name), h('small', null, c.note))));
@@ -144,7 +163,7 @@ export function buildIntro(): HTMLElement {
         h('h2', { class: 'intro-h' }, '我們用一家人為例子，走一遍利未記 11–15 章'),
         h('p', { class: 'lede' }, '第十章最後，神吩咐祭司要分辨潔淨的和不潔淨的。', ...refChips(['利10:10']), ' 第十一到十五章把這件事講得很細：吃什麼、生孩子以後、皮膚和衣服上的病、房屋、身體的漏症。這些都是一般人家裡會碰到的事，所以我們用營中的一家人為例子，一章一章看下去。')),
       layer('這一家人', '人物是虛構的，規矩照經文', cast),
-      layer('能走多近', '這五章的規矩，決定一個人能離會幕多近', rings,
+      layer('能走多近', '這五章的規矩，決定一個人能離會幕多近', flythrough(), rings,
         h('p', { class: 'cloud-note' }, svg(ICONS.fire), factLine(CLOUD))),
       layer('不潔淨有多久', '短的到晚上，長的要等病好', lengths),
       layer('五章各講什麼', '點一章進去', road),

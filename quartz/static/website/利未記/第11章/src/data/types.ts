@@ -57,7 +57,21 @@ export type Spot =
   | 'tentOut' // 自己帳棚外
   | 'onSeat' // 坐在座位上
   | 'onMat' // 躺在墊子上（頭朝北）
-  | 'matBy'; // 墊子東邊
+  | 'matBy' // 墊子東邊
+  | 'cook' // 火堆旁（煮飯的人蹲的地方）
+  | 'potBack' // 瓦罐後面退開一步
+  | 'potF' // 瓦罐東南邊（搬瓦罐的人站的地方）
+  | 'peek' // 桌子東邊（湊過來看的人）
+  | 'bowlBy' // 桌子旁（拿木碗的人）
+  | 'basinM' // 水盆旁（泡木碗的人）
+  | 'edge' // 空地北邊（往外丟東西的地方）
+  | 'fireF' | 'fireM' | 'fireD' // 晚上圍著火堆：父親、母親、女兒
+  | 'inTent' // 帳棚裡（門內）
+  | 'roadM' | 'roadF' | 'roadD' // 回家路上停下來說話：母親、父親、女兒
+  | 'circM' | 'circD' // 全家圍在抱著嬰孩的父親身邊：母親、女兒
+  | 'doorHand' // 會幕門口，女兒走到母親身邊（把東西遞給母親）
+  | 'passBy' // 出營路上經過自家帳棚的地方
+  | 'seeM' | 'seeD'; // 母親、女兒走到路邊看他
 
 export type PropId =
   | 'pot' | 'bowl' | 'lizard' | 'basin' | 'fire'
@@ -70,10 +84,18 @@ export type Mark = 'clean' | 'evening' | 'seven' | 'purify' | 'shut' | 'unclean'
 export type Act =
   | 'look' | 'pick' | 'throw' | 'dip' | 'bow'
   | 'wave' | 'sprinkle' | 'flick' | 'daub' | 'oil' | 'mourn' | 'rip' | 'loosen' | 'cover' | 'shave' | 'restore' | 'offer' | 'touch' | 'wash'
-  | 'sleeve' | 'lean' | 'sit' | 'stand' | 'lie';
+  | 'sleeve' | 'lean' | 'sit' | 'stand' | 'lie'
+  | 'stir' // 照顧火堆／攪湯
+  | 'lift' // 掀開瓦罐的蓋子
+  | 'recoil' // 嚇一跳、往後退
+  | 'smash' // 把瓦罐舉起來摔在地上
+  | 'give'; // 雙手把東西遞給 to（例如把祭物交給祭司）
 
 export type Cue =
-  | { t: 'cam'; view: string }
+  /** 鏡頭：預設飛過去；cut＝直接切換（換場、距離很遠時用，像電影剪接） */
+  | { t: 'cam'; view: string; cut?: boolean }
+  /** 太陽在西邊慢慢落下，天色轉暗（不是整個畫面閃一下） */
+  | { t: 'sunset' }
   | { t: 'walk'; who: CastId; to: Spot; via?: Spot[] }
   | { t: 'at'; who: CastId; to: Spot }
   | { t: 'show'; who: CastId; on: boolean }
@@ -82,15 +104,16 @@ export type Cue =
   | { t: 'bar'; on: boolean }
   /** 道具：hide、at:地點、carry:人（拿在手上／抱著）、lead:人（牽著走）、fly、slain、glow、plain、on、off */
   | { t: 'prop'; id: PropId; state: string }
-  | { t: 'act'; who: CastId; act: Act; to?: CastId }
+  /** to＝轉向某人；toward＝轉向某個地點（例如望向會幕） */
+  | { t: 'act'; who: CastId; act: Act; to?: CastId; toward?: Spot }
   /** 頭上的日子計數，例如「第 8 天」；空字串＝收起 */
   | { t: 'day'; text: string }
   /** 時間快轉：天數從 from 數到 to，天色日夜交替；label 裡的 {n} 換成數字 */
   | { t: 'count'; from: number; to: number; label: string }
   /** 鏡頭跟著一個人走，直到下一個 cam */
   | { t: 'follow'; who: CastId }
-  /** 某個地點冒出一句話（例如帳棚裡的哭聲） */
-  | { t: 'sayAt'; at: Spot; text: string }
+  /** 某個地點冒出一句話（例如帳棚裡的哭聲）；near＝冒在某人身旁（例如他抱著的嬰孩在哭） */
+  | { t: 'sayAt'; at: Spot; text: string; near?: CastId }
   /** 停一下，製造節奏 */
   | { t: 'wait'; ms: number }
   /** 畫面閃一下（判定的那一刻） */

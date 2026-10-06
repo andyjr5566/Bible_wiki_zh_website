@@ -45,7 +45,7 @@ export function quietBadge(status: Status): HTMLElement | null {
 /** 一行事實：文字＋（必要時的）證據標籤＋經節 */
 export function factLine(fact: Fact, opts: { quote?: boolean } = {}): HTMLElement {
   const b = quietBadge(fact.status);
-  const el = h('span', { class: 'fact' }, fact.text, ' ', b, b ? ' ' : null, ...refChips(fact.refs, fact.q));
+  const el = h('span', { class: 'fact', 'data-status': fact.status }, fact.text, ' ', b, b ? ' ' : null, ...refChips(fact.refs, fact.q));
   if (opts.quote && fact.q) el.append(h('span', { class: 'q fact-q' }, fact.q));
   if (fact.note) el.append(h('span', { class: 'fact-note' }, fact.note));
   return el;
@@ -53,7 +53,7 @@ export function factLine(fact: Fact, opts: { quote?: boolean } = {}): HTMLElemen
 
 /** 經文摘句當主角：大字摘句＋出處 */
 export function quoteLine(fact: Fact): HTMLElement {
-  return h('span', { class: 'quote-line' },
+  return h('span', { class: 'quote-line', 'data-status': fact.status },
     fact.q ? h('span', { class: 'q' }, fact.q) : fact.text, ' ', ...refChips(fact.refs, fact.q), ' ', quietBadge(fact.status));
 }
 

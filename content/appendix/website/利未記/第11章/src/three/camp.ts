@@ -22,13 +22,13 @@ const SPOT: Record<Spot, V> = {
   pot: [104.9, 0, 28.6],
   basin: [104.8, 0, 22.4],
   beside: [108.2, 0, 26.2],
-  seatBy: [106.2, 0, 36.4],
+  seatBy: [105.9, 0, 36.8],
   path: [84, 0, 10],
   gate: [57, 0, 1],
   gateF: [62.5, 0, 3.2],
   pathD: [86.5, 0, 14.5],
   pathF: [87.5, 0, 6.5],
-  doorD: [30.5, 0, 8.2],
+  doorD: [27.0, 0, 8.6],
   doorF: [32, 0, 2],
   // 會幕門口：獻祭的人站在壇的東邊，祭司面向他（院子模型：壇在 x=18，院門在 x=50）
   door: [28, 0, 4.5],
@@ -39,14 +39,38 @@ const SPOT: Record<Spot, V> = {
   outP: [296.5, 0, 62.5],
   tentOut: [125, 0, 37.5],
   onSeat: [108, 0, 35.2],
-  onMat: [113, 0, 37.4],
-  matBy: [116.5, 0, 35.5],
+  onMat: [111.5, 0, 36.3],
+  matBy: [115.0, 0, 35.5],
+  cook: [104.6, 0, 30.4],
+  potBack: [106.9, 0, 29.9],
+  potF: [104.6, 0, 26.2],
+  peek: [107.2, 0, 24.2],
+  bowlBy: [105.0, 0, 24.4],
+  basinM: [104.6, 0, 21.2],
+  edge: [104.0, 0, 15.5],
+  fireF: [100.4, 0, 29.4],
+  fireM: [104.9, 0, 32.4],
+  fireD: [102.2, 0, 34.0],
+  inTent: [117.2, 0, 27],
+  roadM: [92.0, 0, 14.8],
+  roadF: [95.2, 0, 11.4],
+  roadD: [93.5, 0, 13.2],
+  circM: [105.3, 0, 30.1],
+  circD: [108.0, 0, 32.6],
+  doorHand: [29.0, 0, 6.6],
+  passBy: [111.5, 0, 8.0],
+  seeM: [107.5, 0, 15.2],
+  seeD: [109.6, 0, 15.9],
 };
 const SEAT: V = [108, 0, 35.2];
-const MAT: V = [113, 0, 35.5];
+const MAT: V = [111.5, 0, 35.5];
 const SHELTER: V = [307, 0, 54];
 const ALTAR_TOP: V = [18, 3.05, 0];
 const POT: V = [102.9, 0, 27.4];
+/** 瓦罐口的高度（Blender 模型）、湯面高度、死蜥蜴的縮放 */
+const POT_RIM = 1.46;
+const SOUP_Y = 1.12;
+const LIZ_SCALE = 0.62;
 const FIRE: V = [102.6, 0, 30.6];
 const BASIN: V = [102.6, 0, 22.4];
 const TABLE: V = [103.4, 0, 25.0];
@@ -67,8 +91,8 @@ const VIEWS: Record<string, View> = {
   washing: [[91, 8.5, 12.5], [104, 2.2, 23]],
   homeward: [[103, 6.5, 11], [84, 2.6, 10.5]],
   gate: [[74, 11, 26], [52, 2, 2]],
-  door: [[44, 10, 22], [24, 2.5, 3]],
-  altar: [[40, 13, 19], [19, 3, 1]],
+  door: [[38.5, 6.8, 15.5], [25.5, 2.4, 3.6]],
+  altar: [[34, 8.5, 13.5], [20.5, 2.8, 2]],
   exit: [[236, 95, 165], [190, 0, 25]],
   outside: [[322, 11, 84], [301, 2.5, 58]],
   tentOut: [[138, 9, 52], [123, 2, 35]],
@@ -77,7 +101,7 @@ const VIEWS: Record<string, View> = {
   apart: [[212, 255, 265], [212, 0, 40]],
   rite: [[313, 8.5, 75], [299.5, 2.4, 60]],
   outClose: [[294.5, 5.6, 68], [303, 2.6, 57]],
-  arm: [[101.5, 7.2, 38.5], [110, 2.8, 27.6]],
+  arm: [[107.5, 6.4, 35.5], [111, 3.0, 27.6]],
   inspectClose: [[60.6, 6.8, 17.5], [59.9, 3.2, 2.1]],
   mournFront: [[55.6, 4.2, -4.6], [62.5, 2.5, 3.2]],
   booth: [[70.5, 9, 17], [61.5, 2.2, 3]],
@@ -86,13 +110,43 @@ const VIEWS: Record<string, View> = {
   reunion: [[118, 6.5, 38], [106.5, 2.5, 29]],
   homeLook: [[99.5, 6.8, 41.5], [121, 3, 13]],
   pathView: [[96, 13, 32], [82, 2, 9]],
-  doorFamily: [[46, 10, 20], [27, 2.5, 4]],
+  doorFamily: [[41, 7.2, 16.5], [27.5, 2.4, 4.4]],
   birthNight: [[99, 10.5, 49], [113.5, 2.6, 28.5]],
   doorClose: [[21.2, 4.4, 10], [27.6, 2.6, 4.2]],
   homeBack: [[124, 11, 50], [110, 2, 29]],
   // 放低的鏡頭：一家人在前景，背後是天空，時間快轉時看得到太陽月亮轉
   skyline: [[92, 4.6, 52], [110, 5.8, 24]],
   inspect: [[69, 7, 17], [59.5, 2.6, 2]],
+  // 第 11 章：帳棚前的空地
+  yardOpen: [[95.5, 7.8, 42], [105.6, 2.2, 28.6]],
+  lidFront: [[96.6, 4.6, 30.4], [104.4, 2.4, 27.8]],
+  potPov: [[104.2, 5.4, 24.6], [102.9, 1.0, 27.4]],
+  smash: [[96.5, 6.2, 21.6], [104.2, 2.2, 27]],
+  bowlClose: [[100.2, 3.6, 21.6], [103.6, 0.8, 25.1]],
+  dump: [[97, 7.5, 33.5], [105, 2.2, 21]],
+  basinDip: [[98.8, 4.6, 18.6], [104, 1.6, 22]],
+  reachLook: [[114, 6.4, 22.6], [60, 1, 4]],
+  sunsetW: [[111.5, 3.4, 33.6], [80, 2.6, 30.5]],
+  fireNight: [[95, 7, 40.5], [103, 2, 31.5]],
+  // 圍著火堆說話：從側面斜拍，女兒問時偏女兒，母親答時偏母親，兩人的臉都看得到
+  askD: [[110.7, 4.8, 39.4], [102.8, 2.4, 33.8]],
+  askM: [[105.6, 4.8, 42.4], [104.4, 2.8, 32.6]],
+  // 第 12 章：帳棚門口、第八天圍著嬰孩、回家路上父女說話
+  tentDoor: [[103.5, 5.5, 34.5], [113.5, 2.6, 27.2]],
+  babyMom: [[100.5, 5.2, 31.5], [109.2, 2.6, 26.6]],
+  babyClose: [[100.5, 5.0, 36.0], [106.3, 2.4, 31.4]],
+  babyTight: [[103.4, 3.9, 34.6], [106.4, 2.7, 31.6]],
+  askRoad: [[103, 4.6, 16.3], [94, 2.4, 12.5]],
+  // 第 13 章：出營路上和家人遠遠對望（兩個鏡頭都在東側，不跨過兩人之間的線）、營外的夜裡
+  lookBackB: [[115.5, 5.0, 23.5], [110.4, 2.6, 9.6]],
+  lookBackA: [[115.6, 4.8, 2.4], [108.4, 2.6, 15.4]],
+  outsideNight: [[294.5, 3.8, 61.5], [302.5, 2.0, 57.5]],
+  // 第 14 章：抹血抹油從北側拍（父親面向西時，右耳、右手、右腳在北側），祭司和父親都在畫面裡
+  daubView: [[29.8, 4.2, -3.8], [25.6, 2.4, 3.1]],
+  askHome: [[112, 4.8, 23.5], [105.6, 2.6, 30.2]],
+  // 第 15 章：躺到墊子上的近景；回家路上女兒問母親（從兩人側面拍）
+  matClose: [[103.8, 4.8, 41.2], [110.2, 1.5, 35.4]],
+  askRoad15: [[99.3, 4.6, 20.1], [92.8, 2.6, 14.0]],
 };
 
 /* ------------------------------------------------------------ 天色 */
@@ -101,7 +155,7 @@ interface SkyLook { bg: string; hemi: number; sun: number; sunCol: string; sunPo
 const SKY: Record<Sky, SkyLook> = {
   day: { bg: '#eadfc8', hemi: 0.95, sun: 2.5, sunCol: '#fff0d0', sunPos: [260, 420, 160], ground: '#dcc59c', night: 0 },
   dusk: { bg: '#e9a678', hemi: 0.55, sun: 1.3, sunCol: '#ffaa66', sunPos: [-520, 90, 120], ground: '#c99a72', night: 0.35 },
-  night: { bg: '#141b2d', hemi: 0.2, sun: 0.22, sunCol: '#8fa6ff', sunPos: [-200, 320, -120], ground: '#3e3a36', night: 1 },
+  night: { bg: '#141b2d', hemi: 0.32, sun: 0.3, sunCol: '#8fa6ff', sunPos: [-200, 320, -120], ground: '#3e3a36', night: 1 },
   dawn: { bg: '#ead2b4', hemi: 0.75, sun: 1.7, sunCol: '#ffd6a4', sunPos: [520, 130, 60], ground: '#d6bd96', night: 0.1 },
 };
 
@@ -129,31 +183,45 @@ const LOOK: Record<CastId, { robe: string; head: string; scale: number; priest?:
 };
 export const CAST_NAME: Record<CastId, string> = { father: '父親', mother: '母親', daughter: '女兒', priest: '祭司' };
 
-/** 木頭棋子造型的人：本體朝 +Z，手臂可以擺動 */
-function figure(id: CastId): THREE.Group {
+/** 從 Blender 模型（public/models/family.glb）複製一份，打開陰影 */
+function part(lib: THREE.Object3D, name: string): THREE.Object3D {
+  const src = lib.getObjectByName(name);
+  if (!src) throw new Error(`family.glb 少了 ${name}`);
+  const o = src.clone(true);
+  o.position.set(0, 0, 0);
+  o.traverse((m) => { if ((m as THREE.Mesh).isMesh) m.castShadow = true; });
+  return o;
+}
+
+/**
+ * 營中的人：身體、頭、臉、頭巾、鬍子在 Blender 做（scripts/blender/build_family.py），
+ * 這裡組成可以動的骨架：本體朝 +Z，body 可以彎腰、躺下，兩隻手臂繞肩膀擺動。
+ * 程式裡的 arm 放在 +X；人面向 +Z 時 +X 是他的左手，所以 body 左右鏡射，arm 才是右手
+ * （利14:14 的右耳垂、右手大拇指、右腳大拇指都跟著到右邊）。
+ */
+function figure(id: CastId, lib: THREE.Object3D): THREE.Group {
   const L = LOOK[id];
   const g = new THREE.Group();
   g.rotation.order = 'YXZ';
   const body = new THREE.Group();
+  body.scale.x = -1;
   g.add(body);
-  const robe = new THREE.MeshStandardMaterial({ color: L.robe, roughness: 0.8 });
+  const shell = part(lib, `${id}_body`);
+  body.add(shell);
+  // 袍子的材質每人一份：洗衣服時會亮一下
+  const robe = new THREE.MeshStandardMaterial({ color: L.robe, roughness: 0.85 });
+  const swapRobe = (o: THREE.Object3D) => o.traverse((m) => {
+    const mm = m as THREE.Mesh;
+    if (mm.isMesh && (mm.material as THREE.Material).name?.startsWith('robe_')) mm.material = robe;
+  });
+  swapRobe(shell);
   g.userData.robe = robe;
   g.userData.robeColor = L.robe;
-  body.add(mesh(new THREE.CylinderGeometry(0.55, 0.95, 3.0, 18), robe, [0, 1.5, 0]));
-  body.add(mesh(new THREE.SphereGeometry(0.5, 20, 14), SKIN, [0, 3.45, 0]));
-  body.add(mesh(new THREE.SphereGeometry(0.09, 8, 6), '#b98c66', [0, 3.42, 0.5]));
   const cover: THREE.Object3D[] = [];
   if (L.priest) {
-    body.add(mesh(new THREE.CylinderGeometry(0.47, 0.5, 0.46, 18), L.head, [0, 3.86, 0]));
-    body.add(mesh(new THREE.CylinderGeometry(0.67, 0.69, 0.22, 18), '#b3263a', [0, 2.15, 0]));
-  } else if (id === 'mother' || id === 'daughter') {
-    // 頭巾垂到肩上
-    const scarf = mesh(new THREE.SphereGeometry(0.6, 18, 12, 0, Math.PI * 2, 0, Math.PI * 0.62), L.head, [0, 3.48, -0.04]);
-    scarf.scale.set(1, 1.05, 1.05);
-    body.add(scarf);
-    body.add(mesh(new THREE.CylinderGeometry(0.62, 0.7, 0.7, 18, 1, true), L.head, [0, 2.95, -0.05]));
-  } else {
-    const c = mesh(new THREE.SphereGeometry(0.55, 18, 10, 0, Math.PI * 2, 0, Math.PI * 0.55), L.head, [0, 3.5, 0]);
+    body.add(part(lib, 'priest_cover'));
+  } else if (id === 'father') {
+    const c = part(lib, 'father_cover');
     body.add(c);
     cover.push(c);
     // 蓬頭散髮（哀悼時才出現）：幾綹亂髮
@@ -171,7 +239,7 @@ function figure(id: CastId): THREE.Group {
     g.userData.hair = hair;
     // 撕裂的衣服：胸前一道裂口
     const rip = new THREE.Group();
-    rip.position.set(0, 2.05, 0.7);
+    rip.position.set(0, 2.05, 0.66);
     rip.rotation.x = -0.15;
     const gap = mesh(new THREE.PlaneGeometry(0.34, 1.9), mat('#24150c', { side: THREE.DoubleSide }));
     rip.add(gap);
@@ -188,17 +256,23 @@ function figure(id: CastId): THREE.Group {
     g.userData.rip = rip;
   }
   g.userData.cover = cover;
+  // 手臂：Blender 模型的原點就在肩膀上
+  const armSrc = lib.getObjectByName(`${id}_arm`)!;
+  const shoulder = armSrc.position;
+  const handY = new THREE.Box3().setFromObject(part(lib, `${id}_arm`)).min.y + 0.14;
   const arm = (side: number) => {
     const pivot = new THREE.Group();
-    pivot.position.set(side * 0.62, 2.75, 0);
-    pivot.add(mesh(new THREE.CapsuleGeometry(0.14, 1.0, 4, 8), robe, [0, -0.65, 0]));
-    pivot.add(mesh(new THREE.SphereGeometry(0.15, 10, 8), SKIN, [0, -1.3, 0]));
+    pivot.position.set(side * Math.abs(shoulder.x), shoulder.y, 0);
+    const a = part(lib, `${id}_arm`);
+    swapRobe(a);
+    pivot.add(a);
     pivot.rotation.z = side * 0.12;
     body.add(pivot);
     return pivot;
   };
   g.userData.arm = arm(1);
   g.userData.armL = arm(-1);
+  g.userData.handY = handY;
   g.userData.body = body;
   g.scale.setScalar(L.scale);
   return g;
@@ -297,33 +371,50 @@ function campfire(): { group: THREE.Group; tick: (t: number) => void; light: THR
   };
 }
 
-function clayPot(): THREE.Group {
-  const g = new THREE.Group();
-  const pts = [[0, 0], [0.42, 0.02], [0.62, 0.35], [0.66, 0.7], [0.52, 1.05], [0.36, 1.18], [0.4, 1.28]].map(([x, y]) => new THREE.Vector2(x, y));
-  const body = mesh(new THREE.LatheGeometry(pts, 28), mat('#b4673e', { side: THREE.DoubleSide, roughness: 0.9 }));
-  g.add(body);
-  const soup = mesh(new THREE.CircleGeometry(0.34, 20), '#7a4a26', [0, 1.16, 0]);
-  soup.rotation.x = -Math.PI / 2;
-  g.add(soup);
-  g.scale.setScalar(1.35);
-  return g;
-}
-
-function shards(): THREE.Group {
-  const g = new THREE.Group();
-  for (let i = 0; i < 7; i++) {
-    const a = (i / 7) * Math.PI * 2;
-    const s = mesh(new THREE.CylinderGeometry(0.66, 0.6, 0.5, 6, 1, true, a, 0.9), mat('#b4673e', { side: THREE.DoubleSide, roughness: 0.9 }));
-    s.userData.dir = new V3(Math.cos(a + 0.45), 0, Math.sin(a + 0.45));
-    s.rotation.z = (Math.random() - 0.5) * 1.2;
-    g.add(s);
-  }
-  const spill = mesh(new THREE.CircleGeometry(1.1, 22), mat('#6e4324', { transparent: true, opacity: 0.85 }), [0, 0.03, 0]);
-  spill.rotation.x = -Math.PI / 2;
-  spill.receiveShadow = true;
-  g.add(spill);
-  g.userData.spill = spill;
-  return g;
+/**
+ * 瓦罐碎片怎麼飛：每片往外、往上彈出，落地彈一兩下、滑一點就停。
+ * 用固定亂數預先算好每一格，播放、快轉、跳到某一步看到的結果都一樣。
+ */
+const SHATTER_MS = 1500;
+type ShardPath = { obj: THREE.Object3D; rest: THREE.Vector3; pos: THREE.Vector3[]; rot: THREE.Euler[] };
+function shatterPaths(list: THREE.Object3D[]): ShardPath[] {
+  let seed = 33;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const steps = Math.round((SHATTER_MS / 1000) * 60);
+  return list.map((obj) => {
+    const rest = obj.position.clone();
+    const out = new V3(rest.x, 0, rest.z);
+    if (out.lengthSq() < 0.01) out.set(rnd() - 0.5, 0, rnd() - 0.5);
+    out.normalize();
+    const p = rest.clone();
+    const v = out.multiplyScalar(1.6 + rnd() * 2.4).add(new V3(0, 1.2 + rnd() * 2.2 + rest.y * 0.8, 0));
+    const r = new THREE.Euler(0, 0, 0);
+    const w = new V3((rnd() - 0.5) * 14, (rnd() - 0.5) * 10, (rnd() - 0.5) * 14);
+    const pos: THREE.Vector3[] = [];
+    const rot: THREE.Euler[] = [];
+    const dt = 1 / 60;
+    for (let i = 0; i <= steps; i++) {
+      pos.push(p.clone());
+      rot.push(r.clone());
+      v.y -= 22 * dt;
+      p.addScaledVector(v, dt);
+      const floor = 0.06;
+      if (p.y < floor) {
+        p.y = floor;
+        v.y = Math.abs(v.y) * 0.3;
+        v.x *= 0.55;
+        v.z *= 0.55;
+        w.multiplyScalar(0.5);
+        if (v.y < 0.5) v.y = 0;
+      }
+      r.x += w.x * dt;
+      r.y += w.y * dt;
+      r.z += w.z * dt;
+      // 落地以後翻滾慢慢停下來
+      if (p.y <= 0.07) w.multiplyScalar(0.86);
+    }
+    return { obj, rest, pos, rot };
+  });
 }
 
 function woodBowl(): THREE.Group {
@@ -341,27 +432,6 @@ function waterBasin(): THREE.Group {
   const water = mesh(new THREE.CircleGeometry(1.08, 26), mat('#5f93a8', { roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.88 }), [0, 0.5, 0]);
   water.rotation.x = -Math.PI / 2;
   g.add(water);
-  return g;
-}
-
-function lizard(): THREE.Group {
-  const g = new THREE.Group();
-  const c = '#6b7a4a';
-  const body = mesh(new THREE.CapsuleGeometry(0.11, 0.42, 4, 8), c);
-  body.rotation.x = Math.PI / 2;
-  g.add(body);
-  g.add(mesh(new THREE.SphereGeometry(0.11, 10, 8), c, [0, 0, 0.36]));
-  const tail = mesh(new THREE.ConeGeometry(0.08, 0.7, 8), c, [0, 0, -0.55]);
-  tail.rotation.x = -Math.PI / 2;
-  g.add(tail);
-  for (const [x, z] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
-    const leg = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.22, 5), c, [x * 0.15, -0.02, z * 0.15]);
-    leg.rotation.z = x * 1.2;
-    g.add(leg);
-  }
-  // 死的：翻過來
-  g.rotation.z = Math.PI;
-  g.scale.setScalar(1.6);
   return g;
 }
 
@@ -506,9 +576,20 @@ function boothModel(): THREE.Group {
   return g;
 }
 
-/** 一圈會發亮的地面光暈：碰到會不潔淨的東西 */
-function glowRing(r: number): THREE.Mesh {
-  const m = new THREE.Mesh(new THREE.RingGeometry(r, r + 0.45, 40), new THREE.MeshBasicMaterial({ color: '#d9622b', transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
+/**
+ * 地面光暈：碰到會不潔淨的東西。圓的給座位；rect＝[寬, 深] 時是貼著東西外緣的長方框（墊子），
+ * 不用大圓圈，免得和站在旁邊的人的光圈疊在一起。
+ */
+function glowRing(r: number, rect?: [number, number]): THREE.Mesh {
+  let geo: THREE.BufferGeometry = new THREE.RingGeometry(r, r + 0.3, 40);
+  if (rect) {
+    const [w, d] = rect;
+    const box = (hw: number, hd: number) => [new THREE.Vector2(-hw, -hd), new THREE.Vector2(hw, -hd), new THREE.Vector2(hw, hd), new THREE.Vector2(-hw, hd)];
+    const shape = new THREE.Shape(box(w / 2 + 0.55, d / 2 + 0.55));
+    shape.holes.push(new THREE.Path(box(w / 2 + 0.25, d / 2 + 0.25)));
+    geo = new THREE.ShapeGeometry(shape);
+  }
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: '#d9622b', transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
   m.rotation.x = -Math.PI / 2;
   m.position.y = 0.07;
   return m;
@@ -570,8 +651,24 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   ground.receiveShadow = true;
   scene.add(ground);
 
-  /* ---- 會幕院子（Blender 模型，單位：肘） ---- */
-  const gltf = await new GLTFLoader().loadAsync(new URL('models/courtyard.glb', document.baseURI).href);
+  /* ---- 會幕院子（Blender 模型，單位：肘）；人物、這一家的帳棚與瓦罐也是 Blender 做的 ---- */
+  const loader = new GLTFLoader();
+  const model = (f: string) => loader.loadAsync(new URL(`models/${f}`, document.baseURI).href);
+  const [gltf, familyGltf, homeGltf] = await Promise.all([model('courtyard.glb'), model('family.glb'), model('home.glb')]);
+  const lib = familyGltf.scene;
+  const homeLib = homeGltf.scene;
+  homeLib.traverse((o) => {
+    if (!(o as THREE.Mesh).isMesh) return;
+    o.castShadow = true;
+    o.receiveShadow = !opts.lowPower;
+  });
+  // 用 glTF 節點（homeLib 的直接子節點）找：一個物件有幾種材質就會拆成幾片網格，
+  // getObjectByName 可能只抓到其中一片（帳棚曾因此只剩深色的布、條紋處變成破洞）
+  const homePart = (name: string) => {
+    const o = homeLib.children.find((c) => c.name === name);
+    if (!o) throw new Error(`home.glb 少了 ${name}`);
+    return o;
+  };
   const court = gltf.scene;
   court.traverse((o) => {
     const m = o as THREE.Mesh;
@@ -646,12 +743,15 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   tents.instanceMatrix.needsUpdate = true;
   scene.add(tents);
 
-  // 這一家的帳棚：門朝西（朝會幕）
-  const homeTent = new THREE.Mesh(tentGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, color: '#c98a5a' }));
+  // 這一家的帳棚（Blender）：門朝西（朝會幕）
+  const homeTent = homePart('home_tent');
+  // 帳棚布是薄薄一層：從門口看進去也要看得到裡面，兩面都畫
+  homeTent.traverse((o) => {
+    const m = (o as THREE.Mesh).material as THREE.Material | undefined;
+    if (m) m.side = THREE.DoubleSide;
+  });
   homeTent.position.copy(v3(HOME));
   homeTent.rotation.y = -Math.PI / 2;
-  homeTent.scale.setScalar(1.15);
-  homeTent.castShadow = homeTent.receiveShadow = true;
   scene.add(homeTent);
 
   // 夜裡帳棚門口的燈火
@@ -696,19 +796,33 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   const fire = campfire();
   fire.group.position.copy(v3(FIRE));
   scene.add(fire.group);
-  const pot = clayPot();
+  // 瓦罐（Blender）：罐身含湯面、蓋子另外一件；打破時換成預先切好的碎片
+  const pot = homePart('pot');
   pot.position.copy(v3(POT));
   scene.add(pot);
-  const potShards = shards();
+  const lid = homePart('pot_lid');
+  scene.add(lid);
+  const LID_ON = new V3(POT[0], POT_RIM, POT[2]);
+  const LID_OFF = new V3(POT[0] - 0.4, 0.06, POT[2] + 1.55);
+  const potShards = new THREE.Group();
   potShards.position.copy(v3(POT));
   potShards.visible = false;
   scene.add(potShards);
+  const shardList = homeLib.children.filter((o) => o.name.startsWith('pot_shard_'));
+  for (const s of shardList) potShards.add(s);
+  const shardPath = shatterPaths(shardList);
+  const spill = mesh(new THREE.CircleGeometry(1.25, 28), mat('#6e4324', { transparent: true, opacity: 0.85 }), [0, 0.03, 0]);
+  spill.rotation.x = -Math.PI / 2;
+  spill.castShadow = false;
+  spill.receiveShadow = true;
+  potShards.add(spill);
   const bowl = woodBowl();
   scene.add(bowl);
   const basin = waterBasin();
   basin.position.copy(v3(BASIN));
   scene.add(basin);
-  const liz = lizard();
+  const liz = homePart('lizard');
+  liz.scale.setScalar(LIZ_SCALE);
   liz.visible = false;
   scene.add(liz);
   // 小桌（一塊平石）
@@ -721,13 +835,13 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   /* ---- 12–15 章的道具：嬰孩、祭物、潔淨禮用的東西、家裡的床和座位 ---- */
   type Item = { obj: THREE.Object3D; home?: V; ring?: THREE.Mesh };
   const items = {} as Partial<Record<PropId, Item>>;
-  const addItem = (id: PropId, obj: THREE.Object3D, home?: V, ring?: number) => {
+  const addItem = (id: PropId, obj: THREE.Object3D, home?: V, ring?: number, rect?: [number, number]) => {
     obj.visible = !!home && (id === 'seat' || id === 'mat');
     if (home) obj.position.copy(v3(home));
     scene.add(obj);
     const it: Item = { obj, home };
     if (ring) {
-      it.ring = glowRing(ring);
+      it.ring = glowRing(ring, rect);
       it.ring.position.set(obj.position.x, 0.07, obj.position.z);
       scene.add(it.ring);
     }
@@ -746,8 +860,8 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   addItem('shelter', shelterModel(), SHELTER);
   items.shelter!.obj.visible = false;
   addItem('booth', boothModel());
-  addItem('seat', seatModel(), SEAT, 1.4);
-  addItem('mat', matModel(), MAT, 2.9);
+  addItem('seat', seatModel(), SEAT, 1.05);
+  addItem('mat', matModel(), MAT, 1, [2.4, 4.6]);
   const altarFire = campfire();
   altarFire.group.scale.setScalar(2.2);
   altarFire.group.position.copy(v3(ALTAR_TOP));
@@ -782,7 +896,7 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   const rings = {} as Record<CastId, THREE.Mesh>;
   const marks = {} as Record<CastId, Mark>;
   for (const id of ['father', 'mother', 'daughter', 'priest'] as CastId[]) {
-    const f = figure(id);
+    const f = figure(id, lib);
     f.visible = false;
     scene.add(f);
     cast[id] = f;
@@ -881,7 +995,10 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   tagsHost.append(flashEl);
   let followWho: CastId | null = null;
   const followOff = new V3(15, 10, 17);
-  const followV = new V3();
+  const followSm = new V3();
+  const followPrev = new V3();
+  let followSpeed = 0;
+  let followFresh = true;
   const followT = new V3();
   let dolly = -1;
   const freeSays: HTMLElement[] = [];
@@ -932,19 +1049,35 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   controls.autoRotateSpeed = 0.28;
   controls.screenSpacePanning = false;
 
-  let fly: { from: View; to: View; t: number } | null = null;
+  /** 鏡頭飛行：近的 1.2 秒、遠的最多 3 秒；遠距離時中途往上拱，不從帳棚、幔子中間穿過去 */
+  let fly: { from: View; to: View; t: number; T: number; lift: number } | null = null;
+  /**
+   * 鏡頭位置依畫面寬窄調整：手機直式畫面左右比較窄，近景會把人切到畫面外，
+   * 所以沿著視線往後拉，讓左右看得到的範圍和桌機差不多（最多拉遠 1.6 倍）。
+   */
+  const fitView = (v: View): View => {
+    const wide = Math.tan(THREE.MathUtils.degToRad(19)) * 1.46;
+    const now = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
+    const k = Math.min(1.6, Math.max(1, wide / now));
+    if (k === 1) return v;
+    const t = v3(v[1]);
+    return [v3(v[0]).sub(t).multiplyScalar(k).add(t).toArray() as V, v[1]];
+  };
   const view = (name: string, instant = false) => {
-    const v = VIEWS[name];
-    if (!v) return;
+    const raw = VIEWS[name];
+    if (!raw) return;
+    const v = fitView(raw);
     controls.autoRotate = false;
     if (instant || opts.reducedMotion) {
       camera.position.copy(v3(v[0]));
       controls.target.copy(v3(v[1]));
       fly = null;
     } else {
-      fly = { from: [camera.position.toArray() as V, controls.target.toArray() as V], to: v, t: 0 };
+      const d = camera.position.distanceTo(v3(v[0]));
+      fly = { from: [camera.position.toArray() as V, controls.target.toArray() as V], to: v, t: 0, T: Math.min(3, Math.max(1.2, 1.1 + d / 90)), lift: d > 30 ? Math.min(40, d * 0.2) : 0 };
     }
   };
+
 
   /* ---- 動畫：每個 tween 都能被快轉 ---- */
   type Anim = { t: number; ms: number; fn: (e: number) => void; done: () => void };
@@ -1007,35 +1140,100 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   const faceTo = (f: THREE.Object3D, p: THREE.Vector3) => {
     f.rotation.y = Math.atan2(p.x - f.position.x, p.z - f.position.z);
   };
+  /**
+   * 走路：整條路線（含途經的地點）一次走完。
+   * 短路程照正常步速；長路程（往會幕、出營、回家）開頭和結尾各約一秒照正常步速，
+   * 中間加速快轉，不跳過、也不拖時間。回傳每個時間點（0–1）走到全程的幾成，以及總毫秒數。
+   */
+  const WALK_V = 7;
+  function pace(dist: number): { ms: number; at: (e: number) => number; fast: (e: number) => number } {
+    if (dist <= 26) {
+      const ms = Math.max(450, (dist / WALK_V) * 1000);
+      return { ms, at: (e) => e, fast: () => 0 };
+    }
+    const tA = 0.9, r = 0.5;
+    let vf = Math.max(24, dist / 2.6);
+    let hold = (dist - 2 * WALK_V * tA - (WALK_V + vf) * r) / vf;
+    if (hold < 0) { vf = (dist - 2 * WALK_V * tA) / r - WALK_V; hold = 0; }
+    const T = 2 * tA + 2 * r + hold;
+    const sm = (x: number) => x * x * (3 - 2 * x);
+    const vAt = (t: number) => {
+      if (t < tA || t > T - tA) return WALK_V;
+      if (t < tA + r) return WALK_V + (vf - WALK_V) * sm((t - tA) / r);
+      if (t > T - tA - r) return WALK_V + (vf - WALK_V) * sm((T - tA - t) / r);
+      return vf;
+    };
+    const N = 240;
+    const cum = [0];
+    for (let i = 1; i <= N; i++) cum.push(cum[i - 1] + vAt(((i - 0.5) / N) * T) * (T / N));
+    const total = cum[N];
+    return {
+      ms: T * 1000,
+      at: (e) => {
+        const x = Math.max(0, Math.min(1, e)) * N;
+        const i = Math.min(N - 1, Math.floor(x));
+        return (cum[i] + (cum[i + 1] - cum[i]) * (x - i)) / total;
+      },
+      fast: (e) => (vAt(e * T) - WALK_V) / Math.max(1, vf - WALK_V),
+    };
+  }
   async function walk(who: CastId, to: Spot, via: Spot[] = []) {
-    for (const v of via) await walk(who, v);
     const f = cast[who];
     if (!f.visible) { at(who, to); return; }
     // 走開了，話就說完了：留在原地的泡泡會讓人以為還在那裡說
     sayTags[who].textContent = '';
     sayTags[who].classList.remove('now', 'say-in');
     (f.userData.arm as THREE.Group).rotation.set(0, 0, 0.12);
-    (f.userData.body as THREE.Group).rotation.x = 0;
-    const a = f.position.clone();
-    const b = v3(SPOT[to]);
-    const dist = a.distanceTo(b);
-    if (dist < 0.05) return;
-    faceTo(f, b);
     const body = f.userData.body as THREE.Group;
-    // 營地很大：長距離走路壓在幾秒內，不然要等很久
-    await tween(Math.min(3200, Math.max(450, (dist / 8) * 1000)), (e) => {
-      f.position.lerpVectors(a, b, e);
-      body.position.y = Math.abs(Math.sin(e * Math.min(dist, 60) * 1.6)) * 0.18 * (e < 1 ? 1 : 0);
+    body.rotation.x = 0;
+    const pts = [f.position.clone(), ...via.map((v) => v3(SPOT[v])), v3(SPOT[to])].filter((p, i, all) => i === 0 || p.distanceTo(all[i - 1]) > 0.05);
+    if (pts.length < 2) return;
+    const lens = pts.slice(1).map((p, i) => p.distanceTo(pts[i]));
+    const dist = lens.reduce((x, y) => x + y, 0);
+    const p = pace(dist);
+    faceTo(f, pts[1]);
+    const tmp = new V3();
+    await tween(p.ms, (e) => {
+      // 走到路線上的哪一點
+      let d = p.at(e) * dist;
+      let k = 0;
+      while (k < lens.length - 1 && d > lens[k]) { d -= lens[k]; k++; }
+      f.position.lerpVectors(pts[k], pts[k + 1], Math.min(1, d / Math.max(lens[k], 1e-6)));
+      // 轉彎：看著前面一小段路，慢慢轉過去
+      tmp.copy(pts[k + 1]);
+      const want = Math.atan2(tmp.x - f.position.x, tmp.z - f.position.z);
+      let dy = want - f.rotation.y;
+      dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+      f.rotation.y += dy * 0.25;
+      const fast = p.fast(e);
+      body.position.y = e < 1 ? Math.abs(Math.sin(e * p.ms * 0.011)) * (0.18 - 0.08 * fast) : 0;
+      body.rotation.x = e < 1 ? 0.14 * fast : 0;
     }, true);
+    f.rotation.y = Math.atan2(pts[pts.length - 1].x - pts[pts.length - 2].x, pts[pts.length - 1].z - pts[pts.length - 2].z);
     body.position.y = 0;
+    body.rotation.x = 0;
   }
-  const handWorld = (f: THREE.Group, out = new V3()) => {
-    const arm = f.userData.arm as THREE.Group;
-    return arm.localToWorld(out.set(0, -1.35, 0));
+  const handWorld = (f: THREE.Group, out = new V3(), left = false) => {
+    const arm = f.userData[left ? 'armL' : 'arm'] as THREE.Group;
+    return arm.localToWorld(out.set(0, f.userData.handY as number, 0));
   };
   let lizardInHand: CastId | null = null;
+  /** 拿在手上的木碗、舉在胸前的瓦罐 */
+  let bowlInHand: CastId | null = null;
+  let potInHands: CastId | null = null;
+  const handL = new V3(), handR = new V3();
 
-  async function act(who: CastId, a: string, to?: CastId) {
+  /**
+   * 往後躺的角度 th（0＝坐直、π/2＝平躺）：身體繞臀部轉，臀部一直留在離地約 0.95 的高度，
+   * 不是整個人從腳底翻倒。
+   */
+  const HIP = 1.4;
+  const recline = (body: THREE.Group, th: number) => {
+    body.rotation.x = -th;
+    body.position.set(0, 0.95 - HIP * Math.cos(th), HIP * Math.sin(th));
+  };
+
+  async function act(who: CastId, a: string, to?: CastId, toward?: Spot) {
     const f = cast[who];
     const body = f.userData.body as THREE.Group;
     const arm = f.userData.arm as THREE.Group;
@@ -1080,30 +1278,105 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
       }
       return;
     }
-    if (a === 'look' || a === 'bow') {
+    if (a === 'look') {
+      // 看向某人／某處：慢慢轉過去，看著停一下；身體不彎（彎腰看起來像鞠躬）
+      const p = to ? cast[to].position : toward ? v3(SPOT[toward]) : null;
+      if (p) {
+        const y0 = f.rotation.y;
+        let dy = Math.atan2(p.x - f.position.x, p.z - f.position.z) - y0;
+        dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+        if (Math.abs(dy) > 0.05) await tween(450, (e) => (f.rotation.y = y0 + dy * e));
+      }
+      await tween(450, () => {});
+    } else if (a === 'bow') {
       if (to) faceTo(f, cast[to].position);
-      const k = a === 'bow' ? 0.5 : 0.32;
-      await tween(500, (e) => (body.rotation.x = k * e));
-      await tween(500, (e) => (body.rotation.x = k * (1 - e)));
+      await tween(500, (e) => (body.rotation.x = 0.5 * e));
+      await tween(500, (e) => (body.rotation.x = 0.5 * (1 - e)));
+    } else if (a === 'give' && to) {
+      // 雙手捧著往前遞給對方，停一下，再收回來
+      const armL = f.userData.armL as THREE.Group;
+      faceTo(f, cast[to].position);
+      faceTo(cast[to], f.position);
+      await tween(500, (e) => { arm.rotation.x = -1.3 * e; armL.rotation.x = -1.3 * e; arm.rotation.z = 0.12 - 0.25 * e; armL.rotation.z = -0.12 + 0.25 * e; body.rotation.x = 0.12 * e; });
+      // 手伸到對方面前的那一刻，手上的東西（抱著的、牽著的）都交到對方手上
+      for (const [id, fl] of follow) if (fl.who === who) follow.set(id, { ...fl, who: to });
+      await tween(500, () => {});
+      await tween(450, (e) => { arm.rotation.x = -1.3 * (1 - e); armL.rotation.x = -1.3 * (1 - e); arm.rotation.z = -0.13 + 0.25 * e; armL.rotation.z = 0.13 - 0.25 * e; body.rotation.x = 0.12 * (1 - e); });
     } else if (a === 'pick') {
-      faceTo(f, v3(POT));
-      await tween(450, (e) => { arm.rotation.x = -1.3 * e; body.rotation.x = 0.3 * e; });
+      // 彎腰從蜥蜴所在的地方（木碗裡）撿起來
+      faceTo(f, liz.position);
+      await tween(500, (e) => { arm.rotation.x = -1.0 * e; body.rotation.x = 0.38 * e; });
       lizardInHand = who;
       liz.visible = true;
-      await tween(450, (e) => { arm.rotation.x = -1.3 + 0.4 * e; body.rotation.x = 0.3 * (1 - e); });
+      await tween(450, (e) => { arm.rotation.x = -1.0 + 0.2 * e; body.rotation.x = 0.38 * (1 - e); });
     } else if (a === 'throw') {
-      const target = new V3(f.position.x + 6, 0.1, f.position.z + 9);
+      // 往空地外面丟（北邊，沒有人的方向）
+      const target = new V3(f.position.x - 2, 0.1, f.position.z - 10);
       faceTo(f, target);
-      await tween(300, (e) => (arm.rotation.x = -0.9 - 1.6 * e));
+      await tween(320, (e) => (arm.rotation.x = -0.8 - 1.7 * e));
       lizardInHand = null;
       const from = handWorld(f);
-      await tween(700, (e) => {
+      await tween(800, (e) => {
         liz.position.lerpVectors(from, target, e);
-        liz.position.y = from.y * (1 - e) + Math.sin(e * Math.PI) * 3;
-        liz.rotation.x = e * 8;
+        liz.position.y = from.y * (1 - e) + Math.sin(e * Math.PI) * 3.2 + 0.1 * e;
+        liz.rotation.x = e * 9;
       }, true);
       liz.visible = false;
       await tween(350, (e) => (arm.rotation.x = -2.5 * (1 - e)));
+    } else if (a === 'stir') {
+      // 蹲在火邊照顧火、攪一攪湯
+      faceTo(f, v3(FIRE));
+      await tween(450, (e) => { body.position.y = -0.35 * e; body.rotation.x = 0.3 * e; arm.rotation.x = -0.9 * e; });
+      await tween(1600, (e) => { arm.rotation.x = -0.9 - 0.25 * Math.sin(e * Math.PI * 4); arm.rotation.y = 0.35 * Math.cos(e * Math.PI * 4); }, true);
+      await tween(450, (e) => { body.position.y = -0.35 * (1 - e); body.rotation.x = 0.3 * (1 - e); arm.rotation.x = -0.9 * (1 - e); arm.rotation.y = 0; });
+    } else if (a === 'lift') {
+      // 掀開瓦罐的蓋子，擱在旁邊地上
+      faceTo(f, v3(POT));
+      await tween(450, (e) => { arm.rotation.x = -1.25 * e; body.rotation.x = 0.25 * e; });
+      const from = lid.position.clone();
+      const up = from.clone().add(new V3(0, 0.7, 0));
+      await tween(450, (e) => { lid.position.lerpVectors(from, up, e); lid.rotation.z = 0.5 * e; });
+      await tween(550, (e) => {
+        lid.position.lerpVectors(up, LID_OFF, e);
+        lid.position.y += Math.sin(e * Math.PI) * 0.5;
+        lid.rotation.z = 0.5 + 0.9 * e;
+        arm.rotation.x = -1.25 + 0.5 * e;
+      });
+      await tween(350, (e) => { arm.rotation.x = -0.75 * (1 - e); body.rotation.x = 0.25 * (1 - e) + 0.32 * e; });
+    } else if (a === 'recoil') {
+      // 嚇一跳：兩手縮到胸前、身體往後仰、退一步
+      const armL = f.userData.armL as THREE.Group;
+      const back = new V3(Math.sin(f.rotation.y), 0, Math.cos(f.rotation.y)).multiplyScalar(-1.1);
+      const from = f.position.clone();
+      await tween(380, (e) => {
+        arm.rotation.x = -1.7 * e; armL.rotation.x = -1.7 * e;
+        arm.rotation.z = 0.12 - 0.5 * e; armL.rotation.z = -0.12 + 0.5 * e;
+        body.rotation.x = 0.32 - 0.5 * e;
+        f.position.copy(from).addScaledVector(back, e);
+      });
+      await tween(700, () => {});
+      await tween(500, (e) => {
+        arm.rotation.x = -1.7 * (1 - e); armL.rotation.x = -1.7 * (1 - e);
+        arm.rotation.z = -0.38 + 0.5 * e; armL.rotation.z = 0.38 - 0.5 * e;
+        body.rotation.x = -0.18 * (1 - e);
+      });
+    } else if (a === 'smash') {
+      // 彎腰把瓦罐抱起來，舉過胸口，往地上一摔
+      const armL = f.userData.armL as THREE.Group;
+      faceTo(f, v3(POT));
+      const both = (x: number) => { arm.rotation.x = x; armL.rotation.x = x; };
+      await tween(500, (e) => { both(-0.9 * e); body.rotation.x = 0.45 * e; arm.rotation.z = 0.12 - 0.3 * e; armL.rotation.z = -0.12 + 0.3 * e; });
+      potInHands = who;
+      await tween(650, (e) => { both(-0.9 - 0.9 * e); body.rotation.x = 0.45 - 0.6 * e; });
+      await tween(300, () => {});
+      // 往前下方摔：瓦罐離手，加速落回原來的地方
+      potInHands = null;
+      const from = pot.position.clone();
+      const fromQ = pot.rotation.x;
+      await tween(330, (e) => { both(-1.8 + 1.3 * e); body.rotation.x = -0.15 + 0.5 * e; pot.position.lerpVectors(from, v3(POT), e * e); pot.rotation.x = fromQ + 0.4 * e; }, true);
+      pot.rotation.x = 0;
+      await prop('pot', 'broken');
+      await tween(400, (e) => { both(-0.5 * (1 - e)); body.rotation.x = 0.35 * (1 - e); arm.rotation.z = -0.18 + 0.3 * e; armL.rotation.z = 0.18 - 0.3 * e; });
     } else if (a === 'dip') {
       faceTo(f, v3(BASIN));
       await tween(400, (e) => (arm.rotation.x = -1.0 * e));
@@ -1227,13 +1500,21 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
       faceTo(f, v3(SPOT.yard));
       await tween(450, (e) => { body.position.y = -0.55 * e; body.rotation.x = -0.1 * e; });
     } else if (a === 'stand') {
+      if (body.rotation.x < -1) {
+        // 從躺著起身：照躺下的路倒回去，先坐起來再站
+        await tween(900, (e) => recline(body, (1 - e) * (Math.PI / 2 + 0.15) - 0.15));
+        await tween(450, (e) => { body.position.set(0, -0.45 * (1 - e), 0); body.rotation.x = 0.15 * (1 - e); });
+        return;
+      }
       const y0 = body.position.y;
+      const z0 = body.position.z;
       const x0 = body.rotation.x;
-      await tween(450, (e) => { body.position.y = y0 * (1 - e); body.rotation.x = x0 * (1 - e); });
+      await tween(450, (e) => { body.position.y = y0 * (1 - e); body.position.z = z0 * (1 - e); body.rotation.x = x0 * (1 - e); });
     } else if (a === 'lie') {
-      // 躺在墊子上：整個人往後倒，頭朝北（−z）
+      // 躺到墊子上：先坐下，再以臀部為軸往後躺平，頭朝北（−z）枕在枕頭上
       f.rotation.y = 0;
-      await tween(700, (e) => { body.rotation.x = -(Math.PI / 2) * e; body.position.y = 1.3 * e; });
+      await tween(500, (e) => { body.position.set(0, -0.45 * e, 0); body.rotation.x = 0.15 * e; });
+      await tween(1000, (e) => recline(body, e * (Math.PI / 2 + 0.15) - 0.15));
     } else if (a === 'touch' && to === undefined) {
       const it = [items.seat!.obj, items.mat!.obj].sort((p, q) => p.position.distanceTo(f.position) - q.position.distanceTo(f.position))[0];
       faceTo(f, it.position);
@@ -1245,35 +1526,47 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
   async function prop(id: PropId, state: string) {
     if (id === 'pot') {
       if (state === 'whole') { pot.visible = true; potShards.visible = false; return; }
+      if (state === 'gone') { pot.visible = false; potShards.visible = false; return; }
       if (state === 'broken') {
-        await tween(260, (e) => (pot.position.y = Math.sin(e * Math.PI) * 0.5));
+        // 罐子一落地就碎：碎片往四面彈開，湯灑一地；湯裡的死蜥蜴被甩出來，掉進桌上的木碗（利11:32）
         pot.visible = false;
         potShards.visible = true;
-        const spill = potShards.userData.spill as THREE.Mesh;
-        await tween(600, (e) => {
-          potShards.children.forEach((c) => {
-            const d = c.userData.dir as THREE.Vector3 | undefined;
-            if (!d) return;
-            c.position.set(d.x * 1.3 * e, 0.25 + Math.sin(e * Math.PI) * 0.6 - 0.1 * e, d.z * 1.3 * e);
-          });
-          spill.scale.setScalar(0.3 + 0.7 * e);
-        });
-        if (liz.visible && !lizardInHand) liz.position.set(POT[0] + 0.4, 0.15, POT[2] + 0.2);
+        const lizFrom = liz.position.clone();
+        const lizTo = BOWL_OUT.clone().add(new V3(0, 0.3, 0));
+        const steps = shardPath[0].pos.length - 1;
+        await tween(SHATTER_MS, (e) => {
+          const i = Math.min(steps, Math.round(e * steps));
+          for (const sp of shardPath) {
+            sp.obj.position.copy(sp.pos[i]);
+            sp.obj.rotation.copy(sp.rot[i]);
+          }
+          spill.scale.setScalar(0.25 + 0.75 * Math.min(1, e * 2.2));
+          if (liz.visible && !lizardInHand) {
+            const k = Math.min(1, e * 1.6);
+            liz.position.lerpVectors(lizFrom, lizTo, k);
+            liz.position.y += Math.sin(k * Math.PI) * 1.6;
+            liz.rotation.y = 0.6 + k * 2.4;
+          }
+        }, true);
       }
     } else if (id === 'lizard') {
       if (state === 'pot') {
+        // 浮在湯面上，肚子朝上
         liz.visible = true;
-        liz.position.set(POT[0], 1.85, POT[2]);
-        liz.rotation.set(0, 0.6, Math.PI);
-        await tween(300, (e) => liz.scale.setScalar(1.6 * e));
+        liz.position.set(POT[0] + 0.05, SOUP_Y + 0.08, POT[2] - 0.05);
+        liz.rotation.set(0, 0.6, 0);
+        liz.scale.setScalar(LIZ_SCALE);
       } else liz.visible = false;
     } else if (id === 'bowl') {
+      const [kind, who] = state.split(':');
+      if (kind === 'carry') { bowlInHand = who as CastId; return; }
+      bowlInHand = null;
       const from = bowl.position.clone();
       const to = state === 'water' ? BOWL_IN : BOWL_OUT;
       if (from.distanceTo(to) < 0.01) return;
-      await tween(800, (e) => {
+      await tween(700, (e) => {
         bowl.position.lerpVectors(from, to, e);
-        bowl.position.y += Math.sin(e * Math.PI) * 1.2;
+        bowl.position.y += Math.sin(e * Math.PI) * 0.6;
       });
     } else if (id === 'fire') {
       fire.group.visible = state === 'on';
@@ -1392,8 +1685,15 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
 
   async function cue(c: Cue) {
     switch (c.t) {
-      case 'cam': followWho = null; view(c.view, skipping || instantMode); return;
-      case 'follow': followWho = c.who; fly = null; controls.autoRotate = false; return;
+      case 'cam': followWho = null; view(c.view, skipping || instantMode || !!c.cut); return;
+      case 'follow':
+        followWho = c.who;
+        fly = null;
+        controls.autoRotate = false;
+        followFresh = true;
+        followSpeed = 0;
+        followPrev.copy(cast[c.who].position);
+        return;
       case 'wait': await tween(c.ms, () => {}); return;
       case 'together': await Promise.all(c.cues.map((x) => cue(x))); return;
       case 'flash':
@@ -1407,8 +1707,10 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
         el.className = 'tag3d say now say-in';
         el.textContent = c.text;
         tagsHost.append(el);
+        const near = c.near ? cast[c.near] : null;
         const p = v3(SPOT[c.at]).add(new V3(4, 7, 0));
-        tags.push({ el, at: () => p, show: () => el.isConnected });
+        const nearV = new V3();
+        tags.push({ el, at: () => (near ? nearV.copy(near.position).add(new V3(0, 3.2 * near.scale.y, 0)) : p), show: () => el.isConnected });
         freeSays.push(el);
         await tween(1400, () => {});
         return;
@@ -1438,6 +1740,24 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
         return;
       }
       case 'sky': setSky(c.sky); return;
+      case 'sunset': {
+        // 太陽在鏡頭前方慢慢沉到地平線下，天色同時轉暗（不是整個畫面閃一下）
+        setSky('night');
+        if (skipping || instantMode || opts.reducedMotion) return;
+        aimOrbs();
+        trail.visible = false;
+        moonOrb.visible = false;
+        sky3.visible = true;
+        await tween(3400, (e) => {
+          const el = 0.42 - 0.62 * e;
+          sunOrb.position.copy(orbC).addScaledVector(orbR, -ORB_R * 0.18).add(new V3(0, Math.sin(el) * ORB_R + 30, 0));
+          (sunOrb.children[1] as THREE.Mesh).scale.setScalar(1 + 0.15 * e);
+        }, true);
+        sky3.visible = false;
+        trail.visible = true;
+        moonOrb.visible = true;
+        return;
+      }
       case 'at': at(c.who, c.to); return;
       case 'walk': await walk(c.who, c.to, c.via); return;
       case 'day':
@@ -1448,7 +1768,9 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
       case 'mark': await setMark(c.who, c.mark); return;
       case 'bar': await setBar(c.on); return;
       case 'prop': await prop(c.id, c.state); return;
-      case 'act': await act(c.who, c.act, c.to); return;
+      case 'act':
+        if (c.toward && c.act !== 'look') faceTo(cast[c.who], v3(SPOT[c.toward]));
+        await act(c.who, c.act, c.to, c.toward); return;
       case 'say': {
         const f = cast[c.who];
         if (c.to) faceTo(f, cast[c.to].position);
@@ -1505,9 +1827,10 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
       applySky(ease(skyT));
     }
     if (fly) {
-      fly.t = Math.min(1, fly.t + dt / 1.7);
+      fly.t = Math.min(1, fly.t + dt / fly.T);
       const e = ease(fly.t);
       camera.position.lerpVectors(v3(fly.from[0]), v3(fly.to[0]), e);
+      camera.position.y += Math.sin(e * Math.PI) * fly.lift;
       controls.target.lerpVectors(v3(fly.from[1]), v3(fly.to[1]), e);
       if (fly.t >= 1) {
         fly = null;
@@ -1517,20 +1840,31 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
         } else dolly = 0;
       }
     }
-    // 跟拍：鏡頭保持在那個人的斜後上方，慢慢跟上
+    // 跟拍：鏡頭在走路的人斜後上方，看得到他往哪裡走。
+    // 位置直接跟住人（高速移動時才不會落後、穿過帳棚），只有角度和高度慢慢轉過去；
+    // 走得越快，鏡頭升得越高、拉得越遠，越過帳棚和院子的幔子。
     if (followWho && !fly) {
       const f = cast[followWho];
-      // 鏡頭在走路的人斜後方：看得到他往哪裡走
       const ry = f.rotation.y;
-      followOff.set(-Math.sin(ry) * 13 + Math.cos(ry) * 5, 7.5, -Math.cos(ry) * 13 - Math.sin(ry) * 5);
-      const want = followV.copy(f.position).add(followOff);
-      const k = Math.min(1, dt * 3.5);
-      camera.position.lerp(want, k);
-      controls.target.lerp(followT.copy(f.position).add(new V3(0, 2.2, 0)), k);
+      const speed = followPrev.distanceTo(f.position) / Math.max(dt, 1e-3);
+      followPrev.copy(f.position);
+      followSpeed += (Math.min(speed, 80) - followSpeed) * Math.min(1, dt * 3);
+      const lift = Math.min(1, followSpeed / 40);
+      const back = 13 + 9 * lift;
+      followOff.set(-Math.sin(ry) * back + Math.cos(ry) * 5, 9 + 9 * lift, -Math.cos(ry) * back - Math.sin(ry) * 5);
+      if (followFresh) {
+        // 從上一個鏡頭接過來；但上一個鏡頭若貼在這個人身邊（近景），直接換到跟拍位置，免得貼著他的背走一段
+        followSm.copy(camera.position).sub(f.position);
+        if (followSm.length() < 11) followSm.copy(followOff);
+        followFresh = false;
+      }
+      followSm.lerp(followOff, Math.min(1, dt * 2.2));
+      camera.position.copy(f.position).add(followSm);
+      controls.target.lerp(followT.copy(f.position).add(new V3(0, 2.2, 0)), Math.min(1, dt * 14));
     } else if (dolly >= 0 && dolly < 9 && !opts.reducedMotion) {
       // 讀字幕的時候，鏡頭很慢地往前推一點，畫面不會停死，也不會轉走
       dolly += dt;
-      camera.position.lerp(controls.target, dt * 0.01);
+      camera.position.lerp(controls.target, dt * 0.028);
     }
     controls.update();
     // 陰影跟著鏡頭看的地方走：近看清楚，遠看涵蓋整個營
@@ -1552,6 +1886,18 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
     }
     if (lizardInHand) {
       handWorld(cast[lizardInHand], liz.position);
+    }
+    if (bowlInHand) {
+      handWorld(cast[bowlInHand], bowl.position);
+      bowl.position.y -= 0.3;
+    }
+    if (potInHands) {
+      // 兩手捧著罐腰
+      const f = cast[potInHands];
+      handWorld(f, handR);
+      handWorld(f, handL, true);
+      pot.position.copy(handR).add(handL).multiplyScalar(0.5);
+      pot.position.y -= 0.75;
     }
     for (const [id, fl] of follow) {
       const o = items[id]!.obj;
@@ -1582,7 +1928,7 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
     const fs = items.seat!.ring!.material as THREE.MeshBasicMaterial;
     const fm = items.mat!.ring!.material as THREE.MeshBasicMaterial;
     if (fs.opacity > 0.05) items.seat!.ring!.scale.setScalar(1 + Math.sin(t * 3) * 0.05);
-    if (fm.opacity > 0.05) items.mat!.ring!.scale.setScalar(1 + Math.sin(t * 3) * 0.04);
+    if (fm.opacity > 0.05) items.mat!.ring!.scale.setScalar(1 + Math.sin(t * 3) * 0.02);
     if (altarFire.group.visible) altarFire.tick(t);
     renderer.render(scene, camera);
     const w = host.clientWidth;
@@ -1608,7 +1954,11 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
         if (!hit) break;
         y = hit.y0 - 3;
       }
-      placed.push({ x0: x - bw / 2, x1: x + bw / 2, y0: y - bh, y1: y });
+      // 對話泡泡被往上推時，不能推出畫面頂端
+      const isSay = tg.el.classList.contains('say');
+      if (isSay) y = Math.max(y, bh + 6);
+      // 對話泡泡下面有一個小尖角，也要算進去，名牌才不會壓到它
+      placed.push({ x0: x - bw / 2, x1: x + bw / 2, y0: y - bh, y1: y + (isSay ? 9 : 0) });
       tg.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
     }
   }
@@ -1635,7 +1985,7 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
       (cast[id].userData.armL as THREE.Group).rotation.x = 0;
       const body = cast[id].userData.body as THREE.Group;
       body.rotation.x = 0;
-      body.position.y = 0;
+      body.position.set(0, 0, 0);
       (cast[id].userData.arm as THREE.Group).rotation.x = 0;
       (cast[id].userData.armL as THREE.Group).rotation.set(0, 0, -0.12);
       for (const d of (cast[id].userData.dots ?? []) as THREE.Object3D[]) d.removeFromParent();
@@ -1660,9 +2010,15 @@ export async function createCamp(host: HTMLElement, tagsHost: HTMLElement, opts:
     dayTag.classList.remove('on');
     pot.visible = true;
     pot.position.set(...POT);
+    pot.rotation.set(0, 0, 0);
+    lid.position.copy(LID_ON);
+    lid.rotation.set(0, 0, 0);
     potShards.visible = false;
+    for (const sp of shardPath) { sp.obj.position.copy(sp.rest); sp.obj.rotation.set(0, 0, 0); }
     liz.visible = false;
     lizardInHand = null;
+    bowlInHand = null;
+    potInHands = null;
     bowl.position.copy(BOWL_OUT);
     fire.group.visible = true;
     barMat.opacity = 0;

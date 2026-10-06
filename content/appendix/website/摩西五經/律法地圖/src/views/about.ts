@@ -41,7 +41,8 @@ export function aboutView(): HTMLElement {
 const he = (t: string) => h('span', { lang: 'he', dir: 'rtl' }, t);
 
 function matrix(): HTMLElement {
-  const cell = (n: number, target: string) => h('td', { class: n ? 'lm-cell' : 'lm-cell lm-cell-empty' }, n ? h('a', { href: target }, String(n)) : '·');
+  // 格子的底色深淺跟著條數走（開根號，免得幾個大數把其他格子都壓成淡色）
+  const cell = (n: number, target: string) => h('td', { class: n ? 'lm-cell' : 'lm-cell lm-cell-empty', style: n ? `--v: ${Math.min(1, Math.sqrt(n / 40)).toFixed(2)}` : null }, n ? h('a', { href: target }, String(n)) : '·');
   const rows: HTMLElement[] = [];
   for (const g of DB.groups) {
     const gl = lawsOfGroup(g.id);
@@ -49,7 +50,7 @@ function matrix(): HTMLElement {
     for (const tid of g.topics) {
       const ls = lawsOfTopic(tid);
       if (!ls.length) continue;
-      rows.push(h('tr', { class: 'lm-mrow-topic' }, h('th', { scope: 'row' }, h('a', { href: href('topic', tid) }, topicById.get(tid)!.name)), ...books.map((b) => cell(ls.filter((l) => l.book === b.name).length, href('topic', tid)))));
+      rows.push(h('tr', { class: 'lm-mrow-topic', style: `--c: var(--g${g.color})` }, h('th', { scope: 'row' }, h('a', { href: href('topic', tid) }, topicById.get(tid)!.name)), ...books.map((b) => cell(ls.filter((l) => l.book === b.name).length, href('topic', tid)))));
     }
   }
   return h('div', { class: 'lm-table-wrap' },

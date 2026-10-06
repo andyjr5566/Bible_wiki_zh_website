@@ -11,7 +11,7 @@ export function buildChrome(): HTMLElement {
     h('button', {
       type: 'button', class: 'lm-icon-btn', title: '切換深淺色', 'aria-label': `深淺色：${store.theme === 'auto' ? '跟著系統' : store.theme === 'dark' ? '深色' : '淺色'}`,
       onclick: () => store.setTheme(store.theme === 'auto' ? 'dark' : store.theme === 'dark' ? 'light' : 'auto'),
-    }, store.theme === 'auto' ? '◐' : store.theme === 'dark' ? '●' : '○'),
+    }, store.theme === 'auto' ? '◐' : store.theme === 'dark' ? '夜' : '晝'),
     h('button', { type: 'button', class: 'lm-icon-btn', 'aria-pressed': String(store.big), title: '字放大', onclick: () => store.setBig(!store.big) }, '大'));
   store.on('prefs', renderPrefs);
   renderPrefs();

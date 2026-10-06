@@ -92,7 +92,9 @@ a { color: var(--bronze); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .muted { color: var(--ink-2); }
 .fine { color: var(--ink-3); font-size: 0.82em; margin-top: 10px; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* 點選單跳到某一區是使用者自己的動作，只看本站的「減少動態」開關，不看作業系統的偏好；
+   ScrollTrigger 會在 html 寫入行內 scroll-behavior: smooth，所以要 !important */
+:root[data-motion='off'] { scroll-behavior: auto !important; }
 :root[data-motion='off'] *, :root[data-motion='off'] *::before, :root[data-motion='off'] *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 
 .wrap { width: min(1180px, 100% - 32px); margin-inline: auto; }

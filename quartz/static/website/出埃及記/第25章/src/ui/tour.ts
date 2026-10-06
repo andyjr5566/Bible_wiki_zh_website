@@ -2,7 +2,7 @@ import { DEBATES } from '../data/debates';
 import { GIVING, MATERIALS } from '../data/materials';
 import { EPIGRAPH, ORDER_VOICES, REVEAL, STOPS, TITLE, WALK, type Stop } from '../data/stops';
 import type { LayerId, Stage } from '../three/tabernacle';
-import { fill, h, motionOff, svg } from './dom';
+import { animOff, fill, h, motionOff, svg } from './dom';
 import { openDrawer } from './drawer';
 import { factLine, interpHeading, refChip, voiceBlock } from './evidence';
 import { ICONS } from './icons';
@@ -265,7 +265,7 @@ export function mountTour(host: HTMLElement) {
     const start = activeIdx + 1 >= list.length ? 0 : Math.max(0, activeIdx + 1);
     for (let i = start; i < list.length; i++) {
       if (autoToken !== my) return;
-      const ok = await smoothScrollTo(yFor(list[i].id), motionOff() ? 0 : 3400, () => autoToken !== my);
+      const ok = await smoothScrollTo(yFor(list[i].id), animOff() ? 0 : 3400, () => autoToken !== my);
       if (!ok || autoToken !== my) return;
       await new Promise((r) => setTimeout(r, 4200));
     }
@@ -293,7 +293,7 @@ export function mountTour(host: HTMLElement) {
   if (!canWebGL) loading.textContent = '這台裝置不支援 3D。文字導覽照樣可以讀。';
   else {
     import('../three/tabernacle').then(({ createStage }) => createStage(stageHost, {
-      reducedMotion: motionOff(), lowPower, onProgress: (p) => (loading.textContent = `載入會幕模型… ${Math.round(p * 100)}%`),
+      reducedMotion: motionOff(), instantEase: animOff(), lowPower, onProgress: (p) => (loading.textContent = `載入會幕模型… ${Math.round(p * 100)}%`),
     })).then((st) => {
       world = st;
       world.setPath(list.map((s) => s.view), list.map((s) => (s.peel ? 1 : 0)));

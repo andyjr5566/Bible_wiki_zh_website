@@ -56,6 +56,12 @@ export const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '
 export const motionOff = () =>
   document.documentElement.dataset.motion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/**
+ * 使用者自己按下的播放、點了才捲過去的跳轉，只看本站的「減少動態」開關，不看作業系統的偏好；
+ * 裝飾性的動畫（自動旋轉、進場淡入、環境飄動）才用 motionOff()。
+ */
+export const animOff = () => document.documentElement.dataset.motion === 'off';
+
 export const wait = (ms: number) => new Promise((r) => setTimeout(r, motionOff() ? 0 : ms));
 
 /** 簡單的事件匯流排：跨區塊溝通（例如首頁選了動機→模擬器切換） */

@@ -98,9 +98,10 @@ export function mountReel(reel: Reel): { el: HTMLElement } {
     if (i >= beats.length - 1) i = -1;
     renderPlay();
     while (playing && my === token && i < beats.length - 1) {
-      // 讀字幕的時間和動畫同時起算：動畫夠長就直接接下一步，太短才補足
+      // 讀字幕的時間和動畫同時起算：動畫夠長就直接接下一步，太短才補足。
+      // 故事一秒讀約九個字；經文摘句通常短，一秒約十四個字
       const b = beats[i + 1];
-      const read = 1200 + (b.story.length + (b.rule.q?.length ?? 0)) * 75;
+      const read = 1400 + b.story.length * 110 + (b.rule.q?.length ?? 0) * 70;
       await Promise.all([go(i + 1), wait(read)]);
       if (my !== token) return;
     }

@@ -75,7 +75,7 @@ function weaveTexture(cherubim: boolean): THREE.CanvasTexture {
   return t;
 }
 
-export async function createStage(host: HTMLElement, opts: { reducedMotion: boolean; lowPower: boolean; onProgress?: (p: number) => void }): Promise<Stage> {
+export async function createStage(host: HTMLElement, opts: { reducedMotion: boolean; instantEase: boolean; lowPower: boolean; onProgress?: (p: number) => void }): Promise<Stage> {
   const renderer = new THREE.WebGLRenderer({ antialias: !opts.lowPower, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, opts.lowPower ? 1 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -285,7 +285,9 @@ export async function createStage(host: HTMLElement, opts: { reducedMotion: bool
     return { fov: a.fov + (b.fov - a.fov) * f, peel: peels[i] + (peels[j] - peels[i]) * pf };
   }
 
-  const ease = (dt: number, rate: number) => (opts.reducedMotion ? 1 : 1 - Math.exp(-dt * rate));
+  // 鏡頭跟著捲動移動、掀頂、圖層淡出都是使用者自己觸發的，只看本站開關（instantEase）；
+  // 全景自轉、呼吸感、煙霧是裝飾，才看 reducedMotion
+  const ease = (dt: number, rate: number) => (opts.instantEase ? 1 : 1 - Math.exp(-dt * rate));
   let last = performance.now();
   function frame() {
     requestAnimationFrame(frame);

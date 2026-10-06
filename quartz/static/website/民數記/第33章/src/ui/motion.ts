@@ -1,4 +1,4 @@
-import { motionOff } from './dom';
+import { animOff } from './dom';
 
 /** 元素捲進畫面時加上 .in，讓 CSS 做進場動畫；只觸發一次 */
 export function reveal(els: Iterable<Element>, rootMargin = '0px 0px -12% 0px') {
@@ -26,7 +26,8 @@ export function smoothScrollTo(y: number, duration?: number, cancel?: () => bool
   const from = scrollY;
   const to = Math.max(0, Math.min(y, document.documentElement.scrollHeight - innerHeight));
   const dist = Math.abs(to - from);
-  const dur = motionOff() ? 0 : duration ?? Math.min(1600, 500 + dist * 0.5);
+  // 捲動都是使用者要求才有的（到地圖看、回到剛才讀的地方、開始走、故事的幕按鈕、帶站號的網址），只看本站的「減少動態」開關
+  const dur = animOff() ? 0 : duration ?? Math.min(1600, 500 + dist * 0.5);
   const my = ++running;
   if (!dur) {
     scrollTo(0, to);

@@ -1,4 +1,4 @@
-import { motionOff } from './dom';
+import { animOff } from './dom';
 
 /** 元素捲進畫面時加上 .in，讓 CSS 做進場動畫；只觸發一次 */
 export function reveal(els: Iterable<Element>, rootMargin = '0px 0px -12% 0px') {
@@ -26,7 +26,8 @@ export function smoothScrollTo(y: number, duration?: number, cancel?: () => bool
   const from = scrollY;
   const to = Math.max(0, Math.min(y, document.documentElement.scrollHeight - innerHeight));
   const dist = Math.abs(to - from);
-  const dur = motionOff() ? 0 : duration ?? Math.min(1600, 500 + dist * 0.5);
+  // 都是使用者點了才捲（跳到某幕、看資訊欄、回地圖），只看本站開關
+  const dur = animOff() ? 0 : duration ?? Math.min(1600, 500 + dist * 0.5);
   const my = ++running;
   if (!dur) {
     scrollTo(0, to);

@@ -1,6 +1,6 @@
 import { OBJECTS } from '../data/objects';
 import type { Courtyard } from '../three/courtyard';
-import { h, motionOff, on } from './dom';
+import { animOff, h, motionOff, on } from './dom';
 import { createMap } from './map';
 import { openObject } from './objects';
 
@@ -47,12 +47,13 @@ export function mountCourt(): { el: HTMLElement; focus(node: string): void } {
     if (!canWebGL) return note('這台裝置不支援 3D，改用平面圖。');
     try {
       const { createCourtyard } = await import('../three/courtyard');
+      // 自動旋轉是裝飾，跟作業系統的減少動態；點標籤／按鈕後的鏡頭移動是使用者自己要的，只看本站開關
       court = await createCourtyard(stage, labels, LABELS, (id) => {
         court?.focus(LABEL_FOCUS[id]);
         roofBtn.setAttribute('aria-pressed', String(id === 'veil'));
         const o = OBJECTS.find((x) => x.id === LABEL_OBJECT[id]);
         if (o) openObject(o);
-      }, { reducedMotion: motionOff(), lowPower });
+      }, { reducedMotion: motionOff(), instantCamera: animOff, lowPower });
       poster.remove();
       roofBtn.hidden = false;
       overviewBtn.hidden = false;

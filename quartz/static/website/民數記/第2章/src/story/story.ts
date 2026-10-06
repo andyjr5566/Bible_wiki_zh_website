@@ -163,7 +163,7 @@ export function createStory(opts: { poster: string; onExplore: () => void; load:
     }
   }
 
-  /* ---- 數字從 0 數上去（只在第一次看到時） ---- */
+  /* ---- 數字從 0 數上去（只在第一次看到時；進場裝飾，跟著作業系統的減少動態） ---- */
   const counted = new WeakSet<Element>();
   function countUp(scope: HTMLElement) {
     scope.querySelectorAll<HTMLElement>('.count[data-n]').forEach((c) => {

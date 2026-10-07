@@ -442,11 +442,11 @@ class Builder:
 
         for r in roots:
             walk(r, None, "")
-        lines.append("  classDef main fill:#f6e7b4,stroke:#b8860b,color:#3d2f00,font-weight:bold")
-        lines.append("  classDef anchor fill:#e8eef6,stroke:#7a8ca5,color:#2b3a4f")
+        lines.append("  classDef main fill:#d4a82e44,stroke:#c9971c,stroke-width:2px,font-weight:bold")
+        lines.append("  classDef anchor fill:#7a8ca533,stroke:#7a8ca5")
         if styled_main:
             lines.append(f"  class {','.join(styled_main)} main")
-        lines.append("  classDef mom fill:#fff,stroke:#c9b8e8,stroke-dasharray:3 3,color:#6b5b8a,font-size:12px")
+        lines.append("  classDef mom fill:#8a7bb022,stroke:#9a8cc4,stroke-dasharray:3 3,font-size:12px")
         if styled_anchor:
             lines.append(f"  class {','.join(styled_anchor)} anchor")
         if styled_mom:
@@ -597,8 +597,8 @@ class Builder:
             lines.append(f"  {last} --> t{j}")
             if t.get("style"):
                 lines.append(f"  class t{j} {t['style']}")
-        lines += ["  classDef main fill:#f6e7b4,stroke:#b8860b,color:#3d2f00,font-weight:bold",
-                  "  classDef none fill:#f3f3f3,stroke:#bbb,color:#888,stroke-dasharray:4 3",
+        lines += ["  classDef main fill:#d4a82e44,stroke:#c9971c,stroke-width:2px,font-weight:bold",
+                  "  classDef none fill:#80808018,stroke:#999,stroke-dasharray:4 3",
                   "  class " + ",".join(f"s{i}" for i in range(len(ov["spine"]))) + " main", "```"]
         return lines
 

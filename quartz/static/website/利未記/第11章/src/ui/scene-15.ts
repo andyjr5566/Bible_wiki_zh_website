@@ -105,7 +105,7 @@ function durRow(r: DurRow): HTMLElement {
 function durations(): HTMLElement {
   const axis = (labels: [number, string][]) => h('div', { class: 'c15d-row c15d-axis', 'aria-hidden': 'true' }, h('div', { class: 'c15d-name' }),
     h('div', { class: 'c15d-track' }, ...labels.map(([d, t]) => h('span', { class: `c15d-tick${t === '好了' ? ' heal' : ''}`, style: `left:${W(d)}` }, t))));
-  return h('figure', { class: 'c15d', 'aria-label': '不潔淨多久，同一把尺：碰到的人和夢遺、同房到晚上；月經和與她同房的男人七天；男人的漏症和血漏，流的日子長短不定，好了以後數七天，第八天獻祭。' },
+  return h('figure', { class: 'c15d', 'aria-label': '不潔淨多久，用同一個比例：碰到的人和夢遺、同房到晚上；月經和與她同房的男人七天；男人的漏症和血漏，流的日子長短不定，好了以後數七天，第八天獻祭。' },
     h('div', { class: 'c15d-legend' },
       h('span', null, h('i', { class: 'c15d-sw unclean' }), '不潔淨'),
       h('span', null, h('i', { class: 'c15d-sw count' }), '好了以後數的七天'),
@@ -252,7 +252,7 @@ export function buildC15(): HTMLElement {
         h('p', { class: 'lede' }, '這一章寫身體流出東西的幾種情況：男人的漏症、夢遺和夫妻同房、女人的月經，以及經期以外的血漏。不潔淨會從人傳到床、座位和器皿，再傳到碰到的人。這一次，是母親的月事過了，血卻沒有止住。')),
       layer('四段並排', '上面一條按節數畫；下面四欄，「不潔淨」和「獻祭」對齊在同一列', verseMap(), cases(),
         h('div', { class: 'c15-notes' }, h('p', null, factLine(SUMMARY_15, { quote: true })), h('p', null, factLine(NOT_CAMP)))),
-      layer('不潔淨多久', '同一把尺，一格一天', durations()),
+      layer('不潔淨多久', '同一個比例，一格一天', durations()),
       layer('傳到哪裡', '男人患漏症的時候：他碰過的東西，和碰到這些東西的人；點一列看經文', matrix(), vessels())),
     h('div', { class: 'wrap' }, layer('好了以後', '男人和女人並排，差在第 3 步', heal())),
     h('div', { class: 'wrap' }, layer('母親的例子', '月事過了，血卻沒有止住', null)),

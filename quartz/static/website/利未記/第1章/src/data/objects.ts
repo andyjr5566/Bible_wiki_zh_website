@@ -148,7 +148,7 @@ export const OBJECTS: SacredObject[] = [
     usedBy: ['grain'],
     voices: [
       { who: 'GT 丁良才', ch: 2, says: '爐是一種能搬動的罐形瓦爐，高約三尺。' },
-      { who: 'GT 丁良才', ch: 2, says: '煎盤不是平板，是能盛油的深鍋。' },
+      { who: 'GT 丁良才', ch: 2, says: '煎盤是能盛油的深鍋。' },
     ],
   },
   {

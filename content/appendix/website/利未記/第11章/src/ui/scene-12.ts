@@ -63,7 +63,7 @@ function timeline(): HTMLElement {
   }
   range.addEventListener('input', show);
   show();
-  return h('figure', { class: 'dur', 'aria-label': '生男孩與生女孩的日子，同一把尺：生男孩不潔淨七天、再三十三天，共四十天；生女孩不潔淨十四天、再六十六天，共八十天。' },
+  return h('figure', { class: 'dur', 'aria-label': '生男孩與生女孩的日子，用同一個比例：生男孩不潔淨七天、再三十三天，共四十天；生女孩不潔淨十四天、再六十六天，共八十天。' },
     h('div', { class: 'dur-legend' },
       h('span', null, h('i', { class: 'dur-sw unclean' }), '不潔淨的日子'),
       h('span', null, h('i', { class: 'dur-sw purify' }), '潔淨的日子：不可摸聖物、不可進聖所')),
@@ -113,7 +113,7 @@ export function buildC12(): HTMLElement {
         h('div', { class: 'kicker' }, kicker('c12')),
         h('h1', null, '生產之後'),
         h('p', { class: 'lede' }, '這一章只有八節：婦人生了孩子以後，要等多少天、等的時候不能做什麼、日子滿了帶什麼來。')),
-      layer('兩段日子', '同一把尺：一格是一天；拖動游標，同時看兩位母親在哪一段', timeline(),
+      layer('兩段日子', '同一個比例：一格是一天；拖動游標，同時看兩位母親在哪一段', timeline(),
         h('div', { class: 'c12-voices' }, voiceBlock(VOICES_12.add), voiceBlock(VOICES_12.husband), voiceBlock(VOICES_12.onlyHoly))),
       layer('中間的第八天', '生男孩的第八天', h('div', { class: 'c12-day8' }, h('p', { class: 'c12-day8-q' }, factLine(CIRCUMCISION, { quote: true })), voiceBlock(VOICES_12.day8)))),
     h('div', { class: 'wrap' }, layer('一家人的例子', '生了男孩：四十天怎麼過', null)),

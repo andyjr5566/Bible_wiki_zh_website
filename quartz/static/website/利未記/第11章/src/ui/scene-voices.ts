@@ -70,7 +70,7 @@ export function buildVoices(): HTMLElement {
       h('header', { class: 'scene-head' },
         h('div', { class: 'kicker' }, kicker('voices')),
         h('h1', null, '各家怎麼讀'),
-        h('p', { class: 'lede' }, '前面五幕裡，來源說法不一樣的地方，集中在這裡，一題一題並排。每一題先看經文自己怎麼說，再看各家怎麼讀。這裡不替誰選答案；經文沒有說的，標明「經文沒說」。'))),
+        h('p', { class: 'lede' }, '前面五幕裡，來源說法不一樣的地方，集中在這裡並排。每一題先列經文自己怎麼說，再列各家的讀法。這裡不替誰選答案；經文沒有說的，標明「經文沒說」。'))),
     h('div', { class: 'wrap' },
       h('div', { class: 'vc' },
         h('aside', { class: 'vc-side' }, tabs, pick),

@@ -492,6 +492,7 @@ class Builder:
         d, ex = self.data, self.extras or {}
         out: list[str] = [f"# {d['title']}", ""]
         out += [d["intro"].strip(), ""]
+        out += ["<!-- 本頁由 appendix/genealogy/build_genealogy.py 從 appendix/genealogy/" + self.book + "/ 的資料檔產生，請改資料檔，不要直接改本頁。 -->", ""]
         out += ["> [!info] 怎麼讀這份圖",
                 "> - **金色框**（名單裡標 ★）：作者一路追下去的主線，例如大衛王室、大祭司、掃羅家。",
                 "> - **藍灰色框**：從前一段接過來的人，方便看出這一段掛在誰底下。",
@@ -503,7 +504,7 @@ class Builder:
         out += ["## 總覽", "", "### 從亞當到以色列十二個兒子", ""]
         out += self.overview_mermaid()
         out += ["", "### 篇幅分給了誰", "",
-                "同樣是以色列的兒子，作者給的篇幅差很多。數一數每段佔幾節，就看得出這份族譜的重心：", ""]
+                "每個支派在歷代志上 1–9 章佔幾節：", ""]
         out += self.bars()
         out += [""] + [d["overview_note"].strip(), ""]
         # 目錄
@@ -573,7 +574,8 @@ class Builder:
                 out.append("")
             out += ["[[#目錄|↑ 回到目錄]] · [[#歷代志上 1–9 章 人物族譜圖|回到頂部]]", ""]
         out += self.tables()
-        out += ["---", "", d["footer"].strip(), ""]
+        if d.get("footer"):
+            out += ["---", "", d["footer"].strip(), ""]
         page = "\n".join(out)
         cross_links = [m for m in re.findall(r"\[\[([^#\]][^\]]*)\]\]", page)]
         if cross_links:
@@ -622,14 +624,14 @@ class Builder:
         ex = self.extras or {}
         out = ["---", "", "## 附表", ""]
         if ex.get("parallels"):
-            out += ["### 平行經文對照", "", "同一件事、同一個人，在別卷書寫法不同。兩邊的字都照和合本原文：", "",
+            out += ["### 平行經文對照", "", "同一件事或同一個人，在別處經文的寫法不同：", "",
                     "| 項目 | 歷代志上 | 對照經文 | 說明 |", "|---|---|---|---|"]
             for r in ex["parallels"]:
                 out.append(f"| {r['topic']} | {r['a_text']}　`{r['a_ref']}` | {r['b_text']}　`{r['b_ref']}` | {r.get('note', '')} |")
             out.append("")
             out += ["[[#目錄|↑ 回到目錄]] · [[#歷代志上 1–9 章 人物族譜圖|回到頂部]]", ""]
         if ex.get("homonyms"):
-            out += ["### 同名不同人", "", "名字相同、但在族譜上是不同的人。讀到時先看他掛在誰底下：", "",
+            out += ["### 同名不同人", "", "名字相同的不同人，看他掛在誰底下來分辨：", "",
                     "| 名字 | 各是誰 |", "|---|---|"]
             for name in ex["homonyms"]:
                 who = []

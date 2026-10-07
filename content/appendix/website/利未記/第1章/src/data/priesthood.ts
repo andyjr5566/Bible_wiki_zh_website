@@ -228,7 +228,7 @@ export const EIGHTH_DAY: TimelineItem[] = [
 ];
 
 export const EIGHTH_DAY_ORDER_VOICES: Voice[] = [
-  { who: 'GT《串珠聖經註釋》', says: '次序本身就是道理。', ch: 9,
+  { who: 'GT《串珠聖經註釋》', says: '次序是先贖罪、再奉獻、最後與神交通。', ch: 9,
     quote: '首先是罪的救贖，然後是生命的奉獻和成聖，最後才是在感恩餐中與神交通。' },
   { who: 'CT', says: '獻祭的根本在於順服。', ch: 9, quote: '給我們顯明了獻祭的根本不在於儀式，而在於順服。' },
 ];

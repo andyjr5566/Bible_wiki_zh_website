@@ -75,7 +75,7 @@ export function buildOverview(): HTMLElement {
       h('header', { class: 'scene-head' },
         h('div', { class: 'kicker' }, kicker('overview')),
         h('h1', null, '總覽'),
-        h('p', { class: 'lede' }, '五章讀完了。這一幕把所有的情況放在同一張圖上：不潔淨有多久、好了以後要獻什麼，最後看這五章在利未記裡的位置。'))),
+        h('p', { class: 'lede' }, '這一幕把五章所有的情況放在同一張圖上：不潔淨有多久、好了以後要獻什麼，最後看這五章在利未記裡的位置。'))),
     h('div', { class: 'wrap' },
       layer('不潔淨有多久', '由短到長排成一條軸；點任何一個情況，看經文怎麼說', timeline()),
       layer('好了以後，要獻什麼', '第八天，或日子滿了，帶到會幕門口', offers()),

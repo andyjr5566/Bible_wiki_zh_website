@@ -1,0 +1,1555 @@
+# 歷代志上 1–9 章族譜資料（唯一來源；頁面由 ../build_genealogy.py 產生）
+#
+# 寫法：
+#   chain:    [甲, 乙, 丙]          甲生乙、乙生丙
+#   parent + children               某人的兒女；mother 標母親；rel 標非「子」的關係（女、妹子、姊妹）
+#   roots:                          經文沒交代父親的人
+#   places:                         地名清單
+#   note:                           白話說明；「」內必須逐字出自所引經節
+#   同名不同人用「名#識別」，識別字不顯示。
+#   new_parent / new_root：這個父親（鏈首）第一次出現。
+#   parent_as / as：經文在這一節的寫法和條目名不同（例如迦勒＝基路拜、雅拉＝耶何阿達）。
+
+book: 歷代志上
+scope: [1, 9]
+output: appendix/歷代志上的完整人物支線圖.md
+title: 歷代志上 1–9 章 人物族譜圖
+intro: |
+  歷代志上前九章幾乎全是名字，從亞當一路排到被擄歸回、住在耶路撒冷的人。這份圖把這些名字按家族畫出來：先看「總覽」抓大方向，再進各章看細節。
+
+  人名、父子關係、引句和數字都照和合本逐字核對過。這裡只整理經文本身寫了什麼；經文說得不清楚的地方，照字面列出，並在「讀經提醒」說明，不替經文補上推論。
+footer: |
+  **資料與驗證**：這份頁面由 `appendix/genealogy/歷代志上/` 的資料檔產生（`python appendix/genealogy/build_genealogy.py 歷代志上`），不要直接修改本頁。產生時程式會逐條檢查：每個人名、「某地之祖」、母親的名字、所有「」引句、人數和城名，都必須逐字出現在所引的和合本經節（`raw_scripture/`）；第 1–9 章每一節都要有資料涵蓋。
+chapters:
+  1: 從亞當到以東列王
+  2: 猶大（一）：希斯崙的三個兒子
+  3: 大衛的家
+  4: 猶大（二）與西緬
+  5: 約旦河東的兩個半支派
+  6: 利未
+  7: 北方各支派
+  8: 便雅憫與掃羅家
+  9: 歸回後住在耶路撒冷的人
+
+overview:
+  spine:
+    - {label: "亞當 → 挪亞（10 代）", ref: "1:1–4"}
+    - {label: "閃 → 亞伯拉罕（10 代）", ref: "1:24–27"}
+    - {label: "以撒", ref: "1:28、1:34"}
+    - {label: "以色列", ref: "1:34、2:1–2"}
+  tribes:
+    - {name: 流便, where: "5:1–10"}
+    - {name: 西緬, where: "4:24–43"}
+    - {name: 利未, where: "6 章"}
+    - {name: 猶大, where: "2:3–4:23", style: main}
+    - {name: 以薩迦, where: "7:1–5"}
+    - {name: 西布倫, style: none}
+    - {name: 但, style: none}
+    - {name: 約瑟, where: "瑪拿西 5:23–26、7:14–19<br/>以法蓮 7:20–29"}
+    - {name: 便雅憫, where: "7:6–12、8 章、9:35–44"}
+    - {name: 拿弗他利, where: "7:13"}
+    - {name: 迦得, where: "5:11–17"}
+    - {name: 亞設, where: "7:30–40"}
+  bars:
+    - {name: 猶大, ranges: ["2:3-55", "3:1-24", "4:1-23"]}
+    - {name: 利未, ranges: ["6:1-81"]}
+    - {name: 列國與列祖, ranges: ["1:1-54"]}
+    - {name: 便雅憫, ranges: ["7:6-12", "8:1-40", "9:35-44"]}
+    - {name: 歸回的居民, ranges: ["9:1-34"]}
+    - {name: 西緬, ranges: ["4:24-43"]}
+    - {name: 亞設, ranges: ["7:30-40"]}
+    - {name: 瑪拿西, ranges: ["5:23-26", "7:14-19"]}
+    - {name: 流便, ranges: ["5:1-10"]}
+    - {name: 以法蓮, ranges: ["7:20-29"]}
+    - {name: 迦得, ranges: ["5:11-17"]}
+    - {name: 河東聯軍, ranges: ["5:18-22"]}
+    - {name: 以薩迦, ranges: ["7:1-5"]}
+    - {name: 拿弗他利, ranges: ["7:13"]}
+    - {name: 西布倫, ranges: []}
+    - {name: 但, ranges: []}
+  # overview_note 在檔尾
+
+sections:
+
+# ───────────────────────── 第 1 章 ─────────────────────────
+- id: c1a
+  chapter: 1
+  title: 亞當到挪亞
+  range: "1:1-4"
+  intro: 第一章一開頭就從人類的始祖寫起，十代人只用了四節。
+  spine: [亞當, 挪亞]
+  statements:
+    - ref: "1:1-4"
+      new_root: true
+      chain: [{id: 亞當, mark: main}, {id: 塞特, mark: main}, {id: 以挪士, mark: main}, {id: 該南, mark: main}, {id: 瑪勒列, mark: main}, {id: 雅列, mark: main}, {id: 以諾, mark: main}, {id: 瑪土撒拉, mark: main}, {id: 拉麥, mark: main}, {id: 挪亞, mark: main}]
+    - ref: "1:4"
+      parent: 挪亞
+      children: [{id: 閃, mark: main}, 含, 雅弗]
+  notes:
+    - text: 1:4 照「閃、含、雅弗」的次序列出，接下來卻倒過來寫：先雅弗（1:5–7），再含（1:8–16），最後才是閃（1:17 起）。
+      refs: "1:4"
+
+- id: c1b
+  chapter: 1
+  title: 雅弗的後代
+  range: "1:5-7"
+  intro: 雅弗的七個兒子和兩支孫輩。
+  statements:
+    - ref: "1:5"
+      parent: 雅弗
+      children: [歌篾, 瑪各, 瑪代, 雅完, 土巴, 米設, 提拉]
+    - ref: "1:6"
+      parent: 歌篾
+      children: [亞實基拿, 低法, 陀迦瑪]
+    - ref: "1:7"
+      parent: 雅完
+      children: [以利沙, 他施, 基提, 多單]
+
+- id: c1c
+  chapter: 1
+  title: 含的後代
+  range: "1:8-16"
+  intro: 含的四個兒子：古實、麥西、弗、迦南。麥西和迦南名下列的多半是民族名（「某某人」）。
+  statements:
+    - ref: "1:8"
+      parent: 含
+      children: [古實, 麥西, 弗, 迦南]
+    - ref: "1:9"
+      parent: 古實
+      children: [西巴, 哈腓拉, 撒弗他, 拉瑪, 撒弗提迦]
+    - ref: "1:9"
+      parent: 拉瑪
+      children: [示巴#拉瑪, 底但#拉瑪]
+    - ref: "1:10"
+      parent: 古實
+      children: [{id: 寧錄, note: "「他為世上英雄之首」"}]
+    - ref: "1:11-12"
+      parent: 麥西
+      children: [路低人, 亞拿米人, 利哈比人, 拿弗土希人, 帕斯魯細人, 迦斯路希人, 迦斐託人]
+    - ref: "1:12"
+      covers: true
+      note: 1:12 結尾說：「從迦斐託出來的有非利士人」。
+    - ref: "1:13-16"
+      parent: 迦南
+      children: [{id: 西頓, note: 長子}, 赫, 耶布斯人, 亞摩利人, 革迦撒人, 希未人, 亞基人, 西尼人, 亞瓦底人, 洗瑪利人, 哈馬人]
+
+- id: c1d
+  chapter: 1
+  title: 閃的後代
+  range: "1:17-23"
+  intro: 閃的兒子當中，作者後來只沿著亞法撒往下追（1:24–27）。希伯的兒子約坍有十三個兒子。
+  statements:
+    - ref: "1:17"
+      parent: 閃
+      children: [以攔, 亞述, {id: 亞法撒, mark: main}, 路德, 亞蘭, 烏斯, 戶勒, 基帖, 米設#閃]
+    - ref: "1:18"
+      chain: [亞法撒, {id: 沙拉, mark: main}, {id: 希伯, mark: main}]
+    - ref: "1:19"
+      parent: 希伯
+      children: [{id: 法勒, mark: main, note: "名字的意思是「分」，「因為那時人就分地居住」"}, 約坍]
+    - ref: "1:20-23"
+      parent: 約坍
+      children: [亞摩答, 沙列, 哈薩瑪非, 耶拉, 哈多蘭, 烏薩, 德拉, 以巴錄, 亞比瑪利, 示巴#約坍, 阿斐, 哈腓拉#約坍, 約巴]
+  notes:
+    - text: 1:17 把烏斯、戶勒、基帖、米設直接列在閃的兒子裡；創世記 10:23 說他們是「亞蘭的兒子」。這裡照歷代志上的寫法，掛在閃底下。
+      refs: "1:17, 創 10:23"
+
+- id: c1e
+  chapter: 1
+  title: 閃到亞伯拉罕
+  range: "1:24-27"
+  intro: 1:24–25 重述閃到法勒的五代，接著一路排到亞伯拉罕。
+  spine: [閃, 亞伯拉罕]
+  statements:
+    - ref: "1:24-25"
+      chain: [閃, 亞法撒, 沙拉, 希伯, 法勒]
+    - ref: "1:25-27"
+      chain: [法勒, {id: 拉吳, mark: main}, {id: 西鹿, mark: main}, {id: 拿鶴, mark: main}, {id: 他拉, mark: main}, {id: 亞伯拉罕, mark: main, note: "「亞伯蘭就是亞伯拉罕」"}]
+
+- id: c1f
+  chapter: 1
+  title: 亞伯拉罕的兒子
+  range: "1:28-34"
+  intro: 亞伯拉罕的兒子分三組：以撒和以實瑪利、妾基土拉生的六個兒子，最後回到以撒的兩個兒子。
+  statements:
+    - ref: "1:28"
+      parent: 亞伯拉罕
+      children: [{id: 以撒, mark: main}, 以實瑪利]
+    - ref: "1:29-31"
+      parent: 以實瑪利
+      children: [{id: 尼拜約, note: 長子}, 基達, 押德別, 米比衫, 米施瑪, 度瑪, 瑪撒, 哈達, 提瑪, 伊突, 拿非施, 基底瑪]
+    - ref: "1:32"
+      parent: 亞伯拉罕
+      mother: 基土拉
+      children: [心蘭, 約珊, 米但, 米甸, 伊施巴, 書亞]
+    - ref: "1:32"
+      parent: 約珊
+      children: [示巴#約珊, 底但#約珊]
+    - ref: "1:33"
+      parent: 米甸
+      children: [以法, 以弗, 哈諾, 亞比大, 以勒大]
+    - ref: "1:34"
+      parent: 以撒
+      children: [以掃, {id: 以色列, mark: main}]
+  notes:
+    - text: 1:32 稱基土拉是亞伯拉罕的「妾」；創世記 25:1 寫「亞伯拉罕又娶了一妻，名叫基土拉」。
+      refs: "1:32, 創 25:1"
+
+- id: c1g
+  chapter: 1
+  title: 以掃的後代與西珥人
+  range: "1:35-42"
+  intro: 以掃的五個兒子，接著是西珥的七個兒子和他們的後代。
+  statements:
+    - ref: "1:35"
+      parent: 以掃
+      children: [以利法, 流珥, 耶烏施, 雅蘭, 可拉#以掃]
+    - ref: "1:36"
+      parent: 以利法
+      children: [提幔, 阿抹, 洗玻, 迦坦, 基納斯, 亭納, 亞瑪力]
+    - ref: "1:37"
+      parent: 流珥
+      children: [拿哈, 謝拉#流珥, 沙瑪, 米撒]
+    - ref: "1:38"
+      parent: 西珥
+      new_parent: true
+      children: [羅坍, 朔巴, 祭便, 亞拿, 底順, 以察, 底珊]
+    - ref: "1:39"
+      parent: 羅坍
+      children: [何利, 荷幔]
+    - ref: "1:39"
+      parent: 羅坍
+      rel: 妹子
+      children: [亭納#羅坍]
+    - ref: "1:40"
+      parent: 朔巴
+      children: [亞勒文, 瑪拿轄, 以巴錄#朔巴, 示非, 阿南]
+    - ref: "1:40"
+      parent: 祭便
+      children: [亞雅, 亞拿#祭便]
+    - ref: "1:41"
+      parent: 亞拿
+      children: [底順#亞拿]
+    - ref: "1:41"
+      parent: 底順
+      children: [哈默蘭, 伊是班, 益蘭, 基蘭]
+    - ref: "1:42"
+      parent: 以察
+      children: [辟罕, 撒番, 亞干#以察]
+    - ref: "1:42"
+      parent: 底珊
+      children: [烏斯#底珊, 亞蘭#底珊]
+  notes:
+    - text: 1:36 把「亭納、亞瑪力」都列為以利法的兒子；創世記 36:12 寫「亭納是以掃兒子以利法的妾；他給以利法生了亞瑪力」。
+      refs: "1:36, 創 36:12"
+    - text: 1:41「亞拿的兒子是底順。底順的兒子是哈默蘭……」，經文沒有說後一個底順是哪一位。1:39–42 是照西珥七個兒子的次序逐一列出他們的兒子，這裡照這個次序，把哈默蘭等四人掛在西珥的兒子底順名下；照字面也可以讀成亞拿的兒子底順。創世記 36:25–28 的排法相同，同樣沒有說明。
+      refs: "1:41"
+
+- id: c1h
+  chapter: 1
+  title: 以東的王和族長
+  range: "1:43-54"
+  intro: 「以色列人未有君王治理之先」，以東已經有八個王前後接續。這八人是一個接一個作王，不是父子。王的時代之後，以東由十一個族長分治。
+  statements:
+    - ref: "1:43"
+      roots: [{id: 比拉#以東王, note: 以東第一個王, pnote: 比珥的兒子；京城亭哈巴, check: [比珥, 亭哈巴]}]
+    - ref: "1:44"
+      roots: [{id: 約巴#以東王, pnote: 波斯拉人謝拉的兒子, check: [波斯拉人謝拉]}]
+    - ref: "1:45"
+      roots: [{id: 戶珊, pnote: 提幔地的人, check: [提幔地的人]}]
+    - ref: "1:46"
+      roots: [{id: 哈達#比達, pnote: 比達的兒子；在摩押地殺敗米甸人；京城亞未得, check: [比達, 在摩押地殺敗米甸人, 亞未得]}]
+    - ref: "1:47"
+      roots: [{id: 桑拉, pnote: 瑪士利加人, check: [瑪士利加人]}]
+    - ref: "1:48"
+      roots: [{id: 掃羅#利河伯, pnote: 大河邊的利河伯人, check: [大河邊的利河伯人]}]
+    - ref: "1:49"
+      roots: [{id: 巴勒哈南, pnote: 亞革波的兒子, check: [亞革波]}]
+    - ref: "1:50"
+      roots: [{id: 哈達#巴伊, pnote: 京城巴伊；妻子米希他別是米薩合的孫女、瑪特列的女兒, check: [巴伊, 米希他別, 米薩合的孫女, 瑪特列的女兒]}]
+    - ref: "1:51-54"
+      roots: [亭納#族長, 亞勒瓦, 耶帖, 亞何利巴瑪, 以拉#族長, 比嫩, 基納斯#族長, 提幔#族長, 米比薩, 瑪基疊, 以蘭]
+      note: 哈達死後，以東改由族長治理；1:51–54 列出十一個族長，結尾說「這都是以東人的族長」。
+
+# ───────────────────────── 第 2 章 ─────────────────────────
+- id: c2a
+  chapter: 2
+  title: 以色列的十二個兒子
+  range: "2:1-2"
+  intro: 先列出十二個兒子，接著跳過老大流便，從第四個兒子猶大寫起。猶大一族寫到 4:23，是全部族譜裡最長的一段。
+  statements:
+    - ref: "2:1-2"
+      parent: 以色列
+      children: [流便, 西緬, 利未, {id: 猶大, mark: main}, 以薩迦, 西布倫, 但, 約瑟, 便雅憫, 拿弗他利, 迦得, 亞設]
+
+- id: c2b
+  chapter: 2
+  title: 猶大的五個兒子
+  range: "2:3-8"
+  intro: 猶大的五個兒子來自兩個母親。往下追的是法勒斯；謝拉一支只記到兩代。
+  statements:
+    - ref: "2:3"
+      parent: 猶大
+      mother: 迦南人書亞女兒
+      children: [{id: 珥, note: "「在耶和華眼中看為惡，耶和華就使他死了」"}, 俄南, 示拉]
+    - ref: "2:4"
+      parent: 猶大
+      mother: 他瑪
+      children: [{id: 法勒斯, mark: main}, 謝拉]
+    - ref: "2:5"
+      parent: 法勒斯
+      children: [{id: 希斯崙, mark: main}, 哈母勒]
+    - ref: "2:6"
+      parent: 謝拉
+      children: [心利, 以探#謝拉, 希幔#謝拉, 甲各, 大拉]
+    - ref: "2:7"
+      parent: 迦米#亞干之父
+      parent_as: 迦米
+      new_parent: true
+      children: [{id: 亞干, note: "「在當滅的物上犯了罪，連累了以色列人」"}]
+    - ref: "2:8"
+      parent: 以探#謝拉
+      parent_as: 以探
+      children: [亞撒利雅#以探]
+  notes:
+    - text: 2:7 沒有說迦米是誰的兒子。約書亞記 7:1 稱亞干是「謝拉的曾孫，撒底的孫子，迦米的兒子」，所以這一家屬於謝拉一支。
+      refs: "2:7, 書 7:1"
+    - text: 2:6 謝拉的兒子以探、希幔、甲各、大拉，列王紀上 4:31 也有同樣一組名字：「以斯拉人以探，並瑪曷的兒子希幔、甲各、達大」。兩處的父親寫法不同。
+      refs: "2:6, 王上 4:31"
+
+- id: c2c
+  chapter: 2
+  title: 蘭到大衛
+  range: "2:9-17"
+  intro: 希斯崙有三個兒子。這一段先追老二蘭，九代之後到大衛；耶拉篾和迦勒（基路拜）兩支放在後面。
+  spine: [猶大, 大衛]
+  statements:
+    - ref: "2:9"
+      parent: 希斯崙
+      children: [耶拉篾, {id: 蘭, mark: main}, 基路拜]
+    - ref: "2:10-12"
+      chain: [蘭, {id: 亞米拿達, mark: main}, {id: 拿順, mark: main, note: "「作猶大人的首領」"}, {id: 撒門, mark: main}, {id: 波阿斯, mark: main}, {id: 俄備得, mark: main}, {id: 耶西, mark: main}]
+    - ref: "2:13-15"
+      parent: 耶西
+      children: [{id: 以利押, note: 長子}, 亞比拿達, {id: 示米亞, note: 三子}, 拿坦業, 拉代, 阿鮮, {id: 大衛, mark: main, note: 七子}]
+    - ref: "2:16"
+      parent: 大衛
+      parent_in_text: false
+      rel: 姊妹
+      children: [洗魯雅, 亞比該]
+    - ref: "2:16"
+      parent: 洗魯雅
+      children: [亞比篩, 約押, 亞撒黑]
+    - ref: "2:17"
+      parent: 亞比該
+      children: [{id: 亞瑪撒, note: "父親是「以實瑪利人益帖」"}]
+  notes:
+    - text: 2:13–15 列出耶西的七個兒子，大衛排第七；撒母耳記上 17:12 說「耶西有八個兒子」。
+      refs: "2:13-15, 撒上 17:12"
+    - text: 2:16「他們的姊妹是洗魯雅和亞比該」，是大衛兄弟們的姊妹。撒母耳記下 17:25 說亞比該是「拿轄的女兒」。
+      refs: "2:16, 撒下 17:25"
+
+- id: c2d
+  chapter: 2
+  title: 迦勒（基路拜）的一支，和希斯崙晚年的兒子
+  range: "2:18-24"
+  intro: 2:9 的基路拜，在 2:18 起稱為迦勒；2:18 說他是「希斯崙的兒子」，2:42 說他是「耶拉篾兄弟」。他的孫子烏利，是造會幕的巧匠比撒列的父親。
+  statements:
+    - ref: "2:18"
+      parent: 基路拜
+      parent_as: 迦勒
+      mother: 阿蘇巴
+      children: [耶設, 朔罷#迦勒, 押墩]
+    - ref: "2:19"
+      parent: 基路拜
+      parent_as: 迦勒
+      mother: 以法他
+      children: [戶珥]
+    - ref: "2:20"
+      chain: [戶珥, 烏利, 比撒列]
+    - ref: "2:21"
+      parent: 希斯崙
+      mother: 瑪吉的女兒
+      children: [{id: 西割, pnote: 希斯崙正六十歲娶瑪吉的女兒所生, check: [正六十歲]}]
+    - ref: "2:22"
+      chain: [西割, {id: 睚珥, note: "「在基列地有二十三個城邑」"}]
+    - ref: "2:23"
+      covers: true
+      note: 「後來基述人和亞蘭人奪了睚珥的城邑，並基納和其鄉村，共六十個」。
+    - ref: "2:24"
+      parent: 希斯崙
+      mother: 亞比雅
+      children: [{id: 亞施戶, of: 提哥亞, of_word: 的父親, pnote: 希斯崙死後才生, check: [希斯崙在迦勒以法他死後]}]
+  notes:
+    - text: 2:18 說迦勒「娶阿蘇巴和耶略為妻」，經文只記了阿蘇巴生的三個兒子，沒有記耶略生的。
+      refs: "2:18"
+
+- id: c2e
+  chapter: 2
+  title: 耶拉篾的後代
+  range: "2:25-41"
+  intro: 希斯崙的長子耶拉篾。值得注意的是示珊一家：示珊沒有兒子，把女兒嫁給埃及僕人耶哈，從此又傳了十三代。
+  spine: [示珊, 以利沙瑪#耶加米雅]
+  statements:
+    - ref: "2:25"
+      parent: 耶拉篾
+      children: [{id: 蘭#耶拉篾, note: 長子}, 布拿, 阿連, 阿鮮#耶拉篾, 亞希雅]
+    - ref: "2:26"
+      parent: 耶拉篾
+      mother: 亞他拉
+      children: [阿南#耶拉篾]
+    - ref: "2:27"
+      parent: 蘭#耶拉篾
+      parent_as: 蘭
+      children: [瑪斯, 雅憫, 以結]
+    - ref: "2:28"
+      parent: 阿南#耶拉篾
+      parent_as: 阿南
+      children: [沙買, 雅大]
+    - ref: "2:28"
+      parent: 沙買
+      children: [拿答, 亞比述]
+    - ref: "2:29"
+      parent: 亞比述
+      mother: 亞比孩
+      children: [亞辦, 摩利]
+    - ref: "2:30"
+      parent: 拿答
+      children: [{id: 西列, note: "「死了沒有兒子」"}, 亞遍]
+    - ref: "2:31"
+      chain: [亞遍, 以示, 示珊, 亞來]
+    - ref: "2:32"
+      parent: 雅大
+      children: [{id: 益帖#雅大, note: "「死了沒有兒子」"}, 約拿單#雅大]
+    - ref: "2:33"
+      parent: 約拿單#雅大
+      parent_as: 約拿單
+      children: [比勒, 撒薩]
+      note: 2:25–33 結尾說：「這都是耶拉篾的子孫」。
+    - ref: "2:34-35"
+      parent: 示珊
+      rel: 女
+      children: [{id: 女兒#示珊, as: 女兒, pnote: 嫁給埃及僕人耶哈, check: [耶哈, 埃及人]}]
+    - ref: "2:35"
+      parent: 女兒#示珊
+      parent_in_text: false
+      children: [{id: 亞太, pnote: 父親是耶哈, check: [耶哈]}]
+    - ref: "2:36-41"
+      chain: [亞太, 拿單#亞太, 撒拔, 以弗拉, 俄備得#以弗拉, 耶戶, 亞撒利雅#耶戶, 希利斯, 以利亞薩#希利斯, 西斯買, 沙龍#西斯買, 耶加米雅, 以利沙瑪#耶加米雅]
+  notes:
+    - text: 2:31 寫「示珊的兒子是亞來」，2:34 卻寫「示珊沒有兒子，只有女兒」。經文沒有解釋兩句的關係，這裡兩句都照列。
+      refs: "2:31, 2:34"
+
+- id: c2f
+  chapter: 2
+  title: 迦勒的其他後代
+  range: "2:42-55"
+  intro: 回到迦勒，這一段多是「某地之祖」，記下猶大南地和伯利恆一帶的家族怎麼來的。
+  statements:
+    - ref: "2:42"
+      parent: 基路拜
+      parent_as: 迦勒
+      children: [{id: 米沙, of: 西弗, note: 長子}]
+    - ref: "2:42"
+      roots: [{id: 瑪利沙, of: 希伯崙}]
+    - ref: "2:43"
+      parent: 希伯崙
+      new_parent: true
+      children: [可拉#希伯崙, 他普亞, 利肯, 示瑪#希伯崙]
+    - ref: "2:44"
+      parent: 示瑪#希伯崙
+      parent_as: 示瑪
+      children: [{id: 拉含, of: 約干}]
+    - ref: "2:44"
+      parent: 利肯
+      children: [沙買#利肯]
+    - ref: "2:45"
+      parent: 沙買#利肯
+      parent_as: 沙買
+      children: [{id: 瑪雲, of: 伯夙}]
+    - ref: "2:46"
+      parent: 基路拜
+      parent_as: 迦勒
+      mother: 以法
+      children: [哈蘭, 摩撒, 迦謝]
+    - ref: "2:46"
+      parent: 哈蘭
+      children: [迦卸]
+    - ref: "2:47"
+      parent: 雅代
+      new_parent: true
+      children: [利健, 約坦#雅代, 基珊, 毘力, 以法#雅代, 沙亞弗#雅代]
+    - ref: "2:48-49"
+      parent: 基路拜
+      parent_as: 迦勒
+      mother: 瑪迦
+      children: [示別, 特哈拿, {id: 沙亞弗, of: 麥瑪拿}, {id: 示法, of: 抹比拿和基比亞}]
+    - ref: "2:49"
+      parent: 基路拜
+      parent_as: 迦勒
+      rel: 女
+      children: [押撒]
+    - ref: "2:50-51"
+      parent: 戶珥
+      children: [{id: 朔巴#戶珥, of: 基列耶琳}, {id: 薩瑪, of: 伯利恆}, {id: 哈勒, of: 伯迦得}]
+      note: 2:50 開頭說：「迦勒的子孫就是以法他的長子、戶珥的兒子」。
+    - ref: "2:52"
+      parent: 朔巴#戶珥
+      parent_as: 朔巴
+      children: [哈羅以, {id: 米努哈人, kind: 族, note: 一半}]
+    - ref: "2:53"
+      parent: 基列耶琳
+      new_parent: true
+      rel: 諸族
+      children: [以帖人, 布特人, 舒瑪人, 密來人]
+    - ref: "2:53"
+      parent: 基列耶琳
+      rel: 又從這些族中生出
+      children: [瑣拉人, 以實陶人]
+    - ref: "2:54-55"
+      parent: 薩瑪
+      rel: 子孫
+      children: [伯利恆人, 尼陀法人, 亞他綠伯約押人, {id: 瑪拿哈人, note: 一半}, 瑣利人, {id: 特拉人, pnote: 住雅比斯的文士家, check: [住雅比斯眾文士家]}, 示米押人, 蘇甲人]
+      note: 2:55 結尾說：「這都是基尼人利甲家之祖哈末所生的」。
+  notes:
+    - text: 2:42「耶拉篾兄弟迦勒的長子米沙，是西弗之祖瑪利沙的兒子，是希伯崙之祖」句子結構不易斷開。這裡照字面列出米沙（西弗之祖）與瑪利沙（希伯崙之祖）兩人，不硬接他們之間的父子關係；2:43 的希伯崙另起一行。
+      refs: "2:42-43"
+    - text: 2:49「迦勒的女兒是押撒」。約書亞記 15:16–17 的迦勒（耶孚尼的兒子，見 4:15）也有一個女兒押撒，嫁給「迦勒兄弟基納斯的兒子俄陀聶」。
+      refs: "2:49, 書 15:16-17"
+    - text: 2:50 稱戶珥是「以法他的長子」，4:4 稱戶珥是「伯利恆之祖以法他的長子」；2:51 則稱戶珥的兒子薩瑪為「伯利恆之祖」。
+      refs: "2:50-51, 4:4"
+
+# ───────────────────────── 第 3 章 ─────────────────────────
+- id: c3a
+  chapter: 3
+  title: 大衛的兒子
+  range: "3:1-9"
+  intro: 大衛在希伯崙生了六個兒子（六個母親），在耶路撒冷生了十三個兒子。
+  statements:
+    - ref: "3:1"
+      parent: 大衛
+      mother: 亞希暖
+      children: [{id: 暗嫩, note: 長子}]
+    - ref: "3:1"
+      parent: 大衛
+      mother: 亞比該
+      children: [{id: 但以利, note: 次子}]
+    - ref: "3:2"
+      parent: 大衛
+      parent_in_text: false
+      mother: 瑪迦
+      children: [{id: 押沙龍, note: 三子}]
+    - ref: "3:2"
+      parent: 大衛
+      parent_in_text: false
+      mother: 哈及
+      children: [{id: 亞多尼雅, note: 四子}]
+    - ref: "3:3"
+      parent: 大衛
+      parent_in_text: false
+      mother: 亞比他
+      children: [{id: 示法提雅, note: 五子}]
+    - ref: "3:3"
+      parent: 大衛
+      parent_in_text: false
+      mother: 以格拉
+      children: [{id: 以特念, note: 六子}]
+    - ref: "3:4"
+      covers: true
+      note: 「這六人都是大衛在希伯崙生的。大衛在希伯崙作王七年零六個月，在耶路撒冷作王三十三年」。
+    - ref: "3:5"
+      parent: 大衛
+      mother: 拔書亞
+      children: [示米亞#大衛, 朔罷, 拿單, {id: 所羅門, mark: main}]
+    - ref: "3:6"
+      parent: 大衛
+      parent_in_text: false
+      children: [益轄, 以利沙瑪#大衛甲, 以利法列#大衛甲]
+    - ref: "3:7"
+      parent: 大衛
+      parent_in_text: false
+      children: [挪迦, 尼斐, 雅非亞]
+    - ref: "3:8"
+      parent: 大衛
+      parent_in_text: false
+      children: [以利沙瑪#大衛乙, 以利雅大, 以利法列#大衛乙]
+    - ref: "3:9"
+      parent: 大衛
+      rel: 女
+      children: [{id: 他瑪, pnote: 經文稱「他們的妹子」}]
+      note: 3:9 說「這都是大衛的兒子」，又特別註明「妃嬪的兒子不在其內」。
+  notes:
+    - text: 3:6–8 的九個兒子沒有寫母親；名單裡以利沙瑪、以利法列各出現兩次，是同名的兩個人。
+      refs: "3:6-8"
+
+- id: c3b
+  chapter: 3
+  title: 從所羅門到約西亞：猶大的王
+  range: "3:10-16"
+  intro: 這一段是猶大歷代的王，一代傳一代，到約西亞的兒子們為止。
+  spine: [所羅門, 約西亞]
+  statements:
+    - ref: "3:10-14"
+      chain: [所羅門, {id: 羅波安, mark: main}, {id: 亞比雅, mark: main}, {id: 亞撒, mark: main}, {id: 約沙法, mark: main}, {id: 約蘭, mark: main}, {id: 亞哈謝, mark: main}, {id: 約阿施, mark: main}, {id: 亞瑪謝, mark: main}, {id: 亞撒利雅#猶大王, mark: main}, {id: 約坦, mark: main}, {id: 亞哈斯, mark: main}, {id: 希西家, mark: main}, {id: 瑪拿西#猶大王, mark: main}, {id: 亞們, mark: main}, {id: 約西亞, mark: main}]
+    - ref: "3:15"
+      parent: 約西亞
+      children: [{id: 約哈難#約西亞, note: 長子}, {id: 約雅敬, note: 次子}, {id: 西底家, note: 三子}, {id: 沙龍#約西亞, note: 四子}]
+    - ref: "3:16"
+      parent: 約雅敬
+      children: [耶哥尼雅, 西底家#約雅敬]
+  notes:
+    - text: 3:15 約西亞的三子叫西底家，3:16 約雅敬的兒子也叫西底家，是兩個人。歷代志下 36:10 稱末代王西底家是約雅斤的「叔叔（原文是兄）」。
+      refs: "3:15-16, 代下 36:10"
+
+- id: c3c
+  chapter: 3
+  title: 被擄以後的大衛子孫
+  range: "3:17-24"
+  intro: 國亡之後，大衛的後代沒有斷，經過被擄歸回的所羅巴伯，一直記到第 3:24 的七個兄弟。
+  spine: [耶哥尼雅, 所羅巴伯]
+  statements:
+    - ref: "3:17-18"
+      parent: 耶哥尼雅
+      children: [撒拉鐵, 瑪基蘭, {id: 毘大雅, mark: main}, 示拿薩, 耶加米, 何沙瑪, 尼大比雅]
+      note: 3:17：「耶哥尼雅被擄」。
+    - ref: "3:19"
+      parent: 毘大雅
+      children: [{id: 所羅巴伯, mark: main}, 示每#毘大雅]
+    - ref: "3:19"
+      parent: 所羅巴伯
+      children: [米書蘭#所羅巴伯, 哈拿尼雅#所羅巴伯]
+    - ref: "3:19"
+      parent: 所羅巴伯
+      rel: 女
+      children: [{id: 示羅密, pnote: 經文稱「他們的妹子」}]
+    - ref: "3:20"
+      parent: 米書蘭#所羅巴伯
+      parent_in_text: false
+      children: [哈舒巴, 阿黑, 比利家#米書蘭, 哈撒底, 于沙希悉]
+      note: 3:20 和合本作「米書蘭的兒子是哈舒巴、阿黑、比利家、哈撒底、于沙希悉，共五人」。
+    - ref: "3:21"
+      parent: 哈拿尼雅#所羅巴伯
+      parent_as: 哈拿尼雅
+      children: [毘拉提#哈拿尼雅, 耶篩亞]
+    - ref: "3:21"
+      roots: [{id: 利法雅#3:21, pnote: 經文作「利法雅的眾子」}, {id: 亞珥難, pnote: 經文作「亞珥難的眾子」}, {id: 俄巴底亞#3:21, pnote: 經文作「俄巴底亞的眾子」}, {id: 示迦尼, pnote: 經文作「示迦尼的眾子」}]
+    - ref: "3:22"
+      parent: 示迦尼
+      children: [示瑪雅#示迦尼]
+    - ref: "3:22"
+      parent: 示瑪雅#示迦尼
+      parent_as: 示瑪雅
+      children: [哈突, 以甲, 巴利亞, 尼利雅, 沙法]
+    - ref: "3:23"
+      parent: 尼利雅
+      children: [以利約乃#尼利雅, 希西家#尼利雅, 亞斯利干#尼利雅]
+    - ref: "3:24"
+      parent: 以利約乃#尼利雅
+      parent_as: 以利約乃
+      children: [何大雅, 以利亞實, 毘萊雅, 阿谷#以利約乃, 約哈難#以利約乃, 第萊雅, 阿拿尼]
+  notes:
+    - text: 3:19 說所羅巴伯是「毘大雅的兒子」；以斯拉記 3:2 和馬太福音 1:12 都說他是撒拉鐵的兒子。
+      refs: "3:19, 拉 3:2, 太 1:12"
+    - text: 3:21 在毘拉提、耶篩亞之後寫「還有利法雅的眾子，亞珥難的眾子，俄巴底亞的眾子，示迦尼的眾子」，沒有交代這四家和上文的關係，所以這裡讓他們各自成行。
+      refs: "3:21"
+    - text: 3:22 說示瑪雅的兒子「共六人」，實際列出的名字是五個。
+      refs: "3:22"
+
+# ───────────────────────── 第 4 章 ─────────────────────────
+- id: c4a
+  chapter: 4
+  title: 猶大的其他家族
+  range: "4:1-23"
+  intro: 這一段補記猶大各地的家族，次序比較零散，夾著雅比斯的禱告。很多名字後面是「某地之祖」，說的是哪個城鎮由這一家開始。
+  statements:
+    - ref: "4:1"
+      covers: true
+      check: [法勒斯, 希斯崙, 迦米, 戶珥, 朔巴]
+      note: 4:1「猶大的兒子是法勒斯、希斯崙、迦米、戶珥、朔巴」：照第 2 章，法勒斯是猶大的兒子、希斯崙是法勒斯的兒子，這裡的「兒子」泛指後代。
+    - ref: "4:2"
+      new_root: true
+      chain: [朔巴#4:2, 利亞雅#朔巴, 雅哈#利亞雅]
+      note: 4:2 結尾說：「這是瑣拉人的諸族」。
+    - ref: "4:2"
+      parent: 雅哈#利亞雅
+      parent_as: 雅哈
+      children: [亞戶買, 拉哈]
+    - ref: "4:3"
+      parent: 以坦之祖
+      new_parent: true
+      children: [耶斯列, 伊施瑪, 伊得巴]
+    - ref: "4:3"
+      parent: 以坦之祖
+      rel: 女
+      children: [{id: 哈悉勒玻尼, pnote: 經文稱「他們的妹子」}]
+    - ref: "4:4"
+      parent: 戶珥
+      children: [{id: 毘努伊勒, of: 基多}, {id: 以謝珥, of: 戶沙}]
+    - ref: "4:5-6"
+      parent: 亞施戶
+      mother: 拿拉
+      children: [亞戶撒, 希弗, 提米尼, 哈轄斯他利]
+      note: 4:5：「提哥亞之祖亞施戶有兩個妻子：一名希拉，一名拿拉」。
+    - ref: "4:5, 4:7"
+      parent: 亞施戶
+      mother: 希拉
+      children: [洗列, 瑣轄, 伊提南]
+    - ref: "4:8"
+      parent: 哥斯
+      new_parent: true
+      children: [亞諾, 瑣比巴]
+    - ref: "4:8"
+      parent: 哈崙
+      new_parent: true
+      children: [{id: 亞哈黑, note: 與他的諸族}]
+    - ref: "4:9-10"
+      roots: [{id: 雅比斯, note: "「比他眾弟兄更尊貴」"}]
+    - ref: "4:11"
+      new_root: true
+      chain: [{id: 基綠, pnote: 書哈的弟兄, check: [書哈的弟兄]}, {id: 米黑, of: 伊施屯}]
+    - ref: "4:12"
+      parent: 伊施屯
+      new_parent: true
+      children: [伯拉巴, 巴西亞, {id: 提欣拿, of: 珥拿轄}]
+      note: 4:12 結尾說：「這都是利迦人」。
+    - ref: "4:13"
+      parent: 基納斯#俄陀聶之父
+      parent_as: 基納斯
+      new_parent: true
+      children: [俄陀聶, 西萊雅#基納斯]
+    - ref: "4:13"
+      parent: 俄陀聶
+      children: [哈塔]
+    - ref: "4:14"
+      parent: 憫挪太
+      new_parent: true
+      children: [俄弗拉]
+    - ref: "4:14"
+      parent: 西萊雅#基納斯
+      parent_as: 西萊雅
+      children: [{id: 約押#西萊雅, of: 革夏納欣人}]
+      note: 4:14：「他們都是匠人」。
+    - ref: "4:15"
+      parent: 耶孚尼
+      new_parent: true
+      children: [迦勒#耶孚尼]
+    - ref: "4:15"
+      parent: 迦勒#耶孚尼
+      parent_as: 迦勒
+      children: [以路, 以拉#迦勒, 拿安]
+    - ref: "4:15"
+      parent: 以拉#迦勒
+      parent_as: 以拉
+      children: [基納斯#以拉]
+    - ref: "4:16"
+      parent: 耶哈利勒
+      new_parent: true
+      children: [西弗, 西法, 提利, 亞撒列]
+    - ref: "4:17-18"
+      parent: 以斯拉
+      new_parent: true
+      children: [益帖#以斯拉, 米列, 以弗#以斯拉, 雅倫]
+    - ref: "4:17-18"
+      parent: 米列
+      mother: 比提雅
+      check: [法老女兒比提雅]
+      children: [米利暗#米列, 沙買#米列, {id: 益巴, of: 以實提摩}]
+    - ref: "4:17-18"
+      parent: 米列
+      mother: 猶大女子
+      children: [{id: 雅列#米列, of: 基多}, {id: 希伯#米列, of: 梭哥}, {id: 耶古鐵, of: 撒挪亞}]
+    - ref: "4:19"
+      parent: 荷第雅
+      new_parent: true
+      mother: 拿含的妹子
+      children: [{id: 基伊拉, note: 迦米人}, {id: 以實提摩之祖, note: 瑪迦人}]
+    - ref: "4:20"
+      parent: 示門
+      new_parent: true
+      children: [暗嫩#示門, 林拿, 便哈南, 提倫]
+    - ref: "4:20"
+      parent: 以示#4:20
+      parent_as: 以示
+      new_parent: true
+      children: [梭黑, 便梭黑]
+    - ref: "4:21-22"
+      parent: 示拉
+      children: [{id: 珥#示拉, of: 利迦}, {id: 拉大, of: 瑪利沙}, {id: 亞實比族, kind: 族, note: 織細麻布的各家}, 約敬, 哥西巴人, 約阿施#示拉, 薩拉, 雅叔比利恆]
+      note: 4:22 說約敬等人「就是在摩押地掌權的」，又說「這都是古時所記載的」。
+    - ref: "4:23"
+      covers: true
+      note: 「這些人都是窯匠，是尼他應和基低拉的居民；與王同處，為王做工」。
+  notes:
+    - text: 4:2 的朔巴、4:4 的戶珥接在 4:1 那串名字後面寫；經文沒有明說 4:2 的朔巴就是 2:50 的朔巴，這裡分開列。
+      refs: "4:1-4"
+    - text: 4:17–18 的經文和合本合成一節（4:18 標「併於上節」）。米列的兩個妻子各生了哪些兒子，照和合本分列。
+      refs: "4:17-18"
+
+- id: c4b
+  chapter: 4
+  title: 西緬
+  range: "4:24-43"
+  intro: 西緬的家族不大（4:27），住在猶大地的南方。這一段後半記了兩次向外擴張：往基多口找草場，和上西珥山。
+  statements:
+    - ref: "4:24"
+      parent: 西緬
+      children: [尼母利, 雅憫#西緬, 雅立, 謝拉#西緬, 掃羅#西緬]
+    - ref: "4:25-26"
+      chain: [掃羅#西緬, 沙龍#掃羅, 米比衫#西緬, 米施瑪#西緬, 哈母利, 撒刻, 示每#撒刻]
+    - ref: "4:27"
+      covers: true
+      note: 「示每有十六個兒子，六個女兒，他弟兄的兒女不多，他們各家不如猶大族的人丁增多」。
+    - ref: "4:28-31"
+      label: 西緬人住的城邑
+      places: [別是巴, 摩拉大, 哈薩書亞, 辟拉, 以森, 陀臘, 彼土利, 何珥瑪, 洗革拉, 伯瑪嘉博, 哈薩蘇撒, 伯比利, 沙拉音]
+      note: 「這些城邑直到大衛作王的時候都是屬西緬人的」。
+    - ref: "4:32-33"
+      label: 另外五個城邑
+      places: [以坦, 亞因, 臨門, 陀健, 亞珊]
+      note: 「還有屬城的鄉村，直到巴力」。
+    - ref: "4:34"
+      roots: [米所巴, 雅米勒]
+    - ref: "4:34"
+      parent: 亞瑪謝#約沙之父
+      parent_as: 亞瑪謝
+      new_parent: true
+      children: [約沙]
+    - ref: "4:35"
+      roots: [約珥#西緬]
+    - ref: "4:35"
+      new_root: true
+      chain: [亞薛, 西萊雅#亞薛, 約示比, 耶戶#約示比]
+    - ref: "4:36"
+      roots: [以利約乃#西緬, 雅哥巴, 約朔海, 亞帥雅#西緬, 亞底業, 耶西篾, 比拿雅#西緬]
+    - ref: "4:37"
+      new_root: true
+      chain: [示瑪雅#申利之父, 申利, 耶大雅#申利, 亞龍, 示非#亞龍, 細撒]
+    - ref: "4:38"
+      covers: true
+      note: 4:34–37 這些人，「都是作族長的，他們宗族的人數增多」。
+    - ref: "4:39-41"
+      covers: true
+      note: 他們往「基多口」去找牧羊的草場，在「猶大王希西家年間」攻擊那裡的「含族人」和「米烏尼人」，「就住在他們的地方，直到今日」。
+    - ref: "4:42-43"
+      parent: 以示#4:42
+      parent_as: 以示
+      new_parent: true
+      children: [毘拉提#以示, 尼利雅#以示, 利法雅#以示, 烏薛#以示]
+      note: 西緬人中「有五百人上西珥山」，由以示的四個兒子率領，「殺了逃脫剩下的亞瑪力人，就住在那裡直到今日」。
+
+# ───────────────────────── 第 5 章 ─────────────────────────
+- id: c5a
+  chapter: 5
+  title: 流便
+  range: "5:1-10"
+  intro: 流便是長子，經文先解釋為什麼族譜不從他開始，再列出他的兒子和後代。
+  statements:
+    - ref: "5:1-2"
+      covers: true
+      note: 流便「因他污穢了父親的床，他長子的名分就歸了約瑟」；「猶大勝過一切弟兄，君王也是從他而出；長子的名分卻歸約瑟」。
+    - ref: "5:3"
+      parent: 流便
+      children: [哈諾#流便, 法路, 希斯倫, 迦米#流便]
+    - ref: "5:4-6"
+      new_root: true
+      chain: [約珥#流便, 示瑪雅#約珥, 歌革, 示每#歌革, 米迦#示每, 利亞雅#米迦, 巴力#利亞雅, {id: 備拉, note: "流便支派的首領，「被亞述王提革拉毘尼色擄去」"}]
+    - ref: "5:7"
+      roots: [{id: 耶利#流便, note: 為首}, 撒迦利雅#流便]
+      note: 5:7：耶利、撒迦利雅和下面的比拉，是備拉的弟兄，「照著宗族，按著家譜作族長」。
+    - ref: "5:8"
+      new_root: true
+      chain: [約珥#比拉, 示瑪#約珥, 亞撒#示瑪, 比拉#亞撒]
+    - ref: "5:8-9"
+      label: 約珥一家住的地方
+      places: [亞羅珥, 尼波, 巴力免, 伯拉河]
+      note: 「因為他們在基列地牲畜增多」。
+    - ref: "5:10"
+      covers: true
+      note: 「掃羅年間，他們與夏甲人爭戰」，佔了基列東邊的全地。
+  notes:
+    - text: 5:4 的約珥沒有交代是流便哪一個兒子的後代。5:6 被擄的是「備拉」，和 5:8 的「比拉」是兩個人。
+      refs: "5:4-8"
+
+- id: c5b
+  chapter: 5
+  title: 迦得
+  range: "5:11-17"
+  intro: 迦得的子孫住在巴珊和基列。這一段沒有從迦得本人往下排，而是列出幾位族長，再往上追溯其中一家的祖先。
+  statements:
+    - ref: "5:11"
+      covers: true
+      note: 迦得的子孫「在流便對面，住在巴珊地，延到撒迦」。
+    - ref: "5:12"
+      roots: [{id: 約珥#迦得, note: 族長}, {id: 沙番, note: 副族長}, 雅乃, {id: 沙法#迦得, note: 住在巴珊}]
+    - ref: "5:14"
+      new_root: true
+      chain: [布斯, 耶哈多, 耶示篩, 米迦勒#耶示篩, 基列#米迦勒, 耶羅亞, 戶利, 亞比孩]
+    - ref: "5:13-14"
+      parent: 亞比孩
+      children: [米迦勒#亞比孩, 米書蘭#亞比孩, 示巴#亞比孩, 約賴, 雅干, 細亞, 希伯#亞比孩]
+    - ref: "5:15"
+      new_root: true
+      chain: [古尼#迦得, 押比疊, {id: 亞希#押比疊, note: 族長}]
+    - ref: "5:16-17"
+      covers: true
+      note: 他們住在「基列與巴珊和巴珊的鄉村，並沙崙的郊野」，「在猶大王約坦並在以色列王耶羅波安年間，都載入家譜」。
+
+- id: c5c
+  chapter: 5
+  title: 河東兩個半支派的戰役
+  range: "5:18-22"
+  intro: 流便、迦得和瑪拿西半支派聯手作戰。經文把勝利的原因說得很清楚。
+  statements:
+    - ref: "5:18-19"
+      label: 對手
+      places: [夏甲人, 伊突人, 拿非施人, 挪答人]
+      note: 河東聯軍「共有四萬四千七百六十名」。
+    - ref: "5:20"
+      covers: true
+      note: 「因為他們在陣上呼求神，倚賴神，神就應允他們」。
+    - ref: "5:21-22"
+      covers: true
+      note: 他們擄掠了大批牲畜和人口（數目見文末〈經文記下的人數〉），「因為這爭戰是出乎神」，就住在敵人的地上，「直到被擄的時候」。
+
+- id: c5d
+  chapter: 5
+  title: 河東的瑪拿西半支派，以及被擄
+  range: "5:23-26"
+  intro: 瑪拿西半支派的七個族長，接著是河東各支派被擄的原因和經過。
+  statements:
+    - ref: "5:23"
+      covers: true
+      note: 瑪拿西半支派的人住的地方「從巴珊延到巴力黑們、示尼珥與黑門山」。
+    - ref: "5:24"
+      roots: [以弗#5:24, 以示#5:24, 以列#5:24, 亞斯列#5:24, 耶利米, 何達威雅#5:24, 雅疊]
+      note: 5:24：這七人「都是大能的勇士，是有名的人，也是作族長的」。
+    - ref: "5:25-26"
+      covers: true
+      note: 他們「得罪了他們列祖的神」，所以神「激動亞述王普勒和亞述王提革拉毘尼色的心」，把流便人、迦得人、瑪拿西半支派的人擄到哈臘、哈博、哈拉與歌散河邊，「直到今日還在那裡」。
+
+# ───────────────────────── 第 6 章 ─────────────────────────
+- id: c6a
+  chapter: 6
+  title: 大祭司的家系
+  range: "6:1-15"
+  intro: 利未支派一開頭就沿著亞倫的兒子以利亞撒，一代代排到被擄時的約薩答。這是一條父傳子的祭司家系。
+  spine: [利未, 約薩答]
+  statements:
+    - ref: "6:1"
+      parent: 利未
+      children: [革順, {id: 哥轄, mark: main}, 米拉利]
+    - ref: "6:2"
+      parent: 哥轄
+      children: [{id: 暗蘭, mark: main}, 以斯哈, 希伯倫, 烏薛#哥轄]
+    - ref: "6:3"
+      parent: 暗蘭
+      children: [{id: 亞倫, mark: main}, 摩西]
+    - ref: "6:3"
+      parent: 暗蘭
+      rel: 女
+      children: [米利暗]
+    - ref: "6:3"
+      parent: 亞倫
+      children: [拿答#亞倫, 亞比戶, {id: 以利亞撒, mark: main}, 以他瑪]
+    - ref: "6:4-15"
+      chain: [以利亞撒, {id: 非尼哈, mark: main}, {id: 亞比書, mark: main}, {id: 布基, mark: main}, {id: 烏西, mark: main}, {id: 西拉希雅, mark: main}, {id: 米拉約, mark: main}, {id: 亞瑪利雅, mark: main}, {id: 亞希突, mark: main}, {id: 撒督, mark: main}, {id: 亞希瑪斯, mark: main}, {id: 亞撒利雅#亞希瑪斯, mark: main}, {id: 約哈難#亞撒利雅, mark: main}, {id: 亞撒利雅#約哈難, mark: main, note: "「在所羅門於耶路撒冷所建造的殿中，供祭司的職分」"}, {id: 亞瑪利雅#亞撒利雅, mark: main}, {id: 亞希突#亞瑪利雅, mark: main}, {id: 撒督#亞希突, mark: main}, {id: 沙龍#撒督, mark: main}, {id: 希勒家, mark: main}, {id: 亞撒利雅#希勒家, mark: main}, {id: 西萊雅, mark: main}, {id: 約薩答, mark: main, note: "耶路撒冷被擄時，「這約薩答也被擄去」"}]
+  notes:
+    - text: 這條家系裡亞瑪利雅、亞希突、撒督、亞撒利雅都出現不只一次，是同名的不同世代。
+      refs: "6:7-14"
+
+- id: c6b
+  chapter: 6
+  title: 利未三族的其他家系
+  range: "6:16-30"
+  intro: 回到利未的三個兒子，分別往下排革順、哥轄、米拉利三族，最後一族接到先知撒母耳。
+  statements:
+    - ref: "6:16"
+      parent: 利未
+      children: [革順, 哥轄, 米拉利]
+    - ref: "6:17"
+      parent: 革順
+      children: [立尼, 示每#革順]
+    - ref: "6:18"
+      parent: 哥轄
+      children: [暗蘭, 以斯哈, 希伯倫, 烏薛#哥轄]
+    - ref: "6:19"
+      parent: 米拉利
+      children: [抹利, 母示]
+      note: 6:19：「這是按著利未人宗族分的各家」。
+    - ref: "6:20-21"
+      chain: [革順, 立尼, 雅哈#立尼, 薪瑪#立尼, 約亞, 易多, 謝拉#易多, 耶特賴]
+    - ref: "6:22-24"
+      chain: [哥轄, 亞米拿達#哥轄, 可拉#亞米拿達, 亞惜#可拉, 以利加拿#亞惜, 以比雅撒#以利加拿, 亞惜#以比雅撒, 他哈#亞惜, 烏列, 烏西雅, 少羅]
+    - ref: "6:25"
+      parent: 以利加拿#6:25
+      parent_as: 以利加拿
+      new_parent: true
+      children: [亞瑪賽#6:25, 亞希摩]
+    - ref: "6:26-27"
+      chain: [亞希摩, 以利加拿#亞希摩, 瑣菲, 拿哈#瑣菲, 以利押#拿哈, 耶羅罕#以利押, 以利加拿#耶羅罕, {id: 撒母耳, mark: main}]
+    - ref: "6:28"
+      parent: 撒母耳
+      children: [{id: 約珥#撒母耳, note: 長子}, {id: 亞比亞, note: 次子}]
+    - ref: "6:29-30"
+      chain: [米拉利, 抹利, 立尼#抹利, 示每#立尼, 烏撒#示每, 示米亞#烏撒, 哈基雅, 亞帥雅#哈基雅]
+  notes:
+    - text: 6:25 的以利加拿，經文沒有說是 6:23 的哪一位以利加拿，這裡另起一行。
+      refs: "6:23-25"
+    - text: 撒母耳的祖先在本章出現兩次，名字不全相同：6:26–27 是瑣菲、拿哈、以利押，6:34–35 是蘇弗、陀亞、以列。可拉的父親，6:22 寫亞米拿達，6:38 寫以斯哈。兩份名單照各自原文分開列。
+      refs: "6:22, 6:26-27, 6:34-35, 6:38"
+    - text: 撒母耳記上 1:1 說撒母耳的父親以利加拿是「以法蓮人」；本章把這一家列在利未支派哥轄族。
+      refs: "6:27, 撒上 1:1"
+
+- id: c6c
+  chapter: 6
+  title: 大衛派定的三位歌唱領袖
+  range: "6:31-48"
+  intro: 約櫃安設以後，大衛派利未人在會幕前歌唱。三族各出一位領袖，經文把每位的祖先一路追回利未：希幔（哥轄族）站中間，亞薩（革順族）在右邊，以探（米拉利族）在左邊。
+  statements:
+    - ref: "6:31-32"
+      covers: true
+      note: 「約櫃安設之後，大衛派人在耶和華殿中管理歌唱的事」；所羅門建殿以後，「他們便按著班次供職」。
+    - ref: "6:33-38"
+      chain: [哥轄, 以斯哈, 可拉, 以比雅撒, 亞惜, 他哈, 西番雅, 亞撒利雅#西番雅, 約珥#亞撒利雅, 以利加拿#約珥, 亞瑪賽, 瑪哈, 以利加拿#瑪哈, 蘇弗, 陀亞, 以列#陀亞, 耶羅罕#以列, 以利加拿#耶羅罕甲, 撒母耳#希幔線, 約珥#希幔之父, {id: 希幔, mark: main, note: 哥轄族，站在中間}]
+    - ref: "6:39-43"
+      chain: [革順, 雅哈, 示每#雅哈, 薪瑪, 以探#薪瑪, 亞大雅#以探, 謝拉#亞大雅, 伊特尼, 瑪基雅#伊特尼, 巴西雅, 米迦勒#巴西雅, 示米亞#米迦勒, 比利家#示米亞, {id: 亞薩, mark: main, note: "革順族，「在希幔右邊供職」"}]
+    - ref: "6:44-47"
+      chain: [米拉利, 母示, 末力, 沙麥, 巴尼#沙麥, 暗西, 希勒家#暗西, 亞瑪謝#希勒家, 哈沙比雅#亞瑪謝, 瑪鹿, 亞伯底, 基示, {id: 以探, mark: main, note: "米拉利族，「在他們左邊供職」"}]
+    - ref: "6:48"
+      covers: true
+      note: 「他們的族弟兄利未人也被派辦神殿中的一切事」。
+  notes:
+    - text: 6:33–38 和 6:22–28 都有撒母耳一家，兩份名單有幾個名字不同（見上一段的讀經提醒）。這裡的撒母耳和 6:27 的撒母耳是同一人，因兩份名單無法逐一對齊，所以分開畫。
+      refs: "6:27-28, 6:33"
+    - text: 亞薩的家系從革順直接接到雅哈（6:43）；6:20 則是革順、立尼、雅哈。
+      refs: "6:20, 6:43"
+
+- id: c6d
+  chapter: 6
+  title: 亞倫子孫的職分
+  range: "6:49-53"
+  intro: 祭司的工作只屬於亞倫的子孫。6:50–53 重述 6:4–8 的大祭司家系，到撒督的兒子亞希瑪斯為止。
+  statements:
+    - ref: "6:49"
+      covers: true
+      note: 亞倫和他的子孫「在燔祭壇和香壇上獻祭燒香，又在至聖所辦理一切的事，為以色列人贖罪」。
+    - ref: "6:50-53"
+      chain: [亞倫, 以利亞撒, 非尼哈, 亞比書, 布基, 烏西, 西拉希雅, 米拉約, 亞瑪利雅, 亞希突, 撒督, 亞希瑪斯]
+
+- id: c6e
+  chapter: 6
+  title: 利未人的城邑
+  range: "6:54-81"
+  intro: 利未人沒有一塊自己的地，而是散住在各支派中間的城邑。完整城名見文末「利未人的城邑」表。
+  statements:
+    - ref: "6:54-56"
+      covers: true
+      note: 亞倫的子孫先抽籤，得了希伯崙和四圍的郊野；「只是屬城的田地和村莊都為耶孚尼的兒子迦勒所得」。
+    - ref: "6:61-63"
+      covers: true
+      note: 哥轄族其餘的人「在瑪拿西半支派的地中得了十座城」，革順族得了「十三座城」，米拉利族得了「十二座城」。
+    - ref: "6:64-65"
+      covers: true
+      note: 「以色列人將這些城與其郊野給了利未人」，都是「拈鬮」分配。
+
+# ───────────────────────── 第 7 章 ─────────────────────────
+- id: c7a
+  chapter: 7
+  title: 以薩迦
+  range: "7:1-5"
+  intro: 以薩迦的記載重點在人數：每一家能出戰的勇士有多少。
+  statements:
+    - ref: "7:1"
+      parent: 以薩迦
+      children: [陀拉, 普瓦, 雅述, 伸崙]
+    - ref: "7:2"
+      parent: 陀拉
+      children: [烏西#陀拉, 利法雅#陀拉, 耶勒, 雅買, 易伯散, 示母利]
+    - ref: "7:3"
+      parent: 烏西#陀拉
+      parent_as: 烏西
+      children: [伊斯拉希]
+    - ref: "7:3"
+      parent: 伊斯拉希
+      children: [米迦勒#伊斯拉希, 俄巴底亞#伊斯拉希, 約珥#伊斯拉希, 伊示雅]
+      note: 7:3：伊斯拉希和四個兒子「共五人，都是族長」。
+    - ref: "7:4-5"
+      covers: true
+      note: 他們率領的軍隊「共有三萬六千人，因為他們的妻和子眾多」；以薩迦全族的勇士「共有八萬七千人」。
+
+- id: c7b
+  chapter: 7
+  title: 便雅憫（第一份名單）
+  range: "7:6-12"
+  intro: 這裡的便雅憫有三個兒子；第 8 章另有一份不同的名單。
+  statements:
+    - ref: "7:6"
+      parent: 便雅憫
+      children: [比拉#便雅憫, 比結, 耶疊]
+    - ref: "7:7"
+      parent: 比拉#便雅憫
+      parent_as: 比拉
+      children: [以斯本, 烏西#比拉, 烏薛#比拉, 耶利摩#比拉, 以利]
+    - ref: "7:8-9"
+      parent: 比結
+      children: [細米拉, 約阿施#比結, 以利以謝, 以利約乃#比結, 暗利, 耶利摩#比結, 亞比雅#比結, 亞拿突, 亞拉篾#比結]
+    - ref: "7:10"
+      chain: [耶疊, 比勒罕]
+    - ref: "7:10-11"
+      parent: 比勒罕
+      children: [耶烏施#比勒罕, 便雅憫#比勒罕, 以忽, 基拿拿, 細坦, 他施#比勒罕, 亞希沙哈]
+      note: 7:11 稱他們「都是耶疊的兒子」。
+    - ref: "7:12"
+      parent: 以珥
+      new_parent: true
+      children: [書品, 戶品]
+    - ref: "7:12"
+      parent: 亞黑
+      new_parent: true
+      children: [戶伸]
+  notes:
+    - text: 7:6 列便雅憫的兒子是比拉、比結、耶疊；8:1–2 列的是比拉、亞實別、亞哈拉、挪哈、拉法。比拉的兒子兩處也不一樣（7:7 和 8:3–5）。
+      refs: "7:6-7, 8:1-5"
+
+- id: c7c
+  chapter: 7
+  title: 拿弗他利
+  range: "7:13"
+  intro: 只有一節，列出四個兒子。
+  statements:
+    - ref: "7:13"
+      parent: 拿弗他利
+      children: [雅薛, 沽尼, 耶色, 沙龍#拿弗他利]
+      note: 7:13：「這都是辟拉的子孫」。
+
+- id: c7d
+  chapter: 7
+  title: 河西的瑪拿西
+  range: "7:14-19"
+  intro: 瑪拿西的兒子瑪吉是「基列之父」。這一段提到西羅非哈只有女兒，和基甸所屬的亞比以謝家。
+  statements:
+    - ref: "7:14"
+      parent: 瑪拿西#支派
+      parent_as: 瑪拿西
+      new_parent: true
+      mother: 妾亞蘭人
+      children: [亞斯列]
+    - ref: "7:14"
+      parent: 瑪拿西#支派
+      parent_as: 瑪拿西
+      children: [{id: 瑪吉, of: 基列, of_word: 之父}]
+    - ref: "7:15"
+      parent: 瑪拿西#支派
+      parent_as: 瑪拿西
+      children: [{id: 西羅非哈, note: "次子；「但有幾個女兒」"}]
+      note: 7:15：瑪吉的妻子叫瑪迦，「是戶品、書品的妹子」。
+    - ref: "7:16"
+      parent: 瑪吉
+      mother: 瑪迦
+      children: [毘利施]
+    - ref: "7:16"
+      parent: 瑪吉
+      parent_in_text: false
+      children: [{id: 示利施, pnote: 經文作「毘利施的兄弟」}]
+    - ref: "7:16"
+      parent: 示利施
+      children: [烏蘭#示利施, 利金]
+    - ref: "7:17"
+      parent: 烏蘭#示利施
+      parent_as: 烏蘭
+      children: [比但]
+    - ref: "7:17"
+      parent: 瑪吉
+      children: [基列]
+      note: 7:17：「這都是基列的子孫。基列是瑪吉的兒子，瑪吉是瑪拿西的兒子」。
+    - ref: "7:18"
+      parent: 基列
+      rel: 妹子
+      children: [哈摩利吉]
+    - ref: "7:18"
+      parent: 哈摩利吉
+      children: [伊施荷, 亞比以謝, 瑪拉]
+    - ref: "7:19"
+      parent: 示米大
+      new_parent: true
+      children: [亞現, 示劍, 利克希, 阿尼安]
+  notes:
+    - text: 7:15 說「瑪拿西的次子名叫西羅非哈」；民數記 27:1 說西羅非哈是「瑪拿西的玄孫，瑪吉的曾孫，基列的孫子，希弗的兒子」。
+      refs: "7:15, 民 27:1"
+
+- id: c7e
+  chapter: 7
+  title: 以法蓮，和約書亞的家系
+  range: "7:20-29"
+  intro: 以法蓮的兒子被迦特人殺害之後，他給新生的兒子取名比利亞。從比利亞往下第十代是約書亞。
+  spine: [比利亞#以法蓮, 約書亞]
+  statements:
+    - ref: "7:20-21"
+      new_root: true
+      chain: [以法蓮, 書提拉, 比列, 他哈#比列, 以拉大, 他哈#以拉大, 撒拔#他哈, 書提拉#撒拔]
+    - ref: "7:21"
+      parent: 以法蓮
+      children: [以謝, 以列#以法蓮]
+      note: 以謝和以列「因為下去奪取迦特人的牲畜，被本地的迦特人殺了」。
+    - ref: "7:22"
+      covers: true
+      note: 「他們的父親以法蓮為他們悲哀了多日，他的弟兄都來安慰他」。
+    - ref: "7:23"
+      parent: 以法蓮
+      children: [{id: 比利亞#以法蓮, mark: main, note: "因為「家裡遭禍」而取這個名字"}]
+    - ref: "7:24"
+      parent: 以法蓮
+      parent_in_text: false
+      rel: 女
+      children: [{id: 舍伊拉, note: "「建築上伯和崙、下伯和崙與烏羨舍伊拉的」"}]
+    - ref: "7:25"
+      parent: 比利亞#以法蓮
+      parent_as: 比利阿
+      children: [利法, {id: 利悉, mark: main}]
+    - ref: "7:25-27"
+      chain: [利悉, {id: 他拉#利悉, mark: main}, {id: 他罕, mark: main}, {id: 拉但, mark: main}, {id: 亞米忽, mark: main}, {id: 以利沙瑪, mark: main}, {id: 嫩, mark: main}, {id: 約書亞, mark: main}]
+    - ref: "7:28-29"
+      label: 以法蓮和瑪拿西的住處
+      places: [伯特利, 拿蘭, 基色, 示劍, 迦薩, 伯善, 他納, 米吉多, 多珥]
+      note: 「以色列兒子約瑟的子孫住在這些地方」。
+  notes:
+    - text: 7:24 說「他的女兒名叫舍伊拉」，這裡照上下文掛在以法蓮名下。7:25 把比利亞寫作「比利阿」。
+      refs: "7:24-25"
+
+- id: c7f
+  chapter: 7
+  title: 亞設
+  range: "7:30-40"
+  intro: 亞設的四個兒子和一個女兒，往下到希別一家，最後記下能出戰的人數。
+  statements:
+    - ref: "7:30"
+      parent: 亞設
+      children: [音拿, 亦施瓦, 亦施韋, 比利亞#亞設]
+    - ref: "7:30"
+      parent: 亞設
+      rel: 女
+      children: [{id: 西拉, pnote: 經文稱「他們的妹子」}]
+    - ref: "7:31"
+      parent: 比利亞#亞設
+      parent_as: 比利亞
+      children: [希別, {id: 瑪結, of: 比撒威, of_word: 的父親}]
+    - ref: "7:32"
+      parent: 希別
+      children: [雅弗勒, 朔默, 何坦]
+    - ref: "7:32"
+      parent: 希別
+      rel: 女
+      children: [{id: 書雅, pnote: 經文稱「他們的妹子」}]
+    - ref: "7:33"
+      parent: 雅弗勒
+      children: [巴薩, 賓哈, 亞施法]
+    - ref: "7:34"
+      parent: 朔默
+      children: [亞希#朔默, 羅迦, 耶戶巴, 亞蘭#朔默]
+    - ref: "7:35"
+      parent: 希別
+      parent_in_text: false
+      children: [{id: 希連, pnote: 經文作「朔默兄弟希連」}]
+    - ref: "7:35"
+      parent: 希連
+      children: [瑣法, 音那, 示利斯, 亞抹]
+    - ref: "7:36-37"
+      parent: 瑣法
+      children: [書亞#瑣法, 哈尼弗, 書阿勒, 比利, 音拉, 比悉, 河得, 珊瑪, 施沙, 益蘭#瑣法, 比拉#瑣法]
+    - ref: "7:38"
+      parent: 益帖#7:38
+      parent_as: 益帖
+      new_parent: true
+      children: [耶孚尼#益帖, 毘斯巴, 亞拉#益帖]
+    - ref: "7:39"
+      parent: 烏拉
+      new_parent: true
+      children: [亞拉#烏拉, 漢尼業, 利寫]
+    - ref: "7:40"
+      covers: true
+      note: 「這都是亞設的子孫，都是族長，是精壯大能的勇士」，能出戰的「共有二萬六千人」。
+  notes:
+    - text: 7:32 希別的兒子是雅弗勒、朔默、何坦；7:35 又提到「朔默兄弟希連」，這裡掛在希別名下。7:38–39 的益帖和烏拉，經文沒有說是誰的兒子。
+      refs: "7:32, 7:35, 7:38-39"
+
+# ───────────────────────── 第 8 章 ─────────────────────────
+- id: c8a
+  chapter: 8
+  title: 便雅憫（第二份名單）
+  range: "8:1-12"
+  intro: 第 8 章重新寫便雅憫，這一次是五個兒子，最後引到掃羅家。
+  statements:
+    - ref: "8:1-2"
+      parent: 便雅憫
+      children: [{id: 比拉#便雅憫, as: 比拉}, 亞實別, 亞哈拉, 挪哈, 拉法]
+    - ref: "8:3-5"
+      parent: 比拉#便雅憫
+      parent_as: 比拉
+      children: [亞大, 基拉#甲, 亞比忽, 亞比書#比拉, 乃幔, 亞何亞, 基拉#乙, 示孚汛, 戶蘭]
+    - ref: "8:6-7"
+      parent: 以忽#8:6
+      parent_as: 以忽
+      new_parent: true
+      children: [乃幔#以忽, 亞希亞, 基拉#以忽]
+      note: 以忽的兒子「作迦巴居民的族長，被擄到瑪拿轄」。
+    - ref: "8:7"
+      parent: 基拉#以忽
+      parent_as: 基拉
+      children: [烏撒, 亞希忽]
+    - ref: "8:8-10"
+      parent: 沙哈連
+      new_parent: true
+      mother: 賀得
+      children: [約巴#沙哈連, 洗比雅, 米沙#沙哈連, 瑪拉干, 耶烏斯, 沙迦, 米瑪]
+      note: 沙哈連「休他二妻戶伸和巴拉之後，在摩押地生了兒子」。
+    - ref: "8:8, 8:11"
+      parent: 沙哈連
+      mother: 戶伸
+      children: [亞比突, 以利巴力]
+    - ref: "8:12"
+      parent: 以利巴力
+      children: [希伯#以利巴力, 米珊, {id: 沙麥#以利巴力, note: "「建立阿挪和羅德二城與其村莊」"}]
+  notes:
+    - text: 8:1 稱比拉是「便雅憫的長子」，8:3–5 列的比拉的兒子，和 7:7 列的完全不同。8:3–5 的名單裡有兩個基拉。
+      refs: "7:7, 8:1-5"
+
+- id: c8b
+  chapter: 8
+  title: 住在耶路撒冷的便雅憫族長
+  range: "8:13-28"
+  intro: 幾個大家族的族長名單，結尾說他們都住在耶路撒冷。
+  statements:
+    - ref: "8:13"
+      roots: [比利亞#8:13, 示瑪#8:13]
+      note: 比利亞和示瑪「是亞雅崙居民的族長，是驅逐迦特人的」。
+    - ref: "8:14-16"
+      parent: 比利亞#8:13
+      parent_as: 比利亞
+      children: [亞希約#比利亞, 沙煞, 耶利末, 西巴第雅#比利亞, 亞拉得, 亞得, 米迦勒#比利亞, 伊施巴#比利亞, 約哈]
+    - ref: "8:17-18"
+      parent: 以利巴力
+      children: [西巴第雅#以利巴力, 米書蘭#以利巴力, 希西基, 希伯#以利巴力, 伊施米萊, 伊斯利亞, 約巴#以利巴力]
+    - ref: "8:19-21"
+      parent: 示每#8:21
+      parent_as: 示每
+      new_parent: true
+      children: [雅金, 細基利#示每, 撒底, 以利乃, 洗勒太, 以列#示每, 亞大雅#示每, 比拉雅, 申拉]
+    - ref: "8:22-25"
+      parent: 沙煞
+      children: [伊施班, 希伯#沙煞, 以列#沙煞, 亞伯頓#沙煞, 細基利#沙煞, 哈難#沙煞, 哈拿尼雅#沙煞, 以攔#沙煞, 安陀提雅, 伊弗底雅, 毘努伊勒#沙煞]
+    - ref: "8:26-27"
+      parent: 耶羅罕#8:27
+      parent_as: 耶羅罕
+      new_parent: true
+      children: [珊示萊, 示哈利, 亞他利雅, 雅利西, 以利亞, 細基利#耶羅罕]
+    - ref: "8:28"
+      covers: true
+      note: 「這些人都是著名的族長，住在耶路撒冷」。
+  notes:
+    - text: 8:12 以利巴力的兒子是希伯、米珊、沙麥；8:17–18 又列出以利巴力的七個兒子，其中也有希伯。8:21 的示每、8:27 的耶羅罕，經文沒有說是誰的兒子。
+      refs: "8:12, 8:17-18, 8:21, 8:27"
+
+- id: c8c
+  chapter: 8
+  title: 基遍的耶利，和掃羅的家
+  range: "8:29-40"
+  intro: 住在基遍的耶利家，其中尼珥的孫子就是以色列第一個王掃羅。掃羅的後代從約拿單一支往下記了十代以上。
+  spine: [耶利, 亞悉]
+  statements:
+    - ref: "8:29-31"
+      roots: [{id: 耶利, of: 基遍, of_word: 的父親, note: "妻子名叫「瑪迦」"}]
+    - ref: "8:30-31"
+      parent: 耶利
+      parent_in_text: false
+      children: [{id: 亞伯頓#耶利, note: 長子}, 蘇珥, 基士#耶利, 巴力#耶利, 拿答#耶利, 基多, 亞希約#耶利, 撒迦, 米基羅]
+    - ref: "9:36"
+      parent: 耶利
+      parent_in_text: false
+      children: [{id: 尼珥, mark: main, pnote: 8:30–31 的名單沒有尼珥，9:36 有}]
+    - ref: "8:32"
+      parent: 米基羅
+      children: [示米暗]
+      note: 8:32：「這些人和他們的弟兄在耶路撒冷對面居住」。
+    - ref: "8:33"
+      chain: [尼珥, {id: 基士, mark: main}, {id: 掃羅, mark: main}]
+    - ref: "8:33"
+      parent: 掃羅
+      children: [{id: 約拿單, mark: main}, 麥基舒亞, 亞比拿達#掃羅, 伊施巴力]
+    - ref: "8:34"
+      chain: [約拿單, {id: 米力巴力, mark: main}, {id: 米迦#米力巴力, mark: main}]
+    - ref: "8:35"
+      parent: 米迦#米力巴力
+      parent_as: 米迦
+      children: [毘敦, 米勒, 他利亞, {id: 亞哈斯#米迦, mark: main}]
+    - ref: "8:36"
+      chain: [亞哈斯#米迦, {id: 耶何阿達, mark: main}]
+    - ref: "8:36"
+      parent: 耶何阿達
+      children: [亞拉篾, 亞斯瑪威, {id: 心利#耶何阿達, mark: main}]
+    - ref: "8:36-37"
+      chain: [心利#耶何阿達, {id: 摩撒#心利, mark: main}, {id: 比尼亞, mark: main}, {id: 拉法#比尼亞, mark: main}, {id: 以利亞薩, mark: main}, {id: 亞悉, mark: main}]
+    - ref: "8:38"
+      parent: 亞悉
+      children: [亞斯利干, 波基路, 以實瑪利#亞悉, 示亞利雅, 俄巴底雅, 哈難]
+    - ref: "8:37, 8:39"
+      parent: 以利亞薩
+      parent_in_text: true
+      children: [{id: 以設, pnote: 經文作「亞悉兄弟以設」}]
+    - ref: "8:39"
+      parent: 以設
+      children: [{id: 烏蘭, note: 長子}, {id: 耶烏施#以設, note: 次子}, {id: 以利法列#以設, note: 三子}]
+    - ref: "8:40"
+      covers: true
+      note: 「烏蘭的兒子都是大能的勇士，是弓箭手，他們有許多的子孫，共一百五十名，都是便雅憫人」。
+  notes:
+    - text: 掃羅的四個兒子當中，約拿單的兒子「米力巴力」，撒母耳記下 4:4 作「米非波設」；「伊施巴力」，撒母耳記下 2:8 作「伊施波設」。
+      refs: "8:33-34, 撒下 4:4, 撒下 2:8"
+
+# ───────────────────────── 第 9 章 ─────────────────────────
+- id: c9a
+  chapter: 9
+  title: 歸回以後住在耶路撒冷的人
+  range: "9:1-9"
+  intro: 族譜寫到這裡，時間跳到被擄歸回以後。先是猶大和便雅憫的居民。
+  statements:
+    - ref: "9:1"
+      covers: true
+      note: 「以色列人都按家譜計算，寫在以色列諸王記上。猶大人因犯罪就被擄到巴比倫」。
+    - ref: "9:2-3"
+      covers: true
+      note: 先回來的有「以色列人、祭司、利未人、尼提寧」；住在耶路撒冷的有「猶大人、便雅憫人、以法蓮人、瑪拿西人」。
+    - ref: "9:4"
+      new_root: true
+      chain: [巴尼#9:4, 音利, 暗利#9:4, 亞米忽#9:4, {id: 烏太, note: 法勒斯的子孫}]
+    - ref: "9:5"
+      roots: [{id: 亞帥雅#示羅, note: "示羅的子孫中的「長子」，和他的眾子"}]
+    - ref: "9:6"
+      roots: [{id: 耶烏利, note: "謝拉的子孫；連弟兄「共六百九十人」"}]
+    - ref: "9:7"
+      new_root: true
+      chain: [哈西努, 何達威雅#哈西努, 米書蘭#何達威雅, {id: 撒路, note: 便雅憫人}]
+    - ref: "9:8"
+      parent: 耶羅罕#9:8
+      parent_as: 耶羅罕
+      new_parent: true
+      children: [伊比尼雅#耶羅罕]
+    - ref: "9:8"
+      new_root: true
+      chain: [米基立, 烏西#米基立, 以拉#烏西]
+    - ref: "9:8"
+      new_root: true
+      chain: [伊比尼雅#流珥之祖, 流珥#9:8, 示法提雅#流珥, 米書蘭#示法提雅]
+    - ref: "9:9"
+      covers: true
+      note: 便雅憫人「按著家譜計算共有九百五十六名」。
+
+- id: c9b
+  chapter: 9
+  title: 祭司
+  range: "9:10-13"
+  intro: 歸回後在聖殿供職的祭司家族。
+  statements:
+    - ref: "9:10"
+      roots: [耶大雅, 耶何雅立, 雅斤]
+    - ref: "9:11"
+      new_root: true
+      chain: [亞希突#9:11, 米拉約#9:11, 撒督#9:11, 米書蘭#撒督, 希勒家#9:11, {id: 亞薩利雅, note: "「管理神殿」"}]
+    - ref: "9:12"
+      new_root: true
+      chain: [瑪基雅#9:12, 巴施戶珥, 耶羅罕#巴施戶珥, 亞大雅#耶羅罕]
+    - ref: "9:12"
+      new_root: true
+      chain: [音麥, 米實利密, 米書蘭#米實利密, 雅希細拉, 亞第業, 瑪賽]
+    - ref: "9:13"
+      covers: true
+      note: 他們和眾弟兄「共有一千七百六十人，是善於做神殿使用之工的」。
+  notes:
+    - text: 9:11 的大祭司家系（亞希突、米拉約、撒督、米書蘭、希勒家），和 6:11–13 的寫法不完全相同。
+      refs: "6:11-13, 9:11"
+
+- id: c9c
+  chapter: 9
+  title: 利未人和守門的
+  range: "9:14-34"
+  intro: 聖殿的工作分得很細：守門、管器皿、調香、烤餅、預備陳設餅、歌唱，各有專人。
+  statements:
+    - ref: "9:14"
+      new_root: true
+      chain: [哈沙比雅#9:14, 押利甘, 哈述, {id: 示瑪雅#哈述, note: 米拉利的子孫}]
+    - ref: "9:15"
+      roots: [拔巴甲, 黑勒施, 迦拉#9:15]
+    - ref: "9:15"
+      chain: [亞薩, 細基利#亞薩, 米迦#細基利, 瑪探雅]
+    - ref: "9:16"
+      new_root: true
+      chain: [耶杜頓, 迦拉#耶杜頓, 示瑪雅#迦拉, 俄巴底]
+    - ref: "9:16"
+      new_root: true
+      chain: [以利加拿#9:16, 亞撒#以利加拿, {id: 比利家#亞撒, note: "「住在尼陀法人的村莊」"}]
+    - ref: "9:17, 9:19"
+      chain: [可拉, 以比雅撒, 可利, {id: 沙龍, mark: main, note: 守門的「沙龍為長」}]
+    - ref: "9:17"
+      roots: [亞谷, 達們, 亞希幔]
+      note: 9:17：「守門的是沙龍、亞谷、達們、亞希幔，和他們的弟兄」。
+    - ref: "9:18-20"
+      covers: true
+      note: 他們「從前」看守「朝東的王門」；可拉人「都管理使用之工，並守會幕的門」；「從前以利亞撒的兒子非尼哈管理他們，耶和華也與他同在」。
+    - ref: "9:21"
+      chain: [米施利米雅, {id: 撒迦利雅#米施利米雅, note: "「看守會幕之門的」"}]
+      new_root: true
+    - ref: "9:22-27"
+      covers: true
+      note: 守門的「共有二百一十二名」，「是大衛和先見撒母耳所派」；東西南北「四方都有守門的」，村莊的弟兄「每七日來與他們換班」；守門的人「要每日早晨開門」。
+    - ref: "9:28-30"
+      covers: true
+      note: 有人管理器皿，「按著數目拿出拿入」；有人管理「細麵、酒、油、乳香、香料」；「祭司中有人用香料做膏油」。
+    - ref: "9:31"
+      parent: 沙龍
+      children: [{id: 瑪他提雅, note: "長子；「管理盤中烤的物」"}]
+    - ref: "9:32-34"
+      covers: true
+      note: 哥轄子孫中有人「管理陳設餅的，每安息日預備擺列」；歌唱的利未族長「住在屬殿的房屋，晝夜供職，不做別樣的工」。
+  notes:
+    - text: 9:15 的瑪探雅是「亞薩的曾孫」，這裡接在 6:39 的亞薩名下；9:19 的沙龍是「可拉的曾孫、以比雅撒的孫子」，接在 6:37 的可拉、以比雅撒名下。
+      refs: "9:15, 9:19, 6:37, 6:39"
+
+- id: c9d
+  chapter: 9
+  title: 再寫一次掃羅的家
+  range: "9:35-44"
+  intro: 第 9 章最後一段，重寫 8:29–38 基遍耶利和掃羅家的名單；緊接著第 10 章就寫掃羅戰死。人物已畫在第 8 章；幾處寫法不同，標在第 8 章的名字旁。
+  statements:
+    - ref: "9:35-37"
+      parent: 耶利
+      children: [亞伯頓#耶利, 蘇珥, 基士#耶利, 巴力#耶利, 尼珥, 拿答#耶利, 基多, 亞希約#耶利, {id: 撒迦, as: 撒迦利雅}, 米基羅]
+    - ref: "9:38"
+      parent: 米基羅
+      children: [示米暗]
+    - ref: "9:39"
+      chain: [尼珥, 基士, 掃羅]
+    - ref: "9:39"
+      parent: 掃羅
+      children: [約拿單, 麥基舒亞, 亞比拿達#掃羅, 伊施巴力]
+    - ref: "9:40"
+      chain: [約拿單, 米力巴力, 米迦#米力巴力]
+    - ref: "9:41"
+      parent: 米迦#米力巴力
+      parent_as: 米迦
+      children: [毘敦, 米勒, 他利亞, 亞哈斯#米迦]
+    - ref: "9:42"
+      chain: [{id: 亞哈斯#米迦, as: 亞哈斯}, {id: 耶何阿達, as: 雅拉}]
+    - ref: "9:42"
+      parent: 耶何阿達
+      parent_as: 雅拉
+      children: [亞拉篾, 亞斯瑪威, 心利#耶何阿達]
+    - ref: "9:42-43"
+      chain: [心利#耶何阿達, 摩撒#心利, 比尼亞, {id: 拉法#比尼亞, as: 利法雅}, 以利亞薩, 亞悉]
+    - ref: "9:44"
+      parent: 亞悉
+      children: [亞斯利干, 波基路, 以實瑪利#亞悉, 示亞利雅, 俄巴底雅, 哈難]
+  notes:
+    - text: 和第 8 章比較：9:36 多了尼珥；8:31 的「撒迦」在 9:37 作「撒迦利雅」；8:36 的「耶何阿達」在 9:42 作「雅拉」；8:37 的「拉法」在 9:43 作「利法雅」。8:39–40 以設一家沒有重寫。
+      refs: "8:31, 8:36-37, 9:36-37, 9:42-43"
+
+overview_note: |
+  猶大一支佔了大約一百節，其次是利未的八十一節，大衛王室和祭司、聖殿的家族是這份族譜的兩個重心。便雅憫寫了兩次（第 7 章和第 8 章），第 9 章結尾又重寫一次掃羅家，接到第 10 章掃羅的死。以色列十二個兒子當中，但和西布倫沒有自己的族譜段落。

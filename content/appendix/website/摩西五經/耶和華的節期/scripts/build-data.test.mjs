@@ -33,7 +33,8 @@ describe.skipIf(!IN_VAULT)('完整建置（需要 vault）', () => {
 const flat = (g) => g.items.map((i) => `${i.animal}${i.count}${i.role}`);
 
 describe.skipIf(!IN_VAULT)('獻祭數字（檢查 #5）：parser 算出的結果要等於主筆讀經文得出的期望值', () => {
-  const { data } = buildAll();
+  // skipIf 的 describe 本體在收集測試時仍會執行；沒有 vault（CI）時不能在這裡建置
+  const { data } = IN_VAULT ? buildAll() : { data: null };
   const expected = {
     '民28:11-15': ['公牛犢2燔祭', '公綿羊1燔祭', '公羊羔7燔祭', '公山羊1贖罪祭'],
     '民28:19-22': ['公牛犢2燔祭', '公綿羊1燔祭', '公羊羔7燔祭', '公山羊1贖罪祭'],

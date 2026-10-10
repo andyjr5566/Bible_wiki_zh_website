@@ -5,7 +5,7 @@ import { BANNED, buildAll, lintCopy, lintPlain, renderOutputs } from '../../scri
 import { extractRefs, IN_VAULT, ROOT, GIST_MAX, SITE } from '../../scripts/lib.mjs';
 import data from './explorer.json';
 import type { Explorer } from './types';
-import { chapterUrl, entryUrl, WIKI_BASE } from './links';
+import { chapterUrl, entryUrl, feastUrl, WIKI_BASE } from './links';
 
 const DB = data as unknown as Explorer;
 
@@ -172,5 +172,25 @@ describe('新手教學開場引用的經文', () => {
     const { DB } = await import('./db');
     const { DEMO_QUOTE } = await import('../ui/coach');
     expect(DB.verses['出21:2']).toContain(DEMO_QUOTE);
+  });
+});
+
+describe('節期網站互連', () => {
+  it('feastLinks 的條文都存在，連結指向節期網站的 #ch=<章 id>', () => {
+    const ids = new Set(DB.laws.map((l) => l.id));
+    const entries = Object.entries(DB.feastLinks);
+    expect(entries.length).toBeGreaterThan(0);
+    for (const [lawId, list] of entries) {
+      expect(ids.has(lawId), lawId).toBe(true);
+      for (const f of list) {
+        expect(f.title.trim().length, `${lawId} ${f.id}`).toBeGreaterThan(0);
+        expect(feastUrl(f.id)).toBe(`../../耶和華的節期/dist/index.html#ch=${f.id}`);
+      }
+    }
+  });
+  it.skipIf(!IN_VAULT)('feastLinks 與節期網站 feasts.yaml 的 law_links 一一對應', () => {
+    const src = readFileSync(resolve(SITE, '../耶和華的節期/data/feasts.yaml'), 'utf8');
+    const count = (src.match(/^law_links:[\s\S]*$/m)?.[0].match(/\b[a-z]+\d+-\d+\b/g) ?? []).length;
+    expect(Object.values(DB.feastLinks).reduce((n, xs) => n + xs.length, 0)).toBe(count);
   });
 });

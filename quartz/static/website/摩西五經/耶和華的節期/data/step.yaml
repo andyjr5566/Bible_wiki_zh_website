@@ -1,0 +1,228 @@
+# 原文關鍵字：只寫「哪一節、STEP 表格第幾個字」和網站自己的說明。
+# 希伯來字、音譯、Strong、詞形、本節譯義、字典義全部由建置腳本從 raw_data/stepbible_*.txt 抽出，不手打。
+# expect_strong 是防呆：腳本抽到的 Strong 不一致就報錯（代表位置寫錯）。
+# note 的寫法：先寫 STEP 能確認的（詞形、本節譯義、字典義），再寫「部分註釋進一步理解為……」。
+#   STEP 沒列出的意思不是反證；lexicon 是可能義域，不等於本節語境義。
+
+- id: abib
+  label: 亞筆月
+  ref: 出13:4
+  position: 5
+  expect_strong: H24
+  note: STEP 把這個字標為月份的名稱「亞筆」。字義部分由註釋補充：黃迦勒解作「結穗」，KingComments 說是「新鮮的嫩穗」，例如大麥。
+
+- id: bein-haarbayim
+  label: 黃昏
+  ref: 出12:6
+  position: 17
+  expect_strong: H6153
+  note: 和合本譯作「黃昏」。STEP 在這裡的本節譯義是「兩個黃昏」，前一個字是「之間」，這個字的詞形是雙數。這段時間確切從何時算起，註釋有不同說法：《串珠聖經註釋》和《丁道爾聖經註釋》都提到，法利賽人解作從下午日頭熱力減退到日落。
+
+- id: ezov
+  label: 牛膝草
+  ref: 出12:22
+  position: 3
+  expect_strong: H231
+  note: STEP 的本節譯義是 hyssop。這種草相當於今天哪一種植物，註釋這樣描述：《舊約聖經背景註釋》說它是一種墨角蘭（marjoram）屬的植物，質地很適合做刷子；黃迦勒和丁良才都說它長在牆上或石縫裡。
+
+- id: saph
+  label: 盆
+  ref: 出12:22
+  position: 7
+  expect_strong: H5592A
+  note: 和合本譯作「盆」。這個字在本節出現兩次，STEP 兩處的本節譯義都是 basin（盆），字典義也是 basin。黃迦勒解釋出12:7「取點血」時說，是宰羊羔的時候用盆取血備用；KingComments 也說，羊羔的血要接在盆裡，再用牛膝草抹在門框和門楣上。
+
+- id: matzot
+  label: 無酵餅
+  ref: 出12:8
+  position: 8
+  expect_strong: H4682
+  note: STEP 的本節譯義是 unleavened bread，詞形是複數。《丁道爾聖經註釋》提到，和合本的「無酵餅」和「除酵節」在原文是同一個字。
+
+- id: merorim
+  label: 苦菜
+  ref: 出12:8
+  position: 10
+  expect_strong: H4844
+  note: STEP 的本節譯義是 bitter herbs，詞形標為複數，字典義是「苦味」。經文沒有說是哪一種菜。《舊約聖經背景註釋》列出後期猶太文獻的幾種說法，像萵苣、菊苣，也說無法確定聖經的字眼是否包括這些。
+
+- id: pesach
+  label: 逾越節
+  ref: 出12:11
+  position: 13
+  expect_strong: H6453
+  note: 這是節期的名稱，STEP 標為名詞，字典義是 Passover。《丁道爾聖經註釋》認為這個字主要指祭物，其次才指以祭物為中心的節期。
+
+- id: pasach
+  label: 越過
+  ref: 出12:13
+  position: 13
+  expect_strong: H6452A
+  note: 第13節和第23節用的是同一個字根的動詞，STEP 在第13節的本節譯義是「我要越過」，字典義是 to pass。這個動詞怎麼理解，註釋有兩種說法：黃迦勒在原文字義裡把「越過」解作略過、跳過；《舊約聖經背景註釋》從以賽亞書31:5 看出它有保護的意思，認為這裡是神在門口護衛。
+
+- id: mashchit
+  label: 滅命的
+  ref: 出12:23
+  position: 20
+  expect_strong: H7843
+  note: STEP 的本節譯義是 the destroyer，這裡標為帶冠詞的名詞；對應的字典條目是動詞「毀壞」。經文沒有描寫滅命的是什麼樣子。黃迦勒說一般理解為奉命擊殺的天使，也有人認為就是神自己。
+
+- id: shimmurim
+  label: 謹守
+  ref: 出12:42
+  position: 12
+  expect_strong: H8107
+  note: STEP 的本節譯義是 vigil，也就是守夜，詞形是複數；這個字在本節出現兩次。黃迦勒和《啟導本聖經腳註》都提到，「耶和華的夜」可以另譯為「耶和華親自守夜」。
+
+# ================= 第二階段第一批（春季） =================
+- id: chodesh
+  label: 月朔
+  ref: 民28:11
+  position: 2
+  expect_strong: H2320G
+  note: 和合本譯作「每月朔」。STEP 把這一句分成兩個字：前一個字的本節譯義是「beginnings of」（起頭），這個字是 months（你們的月份），詞形是複數，字典義是 month（月）。黃迦勒說，月朔是每月的第一日，或新月出現的日子。
+
+- id: omer
+  label: 一捆
+  ref: 利23:10
+  position: 20
+  expect_strong: H6016A
+  note: STEP 在這裡的本節譯義與字典義都是 sheaf（一捆）。部分註釋進一步指出，同一個字也是量器的名稱：黃迦勒解作一伊法的十分之一；丁良才說這字有時是捆的意思，也是一種量器的名字。
+
+- id: shabbat
+  label: 安息日
+  ref: 利23:11
+  position: 8
+  expect_strong: H7676
+  note: STEP 在這裡的本節譯義是 the sabbath（那安息日），帶定冠詞，字典義是 Sabbath。這個安息日指哪一天，註釋有不同說法：丁良才記下撒都該人說是無酵節中尋常的安息日，法利賽人說是無酵節的頭一個聖會日；黃迦勒也提到七十士譯本作「第一日的次日」。
+
+- id: nuph
+  label: 搖一搖
+  ref: 利23:11
+  position: 1
+  expect_strong: H5130B
+  note: STEP 的本節譯義是 he will wave（他要搖），詞形是使役式（Hiphil），字典義是 to wave。實際的動作怎麼做，部分註釋看法不同：黃迦勒說是水平方向前後擺動；《舊約聖經背景註釋》說是搖一搖或抬起。
+
+- id: chamets
+  label: 酵
+  ref: 利23:17
+  position: 10
+  expect_strong: H2557A
+  note: 和合本譯作「加酵」。STEP 的本節譯義是 leaven，詞形是形容詞，字典義也是 leaven。部分註釋進一步解釋這酵的意思：黃迦勒認為這是見證奉獻的人承認自己有罪；BibleHub 指出，這份祭物含有酵，和其他規定要用無酵餅的祭物不同。
+
+- id: oni
+  label: 困苦
+  ref: 申16:3
+  position: 11
+  expect_strong: H6040
+  note: 和合本「困苦餅」的「困苦」。STEP 的本節譯義和字典義都是 affliction。同一節經文接著說明了原因：你本是急忙出了埃及地。黃迦勒說，無酵餅的滋味不如有酵餅，用來紀念在埃及所過困苦的日子。
+
+- id: tame
+  label: 不潔淨
+  ref: 民9:6
+  position: 5
+  expect_strong: H2931
+  note: STEP 的本節譯義是 unclean，詞形是形容詞複數，字典義相同。黃迦勒說，因死屍而不潔淨要算七天；BibleHub 說這是禮儀上的狀態，不是道德上的過失。
+
+- id: shavuot
+  label: 七七節
+  ref: 申16:10
+  position: 3
+  expect_strong: H7620G
+  note: 「七七節」的「七七」在原文是一個字。STEP 的本節譯義是 weeks（週），詞形是複數，標為節期名稱；字典義是 Weeks。申16:9 說要計算七七日；黃迦勒說，到了第五十天就是五旬節當天。
+
+# ---------- 秋季 ----------
+- id: teruah
+  label: 吹角
+  ref: 利23:24
+  position: 14
+  expect_strong: H8643
+  note: 和合本譯作「吹角」。STEP 的本節譯義是「a sound of a loud blast」（響亮的聲音），字典義是「shout」（呼喊）；這一節的原文字裡沒有樂器的名稱，民29:1 的「吹角的日子」也是這個字。後來詩81:3 說在月朔吹角，那裡用的字 STEP 譯為 a ram's horn（公羊角）；民10:10 說月朔和節期吹的是銀號。部分註釋進一步理解為七月初一吹的是公綿羊的角：《舊約聖經背景註釋》這樣說，《串珠聖經註釋》說這是按猶太人的遺傳。
+
+- id: kapporet
+  label: 施恩座
+  ref: 利16:2
+  position: 19
+  expect_strong: H3727
+  note: 和合本譯作「施恩座」。STEP 的本節譯義是 atonement cover（贖罪的蓋子），字典義是 mercy seat。這一節出現兩次。黃迦勒說它是約櫃上面的一塊精金做的厚蓋板，原文字根有「遮蓋」的意思。
+
+- id: bad
+  label: 細麻布
+  ref: 利16:4
+  position: 2
+  expect_strong: H906
+  note: 和合本譯作「細麻布」。這個字在本節出現四次，內袍、褲子、腰帶、冠冕都用它；STEP 的本節譯義是 linen（細麻）。《舊約聖經背景註釋》說，祭司穿的細麻是從埃及進口的，在當地也是祭司特有的衣料。
+
+- id: azazel
+  label: 阿撒瀉勒
+  ref: 利16:8
+  position: 12
+  expect_strong: H5799
+  note: 和合本音譯作「阿撒瀉勒」。STEP 把它標為專有名詞，本節譯義是「[the] escape goat」（放走的羊），字典義是 Azazel。這個字指的是什麼，註釋說法不同，請看「四家怎麼說」。
+
+- id: gezerah
+  label: 無人之地
+  ref: 利16:22
+  position: 9
+  expect_strong: H1509
+  note: 和合本的「無人之地」是兩個字：「地」和這個字。STEP 的本節譯義是 infertile（不毛的），字典義是 isolation（隔絕）。黃迦勒把這個字的字義寫作「分離」，並說經文裡的「曠野」就是「無人之地」。
+
+- id: anah
+  label: 刻苦
+  ref: 利16:29
+  position: 9
+  expect_strong: H6031B
+  note: 和合本譯作「刻苦」，下一個字是「己心」。STEP 的本節譯義是 you will afflict（你們要刻苦），詞形是 Piel 未完成式，字典義是 to afflict。部分註釋進一步理解為包括禁食：《利未記雷氏研讀本》這樣說，BibleHub 說傳統上理解為禁食和克己。
+
+- id: hadar
+  label: 美好
+  ref: 利23:40
+  position: 7
+  expect_strong: H1926
+  note: 和合本的「美好樹上的果子」是三個字：「果子」「樹」和這個字。STEP 的本節譯義是 splendor，字典義是 glory。經文沒有說是哪一種樹；《舊約聖經背景註釋》說是柑橘屬，丁良才提到法利賽人以為是香櫞。
+
+- id: sukkah
+  label: 棚
+  ref: 利23:42
+  position: 1
+  expect_strong: H5521
+  note: 和合本譯作「棚」。STEP 的字典義是 booth，詞形是陰性複數；利23:34「住棚節」的「棚」也是這個字。丁良才說，聖經講以色列人在曠野的住處，除了這裡以外都用「帳幕」，沒有用過「棚」字。
+
+- id: atzeret
+  label: 嚴肅會
+  ref: 利23:36
+  position: 15
+  expect_strong: H6116
+  note: 和合本譯作「嚴肅會」。STEP 的本節譯義是 a solemn assembly，字典義是 assembly（聚會）。同一個字也出現在珥1:14、珥2:15（禁食的聚會）、摩5:21、王下10:20（為巴力宣告的聚會）。黃迦勒說，第八日的嚴肅會是住棚節後次日再慶祝一天，不可作工，百姓到會幕前聚集。
+
+# ================= 第三批：七的節奏 =================
+- id: shabbaton
+  label: 聖安息日
+  ref: 利23:3
+  position: 8
+  expect_strong: H7677
+  note: 和合本的「聖安息日」在原文是兩個字連用：前一字 STEP 譯作 a sabbath of（安息日），這一字 STEP 譯作 sabbath observance（守安息），字典義同。利25:4 地在第七年要守的「聖安息」，原文也是這兩個字；黃迦勒在那一節註明「原文雙字」。
+- id: shemittah
+  label: 豁免
+  ref: 申15:1
+  position: 5
+  expect_strong: H8059
+  note: 和合本譯作「豁免」。STEP 的本節譯義是 a remission（免除），字典義也是 remission；下一節「豁免了」用的是動詞，STEP 字典義是 to release（鬆開、釋放）。黃迦勒說「豁免」原意指休耕（參出23:11），在申15 指免除債務。
+- id: shofar
+  label: 角
+  ref: 利25:9
+  position: 2
+  expect_strong: H7782
+  note: 和合本「大發角聲」的「角」。STEP 的本節譯義是 a ram's horn（公羊角），字典義是 trumpet；後面緊接的字就是利23:24 那個 teruah（響亮的聲音）。利23:24 只有 teruah、沒有樂器名，這一節兩個字都出現，「角」在本節出現兩次。
+- id: deror
+  label: 自由
+  ref: 利25:10
+  position: 7
+  expect_strong: H1865
+  note: 和合本譯作「自由」。STEP 的本節譯義和字典義都是 liberty。同一個字也出現在耶34:8、15、17（西底家與眾民立約宣告自由，第17節出現兩次）、賽61:1（和合本譯作「被擄的得釋放」的「釋放」）、結46:17（「自由之年」）。
+- id: yovel
+  label: 禧年
+  ref: 利25:10
+  position: 11
+  expect_strong: H3104
+  note: 和合本譯作「禧年」。STEP 的本節譯義是 a jubilee，字典義是 jubilee/horn：同一個字也可以指那支角。部分註釋就從這裡解釋名稱：KingComments 說這個字的意思是「吹公羊角」；《聖經精讀本》說名稱來自吹公羊角宣告禧年開始。

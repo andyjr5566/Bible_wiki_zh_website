@@ -1,0 +1,41 @@
+/* 設計系統：紙與墨，限定配色。亮暗兩組（暗色：紙與墨對調明暗，血紅、土黃、燈火不變）。 */
+:root {
+  color-scheme: light dark;
+
+  --jf-paper: #efeadf; /* 紙、說明框底 */
+  --jf-ink: #161412; /* 墨、文字、邊框 */
+  --jf-blood: #a3231b; /* 血、關鍵詞 */
+  --jf-ochre: #a88758; /* 泥磚、衣袍、麥穗 */
+  --jf-night: #1c2340; /* 夜空平塗 */
+  --jf-glow: #f0c46a; /* 燈火、月光 */
+
+  /* 衍生色：次要文字、淡線 */
+  --jf-mute: color-mix(in srgb, var(--jf-ink) 72%, var(--jf-paper));
+  --jf-line: color-mix(in srgb, var(--jf-ink) 24%, transparent);
+  --jf-wash: color-mix(in srgb, var(--jf-ink) 7%, var(--jf-paper));
+
+  --jf-font-title: 'Cactus Classical Serif', 'Noto Serif TC', 'Songti TC', 'PMingLiU', serif;
+  --jf-font-sans: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', 'Noto Serif Hebrew', system-ui, sans-serif;
+  --jf-font-serif: 'Noto Serif TC', 'Songti TC', 'PMingLiU', 'Noto Serif Hebrew', serif;
+  --jf-font-he: 'Noto Serif Hebrew', 'Times New Roman', serif;
+
+  /* power3.out、power2.inOut 的近似曲線 */
+  --jf-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --jf-ease-io: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  --jf-safe-t: env(safe-area-inset-top, 0px);
+  --jf-safe-r: env(safe-area-inset-right, 0px);
+  --jf-safe-b: env(safe-area-inset-bottom, 0px);
+  --jf-safe-l: env(safe-area-inset-left, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --jf-paper: #15130f;
+    --jf-ink: #ece4d2;
+    --jf-blood: #cf4334;
+    --jf-ochre: #b8955f;
+    --jf-night: #0b0e1c;
+    --jf-glow: #f0c46a;
+  }
+}

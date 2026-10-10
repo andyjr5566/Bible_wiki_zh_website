@@ -1,0 +1,1512 @@
+/* 故事：每一拍一個 section、說明框（sticky）、就地展開的面板、塗血互動 */
+
+.jf-story {
+  position: relative; /* 不設 z-index：說明框的層級要跟觸控層、標題列直接比 */
+  pointer-events: none; /* 說明框以外的 DOM 一律不攔截，讓畫面和捲動照常 */
+  overflow-x: clip;
+}
+
+.jf-beat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* 說明框的 sticky 範圍：整拍的高度由它決定（140–180vh） */
+.jf-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 140vh;
+  min-height: 140svh;
+}
+.jf-beat[data-len='long'] .jf-pin {
+  min-height: 170vh;
+  min-height: 170svh;
+}
+.jf-hero + .jf-pin {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+.jf-chaphead + .jf-pin {
+  min-height: 110vh;
+  min-height: 110svh;
+}
+
+/* ---------- 開場大標題、章標題 ---------- */
+.jf-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 84vh;
+  min-height: 84svh;
+  margin: clamp(88px, 15svh, 150px) clamp(24px, 6vw, 96px) 0;
+  pointer-events: none;
+}
+.jf-title,
+.jf-chaptitle {
+  display: inline-block;
+  margin: 0;
+  padding: 0.04em 0.2em 0.08em;
+  font-family: var(--jf-font-title);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  pointer-events: auto;
+}
+.jf-title {
+  font-size: clamp(56px, 11vw, 168px);
+}
+.jf-hero-ref {
+  display: inline-block;
+  margin: 22px 0 0 6px;
+  padding: 2px 12px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  pointer-events: auto;
+}
+.jf-chaphead {
+  margin: clamp(80px, 18svh, 190px) clamp(24px, 6vw, 96px) clamp(40px, 8svh, 90px);
+  pointer-events: none;
+}
+.jf-chaptitle {
+  font-size: clamp(44px, 7.5vw, 104px);
+}
+.jf-chapdate {
+  display: inline-block;
+  margin: 20px 0 0 6px;
+  padding: 2px 12px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  pointer-events: auto;
+}
+
+/* ---------- 說明框 ---------- */
+.jf-box {
+  --jf-box-top: clamp(88px, 15svh, 150px);
+  position: sticky;
+  top: var(--jf-box-top);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  width: min(32rem, max(21rem, 40vw));
+  max-height: calc(100vh - var(--jf-box-top) - 84px);
+  max-height: calc(100svh - var(--jf-box-top) - 84px);
+  margin-left: clamp(24px, 6vw, 96px);
+  padding: 0;
+  pointer-events: auto;
+  color: var(--jf-ink);
+}
+/* 內容放在 .jf-box-body：超過 max-height 時只有它捲動，框線與偏移墨塊（::before）留在原地 */
+.jf-box-body {
+  position: relative; /* 面板的 offsetTop 以它為準 */
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding: 22px 26px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--jf-ink) transparent;
+}
+.jf-box-body > * {
+  flex-shrink: 0;
+}
+/* 「往下看」：掛在框底邊線上，不蓋住文字 */
+.jf-box-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -16px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 12px 2px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.jf-box-hint[hidden] {
+  display: none;
+}
+.jf-box-hint::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top: 7px solid var(--jf-blood);
+  border-bottom: 0;
+}
+.jf-box[data-open] {
+  z-index: 12;
+}
+.jf-beat[data-side='right'] .jf-box {
+  align-self: flex-end;
+  margin-left: 0;
+  margin-right: clamp(100px, 9vw, 150px);
+}
+
+/* 收起說明框：掛在框頂邊線上的小標籤；收起後整框只剩這個標籤（有互動的拍另外留著互動按鈕） */
+.jf-boxfold {
+  position: absolute;
+  top: -15px;
+  right: 16px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 2px 12px 2px 10px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  cursor: pointer;
+}
+.jf-boxfold::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-bottom: 7px solid var(--jf-blood);
+  border-top: 0;
+}
+.jf-boxfold:hover {
+  background: color-mix(in oklab, var(--jf-paper) 86%, var(--jf-ink));
+}
+.jf-boxfold:focus-visible {
+  outline: 3px solid var(--jf-blood);
+  outline-offset: 2px;
+}
+:root[data-fold] .jf-boxfold::before {
+  border-top: 7px solid var(--jf-blood);
+  border-bottom: 0;
+}
+/* 收起：沒有互動的拍，框只剩標籤 */
+:root[data-fold] .jf-box:not([data-ctl]) {
+  width: auto;
+  max-height: none;
+}
+:root[data-fold] .jf-box:not([data-ctl])::before,
+:root[data-fold] .jf-box:not([data-ctl]) .jf-box-body,
+:root[data-fold] .jf-box .jf-box-hint,
+:root[data-fold] .jf-box .jf-later-tag {
+  display: none;
+}
+:root[data-fold] .jf-box:not([data-ctl]) .jf-boxfold {
+  position: static;
+  padding: 4px 14px 4px 12px;
+  font-size: 14px;
+  box-shadow: 4px 4px 0 var(--jf-ink);
+}
+/* 收起：有互動的拍只留互動按鈕 */
+:root[data-fold] .jf-box[data-ctl] .jf-box-body > :not(.jf-ctl) {
+  display: none;
+}
+
+/* 進場：捲進來時淡入、從下方滑上來（有 JS 才先藏起來，沒有 JS 內容照常可讀） */
+.jf-js .jf-box {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--jf-ease-out), transform 0.85s var(--jf-ease-out);
+}
+.jf-js .jf-box.jf-in {
+  opacity: 1;
+  transform: none;
+}
+
+.jf-reason {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--jf-blood);
+}
+.jf-text {
+  margin: 0;
+  font-size: clamp(17px, 0.9vw + 9px, 19px);
+  line-height: 1.75;
+}
+
+.jf-verse {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-verse-ref {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--jf-mute);
+}
+.jf-verse-text {
+  margin: 4px 0 0;
+  font-family: var(--jf-font-serif);
+  font-weight: 500;
+  font-size: clamp(16px, 0.5vw + 11px, 18px);
+  line-height: 1.9;
+}
+.jf-vn {
+  margin-right: 0.25em;
+  font: 700 0.62em/0 var(--jf-font-sans);
+  letter-spacing: 0;
+  vertical-align: super;
+  color: var(--jf-blood);
+}
+
+/* ---------- 室內分格（meal）：DOM 只給透明外框，場景用 scissor 把室內畫在框裡 ---------- */
+.jf-panel {
+  position: fixed;
+  z-index: 3; /* canvas 之上、說明框之下 */
+  left: 6vw;
+  top: 14vh;
+  top: 14svh;
+  width: 44vw;
+  height: 62vh;
+  height: 62svh;
+  pointer-events: none; /* 不攔截任何 pointer 事件 */
+  background: none; /* 完全透明，canvas 透出來 */
+  /* 不旋轉：scissor 是正矩形 */
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.5s var(--jf-ease-out), transform 0.5s var(--jf-ease-out);
+}
+.jf-panel[hidden] {
+  display: none;
+}
+.jf-panel.is-on {
+  opacity: 1;
+  transform: none;
+}
+/* 框線與偏移墨塊在 ::before；手繪抖動的濾鏡只套在這一層 */
+.jf-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--jf-ink);
+  box-shadow: 6px 6px 0 var(--jf-ink);
+  filter: url(#jf-rough);
+  pointer-events: none;
+}
+/* 沒有場景（WebGL 不可用）時分格裡沒東西可畫：不顯示 */
+.jf-no-scene .jf-panel {
+  display: none;
+}
+
+/* 兩顆小按鈕 */
+.jf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.jf-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  font: 700 14.5px/1 var(--jf-font-sans);
+  letter-spacing: 0.04em;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--jf-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s var(--jf-ease-out), box-shadow 0.12s var(--jf-ease-out), background-color 0.15s, color 0.15s;
+}
+.jf-chip::after {
+  content: '＋';
+  font-size: 13px;
+  line-height: 1;
+}
+.jf-chip[aria-expanded='true']::after {
+  content: '－';
+}
+.jf-chip:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--jf-ink);
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-chip:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--jf-ink);
+}
+.jf-chip[aria-expanded='true'] {
+  background: var(--jf-ink);
+  color: var(--jf-paper);
+}
+.jf-chip:focus-visible {
+  box-shadow: 0 0 0 3px var(--jf-paper);
+}
+.jf-chip-demo {
+  cursor: default;
+  pointer-events: none;
+}
+.jf-chip-demo::after {
+  content: '＋';
+}
+
+/* ---------- 就地展開的面板 ---------- */
+.jf-more {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto; /* 不被壓縮：內容照常高度，由說明框自己捲 */
+  margin-top: 14px;
+  border-top: 3px solid var(--jf-ink);
+}
+.jf-more[hidden] {
+  display: none;
+}
+.jf-more-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0 4px;
+}
+.jf-more-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--jf-mute);
+}
+.jf-more-x {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 10px;
+  font: 700 14px/1 var(--jf-font-sans);
+  color: var(--jf-ink);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--jf-blood);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.jf-more-x:hover {
+  border-color: var(--jf-ink);
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-more-x:active {
+  background: var(--jf-ink);
+  color: var(--jf-paper);
+}
+.jf-more-body {
+  flex: 0 0 auto;
+  padding: 4px 8px 4px 0;
+}
+
+/* 四家怎麼說 */
+.jf-notes {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-note {
+  padding-left: 12px;
+  border-left: 4px solid var(--jf-ink);
+}
+.jf-note-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin: 0;
+  line-height: 1.5;
+}
+.jf-note-work {
+  font-size: 15.5px;
+  font-weight: 700;
+}
+.jf-note-site,
+.jf-note-verse {
+  font-size: 13px;
+  color: var(--jf-mute);
+}
+.jf-note-verse::before {
+  content: '・';
+}
+.jf-note-quote {
+  margin: 6px 0 0;
+  font-family: var(--jf-font-serif);
+  font-size: 15.5px;
+  line-height: 1.85;
+}
+.jf-note-para {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.jf-note-link {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+
+/* 原文字卡 */
+.jf-words {
+  display: grid;
+  gap: 4px;
+}
+.jf-word {
+  padding: 10px 0 14px;
+  border-bottom: 2px dashed var(--jf-line);
+}
+.jf-word-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.jf-word-label {
+  font-size: 18px;
+  font-weight: 700;
+}
+.jf-word-ref {
+  font-size: 13px;
+  color: var(--jf-mute);
+}
+.jf-word-he {
+  margin: 8px 0 0;
+  padding: 4px 12px;
+  font-family: var(--jf-font-he);
+  font-weight: 500;
+  font-size: clamp(36px, 3.4vw, 46px);
+  line-height: 1.45;
+  text-align: center;
+  background: var(--jf-wash);
+  border: 2px solid var(--jf-line);
+}
+.jf-word-tr {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-style: italic;
+  text-align: center;
+  color: var(--jf-mute);
+}
+.jf-dl {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+}
+.jf-dl-row {
+  display: grid;
+  grid-template-columns: 6.2em 1fr;
+  gap: 8px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.jf-dl-row dt {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--jf-mute);
+}
+.jf-dl-row dd {
+  margin: 0;
+}
+.jf-code {
+  margin-left: 8px;
+  padding: 0 6px;
+  font: 500 12.5px/1.5 ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  background: var(--jf-wash);
+  border: 1px solid var(--jf-line);
+}
+.jf-word-note {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.jf-step-credit {
+  margin: 10px 0 4px;
+  font-size: 13px;
+  color: var(--jf-mute);
+}
+
+/* ---------- 塗血互動 ---------- */
+.jf-hyssop {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-prompt {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+.jf-keys {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.jf-key-btn {
+  appearance: none;
+  min-height: 44px;
+  padding: 0 6px;
+  font: 700 14.5px/1.2 var(--jf-font-sans);
+  letter-spacing: 0.02em;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--jf-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s var(--jf-ease-out), box-shadow 0.12s var(--jf-ease-out), background-color 0.15s, color 0.15s;
+}
+.jf-key-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--jf-ink);
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-key-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--jf-ink);
+}
+.jf-key-btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--jf-paper);
+}
+.jf-key-btn.is-done {
+  background: var(--jf-blood);
+  border-color: var(--jf-blood);
+  color: var(--jf-paper);
+}
+.jf-status-row {
+  display: block;
+}
+.jf-fold {
+  display: none;
+}
+.jf-hyssop-status,
+.jf-wave-status,
+.jf-bake-status {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.jf-hyssop-status::before,
+.jf-wave-status::before,
+.jf-bake-status::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  background: var(--jf-blood);
+  vertical-align: 0.05em;
+}
+/* ---------- 獻祭清單、烤餅、搖禾捆、數算（春季） ---------- */
+.jf-interact {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.jf-offer {
+  display: grid;
+  gap: 12px 18px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-offer[data-n='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.jf-offer-label {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--jf-blood);
+}
+.jf-offer-set {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+}
+.jf-offer-row {
+  display: grid;
+  gap: 4px;
+}
+.jf-offer-role {
+  justify-self: start;
+  padding: 0 7px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  color: var(--jf-paper);
+  background: var(--jf-ink);
+}
+.jf-offer-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-offer-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.jf-tally {
+  flex: none;
+  overflow: visible;
+}
+.jf-tally-line {
+  stroke: var(--jf-ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.jf-offer-n {
+  min-width: 0.8em;
+  font-variant-numeric: tabular-nums;
+}
+.jf-offer-ref {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--jf-mute);
+}
+
+/* 烤餅：圓形大按鈕，外圈是進度 */
+.jf-bake-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.jf-bake-side {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.jf-bake-btn {
+  appearance: none;
+  position: relative;
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 112px;
+  height: 112px;
+  margin: 10px;
+  padding: 0;
+  font: 700 19px/1.3 var(--jf-font-sans);
+  letter-spacing: 0.08em;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+  border-radius: 50%;
+  box-shadow: 4px 4px 0 var(--jf-ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s var(--jf-ease-out), box-shadow 0.12s var(--jf-ease-out), background-color 0.15s, color 0.15s;
+}
+.jf-bake-btn::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: conic-gradient(var(--jf-blood) calc(var(--p, 0) * 360deg), var(--jf-line) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  pointer-events: none;
+}
+.jf-bake-btn:hover {
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-bake-btn.is-held,
+.jf-bake-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--jf-ink);
+  background: color-mix(in srgb, var(--jf-blood) 18%, var(--jf-paper));
+}
+.jf-bake-btn.is-done {
+  cursor: default;
+  color: var(--jf-paper);
+  background: var(--jf-ink);
+  transform: none;
+  box-shadow: 4px 4px 0 var(--jf-ink);
+}
+.jf-bake-btn:focus-visible {
+  outline: 3px solid var(--jf-blood);
+  outline-offset: 10px;
+}
+.jf-keys-one {
+  grid-template-columns: minmax(0, 12rem);
+}
+.jf-wave-btn {
+  min-height: 52px;
+  font-size: 17px;
+}
+
+/* 數算：7×7 格＋第 50 格；刻線填滿 */
+.jf-count-grid {
+  --cell: 25px;
+  display: grid;
+  grid-template-columns: repeat(7, var(--cell)) auto;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+}
+.jf-cell {
+  position: relative;
+  display: block;
+  width: var(--cell);
+  height: var(--cell);
+  overflow: hidden;
+  background: var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+}
+.jf-cell-fill {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, var(--jf-ink) 0 1.6px, transparent 1.6px 4.2px);
+  clip-path: inset(0 calc((1 - var(--f, 0)) * 100%) 0 0);
+}
+.jf-cell-label {
+  padding-left: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--jf-ink);
+}
+.jf-cell-sab {
+  opacity: 0;
+  transition: opacity 0.25s var(--jf-ease-out);
+}
+.jf-cell-sab.is-on {
+  opacity: 1;
+}
+.jf-cell-50 {
+  grid-column: 1 / span 2;
+  width: auto;
+  margin-top: 6px;
+}
+.jf-cell-50 b {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  font-size: 14px;
+  line-height: 1;
+}
+.jf-cell-50 b::before {
+  content: '';
+  position: absolute;
+  inset: 5px 8px;
+  z-index: -1;
+  background: var(--jf-paper);
+}
+.jf-cell-new {
+  grid-column: 3 / -1;
+  margin-top: 6px;
+}
+
+/* 沒有場景（WebGL 不可用）時，互動用不了：整塊收起來 */
+.jf-no-scene .jf-hyssop {
+  display: none;
+}
+
+.jf-touch-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: none;
+  pointer-events: none;
+}
+.jf-touch-layer.is-on {
+  display: block;
+}
+.jf-touch {
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: none;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.jf-touch-drag {
+  touch-action: none;
+}
+.jf-touch-tap {
+  touch-action: pan-y;
+  cursor: pointer;
+}
+.jf-touch.is-down {
+  cursor: grabbing;
+}
+
+.jf-badge {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  display: grid;
+  place-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+  box-shadow: 4px 4px 0 var(--jf-ink);
+  color: var(--jf-ink);
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--jf-ease-out);
+}
+.jf-badge span {
+  display: block;
+}
+.jf-badge.is-on {
+  opacity: 1;
+  animation: jf-pulse 2.4s var(--jf-ease-io) infinite;
+}
+.jf-badge-demo {
+  position: static;
+  animation: none !important;
+}
+
+@keyframes jf-pulse {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.07;
+  }
+}
+@keyframes jf-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes jf-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- 手機：說明框貼底，面板從底部升起；說明框最多佔半個畫面（使用者要求），其餘框內捲動 ---------- */
+@media (max-width: 720px) {
+  .jf-box {
+    --jf-box-top: auto;
+    top: auto;
+    bottom: calc(8px + var(--jf-safe-b));
+    /* 貼底的 sticky 要讓說明框的自然位置在 section 底端，捲動時才會一直停在畫面底部 */
+    margin-top: auto;
+    align-self: stretch;
+    width: auto;
+    max-height: 50vh;
+    max-height: 50svh;
+    margin-right: 8px;
+    margin-left: 8px;
+    padding: 16px 16px 14px;
+  }
+  .jf-box-body {
+    padding: 0;
+    overflow: visible;
+  }
+  .jf-box-hint {
+    display: none;
+  }
+  .jf-box::before,
+  .jf-coach-card::before,
+  .jf-plate::before {
+    box-shadow: 4px 4px 0 var(--jf-ink);
+  }
+  .jf-beat[data-side='right'] .jf-box {
+    align-self: stretch;
+    margin-right: 8px;
+    margin-left: 8px;
+  }
+  /* 收起後的標籤靠右下角，不擋畫面中央 */
+  :root[data-fold] .jf-box:not([data-ctl]),
+  :root[data-fold] .jf-beat[data-side='right'] .jf-box:not([data-ctl]) {
+    align-self: flex-end;
+    padding: 0;
+  }
+  .jf-boxfold {
+    right: 12px;
+    min-height: 32px;
+  }
+  .jf-text {
+    font-size: 17px;
+  }
+  .jf-verse-text {
+    font-size: 16px;
+    line-height: 1.85;
+  }
+  .jf-hero {
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: calc(164px + var(--jf-safe-t));
+  }
+  .jf-panel {
+    left: 4vw;
+    right: 4vw;
+    width: auto;
+    top: calc(max(12px, var(--jf-safe-t)) + 96px); /* 月份導覽下方 */
+    height: var(--jf-panel-h, clamp(200px, 34vh, 290px));
+  }
+  .jf-panel::before {
+    box-shadow: 4px 4px 0 var(--jf-ink);
+  }
+  .jf-chaphead {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+  .jf-keys {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .jf-key-btn {
+    padding: 0 2px;
+    font-size: 13.5px;
+  }
+  /* 互動那一拍：收成小條，讓出畫面上要拖的牛膝草、盆和門框 */
+  html:not(.jf-no-scene) .jf-box[data-compact='true'] .jf-box-body > :is(.jf-reason, .jf-text, .jf-verse, .jf-actions) {
+    display: none;
+  }
+  html:not(.jf-no-scene) .jf-box[data-compact='true'] .jf-hyssop,
+  .jf-box[data-compact='true'] .jf-interact {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .jf-box[data-compact='true'] .jf-prompt {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .jf-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .jf-status-row .jf-hyssop-status,
+  .jf-status-row .jf-wave-status,
+  .jf-status-row .jf-bake-status {
+    margin: 0;
+    font-size: 14px;
+  }
+  .jf-bake-row {
+    gap: 14px;
+  }
+  .jf-bake-btn {
+    width: 88px;
+    height: 88px;
+    margin: 8px;
+    font-size: 17px;
+  }
+  .jf-bake-btn::before {
+    inset: -10px;
+  }
+  .jf-offer {
+    gap: 10px 12px;
+  }
+  .jf-offer-items {
+    gap: 2px 12px;
+  }
+  .jf-offer-item {
+    gap: 5px;
+    font-size: 15px;
+  }
+  /* 兩組獻祭並排時整個說明框會太高：經文限高、自己捲 */
+  .jf-box[data-offers='2'] .jf-verse-text {
+    max-height: 5.6em;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--jf-ink) transparent;
+  }
+  .jf-keys-one {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .jf-fold {
+    appearance: none;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 10px;
+    font: 700 14px/1 var(--jf-font-sans);
+    color: var(--jf-ink);
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--jf-blood);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .jf-fold:hover {
+    border-color: var(--jf-ink);
+    background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+  }
+  .jf-fold:active {
+    background: var(--jf-ink);
+    color: var(--jf-paper);
+  }
+
+  .jf-more {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + var(--jf-safe-b));
+    z-index: 30;
+    max-height: calc(100vh - 160px);
+    max-height: calc(100svh - 160px);
+    margin: 0;
+    padding: 0 14px 10px;
+    background: var(--jf-paper);
+    border: 3px solid var(--jf-ink);
+    box-shadow: 4px 4px 0 var(--jf-ink);
+    animation: jf-rise 0.38s var(--jf-ease-out) both;
+  }
+  .jf-more-head {
+    padding: 4px 0;
+    border-bottom: 2px solid var(--jf-line);
+  }
+  .jf-more-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--jf-ink) transparent;
+    padding-top: 12px;
+  }
+}
+
+/* ---------- 動態關閉（html[data-motion="off"]）：說明框的進場位移改成淡入；面板淡入 ---------- */
+html[data-motion='off'].jf-js .jf-box {
+    transform: none;
+    transition: opacity 0.6s linear;
+  }
+html[data-motion='off'] .jf-badge.is-on {
+    animation: none;
+  }
+html[data-motion='off'] .jf-panel {
+    transform: none;
+    transition: opacity 0.5s linear;
+  }
+html[data-motion='off'] .jf-more {
+    animation: jf-fade 0.25s linear both !important;
+  }
+html[data-motion='off'] .jf-chip,
+html[data-motion='off'] .jf-key-btn {
+    transition: background-color 0.15s, color 0.15s;
+  }
+html[data-motion='off'] .jf-cell-sab {
+    transition: none;
+  }
+html[data-motion='off'] .jf-chip:hover,
+html[data-motion='off'] .jf-chip:active,
+html[data-motion='off'] .jf-key-btn:hover,
+html[data-motion='off'] .jf-key-btn:active {
+    transform: none;
+  }
+
+/* ======================================================================
+   第二階段第二批（秋季＋舊約回聲）
+   ====================================================================== */
+
+/* ---------- 無字的時光過場（kind: passage）：沒有說明框、標題卡，只有一段捲動的高度 ---------- */
+.jf-passage {
+  min-height: 110vh;
+  min-height: 110svh;
+  pointer-events: none;
+}
+.jf-box-none {
+  display: none !important;
+}
+
+/* ---------- 吹角：沿用烤餅的圓形長按鈕 ---------- */
+.jf-blow-btn .jf-bake-label {
+  font-size: 34px;
+  letter-spacing: 0;
+}
+
+/* ---------- 回聲拍（後來的歷史） ---------- */
+/* 舊紙配色：只在亮色模式套用（暗色模式的紙與墨已經對調明暗）；顏色由 main.ts 從 SITE.laterPalette 寫進 :root */
+@media (prefers-color-scheme: light) {
+  .jf-box[data-later='true'] {
+    --jf-paper: var(--jf-later-paper, #e2d2ad);
+    --jf-ink: var(--jf-later-ink, #38291a);
+    --jf-blood: var(--jf-later-accent, #8a5a2b);
+    --jf-mute: color-mix(in srgb, var(--jf-later-ink, #38291a) 72%, var(--jf-later-paper, #e2d2ad));
+    --jf-line: color-mix(in srgb, var(--jf-later-ink, #38291a) 24%, transparent);
+    --jf-wash: color-mix(in srgb, var(--jf-later-ink, #38291a) 7%, var(--jf-later-paper, #e2d2ad));
+  }
+}
+.jf-later-tag {
+  position: absolute;
+  top: -15px;
+  left: 18px;
+  z-index: 3;
+  padding: 1px 12px 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  line-height: 1.7;
+  color: var(--jf-paper);
+  background: var(--jf-ink);
+  pointer-events: none;
+}
+.jf-echoes,
+.jf-laters {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-echoes-h {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--jf-mute);
+}
+.jf-echoes-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-later-line {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.jf-later-k {
+  font-weight: 700;
+  color: var(--jf-mute);
+}
+.jf-echo-link {
+  appearance: none;
+  min-height: 44px;
+  padding: 0 4px 0 0;
+  font: 700 15.5px/1.4 var(--jf-font-sans);
+  text-align: left;
+  color: var(--jf-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--jf-blood);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.jf-echo-link:hover {
+  color: var(--jf-blood);
+  text-decoration-color: currentColor;
+}
+.jf-echo-link:active {
+  background: color-mix(in srgb, var(--jf-blood) 16%, transparent);
+}
+.jf-echo-later {
+  min-height: 40px;
+}
+
+/* 補充經文：接在主經文後面，樣式一致、稍淡 */
+.jf-verse-more {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 2px dashed var(--jf-line);
+  opacity: 0.88;
+}
+.jf-verse-more .jf-verse-text {
+  font-size: clamp(15px, 0.4vw + 11px, 17px);
+}
+
+/* 跳過去以後的「回到」小按鈕：畫面角落 */
+.jf-return {
+  position: fixed;
+  left: max(18px, var(--jf-safe-l));
+  bottom: max(18px, var(--jf-safe-b));
+  z-index: 25;
+  max-width: calc(100vw - 36px);
+}
+.jf-return[hidden] {
+  display: none;
+}
+
+/* ---------- 長條圖（住棚節 bulls） ---------- */
+.jf-bars {
+  --bars-h: 112px;
+  margin: 14px 0 0;
+  padding-top: 10px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-bars-plot {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  align-items: end;
+}
+.jf-vb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: calc(var(--bars-h) + 2.6em);
+}
+.jf-vb-n {
+  height: 1.4em;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+}
+.jf-vb.is-on .jf-vb-n {
+  opacity: 1;
+}
+.jf-vb-fill {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 36px;
+  height: calc(var(--bars-h) * var(--r, 0) * var(--f, 0));
+  background: repeating-linear-gradient(135deg, var(--jf-ink) 0 1.6px, transparent 1.6px 4.2px), var(--jf-paper);
+  border: 2px solid var(--jf-ink);
+}
+.jf-vb:not(.is-on) .jf-vb-fill {
+  visibility: hidden;
+}
+.jf-vb.is-current .jf-vb-fill {
+  background: repeating-linear-gradient(135deg, var(--jf-blood) 0 2.2px, transparent 2.2px 4.4px), var(--jf-paper);
+  border-color: var(--jf-blood);
+}
+.jf-vb.is-current .jf-vb-n,
+.jf-vb.is-current .jf-vb-l {
+  color: var(--jf-blood);
+}
+.jf-vb-l {
+  margin-top: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+.jf-bars-total {
+  margin: 10px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--jf-blood);
+}
+.jf-bars-day .jf-offer {
+  margin-top: 8px;
+}
+.jf-bars-day-h {
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--jf-mute);
+}
+/* 桌機：圖放在說明框旁邊（另一側），fixed；手機：只顯示說明框裡的那一份 */
+.jf-bars[data-where='side'] {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+  width: min(25rem, 34vw);
+  max-height: calc(100svh - clamp(88px, 15svh, 150px) - 84px);
+  margin: 0;
+  padding: 16px 18px 14px;
+  overflow-y: auto;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+  box-shadow: 6px 6px 0 var(--jf-ink);
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s var(--jf-ease-out), transform 0.5s var(--jf-ease-out);
+  scrollbar-width: thin;
+  scrollbar-color: var(--jf-ink) transparent;
+}
+.jf-bars[data-where='side'][hidden] {
+  display: none;
+}
+.jf-bars[data-where='side'].is-on {
+  opacity: 1;
+  transform: none;
+}
+/* 說明框在右、圖在左：貼在框的左外側；反之貼在右外側 */
+.jf-bars[data-where='side'][data-at='left'] {
+  right: calc(100% + 28px);
+}
+.jf-bars[data-where='side'][data-at='right'] {
+  left: calc(100% + 28px);
+}
+:root[data-fold] .jf-bars[data-where='side'] {
+  display: none;
+}
+.jf-bars[data-where='inline'] {
+  display: none;
+}
+
+/* 窄的桌機視窗：框旁邊放不下圖（日名會擠在一起、蓋住場景），改成跟手機一樣放在框裡 */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .jf-bars[data-where='side'] {
+    display: none;
+  }
+  .jf-bars[data-where='inline'] {
+    display: block;
+    --bars-h: 80px;
+    margin-top: 14px;
+  }
+  /* 圖排在敘述後面、經文前面，不必捲框就看得到 */
+  .jf-box[data-bars='true'] .jf-text {
+    order: -3;
+  }
+  .jf-box[data-bars='true'] .jf-bars[data-where='inline'] {
+    order: -2;
+  }
+}
+@media (max-width: 720px) {
+  .jf-bars[data-where='side'] {
+    display: none;
+  }
+  .jf-bars[data-where='inline'] {
+    display: block;
+    --bars-h: 72px;
+    margin-top: 10px;
+  }
+  .jf-bars-total {
+    margin-top: 6px;
+    font-size: 15px;
+  }
+  .jf-box[data-bars='true'] .jf-verse-text {
+    max-height: 4.6em;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--jf-ink) transparent;
+  }
+  .jf-return {
+    top: calc(max(12px, var(--jf-safe-t)) + 104px);
+    bottom: auto;
+    left: max(8px, var(--jf-safe-l));
+    max-width: calc(100vw - 16px - 128px);
+    min-height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .jf-echo-link {
+    font-size: 15px;
+  }
+}
+
+/* ---------- 動態關閉 ---------- */
+html[data-motion='off'] .jf-bars[data-where='side'] {
+  transform: none;
+  transition: opacity 0.5s linear;
+}
+html[data-motion='off'] .jf-return,
+html[data-motion='off'] .jf-return:hover,
+html[data-motion='off'] .jf-return:active {
+  transition: background-color 0.15s, color 0.15s;
+}
+
+/* ---------- 手機：內容比說明框高時（回聲拍有補充經文、長條圖）框內自己捲，不要把下半截擠出畫面 ---------- */
+@media (max-width: 720px) {
+  .jf-box-body {
+    max-height: calc(50vh - 30px);
+    max-height: calc(50svh - 30px);
+    overflow-y: auto;
+    overscroll-behavior: auto; /* 捲到頭就把捲動交還給頁面，不卡住 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--jf-ink) transparent;
+  }
+  /* 框內還能往下捲時，框底的小標籤（手機貼在框內底邊） */
+  .jf-box-hint {
+    display: inline-flex;
+    bottom: 6px;
+    box-shadow: 0 0 0 4px var(--jf-paper);
+  }
+  /* 長條圖的那一拍：圖先於經文（先讓讀者看到隨捲動長出來的條），經文接在下面 */
+  .jf-box[data-bars='true'] .jf-text {
+    order: -3;
+  }
+  .jf-box[data-bars='true'] .jf-bars[data-where='inline'] {
+    order: -2;
+  }
+}

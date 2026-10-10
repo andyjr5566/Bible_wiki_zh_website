@@ -1,0 +1,418 @@
+/* 章末與頁尾：紙色區塊 */
+
+.jf-end,
+.jf-others,
+.jf-credits {
+  position: relative;
+  z-index: 3;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  pointer-events: auto;
+  overflow-x: clip;
+}
+
+/* 章末上緣：直向刻線，越靠下越密，接上紙色區塊 */
+.jf-end {
+  margin-top: 28px;
+  padding: clamp(36px, 7vw, 88px) max(16px, var(--jf-safe-l)) clamp(48px, 8vw, 96px) max(16px, var(--jf-safe-r));
+  border-top: 3px solid var(--jf-ink);
+}
+.jf-end::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -31px;
+  height: 28px;
+  background: repeating-linear-gradient(90deg, var(--jf-paper) 0 3px, transparent 3px 8px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000);
+  mask-image: linear-gradient(to bottom, transparent, #000);
+  pointer-events: none;
+}
+.jf-end-inner,
+.jf-credits-inner {
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+.jf-end-title {
+  margin: 0;
+  font: 400 clamp(36px, 6vw, 68px) / 1.2 var(--jf-font-title);
+}
+.jf-end-date {
+  margin: 6px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--jf-blood);
+}
+.jf-end-block {
+  margin-top: clamp(32px, 5vw, 52px);
+}
+.jf-end-h {
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  border-bottom: 3px solid var(--jf-ink);
+}
+
+/* 經文全文：逐段可展開 */
+.jf-pass-list {
+  display: grid;
+  gap: 10px;
+}
+.jf-pass {
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+}
+.jf-pass-sum {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 6px 16px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  list-style: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.jf-pass-sum::-webkit-details-marker {
+  display: none;
+}
+.jf-pass-sum::after {
+  content: '＋';
+  font-size: 15px;
+}
+.jf-pass[open] > .jf-pass-sum {
+  color: var(--jf-paper);
+  background: var(--jf-ink);
+}
+.jf-pass[open] > .jf-pass-sum::after {
+  content: '－';
+}
+.jf-pass-sum:hover {
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-pass[open] > .jf-pass-sum:hover {
+  background: var(--jf-blood);
+}
+.jf-pass-sum:active {
+  background: var(--jf-wash);
+}
+.jf-pass-sum:focus-visible {
+  outline-offset: -4px;
+  box-shadow: none;
+}
+.jf-pass-body {
+  padding: 12px 16px 14px;
+  font-family: var(--jf-font-serif);
+  font-size: 17px;
+  line-height: 1.95;
+}
+.jf-pass-line {
+  margin: 0 0 4px;
+}
+.jf-vn-inline {
+  margin-right: 0.45em;
+  font-size: 0.62em;
+}
+
+/* 延伸閱讀、新約 */
+.jf-entries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-entry {
+  padding: 14px 16px 12px;
+  border: 2px solid var(--jf-ink);
+  background: var(--jf-paper);
+}
+.jf-entry p {
+  margin: 0;
+}
+.jf-entry-name {
+  font-size: 17.5px;
+  font-weight: 700;
+}
+.jf-entry-gist {
+  margin-top: 4px !important;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--jf-mute);
+}
+.jf-entry-go {
+  margin-top: 8px !important;
+  font-size: 14.5px;
+}
+.jf-entries-one {
+  grid-template-columns: minmax(0, 1fr);
+}
+.jf-entries-one .jf-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+}
+.jf-entries-one .jf-entry-gist,
+.jf-entries-one .jf-entry-go {
+  margin-top: 0 !important;
+}
+
+.jf-next-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 20px;
+  margin: 0;
+}
+.jf-next-title {
+  font: 400 clamp(28px, 4.4vw, 48px) / 1.3 var(--jf-font-title);
+}
+.jf-next-date {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--jf-blood);
+}
+
+/* ---------- 頁尾：聖經裡還有的節期（coda 之後、資料來源之前） ---------- */
+.jf-others {
+  padding: clamp(40px, 7vw, 80px) max(16px, var(--jf-safe-l)) clamp(40px, 7vw, 80px) max(16px, var(--jf-safe-r));
+  border-top: 3px solid var(--jf-ink);
+}
+.jf-others-inner {
+  max-width: 62rem;
+  margin: 0 auto;
+}
+.jf-others-h {
+  margin: 0;
+  font: 400 clamp(28px, 4.4vw, 44px) / 1.25 var(--jf-font-title);
+}
+.jf-others-intro {
+  max-width: 40em;
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 1.85;
+}
+.jf-others-list {
+  display: grid;
+  gap: 18px;
+  margin: clamp(24px, 4vw, 36px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-others-item {
+  padding: 16px 18px 14px;
+  border: 3px solid var(--jf-ink);
+  background: var(--jf-paper);
+}
+.jf-others-name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--jf-blood);
+}
+.jf-others-note {
+  margin: 8px 0 0;
+  font-size: 16.5px;
+  line-height: 1.85;
+}
+.jf-others-verses {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 2px solid var(--jf-line);
+}
+.jf-others-ref {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--jf-mute);
+}
+.jf-others-src {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--jf-mute);
+}
+.jf-others-text {
+  margin: 2px 0 0;
+  font-family: var(--jf-font-serif);
+  font-size: 17px;
+  line-height: 1.95;
+}
+
+/* ---------- 頁尾：資料來源與授權 ---------- */
+.jf-credits {
+  padding: clamp(36px, 6vw, 72px) max(16px, var(--jf-safe-l)) calc(clamp(72px, 9vw, 110px) + var(--jf-safe-b)) max(16px, var(--jf-safe-r));
+  border-top: 3px solid var(--jf-ink);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.jf-end + .jf-credits,
+.jf-end ~ .jf-credits,
+.jf-others + .jf-credits {
+  margin-top: 0;
+}
+.jf-credits-h {
+  margin: 0 0 20px;
+  font: 400 clamp(26px, 3.6vw, 36px) / 1.3 var(--jf-font-title);
+}
+.jf-credit-block {
+  margin-top: 22px;
+}
+.jf-credit-block h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--jf-mute);
+}
+.jf-credit-block p {
+  margin: 0;
+}
+.jf-src-list,
+.jf-audio-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-src-label {
+  display: inline-block;
+  min-width: 6.5em;
+  margin-right: 10px;
+  font-weight: 700;
+}
+.jf-audio-main {
+  margin: 0;
+}
+.jf-audio-title {
+  font-weight: 700;
+}
+.jf-audio-edit {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--jf-mute);
+}
+.jf-credits-note {
+  margin: 34px 0 0;
+  padding-top: 14px;
+  font-weight: 700;
+  border-top: 2px solid var(--jf-line);
+}
+
+@media (max-width: 720px) {
+  .jf-entries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .jf-src-label {
+    display: block;
+    margin-right: 0;
+  }
+  .jf-pass-body {
+    font-size: 16.5px;
+  }
+  .jf-others-item {
+    padding: 14px 14px 12px;
+  }
+  .jf-others-text {
+    font-size: 16.5px;
+  }
+}
+
+/* ---------- 舊約其他書卷（章末） ---------- */
+.jf-ot-sub + .jf-ot-sub {
+  margin-top: 26px;
+}
+.jf-ot-h {
+  margin: 0 0 10px;
+  font-size: 17.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.jf-ot-fixed {
+  margin: -4px 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.7;
+  color: var(--jf-blood);
+}
+/* 開場章（月朔）併進來的 ot：另起一個小標 */
+.jf-ot-group {
+  margin: 20px 0 10px;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in oklab, currentColor 22%, transparent);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.jf-ot-h + .jf-ot-group,
+.jf-ot-fixed + .jf-ot-group {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.jf-ot-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jf-ot-item {
+  padding: 12px 16px;
+  border: 2px solid var(--jf-ink);
+  background: var(--jf-paper);
+}
+.jf-ot-go {
+  margin: 8px 0 0;
+}
+.jf-ot-story {
+  min-height: 44px;
+  padding: 0;
+  font-size: 15px;
+}
+/* 「同樣的字」：一眼看出不是這裡的節期，左側虛線，其餘三邊淡一點 */
+.jf-ot-item[data-kind='word'] {
+  border-width: 2px 2px 2px 4px;
+  border-color: var(--jf-line);
+  border-left-color: var(--jf-ink);
+  border-left-style: dashed;
+}
+.jf-ot-item p {
+  margin: 0;
+}
+.jf-ot-ref {
+  font-size: 17px;
+  font-weight: 700;
+}
+.jf-ot-note {
+  margin-top: 4px !important;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.jf-ot-pass {
+  margin-top: 10px;
+}
+.jf-ot-pass .jf-pass-sum {
+  min-height: 44px;
+  font-size: 15px;
+}
+.jf-ot-kb {
+  margin-top: 8px !important;
+  font-family: var(--jf-font-sans);
+  font-size: 14.5px;
+  line-height: 1.7;
+}

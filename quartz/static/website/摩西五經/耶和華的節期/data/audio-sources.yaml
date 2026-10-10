@@ -1,0 +1,133 @@
+# CC0 音檔：每個 public/audio/ 底下的檔案都要在這裡有一筆，授權頁要實際打開確認過。
+# 欄位：id、file、title、author、license（只能是 CC0）、page（來源頁）、downloaded（YYYY-MM-DD）、loop（選填）
+# 2026-10-09：以下各頁都實際抓取確認授權為 creativecommons.org/publicdomain/zero/1.0。
+# 檔案取自 Freesound 的 hq 預覽，經 ffmpeg 剪輯、淡入淡出與響度調整（edit 欄記錄做了什麼）。
+
+- id: night-wind
+  file: night-wind.mp3
+  title: Slight cricket singing with silent breeze recorded at night in the desert at Bagdad California
+  author: felix.blume
+  license: CC0
+  page: https://freesound.org/people/felix.blume/sounds/651241/
+  downloaded: 2026-10-09
+  loop: true
+  edit: 取 20–60 秒，淡入淡出，單聲道
+
+- id: lamb
+  file: lamb.mp3
+  title: Lamb and Mother
+  author: swiftoid
+  license: CC0
+  page: https://freesound.org/people/swiftoid/sounds/182509/
+  downloaded: 2026-10-09
+  edit: 去頭尾靜音，單聲道
+
+- id: dip
+  file: dip.mp3
+  title: Hands through water in ceramic bowl.
+  author: Wigglesworth
+  license: CC0
+  page: https://freesound.org/people/Wigglesworth/sounds/842637/
+  downloaded: 2026-10-09
+  edit: 取 1.40–2.70 秒一段水聲，單聲道
+
+- id: strike
+  file: strike.mp3
+  title: wet thwack
+  author: adviseme333
+  license: CC0
+  page: https://freesound.org/people/adviseme333/sounds/679391/
+  downloaded: 2026-10-09
+  edit: 去頭尾靜音，單聲道
+
+- id: door
+  file: door.mp3
+  title: Close Wooden Door
+  author: nozefian
+  license: CC0
+  page: https://freesound.org/people/nozefian/sounds/397917/
+  downloaded: 2026-10-09
+  edit: 響度調整，單聲道
+
+- id: wailing
+  file: wailing.mp3
+  title: CRWDMisc_Crowd Wailing, Crying_ShaneVincent_GSC24_FUMA-AmbeoVR.wav
+  author: ShangusBurger
+  license: CC0
+  page: https://freesound.org/people/ShangusBurger/sounds/764080/
+  downloaded: 2026-10-09
+  edit: 淡入淡出，響度調整
+
+- id: depart
+  file: depart.mp3
+  title: Cows herd walking in the bush in Africa (Mali)（與 Group Walking, Group Footsteps 混音）
+  author: felix.blume；beautifuldaymonster1968
+  license: CC0
+  page: https://freesound.org/people/felix.blume/sounds/174860/
+  pages:
+    - https://freesound.org/people/felix.blume/sounds/174860/
+    - https://freesound.org/people/beautifuldaymonster1968/sounds/758223/
+  downloaded: 2026-10-09
+  loop: true
+  edit: 牛群取 30–60 秒，混入群眾腳步聲（重複一次），淡入淡出
+
+# 第二階段第一批（春季）：2026-10-09 實際抓取確認授權為 creativecommons.org/publicdomain/zero/1.0。
+- id: fire
+  file: fire.mp3
+  title: Campfire 01
+  author: HECKFRICKER
+  license: CC0
+  page: https://freesound.org/people/HECKFRICKER/sounds/729395/
+  downloaded: 2026-10-09
+  loop: true
+  edit: 取 20–50 秒，淡入淡出，單聲道，響度調整
+
+- id: field-wind
+  file: field-wind.mp3
+  title: WIND, Wind through Wheatfield.wav
+  author: Uganda
+  license: CC0
+  page: https://freesound.org/people/Uganda/sounds/38976/
+  downloaded: 2026-10-09
+  edit: 取 24–32 秒一陣風，淡入淡出，單聲道，響度調整
+
+- id: harvest
+  file: harvest.mp3
+  title: Silencyo_COUNTRY_DAY_Sickle_Wheat.aif
+  author: silencyo
+  license: CC0
+  page: https://freesound.org/people/silencyo/sounds/81721/
+  downloaded: 2026-10-09
+  edit: 取前 12 秒鐮刀割麥聲，淡出，單聲道，響度調整
+
+- id: desert-wind
+  file: desert-wind.mp3
+  title: Looping Gentle Wind Ambience on an Open Desert Plain.wav
+  author: dhallcomposer
+  license: CC0
+  page: https://freesound.org/people/dhallcomposer/sounds/697217/
+  downloaded: 2026-10-09
+  loop: true
+  edit: 取前 40 秒，頭尾 30 毫秒淡入淡出，單聲道，響度調整
+
+- id: branches
+  file: branches.mp3
+  title: Leaves_Rustling_Edited.wav；pile of boughs and branches breaks, close up, H6.wav
+  author: AmberdeMeillon；Bini_trns
+  license: CC0
+  page: https://freesound.org/people/AmberdeMeillon/sounds/443065/
+  pages:
+    - https://freesound.org/people/AmberdeMeillon/sounds/443065/
+    - https://freesound.org/people/Bini_trns/sounds/354099/
+  downloaded: 2026-10-09
+  edit: 葉子沙沙取前 3.6 秒，疊上延後 0.4 秒的枝條堆疊聲，淡入淡出，單聲道，響度調整
+
+- id: music
+  file: music.mp3
+  title: Decline (Loop)
+  author: Andrewkn
+  license: CC0
+  page: https://freesound.org/people/Andrewkn/sounds/476772/
+  downloaded: 2026-10-10
+  loop: true
+  edit: 整首照原樣（作者做成可接續循環），響度調整到 -26 LUFS，重新編碼 112 kbps

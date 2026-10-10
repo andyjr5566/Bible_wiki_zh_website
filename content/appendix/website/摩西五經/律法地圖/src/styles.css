@@ -374,6 +374,8 @@ code { font-size: 0.86em; font-family: ui-monospace, 'SF Mono', Menlo, monospace
 .lm-say { font-family: var(--f-head); font-weight: 500; font-size: 1.3rem; line-height: 1.85; margin: 0 0 16px; max-width: 30em; }
 .lm-law-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .lm-law-meta .lm-link-btn { margin-left: auto; }
+.lm-feast-links { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; font-size: 0.95rem; }
+.lm-feast-links a { display: inline-block; padding-block: 6px; }
 .lm-ref { color: var(--ink-2); font-size: 0.86rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .lm-layer-row { display: flex; align-items: baseline; gap: 14px; padding: 15px 0; border-top: 1px solid var(--line); cursor: pointer; list-style: none; }
 .lm-layer-row::-webkit-details-marker { display: none; }

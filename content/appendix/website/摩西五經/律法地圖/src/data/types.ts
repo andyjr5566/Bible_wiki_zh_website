@@ -118,4 +118,6 @@ export interface Explorer {
   tours: Tour[];
   glossary: { term: string; entry: string }[];
   coverage: Coverage[];
+  /** 條文 id → 引用它的節期網站章（唯讀 ../耶和華的節期/data/feasts.yaml 的 law_links 反推；title 是節期網站的章名） */
+  feastLinks: Record<string, { id: string; title: string }[]>;
 }

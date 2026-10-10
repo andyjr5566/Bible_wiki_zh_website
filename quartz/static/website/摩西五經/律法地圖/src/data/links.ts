@@ -14,3 +14,9 @@ export const entryUrl = (type: string, title: string): string =>
 /** 章節頁：…/02-出埃及記/第21章（公開網站把資料夾的空白換成連字號） */
 export const chapterUrl = (bookNum: number, bookName: string, chapter: number): string =>
   `${WIKI_BASE}/${encodeURIComponent(`${String(bookNum).padStart(2, '0')}-${bookName}`)}/${encodeURIComponent(`第${chapter}章`)}`;
+
+/**
+ * 姊妹網站「耶和華的節期」（同在 摩西五經/ 底下）：從 dist/index.html 往上兩層再進 耶和華的節期/dist。
+ * #ch=<章 id> 由節期網站載入後用抹除＋瞬間定位跳到那一章。
+ */
+export const feastUrl = (chapterId: string): string => `../../耶和華的節期/dist/index.html#ch=${encodeURIComponent(chapterId)}`;

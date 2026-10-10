@@ -1,0 +1,33 @@
+{
+  "name": "feasts-of-the-lord",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "耶和華的節期：順著一年走過摩西五經的節日（非商業教育用途）",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 3061",
+    "data": "node scripts/build-data.mjs",
+    "data:check": "node scripts/build-data.mjs --check",
+    "build": "npm run verify && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4201",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "verify": "npm run data:check && npm run typecheck && npm run test"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-singlefile": "^2.0.3",
+    "vitest": "^2.1.8",
+    "yaml": "^2.6.1"
+  },
+  "overrides": {
+    "rollup": "4.62.4"
+  }
+}

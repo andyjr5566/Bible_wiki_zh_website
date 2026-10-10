@@ -1,3 +1,4 @@
+import { feastUrl } from '../data/links';
 import { abbrOf, bookByName, chapterHref, DB, entryHref, lawById, lawEntries, laws, refText, relationLabel, relationsOf, sectionOf, topicsOf } from '../data/db';
 import type { Law } from '../data/types';
 import { href, type Route } from '../router';
@@ -48,10 +49,19 @@ export function lawView(route: Route): HTMLElement {
         h('div', { class: 'lm-law-meta' },
           h('span', { class: 'lm-ref' }, `依據${abbrOf(l.book)}${l.chapter}:${l.basis.join('、')}`),
           ...topicsOf(l).map(topicChip),
-          toggleAll)),
+          toggleAll),
+        feastLinks(l)),
       ...layers),
     neighbors(l),
   );
+}
+
+/** 節期網站有引用這一條的章：「在節期網站看「住棚節」（另開網頁）」，連到節期網站的 #ch=<章 id> */
+function feastLinks(l: Law): HTMLElement | null {
+  const list = DB.feastLinks?.[l.id];
+  if (!list?.length) return null;
+  return h('ul', { class: 'lm-feast-links' },
+    list.map((f) => h('li', null, ext(feastUrl(f.id), `在節期網站看「${f.title}」（另開網頁）`))));
 }
 
 /** 一層：原生 <details>，打開不換頁、不捲動；記住讀者打開過哪幾層 */

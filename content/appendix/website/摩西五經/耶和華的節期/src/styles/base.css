@@ -1,0 +1,192 @@
+/* 基礎：重設、舞台（canvas／靜態插圖）、共用的板（plate）與按鈕 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--jf-paper);
+  scroll-behavior: auto; /* 不用平滑捲動 */
+}
+/* 導覽 dialog 開著時鎖住頁面捲動；保留捲軸的位置，版面不會跳動 */
+html.jf-lock {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--jf-paper);
+  color: var(--jf-ink);
+  font-family: var(--jf-font-sans);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p,
+li,
+dd,
+blockquote,
+figcaption {
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+
+::selection {
+  background: var(--jf-blood);
+  color: var(--jf-paper);
+}
+
+/* ---------- 舞台 ---------- */
+.jf-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none; /* 觸控由 .jf-touch 轉發；其餘地方照常捲動 */
+}
+.jf-canvas[hidden] {
+  display: none;
+}
+
+.jf-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--jf-paper);
+}
+.jf-fallback[hidden] {
+  display: none;
+}
+.jf-fallback-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.6s var(--jf-ease-io);
+}
+.jf-fallback-layer.is-on {
+  opacity: 1;
+}
+
+/* ---------- 共用：焦點、連結 ---------- */
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--jf-blood);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--jf-paper);
+}
+
+.jf-ext {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--jf-blood);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color 0.15s, text-decoration-color 0.15s, background-color 0.15s;
+}
+.jf-ext:hover {
+  color: var(--jf-blood);
+  text-decoration-color: currentColor;
+}
+.jf-ext:active {
+  background: color-mix(in srgb, var(--jf-blood) 16%, transparent);
+}
+
+/* 關鍵詞：每段最多一處，血紅色 */
+.jf-key {
+  background: none;
+  color: var(--jf-blood);
+  font-weight: 700;
+}
+
+/* ---------- 板：紙色底、3px 墨線框（輕微手繪抖動）、6px 實心墨塊偏移陰影 ---------- */
+.jf-plate,
+.jf-box,
+.jf-coach-card {
+  position: relative;
+  isolation: isolate;
+}
+.jf-plate::before,
+.jf-box::before,
+.jf-coach-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+  box-shadow: 6px 6px 0 var(--jf-ink);
+  filter: url(#jf-rough);
+  pointer-events: none;
+}
+
+/* ---------- 按鈕 ---------- */
+.jf-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  font: 700 15px/1 var(--jf-font-sans);
+  letter-spacing: 0.04em;
+  color: var(--jf-ink);
+  background: var(--jf-paper);
+  border: 3px solid var(--jf-ink);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--jf-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s var(--jf-ease-out), box-shadow 0.12s var(--jf-ease-out), background-color 0.15s, color 0.15s;
+}
+.jf-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--jf-ink);
+  background: color-mix(in srgb, var(--jf-blood) 12%, var(--jf-paper));
+}
+.jf-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--jf-ink);
+}
+.jf-btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--jf-paper);
+}
+.jf-btn-primary {
+  background: var(--jf-ink);
+  color: var(--jf-paper);
+}
+.jf-btn-primary:hover {
+  background: var(--jf-blood);
+  color: var(--jf-paper);
+}
+.jf-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+html[data-motion='off'] .jf-btn,
+html[data-motion='off'] .jf-btn:hover,
+html[data-motion='off'] .jf-btn:active {
+    transition: background-color 0.15s, color 0.15s;
+  }
+html[data-motion='off'] .jf-btn:hover,
+html[data-motion='off'] .jf-btn:active {
+    transform: none;
+  }

@@ -252,6 +252,24 @@ export function buildAll() {
     if (t) glossary.push({ term, entry: t });
   }
 
+  // ---- 節期網站互連：唯讀讀 ../耶和華的節期/data/feasts.yaml 的 law_links，反推「條文 → 節期章」 ----
+  // 條文頁加一行「在節期網站看「<章名>」（另開網頁）」，章名取 feasts.yaml 的 chapter title。
+  const feastLinks = {};
+  const feastsPath = resolve(SITE, '../耶和華的節期/data/feasts.yaml');
+  if (!existsSync(feastsPath)) err('feastLinks', `找不到節期網站的資料：${feastsPath}`);
+  else {
+    const feasts = loadYaml(feastsPath) ?? {};
+    const titles = new Map((feasts.chapters ?? []).map((c) => [c.id, c.title]));
+    for (const [ch, ids] of Object.entries(feasts.law_links ?? {})) {
+      const where = `feastLinks.${ch}`;
+      if (!titles.has(ch)) { err(where, '不是節期網站 feasts.yaml 的章 id'); continue; }
+      for (const id of Array.isArray(ids) ? ids : []) {
+        if (!lawById.has(id)) { err(where, `沒有這條條文：${id}`); continue; }
+        feastLinks[id] = [...(feastLinks[id] ?? []), { id: ch, title: titles.get(ch) }];
+      }
+    }
+  }
+
   // ---- 首頁標語：詩1:2 和合本原句 ----
   const mottoVerses = chapterVerses(MOTTO.book, MOTTO.chapter);
   const motto = { ref: `${MOTTO.book}${MOTTO.chapter}:${MOTTO.verse}`, text: mottoVerses?.[MOTTO.verse - 1] ?? '' };
@@ -290,7 +308,7 @@ export function buildAll() {
     })),
     groups, topics, sections,
     laws: laws.map(({ _overlap, ...l }) => l),
-    motto, verses, links, entries: entryMap, relations, questions, tours, glossary, coverage,
+    motto, verses, links, entries: entryMap, relations, questions, tours, glossary, coverage, feastLinks,
   };
 
   // toc_only：涵蓋近百章，只列在各卷全書目錄，不寫進每個章節檔的附錄

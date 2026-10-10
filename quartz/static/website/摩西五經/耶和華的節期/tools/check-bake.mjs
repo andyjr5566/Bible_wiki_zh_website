@@ -1,0 +1,36 @@
+// 在整合後的網站上，按住「按住烤餅」按鈕，截圖看麵團被壓平、出現焦痕（減少動態開與關都要會動）。
+// 用法：node tools/check-bake.mjs <url> [--reduced] [--mobile] [outDir]
+import { join } from 'node:path';
+import { launch, sleep } from './cdp.mjs';
+const [url] = process.argv.slice(2);
+const reduced = process.argv.includes('--reduced');
+const mobile = process.argv.includes('--mobile');
+const outDir = process.argv.slice(2).find((a) => a !== url && !a.startsWith('--'));
+const W = mobile ? 390 : 1440, H = mobile ? 844 : 900;
+const b = await launch({ width: W, height: H, mobile, port: 9411 + (reduced ? 1 : 0) + (mobile ? 2 : 0), gpu: true });
+await b.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }, { name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' }] });
+await b.send('Page.addScriptToEvaluateOnNewDocument', { source: `try { localStorage.setItem('jf-coach-seen', '1') } catch {}` });
+await b.send('Page.navigate', { url });
+await sleep(4500);
+await b.evaluate(`(() => { const el = document.querySelector('[data-cue="bake"]'); window.scrollTo(0, el.getBoundingClientRect().top + scrollY + Math.max(0, el.offsetHeight - innerHeight) * 0.5); })()`);
+await sleep(2500);
+const tag = `${mobile ? 'm' : 'd'}${reduced ? '-reduce' : ''}`;
+const r = JSON.parse(await b.evaluate(`JSON.stringify((() => { const r = document.querySelector('.jf-bake-btn').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })())`));
+const status = () => b.evaluate(`document.querySelector('.jf-bake-status')?.textContent`);
+if (outDir) await b.shot(join(outDir, `bake-${tag}-0.png`));
+const down = () => (mobile ? b.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: r[0], y: r[1] }] }) : b.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: r[0], y: r[1], button: 'left', clickCount: 1 }));
+const up = () => (mobile ? b.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }) : b.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: r[0], y: r[1], button: 'left', clickCount: 1 }));
+if (!mobile) await b.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: r[0], y: r[1] });
+await down();
+await sleep(1000);
+if (outDir) await b.shot(join(outDir, `bake-${tag}-1.png`));
+console.log(tag, '按住 1 秒', await status());
+await sleep(1200);
+await up();
+await sleep(600);
+if (outDir) await b.shot(join(outDir, `bake-${tag}-2.png`));
+console.log(tag, '放開後', await status());
+const errs = b.consoleLog.filter((l) => /^\[(exception|error)\]/.test(l));
+console.log(errs.length ? errs.join('\n') : 'console 無錯誤');
+await b.close();
+process.exit(0);

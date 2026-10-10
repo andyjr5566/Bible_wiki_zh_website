@@ -4,7 +4,10 @@ added 55 packages, and audited 56 packages in 2s
 12 packages are looking for funding
   run `npm fund` for details
 
-5 vulnerabilities (3 moderate, 1 high, 1 critical)
+7 vulnerabilities (3 moderate, 2 high, 2 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
@@ -29,32 +32,32 @@ Run `npm audit` for details.
 
 [1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/出埃及記/第25章[39m
 
- [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 3[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
-[2m   Start at [22m 20:36:50
-[2m   Duration [22m 450ms[2m (transform 131ms, setup 0ms, collect 133ms, tests 5ms, environment 0ms, prepare 74ms)[22m
+[2m   Start at [22m 18:02:20
+[2m   Duration [22m 370ms[2m (transform 116ms, setup 0ms, collect 111ms, tests 3ms, environment 0ms, prepare 57ms)[22m
 
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
 transforming...
 [32m✓[39m 26 modules transformed.
 rendering chunks...
 computing gzip size...
-[2mdist/[22m[32mindex.html                          [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.77 kB[22m
+[2mdist/[22m[32mindex.html                          [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.78 kB[22m
 [2mdist/[22m[2massets/[22m[35mindex-CVegIydT.css           [39m[1m[2m 35.90 kB[22m[1m[22m[2m │ gzip:   8.67 kB[22m
 [2mdist/[22m[2massets/[22m[36mdetail-Cyig4yrc.js           [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
-[2mdist/[22m[2massets/[22m[36mtabernacle-DMGMVV3S.js       [39m[1m[2m  6.90 kB[22m[1m[22m[2m │ gzip:   3.43 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-D8ewySLN.js            [39m[1m[2m 53.89 kB[22m[1m[22m[2m │ gzip:  31.15 kB[22m
+[2mdist/[22m[2massets/[22m[36mtabernacle-CdcrQZ0Z.js       [39m[1m[2m  6.90 kB[22m[1m[22m[2m │ gzip:   3.43 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-DRYpCjHz.js            [39m[1m[2m 53.96 kB[22m[1m[22m[2m │ gzip:  31.17 kB[22m
 [2mdist/[22m[2massets/[22m[36mRoomEnvironment-sd-MvLcI.js  [39m[1m[2m587.96 kB[22m[1m[22m[2m │ gzip: 149.85 kB[22m
-[32m✓ built in 1.51s[39m
+[32m✓ built in 1.36s[39m
 
-added 55 packages, and audited 56 packages in 7s
+added 55 packages, and audited 56 packages in 9s
 
 12 packages are looking for funding
   run `npm fund` for details
 
-5 vulnerabilities (3 moderate, 1 high, 1 critical)
+6 vulnerabilities (3 moderate, 1 high, 2 critical)
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
@@ -79,30 +82,35 @@ Run `npm audit` for details.
 
 [1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/利未記/第11章[39m
 
- [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m4 skipped[39m[2m)[22m[90m 3[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
-[2m   Start at [22m 20:37:04
-[2m   Duration [22m 576ms[2m (transform 249ms, setup 0ms, collect 275ms, tests 4ms, environment 0ms, prepare 84ms)[22m
+[2m   Start at [22m 18:02:34
+[2m   Duration [22m 511ms[2m (transform 226ms, setup 0ms, collect 251ms, tests 3ms, environment 0ms, prepare 66ms)[22m
 
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
 transforming...
-[32m✓[39m 42 modules transformed.
+[32m✓[39m 44 modules transformed.
 rendering chunks...
 computing gzip size...
-[2mdist/[22m[32mindex.html                 [39m[1m[2m  1.16 kB[22m[1m[22m[2m │ gzip:   0.83 kB[22m
-[2mdist/[22m[2massets/[22m[35mindex-4IkJfk7_.css  [39m[1m[2m 83.07 kB[22m[1m[22m[2m │ gzip:  17.01 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-gEpeeogz.js   [39m[1m[2m263.85 kB[22m[1m[22m[2m │ gzip: 136.73 kB[22m
-[2mdist/[22m[2massets/[22m[36mcamp-Dej68AUv.js    [39m[1m[2m654.55 kB[22m[1m[22m[2m │ gzip: 172.28 kB[22m
-[32m✓ built in 1.93s[39m
+[2mdist/[22m[32mindex.html                     [39m[1m[2m  1.32 kB[22m[1m[22m[2m │ gzip:   0.90 kB[22m
+[2mdist/[22m[2massets/[22m[35mindex-BhmK968H.css      [39m[1m[2m138.80 kB[22m[1m[22m[2m │ gzip:  27.46 kB[22m
+[2mdist/[22m[2massets/[22m[36mjar-CrrsbbEJ.js         [39m[1m[2m  1.71 kB[22m[1m[22m[2m │ gzip:   0.96 kB[22m
+[2mdist/[22m[2massets/[22m[36mcamp-DyBMYJND.js        [39m[1m[2m 67.68 kB[22m[1m[22m[2m │ gzip:  23.14 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-CGY4x7_a.js       [39m[1m[2m276.03 kB[22m[1m[22m[2m │ gzip: 142.37 kB[22m
+[2mdist/[22m[2massets/[22m[36mGLTFLoader-DVzLd6Bp.js  [39m[1m[2m616.86 kB[22m[1m[22m[2m │ gzip: 159.61 kB[22m
+[32m✓ built in 1.64s[39m
 
-added 55 packages, and audited 56 packages in 2s
+added 55 packages, and audited 56 packages in 1s
 
 12 packages are looking for funding
   run `npm fund` for details
 
-5 vulnerabilities (3 moderate, 1 high, 1 critical)
+7 vulnerabilities (3 moderate, 2 high, 2 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
@@ -131,8 +139,8 @@ Run `npm audit` for details.
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
-[2m   Start at [22m 20:37:12
-[2m   Duration [22m 583ms[2m (transform 246ms, setup 0ms, collect 275ms, tests 5ms, environment 0ms, prepare 75ms)[22m
+[2m   Start at [22m 18:02:41
+[2m   Duration [22m 501ms[2m (transform 216ms, setup 0ms, collect 241ms, tests 5ms, environment 0ms, prepare 51ms)[22m
 
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
 transforming...
@@ -141,17 +149,20 @@ rendering chunks...
 computing gzip size...
 [2mdist/[22m[32mindex.html                    [39m[1m[2m  1.05 kB[22m[1m[22m[2m │ gzip:   0.75 kB[22m
 [2mdist/[22m[2massets/[22m[35mindex-DBJfcAyS.css     [39m[1m[2m 41.79 kB[22m[1m[22m[2m │ gzip:   9.54 kB[22m
-[2mdist/[22m[2massets/[22m[36mrehearsal-D_11aEF1.js  [39m[1m[2m 27.32 kB[22m[1m[22m[2m │ gzip:  10.57 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-DWhEiakq.js      [39m[1m[2m157.98 kB[22m[1m[22m[2m │ gzip:  76.22 kB[22m
-[2mdist/[22m[2massets/[22m[36mcourtyard-BBfoErIm.js  [39m[1m[2m615.77 kB[22m[1m[22m[2m │ gzip: 158.60 kB[22m
-[32m✓ built in 1.97s[39m
+[2mdist/[22m[2massets/[22m[36mrehearsal-D78ijFUI.js  [39m[1m[2m 27.32 kB[22m[1m[22m[2m │ gzip:  10.56 kB[22m
+[2mdist/[22m[2massets/[22m[36mindex-Lnf302-v.js      [39m[1m[2m158.00 kB[22m[1m[22m[2m │ gzip:  76.23 kB[22m
+[2mdist/[22m[2massets/[22m[36mcourtyard-CV2-Vh1h.js  [39m[1m[2m615.81 kB[22m[1m[22m[2m │ gzip: 158.61 kB[22m
+[32m✓ built in 1.74s[39m
 
-added 55 packages, and audited 56 packages in 2s
+added 55 packages, and audited 56 packages in 1s
 
 12 packages are looking for funding
   run `npm fund` for details
 
-5 vulnerabilities (3 moderate, 1 high, 1 critical)
+7 vulnerabilities (3 moderate, 2 high, 2 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
@@ -180,8 +191,8 @@ Run `npm audit` for details.
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m3 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (7)[39m
-[2m   Start at [22m 20:37:20
-[2m   Duration [22m 446ms[2m (transform 127ms, setup 0ms, collect 143ms, tests 4ms, environment 0ms, prepare 85ms)[22m
+[2m   Start at [22m 18:02:48
+[2m   Duration [22m 409ms[2m (transform 123ms, setup 0ms, collect 141ms, tests 4ms, environment 0ms, prepare 60ms)[22m
 
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
 transforming...
@@ -190,15 +201,15 @@ rendering chunks...
 computing gzip size...
 [2mdist/[22m[32mindex.html                 [39m[1m[2m  1.22 kB[22m[1m[22m[2m │ gzip:   0.88 kB[22m
 [2mdist/[22m[2massets/[22m[35mindex-DC3kye34.css  [39m[1m[2m 26.82 kB[22m[1m[22m[2m │ gzip:   6.97 kB[22m
-[2mdist/[22m[2massets/[22m[36mindex-CiadjPY1.js   [39m[1m[2m766.16 kB[22m[1m[22m[2m │ gzip: 224.06 kB[22m
-[32m✓ built in 1.90s[39m
+[2mdist/[22m[2massets/[22m[36mindex-BJB0ECxP.js   [39m[1m[2m766.10 kB[22m[1m[22m[2m │ gzip: 224.07 kB[22m
+[32m✓ built in 1.61s[39m
 
 added 55 packages, and audited 56 packages in 1s
 
 14 packages are looking for funding
   run `npm fund` for details
 
-8 vulnerabilities (3 moderate, 4 high, 1 critical)
+9 vulnerabilities (3 moderate, 4 high, 2 critical)
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
@@ -216,7 +227,105 @@ Run `npm audit` for details.
 > pentateuch-law-map@0.1.0 data:check
 > node scripts/build-data.mjs --check
 
-找不到 vault（raw_scripture、link_folder）。這個腳本要在 scripture 專案裡跑。
+找不到 vault，略過資料新鮮度檢查（使用已提交的 explorer.json）。
+
+> pentateuch-law-map@0.1.0 typecheck
+> tsc --noEmit
+
+
+> pentateuch-law-map@0.1.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/摩西五經/律法地圖[39m
+
+ [32m✓[39m src/lib/lib.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m src/lib/search.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 56[2mms[22m[39m
+ [32m✓[39m src/data/data.test.ts [2m([22m[2m46 tests[22m[2m | [22m[33m6 skipped[39m[2m)[22m[90m 223[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m50 passed[39m[22m[2m | [22m[33m6 skipped[39m[90m (56)[39m
+[2m   Start at [22m 18:02:55
+[2m   Duration [22m 1.10s[2m (transform 698ms, setup 0ms, collect 1.67s, tests 285ms, environment 1ms, prepare 259ms)[22m
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 29 modules transformed.
+rendering chunks...
+[plugin vite:singlefile] 
+
+[plugin vite:singlefile] Inlining: index-BVINN48j.js
+[plugin vite:singlefile] Inlining: style-BbQv4opI.css
+computing gzip size...
+[2mdist/[22m[32mindex.html  [39m[1m[2m511.97 kB[22m[1m[22m[2m │ gzip: 243.87 kB[22m
+[32m✓ built in 707ms[39m
+
+added 64 packages, and audited 65 packages in 2s
+
+14 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 moderate, 4 high, 2 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> feasts-of-the-lord@0.1.0 build
+> npm run verify && vite build
+
+
+> feasts-of-the-lord@0.1.0 verify
+> npm run data:check && npm run typecheck && npm run test
+
+
+> feasts-of-the-lord@0.1.0 data:check
+> node scripts/build-data.mjs --check
+
+找不到 vault，略過資料新鮮度檢查（使用已提交的 site.json）。
+
+> feasts-of-the-lord@0.1.0 typecheck
+> tsc --noEmit
+
+
+> feasts-of-the-lord@0.1.0 test
+> vitest run
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90m/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/摩西五經/耶和華的節期[39m
+
+ [32m✓[39m scripts/checks.test.mjs [2m([22m[2m32 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[90m 27[2mms[22m[39m
+ [31m❯[39m scripts/build-data.test.mjs [2m([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m src/data/site.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 143[2mms[22m[39m
+ [32m✓[39m scripts/lib.test.mjs [2m([22m[2m10 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+ [32m✓[39m src/data/gist.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m src/scene/cues.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 224[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Failed Suites 1 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m scripts/build-data.test.mjs[2m [ scripts/build-data.test.mjs ][22m
+[31m[1mError[22m: ENOENT: no such file or directory, scandir '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/link_folder'[39m
+[36m [2m❯[22m entries scripts/lib.mjs:[2m242:22[22m[39m
+    [90m240| [39m  [35mconst[39m alias [33m=[39m [35mnew[39m [33mMap[39m()[33m;[39m
+    [90m241| [39m  [35mconst[39m base [33m=[39m [34mresolve[39m([33mROOT[39m[33m,[39m [32m'link_folder'[39m)[33m;[39m
+    [90m242| [39m  [35mfor[39m ([35mconst[39m type [35mof[39m [34mreaddirSync[39m(base[33m,[39m { withFileTypes[33m:[39m [35mtrue[39m })) {
+    [90m   | [39m                     [31m^[39m
+    [90m243| [39m    [35mif[39m ([33m![39mtype[33m.[39m[34misDirectory[39m() [33m||[39m type[33m.[39mname[33m.[39m[34mstartsWith[39m([32m'.'[39m)) [35mcontinue[39m[33m;[39m
+    [90m244| [39m    [35mfor[39m ([35mconst[39m f [35mof[39m [34mreaddirSync[39m([34mresolve[39m(base[33m,[39m type[33m.[39mname))) {
+[90m [2m❯[22m Module.resolveEntry scripts/lib.mjs:[2m260:30[22m[39m
+[90m [2m❯[22m Module.buildAll scripts/build-data.mjs:[2m127:10[22m[39m
+[90m [2m❯[22m scripts/build-data.test.mjs:[2m36:20[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m62 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (64)[39m
+[2m   Start at [22m 18:03:03
+[2m   Duration [22m 1.64s[2m (transform 754ms, setup 0ms, collect 1.32s, tests 422ms, environment 1ms, prepare 498ms)[22m
+
+
+::error file=/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/摩西五經/耶和華的節期/scripts/lib.mjs,title=scripts/build-data.test.mjs,line=242,column=22::Error: ENOENT: no such file or directory, scandir '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/link_folder'%0A ❯ entries scripts/lib.mjs:242:22%0A ❯ Module.resolveEntry scripts/lib.mjs:260:30%0A ❯ Module.buildAll scripts/build-data.mjs:127:10%0A ❯ scripts/build-data.test.mjs:36:20%0A%0A⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%0ASerialized Error: { errno: -2, code: 'ENOENT', syscall: 'scandir', path: '/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/link_folder' }%0A
 [依賴] static/website/出埃及記/第25章
 [建置] static/website/出埃及記/第25章
 [依賴] static/website/利未記/第11章
@@ -227,13 +336,15 @@ Run `npm audit` for details.
 [建置] static/website/創世記/第6章
 [依賴] static/website/摩西五經/律法地圖
 [建置] static/website/摩西五經/律法地圖
+[依賴] static/website/摩西五經/耶和華的節期
+[建置] static/website/摩西五經/耶和華的節期
 Traceback (most recent call last):
-  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 452, in <module>
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 481, in <module>
     raise SystemExit(main())
                      ^^^^^^
-  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 432, in main
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 461, in main
     build_vite_apps(apps, install_dependencies=True)
-  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 238, in build_vite_apps
+  File "/home/runner/work/Bible_wiki_zh_website/Bible_wiki_zh_website/quartz/static/website/build.py", line 261, in build_vite_apps
     subprocess.run([npm_command, "run", "build"], cwd=app, check=True)
   File "/usr/lib/python3.12/subprocess.py", line 571, in run
     raise CalledProcessError(retcode, process.args,

@@ -7,6 +7,7 @@ import type { Beat, StoryChapter } from '../data/types';
 import { SITE } from '../data/site';
 import { story } from '../story/state';
 import { h } from './dom';
+import { bindHandoff } from './handoff';
 import type { BakeUI } from './bake';
 import type { BarsUI } from './bars';
 import type { BlowUI } from './blow';
@@ -84,6 +85,35 @@ export function closeOpenPanel(returnFocus = false): void {
 export const anyPanelOpen = (): boolean => openRef !== null;
 
 /**
+ * 手機：面板蓋住畫面的大半，點面板以外的地方（上方露出的場景、標題列以外的空白）也收起來，
+ * 讀者不會因為找不到（或按不到）「關閉」而被困在面板裡。桌機的面板是就地展開，不需要。
+ */
+let outsideTapBound = false;
+function bindOutsideTap(): void {
+  if (outsideTapBound) return;
+  outsideTapBound = true;
+  const q = window.matchMedia('(max-width: 720px)');
+  // 用 pointerdown／pointerup 而不是 click：iOS Safari 對「不可點選的元素」（空白處、場景）不送 click 給 document。
+  // 手指一動（開始捲頁）瀏覽器會送 pointercancel，不會走到 pointerup；再加位移門檻，免得拖曳尾端誤判成點一下。
+  let down: { x: number; y: number } | null = null;
+  document.addEventListener('pointerdown', (e) => {
+    down = e.isPrimary ? { x: e.clientX, y: e.clientY } : null;
+  });
+  document.addEventListener('pointercancel', () => {
+    down = null;
+  });
+  document.addEventListener('pointerup', (e) => {
+    const d = down;
+    down = null;
+    if (!d || !openRef || !q.matches) return;
+    if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10) return;
+    const t = e.target;
+    if (!(t instanceof Element) || t.closest('.jf-more, .jf-chip, dialog')) return;
+    closeOpenPanel(false);
+  });
+}
+
+/**
  * 收起說明框：讀者按任何一框的「收起」，所有說明框一起收成一個小標籤，捲到下一拍也維持收起，
  * 好看動畫的全貌；再按「展開說明」就全部回來。不存進 localStorage：重新整理就回到有字的狀態。
  * 有互動的拍（吹、烤餅、搖禾捆……）收起時仍留著互動按鈕。
@@ -104,6 +134,7 @@ function setFolded(on: boolean, from?: HTMLButtonElement): void {
 
 export function buildBeats(main: HTMLElement, ui: InteractionUIs): BeatRef[] {
   const refs: BeatRef[] = [];
+  bindOutsideTap();
   // 說明框左右交替；有互動的那一拍固定落在左邊（牛膝草把手在畫面右側），其餘照奇偶往前後推
   const flat = SITE.chapters.flatMap((c) => c.beats);
   const interactive = flat.findIndex((b) => b.interaction);
@@ -174,6 +205,7 @@ function buildBeat(chapter: StoryChapter, beat: Beat, bi: number, index: number,
   });
   // 說明框的內容放進 .jf-box-body：桌機超過 max-height 時只有它捲動，框線與偏移墨塊（::before）不動
   const body = h('div', { class: 'jf-box-body', id: `${boxId}-body` });
+  bindHandoff(body);
   const hint = h('span', { class: 'jf-box-hint', 'aria-hidden': 'true', hidden: true }, '往下看');
   const fold = h('button', {
     type: 'button',
@@ -267,6 +299,8 @@ function buildBeat(chapter: StoryChapter, beat: Beat, bi: number, index: number,
     box.dataset.open = kind ?? '';
     if (kind) openRef = handle;
     else if (openRef === handle) openRef = null;
+    // 手機：面板開著時日數牌、「回到」鈕讓開（見 chrome.css）
+    document.documentElement.classList.toggle('jf-more-open', openRef !== null);
     // 桌機：展開後把面板標題捲進框內（只捲框自己，不用 scrollIntoView，免得整頁跟著動）；收起就回到頂端
     if (!mobileQ.matches) {
       const target = kind ? parts[kind]?.more : null;
@@ -280,6 +314,9 @@ function buildBeat(chapter: StoryChapter, beat: Beat, bi: number, index: number,
   function updateHint() {
     const more = body.scrollHeight - body.clientHeight > 4 && body.scrollTop + body.clientHeight < body.scrollHeight - 4;
     hint.hidden = !more;
+    // 手機：內文本來就比框高的拍，在框底多留一條放「往下看」，免得它蓋住最後露出來的那行字或按鈕（見 story.css）。
+    // 看的是「可不可以捲」而不是「捲到哪裡」，所以捲動時不會讓版面跳動。
+    box.toggleAttribute('data-scroll', body.scrollHeight - body.clientHeight > 4);
   }
   body.addEventListener('scroll', updateHint, { passive: true });
 

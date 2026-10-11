@@ -389,6 +389,19 @@
 
 /* ---------- 手機 ---------- */
 @media (max-width: 720px) {
+  /* 手機上固定在最上方的介面（標題列、月份導覽、標記三角）的下緣；從底部升起的面板頂端不得高過它。
+     瀏海機的 --jf-safe-t 約 47–59px，所以要把安全區算進去（無瀏海時 max() 取 12px）。 */
+  :root {
+    --jf-ui-top: calc(max(12px, var(--jf-safe-t)) + 108px);
+  }
+  /* 「四家怎麼說」「原文」面板打開時（JS 在 <html> 加 jf-more-open）：
+     日數牌與「回到」鈕讓開，免得壓在面板頂端的「關閉」上（它們的層級比面板高） */
+  .jf-more-open .jf-day.is-on {
+    opacity: 0;
+  }
+  .jf-more-open .jf-return {
+    visibility: hidden;
+  }
   .jf-topbg {
     display: block;
     position: fixed;

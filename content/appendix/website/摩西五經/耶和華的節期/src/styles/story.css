@@ -966,6 +966,7 @@
     width: auto;
     max-height: 50vh;
     max-height: 50svh;
+    max-height: round(down, 50svh, 1px); /* 整數像素：捲動區的高度帶小數會讓「捲到底」差 0.x px，見 ui/handoff.ts */
     margin-right: 8px;
     margin-left: 8px;
     padding: 16px 16px 14px;
@@ -1080,13 +1081,8 @@
     gap: 5px;
     font-size: 15px;
   }
-  /* 兩組獻祭並排時整個說明框會太高：經文限高、自己捲 */
-  .jf-box[data-offers='2'] .jf-verse-text {
-    max-height: 5.6em;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--jf-ink) transparent;
-  }
+  /* 以前兩組獻祭並排時把經文限高、自己捲；手機上這是框內再套一層捲動區：手指落在經文上就只捲經文，
+     頁面與內文都不動，而且 iOS 看不到捲軸，讀者以為經文被截掉。現在整個說明框只有 .jf-box-body 一層捲動。 */
   .jf-keys-one {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1124,8 +1120,9 @@
     right: 8px;
     bottom: calc(8px + var(--jf-safe-b));
     z-index: 30;
-    max-height: calc(100vh - 160px);
-    max-height: calc(100svh - 160px);
+    /* 頂端停在固定介面（標題列、月份導覽）之下，「關閉」才不會被它們蓋住；內容多就在面板內捲 */
+    max-height: calc(100vh - var(--jf-ui-top) - 16px - var(--jf-safe-b));
+    max-height: calc(100svh - var(--jf-ui-top) - 16px - var(--jf-safe-b));
     margin: 0;
     padding: 0 14px 10px;
     background: var(--jf-paper);
@@ -1142,7 +1139,7 @@
     min-height: 0;
     max-height: none;
     overflow-y: auto;
-    overscroll-behavior: contain;
+    overscroll-behavior: auto; /* 捲到頭，下一次手勢就交給頁面：面板開著也不會把讀者困住 */
     scrollbar-width: thin;
     scrollbar-color: var(--jf-ink) transparent;
     padding-top: 12px;
@@ -1454,12 +1451,6 @@ html[data-motion='off'] .jf-key-btn:active {
     margin-top: 6px;
     font-size: 15px;
   }
-  .jf-box[data-bars='true'] .jf-verse-text {
-    max-height: 4.6em;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--jf-ink) transparent;
-  }
   .jf-return {
     top: calc(max(12px, var(--jf-safe-t)) + 104px);
     bottom: auto;
@@ -1491,6 +1482,7 @@ html[data-motion='off'] .jf-return:active {
   .jf-box-body {
     max-height: calc(50vh - 30px);
     max-height: calc(50svh - 30px);
+    max-height: round(down, calc(50svh - 30px), 1px);
     overflow-y: auto;
     overscroll-behavior: auto; /* 捲到頭就把捲動交還給頁面，不卡住 */
     scrollbar-width: thin;
@@ -1499,8 +1491,17 @@ html[data-motion='off'] .jf-return:active {
   /* 框內還能往下捲時，框底的小標籤（手機貼在框內底邊） */
   .jf-box-hint {
     display: inline-flex;
-    bottom: 6px;
+    bottom: 8px;
     box-shadow: 0 0 0 4px var(--jf-paper);
+  }
+  /* 內文要捲的拍：框底多留 24px 給「往下看」，它不再蓋在內文上（內文上限跟著少 24px，框總高不變） */
+  .jf-box[data-scroll] {
+    padding-bottom: 38px;
+  }
+  .jf-box[data-scroll] .jf-box-body {
+    max-height: calc(50vh - 54px);
+    max-height: calc(50svh - 54px);
+    max-height: round(down, calc(50svh - 54px), 1px);
   }
   /* 長條圖的那一拍：圖先於經文（先讓讀者看到隨捲動長出來的條），經文接在下面 */
   .jf-box[data-bars='true'] .jf-text {

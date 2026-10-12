@@ -1,0 +1,7 @@
+# 歷代志人物附錄系列；ready: false 的頁面不出現在導覽、也不准被連結
+pages:
+  - {data: 歷代志上, path: appendix/歷代志上的完整人物支線圖.md, short: 族譜（代上 1–9）, ready: true}
+  - {data: 歷代志上/大衛王朝, path: appendix/歷代志上的大衛王朝人物圖.md, short: 大衛王朝（代上 10–29）, ready: true}
+  - {data: 歷代志下/列王, path: appendix/歷代志下的列王人物圖.md, short: 猶大列王（代下）, ready: true}
+  - {data: 南北國列王/對照, path: appendix/南北國列王對照.md, short: 南北國列王對照, ready: true}
+  - {data: 歷代志上/總覽, path: appendix/歷代志人物總覽.md, short: 總覽, ready: true}

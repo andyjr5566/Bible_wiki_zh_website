@@ -1,0 +1,792 @@
+# 南北國君王登錄檔（唯一來源）：歷代志下列王頁的卡片、南北國列王對照頁、總覽頁共用。
+#
+# verdict.class：good ●行正／good_caveat ●但 行正另有但書／good_to_bad ◐好轉壞／bad_to_good ◑壞轉好／bad ○行惡／none —沒有評語
+# verdict.items：role 只能是 評語／但書／轉變；quote 必須逐字出現在 ref。
+# differs：統一王國與猶大的王，兩卷（撒母耳記或列王紀 vs 歷代志）一卷有評語另一卷沒有、或一卷多寫了轉變時為 true。北國的王不標。
+# prose：事蹟散文，只寫所附經節裡有的事；「」內逐字。
+
+chronology:
+  label: Thiele 年表
+  source: 'Edwin R. Thiele, The Mysterious Numbers of the Hebrew Kings（新修訂版／第三版，Zondervan 1983），附錄 B「The Dates of the Kings of Israel and Judah」第 217 頁；共治與並立見第 219 頁。本頁數字轉錄自英文維基百科 List of kings of Judah 與 List of kings of Israel 的 Thiele 欄（https://en.wikipedia.org/wiki/List_of_kings_of_Judah 、https://en.wikipedia.org/wiki/List_of_kings_of_Israel ），並參照 Thiele 1974 年 JBL 文章與 McFall 1991、Young 2007 的轉載核對；何細亞的結束年作 723。原書表格未能逐格目驗。'
+  estimate_source: '掃羅、大衛、所羅門不在 Thiele 年表內。大衛、所羅門採英文維基百科 Kings of Israel and Judah 表格 Galil、Kitchen 欄的 1010–970、970–931（https://en.wikipedia.org/wiki/Kings_of_Israel_and_Judah ）；掃羅依使徒行傳 13:21 的四十年，接在大衛之前倒推作 1050–1010。'
+  note: 年代不是經文本身的資料。經文只記「某王第幾年，某某登基」和在位年數，各家年表的換算不同；圖上的數字一律是「約」。
+
+kings:
+# ───────────── 統一王國 ─────────────
+- id: 掃羅
+  name: 掃羅
+  kingdom: 統一
+  years: {start: 1050, end: 1010, estimate: true}
+  verdict:
+    class: bad
+    basis: 代上
+    differs: false
+    items:
+      - {book: 代上, role: 評語, quote: 因為他干犯耶和華，沒有遵守耶和華的命, ref: "代上 10:13"}
+      - {book: 撒上, role: 評語, quote: 你既厭棄耶和華的命令，耶和華也厭棄你作王, ref: "撒上 15:23"}
+  kings_refs: "撒上 9:1-31:13"
+  chronicles_refs: "代上 10:1-14"
+  prose:
+    text: 掃羅是便雅憫人基士的兒子，撒母耳膏他作以色列的第一個王。他後來違背耶和華藉撒母耳傳的命令，撒母耳對他說「耶和華也厭棄你作王」。他多年追殺大衛，最後和三個兒子死在基利波山。歷代志說他死，是「因為他干犯耶和華，沒有遵守耶和華的命」，又「求問交鬼的婦人」。
+    refs: "撒上 9:1-2, 撒上 10:1, 撒上 15:23, 代上 10:1-14"
+  notes:
+    - text: 和合本撒上 13:1 說掃羅「作以色列王二年的時候」，使徒行傳 13:21 說神將掃羅「給他們作王四十年」。圖上的年代用四十年推估。
+      refs: "撒上 13:1, 徒 13:21"
+
+- id: 大衛
+  name: 大衛
+  kingdom: 統一
+  years: {start: 1010, end: 970, estimate: true}
+  verdict:
+    class: good_caveat
+    basis: 王上
+    differs: true
+    items:
+      - {book: 王上, role: 評語, quote: 都是行耶和華眼中看為正的事, ref: "王上 15:5"}
+      - {book: 王上, role: 但書, quote: 除了赫人烏利亞那件事, ref: "王上 15:5"}
+  kings_refs: "撒上 16:1-31:13, 撒下 1:1-24:25, 王上 1:1-2:11"
+  chronicles_refs: "代上 11:1-29:30"
+  prose:
+    text: 大衛是耶西的第七個兒子，在希伯崙作猶大王七年半，又在耶路撒冷作以色列眾人的王三十三年。他攻取錫安的保障，把約櫃運進大衛城，打敗四圍的仇敵。神藉先知拿單應許「必為你建立家室」。撒母耳記下記了他和拔示巴的事、押沙龍的叛亂；歷代志沒有記這兩件事，卻用很長的篇幅寫他為建殿預備材料，安排祭司和利未人的班次。
+    refs: "代上 2:15, 撒下 5:4-5, 代上 11:5, 代上 15:25-29, 代上 17:10, 撒下 11:1-27, 撒下 15:1-18:33, 代上 22:1-29:30"
+
+- id: 所羅門
+  name: 所羅門
+  kingdom: 統一
+  years: {start: 970, end: 931, estimate: true}
+  verdict:
+    class: good_to_bad
+    basis: 王上
+    differs: true
+    items:
+      - {book: 王上, role: 評語, quote: 所羅門愛耶和華，遵行他父親大衛的律例, ref: "王上 3:3"}
+      - {book: 王上, role: 但書, quote: 只是還在邱壇獻祭燒香, ref: "王上 3:3"}
+      - {book: 王上, role: 轉變, quote: 所羅門年老的時候，他的妃嬪誘惑他的心去隨從別神, ref: "王上 11:4"}
+      - {book: 王上, role: 評語, quote: 所羅門行耶和華眼中看為惡的事, ref: "王上 11:6"}
+  kings_refs: "王上 1:1-11:43"
+  chronicles_refs: "代下 1:1-9:31"
+  prose:
+    text: 所羅門是大衛和拔示巴的兒子，接續大衛作王四十年。他向神求智慧，在作王第四年開工建造耶和華的殿，建了七年。列王紀說他年老的時候，「他的妃嬪誘惑他的心去隨從別神」，耶和華因此說要把國奪去，只留一個支派給他的兒子。歷代志記了他建殿、奉獻聖殿和示巴女王來訪，沒有記他晚年的事。
+    refs: "代上 3:5, 王上 3:5-14, 王上 6:1, 王上 6:38, 王上 11:1-13, 王上 11:42, 代下 1:1-9:31"
+
+# ───────────── 南國猶大 ─────────────
+- id: 羅波安
+  name: 羅波安
+  kingdom: 猶大
+  years: {start: 931, end: 913}
+  verdict:
+    class: good_to_bad
+    basis: 代下
+    differs: true
+    items:
+      - {book: 代下, role: 轉變, quote: 羅波安的國堅立，他強盛的時候就離棄耶和華的律法, ref: "代下 12:1"}
+      - {book: 代下, role: 轉變, quote: 王自卑的時候，耶和華的怒氣就轉消了, ref: "代下 12:12"}
+      - {book: 代下, role: 評語, quote: 羅波安行惡，因他不立定心意尋求耶和華, ref: "代下 12:14"}
+  kings_refs: "王上 12:1-24, 王上 14:21-31"
+  chronicles_refs: "代下 10:1-12:16"
+  prose:
+    text: 羅波安是所羅門的兒子，母親是亞捫人拿瑪。他不聽老年人的勸告，用嚴厲的話回答百姓，北方的支派就離開他，立耶羅波安作王。歷代志說他國位堅固以後「就離棄耶和華的律法」；埃及王示撒攻打耶路撒冷，先知示瑪雅傳話，他和首領就自卑。他在耶路撒冷作王十七年。
+    refs: "代下 10:1-12:16, 王上 12:1-20, 王上 14:21-31"
+
+- id: 亞比雅
+  name: 亞比雅
+  kingdom: 猶大
+  years: {start: 913, end: 911}
+  verdict:
+    class: bad
+    basis: 王上
+    differs: true
+    items:
+      - {book: 王上, role: 評語, quote: 亞比央行他父親在他以前所行的一切惡, ref: "王上 15:3"}
+  synchronism:
+    - {quote: 尼八的兒子耶羅波安王十八年，亞比央登基作猶大王, ref: "王上 15:1"}
+  kings_refs: "王上 15:1-8"
+  chronicles_refs: "代下 13:1-22"
+  prose:
+    text: 亞比雅（列王紀作亞比央）是羅波安的兒子，在耶路撒冷作王三年。列王紀說他「行他父親在他以前所行的一切惡」。歷代志沒有這句評語，卻記他在洗瑪臉山上向耶羅波安和以色列人喊話，說猶大有亞倫的子孫作祭司；接著猶大人「因倚靠耶和華」打敗了以色列。
+    refs: "王上 15:1-8, 代下 13:1-22"
+
+- id: 亞撒
+  name: 亞撒
+  kingdom: 猶大
+  years: {start: 911, end: 870}
+  verdict:
+    class: good_to_bad
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王上, role: 評語, quote: 亞撒效法他祖大衛行耶和華眼中看為正的事, ref: "王上 15:11"}
+      - {book: 王上, role: 但書, quote: 只是邱壇還沒有廢去, ref: "王上 15:14"}
+      - {book: 代下, role: 評語, quote: 亞撒行耶和華─他神眼中看為善為正的事, ref: "代下 14:2"}
+      - {book: 代下, role: 轉變, quote: 因你仰賴亞蘭王，沒有仰賴耶和華─你的神, ref: "代下 16:7"}
+      - {book: 代下, role: 轉變, quote: 病的時候沒有求耶和華，只求醫生, ref: "代下 16:12"}
+  synchronism:
+    - {quote: 以色列王耶羅波安二十年，亞撒登基作猶大王, ref: "王上 15:9"}
+  kings_refs: "王上 15:9-24"
+  chronicles_refs: "代下 14:1-16:14"
+  prose:
+    text: 亞撒是亞比雅的兒子，作王四十一年。他除掉外邦的祭壇和偶像，又因祖母瑪迦造了可憎的偶像，就貶了他太后的位。古實人謝拉來攻擊時，他呼求耶和華而得勝。後來以色列王巴沙來攻，他拿聖殿和王宮的金銀送給亞蘭王便哈達求助，先見哈拿尼責備他，他就把先見囚在監裡。晚年他腳上有病，「病的時候沒有求耶和華，只求醫生」。
+    refs: "代下 14:1-16:14, 王上 15:9-24"
+
+- id: 約沙法
+  name: 約沙法
+  kingdom: 猶大
+  years: {start: 870, end: 848, co_start: 872}
+  verdict:
+    class: good_caveat
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王上, role: 評語, quote: 行耶和華眼中看為正的事, ref: "王上 22:43"}
+      - {book: 王上, role: 但書, quote: 只是邱壇還沒有廢去, ref: "王上 22:43"}
+      - {book: 代下, role: 評語, quote: 行耶和華眼中看為正的事, ref: "代下 20:32"}
+      - {book: 代下, role: 但書, quote: 只是邱壇還沒有廢去, ref: "代下 20:33"}
+  synchronism:
+    - {quote: 以色列王亞哈第四年，亞撒的兒子約沙法登基作了猶大王, ref: "王上 22:41"}
+  kings_refs: "王上 22:41-50"
+  chronicles_refs: "代下 17:1-20:37"
+  prose:
+    text: 約沙法是亞撒的兒子，三十五歲登基，在耶路撒冷作王二十五年。他差派首領和利未人帶著律法書，到猶大各城教訓百姓，又在各城設立審判官。他與亞哈結親，和亞哈一同上基列的拉末打仗；回來以後先見耶戶責備他，也說「你還有善行」。摩押人和亞捫人來攻的時候，他宣告禁食，敵軍後來彼此自相擊殺。
+    refs: "代下 17:1-20:37, 王上 22:41-50"
+
+- id: 約蘭#猶大
+  name: 約蘭
+  title: 約蘭（猶大）
+  kingdom: 猶大
+  years: {start: 848, end: 841, co_start: 853}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 行耶和華眼中看為惡的事, ref: "王下 8:18"}
+      - {book: 代下, role: 評語, quote: 行耶和華眼中看為惡的事, ref: "代下 21:6"}
+  synchronism:
+    - {quote: 以色列王亞哈的兒子約蘭第五年，猶大王約沙法還在位的時候，約沙法的兒子約蘭登基作了猶大王, ref: "王下 8:16"}
+  kings_refs: "王下 8:16-24"
+  chronicles_refs: "代下 21:1-20"
+  prose:
+    text: 約蘭是約沙法的兒子，娶了亞哈的女兒為妻。他登基以後殺了自己的眾兄弟。以東和立拿在他的時候背叛猶大。先知以利亞寫信給他，說耶和華要使他患腸病；後來他「腸子墜落」而死，經文說「他去世無人思慕」。
+    refs: "代下 21:1-20, 王下 8:16-24"
+
+- id: 亞哈謝#猶大
+  name: 亞哈謝
+  title: 亞哈謝（猶大）
+  kingdom: 猶大
+  years: {start: 841, end: 841}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 亞哈謝效法亞哈家行耶和華眼中看為惡的事, ref: "王下 8:27"}
+      - {book: 代下, role: 評語, quote: 他行耶和華眼中看為惡的事，像亞哈家一樣, ref: "代下 22:4"}
+  synchronism:
+    - {quote: 以色列王亞哈的兒子約蘭十二年，猶大王約蘭的兒子亞哈謝登基, ref: "王下 8:25"}
+  kings_refs: "王下 8:25-29, 王下 9:27-29"
+  chronicles_refs: "代下 22:1-9"
+  prose:
+    text: 亞哈謝是約蘭的兒子，母親是暗利的孫女亞他利雅。歷代志說「他母親給他主謀，使他行惡」。他和以色列王約蘭一同去攻打亞蘭王哈薛，後來去探望受傷的約蘭，正遇上耶戶剿滅亞哈家，就被殺了。他只作王一年。
+    refs: "代下 22:1-9, 王下 8:25-29, 王下 9:27-29"
+
+- id: 亞他利雅
+  name: 亞他利雅
+  kingdom: 猶大
+  years: {start: 841, end: 835}
+  verdict:
+    class: none
+    differs: false
+    items: []
+  kings_refs: "王下 11:1-20"
+  chronicles_refs: "代下 22:10-23:21"
+  prose:
+    text: 亞他利雅是亞哈謝的母親。他見兒子死了，「就起來剿滅猶大王室」，自己治理國事六年。亞哈謝的妹妹約示巴把小約阿施偷出來，藏在神殿裡。第七年祭司耶何耶大立約阿施作王，眾人殺了亞他利雅。兩卷都沒有對他的評語句。
+    refs: "代下 22:10-23:21, 王下 11:1-20"
+
+- id: 約阿施#猶大
+  name: 約阿施
+  title: 約阿施（猶大）
+  kingdom: 猶大
+  years: {start: 835, end: 796}
+  verdict:
+    class: good_to_bad
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 就行耶和華眼中看為正的事, ref: "王下 12:2"}
+      - {book: 王下, role: 但書, quote: 只是邱壇還沒有廢去, ref: "王下 12:3"}
+      - {book: 代下, role: 評語, quote: 約阿施行耶和華眼中看為正的事, ref: "代下 24:2"}
+      - {book: 代下, role: 轉變, quote: 耶何耶大死後，猶大的眾首領來朝拜王；王就聽從他們, ref: "代下 24:17"}
+  synchronism:
+    - {quote: 耶戶第七年，約阿施登基, ref: "王下 12:1"}
+  kings_refs: "王下 11:21-12:21"
+  chronicles_refs: "代下 24:1-27"
+  prose:
+    text: 約阿施七歲登基，在耶路撒冷作王四十年。祭司耶何耶大在世的時候，他行正，並且重修耶和華的殿。耶何耶大死後，他聽從眾首領，百姓去事奉亞舍拉和偶像。耶何耶大的兒子撒迦利雅責備他們，約阿施竟吩咐人在殿院裡用石頭打死他。後來臣僕背叛他，把他殺在床上，「只是不葬在列王的墳墓裡」。
+    refs: "代下 24:1-27, 王下 12:1-21"
+
+- id: 亞瑪謝
+  name: 亞瑪謝
+  kingdom: 猶大
+  years: {start: 796, end: 767}
+  verdict:
+    class: good_to_bad
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 亞瑪謝行耶和華眼中看為正的事, ref: "王下 14:3"}
+      - {book: 王下, role: 但書, quote: 但不如他祖大衛, ref: "王下 14:3"}
+      - {book: 代下, role: 評語, quote: 亞瑪謝行耶和華眼中看為正的事, ref: "代下 25:2"}
+      - {book: 代下, role: 但書, quote: 只是心不專誠, ref: "代下 25:2"}
+      - {book: 代下, role: 轉變, quote: 亞瑪謝殺了以東人回來，就把西珥的神像帶回, ref: "代下 25:14"}
+  synchronism:
+    - {quote: 以色列王約哈斯的兒子約阿施第二年，猶大王約阿施的兒子亞瑪謝登基, ref: "王下 14:1"}
+  kings_refs: "王下 14:1-20"
+  chronicles_refs: "代下 25:1-28"
+  prose:
+    text: 亞瑪謝是約阿施的兒子。他登基後殺了殺害他父親的臣僕，卻照摩西律法沒有殺他們的兒子。他在鹽谷打敗以東，回來卻把西珥的神像帶回，「立為自己的神」。他向以色列王約阿施挑戰，在伯示麥大敗被擒。後來耶路撒冷有人背叛他，他逃到拉吉，在那裡被殺。
+    refs: "代下 25:1-28, 王下 14:1-20"
+
+- id: 烏西雅
+  name: 烏西雅
+  kingdom: 猶大
+  years: {start: 767, end: 740, co_start: 792}
+  verdict:
+    class: good_to_bad
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 亞撒利雅行耶和華眼中看為正的事, ref: "王下 15:3"}
+      - {book: 王下, role: 但書, quote: 只是邱壇還沒有廢去, ref: "王下 15:4"}
+      - {book: 代下, role: 評語, quote: 烏西雅行耶和華眼中看為正的事, ref: "代下 26:4"}
+      - {book: 代下, role: 轉變, quote: 他既強盛，就心高氣傲，以致行事邪僻, ref: "代下 26:16"}
+  synchronism:
+    - {quote: 以色列王耶羅波安二十七年，猶大王亞瑪謝的兒子亞撒利雅登基, ref: "王下 15:1"}
+  kings_refs: "王下 14:21-22, 王下 15:1-7"
+  chronicles_refs: "代下 26:1-23"
+  prose:
+    text: 烏西雅（列王紀多作亞撒利雅）十六歲登基，在耶路撒冷作王五十二年。他打敗非利士人和亞拉伯人，在耶路撒冷建造城樓，在曠野挖了許多井；他在山地和佳美之地有農夫和修理葡萄園的人，「因為他喜悅農事」。強盛以後，他進耶和華的殿要燒香，祭司亞撒利雅攔阻他，他發怒，額上就發出大痲瘋，從此住在別的宮裡，直到死日。以賽亞在「烏西雅王崩的那年」看見主坐在高高的寶座上。
+    refs: "代下 26:1-23, 王下 15:1-7, 賽 6:1"
+
+- id: 約坦
+  name: 約坦
+  kingdom: 猶大
+  years: {start: 740, end: 732, co_start: 750}
+  verdict:
+    class: good_caveat
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 約坦行耶和華眼中看為正的事, ref: "王下 15:34"}
+      - {book: 王下, role: 但書, quote: 只是邱壇還沒有廢去, ref: "王下 15:35"}
+      - {book: 代下, role: 評語, quote: 約坦行耶和華眼中看為正的事, ref: "代下 27:2"}
+      - {book: 代下, role: 但書, quote: 只是不入耶和華的殿, ref: "代下 27:2"}
+  synchronism:
+    - {quote: 以色列王利瑪利的兒子比加第二年，猶大王烏西雅的兒子約坦登基, ref: "王下 15:32"}
+  kings_refs: "王下 15:32-38"
+  chronicles_refs: "代下 27:1-9"
+  prose:
+    text: 約坦是烏西雅的兒子，二十五歲登基，在耶路撒冷作王十六年。他建立耶和華殿的上門，在猶大山地建城，又打敗亞捫人，使他們三年進貢。經文說他「在耶和華─他神面前行正道，以致日漸強盛」。
+    refs: "代下 27:1-9, 王下 15:32-38"
+
+- id: 亞哈斯
+  name: 亞哈斯
+  kingdom: 猶大
+  years: {start: 732, end: 716, co_start: 735}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 不像他祖大衛行耶和華─他神眼中看為正的事, ref: "王下 16:2"}
+      - {book: 代下, role: 評語, quote: 不像他祖大衛行耶和華眼中看為正的事, ref: "代下 28:1"}
+  synchronism:
+    - {quote: 利瑪利的兒子比加十七年，猶大王約坦的兒子亞哈斯登基, ref: "王下 16:1"}
+  kings_refs: "王下 16:1-20"
+  chronicles_refs: "代下 28:1-27"
+  prose:
+    text: 亞哈斯是約坦的兒子，二十歲登基。他為巴力鑄造偶像，「使他的兒子經火」。亞蘭王利汛和以色列王比加攻打猶大時，以賽亞勸他「你要謹慎安靜」，不要害怕，他卻向亞述王求助。他照大馬色祭壇的樣式在耶路撒冷造壇，又封鎖耶和華殿的門。死後「沒有送入以色列諸王的墳墓中」。
+    refs: "代下 28:1-27, 王下 16:1-20, 賽 7:1-9"
+
+- id: 希西家
+  name: 希西家
+  kingdom: 猶大
+  years: {start: 716, end: 687}
+  verdict:
+    class: good_caveat
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 希西家行耶和華眼中看為正的事, ref: "王下 18:3"}
+      - {book: 代下, role: 評語, quote: 希西家行耶和華眼中看為正的事, ref: "代下 29:2"}
+      - {book: 代下, role: 但書, quote: 因他心裡驕傲, ref: "代下 32:25"}
+  synchronism:
+    - {quote: 以色列王以拉的兒子何細亞第三年，猶大王亞哈斯的兒子希西家登基, ref: "王下 18:1"}
+  kings_refs: "王下 18:1-20:21"
+  chronicles_refs: "代下 29:1-32:33"
+  prose:
+    text: 希西家是亞哈斯的兒子，二十五歲登基，在耶路撒冷作王二十九年。他一登基就開了耶和華殿的門，潔淨聖殿，又守逾越節，也請以法蓮和瑪拿西的人來。亞述王西拿基立圍攻耶路撒冷，他和先知以賽亞禱告，耶和華差使者滅了亞述營中的人。他病重時禱告，神加添他十五年的壽數。歷代志又說他「心裡驕傲」，隨後他和耶路撒冷的居民「一同自卑」。
+    refs: "代下 29:1-32:33, 王下 18:1-20:21, 賽 36:1-39:8"
+  notes:
+    - text: 王下 18:1 說希西家在「以拉的兒子何細亞第三年」登基。照 Thiele 年表，希西家約主前 716 登基，何細亞約主前 723 已經結束，兩者對不上。
+      refs: "王下 18:1"
+
+- id: 瑪拿西
+  name: 瑪拿西
+  kingdom: 猶大
+  years: {start: 687, end: 643, co_start: 697}
+  verdict:
+    class: bad_to_good
+    basis: 代下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 瑪拿西行耶和華眼中看為惡的事, ref: "王下 21:2"}
+      - {book: 代下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "代下 33:2"}
+      - {book: 代下, role: 轉變, quote: 他在急難的時候，就懇求耶和華─他的神, ref: "代下 33:12"}
+      - {book: 代下, role: 轉變, quote: 瑪拿西這才知道惟獨耶和華是神, ref: "代下 33:13"}
+  kings_refs: "王下 21:1-18"
+  chronicles_refs: "代下 33:1-20"
+  prose:
+    text: 瑪拿西十二歲登基，作王五十五年，是猶大在位最久的王。他重新建築邱壇，為巴力築壇，在欣嫩子谷「使他的兒女經火」，又「流許多無辜人的血」。歷代志記他被亞述王的將帥用銅鍊鎖住、帶到巴比倫，他在急難中自卑禱告，耶和華使他回到耶路撒冷，他就除掉殿中的偶像。列王紀沒有記他悔改，並說後來的災禍臨到猶大，是因為瑪拿西所犯的罪。
+    refs: "代下 33:1-20, 王下 21:1-18, 王下 24:3-4"
+
+- id: 亞們
+  name: 亞們
+  kingdom: 猶大
+  years: {start: 643, end: 641}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 亞們行耶和華眼中看為惡的事, ref: "王下 21:20"}
+      - {book: 代下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "代下 33:22"}
+  kings_refs: "王下 21:19-26"
+  chronicles_refs: "代下 33:21-25"
+  prose:
+    text: 亞們是瑪拿西的兒子，二十二歲登基，只作王兩年。歷代志說他「不在耶和華面前像他父瑪拿西自卑」。他的臣僕背叛，在宮裡殺了他；國民殺了背叛的人，立他兒子約西亞作王。
+    refs: "代下 33:21-25, 王下 21:19-26"
+
+- id: 約西亞
+  name: 約西亞
+  kingdom: 猶大
+  years: {start: 641, end: 609}
+  verdict:
+    class: good
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 約西亞行耶和華眼中看為正的事, ref: "王下 22:2"}
+      - {book: 代下, role: 評語, quote: 他行耶和華眼中看為正的事, ref: "代下 34:2"}
+  kings_refs: "王下 22:1-23:30"
+  chronicles_refs: "代下 34:1-35:27"
+  prose:
+    text: 約西亞八歲登基，作王三十一年。他作王第八年開始尋求神，第十二年起潔淨猶大和耶路撒冷，除掉邱壇和偶像。修殿時祭司希勒家找到律法書，約西亞聽了就撕裂衣服，又差人去問女先知戶勒大。他照律法守逾越節。後來他不聽埃及王尼哥的話，在米吉多平原中箭，被送回耶路撒冷就死了。列王紀說「在約西亞以前沒有王像他」。
+    refs: "代下 34:1-35:27, 王下 22:1-23:30"
+
+- id: 約哈斯#猶大
+  name: 約哈斯
+  title: 約哈斯（猶大）
+  kingdom: 猶大
+  years: {start: 609, end: 609}
+  verdict:
+    class: bad
+    basis: 王下
+    differs: true
+    items:
+      - {book: 王下, role: 評語, quote: 約哈斯行耶和華眼中看為惡的事, ref: "王下 23:32"}
+  kings_refs: "王下 23:30-34"
+  chronicles_refs: "代下 36:1-4"
+  prose:
+    text: 約哈斯是約西亞的兒子，國民立他接續作王。他作王三個月，埃及王尼哥就廢了他，罰猶大國銀子，把他帶到埃及，他死在那裡。耶利米書稱他「約西亞的兒子沙龍」。
+    refs: "代下 36:1-4, 王下 23:30-34, 耶 22:11"
+
+- id: 約雅敬
+  name: 約雅敬
+  kingdom: 猶大
+  years: {start: 609, end: 598}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 約雅敬行耶和華眼中看為惡的事, ref: "王下 23:37"}
+      - {book: 代下, role: 評語, quote: 行耶和華─他神眼中看為惡的事, ref: "代下 36:5"}
+  kings_refs: "王下 23:34-24:7"
+  chronicles_refs: "代下 36:4-8"
+  prose:
+    text: 約雅敬本名以利雅敬，是約哈斯的哥哥，埃及王尼哥立他作王，給他改名。他向百姓徵收金銀，好進貢給法老。耶利米書記他把耶利米口傳、巴錄寫成的書卷「用文士的刀將書卷割破，扔在火盆中」。巴比倫王尼布甲尼撒上來，他服事巴比倫三年，然後背叛。
+    refs: "代下 36:4-8, 王下 23:34-24:7, 耶 36:1-32"
+
+- id: 約雅斤
+  name: 約雅斤
+  kingdom: 猶大
+  years: {start: 598, end: 597}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 約雅斤行耶和華眼中看為惡的事, ref: "王下 24:9"}
+      - {book: 代下, role: 評語, quote: 行耶和華眼中看為惡的事, ref: "代下 36:9"}
+  kings_refs: "王下 24:8-17, 王下 25:27-30"
+  chronicles_refs: "代下 36:9-10"
+  prose:
+    text: 約雅斤是約雅敬的兒子，作王三個月零十日。巴比倫王把他和他母親、臣僕、首領一同擄到巴比倫，又擄走耶和華殿裡的寶物。被擄第三十七年，巴比倫王以未米羅達「使猶大王約雅斤抬頭，提他出監」。
+    refs: "代下 36:9-10, 王下 24:8-17, 王下 25:27-30"
+
+- id: 西底家
+  name: 西底家
+  kingdom: 猶大
+  years: {start: 597, end: 586}
+  verdict:
+    class: bad
+    basis: 代下
+    differs: false
+    items:
+      - {book: 王下, role: 評語, quote: 西底家行耶和華眼中看為惡的事, ref: "王下 24:19"}
+      - {book: 代下, role: 評語, quote: 行耶和華─他神眼中看為惡的事, ref: "代下 36:12"}
+  kings_refs: "王下 24:17-25:21"
+  chronicles_refs: "代下 36:10-21"
+  prose:
+    text: 西底家本名瑪探雅，巴比倫王立他作王，給他改名。歷代志說他「仍不在耶利米面前自卑」，又背叛尼布甲尼撒。耶利米書記他私下問耶利米，耶利米勸他出城投降。巴比倫攻破耶路撒冷，他逃到耶利哥的平原被擒，在利比拉看著兒子被殺，自己被剜了眼睛，帶到巴比倫。聖殿被焚，猶大人被擄。
+    refs: "代下 36:10-21, 王下 24:17-25:21, 耶 38:14-28"
+
+# ───────────── 北國以色列 ─────────────
+- id: 耶羅波安#尼八之子
+  name: 耶羅波安
+  title: 耶羅波安（尼八的兒子）
+  kingdom: 以色列
+  years: {start: 931, end: 910}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 你竟行惡，比那在你以先的更甚, ref: "王上 14:9"}
+  kings_refs: "王上 11:26-14:20"
+  chronicles_refs: "代下 10:2-13:20"
+  prose:
+    text: 耶羅波安是尼八的兒子，原是所羅門的臣僕。先知亞希雅把新衣撕成十二片，叫他拿十片，表示他要得十個支派。王國分裂後他作以色列王，在伯特利和但各立一個金牛犢，對百姓說「這就是領你們出埃及地的神」。列王紀後來評論許多北國的王，常說他們「不離開尼八的兒子耶羅波安使以色列人陷在罪裡的一切罪」。他作王二十二年。
+    refs: "王上 11:26-40, 王上 12:20-33, 王上 14:1-20, 王下 14:24"
+
+- id: 拿答
+  name: 拿答
+  kingdom: 以色列
+  years: {start: 910, end: 909}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 拿答行耶和華眼中看為惡的事, ref: "王上 15:26"}
+  synchronism:
+    - {quote: 猶大王亞撒第二年，耶羅波安的兒子拿答登基作以色列王, ref: "王上 15:25"}
+  kings_refs: "王上 15:25-31"
+  prose:
+    text: 拿答是耶羅波安的兒子，作王二年。他圍攻非利士的基比頓時，以薩迦人巴沙背叛他，殺了他，篡了他的位，又殺盡耶羅波安全家，應驗耶和華藉先知亞希雅所說的話。
+    refs: "王上 15:25-31"
+
+- id: 巴沙
+  name: 巴沙
+  kingdom: 以色列
+  years: {start: 909, end: 886}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王上 15:34"}
+  synchronism:
+    - {quote: 猶大王亞撒第三年，亞希雅的兒子巴沙在得撒登基作以色列眾人的王, ref: "王上 15:33"}
+  kings_refs: "王上 15:27-16:7"
+  chronicles_refs: "代下 16:1-6"
+  prose:
+    text: 巴沙殺了拿答篡位，作王二十四年。他修築拉瑪，不許人出入到猶大王亞撒那裡；亞撒送禮給亞蘭王，請他攻打以色列，巴沙聽見就停工。先知耶戶傳耶和華的話，說巴沙的家要像耶羅波安的家一樣被除盡。
+    refs: "王上 15:27-16:7, 代下 16:1-6"
+
+- id: 以拉
+  name: 以拉
+  kingdom: 以色列
+  years: {start: 886, end: 885}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 這是因巴沙和他兒子以拉的一切罪, ref: "王上 16:13"}
+  synchronism:
+    - {quote: 猶大王亞撒二十六年，巴沙的兒子以拉在得撒登基作以色列王, ref: "王上 16:8"}
+  kings_refs: "王上 16:8-14"
+  prose:
+    text: 以拉是巴沙的兒子，作王二年。他在得撒家宰亞雜的家裡喝醉了，管理一半戰車的臣子心利進去殺了他，接著殺盡巴沙全家。
+    refs: "王上 16:8-14"
+
+- id: 心利
+  name: 心利
+  kingdom: 以色列
+  years: {start: 885, end: 885}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 行耶和華眼中看為惡的事, ref: "王上 16:19"}
+  synchronism:
+    - {quote: 猶大王亞撒二十七年，心利在得撒作王七日, ref: "王上 16:15"}
+  kings_refs: "王上 16:9-20"
+  prose:
+    text: 心利殺了以拉，在得撒只作王七日。在基比頓安營的百姓聽說他背叛，就立元帥暗利作王，上來圍攻得撒。心利見城破了，進了王宮的衛所，放火焚燒宮殿，自己死在火中。
+    refs: "王上 16:9-20"
+
+- id: 提比尼
+  name: 提比尼
+  kingdom: 以色列
+  years: {start: 885, end: 880}
+  verdict:
+    class: none
+    items: []
+  kings_refs: "王上 16:21-22"
+  prose:
+    text: 心利死後，以色列民分成兩半：一半隨從基納的兒子提比尼，要立他作王；一半隨從暗利。後來「隨從暗利的民勝過隨從基納的兒子提比尼的民」，提比尼死了，暗利就作了王。經文沒有對他的評語。
+    refs: "王上 16:21-22"
+  notes:
+    - text: 經文沒有寫提比尼爭位多久。Thiele 年表把暗利與提比尼並立的時間算作約主前 885–880，所以圖上兩人並排。
+      refs: "王上 16:21-23"
+
+- id: 暗利
+  name: 暗利
+  kingdom: 以色列
+  years: {start: 885, end: 874}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 暗利行耶和華眼中看為惡的事，比他以前的列王作惡更甚, ref: "王上 16:25"}
+  synchronism:
+    - {quote: 猶大王亞撒三十一年，暗利登基作以色列王共十二年, ref: "王上 16:23"}
+  kings_refs: "王上 16:16-28"
+  chronicles_refs: "代下 22:2"
+  prose:
+    text: 暗利原是元帥，心利篡位時，在營中的百姓立他作王。提比尼死後，暗利就作了王，經文說他「登基作以色列王共十二年」。他向撒瑪買了撒瑪利亞山，在山上造城，照山的原主撒瑪的名字，給城起名叫撒瑪利亞。
+    refs: "王上 16:16-28"
+
+- id: 亞哈
+  name: 亞哈
+  kingdom: 以色列
+  years: {start: 874, end: 853}
+  verdict:
+    class: bad_to_good
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 暗利的兒子亞哈行耶和華眼中看為惡的事，比他以前的列王更甚, ref: "王上 16:30"}
+      - {book: 王上, role: 轉變, quote: 亞哈在我面前這樣自卑, ref: "王上 21:29"}
+  synchronism:
+    - {quote: 猶大王亞撒三十八年，暗利的兒子亞哈登基作了以色列王, ref: "王上 16:29"}
+  kings_refs: "王上 16:29-22:40"
+  chronicles_refs: "代下 18:1-34, 代下 21:6, 代下 22:2-5"
+  prose:
+    text: 亞哈是暗利的兒子，作王二十二年。他娶西頓王的女兒耶洗別，在撒瑪利亞為巴力建廟築壇。王后耶洗別為他設計害死拿伯、奪了葡萄園；以利亞宣告災禍，亞哈就撕裂衣服、禁食，耶和華說「因他在我面前自卑」，要把禍延到他兒子的時候。後來他不聽先知米該雅的話，上基列的拉末打仗，中箭而死。
+    refs: "王上 16:29-22:40, 代下 18:1-34"
+  notes:
+    - text: 亞哈自卑以後，第 22 章仍不聽先知米該雅的話。這裡依王上 21:29 經文明說的「自卑」歸為壞轉好。
+      refs: "王上 21:29, 王上 22:8-28"
+
+- id: 亞哈謝#以色列
+  name: 亞哈謝
+  title: 亞哈謝（以色列）
+  kingdom: 以色列
+  years: {start: 853, end: 852}
+  verdict:
+    class: bad
+    basis: 王上
+    items:
+      - {book: 王上, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王上 22:52"}
+  synchronism:
+    - {quote: 猶大王約沙法十七年，亞哈的兒子亞哈謝在撒瑪利亞登基, ref: "王上 22:51"}
+  kings_refs: "王上 22:51-53, 王下 1:1-18"
+  chronicles_refs: "代下 20:35-37"
+  prose:
+    text: 亞哈謝是亞哈的兒子，作王二年。他從樓上的欄杆掉下來，打發人去問以革倫的神巴力西卜；以利亞攔住使者，說他必定要死。他果然死了，沒有兒子，由兄弟約蘭接續作王。歷代志記約沙法和他合夥造船，船後來破壞了。
+    refs: "王上 22:51-53, 王下 1:1-18, 代下 20:35-37"
+
+- id: 約蘭#以色列
+  name: 約蘭
+  title: 約蘭（以色列）
+  kingdom: 以色列
+  years: {start: 852, end: 841}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 3:2"}
+      - {book: 王下, role: 但書, quote: 但不致像他父母所行的, ref: "王下 3:2"}
+  synchronism:
+    - {quote: 猶大王約沙法十八年，亞哈的兒子約蘭在撒瑪利亞登基作了以色列王, ref: "王下 3:1"}
+  kings_refs: "王下 3:1-9:26"
+  chronicles_refs: "代下 22:5-7"
+  prose:
+    text: 約蘭是亞哈的兒子，作王十二年。他除掉他父親所造巴力的柱像。他聯合猶大王約沙法和以東王攻打摩押，軍中缺水時，以利沙為他們傳耶和華的話。他和亞蘭王哈薛打仗受了傷，在耶斯列養傷時，被耶戶射死，屍首拋在耶斯列人拿伯的田間。
+    refs: "王下 3:1-27, 王下 8:28-9:26, 代下 22:5-7"
+
+- id: 耶戶
+  name: 耶戶
+  kingdom: 以色列
+  years: {start: 841, end: 814}
+  verdict:
+    class: good_caveat
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 因你辦好我眼中看為正的事, ref: "王下 10:30"}
+      - {book: 王下, role: 但書, quote: 只是耶戶不盡心遵守耶和華─以色列神的律法, ref: "王下 10:31"}
+  kings_refs: "王下 9:1-10:36"
+  chronicles_refs: "代下 22:7-9"
+  prose:
+    text: 耶戶是寧示的孫子，原是軍長。以利沙差一個門徒去膏他作王，吩咐他剿滅亞哈家。他射死以色列王約蘭，也殺了猶大王亞哈謝和耶洗別，又設計殺盡拜巴力的人。耶和華說他「辦好我眼中看為正的事」，應許他的子孫坐國位直到四代；但他仍不離開伯特利和但的金牛犢。他作王二十八年。
+    refs: "王下 9:1-10:36, 代下 22:7-9"
+
+- id: 約哈斯#以色列
+  name: 約哈斯
+  title: 約哈斯（以色列）
+  kingdom: 以色列
+  years: {start: 814, end: 798}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 約哈斯行耶和華眼中看為惡的事, ref: "王下 13:2"}
+  synchronism:
+    - {quote: 猶大王亞哈謝的兒子約阿施二十三年，耶戶的兒子約哈斯在撒瑪利亞登基作以色列王, ref: "王下 13:1"}
+  kings_refs: "王下 13:1-9"
+  prose:
+    text: 約哈斯是耶戶的兒子，作王十七年。亞蘭王哈薛和他兒子便哈達一直欺壓以色列，「約哈斯懇求耶和華，耶和華就應允他」，賜給以色列人一位拯救者。但百姓仍不離開耶羅波安家的罪，約哈斯的軍隊只剩下五十馬兵、十輛戰車、一萬步兵。
+    refs: "王下 13:1-9"
+
+- id: 約阿施#以色列
+  name: 約阿施
+  title: 約阿施（以色列）
+  kingdom: 以色列
+  years: {start: 798, end: 782}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 13:11"}
+  synchronism:
+    - {quote: 猶大王約阿施三十七年，約哈斯的兒子約阿施在撒瑪利亞登基作以色列王, ref: "王下 13:10"}
+  kings_refs: "王下 13:10-25, 王下 14:8-16"
+  chronicles_refs: "代下 25:17-25"
+  prose:
+    text: 約阿施是約哈斯的兒子，作王十六年。以利沙病危時，約阿施去哭著見他；以利沙叫他拿箭擊地，他只擊了三次，以利沙說他只能打敗亞蘭人三次。猶大王亞瑪謝向他挑戰，他在伯示麥打敗猶大，拆毀耶路撒冷的城牆，帶走殿裡和王宮的金銀。
+    refs: "王下 13:10-25, 王下 14:8-16, 代下 25:17-24"
+
+- id: 耶羅波安#約阿施之子
+  name: 耶羅波安
+  title: 耶羅波安（約阿施的兒子）
+  kingdom: 以色列
+  years: {start: 782, end: 753, co_start: 793}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 14:24"}
+  synchronism:
+    - {quote: 猶大王約阿施的兒子亞瑪謝十五年，以色列王約阿施的兒子耶羅波安在撒瑪利亞登基, ref: "王下 14:23"}
+  kings_refs: "王下 14:23-29"
+  prose:
+    text: 耶羅波安是約阿施的兒子，作王四十一年。他照先知約拿的話，收回以色列的疆界，從哈馬口直到亞拉巴海。阿摩司在他作王的時候說預言；伯特利的祭司亞瑪謝向他告狀，說「阿摩司在以色列家中圖謀背叛你」。
+    refs: "王下 14:23-29, 摩 1:1, 摩 7:10-13"
+
+- id: 撒迦利雅
+  name: 撒迦利雅
+  kingdom: 以色列
+  years: {start: 753, end: 753}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 15:9"}
+  synchronism:
+    - {quote: 猶大王亞撒利雅三十八年，耶羅波安的兒子撒迦利雅在撒瑪利亞作以色列王六個月, ref: "王下 15:8"}
+  kings_refs: "王下 15:8-12"
+  prose:
+    text: 撒迦利雅是耶羅波安的兒子，只作王六個月，就被雅比的兒子沙龍當眾擊殺。經文說這是應驗耶和華從前應許耶戶的話：「你的子孫必坐以色列的國位直到四代」。
+    refs: "王下 15:8-12"
+
+- id: 沙龍
+  name: 沙龍
+  kingdom: 以色列
+  years: {start: 752, end: 752}
+  verdict:
+    class: none
+    items: []
+  synchronism:
+    - {quote: 雅比的兒子沙龍登基在撒瑪利亞作王一個月, ref: "王下 15:13"}
+  kings_refs: "王下 15:10-15"
+  prose:
+    text: 沙龍是雅比的兒子，殺了撒迦利雅篡位，只作王一個月，就被迦底的兒子米拿現從得撒上來殺了。經文沒有對他的評語。
+    refs: "王下 15:10-15"
+
+- id: 米拿現
+  name: 米拿現
+  kingdom: 以色列
+  years: {start: 752, end: 742}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 15:18"}
+  synchronism:
+    - {quote: 猶大王亞撒利雅三十九年，迦底的兒子米拿現登基, ref: "王下 15:17"}
+  kings_refs: "王下 15:14-22"
+  prose:
+    text: 米拿現殺了沙龍篡位，作王十年。提斐薩人不給他開城門，他就攻打那城，「剖開其中所有的孕婦」。亞述王普勒來攻，他向國中的富戶每人徵收五十舍客勒銀子，給了亞述王一千他連得，亞述王就回去了。
+    refs: "王下 15:14-22"
+
+- id: 比加轄
+  name: 比加轄
+  kingdom: 以色列
+  years: {start: 742, end: 740}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 15:24"}
+  synchronism:
+    - {quote: 猶大王亞撒利雅五十年，米拿現的兒子比加轄在撒瑪利亞登基作以色列王, ref: "王下 15:23"}
+  kings_refs: "王下 15:23-26"
+  prose:
+    text: 比加轄是米拿現的兒子，作王二年，被他的將軍、利瑪利的兒子比加在撒瑪利亞王宮的衛所裡殺了。
+    refs: "王下 15:23-26"
+
+- id: 比加
+  name: 比加
+  kingdom: 以色列
+  years: {start: 752, end: 732}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 15:28"}
+  synchronism:
+    - {quote: 猶大王亞撒利雅五十二年，利瑪利的兒子比加在撒瑪利亞登基作以色列王二十年, ref: "王下 15:27"}
+  kings_refs: "王下 15:25-31"
+  chronicles_refs: "代下 28:5-8"
+  prose:
+    text: 比加殺了比加轄篡位。他和亞蘭王利汛聯手攻打猶大，歷代志說他「一日殺了猶大人十二萬」。亞述王提革拉毘列色來攻，擄走以色列北方和基列的居民。後來以拉的兒子何細亞背叛他，殺了他。
+    refs: "王下 15:25-31, 王下 16:5, 代下 28:5-8"
+  notes:
+    - text: 王下 15:27 說比加「作以色列王二十年」。Thiele 年表把這二十年從約主前 752 算起，和米拿現、比加轄重疊，所以圖上並排。
+      refs: "王下 15:27"
+
+- id: 何細亞
+  name: 何細亞
+  kingdom: 以色列
+  years: {start: 732, end: 723}
+  verdict:
+    class: bad
+    basis: 王下
+    items:
+      - {book: 王下, role: 評語, quote: 他行耶和華眼中看為惡的事, ref: "王下 17:2"}
+      - {book: 王下, role: 但書, quote: 只是不像在他以前的以色列諸王, ref: "王下 17:2"}
+  synchronism:
+    - {quote: 猶大王亞哈斯十二年，以拉的兒子何細亞在撒瑪利亞登基作以色列王九年, ref: "王下 17:1"}
+  kings_refs: "王下 15:30, 王下 17:1-6"
+  prose:
+    text: 何細亞是以拉的兒子，殺了比加篡位，作王九年。他先歸服亞述、向亞述進貢，後來背叛，差人去見埃及王梭。亞述王把他鎖禁、囚在監裡，圍攻撒瑪利亞三年，在何細亞第九年攻取撒瑪利亞，把以色列人擄到亞述。
+    refs: "王下 15:30, 王下 17:1-6, 王下 18:9-11"

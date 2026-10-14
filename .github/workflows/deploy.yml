@@ -117,7 +117,10 @@ jobs:
 
       - name: Copy interactive website dist to public
         run: |
-          find quartz/static/website -type d -name "dist" | while read dist_dir; do
+          # Only each app's own dist/ (website/<book>/<app>/dist). A bare `-name dist`
+          # also matched every dist/ inside node_modules and published ~14 MB of
+          # package files per app.
+          find quartz/static/website -mindepth 3 -maxdepth 3 -type d -name "dist" | while read dist_dir; do
             dest_dir="public/${dist_dir#quartz/}"
             mkdir -p "$(dirname "$dest_dir")"
             cp -r "$dist_dir" "$(dirname "$dest_dir")/"

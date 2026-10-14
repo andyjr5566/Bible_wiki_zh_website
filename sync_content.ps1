@@ -1,4 +1,8 @@
-﻿$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
+﻿# -NoPush: only sync into the local working tree; do not commit or push.
+# Use it to review what would be published before pushing for real.
+param([switch]$NoPush)
+
+$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
@@ -19,7 +23,10 @@ function Sync-WithRobocopy {
         [switch]$Mirror,
 
         # Extra directory names to skip (matched at any depth, never purged).
-        [string[]]$ExcludeDir = @()
+        [string[]]$ExcludeDir = @(),
+
+        # Extra file names / paths to skip (wildcards allowed).
+        [string[]]$ExcludeFile = @()
     )
 
     if ($Mirror -and -not $FileName) {
@@ -64,11 +71,16 @@ function Sync-WithRobocopy {
             $robocopyArgs += @('.tmp', 'node_modules', 'dist', '__pycache__')
             $robocopyArgs += $ExcludeDir
             $robocopyArgs += @('/XF', '*.pyc')
+            $robocopyArgs += $ExcludeFile
         }
         else {
             $robocopyArgs += @('/E', '/XD', '.tmp')
             $robocopyArgs += $ExcludeDir
             $robocopyArgs += '/XO'
+            if ($ExcludeFile.Count -gt 0) {
+                $robocopyArgs += '/XF'
+                $robocopyArgs += $ExcludeFile
+            }
         }
         $robocopyArgs += @(
             '/R:2',
@@ -87,6 +99,15 @@ function Sync-WithRobocopy {
     }
 }
 
+# robocopy never purges what /XD and /XF exclude, so files that an older version of
+# this script already copied must be removed explicitly. Idempotent: safe to re-run.
+function Remove-IfExists {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    if (Test-Path -LiteralPath $Path) {
+        Remove-Item -LiteralPath $Path -Recurse -Force
+    }
+}
+
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 
 $items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md','專案流程說明.md')
@@ -96,13 +117,48 @@ foreach ($item in $items) {
         if ((Get-Item -LiteralPath $itemPath).PSIsContainer) {
             $destination = Join-Path $target $item
             if ($item -eq 'appendix') {
-                # Everything under appendix/ except the website apps is additive;
-                # the website apps are mirrored separately below.
-                Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination -ExcludeDir 'website'
-                $websiteSrc = Join-Path $itemPath 'website'
-                if (Test-Path -LiteralPath $websiteSrc) {
-                    Sync-WithRobocopy -SourcePath $websiteSrc -DestinationPath (Join-Path $destination 'website') -Mirror
+                # Publish only what readers see: pages, map notes and images, plus the
+                # Quartz opening page. Kept out of the website repo on purpose:
+                #   genealogy/        YAML data + generator scripts (pages are generated into appendix/*.md)
+                #   video/            demo video (README links it through GitHub raw)
+                #   fhl_maps/texts/   raw map texts, not referenced by any page
+                #   fhl_maps build files (build.py and *.json indexes)
+                #   website/          interactive apps: handled below, never under content/
+                $fhl = Join-Path $itemPath 'fhl_maps'
+                $skipDirs = @(
+                    (Join-Path $itemPath 'website'),
+                    (Join-Path $itemPath 'genealogy'),
+                    (Join-Path $itemPath 'video'),
+                    (Join-Path $fhl 'texts')
+                )
+                $skipFiles = @('build.py', 'metadata.json', 'image_optimization.json', 'scripture_map_index.json') |
+                    ForEach-Object { Join-Path $fhl $_ }
+                Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination -Mirror -ExcludeDir $skipDirs -ExcludeFile $skipFiles
+
+                foreach ($skip in ($skipDirs + $skipFiles)) {
+                    Remove-IfExists -Path (Join-Path $destination $skip.Substring($itemPath.Length).TrimStart('\', '/'))
                 }
+
+                # content/appendix/website keeps only the index page and the opening page
+                # that quartz/build.ts copies out. The apps themselves live in
+                # quartz/static/website (synced below); under content/ Quartz would turn
+                # every .md into a page and publish every source file as an asset.
+                $websiteSrc = Join-Path $itemPath 'website'
+                $websiteDst = Join-Path $destination 'website'
+                $indexSrc = Join-Path $websiteSrc 'index.md'
+                $openingSrc = Join-Path $websiteSrc '.opening'
+                if (-not (Test-Path -LiteralPath $indexSrc) -or -not (Test-Path -LiteralPath $openingSrc)) {
+                    throw "appendix/website must contain index.md and .opening: $websiteSrc"
+                }
+                New-Item -ItemType Directory -Path $websiteDst -Force | Out-Null
+                Copy-Item -LiteralPath $indexSrc -Destination $websiteDst -Force
+                Sync-WithRobocopy -SourcePath $openingSrc -DestinationPath (Join-Path $websiteDst '.opening') -Mirror
+                Get-ChildItem -LiteralPath $websiteDst -Force |
+                    Where-Object { $_.Name -notin @('index.md', '.opening') } |
+                    Remove-Item -Recurse -Force
+
+                Get-ChildItem -LiteralPath $destination -Recurse -Directory -Force -Filter '__pycache__' -ErrorAction SilentlyContinue |
+                    Remove-Item -Recurse -Force
             }
             else {
                 Sync-WithRobocopy -SourcePath $itemPath -DestinationPath $destination
@@ -157,7 +213,44 @@ $websiteSource = Join-Path $source 'appendix\website'
 $staticWebsiteTarget = Join-Path $repoPath 'quartz\static\website'
 
 if (Test-Path $websiteSource) {
-    Sync-WithRobocopy -SourcePath $websiteSource -DestinationPath $staticWebsiteTarget -Mirror
+    # quartz/static/website is the CI build workspace for the interactive apps
+    # (npm ci + vite build, then only each app's dist/ is copied into public/).
+    # It needs the Vite project, never the working material around it:
+    #   tools/ lab/ review/ .vite/   dev scripts, scene lab, screenshots, cache
+    #   GOAL*/HANDOFF/SPEC/README/位置考證 .md   notes for whoever builds the app
+    #   .opening/ (served from content/) and the top-level index.md (served from content/)
+    $devDirNames = @('tools', 'lab', 'review', '.vite')
+    $devFilePatterns = @('GOAL*.md', 'HANDOFF.md', 'SPEC.md', 'README.md', '位置考證.md')
+    $skipDirs = @((Join-Path $websiteSource '.opening'))
+    $skipFiles = @((Join-Path $websiteSource 'index.md'))
+    $appDirs = Get-ChildItem -LiteralPath $websiteSource -Directory |
+        Where-Object { $_.Name -notin @('.opening', '__pycache__') } |
+        ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -Directory }
+    foreach ($app in $appDirs) {
+        foreach ($name in $devDirNames) { $skipDirs += (Join-Path $app.FullName $name) }
+        foreach ($pattern in $devFilePatterns) {
+            # robocopy rejects wildcards inside a path, so expand to the real file names.
+            Get-ChildItem -LiteralPath $app.FullName -File -Force |
+                Where-Object { $_.Name -like $pattern } |
+                ForEach-Object { $skipFiles += $_.FullName }
+        }
+    }
+    Sync-WithRobocopy -SourcePath $websiteSource -DestinationPath $staticWebsiteTarget -Mirror -ExcludeDir $skipDirs -ExcludeFile $skipFiles
+
+    Remove-IfExists -Path (Join-Path $staticWebsiteTarget '.opening')
+    Remove-IfExists -Path (Join-Path $staticWebsiteTarget 'index.md')
+    Remove-IfExists -Path (Join-Path $staticWebsiteTarget '__pycache__')
+    $staleApps = Get-ChildItem -LiteralPath $staticWebsiteTarget -Directory |
+        Where-Object { $_.Name -notin @('.opening', '__pycache__') } |
+        ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -Directory }
+    foreach ($app in $staleApps) {
+        foreach ($name in $devDirNames) { Remove-IfExists -Path (Join-Path $app.FullName $name) }
+        foreach ($pattern in $devFilePatterns) {
+            Get-ChildItem -LiteralPath $app.FullName -File -Force |
+                Where-Object { $_.Name -like $pattern } |
+                Remove-Item -Force
+        }
+    }
     Write-Host 'Static website assets synced to quartz/static/website.'
 }
 
@@ -222,6 +315,11 @@ if (Test-Path $contentIndexPath) {
         Set-Content -Path $contentIndexPath -Value $updated -Encoding UTF8 -NoNewline
         Write-Host 'Website guide navigation updated in content/index.md.'
     }
+}
+
+if ($NoPush) {
+    Write-Host '-NoPush: local sync finished; nothing was committed or pushed.'
+    exit 0
 }
 
 # ── Git commit & push ──────────────────────────────────────────

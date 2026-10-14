@@ -12,6 +12,9 @@ configuration:
     - private
     - templates
     - .obsidian
+    # quartz/static/website is the CI build workspace for the interactive apps (sources,
+    # tests, data). Only each app's built dist/ is published, by deploy.yml.
+    - website/**
 
 #  更換字型：
 # header: Noto Serif TC (控制所有大標題的字體，目前是思源宋體)

@@ -1,0 +1,48 @@
+/* 「歸回的名單」分頁：六張卡，每張有名冊（或城牆）的縮影。class 一律 ag-rt- 開頭。 */
+.ag-rt-page { padding-bottom: 80px; }
+.ag-rt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 16px; max-width: 1280px; margin: 0 auto; }
+
+.ag-rt-card {
+  position: relative; display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0; overflow: hidden;
+  border: 1px solid var(--ag-border); border-radius: 6px; background: var(--ag-paper-raised); color: var(--ag-ink); font: inherit; text-align: left; cursor: pointer;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+.ag-rt-card:hover { border-color: var(--ag-seal); box-shadow: 0 12px 30px rgb(32 28 19 / 12%); transform: translateY(-2px); }
+.ag-rt-card:focus-visible { outline: 2px solid var(--ag-focus); outline-offset: 2px; }
+
+.ag-rt-thumb {
+  position: relative; display: block; height: 148px; overflow: hidden;
+  border-bottom: 1px solid var(--ag-border); background: var(--ag-paper-shadow);
+}
+.ag-rt-thumb-svg { position: absolute; display: block; overflow: visible; }
+.ag-rt-thumb-svg.is-roster { top: 12px; bottom: 12px; left: 50%; width: 112px; margin-left: -56px; height: calc(100% - 24px); }
+.ag-rt-thumb-svg.is-wall { top: 8px; left: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+.ag-rt-sheet { fill: var(--ag-paper-raised); stroke: var(--ag-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.ag-rt-line { fill: none; stroke: var(--ag-faint); stroke-width: 1.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.ag-rt-line.is-head { stroke: var(--ag-seal); stroke-width: 2; }
+.ag-rt-line.is-bar { stroke: var(--ag-ink); stroke-width: 2.4; opacity: .65; }
+.ag-rt-line.is-num { opacity: .6; }
+.ag-rt-line.is-name { stroke-width: 2.2; stroke-dasharray: 3 2; }
+.ag-rt-line.is-big { stroke: var(--ag-ink); stroke-width: 3; }
+.ag-rt-line.is-quote { opacity: .5; stroke-dasharray: 2 2; }
+.ag-rt-ring { fill: none; stroke: var(--ag-faint); stroke-width: .006; stroke-dasharray: .012 .016; }
+.ag-rt-part { fill: none; stroke: var(--ag-ink); stroke-width: .03; stroke-linecap: butt; opacity: .55; }
+.ag-rt-mark { fill: var(--ag-paper-raised); stroke: var(--ag-ink); stroke-width: .008; }
+.ag-rt-mark.is-gate { fill: var(--ag-seal); stroke: var(--ag-seal); }
+
+.ag-rt-body { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 15px; }
+.ag-rt-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ag-rt-stage { display: inline-flex; align-items: center; gap: 6px; color: var(--ag-muted); font-size: calc(11px * var(--ag-fs)); letter-spacing: .1em; white-space: nowrap; }
+.ag-rt-stage .ag-ct-icon { color: var(--ag-seal); }
+.ag-rt-range { color: var(--ag-muted); font-size: calc(11.5px * var(--ag-fs)); font-variant-numeric: tabular-nums; }
+.ag-rt-title { font: 600 calc(18px * var(--ag-fs)) / 1.4 var(--ag-serif); }
+.ag-rt-intro { color: var(--ag-muted); font-size: calc(12.5px * var(--ag-fs)); line-height: 1.7; }
+.ag-rt-go { margin-top: 2px; color: var(--ag-seal); font-size: calc(12.5px * var(--ag-fs)); font-weight: 600; letter-spacing: .1em; }
+.ag-rt-go::after { content: " ›"; }
+
+@media (max-width: 520px) {
+  .ag-rt-grid { grid-template-columns: 1fr; gap: 12px; }
+  .ag-rt-thumb { height: 128px; }
+}
+html[data-motion="off"] .ag-rt-card { transition: none; }
+html[data-motion="off"] .ag-rt-card:hover { transform: none; }

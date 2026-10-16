@@ -1,16 +1,24 @@
 import './styles.css';
-import { DATA, VERSES, buildGraph, lookupVerses, makeSyntheticData, pathToFirstAncestor } from './data/model';
+import './reading.css';
+import { DATA, READING, VERSES, buildGraph, isPlacementNode, loadRoles, loadRoster, loadWall, lookupVerses, makeSyntheticData, pathToFirstAncestor } from './data/model';
+import { SPEECH_FIXES } from './data/speech-fixes';
 import type { GenealogyData, GenealogyNote, Person } from './data/types';
 import { createAges } from './ui/ages';
 import { createCanvas, type CanvasApi } from './ui/canvas';
 import { createCompare } from './ui/compare';
 import { createPersonCard, type PersonCard } from './ui/card';
 import { button, h } from './ui/dom';
-import { createNTFamilies } from './ui/ntfamilies';
 import { createNotes } from './ui/notes';
 import { createToolbar, type LineFilter, type PageId } from './ui/toolbar';
+import { createReader } from './ui/reader';
+import { createRoles } from './ui/roles';
+import { createRoster } from './ui/roster';
+import { createSpeech } from './ui/speech';
 import { createTour } from './ui/tour';
-import { createUnconnectedFamilies } from './ui/unconnected';
+import { createCatalog } from './ui/catalog';
+import { createReturns } from './ui/returns';
+import { createTreeStage } from './ui/tree-stage';
+import { createWall } from './ui/wall';
 
 const synthetic = import.meta.env.DEV && new URLSearchParams(location.search).get('synthetic') === '1';
 const data: GenealogyData = synthetic ? makeSyntheticData() : DATA;
@@ -68,8 +76,9 @@ const selectPerson = (person: Person | null) => {
   activeCardPerson = person;
   const focusId = focusIdForPerson(person);
   canvas.select(focusId);
-  if (focusId) canvas.focusPerson(focusId, true);
+  // 先開人物卡，鏡頭才知道卡片蓋住哪裡，把人移到看得到的地方
   card.show(person);
+  if (focusId) canvas.focusPerson(focusId, true);
   history.replaceState(null, '', `${location.pathname}${location.search}#p=${encodeURIComponent(person.id)}`);
 };
 
@@ -77,26 +86,24 @@ canvas = createCanvas(data, selectPerson, openNote);
 card = createPersonCard(data, {
   select: (id) => {
     const person = graph.byId.get(id);
-    if (!person) return;
-    if (page === 'families' || page === 'unconnected') showFamilyPagePerson(person);
-    else selectPerson(person);
+    if (person) selectPerson(person);
   },
   tree: focusTreeTarget,
   verse: openVerse,
   trace: traceToAdam,
-  family: openPersonFamily,
   note: openNote,
 });
 
-const treePage = h('section', { className: 'ag-workspace ag-page-view', 'data-page': 'tree' },
-  h('div', { className: 'ag-canvas-wrap' }, canvas.el,
+const canvasWrap = h('div', { className: 'ag-canvas-wrap' }, canvas.el,
     h('div', { className: 'ag-canvas-legend-panel' },
       h('div', { className: 'ag-legend' },
         h('span', {}, h('i', { className: 'ag-dot ag-dot-common' }), '共同主線'),
         h('span', {}, h('i', { className: 'ag-dot ag-dot-matthew' }), '馬太'),
         h('span', {}, h('i', { className: 'ag-dot ag-dot-luke' }), '路加'),
-        h('span', {}, h('i', { className: 'ag-dot ag-dot-side' }), '旁支')),
-      h('div', { className: 'ag-canvas-hint' }, '拖曳移動畫布 · 滾輪縮放 · 觸控可平移與雙指縮放'))));
+        h('span', {}, h('i', { className: 'ag-dot ag-dot-side' }), '旁支'),
+        h('span', {}, h('i', { className: 'ag-legend-line ag-legend-list' }), '只列在名單裡')),
+      h('div', { className: 'ag-canvas-hint' }, '拖曳移動畫布 · 滾輪縮放 · 觸控可平移與雙指縮放')));
+const treePage = h('section', { className: 'ag-workspace ag-page-view', 'data-page': 'tree' }, canvasWrap);
 const comparePage = createCompare(data, (id) => {
   const person = graph.byId.get(id);
   if (person) selectPerson(person);
@@ -109,37 +116,27 @@ const notesPage = createNotes(data, VERSES, (id) => {
   const person = graph.byId.get(id);
   if (person) selectPerson(person);
 }, openVerse);
-const familiesPage = createNTFamilies(data, (id, groupId) => {
-  const person = graph.byId.get(id);
-  if (person) showFamilyPagePerson(person, groupId);
+// 大衛立的職位：平常是自己的分頁；讀經時這個元素被借去當舞台（疊在畫布上），讀完再放回來，始終只有一份
+const rolesView = createRoles({
+  load: loadRoles,
+  data,
+  reading: READING,
+  onTreePerson(id) {
+    // 讀經中：換到家譜樹看那個人（停止跟隨、出「回到朗讀處」）；平常：回家譜樹分頁並選取他
+    if (reader?.isOpen()) { reader.showOnTree(id); return; }
+    const person = graph.byId.get(id);
+    if (person) selectPerson(person);
+  },
 });
-const unconnectedFamiliesPage = createUnconnectedFamilies(data, (id, groupId) => {
-  const person = graph.byId.get(id);
-  if (person) showFamilyPagePerson(person, groupId);
-});
+const rolesPage = h('section', { className: 'ag-page-view ag-rd-roles-page', 'data-page': 'roles' }, rolesView.el);
+// 目錄（最左邊）和「歸回的名單」：點一段就從那裡開始帶你讀
+const catalogPage = h('section', { className: 'ag-page-view', 'data-page': 'catalog' },
+  createCatalog({ reading: READING, onOpen(start) { reader.open(start); } }));
+const returnsView = createReturns({ reading: READING, loadRoster, loadWall, onOpen(start) { reader.open(start); } });
+const returnsPage = h('section', { className: 'ag-page-view', 'data-page': 'returns' }, returnsView.el);
 const pageNodes = new Map<PageId, HTMLElement>([
-  ['tree', treePage], ['compare', comparePage], ['ages', agesPage], ['notes', notesPage], ['families', familiesPage.el], ['unconnected', unconnectedFamiliesPage.el],
+  ['catalog', catalogPage], ['tree', treePage], ['compare', comparePage], ['ages', agesPage], ['notes', notesPage], ['roles', rolesPage], ['returns', returnsPage],
 ]);
-
-let activeFamilyGroup: string | null = null;
-let activeFamilyPage: PageId | null = null;
-
-function familyPageController(id: PageId) {
-  return id === 'families' ? familiesPage : id === 'unconnected' ? unconnectedFamiliesPage : null;
-}
-
-function showFamilyPagePerson(person: Person, suppliedGroupId?: string) {
-  const controller = familyPageController(page);
-  if (!controller) return;
-  const groupId = suppliedGroupId ?? controller.groupIdFor(person.id);
-  if (groupId && (activeFamilyPage !== page || activeFamilyGroup !== groupId)) controller.focusPerson(person.id);
-  controller.highlightPerson(groupId ? person.id : null);
-  activeFamilyPage = page;
-  activeFamilyGroup = groupId;
-  activeCardPerson = person;
-  card.show(person, treeTargetForPerson(person));
-  history.replaceState(null, '', `${location.pathname}${location.search}#p=${encodeURIComponent(person.id)}`);
-}
 
 function focusTreeTarget(id: string) {
   const target = graph.byId.get(id);
@@ -152,120 +149,107 @@ function focusTreeTarget(id: string) {
   if (activeCardPerson) history.replaceState(null, '', `${location.pathname}${location.search}#p=${encodeURIComponent(activeCardPerson.id)}`);
 }
 
-function treeTargetForPerson(person: Person): string | null {
-  const reachesSpine = (id: string) => graph.spineIds.has(id) || Boolean(pathToFirstAncestor(id, data, graph)?.ids.some((pathId) => graph.spineIds.has(pathId)));
-  if (reachesSpine(person.id)) return person.id;
-
-  const motherOf = data.persons.find((candidate) => reachesSpine(candidate.id) && (
-    candidate.parents?.some((parent) => parent.id === person.id && /母|mother/i.test(parent.role ?? '')) ||
-    candidate.mother_name === person.name || candidate.mother_name === person.id));
-  if (motherOf) return motherOf.id;
-
-  const spouse = person.spouses?.find((relation) => reachesSpine(relation.id));
-  if (spouse) return spouse.id;
-  const reverseSpouse = data.persons.find((candidate) => reachesSpine(candidate.id) && candidate.spouses?.some((relation) => relation.id === person.id));
-  return reverseSpouse?.id ?? null;
-}
-
-function openPersonFamily(id: string) {
-  card.show(null);
-  activeCardPerson = null;
-  activeFamilyGroup = null;
-  activeFamilyPage = null;
-  if (unconnectedFamiliesPage.hasPerson(id)) {
-    page = 'unconnected';
-    applyPage();
-    unconnectedFamiliesPage.focusPerson(id);
-    return;
-  }
-  const family = (data.ntFamilies ?? []).find((item) => item.members?.includes(id) || item.roots?.includes(id));
-  if (family) {
-    page = 'families';
-    applyPage();
-    familiesPage.focusPerson(id);
-    return;
-  }
-  page = 'unconnected';
-  applyPage();
-}
-
-function chooseSearchPerson(person: Person) {
-  if (unconnectedFamiliesPage.hasPerson(person.id)) {
-    page = 'unconnected';
-    applyPage();
-    activeFamilyGroup = null;
-    activeFamilyPage = null;
-    showFamilyPagePerson(person);
-    return;
-  }
-  if (familiesPage.hasPerson(person.id)) {
-    page = 'families';
-    applyPage();
-    activeFamilyGroup = null;
-    activeFamilyPage = null;
-    showFamilyPagePerson(person);
-    return;
-  }
-  selectPerson(person);
-}
-
+// 每個人在大圖上都有自己的節點（經文只列在名單裡的，掛在名單牌子底下）
 function focusIdForPerson(person: Person): string | null {
   canvas.expandFor(person.id);
-  if (canvas.layoutNow().nodes.some((node) => node.id === person.id)) return person.id;
-
-  const childThroughMother = data.persons.find((candidate) =>
-    candidate.parents?.some((parent) => parent.id === person.id && parent.role === '母') ||
-    candidate.mother_name === person.name || candidate.mother_name === person.id);
-  const childId = childThroughMother?.id ?? graph.children.get(person.id)?.[0];
-  if (childId) {
-    canvas.expandFor(childId);
-    return childId;
-  }
-
-  const spouseId = person.spouses?.[0]?.id;
-  if (spouseId) {
-    canvas.expandFor(spouseId);
-    return spouseId;
-  }
-  return null;
+  return canvas.layoutNow().nodes.some((node) => node.id === person.id) ? person.id : null;
 }
 
 function applyPage() {
   for (const [id, element] of pageNodes) element.hidden = id !== page;
+  if (page === 'roles') rolesView.showPage();
+  if (page === 'returns') returnsView.showPage();
   toolbar?.setState();
 }
 
 const toolbar = createToolbar(data, {
-  selectPerson: chooseSearchPerson,
+  selectPerson,
   setPage(id) {
+    // 讀經時分頁照常看得到；點分頁就離開讀經、到那一頁
+    if (reader.isOpen()) reader.close();
     if (id !== page) {
       activeCardPerson = null;
-      activeFamilyGroup = null;
-      activeFamilyPage = null;
       card.show(null);
     }
     page = id;
     applyPage();
   },
   setLine(value) { line = value; canvas.setLine(value); },
-  restartTour() { page = 'tree'; applyPage(); tour.start(); },
+  restartTour() { reader.close(); page = 'tree'; applyPage(); tour.start(); },
+  toggleReading() { if (reader.isOpen()) reader.close(); else reader.open(); },
+  isReading: () => reader.isOpen(),
   zoom: (factor) => canvas.zoom(factor),
   fit: () => canvas.fitSpine(true, true),
   getLine: () => line,
   getPage: () => page,
 });
-const tour = createTour(data, canvas, openVerse);
+const treeStage = createTreeStage(canvas, data, graph, canvasWrap, READING);
+// 歸回的名冊：只在讀經時出現（疊在畫布上），平常不在頁面上
+const rosterStage = createRoster({
+  load: loadRoster,
+  reading: READING,
+  data,
+  graph,
+  onTreePerson(id) { reader?.showOnTree(id); },
+  onJump(key) { reader?.jumpTo(key); },
+});
+// 修城牆的人（尼 3）：同樣只在讀經時疊在畫布上
+const wallStage = createWall({
+  load: loadWall,
+  reading: READING,
+  onJump(key) { reader?.jumpTo(key); },
+  onTreePerson(id) { reader?.showOnTree(id); },
+});
+const reader = createReader(READING, { tree: treeStage, roles: rolesView, roster: rosterStage, wall: wallStage }, {
+  speech: createSpeech({ replacements: SPEECH_FIXES }),
+  onOpenChange(open) {
+    // 讀經時職位圖借去疊在畫布上；離開讀經就放回分頁
+    if (open) canvasWrap.append(rolesView.el, rosterStage.el, wallStage.el);
+    else { rolesPage.append(rolesView.el); rosterStage.el.remove(); wallStage.el.remove(); }
+    if (open) {
+      tour.stop(false);
+      page = 'tree';
+      applyPage();
+      activeCardPerson = null;
+      card.show(null);
+      canvas.select(null);
+    }
+    toolbar.setState();
+  },
+});
+// 家譜樹上的職位印：點了到「大衛立的職位」，捲到那個方塊並標亮那個人（讀經時印只是標示，不換頁）
+canvas.onRoleSeal((boxId, personId) => {
+  if (reader.isOpen()) return;
+  activeCardPerson = null;
+  card.show(null);
+  page = 'roles';
+  applyPage();
+  void rolesView.ready().then(() => rolesView.focusBox(boxId, personId));
+});
+const tour = createTour(data, canvas, openVerse, {
+  hintRead: (on) => toolbar.hintRead(on),
+  showCatalog() { if (page !== 'catalog') { activeCardPerson = null; card.show(null); page = 'catalog'; applyPage(); } },
+  showTree() { if (page !== 'tree') { page = 'tree'; applyPage(); } },
+});
 const main = h('main', { className: 'ag-main' });
 for (const element of pageNodes.values()) main.append(element);
-main.append(card.el);
+main.append(card.el, reader.panel);
+canvasWrap.append(reader.stage);
 const footer = h('footer', { className: 'ag-footer' },
-  h('span', {}, '家譜依資料中的經文記載呈現。'),
+  h('span', {}, '家譜照經文的記載畫出。'),
   h('span', {}, synthetic ? '合成壓力測試資料' : `${data.persons.length.toLocaleString()} 位人物`));
 app.replaceChildren(toolbar.el, main, footer, tour.el, verseLayer);
 applyPage();
 
 function applyDeepLink() {
   const hash = location.hash.slice(1);
+  if (hash.startsWith('read=')) {
+    let ref = '';
+    try { ref = decodeURIComponent(hash.slice('read='.length)); } catch { return; }
+    tour.stop(false);
+    reader.open(ref, false);
+    return;
+  }
   if (hash.startsWith('p=')) {
     let id = '';
     try { id = decodeURIComponent(hash.slice(2)); } catch { return; }
@@ -282,6 +266,8 @@ function applyDeepLink() {
     tour.stop(false);
     page = 'tree';
     applyPage();
+    activeCardPerson = null;
+    card.show(null);
     canvas.expandFamily(id);
   }
 }
@@ -302,11 +288,16 @@ function traceToAdam(id: string) {
   if (!route) {
     canvas.expandFor(id);
     canvas.setTrace([], []);
-    const unattached = data.unattached?.includes(id) ?? false;
-    const message = !person.parents?.length && !unattached
-      ? '經文沒有記載他的父母。'
-      : '經文沒有記載他和主線的關係。';
-    card.setTraceMessage(message, false, unattached);
+    // 往上找他掛在哪一塊名單牌子底下
+    let upward = graph.treeParent.get(id);
+    while (upward && !isPlacementNode(graph.byId.get(upward))) upward = graph.treeParent.get(upward);
+    const holder = upward ? graph.byId.get(upward) : undefined;
+    const message = holder?.kind === 'list'
+      ? `經文把他列在『${holder.name}』這段名單裡，沒有寫他接在哪一代底下。`
+      : !person.parents?.length && !holder
+        ? '經文沒有記載他的父母。'
+        : '經文沒有記載他和主線的關係。';
+    card.setTraceMessage(message, false);
     const focusId = focusIdForPerson(person);
     if (focusId) canvas.focusPerson(focusId, true);
     return;

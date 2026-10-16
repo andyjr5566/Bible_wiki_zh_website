@@ -13,6 +13,7 @@
   --ag-selected: #fff0c9;
   --ag-focus: #176f7a;
   --ag-flood: #34734c;
+  --ag-seal: #a8382a;
   --ag-serif: "Iowan Old Style", "Palatino Linotype", "Noto Serif TC", "Songti TC", serif;
   --ag-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
   --ag-shadow: 0 18px 50px rgb(32 28 19 / 15%);
@@ -36,6 +37,7 @@
     --ag-selected: #48391f;
     --ag-focus: #72c2cb;
     --ag-flood: #83b98b;
+    --ag-seal: #d8705c;
     --ag-shadow: 0 18px 50px rgb(0 0 0 / 44%);
   }
 }
@@ -52,6 +54,7 @@
   --ag-selected: #48391f;
   --ag-focus: #72c2cb;
   --ag-flood: #83b98b;
+  --ag-seal: #d8705c;
   --ag-shadow: 0 18px 50px rgb(0 0 0 / 44%);
 }
 
@@ -69,10 +72,12 @@ a { color: var(--ag-focus); }
 
 #app { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 .ag-header {
+  --ag-fs: var(--ag-fs-ui, 1);
   position: relative;
   z-index: 5;
   display: grid;
-  grid-template-columns: minmax(155px, 0.7fr) minmax(220px, 1.1fr) minmax(470px, 2.5fr);
+  /* 按鈕列照自己的寬度，搜尋框吃剩下的；擠不下時（下面 1240px）按鈕改到第二排 */
+  grid-template-columns: minmax(150px, auto) minmax(180px, 1fr) auto;
   grid-template-rows: 58px 42px;
   align-items: center;
   gap: 0 18px;
@@ -160,6 +165,38 @@ a { color: var(--ag-focus); }
 .ag-child-group-label { fill: var(--ag-ink); font: 12px var(--ag-sans); pointer-events: none; }
 .ag-node-group-馬太 .ag-child-group-label { fill: var(--ag-matthew); }
 .ag-node-group-路加 .ag-child-group-label { fill: var(--ag-luke); }
+/* 大圖安置：名單牌子（點線掛上去）、同時代區域（不畫連到主線的線）、區域裡各家的牌子 */
+.ag-edge-list { stroke-dasharray: 0.5 6; stroke-width: 2.2px; stroke-opacity: .85; }
+.ag-edge-member { stroke-opacity: .4; }
+.ag-edge-kin { stroke-dasharray: 9 3 1 3; stroke-opacity: .55; }
+.ag-node-plaque rect { fill: var(--ag-paper-shadow); stroke: var(--ag-seal); stroke-width: 1.2; }
+.ag-node-plaque.ag-node-collapsed rect { fill: var(--ag-paper-shadow); stroke: var(--ag-seal); stroke-dasharray: none; }
+.ag-node-plaque .ag-node-label { font: 600 14px var(--ag-serif); letter-spacing: .05em; }
+.ag-node-plaque .ag-node-subtitle { fill: var(--ag-seal); }
+.ag-node-plaque-region rect, .ag-node-plaque-region.ag-node-collapsed rect { fill: var(--ag-paper-raised); stroke: var(--ag-ink); stroke-width: 1.6; }
+.ag-node-plaque-region .ag-node-subtitle { fill: var(--ag-muted); }
+.ag-node-plaque .ag-descendant-badge circle { fill: var(--ag-seal); }
+.ag-node-plaque:hover rect { fill: var(--ag-selected); }
+.ag-region-frame rect { fill: color-mix(in srgb, var(--ag-paper-shadow) 55%, transparent); stroke: var(--ag-faint); stroke-width: 1.2; stroke-dasharray: 1 6; stroke-linecap: round; }
+/* 線上的關係字（妻子、妹子、母親、後代……）：小小的淡色標籤，不搶名字的焦點 */
+.ag-edge-label { pointer-events: none; }
+.ag-edge-label rect { fill: var(--ag-paper); stroke: var(--ag-border); stroke-width: 1; }
+.ag-edge-label text { fill: var(--ag-muted); font: 10px var(--ag-sans); letter-spacing: .04em; }
+.ag-edge-label-kin text { fill: var(--ag-ink); }
+.ag-rd-on .ag-edge-label { opacity: .55; }
+.ag-far-link text { fill: var(--ag-muted); }
+.ag-far-link-name { pointer-events: auto; cursor: pointer; fill: var(--ag-ink); text-decoration: underline; text-underline-offset: 2px; }
+.ag-far-link-name:hover, .ag-far-link-name:focus-visible { fill: var(--ag-seal, var(--ag-ink)); outline: none; }
+/* 妻子欄：卡片上緣的「妻子」「生母」朱印小牌；「母親未記載」虛線膠囊；疊在妻子上面的祖先小卡 */
+.ag-wife-badge rect { fill: var(--ag-seal, #b3362c); }
+.ag-wife-badge text { fill: #fff8ee; font: 600 10px var(--ag-sans); letter-spacing: .08em; }
+.ag-node-no-mother rect { fill: var(--ag-paper-raised); stroke: var(--ag-border); stroke-width: 1.2; stroke-dasharray: 4 3; }
+.ag-node-no-mother .ag-child-group-label { fill: var(--ag-muted); }
+.ag-node-chip rect { stroke-width: 1; }
+.ag-node-chip .ag-node-label { font-size: 13px; }
+/* 「↗」卡：右上角「↗」表示本人的卡在別處（娘家那一支或主線上） */
+.ag-born-of-mark { fill: var(--ag-muted); font: 11px var(--ag-sans); pointer-events: none; }
+.ag-legend-line { display: inline-block; width: 18px; height: 0; border-top: 2.5px dotted var(--ag-branch); }
 .ag-canvas-legend-panel { position: absolute; right: 22px; bottom: 17px; display: grid; gap: 6px; max-width: calc(100% - 44px); padding: 8px 10px; border: 1px solid var(--ag-border); border-radius: 4px; background: color-mix(in srgb, var(--ag-paper-raised) 94%, transparent); pointer-events: none; }
 .ag-canvas-hint { color: var(--ag-muted); font-size: calc(11px * var(--ag-fs)); pointer-events: none; }
 .ag-legend { display: flex; flex-wrap: wrap; gap: 6px 13px; color: var(--ag-muted); font-size: calc(11px * var(--ag-fs)); }
@@ -318,6 +355,13 @@ a { color: var(--ag-focus); }
 @keyframes ag-node-pulse { 0% { transform: scale(1); } 45% { transform: scale(1.12); } 100% { transform: scale(1); } }
 @keyframes ag-person-pulse { 0% { transform: scale(1); } 45% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
+@media (max-width: 1240px) and (min-width: 901px) {
+  .ag-header { grid-template-columns: minmax(150px, auto) minmax(180px, 1fr); grid-template-rows: 54px 42px 40px; }
+  .ag-controls { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; }
+  .ag-controls::-webkit-scrollbar { display: none; }
+  .ag-tabs { grid-row: 3; }
+}
+
 @media (max-width: 900px) {
   .ag-header { grid-template-columns: 150px minmax(160px, 1fr); grid-template-rows: 52px 40px 38px; gap: 0 12px; padding: 5px 14px 0; }
   .ag-controls { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; }
@@ -399,10 +443,24 @@ a { color: var(--ag-focus); }
 .ag-ov-lit .ag-ov-dot, .ag-ov-current .ag-ov-dot { stroke: var(--ag-matthew); stroke-width: 2.5px; }
 .ag-ov-lit .ag-ov-label, .ag-ov-current .ag-ov-label { stroke: none; font-weight: 700; }
 
-/* 字體大小按鈕 */
-.ag-font-size { display: inline-flex; flex: 0 0 auto; align-items: center; }
-.ag-font-size button { flex: 0 0 auto; white-space: nowrap; }
-.ag-font-size button:disabled { opacity: .35; cursor: default; }
+/* 大小滑桿：A ━━●━━ A 130% */
+.ag-font-size { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; padding: 0 4px; }
+.ag-size-end { flex: 0 0 auto; display: grid; place-items: center; width: 24px; height: 30px; padding: 0; border: 0; background: transparent; color: var(--ag-muted); font-family: var(--ag-serif); line-height: 1; cursor: pointer; }
+.ag-size-small { font-size: 12px; }
+.ag-size-large { font-size: 19px; }
+.ag-size-end:hover:not(:disabled) { color: var(--ag-ink); }
+.ag-size-end:disabled { opacity: .35; cursor: default; }
+.ag-size-value { min-width: 3.4em; color: var(--ag-muted); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+.ag-size-range { flex: 0 0 auto; width: 108px; height: 30px; margin: 0; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.ag-size-range::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: var(--ag-border); }
+.ag-size-range::-moz-range-track { height: 6px; border-radius: 3px; background: var(--ag-border); }
+.ag-size-range::-webkit-slider-thumb { width: 18px; height: 18px; margin-top: -6px; border: 2px solid var(--ag-paper-raised); border-radius: 50%; background: var(--ag-matthew); box-shadow: 0 1px 3px rgb(0 0 0 / 30%); -webkit-appearance: none; appearance: none; }
+.ag-size-range::-moz-range-thumb { width: 18px; height: 18px; border: 2px solid var(--ag-paper-raised); border-radius: 50%; background: var(--ag-matthew); box-shadow: 0 1px 3px rgb(0 0 0 / 30%); }
+@media (max-width: 520px) { .ag-size-range { width: 96px; } .ag-size-value { font-size: 10px; } }
+
+/* 分頁內容整塊照滑桿比例放大（字已經跟著放大，裡面的字級不再另外乘） */
+.ag-page > *, .ag-ro-chart { zoom: var(--ag-zoom, 1); --ag-fs: 1; }
+.ag-page, .ag-ro-chart { font-size: 14px; }
 .ag-controls > button { flex: 0 0 auto; white-space: nowrap; }
 
 /* 範圍經文：每節一行，節號縮小 */

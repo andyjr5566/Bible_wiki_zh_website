@@ -1,6 +1,7 @@
 import type { GenealogyData, TourStop } from '../data/types';
 import type { CanvasApi } from './canvas';
 import { button, h, linkButton } from './dom';
+import { stopFocus, stopMode, stopRefs } from './entry-model';
 
 export interface TourController {
   el: HTMLElement;
@@ -9,7 +10,17 @@ export interface TourController {
   showIntro(): void;
 }
 
-export function createTour(data: GenealogyData, canvas: CanvasApi, onVerse: (ref: string) => void): TourController {
+/** 導覽最後兩站要動到畫布以外的地方：標亮「帶你讀經」、切到目錄分頁 */
+export interface TourHooks {
+  /** 一起讀經那一站：工具列的「帶你讀經」按鈕標亮／取消 */
+  hintRead(on: boolean): void;
+  /** 目錄那一站：切到目錄分頁 */
+  showCatalog(): void;
+  /** 回到一般站（或離開導覽）：切回家譜樹分頁 */
+  showTree(): void;
+}
+
+export function createTour(data: GenealogyData, canvas: CanvasApi, onVerse: (ref: string) => void, hooks: TourHooks): TourController {
   const layer = h('div', { className: 'ag-tour-layer' });
   const stops = data.tour ?? [];
   let at = 0;
@@ -21,7 +32,6 @@ export function createTour(data: GenealogyData, canvas: CanvasApi, onVerse: (ref
   };
 
   const hide = () => layer.replaceChildren();
-  const refsOf = (stop: TourStop) => Array.isArray(stop.refs) ? stop.refs : stop.refs ? [stop.refs] : [];
   const pairsFor = (ids: string[]) => ids.slice(1).map((id, index): [string, string] => [ids[index]!, id]);
   const revealStop = async (run: number, station: TourStop, ids: string[], card: HTMLElement) => {
     const fits = await canvas.focusTourIds(ids, card, true);
@@ -53,22 +63,28 @@ export function createTour(data: GenealogyData, canvas: CanvasApi, onVerse: (ref
     const run = ++highlightRun;
     canvas.clearTourHighlights();
     const station = stops[at]!;
+    const mode = stopMode(station);
     canvas.setTrace([], []);
-    const focus = station.sequence?.length ? station.sequence : station.focus;
+    // 一般站在家譜樹上；一起讀經站標亮按鈕；目錄站打開目錄分頁
+    hooks.hintRead(mode === 'reading');
+    if (mode === 'catalog') hooks.showCatalog(); else hooks.showTree();
+    const focus = stopFocus(station);
+    const last = at === stops.length - 1;
     const card = h('section', { className: 'ag-tour-card', 'aria-live': 'polite' },
       h('div', { className: 'ag-tour-progress' }, `${String(at + 1).padStart(2, '0')}／${String(stops.length).padStart(2, '0')}`),
       h('h2', {}, station.title),
       h('p', {}, station.text),
-      h('div', { className: 'ag-chip-list ag-tour-refs' }, ...refsOf(station).map((ref) => linkButton(ref, () => onVerse(ref)))),
+      h('div', { className: 'ag-chip-list ag-tour-refs' }, ...stopRefs(station).map((ref) => linkButton(ref, () => onVerse(ref)))),
       h('div', { className: 'ag-tour-actions' },
         button('上一站', () => { at = Math.max(0, at - 1); showStop(); }, 'ag-quiet-button'),
-        button(at === stops.length - 1 ? '完成' : '下一站', () => {
-          if (at >= stops.length - 1) stop(true);
+        button(last ? '完成' : '下一站', () => {
+          // 最後一站（目錄）完成後停在目錄
+          if (last) stop(mode !== 'catalog');
           else { at += 1; showStop(); }
         }, 'ag-primary-button'),
         button('跳過', () => stop(true), 'ag-text-button')));
     layer.replaceChildren(card);
-    void revealStop(run, station, focus, card);
+    if (focus.length) void revealStop(run, station, focus, card);
   };
   const start = () => {
     settings.set();
@@ -80,6 +96,9 @@ export function createTour(data: GenealogyData, canvas: CanvasApi, onVerse: (ref
   const stop = (fit = false) => {
     active = false;
     highlightRun += 1;
+    hooks.hintRead(false);
+    // 跳過、重新開始、離開時回到家譜樹；只有在目錄站按「完成」(fit=false) 才停在目錄
+    if (fit) hooks.showTree();
     canvas.clearTourHighlights();
     canvas.setTrace([], []);
     hide();

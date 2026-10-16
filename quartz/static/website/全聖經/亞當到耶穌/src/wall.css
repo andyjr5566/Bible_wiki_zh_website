@@ -1,0 +1,184 @@
+/* 城牆（尼 3）：讀經的第四個舞台，疊在畫布上。class 一律 ag-wl- 開頭（容器是 ag-wall）。
+   一圈示意的牆：未讀的是淡淡的虛線，讀到的一段墨色砌上去、朱色微光跟著牆的盡頭，讀過的留下淡墨。 */
+
+:root {
+  --wl-gold: #8a5f10;
+  --wl-gold-line: rgb(168 119 28 / 55%);
+  --wl-gold-soft: rgb(196 150 52 / 16%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --wl-gold: #efcb73;
+    --wl-gold-line: rgb(230 189 90 / 55%);
+    --wl-gold-soft: rgb(230 189 90 / 15%);
+  }
+}
+:root[data-theme="dark"] {
+  --wl-gold: #efcb73;
+  --wl-gold-line: rgb(230 189 90 / 55%);
+  --wl-gold-soft: rgb(230 189 90 / 15%);
+}
+
+/* 疊在畫布上的容器：自己不捲動，圈整個放得進去 */
+.ag-reading .ag-wall.ag-rd-overlay { overflow: hidden; }
+.ag-wall { display: block; width: 100%; height: 100%; color: var(--rd-ink, #1e1b17); font-family: var(--rd-font, serif); }
+.ag-wl-board { position: relative; box-sizing: border-box; width: 100%; height: 100%; overflow: hidden; user-select: none; -webkit-user-select: none; }
+.ag-wl-wash {
+  position: absolute; inset: 4% 6%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--rd-ink, #1e1b17) 7%, transparent), color-mix(in srgb, var(--rd-ink, #1e1b17) 2%, transparent) 70%, transparent);
+}
+.ag-wl-empty { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; color: var(--rd-ink-soft, #8a867b); }
+.ag-wl-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; touch-action: manipulation; }
+.ag-wl-svg .ag-wl-off, .ag-wl-board .ag-wl-off { display: none; }
+.ag-wl-board.is-measure .ag-wl-off { display: block; visibility: hidden; }
+.ag-wl-board.is-measure .ag-wl-tag, .ag-wl-board.is-measure .ag-wl-lm { scale: 1; opacity: 1; animation: none; }
+.ag-wl-board.is-measure .ag-wl-fam-line { display: flex; }
+
+.ag-wl-note {
+  position: absolute; left: 18px; top: 14px; z-index: 1; margin: 0; color: var(--rd-ink-soft, #8a867b);
+  font-size: calc(12px * var(--ag-fs, 1)); letter-spacing: .14em; pointer-events: none;
+}
+
+/* ── 牆 ───────────────────────────────────────── */
+.ag-wl-outline { fill: none; stroke: var(--rd-ink-soft, #8a867b); stroke-width: 1.1; stroke-dasharray: 4 5; stroke-linejoin: round; opacity: .75; }
+.ag-wl-fill { fill: color-mix(in srgb, var(--rd-ink, #1e1b17) 12%, transparent); stroke: color-mix(in srgb, var(--rd-ink, #1e1b17) 50%, transparent); stroke-width: 1.2; stroke-linejoin: round; }
+.ag-wl-bricks { fill: none; stroke: color-mix(in srgb, var(--rd-ink, #1e1b17) 36%, transparent); stroke-width: .9; stroke-linecap: round; }
+.ag-wl-part.is-now .ag-wl-fill { fill: color-mix(in srgb, var(--rd-ink, #1e1b17) 74%, transparent); stroke: var(--rd-ink, #1e1b17); stroke-width: 1.5; }
+.ag-wl-part.is-now .ag-wl-bricks { stroke: color-mix(in srgb, var(--rd-paper, #f2e9d6) 62%, transparent); }
+.ag-wl-glow {
+  fill: color-mix(in srgb, var(--rd-seal, #ab3427) 26%, transparent); stroke: var(--rd-seal, #ab3427); stroke-width: 2.4; stroke-linejoin: round;
+  filter: blur(2.6px); animation: ag-wl-glow 1.8s ease-in-out infinite;
+}
+.ag-wl-front { fill: var(--rd-seal, #ab3427); }
+/* 砌牆的前沿像一盞燈：朱色的光暈慢慢漲開又收回 */
+.ag-wl-lamp-in { stop-color: var(--rd-seal, #ab3427); stop-opacity: .85; }
+.ag-wl-lamp-mid { stop-color: var(--rd-seal, #ab3427); stop-opacity: .42; }
+.ag-wl-lamp-out { stop-color: var(--rd-seal, #ab3427); stop-opacity: 0; }
+.ag-wl-front-halo { fill: url(#ag-wl-lamp); transform-box: fill-box; transform-origin: center; animation: ag-wl-halo 2.3s cubic-bezier(.2, .6, .4, 1) infinite; pointer-events: none; }
+
+/* ── 門、樓、地方 ──────────────────────────── */
+.ag-wl-sym { opacity: .42; }
+.ag-wl-sym.is-read, .ag-wl-sym.is-now { opacity: 1; }
+.ag-wl-post, .ag-wl-lintel { fill: var(--rd-seal, #ab3427); }
+.ag-wl-tower { fill: var(--rd-paper, #f2e9d6); stroke: var(--rd-ink, #1e1b17); stroke-width: 1.5; }
+.ag-wl-crown { fill: var(--rd-paper, #f2e9d6); stroke: var(--rd-ink, #1e1b17); stroke-width: 1.5; stroke-linejoin: round; }
+.ag-wl-slit { fill: none; stroke: var(--rd-ink, #1e1b17); stroke-width: 1.3; stroke-linecap: round; }
+.ag-wl-spot { fill: var(--rd-paper, #f2e9d6); stroke: var(--rd-ink, #1e1b17); stroke-width: 1.5; }
+.ag-wl-spot-core { fill: var(--rd-ink, #1e1b17); }
+.ag-wl-pulse { fill: none; stroke: var(--rd-seal, #ab3427); stroke-width: 1.4; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.ag-wl-sym.is-now .ag-wl-pulse { animation: ag-wl-ping 1.8s ease-out infinite; }
+.ag-wl-sym.is-now.is-gate .ag-wl-lintel { filter: drop-shadow(0 0 3px var(--rd-seal, #ab3427)); }
+
+.ag-wl-labels { position: absolute; inset: 0; pointer-events: none; }
+.ag-wl-lm {
+  position: absolute; z-index: 3; white-space: nowrap; font-size: calc(13px * var(--ag-fs, 1)); line-height: 1.4; letter-spacing: .04em;
+  /* 門名永遠壓在細線和光暈上面：一圈紙色的邊，線穿過去也讀得清楚 */
+  text-shadow: 0 0 2px var(--rd-paper, #f2e9d6), 0 0 3px var(--rd-paper, #f2e9d6), 0 0 5px var(--rd-paper, #f2e9d6),
+    1px 0 0 var(--rd-paper, #f2e9d6), -1px 0 0 var(--rd-paper, #f2e9d6), 0 1px 0 var(--rd-paper, #f2e9d6), 0 -1px 0 var(--rd-paper, #f2e9d6);
+}
+.ag-wl-lm .ag-wl-ch { color: color-mix(in srgb, var(--rd-ink, #1e1b17) 62%, transparent); transition: color 320ms ease-out; }
+.ag-wl-lm .ag-wl-ch.is-on { color: var(--rd-ink, #1e1b17); }
+.ag-wl-lm.is-now .ag-wl-ch.is-on { color: var(--rd-seal, #ab3427); font-weight: 600; }
+.ag-wl-lm.is-gate.is-read .ag-wl-ch.is-on, .ag-wl-lm.is-gate.is-now .ag-wl-ch.is-on { font-weight: 600; }
+
+/* 一個字一個字寫上去 */
+.ag-wl-ch { position: relative; }
+.ag-wl-tag .ag-wl-ch { opacity: 0; color: var(--rd-ink-soft, #8a867b); }
+.ag-wl-tag .ag-wl-ch.is-on { opacity: 1; color: inherit; transition: opacity 250ms ease-out, color 320ms ease-out; }
+.ag-wl-ch.is-new::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, var(--rs-bloom, rgb(30 27 23 / 28%)), transparent); animation: ag-wl-bloom 820ms ease-out both;
+}
+
+/* ── 名牌 ─────────────────────────────────────── */
+.ag-wl-tag {
+  z-index: 1;
+  position: absolute; box-sizing: border-box; width: max-content; max-width: 200px; padding: 4px 9px 5px 9px; scale: .92; opacity: .8;
+  border: 1px solid color-mix(in srgb, var(--rd-ink, #1e1b17) 22%, transparent); border-left: 3px solid color-mix(in srgb, var(--rd-ink, #1e1b17) 30%, transparent); border-radius: 3px;
+  background: color-mix(in srgb, var(--rd-paper, #f2e9d6) 90%, transparent); color: var(--rd-ink, #1e1b17);
+  font-size: calc(13.5px * var(--ag-fs, 1)); line-height: 1.5; letter-spacing: .03em; pointer-events: none;
+  transition: scale 520ms cubic-bezier(.2, .8, .2, 1), opacity 520ms ease, border-color 520ms ease, box-shadow 520ms ease;
+}
+.ag-wl-tag.is-now {
+  z-index: 2; scale: 1.04; opacity: 1; border-color: color-mix(in srgb, var(--rd-ink, #1e1b17) 52%, transparent); border-left-color: var(--rd-seal, #ab3427);
+  box-shadow: 0 8px 22px rgb(40 30 15 / 16%), 0 0 0 3px color-mix(in srgb, var(--rd-seal, #ab3427) 9%, transparent);
+}
+.ag-wl-board.is-live .ag-wl-tag.is-now:not(.is-fresh) { animation: ag-wl-tint 2s ease-in-out infinite; }
+.ag-wl-tag.is-fresh { animation: ag-wl-in 480ms ease-out both; }
+.ag-wl-line { white-space: nowrap; }
+.ag-wl-nm.is-named { color: var(--wl-gold); font-weight: 600; }
+.ag-wl-tag:has(.is-named) { border-color: var(--wl-gold-line); background: color-mix(in srgb, var(--wl-gold-soft) 100%, var(--rd-paper, #f2e9d6)); }
+.ag-wl-seal {
+  position: absolute; right: -6px; top: -9px; display: block; padding: 3px 3px; border-radius: 2px; background: var(--rd-seal, #ab3427); color: var(--rd-seal-ink, #f7eedb);
+  font-size: 10.5px; font-weight: 600; line-height: 1.08; writing-mode: vertical-rl; transform: rotate(-5deg);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--rd-seal, #ab3427) 30%, transparent);
+}
+.ag-wl-seal.is-fresh { animation: ag-wl-stamp 560ms cubic-bezier(.2, .9, .3, 1.15) both; }
+
+.ag-wl-leader { fill: none; stroke: color-mix(in srgb, var(--rd-ink, #1e1b17) 38%, transparent); stroke-width: 1; stroke-linecap: round; }
+.ag-wl-lm-link { fill: none; stroke: color-mix(in srgb, var(--rd-ink, #1e1b17) 30%, transparent); stroke-width: 1; stroke-dasharray: 2 3; }
+.ag-wl-leader-dot { fill: color-mix(in srgb, var(--rd-ink, #1e1b17) 52%, transparent); }
+.ag-wl-leader.is-now { stroke: var(--rd-seal, #ab3427); stroke-width: 1.5; stroke-dasharray: 5 3; animation: ag-wl-flow 700ms linear infinite; }
+.ag-wl-leader-dot.is-now { fill: var(--rd-seal, #ab3427); }
+
+/* 家族軌跡：這個名字也在別的名單裡，一排小籤，點了跳到那一節讀 */
+.ag-wl-fam { display: grid; gap: 3px; margin-top: 5px; padding-top: 4px; border-top: 1px dashed var(--rd-ink-faint, rgb(30 27 23 / 14%)); }
+.ag-wl-fam-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; min-width: 0; }
+.ag-wl-fam-line.is-fresh { animation: ag-wl-fade 420ms ease-out both; }
+.ag-wl-fam-lead { color: var(--rd-ink-soft, #8a867b); font-size: calc(12px * var(--ag-fs, 1)); letter-spacing: .1em; white-space: nowrap; }
+.ag-wl-fam-tag {
+  display: inline-flex; align-items: baseline; gap: .5em; min-height: 26px; box-sizing: border-box; padding: 3px 10px; margin: 0; cursor: pointer; pointer-events: auto;
+  border: 1px solid color-mix(in srgb, var(--rd-ink, #1e1b17) 26%, transparent); border-radius: 13px;
+  background: color-mix(in srgb, var(--rd-paper, #f2e9d6) 78%, transparent); color: var(--rd-ink, #1e1b17);
+  font: inherit; font-size: calc(12.5px * var(--ag-fs, 1)); line-height: 1.4; letter-spacing: .02em; text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.ag-wl-fam-cnt { color: var(--rd-ink-soft, #8a867b); font-size: .94em; font-variant-numeric: tabular-nums; }
+.ag-wl-fam-tag:hover { border-color: var(--rd-seal, #ab3427); background: color-mix(in srgb, var(--rd-seal, #ab3427) 8%, var(--rd-paper, #f2e9d6)); }
+.ag-wl-fam-tag:focus-visible { outline: 2px solid var(--rd-seal, #ab3427); outline-offset: 2px; }
+@media (pointer: coarse) { .ag-wl-fam-tag { min-height: 34px; padding: 5px 12px; } }
+
+/* ── 縮影（讀經的小地圖） ──────────────────── */
+.ag-wl-mini { display: block; }
+.ag-wl-mini-ring { fill: none; stroke: var(--rd-ink-soft, #8a867b); stroke-width: 3; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ag-wl-mini-dot { fill: var(--rd-ink-soft, #8a867b); }
+.ag-wl-mini-dot.is-gate { fill: var(--rd-seal, #ab3427); }
+
+/* ── 動態 ─────────────────────────────────────── */
+@keyframes ag-wl-glow { 0%, 100% { opacity: .3; stroke-width: 2; } 50% { opacity: 1; stroke-width: 7; } }
+@keyframes ag-wl-halo { 0% { scale: .3; opacity: 1; } 100% { scale: 1.15; opacity: 0; } }
+@keyframes ag-wl-tint {
+  0%, 100% { background: color-mix(in srgb, var(--rd-paper, #f2e9d6) 92%, transparent); box-shadow: 0 8px 22px rgb(40 30 15 / 16%), 0 0 0 3px color-mix(in srgb, var(--rd-seal, #ab3427) 9%, transparent); }
+  50% { background: color-mix(in srgb, var(--rd-seal, #ab3427) 38%, var(--rd-paper, #f2e9d6)); box-shadow: 0 8px 22px rgb(40 30 15 / 16%), 0 0 0 9px color-mix(in srgb, var(--rd-seal, #ab3427) 20%, transparent); }
+}
+@keyframes ag-wl-breathe { 0%, 100% { box-shadow: 0 8px 22px rgb(40 30 15 / 16%), 0 0 0 0 color-mix(in srgb, var(--rd-seal, #ab3427) 34%, transparent); } 50% { box-shadow: 0 8px 22px rgb(40 30 15 / 16%), 0 0 0 9px color-mix(in srgb, var(--rd-seal, #ab3427) 0%, transparent); } }
+@keyframes ag-wl-flow { to { stroke-dashoffset: -16; } }
+@keyframes ag-wl-ping { 0% { scale: .6; opacity: .9; } 100% { scale: 2.1; opacity: 0; } }
+@keyframes ag-wl-bloom { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.3); } }
+@keyframes ag-wl-in { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+@keyframes ag-wl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ag-wl-stamp { 0% { opacity: 0; scale: 2.2; } 60% { opacity: 1; scale: .9; } 100% { opacity: 1; scale: 1; } }
+html[data-motion="off"] .ag-wl-glow,
+html[data-motion="off"] .ag-wl-tag.is-now,
+html[data-motion="off"] .ag-wl-board.is-live .ag-wl-tag.is-now,
+html[data-motion="off"] .ag-wl-leader.is-now,
+html[data-motion="off"] .ag-wl-front-halo,
+html[data-motion="off"] .ag-wl-sym.is-now .ag-wl-pulse,
+html[data-motion="off"] .ag-wl-ch.is-new::before,
+html[data-motion="off"] .ag-wl-tag.is-fresh,
+html[data-motion="off"] .ag-wl-fam-line.is-fresh,
+html[data-motion="off"] .ag-wl-seal.is-fresh { animation: none; }
+html[data-motion="off"] .ag-wl-tag,
+html[data-motion="off"] .ag-wl-ch,
+html[data-motion="off"] .ag-wl-fam-tag { transition: none !important; }
+.ag-wl-board.is-still .ag-wl-tag, .ag-wl-board.is-still .ag-wl-ch { transition: none !important; }
+
+/* ── 手機：圈縮小，名牌放圈中央 ─────────────── */
+@media (max-width: 900px) {
+  .ag-wl-note { left: 12px; top: 10px; }
+}
+@media (max-width: 560px) {
+  .ag-wl-lm { font-size: calc(10.5px * var(--ag-fs, 1)); letter-spacing: .02em; }
+  .ag-wl-tag { font-size: calc(14px * var(--ag-fs, 1)); max-width: 180px; }
+  .ag-wl-note { font-size: calc(11px * var(--ag-fs, 1)); }
+}

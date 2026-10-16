@@ -1,9 +1,17 @@
 import source from './genealogy.json';
+import readingSource from './reading.json';
 import verseSource from './verses.json';
-import type { GenealogyData, Person, Relation, VerseMap } from './types';
+import type { GenealogyData, Person, PlacementItem, PlacementNode, ReadingData, Relation, RolesData, RosterData, VerseMap, WallData } from './types';
 
 export const DATA = source as unknown as GenealogyData;
 export const VERSES = verseSource as VerseMap;
+export const READING = readingSource as unknown as ReadingData;
+/** 大衛立的職位：分頁打開或讀到時才載入（另一個檔案，不拖慢首頁） */
+export const loadRoles = (): Promise<RolesData> => import('./roles.json').then((module) => module.default as unknown as RolesData);
+/** 歸回的名冊（拉 2、尼 7）：讀到時才載入 */
+export const loadRoster = (): Promise<RosterData> => import('./roster.json').then((module) => module.default as unknown as RosterData);
+/** 修造城牆的人（尼 3）：讀到時才載入 */
+export const loadWall = (): Promise<WallData> => import('./wall.json').then((module) => module.default as unknown as WallData);
 /**
  * 把「代上8:30-31」「創11:10-12:1」「創5:1-3, 路3:38」這類寫法展開成逐節的 key（和 verses.json 一致）。
  * 跨章的範圍靠 verses.json 有哪些節來判斷章尾；後面的片段沒寫書卷時沿用前一段的書卷。
@@ -57,42 +65,263 @@ export function verseText(ref: string, verses: VerseMap = VERSES): string | null
 export const WIKI_BASE = ((import.meta.env?.VITE_WIKI_BASE as string | undefined) ||
   'https://andyjr5566.github.io/Bible_wiki_zh_website').replace(/\/+$/, '');
 
+export type PlacedKind = PlacementNode['kind'] | 'link';
+
 export interface PersonGraph {
   byId: Map<string, Person>;
   children: Map<string, string[]>;
   spineIds: Set<string>;
+  /** 每個節點在大圖上掛在誰底下（主線上的人不在這裡）。 */
+  treeParent: Map<string, string>;
+  /** 經由大圖安置掛上去的節點：名單牌子、區域、各家牌子，以及各家的根。 */
+  placed: Map<string, { kind: PlacedKind; side: PlacementItem['side']; via: PlacementItem['via'] }>;
+  /** 妻子欄的「↗」卡 → 妻子本人 */
+  bornOf: Map<string, string>;
+  /** 兒女欄裡主線兒女的「↗」卡 → 主線上那個人 */
+  childRefs: Map<string, string>;
+  /** 妻子欄的每一張卡（本人或「↗」卡）：丈夫是誰、妻子是誰、經文有沒有記成夫妻（沒有就標「生母」） */
+  wifeSlots: Map<string, { husband: string; wife: string; spouse: boolean }>;
+  /** 妻子 → 疊在他上面的祖先，一層一層由上而下；最下面一層是他的父親（記了兩個名字的並排：以連、亞米利） */
+  ancestry: Map<string, string[][]>;
+  /** 妻子 → 排在他卡片下面的另一位丈夫（拔示巴的烏利亞、亞比該的拿八） */
+  otherHusbands: Map<string, string[]>;
+  /** 「母親未記載」→ 丈夫 */
+  noMother: Map<string, string>;
+}
+
+const PLACEMENT_KINDS = new Set(['list', 'region', 'family']);
+/** 名單牌子、同時代區域、區域裡各家的牌子：在畫布上是可以展開收合的標示，不是人物。 */
+export const isPlacementNode = (person: Person | undefined | null): boolean => Boolean(person && PLACEMENT_KINDS.has(String(person.kind)));
+
+function placementPerson(node: PlacementNode): Person {
+  return {
+    id: node.id, name: node.title, qualifier: node.ref, kind: node.kind, names: [], parents: [], spouses: [], siblings: [],
+    kin: [], descends: [], desc: null, note: null, entry: null, entryGloss: '', gen: {}, lines: [], marks: [], notes: [],
+    imported: null, anchor: null, ...(node.family ? { family: node.family } : {}),
+  };
 }
 
 export function buildGraph(data: GenealogyData): PersonGraph {
   const byId = new Map(data.persons.map((person) => [person.id, person]));
+  for (const node of data.placements?.nodes ?? []) byId.set(node.id, placementPerson(node));
   const children = new Map<string, string[]>();
+  const treeParent = new Map<string, string>();
   const addChild = (parentId: string, childId: string) => {
     if (!byId.has(parentId) || !byId.has(childId) || parentId === childId) return;
     const items = children.get(parentId) ?? [];
     if (!items.includes(childId)) items.push(childId);
     children.set(parentId, items);
+    treeParent.set(childId, parentId);
   };
   const spineIds = new Set(Object.values(data.spine.lines).flat());
   // 樹的連線每人只掛一處，避免同一個孩子同時出現在父親和母親底下、後代數重複計算：
   // 優先掛父親；經文沒記父親才掛母親；都沒有才用「後裔（代數不詳）」。
   // 主線上的人只掛在主線的父親底下（由主線版面處理），這裡不再掛到旁支。
-  // 其餘的父母、後裔關係照樣在資訊卡列出。
+  // 其餘的父母、後裔關係照樣在資訊卡列出。（和匯出程式 _tree_parents 同一條規則）
   for (const person of data.persons) {
     const parents = person.parents ?? [];
-    const father = parents.find((relation) => relation.role !== '母');
-    const mother = parents.find((relation) => relation.role === '母');
-    const descend = (person.descends ?? [])[0];
-    const treeParent = father ?? mother ?? descend;
-    if (!treeParent) continue;
+    const father = parents.find((relation) => relation.role !== '母' && byId.has(relation.id));
+    const mother = parents.find((relation) => relation.role === '母' && byId.has(relation.id));
+    const descend = (person.descends ?? []).find((relation) => byId.has(relation.id));
+    const parent = father ?? mother ?? descend;
+    if (!parent) continue;
     if (spineIds.has(person.id)) {
-      if (father) addChild(father.id, person.id);
+      if (father) {
+        const items = children.get(father.id) ?? [];
+        if (!items.includes(person.id)) items.push(person.id);
+        children.set(father.id, items);
+      }
       continue;
     }
-    addChild(treeParent.id, person.id);
+    addChild(parent.id, person.id);
   }
-  return { byId, children, spineIds };
+  // 主線往下接不到的家族：照匯出時決定的位置掛上去（排在真正的子女後面）
+  const placed: PersonGraph['placed'] = new Map();
+  for (const node of data.placements?.nodes ?? []) {
+    addChild(node.under, node.id);
+    placed.set(node.id, { kind: node.kind, side: 'same', via: null });
+  }
+  for (const item of data.placements?.items ?? []) {
+    if (treeParent.has(item.root)) continue;
+    addChild(item.under, item.root);
+    const under = byId.get(item.under);
+    placed.set(item.root, { kind: isPlacementNode(under) ? (under!.kind as PlacedKind) : 'link', side: item.side, via: item.via });
+  }
+  // ── 一家人的排法：丈夫 → 妻子一欄 → 兒女一欄 ──
+  // 每位有記妻子（或孩子的母親）的男人：妻子們排在同一欄，兒女排在下一欄，各自接在自己的母親底下；
+  // 經文沒寫母親的兒女接在同一欄的「母親未記載」底下。主線上的兒女（所羅門）不能搬家，在母親底下放一張「↗」卡。
+  // 妻子本人的卡怎麼來：
+  //   1. 本來就排在丈夫旁邊、或和丈夫在同一處（西庇太一家）→ 直接用本人。
+  //   2. 娘家只有一條祖先線、而且掛在這一家裡面（瑪迦的祖父亞米忽、父親達買掛在他兒子押沙龍底下）
+  //      → 本人搬到妻子欄，祖先改成疊在他上面的小卡（亞米忽 → 達買 → 瑪迦）。
+  //   3. 娘家是另外一大支（利亞、拉結在拉班底下）→ 妻子欄放一張「↗」卡，寫「拉班的女兒」，點了跳過去。
+  const bornOf = new Map<string, string>();
+  const childRefs = new Map<string, string>();
+  const wifeSlots: PersonGraph['wifeSlots'] = new Map();
+  const ancestry = new Map<string, string[][]>();
+  const otherHusbands = new Map<string, string[]>();
+  const noMother = new Map<string, string>();
+  const remove = (parentId: string | undefined, id: string) => {
+    const items = parentId === undefined ? undefined : children.get(parentId);
+    const index = items ? items.indexOf(id) : -1;
+    if (items && index >= 0) items.splice(index, 1);
+  };
+  const attach = (parentId: string, id: string) => {
+    remove(treeParent.get(id), id);
+    children.set(parentId, [...(children.get(parentId) ?? []), id]);
+    treeParent.set(id, parentId);
+  };
+  const reaches = (from: string | undefined, target: string) => {
+    for (let cur = from, steps = 0; cur !== undefined && steps < 500; cur = treeParent.get(cur), steps += 1) if (cur === target) return true;
+    return false;
+  };
+  const subtree = (id: string): string[] => [id, ...(children.get(id) ?? []).flatMap(subtree)];
+  const fatherOf = (person: Person) => (person.parents ?? []).find((relation) => relation.role !== '母' && byId.has(relation.id))?.id;
+  const motherOf = (person: Person) => (person.parents ?? []).find((relation) => relation.role === '母' && byId.has(relation.id))?.id;
+  const spousesOf = new Map<string, string[]>();
+  for (const person of data.persons) {
+    for (const spouse of person.spouses ?? []) {
+      if (!byId.has(spouse.id) || spouse.id === person.id) continue;
+      for (const [a, b] of [[person.id, spouse.id], [spouse.id, person.id]] as const) {
+        const items = spousesOf.get(a) ?? [];
+        if (!items.includes(b)) items.push(b);
+        spousesOf.set(a, items);
+      }
+    }
+  }
+  const claimed = new Set<string>();
+  const byFather = new Map<string, Person[]>();
+  for (const person of data.persons) {
+    const father = fatherOf(person);
+    if (father) byFather.set(father, [...(byFather.get(father) ?? []), person]);
+  }
+  for (const husband of data.persons) {
+    if (husband.sex === 'f') continue;
+    const kids = (byFather.get(husband.id) ?? []).filter((person) => spineIds.has(person.id) || treeParent.get(person.id) === husband.id);
+    const wives: string[] = [];
+    for (const kid of kids) {
+      const mother = motherOf(kid);
+      if (mother && !spineIds.has(mother) && !wives.includes(mother)) wives.push(mother);
+    }
+    const kidIds = new Set(kids.map((kid) => kid.id));
+    for (const spouse of spousesOf.get(husband.id) ?? []) {
+      if (byId.get(spouse)?.sex === 'm' || spineIds.has(spouse) || kidIds.has(spouse) || wives.includes(spouse)) continue;
+      wives.push(spouse);
+    }
+    // 沒有兒女、妻子也不在他旁邊的（烏利亞只是掛在拔示巴旁邊）：不另外排一家
+    if (!wives.length || (!kids.length && !wives.some((wife) => treeParent.get(wife) === husband.id))) continue;
+    const slotOf = new Map<string, string>();
+    for (const wife of wives) {
+      let own = false;
+      const at = treeParent.get(wife);
+      if (!claimed.has(wife)) {
+        if (at === husband.id || (at !== undefined && at === treeParent.get(husband.id))) own = true;
+        else {
+          const chain: string[] = [];
+          let cur = wife;
+          let inside = false;
+          for (let steps = 0; steps < 60; steps += 1) {
+            const up = treeParent.get(cur);
+            if (up === undefined) break;
+            // 一路往上都是父親（達買、亞米忽）就收進祖先線；走到不是父親的那一層，看那一層是不是在這一家裡面（押沙龍）
+            if (byId.get(cur)?.parents?.some((relation) => relation.id === up) && up !== husband.id) {
+              chain.unshift(up);
+              cur = up;
+              continue;
+            }
+            // 掛在主線上的兒子底下也算（西比亞掛在他兒子約阿施底下）
+            inside = reaches(up, husband.id) || kidIds.has(up);
+            break;
+          }
+          const top = chain[0] ?? wife;
+          const keep = new Set([...chain, ...subtree(wife)]);
+          if (inside && subtree(top).every((id) => keep.has(id))) {
+            own = true;
+            if (chain.length) {
+              remove(treeParent.get(top), top);
+              chain.forEach((id, index) => { remove(id, chain[index + 1] ?? wife); treeParent.set(id, wife); });
+              ancestry.set(wife, chain.map((id) => [id]));
+            }
+          }
+        }
+      }
+      let slot = wife;
+      if (own) {
+        claimed.add(wife);
+        attach(husband.id, wife);
+      } else {
+        slot = `${BORN_OF_PREFIX}${husband.id}:${wife}`;
+        byId.set(slot, bornOfPerson(slot, byId.get(wife)!, byId));
+        bornOf.set(slot, wife);
+        attach(husband.id, slot);
+      }
+      wifeSlots.set(slot, { husband: husband.id, wife, spouse: (spousesOf.get(husband.id) ?? []).includes(wife) });
+      slotOf.set(wife, slot);
+    }
+    let capsule: string | undefined;
+    for (const kid of kids) {
+      const mother = motherOf(kid);
+      let target = mother ? slotOf.get(mother) : undefined;
+      if (!target) {
+        if (!capsule) {
+          capsule = `${NO_MOTHER_PREFIX}${husband.id}`;
+          byId.set(capsule, markerPerson(capsule, '母親未記載', 'no-mother', husband.lines ?? []));
+          noMother.set(capsule, husband.id);
+          attach(husband.id, capsule);
+        }
+        target = capsule;
+      }
+      if (spineIds.has(kid.id)) {
+        const ref = `${CHILD_REF_PREFIX}${target}:${kid.id}`;
+        byId.set(ref, { ...bornOfPerson(ref, kid, byId), qualifier: kid.qualifier || firstReference(kid), lines: kid.lines ?? [] });
+        childRefs.set(ref, kid.id);
+        attach(target, ref);
+      } else attach(target, kid.id);
+    }
+    // 本人排進妻子欄的妻子：底下掛著的父親（另一個名字）移到上面那一排，另一位丈夫移到卡片下面，不混進兒女欄
+    for (const wife of wives) {
+      if (slotOf.get(wife) !== wife) continue;
+      const self = byId.get(wife)!;
+      for (const id of [...(children.get(wife) ?? [])]) {
+        const other = byId.get(id);
+        if (self.parents?.some((relation) => relation.id === id)) {
+          remove(wife, id);
+          const rows = ancestry.get(wife) ?? [[]];
+          if (!rows.length) rows.push([]);
+          rows[rows.length - 1]!.push(id);
+          ancestry.set(wife, rows);
+        } else if ((spousesOf.get(wife) ?? []).includes(id) && (other?.sex === 'm' || !other?.sex) && !(children.get(id) ?? []).length) {
+          remove(wife, id);
+          otherHusbands.set(wife, [...(otherHusbands.get(wife) ?? []), id]);
+        }
+      }
+    }
+    // 妻子欄排在最前面（照經文出現的順序），「母親未記載」接在後面，其他掛在他旁邊的（名單牌子、親屬）再後面
+    const column = [...wives.map((wife) => slotOf.get(wife)!), ...(capsule ? [capsule] : [])];
+    children.set(husband.id, [...column, ...(children.get(husband.id) ?? []).filter((id) => !column.includes(id))]);
+  }
+  return { byId, children, spineIds, treeParent, placed, bornOf, childRefs, wifeSlots, ancestry, otherHusbands, noMother };
 }
 
+const CHILD_REF_PREFIX = '主線:';
+const NO_MOTHER_PREFIX = '未記母親:';
+const BORN_OF_PREFIX = '所生:';
+/** 一家人排法用的標示卡：妻子的「↗」卡、主線兒女的「↗」卡（kind born-of），「母親未記載」（kind no-mother）。不是人物，不算後代人數。 */
+export const isBornOfNode = (person: Person | undefined | null): boolean => Boolean(person && person.kind === 'born-of');
+export const isMarkerNode = (person: Person | undefined | null): boolean => Boolean(person && (person.kind === 'born-of' || person.kind === 'no-mother'));
+function markerPerson(id: string, name: string, kind: string, lines: string[]): Person {
+  return {
+    id, name, qualifier: '', kind, names: [], parents: [], spouses: [], siblings: [],
+    kin: [], descends: [], desc: null, note: null, entry: null, entryGloss: '', gen: {}, lines, marks: [], notes: [],
+    imported: null, anchor: null,
+  };
+}
+function bornOfPerson(id: string, person: Person, byId: Map<string, Person>): Person {
+  // 第二行寫出身：「拉班的女兒」；沒記父親的寫經節
+  const father = (person.parents ?? []).find((relation) => relation.role !== '母' && byId.has(relation.id));
+  const origin = father ? `${byId.get(father.id)!.name}的${person.sex === 'm' ? '兒子' : '女兒'}` : person.qualifier || firstReference(person);
+  return { ...markerPerson(id, person.name, 'born-of', person.lines ?? []), qualifier: origin };
+}
 // 資訊卡的「子女」：父母記載裡有這個人的都算（不論父親或母親），和畫布的樹（每人只掛一處）不同。
 const recordedChildren = new WeakMap<PersonGraph, Map<string, Person[]>>();
 export function childrenOf(personId: string, graph: PersonGraph): Person[] {
@@ -129,7 +358,8 @@ export function descendantCount(personId: string, graph: PersonGraph): number {
     const id = queue.pop()!;
     if (seen.has(id)) continue;
     seen.add(id);
-    total += 1;
+    // 主線兒女的「↗」卡代表一個人，算進去；妻子的「↗」卡、「母親未記載」不算
+    if (!isMarkerNode(graph.byId.get(id)) || graph.childRefs.has(id)) total += 1;
     queue.push(...(graph.children.get(id) ?? []));
   }
   return total;

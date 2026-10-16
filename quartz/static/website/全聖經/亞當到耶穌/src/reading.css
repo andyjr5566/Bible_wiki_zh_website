@@ -1,0 +1,356 @@
+/* 帶你讀經：水墨與朱印。亮色是宣紙墨字，暗色是墨底金字。重的效果只在讀經模式（html.ag-reading）出現。 */
+
+@font-face {
+  font-family: "Wenkai TC Reading";
+  src: url("./assets/fonts/wenkai-tc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Wenkai TC Reading";
+  src: url("./assets/fonts/wenkai-tc-medium.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  --rd-paper: #f2e9d6;
+  --rd-paper-deep: #e9dcc0;
+  --rd-paper-edge: #dccdab;
+  --rd-ink: #1e1b17;
+  --rd-ink-soft: rgb(30 27 23 / 42%);
+  --rd-ink-faint: rgb(30 27 23 / 14%);
+  --rd-line: #26221d;
+  --rd-glow: rgb(30 27 23 / 26%);
+  --rd-seal: #ab3427;
+  --rd-seal-ink: #f7eedb;
+  --rd-accent: #ab3427;
+  --rd-font: "Wenkai TC Reading", "LXGW WenKai TC", "Kaiti TC", "BiauKai", "DFKai-SB", serif;
+  /* 宣紙：細密的紙紋，加一層橫向拉長的纖維 */
+  --rd-texture:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .16' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .34 0 0 0 0 .2 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .24 0 0 0 0 .15 0 0 0 .085 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --rd-paper: #14120f;
+    --rd-paper-deep: #1d1a15;
+    --rd-paper-edge: #2b261d;
+    --rd-ink: #e2c88e;
+    --rd-ink-soft: rgb(226 200 142 / 44%);
+    --rd-ink-faint: rgb(226 200 142 / 13%);
+    --rd-line: #d4b16a;
+    --rd-glow: rgb(226 200 142 / 24%);
+    --rd-seal: #b8402f;
+    --rd-seal-ink: #f4e2c2;
+    --rd-accent: #e07a5f;
+    --rd-texture:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .16' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .85 0 0 0 0 .75 0 0 0 0 .5 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .8 0 0 0 0 .55 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+:root[data-theme="dark"] {
+  --rd-paper: #14120f;
+  --rd-paper-deep: #1d1a15;
+  --rd-paper-edge: #2b261d;
+  --rd-ink: #e2c88e;
+  --rd-ink-soft: rgb(226 200 142 / 44%);
+  --rd-ink-faint: rgb(226 200 142 / 13%);
+  --rd-line: #d4b16a;
+  --rd-glow: rgb(226 200 142 / 24%);
+  --rd-seal: #b8402f;
+  --rd-seal-ink: #f4e2c2;
+  --rd-accent: #e07a5f;
+  --rd-texture:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .16' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .85 0 0 0 0 .75 0 0 0 0 .5 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .8 0 0 0 0 .55 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 整站只輕輕帶一點紙紋 */
+.ag-canvas-wrap { background-image: var(--rd-texture); background-blend-mode: multiply; }
+
+/* ── 進入讀經模式 ─────────────────────────────── */
+.ag-rd-entry {
+  border: 1px solid var(--rd-seal); border-radius: 4px; padding: 6px 13px; background: var(--rd-seal); color: var(--rd-seal-ink);
+  font: 600 calc(13px * var(--ag-fs)) var(--rd-font); letter-spacing: .12em; cursor: pointer; white-space: nowrap;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 12%);
+}
+.ag-rd-entry:hover { filter: brightness(1.06); }
+.ag-rd-entry[aria-pressed="true"] { background: transparent; color: var(--rd-seal); }
+/* 導覽的「一起讀經」那一站：按鈕外面一圈朱色框，慢慢呼吸 */
+.ag-rd-entry.is-hint { position: relative; animation: ag-rd-hint 1.6s ease-in-out infinite; }
+.ag-rd-entry.is-hint::after { content: ""; position: absolute; inset: -5px; border: 2px solid var(--rd-seal); border-radius: 8px; pointer-events: none; animation: ag-rd-hint-ring 1.6s ease-in-out infinite; }
+@keyframes ag-rd-hint { 0%, 100% { box-shadow: inset 0 0 0 2px rgb(255 255 255 / 12%), 0 0 0 0 color-mix(in srgb, var(--rd-seal) 45%, transparent); } 50% { box-shadow: inset 0 0 0 2px rgb(255 255 255 / 12%), 0 0 16px 4px color-mix(in srgb, var(--rd-seal) 45%, transparent); } }
+@keyframes ag-rd-hint-ring { 0%, 100% { opacity: .35; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.04); } }
+html[data-motion="off"] .ag-rd-entry.is-hint, html[data-motion="off"] .ag-rd-entry.is-hint::after { animation: none; }
+.ag-tour-invite { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-top: 10px; color: var(--ag-muted); }
+
+.ag-reading .ag-canvas-wrap { background-color: var(--rd-paper); background-image: var(--rd-texture); }
+.ag-reading .ag-canvas-legend-panel { display: none; }
+
+/* 大圖：沒讀到的人退成淡墨，讀到的人亮起來。
+   節點本身的 opacity 用來隱藏另一條線，所以淡墨調在節點裡面的圖形上。 */
+.ag-canvas.ag-rd-on .ag-node > * { opacity: .28; transition: opacity 900ms ease; }
+.ag-canvas.ag-rd-on .ag-node.ag-rd-trail > * { opacity: .66; transition: opacity 2400ms ease; }
+.ag-canvas.ag-rd-on .ag-node.ag-rd-lit > *,
+.ag-canvas.ag-rd-on .ag-node-plaque > *,
+.ag-canvas.ag-rd-on .ag-node-selected > *,
+.ag-canvas.ag-rd-on .ag-node:hover > * { opacity: 1; transition: opacity 240ms ease; }
+.ag-canvas.ag-rd-on .ag-node rect { fill: var(--rd-paper); stroke: var(--rd-ink-soft); stroke-dasharray: none; }
+.ag-canvas.ag-rd-on .ag-node-label { fill: var(--rd-ink); font-family: var(--rd-font); font-size: 16px; }
+.ag-canvas.ag-rd-on .ag-node-subtitle { fill: var(--rd-ink-soft); }
+.ag-canvas.ag-rd-on .ag-node.ag-rd-lit rect { stroke: var(--rd-ink); stroke-width: 1.5; }
+.ag-canvas.ag-rd-on .ag-node.ag-rd-current rect { fill: var(--rd-paper-deep); stroke: var(--rd-ink); stroke-width: 2.4; }
+.ag-canvas.ag-rd-on .ag-node.ag-rd-current .ag-node-label {
+  font-weight: 700; animation: ag-rd-write 700ms cubic-bezier(.3, .1, .2, 1) both;
+}
+.ag-canvas.ag-rd-on .ag-node-plaque rect { fill: var(--rd-paper-deep); stroke: var(--rd-seal); }
+.ag-canvas.ag-rd-on .ag-edge { stroke-opacity: .2; }
+.ag-canvas.ag-rd-on .ag-region-frame rect { stroke: var(--rd-ink-faint); fill: transparent; }
+@keyframes ag-rd-write {
+  from { clip-path: inset(0 0 100% 0); opacity: .25; }
+  to { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+/* 墨線、墨暈、朱印 */
+.ag-rd-ink-wash { fill: none; stroke: var(--rd-line); stroke-width: 10; stroke-opacity: .09; stroke-linecap: round; stroke-linejoin: round; }
+.ag-rd-ink-line { fill: none; stroke: var(--rd-line); stroke-width: 3.1; stroke-opacity: .92; stroke-linecap: round; stroke-linejoin: round; }
+.ag-rd-halo { fill: var(--rd-glow); transform-box: fill-box; transform-origin: center; animation: ag-rd-bloom 1100ms ease-out both; }
+@keyframes ag-rd-bloom { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.ag-rd-seal { pointer-events: none; }
+.ag-rd-seal-ink { fill: var(--rd-seal); }
+.ag-rd-seal-text { fill: var(--rd-seal-ink); font: 600 16px var(--rd-font); }
+.ag-rd-seal-text-wide { font-size: 14px; }
+.ag-rd-seal { filter: drop-shadow(0 1px 1.5px rgb(60 20 10 / 25%)); }
+.ag-rd-seal-stamp { transform-box: fill-box; transform-origin: center; animation: ag-rd-stamp 460ms cubic-bezier(.2, .9, .3, 1.15) both; }
+@keyframes ag-rd-stamp {
+  0% { transform: scale(1.8); opacity: 0; }
+  55% { transform: scale(.93); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── 經文欄 ─────────────────────────────────── */
+.ag-rd-panel {
+  position: absolute; top: 14px; right: 14px; bottom: 14px; z-index: 5;
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; width: clamp(340px, 31vw, 470px);
+  overflow: hidden; border: 1px solid var(--rd-paper-edge); border-radius: 5px;
+  background-color: var(--rd-paper); background-image: var(--rd-texture);
+  color: var(--rd-ink); font-family: var(--rd-font);
+  box-shadow: 0 22px 60px rgb(40 30 15 / 22%), inset 0 0 0 6px color-mix(in srgb, var(--rd-paper-deep) 60%, transparent);
+}
+.ag-rd-panel[hidden] { display: none; }
+.ag-rd-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; padding: 16px 20px 12px; border-bottom: 1px solid var(--rd-ink-faint); }
+.ag-rd-title { display: grid; min-width: 0; line-height: 1.2; }
+.ag-rd-head .ag-rd-select { grid-column: 1 / -1; grid-row: 2; }
+.ag-rd-eyebrow { color: var(--rd-seal); font-size: calc(11px * var(--ag-fs)); letter-spacing: .3em; }
+.ag-rd-title strong { font-size: calc(21px * var(--ag-fs)); font-weight: 600; letter-spacing: .08em; overflow-wrap: anywhere; }
+.ag-rd-select {
+  min-width: 0; max-width: 100%; padding: 5px 8px; border: 1px solid var(--rd-ink-faint); border-radius: 3px;
+  background: color-mix(in srgb, var(--rd-paper) 80%, white 4%); color: var(--rd-ink); font: calc(13px * var(--ag-fs)) var(--rd-font);
+}
+.ag-rd-close { padding: 5px 10px; border: 1px solid var(--rd-ink-faint); border-radius: 3px; background: transparent; color: var(--rd-ink); font: calc(13px * var(--ag-fs)) var(--rd-font); cursor: pointer; }
+.ag-rd-close:hover { border-color: var(--rd-ink-soft); }
+.ag-rd-scroll { overflow-y: auto; overscroll-behavior: contain; padding: 4px 26px 48px; scrollbar-color: var(--rd-ink-faint) transparent; }
+.ag-rd-chapter-head { display: grid; justify-items: start; gap: 2px; margin: 18px 0 14px; font-weight: 400; }
+.ag-rd-chapter-no { font-size: calc(30px * var(--ag-fs)); font-weight: 600; letter-spacing: .18em; }
+.ag-rd-chapter-name { position: relative; padding-bottom: 8px; color: var(--rd-ink-soft); font-size: calc(15px * var(--ag-fs)); letter-spacing: .06em; }
+.ag-rd-chapter-name::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 64px; height: 5px; border-radius: 3px;
+  background: var(--rd-seal); opacity: .85; clip-path: polygon(0 40%, 8% 0, 100% 30%, 96% 100%, 4% 85%);
+}
+
+.ag-rd-segment-head { display: grid; gap: 2px; margin: 16px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--rd-ink-faint); }
+.ag-rd-segment-head strong { color: var(--rd-seal); font-size: calc(15px * var(--ag-fs)); font-weight: 600; letter-spacing: .12em; }
+.ag-rd-segment-head span { color: var(--rd-ink-soft); font-size: calc(12px * var(--ag-fs)); letter-spacing: .08em; }
+.ag-rd-chapter-no.is-book { font-size: calc(24px * var(--ag-fs)); letter-spacing: .1em; }
+.ag-rd-chapter-name:empty { min-height: 8px; }
+
+.ag-rd-verse { margin: 0 0 .5em; color: var(--rd-ink-soft); font-size: calc(19px * var(--ag-fs)); line-height: 2.05; transition: color 700ms ease; }
+.ag-rd-verse.is-past { color: color-mix(in srgb, var(--rd-ink) 74%, transparent); }
+.ag-rd-verse.is-now { color: var(--rd-ink-soft); }
+.ag-rd-verse.is-now .ag-rd-seg.is-read { color: var(--rd-ink); transition: color 220ms ease; }
+.ag-rd-vno {
+  margin-right: .35em; padding: 0 .1em; border: 0; background: none; color: var(--rd-seal); cursor: pointer;
+  font: 600 calc(12px * var(--ag-fs)) var(--rd-font); vertical-align: .55em;
+}
+.ag-rd-vno:hover { text-decoration: underline; }
+.ag-rd-person { cursor: pointer; border-radius: 2px; }
+.ag-rd-person:focus-visible { outline: 2px solid var(--rd-seal); outline-offset: 2px; }
+.ag-rd-k-p { font-weight: 600; }
+.ag-rd-is-past .ag-rd-k-p,
+.ag-rd-verse.is-past .ag-rd-k-p,
+.ag-rd-seg.ag-rd-k-p.is-read {
+  background-image: linear-gradient(transparent 82%, var(--rd-ink-faint) 82%, var(--rd-ink-faint) 96%, transparent 96%);
+}
+/* 正在讀的名字：底下一道朱紅的筆觸由左往右寫出來 */
+.ag-rd-seg.is-now {
+  color: var(--rd-ink); background-repeat: no-repeat; background-position: 0 92%;
+  background-image: linear-gradient(90deg, var(--rd-accent), color-mix(in srgb, var(--rd-accent) 70%, transparent));
+  background-size: 100% .16em; animation: ag-rd-underline 520ms ease-out both;
+}
+@keyframes ag-rd-underline { from { background-size: 0 .16em; } to { background-size: 100% .16em; } }
+.ag-rd-k-t.is-read, .ag-rd-verse.is-past .ag-rd-k-t { color: var(--rd-seal); }
+.ag-rd-k-l.is-read, .ag-rd-verse.is-past .ag-rd-k-l { text-decoration: underline dotted color-mix(in srgb, var(--rd-ink) 45%, transparent); text-underline-offset: .32em; }
+.ag-rd-k-n { font-variant-numeric: tabular-nums; }
+
+.ag-rd-note {
+  display: none; margin: -.1em 0 1em 1.2em; padding: 8px 12px 9px; border-left: 3px solid var(--rd-seal);
+  background: color-mix(in srgb, var(--rd-paper-deep) 70%, transparent); color: var(--rd-ink);
+  font-size: calc(14px * var(--ag-fs)); line-height: 1.75;
+}
+.ag-rd-note.is-shown { display: block; animation: ag-rd-fade 600ms ease both; }
+.ag-rd-note-label { display: block; margin-bottom: 2px; color: var(--rd-seal); font-size: calc(11px * var(--ag-fs)); letter-spacing: .24em; }
+/* 兩處寫法不同、連回祖先：樣式比照讀經提醒，只是邊線與內文排法不同 */
+.ag-rd-diff { border-left-color: var(--rd-ink-soft); }
+.ag-rd-diff .ag-rd-note-label { color: var(--rd-ink-soft); }
+.ag-rd-diff-title, .ag-rd-linkcard-text { display: block; }
+.ag-rd-diff-title { margin-bottom: 3px; }
+.ag-rd-diff-side { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; margin-top: 2px; }
+.ag-rd-diff-text { font-weight: 600; }
+.ag-rd-diff-ref, .ag-rd-linkcard-refs { color: var(--rd-ink-soft); font-size: .86em; }
+.ag-rd-diff-ref { white-space: nowrap; }
+.ag-rd-linkcard-refs { display: block; margin-top: 3px; }
+@keyframes ag-rd-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.ag-rd-controls { display: grid; gap: 8px; padding: 12px 18px 10px; border-top: 1px solid var(--rd-ink-faint); background: color-mix(in srgb, var(--rd-paper-deep) 45%, transparent); }
+.ag-rd-transport { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.ag-rd-step {
+  display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--rd-ink-faint); border-radius: 50%;
+  background: transparent; color: var(--rd-ink); font: 18px var(--rd-font); cursor: pointer;
+}
+.ag-rd-step:hover { border-color: var(--rd-ink-soft); }
+.ag-rd-play {
+  min-width: 84px; height: 42px; padding: 0 18px; border: 0; border-radius: 21px; background: var(--rd-ink); color: var(--rd-paper);
+  font: 600 calc(15px * var(--ag-fs)) var(--rd-font); letter-spacing: .3em; cursor: pointer;
+}
+.ag-rd-play.is-playing { background: var(--rd-seal); color: var(--rd-seal-ink); }
+.ag-rd-options { display: flex; justify-content: center; gap: 10px; }
+.ag-rd-voice { padding: 5px 14px; border: 1px solid var(--rd-ink-faint); border-radius: 3px; background: transparent; color: var(--rd-ink); font: calc(13px * var(--ag-fs)) var(--rd-font); cursor: pointer; }
+.ag-rd-voice.is-on { border-color: var(--rd-seal); color: var(--rd-seal); }
+.ag-rd-voice-note { margin: 0; color: var(--rd-ink-soft); font-size: calc(12px * var(--ag-fs)); text-align: center; }
+.ag-rd-credit { margin: 0; color: var(--rd-ink-soft); font-size: calc(10px * var(--ag-fs)); text-align: center; letter-spacing: .04em; }
+
+/* ── 畫布上的章名卡、回到朗讀處 ───────────────── */
+.ag-rd-stage { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.ag-rd-stage[hidden] { display: none; }
+.ag-rd-chapter-card {
+  position: absolute; top: 18%; left: 0; right: calc(clamp(340px, 31vw, 470px) + 28px);
+  display: grid; justify-items: center; gap: 6px; color: var(--rd-ink); font-family: var(--rd-font);
+  opacity: 0; transition: opacity 600ms ease;
+}
+.ag-rd-chapter-card.is-on { opacity: 1; }
+/* 章名卡底下一團淡淡的紙色，蓋過後面的家譜，字才讀得清楚 */
+.ag-rd-chapter-card::before {
+  content: ""; position: absolute; inset: -60px -10%; z-index: -1;
+  background: radial-gradient(closest-side, var(--rd-paper) 58%, color-mix(in srgb, var(--rd-paper) 70%, transparent) 78%, transparent 100%);
+}
+.ag-rd-chapter-card.is-on > * { animation: ag-rd-write 900ms cubic-bezier(.3, .1, .2, 1) both; }
+/* 朱印：四個字直寫兩行，由右往左讀 */
+.ag-rd-card-seal {
+  display: block; height: 52px; padding: 6px 7px; border-radius: 3px;
+  background: var(--rd-seal); color: var(--rd-seal-ink); font-size: 19px; font-weight: 600; line-height: 1.06; letter-spacing: .02em;
+  writing-mode: vertical-rl; transform: rotate(-5deg); box-shadow: 0 0 0 2px color-mix(in srgb, var(--rd-seal) 30%, transparent);
+}
+.ag-rd-chapter-card.is-on .ag-rd-card-seal { animation: ag-rd-stamp 620ms 260ms cubic-bezier(.2, .9, .3, 1.15) both; }
+.ag-rd-card-no { font-size: clamp(44px, 6vw, 72px); font-weight: 600; letter-spacing: .22em; text-shadow: 0 0 22px var(--rd-paper), 0 0 6px var(--rd-paper); }
+.ag-rd-card-no.is-title { max-width: min(88%, 760px); font-size: clamp(26px, 3.6vw, 46px); line-height: 1.25; letter-spacing: .1em; text-align: center; }
+.ag-rd-card-title { padding: 2px 14px; background: color-mix(in srgb, var(--rd-paper) 82%, transparent); font-size: clamp(17px, 1.8vw, 22px); letter-spacing: .1em; }
+.ag-rd-return {
+  position: absolute; left: 22px; bottom: 22px; pointer-events: auto; padding: 8px 16px; border: 1px solid var(--rd-seal); border-radius: 20px;
+  background: var(--rd-paper); color: var(--rd-seal); font: 600 calc(14px * var(--ag-fs)) var(--rd-font); cursor: pointer; box-shadow: 0 8px 24px rgb(40 30 15 / 18%);
+}
+.ag-rd-return[hidden] { display: none; }
+
+/* ── 兩個畫面：職位圖疊在畫布上，另一個畫面縮成角落小地圖 ───────── */
+.ag-reading .ag-rd-overlay {
+  position: absolute; inset: 0; z-index: 3; box-sizing: border-box; overflow: auto; overscroll-behavior: contain;
+  padding-right: calc(clamp(340px, 31vw, 470px) + 28px);
+  background-color: var(--rd-paper); background-image: var(--rd-texture); color: var(--rd-ink);
+}
+.ag-reading .ag-rd-overlay:not(.ag-rd-overlay-on) { display: none !important; }
+.ag-reading .ag-rd-overlay-enter { transform-origin: calc(100% - clamp(340px, 31vw, 470px) - 94px) 64px; animation: ag-rd-stage-in 450ms cubic-bezier(.2, .8, .2, 1) both; }
+.ag-reading .ag-rd-overlay-leave { transform-origin: calc(100% - clamp(340px, 31vw, 470px) - 94px) 64px; animation: ag-rd-stage-out 450ms cubic-bezier(.5, 0, .8, .4) both; pointer-events: none; }
+/* 右上角的小地圖卡不蓋住名冊、職位圖的內容：桌機讓出右邊一欄（城牆自己排版時避開，不讓欄） */
+.ag-reading .ag-rd-overlay:not(.ag-wall) { padding-right: calc(clamp(340px, 31vw, 470px) + 28px + 152px); }
+.ag-reading .ag-rd-stage::before {
+  content: ""; display: none; position: absolute; top: 0; right: 0; left: 0; height: 52px;
+  background: var(--rd-paper); border-bottom: 1px solid var(--rd-paper-edge);
+}
+@keyframes ag-rd-stage-in { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: none; } }
+@keyframes ag-rd-stage-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(.2); } }
+
+.ag-rd-mini {
+  position: absolute; top: 14px; right: calc(clamp(340px, 31vw, 470px) + 28px); z-index: 2; pointer-events: auto;
+  display: grid; gap: 4px; width: 132px; padding: 6px 6px 5px; border: 1px solid var(--rd-paper-edge); border-radius: 6px;
+  background: var(--rd-paper); color: var(--rd-ink); font: calc(12px * var(--ag-fs)) var(--rd-font); letter-spacing: .12em; text-align: center;
+  box-shadow: 0 8px 24px rgb(40 30 15 / 20%); cursor: pointer;
+}
+.ag-rd-mini:hover { border-color: var(--rd-seal); }
+.ag-rd-mini:focus-visible { outline: 2px solid var(--rd-seal); outline-offset: 2px; }
+.ag-rd-mini.is-fresh { animation: ag-rd-fade 450ms 380ms ease both; }
+.ag-rd-mini-view { position: relative; display: block; height: 84px; border-radius: 3px; background: var(--rd-paper-deep); }
+.ag-rd-mini-view > :not(.ag-rd-mini-dot) { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ag-rd-mini-line { fill: none; stroke: var(--rd-ink-soft); stroke-width: 1.6px; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.ag-rd-mini-line.is-matthew { stroke: var(--ag-matthew); }
+.ag-rd-mini-line.is-luke { stroke: var(--ag-luke); }
+.ag-rd-mini-dot {
+  position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--rd-seal);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rd-seal) 28%, transparent);
+}
+
+/* 讀經時點了人物，人物卡放在左邊，不蓋住經文欄 */
+@media (min-width: 901px) {
+  .ag-reading .ag-info-card { right: auto; left: 16px; }
+}
+
+/* 動畫開關關掉：直接切換，不畫落筆、蓋印 */
+html[data-motion="off"] .ag-rd-halo,
+html[data-motion="off"] .ag-rd-seal-stamp,
+html[data-motion="off"] .ag-canvas.ag-rd-on .ag-node.ag-rd-current .ag-node-label,
+html[data-motion="off"] .ag-rd-seg.is-now,
+html[data-motion="off"] .ag-rd-chapter-card.is-on > *,
+html[data-motion="off"] .ag-rd-chapter-card.is-on .ag-rd-card-seal,
+html[data-motion="off"] .ag-reading .ag-rd-overlay-enter,
+html[data-motion="off"] .ag-reading .ag-rd-overlay-leave,
+html[data-motion="off"] .ag-rd-mini.is-fresh { animation: none; }
+
+/* ── 手機、平板：上半畫布，下半經文 ──────────── */
+@media (max-width: 900px) {
+  .ag-rd-panel { top: auto; right: 0; bottom: 0; left: 0; width: auto; height: 47dvh; border-radius: 14px 14px 0 0; border-bottom: 0; }
+  .ag-rd-head { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 8px; padding: 12px 14px 9px; }
+  .ag-rd-title { grid-column: 1; grid-row: 1; grid-auto-flow: column; justify-content: start; align-items: baseline; gap: 10px; }
+  .ag-rd-title strong { font-size: calc(18px * var(--ag-fs)); }
+  .ag-reading .ag-rd-overlay { padding-right: 0; padding-bottom: 47dvh; }
+  /* 平板：小地圖卡（112px）占右邊一欄，內容讓開 */
+  .ag-reading .ag-rd-overlay:not(.ag-wall) { padding-right: 132px; }
+  .ag-reading .ag-rd-overlay-enter, .ag-reading .ag-rd-overlay-leave { transform-origin: calc(100% - 70px) 54px; }
+  .ag-rd-mini { top: 8px; right: 10px; width: 112px; }
+  .ag-rd-mini-view { height: 62px; }
+  .ag-rd-card-no.is-title { font-size: 26px; }
+  .ag-rd-head .ag-rd-select { grid-column: 1 / -1; grid-row: 2; }
+  .ag-rd-close { grid-column: 2; grid-row: 1; }
+  .ag-rd-scroll { padding: 0 16px 32px; }
+  .ag-rd-verse { font-size: calc(17px * var(--ag-fs)); line-height: 1.95; }
+  .ag-rd-chapter-head { margin: 12px 0 10px; }
+  .ag-rd-chapter-no { font-size: calc(24px * var(--ag-fs)); }
+  .ag-rd-controls { padding: 8px 12px 8px; gap: 6px; }
+  .ag-rd-credit { display: none; }
+  .ag-rd-chapter-card { top: 3%; right: 0; gap: 2px; }
+  .ag-rd-chapter-card::before { inset: -24px 0; background: radial-gradient(closest-side, var(--rd-paper) 72%, transparent 100%); }
+  .ag-rd-card-no { font-size: 34px; }
+  .ag-rd-card-seal { height: 42px; padding: 4px 5px; font-size: 15px; }
+  .ag-rd-card-title { font-size: 15px; }
+  .ag-rd-return { left: auto; right: 12px; bottom: calc(47dvh + 12px); }
+}
+@media (max-width: 520px) {
+  /* 手機：「家譜樹」膠囊放在上方一條帶子裡，捲動的內容在帶子下面，不會跑到按鈕底下 */
+  .ag-reading .ag-rd-overlay:not(.ag-wall) { top: 52px; padding-right: 0; }
+  .ag-reading .ag-rd-overlay:not(.ag-wall).ag-rd-overlay-enter, .ag-reading .ag-rd-overlay:not(.ag-wall).ag-rd-overlay-leave { transform-origin: calc(100% - 70px) 2px; }
+  .ag-reading:has(.ag-rd-overlay-on:not(.ag-wall)) .ag-rd-stage::before { display: block; }
+  .ag-rd-mini { width: auto; padding: 6px 14px; border-color: var(--rd-seal); border-radius: 18px; color: var(--rd-seal); font-weight: 600; letter-spacing: .14em; }
+  .ag-rd-mini-view { display: none; }
+  .ag-rd-options { flex-wrap: wrap; }
+  .ag-rd-step { width: 34px; height: 34px; }
+  .ag-rd-play { min-width: 74px; height: 38px; }
+}

@@ -1,9 +1,9 @@
 import type { GenealogyData, Person } from '../data/types';
 import { h } from './dom';
 import { createSearch } from './search';
-import { FONT_SCALES, getFontScale, setFontScale } from './fontscale';
+import { FONT_SCALE_EVENT, PAGE_SCALE_MAX, PAGE_SCALE_MIN, PAGE_SCALE_STEP, getPageScale, setPageScale } from './fontscale';
 
-export type PageId = 'tree' | 'compare' | 'ages' | 'notes' | 'families' | 'unconnected';
+export type PageId = 'catalog' | 'tree' | 'compare' | 'ages' | 'notes' | 'roles' | 'returns';
 export type LineFilter = 'both' | '馬太' | '路加';
 
 export interface ToolbarActions {
@@ -11,13 +11,16 @@ export interface ToolbarActions {
   setPage(page: PageId): void;
   setLine(line: LineFilter): void;
   restartTour(): void;
+  /** 帶你讀經：打開或離開 */
+  toggleReading(): void;
+  isReading(): boolean;
   zoom(factor: number): void;
   fit(): void;
   getLine(): LineFilter;
   getPage(): PageId;
 }
 
-export function createToolbar(data: GenealogyData, actions: ToolbarActions): { el: HTMLElement; setState(): void } {
+export function createToolbar(data: GenealogyData, actions: ToolbarActions): { el: HTMLElement; setState(): void; hintRead(on: boolean): void } {
   const search = createSearch(data, actions.selectPerson);
   const lineButtons = new Map<LineFilter, HTMLButtonElement>();
   const lineGroup = h('div', { className: 'ag-line-toggle', role: 'group', 'aria-label': '顯示家譜線' });
@@ -28,7 +31,7 @@ export function createToolbar(data: GenealogyData, actions: ToolbarActions): { e
     lineGroup.append(button);
   }
   const tabs: Array<[PageId, string]> = [
-    ['tree', '家譜樹'], ['compare', '兩條線對照'], ['ages', '年歲時間軸'], ['notes', '經文不同的地方'], ['families', '新約家族'], ['unconnected', '接不上主線的家族'],
+    ['catalog', '目錄'], ['tree', '家譜樹'], ['compare', '兩條線對照'], ['ages', '年歲時間軸'], ['notes', '經文不同的地方'], ['roles', '大衛立的職位'], ['returns', '歸回的名單'],
   ];
   const tabButtons = new Map<PageId, HTMLButtonElement>();
   const tabBar = h('nav', { className: 'ag-tabs', 'aria-label': '家譜檢視' });
@@ -45,6 +48,8 @@ export function createToolbar(data: GenealogyData, actions: ToolbarActions): { e
   zoomIn.addEventListener('click', () => actions.zoom(1.22));
   fit.addEventListener('click', actions.fit);
   const restart = h('button', { className: 'ag-quiet-button', type: 'button' }, '重播導覽');
+  const readButton = h('button', { className: 'ag-rd-entry', type: 'button', 'aria-pressed': 'false' }, '帶你讀經');
+  readButton.addEventListener('click', () => { actions.toggleReading(); setState(); });
   restart.addEventListener('click', actions.restartTour);
   const theme = h('button', { className: 'ag-quiet-button', type: 'button', 'aria-pressed': 'false' }, '深色');
   const motion = h('button', { className: 'ag-quiet-button', type: 'button', 'aria-pressed': 'true' }, '動畫');
@@ -74,20 +79,29 @@ export function createToolbar(data: GenealogyData, actions: ToolbarActions): { e
     syncPreferences();
   });
   syncPreferences();
-  const smaller = h('button', { className: 'ag-quiet-button', type: 'button', title: '字體變小', 'aria-label': '字體變小' }, 'A−');
-  const larger = h('button', { className: 'ag-quiet-button', type: 'button', title: '字體變大', 'aria-label': '字體變大' }, 'A＋');
-  const fontGroup = h('div', { className: 'ag-font-size', role: 'group', 'aria-label': '字體大小' }, smaller, larger);
+  // 大小滑桿：字、圓盤、方塊一起放大；兩端的 A 點一下各走一格
+  const smaller = h('button', { className: 'ag-size-end ag-size-small', type: 'button', title: '變小', 'aria-label': '變小' }, 'A');
+  const larger = h('button', { className: 'ag-size-end ag-size-large', type: 'button', title: '變大', 'aria-label': '變大' }, 'A');
+  const slider = h('input', {
+    className: 'ag-size-range', type: 'range', min: String(PAGE_SCALE_MIN), max: String(PAGE_SCALE_MAX), step: String(PAGE_SCALE_STEP), 'aria-label': '大小',
+  }) as HTMLInputElement;
+  const percent = h('output', { className: 'ag-size-value' });
+  const fontGroup = h('div', { className: 'ag-font-size', role: 'group', 'aria-label': '大小' }, smaller, slider, larger, percent);
   const syncFont = () => {
-    const index = (FONT_SCALES as readonly number[]).indexOf(getFontScale());
-    smaller.disabled = index <= 0;
-    larger.disabled = index >= FONT_SCALES.length - 1;
-    fontGroup.title = `字體大小 ${Math.round(getFontScale() * 100)}%`;
+    const scale = getPageScale();
+    slider.value = String(scale);
+    slider.setAttribute('aria-valuetext', `${Math.round(scale * 100)}%`);
+    percent.textContent = `${Math.round(scale * 100)}%`;
+    smaller.disabled = scale <= PAGE_SCALE_MIN + 1e-6;
+    larger.disabled = scale >= PAGE_SCALE_MAX - 1e-6;
+    fontGroup.title = `大小 ${Math.round(scale * 100)}%`;
   };
-  smaller.addEventListener('click', () => setFontScale(FONT_SCALES[Math.max(0, (FONT_SCALES as readonly number[]).indexOf(getFontScale()) - 1)]!));
-  larger.addEventListener('click', () => setFontScale(FONT_SCALES[Math.min(FONT_SCALES.length - 1, (FONT_SCALES as readonly number[]).indexOf(getFontScale()) + 1)]!));
-  window.addEventListener('ag-fontscale', syncFont);
+  slider.addEventListener('input', () => setPageScale(Number(slider.value)));
+  smaller.addEventListener('click', () => setPageScale(getPageScale() - 0.1));
+  larger.addEventListener('click', () => setPageScale(getPageScale() + 0.1));
+  window.addEventListener(FONT_SCALE_EVENT, syncFont);
   syncFont();
-  const controls = h('div', { className: 'ag-controls' }, lineGroup, zoomOut, zoomIn, fit, restart, fontGroup, theme, motion);
+  const controls = h('div', { className: 'ag-controls' }, readButton, lineGroup, zoomOut, zoomIn, fit, restart, fontGroup, theme, motion);
   const header = h('header', { className: 'ag-header' },
     h('div', { className: 'ag-brand' },
       h('span', { className: 'ag-brand-mark', 'aria-hidden': 'true' }, '譜'),
@@ -97,7 +111,12 @@ export function createToolbar(data: GenealogyData, actions: ToolbarActions): { e
     tabBar);
   const setState = () => {
     for (const [id, button] of lineButtons) button.setAttribute('aria-pressed', String(actions.getLine() === id));
-    for (const [id, button] of tabButtons) button.setAttribute('aria-pressed', String(actions.getPage() === id));
+    // 讀經時沒有哪個分頁是「目前這頁」
+    for (const [id, button] of tabButtons) button.setAttribute('aria-pressed', String(!actions.isReading() && actions.getPage() === id));
+    readButton.setAttribute('aria-pressed', String(actions.isReading()));
+    readButton.textContent = actions.isReading() ? '離開讀經' : '帶你讀經';
   };
-  return { el: header, setState };
+  /** 導覽的「一起讀經」站：把「帶你讀經」按鈕標亮（朱色呼吸框） */
+  const hintRead = (on: boolean) => readButton.classList.toggle('is-hint', on);
+  return { el: header, setState, hintRead };
 }

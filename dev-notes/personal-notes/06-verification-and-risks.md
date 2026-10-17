@@ -8,17 +8,17 @@
 
 | # | 項目 | 為什麼重要 | 結果 |
 |---|---|---|---|
-| V-01 | GIS token client 在 iPhone Safari 一般分頁能否登入 | 主要行動使用情境 | |
+| V-01 | GIS token client 在 iPhone Safari 一般分頁能否登入 | 主要行動使用情境 | ✅ 2026-10-18 iOS 18.7 Safari：登入成功（約 14 秒，含使用者操作），t01–t11 全通過 |
 | V-02 | GIS token client 在 iPhone 主畫面 App（standalone）能否登入；彈窗是否卡住 | 決定 Token 服務是否提前（D-31） | |
 | V-03 | LINE 內建瀏覽器的行為（預期 `disallowed_useragent`）；`openExternalBrowser=1` 是否有效 | 台灣使用者大量從 LINE 點連結 | |
-| V-04 | `prompt:''`＋`login_hint` 續期時，彈窗是否不需使用者操作就自動關閉 | 決定 MVP「點一下繼續同步」的摩擦程度 | ✅ 2026-10-18 Windows Chrome：續期彈窗**閃一下自動關閉**，不需選帳號或再按允許 → MVP 續期只需一次點擊、無其他操作 |
+| V-04 | `prompt:''`＋`login_hint` 續期時，彈窗是否不需使用者操作就自動關閉 | 決定 MVP「點一下繼續同步」的摩擦程度 | ✅ 2026-10-18 Windows Chrome：續期彈窗**閃一下自動關閉**，不需選帳號或再按允許 → MVP 續期只需一次點擊、無其他操作；iPhone Safari：續期**需要選帳號或再按允許**（約 3.8 秒）→ iOS 續期多一步操作 |
 | V-05 | `files.get?alt=media`、`files.create`、`changes.list` 實際耗用的配額單位 | 成本估算準確度（02 §4） | 待 P0-7 到 Cloud Console 比對。Windows 測試共呼叫 79 次（含跨裝置監看 changes.list 51 次） |
-| V-06 | `changes.list(spaces=appDataFolder)` 從一台裝置寫入到另一台看到的延遲 | 跨裝置同步體驗 | |
+| V-06 | `changes.list(spaces=appDataFolder)` 從一台裝置寫入到另一台看到的延遲 | 跨裝置同步體驗 | ✅ 2026-10-18 Windows Chrome 寫入 → iPhone Safari 輪詢（5 秒間隔）：伺服器寫入後約 3 秒被發現，端到端約 5 秒 → changes.list 延遲極低 |
 | V-07 | 用 `generateIds` 的 id 重複建立同一檔案時的錯誤行為（確認不會產生重複檔） | 重試安全 | ✅ 2026-10-18 Windows Chrome：重複建立同一 ID 回 **HTTP 409 `fileIdInUse`**，未產生重複檔。設計可用 |
 | V-08 | appDataFolder 檔案是否保留版本紀錄（revisions.list） | 資料救回手段 | ✅ 2026-10-18：appDataFolder 檔案**有保留版本紀錄**（寫 2 次 → 2 個 revision）。保留期限未測 |
 | V-09 | 純網頁 App 是否出現在 Drive「管理應用程式」；「中斷連線」是否刪除隱藏資料 | 使用者說明與資料保護 | |
-| V-10 | `storage.persist()` 在 Safari 一般分頁與主畫面 App 的結果；Windows Chrome／Edge 的結果 | 本機資料被清除的風險 | Windows Chrome（localhost、一般分頁）：`persist()` **未授予**（Chrome 依網站互動度判斷，屬預期）。Safari 待測 |
-| V-11 | 測試中狀態下，測試使用者是否看到「Google 尚未驗證這個應用程式」畫面 | 試用說明 | ✅ 2026-10-18 Windows Chrome：測試中狀態、測試使用者登入時**沒有**出現未驗證警告；同意畫面只有一項權限、**沒有勾選框**（符合 D-11） |
+| V-10 | `storage.persist()` 在 Safari 一般分頁與主畫面 App 的結果；Windows Chrome／Edge 的結果 | 本機資料被清除的風險 | Windows Chrome（localhost、一般分頁）：`persist()` **未授予**（Chrome 依網站互動度判斷，屬預期）。Safari 待測；iPhone Safari 一般分頁：未授予（配額上限約 39 GB） |
+| V-11 | 測試中狀態下，測試使用者是否看到「Google 尚未驗證這個應用程式」畫面 | 試用說明 | ✅ 2026-10-18 Windows Chrome：測試中狀態、測試使用者登入時**沒有**出現未驗證警告；同意畫面只有一項權限、**沒有勾選框**（符合 D-11）；iPhone Safari 同樣無警告、只有一項權限 |
 | V-12 | `andyjr5566.github.io` 能否在 Search Console 驗證（可能需另建使用者站台 repo），或需改用自訂網域 | 發佈正式版前必要（D-33） | |
 | V-13 | 學校／公司 Workspace 帳號與受監護的未成年帳號的行為 | 青少年團契、學校帳號使用者 | |
 | V-14 | Google 公布的 Drive API 超量計費單價（2026 稍晚） | 長期成本 | |
@@ -33,7 +33,7 @@
 |---|---|---|---|---|---|---|
 | Windows Chrome | ✅ 2026-10-18 | ✅ t01–t11 全通過 | 待測 | 待測 | ✅ 自動關閉 | localhost；token 3599 秒；API 回應 0.2–1.9 秒 |
 | Windows Edge | | | | | | |
-| iPhone Safari | | | | | | |
+| iPhone Safari | ✅ 2026-10-18 | ✅ t01–t11 全通過 | 待測 | 待測 | ⚠️ 需選帳號／按允許 | iOS 18.7；跨裝置延遲約 3–5 秒 |
 | iPhone 主畫面 App | | | | | | 與 Safari 儲存分開 |
 | iPad Safari | | | | | | |
 | iPhone LINE 內建瀏覽器 | | — | — | — | — | 預期需引導外部瀏覽器 |

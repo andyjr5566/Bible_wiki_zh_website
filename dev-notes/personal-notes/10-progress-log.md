@@ -60,3 +60,11 @@
 
 - main 上只新增 PoC 頁（commit `0f1b2559`，已 push）；GitHub Pages 約 15 分鐘後上線：https://andyjr5566.github.io/Bible_wiki_zh_website/static/personal-notes-poc/ （含 noindex；首頁正常 200）。
 - 下一步：P0-6 使用者 iPhone／iPad 實測。
+
+## 2026-10-18｜Phase 0｜P0-6 iPhone Safari 測試通過
+
+- iOS 18.7 Safari（GitHub Pages）：登入、續期、t01–t11 全通過；API 延遲與 Windows 相近（0.4–2.3 秒）。
+- 跨裝置：Windows 寫入 → iPhone 監看，伺服器寫入後約 3 秒發現、端到端約 5 秒（V-06 ✅）。
+- 續期在 iPhone Safari 需要選帳號或再按允許（Windows 是自動關閉）→ iOS 上的「點一下繼續同步」實際是 2 步。
+- `persist()` 未授予（Safari 一般分頁）；無未驗證警告、只有一項權限。
+- 待釐清：報告中 o4（主畫面 App）答「可以」但環境顯示 standalone=否；o5（LINE）答「其他」未描述 → 已向使用者確認。

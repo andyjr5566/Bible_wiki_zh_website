@@ -79,3 +79,16 @@
 - iPhone 主畫面 App（standalone=是）：登入成功並回到 App、續期自動關閉（0.5 秒）、t01–t11 全通過、**persist() 已授予**、跨裝置約 3–6 秒。
 - 06 §1、§2 已更新；01 新增 D-20～D-25：MVP 確定用 Token model（Token 服務不提前）、LINE 先引導外部瀏覽器、續期文案依環境、鼓勵 iPhone 加入主畫面、輪詢間隔可放寬、generateIds＋409 處理方式。
 - Phase 0 剩 P0-7（Cloud Console 配額單位比對）需要使用者。
+
+## 2026-10-18｜Phase 0｜✅ 階段完成
+
+**驗收**
+- 05 Phase 0 任務 P0-1～P0-8 全部完成（P0-7 經使用者同意延後併入 P1-18）。
+- 06 §1：V-01、V-02、V-03、V-04、V-06、V-07、V-08、V-10、V-11 有實測結果；V-05、V-09、V-12、V-13、V-14 標示延後與理由。
+- 01 新增 D-20～D-25。
+- 建置：`npx quartz build -d test_content -o <scratch>/build-p0` 成功（203 個檔案，PoC 頁在輸出中；Google Fonts 400 警告為既有狀況）。線上首頁 200。Phase 0 未改動任何元件或 plugin，既有功能無回歸風險。
+- 本機測試伺服器已關閉。
+
+**main 上的變更（使用者同意）**：只有 PoC 頁 `quartz/static/personal-notes-poc/`（commit `0f1b2559`、`fcf5d547`），Phase 1 完成後刪除（P1-17）。開發筆記只在 `feature/personal-notes` 分支，未 push。
+
+**下一階段**：Phase 1 MVP（整章筆記＋同步）。

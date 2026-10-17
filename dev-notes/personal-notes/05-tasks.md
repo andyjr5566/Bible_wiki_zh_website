@@ -14,7 +14,7 @@
 
 | # | 任務 | 負責 | 完成 |
 |---|---|---|---|
-| P0-1 | 建立 `feature/personal-notes` 分支 | C | [ ] |
+| P0-1 | 建立 `feature/personal-notes` 分支 | C | [x] 2026-10-18 |
 | P0-2 | 🙋 使用者依 08 建立 Google Cloud 專案、啟用 Drive API、設定同意畫面（測試中）、建立網頁用戶端，提供 **Client ID**（不要提供 client secret） | U | [x] 2026-10-18（Client ID 見 08；設定是否正確於 P0-4 驗證） |
 | P0-3 | 撰寫 PoC 頁 `quartz/static/personal-notes-poc/index.html`（單檔、無框架、noindex）：GIS 登入、about.get、generateIds＋建立、上傳、下載、列表、changes.list、刪除、revoke；顯示每步結果與耗時；偵測內建瀏覽器與 standalone；呼叫 storage.persist() 並顯示結果；Web Locks 支援檢查 | C／Cx | [ ] |
 | P0-4 | 本機（localhost:8080）在 Windows Chrome／Edge 跑通 PoC | C | [ ] |

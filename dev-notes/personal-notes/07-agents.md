@@ -22,6 +22,9 @@ codex exec -m gpt-6-sol -s workspace-write -C "<worktree 路徑>" \
   -c model_reasoning_effort="high" - < task.md
 ```
 
+- **已知問題（2026-10-18）**：在這台 Windows 上 `-s read-only` 沙箱無法啟動任何子程序（`helper_unknown_error: setup refresh had errors`），Codex 讀不到檔案。只讀審查的替代做法：把檔案內容用 stdin 傳進去，提示詞放在參數（stdin 會附加成 `<stdin>` 區塊）：
+  `codex exec -m gpt-6-sol -s read-only --skip-git-repo-check "<審查提示>" < 目標檔案`
+  `workspace-write` 沙箱是否正常，第一次委派實作時要先驗證。
 - 程式碼審查：`codex exec review`（或 `codex review`）在 worktree 中執行。
 - 建議在獨立 git worktree 執行（例如 `git worktree add ../bwz-wt-p1-3 feature/personal-notes`），完成後由主導者審查並 cherry-pick。
 

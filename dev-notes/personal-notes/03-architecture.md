@@ -29,7 +29,7 @@
 
 原則：
 - UI 只讀寫 IndexedDB；同步在背景。
-- 一般讀者不下載任何筆記程式碼；GIS script（`https://accounts.google.com/gsi/client`）只在按下登入或連線時載入。
+- 一般讀者不下載任何筆記程式碼；GIS script（`https://accounts.google.com/gsi/client`）在筆記面板或同步按鈕**出現時**預先載入，**不可等到按下按鈕才載入**：點擊後再非同步等待 script，瀏覽器會失去「使用者手勢」，登入彈窗會被封鎖（2026-10-18 撰寫 PoC 時確認的設計限制）。
 - 引擎掛在 `window.__bwzNotes`，Quartz SPA 換頁（`nav` 事件）不重建；UI 掛載點每次 `nav` 重新掛載並用 `window.addCleanup` 清理。
 - 同步層實作 `SyncAdapter` 介面，可抽換（D-18）。
 
@@ -214,7 +214,8 @@ appDataFolder/                      （使用者看不到）
 ## 7. 授權模組（MVP：GIS Token model）
 
 - `google.accounts.oauth2.initTokenClient({ client_id, scope: "https://www.googleapis.com/auth/drive.appdata", prompt: "", login_hint, callback, error_callback })`。
-- 第一次：使用者點「用 Google 同步」→ 先顯示說明：「本站只能存取它自己建立的隱藏筆記資料夾，看不到你雲端硬碟的任何其他檔案。」→ `requestAccessToken()`。
+- GIS 預先載入並 `initTokenClient`，使點擊處理函式能**同步**呼叫 `requestAccessToken()`（中間不可有 `await`），否則彈窗會被封鎖。
+- 第一次：使用者點「用 Google 同步」→ 先顯示說明：「本站只能存取它自己建立的隱藏筆記資料夾，看不到你雲端硬碟的任何其他檔案。」→ 使用者在說明視窗按「繼續」時（新的使用者手勢）呼叫 `requestAccessToken()`。
 - Token 只放記憶體＋同分頁 `sessionStorage`（含到期時間，提前 5 分鐘視為過期）；不放 localStorage、不放網址。
 - 取得 token 後呼叫 `about.get` 取得 displayName、emailAddress、photoLink、permissionId。
 - 續期：只能在使用者點擊中呼叫；UI 提供「連線同步」「點一下繼續同步」按鈕。

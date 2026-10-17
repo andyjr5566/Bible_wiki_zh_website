@@ -55,3 +55,8 @@
 
 - 使用者回報（Windows Chrome）：無未驗證警告（V-11）；同意畫面只有一項權限、無勾選框；續期彈窗閃一下自動關閉（V-04 ✅）。
 - 使用者同意 P0-5 方案：**只把 PoC 頁推到 main 讓 GitHub Pages 發佈**；開發筆記與分支其他內容不推。
+
+## 2026-10-18｜Phase 0｜P0-5 PoC 上線
+
+- main 上只新增 PoC 頁（commit `0f1b2559`，已 push）；GitHub Pages 約 15 分鐘後上線：https://andyjr5566.github.io/Bible_wiki_zh_website/static/personal-notes-poc/ （含 noindex；首頁正常 200）。
+- 下一步：P0-6 使用者 iPhone／iPad 實測。

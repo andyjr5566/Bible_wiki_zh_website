@@ -18,7 +18,7 @@
 | P0-2 | 🙋 使用者依 08 建立 Google Cloud 專案、啟用 Drive API、設定同意畫面（測試中）、建立網頁用戶端，提供 **Client ID**（不要提供 client secret） | U | [x] 2026-10-18（Client ID 見 08；設定是否正確於 P0-4 驗證） |
 | P0-3 | 撰寫 PoC 頁 `quartz/static/personal-notes-poc/index.html`（單檔、無框架、noindex）：GIS 登入、about.get、generateIds＋建立、上傳、下載、列表、changes.list、刪除、revoke；顯示每步結果與耗時；偵測內建瀏覽器與 standalone；呼叫 storage.persist() 並顯示結果；Web Locks 支援檢查 | C／Cx | [x] 2026-10-18（Codex Sol 審查 11 項全數修正） |
 | P0-4 | 本機（localhost:8080）在 Windows Chrome／Edge 跑通 PoC | C | [x] 2026-10-18 Windows Chrome 全通過（Edge 未測，非必要） |
-| P0-5 | 🙋 使用者同意後部署 PoC 到 GitHub Pages（需要 push；或先只推分支並用其他方式提供 HTTPS 頁面，由使用者決定） | U／C | [ ] |
+| P0-5 | 🙋 使用者同意後部署 PoC 到 GitHub Pages（需要 push；或先只推分支並用其他方式提供 HTTPS 頁面，由使用者決定） | U／C | [x] 2026-10-18 只推 PoC 頁到 main（`0f1b2559`），已上線 https://andyjr5566.github.io/Bible_wiki_zh_website/static/personal-notes-poc/ |
 | P0-6 | 🙋 使用者實機測試：iPhone／iPad Safari、iPhone 主畫面 App、LINE 內建瀏覽器（含 `openExternalBrowser=1`）、Windows Chrome／Edge；依 06 §2 矩陣回報 | U | [ ] |
 | P0-7 | 到 Cloud Console 觀察各 API 實際耗用配額單位（特別是 files.get?alt=media、files.create、changes.list） | U／C | [ ] |
 | P0-8 | 整理 PoC 結果寫入 06，並決定：MVP 的 iPhone 主畫面 App 策略、Token 服務是否提前（D-31） | C＋U | [ ] |

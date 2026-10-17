@@ -46,6 +46,8 @@ export class TokenManager {
   private client: any = null
   private accessToken: string | null = null
   private expiresAt = 0
+  /** 目前 token 屬於哪個 Google 帳號（permissionId）。取得新 token 後為 null，直到用 about.get 確認（Codex 審查 #1、#7）。 */
+  private owner: string | null = null
   private listeners = new Set<Listener>()
   private pending: ((r: TokenResult) => void) | null = null
 
@@ -53,10 +55,12 @@ export class TokenManager {
     const saved = safe(() => JSON.parse(sessionStorage.getItem(TOKEN_KEY) ?? "null"), null) as {
       token: string
       expiresAt: number
+      owner?: string | null
     } | null
     if (saved && saved.expiresAt - EXPIRY_MARGIN_MS > Date.now()) {
       this.accessToken = saved.token
       this.expiresAt = saved.expiresAt
+      this.owner = saved.owner ?? null
     }
   }
 
@@ -86,6 +90,22 @@ export class TokenManager {
 
   hasToken(): boolean {
     return this.token() !== null
+  }
+
+  /** 只有在 token 已確認屬於指定帳號時才回傳（同步一律用這個）。 */
+  tokenFor(permissionId: string): string | null {
+    return this.owner === permissionId ? this.token() : null
+  }
+
+  /** 用 about.get 確認帳號後呼叫。 */
+  setOwner(permissionId: string): void {
+    this.owner = permissionId
+    this.persist()
+    this.emit()
+  }
+
+  private persist(): void {
+    safe(() => sessionStorage.setItem(TOKEN_KEY, JSON.stringify({ token: this.accessToken, expiresAt: this.expiresAt, owner: this.owner })), undefined)
   }
 
   /** 距離過期還有多久（毫秒），沒有 token 回傳 0。 */
@@ -136,7 +156,8 @@ export class TokenManager {
     }
     this.accessToken = resp.access_token
     this.expiresAt = Date.now() + Number(resp.expires_in) * 1000
-    safe(() => sessionStorage.setItem(TOKEN_KEY, JSON.stringify({ token: this.accessToken, expiresAt: this.expiresAt })), undefined)
+    this.owner = null // 新 token 尚未確認屬於哪個帳號
+    this.persist()
     this.emit()
     this.settle({ ok: true })
   }
@@ -152,10 +173,16 @@ export class TokenManager {
     safe(() => localStorage.setItem(HINT_KEY, email), undefined)
   }
 
+  /** 公用電腦登出並清除時，連同記住的 email 一起清掉（Antigravity 審閱 #6）。 */
+  forgetEmail(): void {
+    safe(() => localStorage.removeItem(HINT_KEY), undefined)
+  }
+
   /** 忘記 token（登出）。 */
   clear(): void {
     this.accessToken = null
     this.expiresAt = 0
+    this.owner = null
     safe(() => sessionStorage.removeItem(TOKEN_KEY), undefined)
     this.emit()
   }

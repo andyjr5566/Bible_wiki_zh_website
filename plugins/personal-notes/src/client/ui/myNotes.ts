@@ -106,7 +106,7 @@ export class MyNotesPage {
       )
       // D-23：iPhone 加入主畫面後，本機筆記較不會被系統清除
       if (isIOS() && !isStandalone()) {
-        parts.push(h("p", { class: "bwz-n-tip", text: "小提醒：在 iPhone 上把本站「加入主畫面」後再使用，筆記會更穩定地保存在手機上，登入也更順。" }))
+        parts.push(h("p", { class: "bwz-n-tip", text: "小提醒：在 iPhone 上把本站「加入主畫面」後再使用，筆記會更穩定地儲存在手機上，登入也更順。（主畫面圖示和 Safari 的儲存空間是分開的，請先登入同步。）" }))
       }
     }
     this.accountEl.replaceChildren(...parts.filter((x): x is HTMLElement => x !== null))

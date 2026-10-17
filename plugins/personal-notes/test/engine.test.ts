@@ -330,3 +330,67 @@ describe("NotesEngine：多裝置同步", () => {
     expect(a.engine.visible()).toHaveLength(0)
   })
 })
+
+describe("NotesEngine：Codex 審查回歸測試", () => {
+  it("#3 更新其實成功但回應遺失：不會誤判成別人用了同一裝置 ID", async () => {
+    const cloud = new MemoryCloud()
+    const inner = new MemoryAdapter(cloud)
+    let lose = false
+    const flaky: SyncAdapter = Object.assign(Object.create(inner), {
+      update: async (...args: Parameters<SyncAdapter["update"]>) => {
+        const r = await inner.update(...args)
+        if (lose) {
+          lose = false
+          throw new AdapterError("network", "response lost")
+        }
+        return r
+      },
+    })
+    const a = await device(cloud, { adapter: flaky })
+    const n = await a.engine.create(note("v1"))
+    await a.engine.sync()
+    const id1 = a.engine.deviceId
+    await a.engine.update(n.id, { body: "v2" })
+    lose = true
+    await a.engine.sync()
+    expect(a.engine.status.kind).toBe("offline")
+    await a.engine.sync()
+    expect(a.engine.deviceId).toBe(id1)
+    expect([...cloud.files.values()].filter((f) => f.meta.kind === "shard")).toHaveLength(1)
+  })
+
+  it("#5 雲端清空後重新上傳：其他裝置的較新版本與衝突版本都保住", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const b = await device(cloud)
+    const n = await a.engine.create(note("原文"))
+    const m = await a.engine.create(note("第二則"))
+    await a.engine.sync()
+    await b.engine.sync()
+    await b.engine.update(n.id, { body: "B 的較新版本" })
+    await b.engine.update(m.id, { body: "B 同時改" })
+    await a.engine.update(m.id, { body: "A 同時改" })
+    await b.engine.sync()
+    await a.engine.sync()
+    cloud.wipe()
+    await a.engine.sync()
+    await a.engine.reuploadAfterWipe()
+    const c = await device(cloud)
+    await c.engine.sync()
+    expect(bodies(c)).toEqual(["A 同時改", "B 同時改", "B 的較新版本"].sort())
+  })
+
+  it("#6 未登入時的筆記和帳號裡同 id 但內容不同：另存，不丟棄", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const n = await a.engine.create(note("帳號裡的版本"))
+    const anonStore = await NotesStore.open("anon6", new IDBFactory())
+    const anon = await NotesEngine.create({ store: anonStore })
+    await anon.importData(JSON.parse(JSON.stringify(a.engine.exportData())))
+    await anon.update(n.id, { body: "未登入時改的" })
+    await a.engine.update(n.id, { body: "帳號裡又改了" })
+    const added = await a.engine.adoptRecords(await anonStore.getAllOwn())
+    expect(added).toBe(1)
+    expect(bodies(a)).toEqual(["帳號裡又改了", "未登入時改的"].sort())
+  })
+})

@@ -110,8 +110,10 @@ export class Controller {
 
     if (account && this.tokens) {
       const tokens = this.tokens
-      const adapter = new DriveAdapter({ getToken: () => tokens.token(), maxCallsPerMinute: 60 })
-      this.engine.setAdapter(adapter, () => tokens.hasToken())
+      const pid = account.permissionId
+      // 只有「已確認屬於這個帳號」的 token 才能用來同步，避免把 A 帳號的筆記寫進 B 帳號（Codex 審查 #1、#7）
+      const adapter = new DriveAdapter({ getToken: () => tokens.tokenFor(pid), maxCallsPerMinute: 60 })
+      this.engine.setAdapter(adapter, () => tokens.tokenFor(pid) !== null)
       this.scheduler = new SyncScheduler({
         engine: this.engine,
         namespace: account.permissionId,
@@ -159,7 +161,7 @@ export class Controller {
         "div",
         null,
         h("p", { text: "登入後，你的筆記會存到你自己的 Google 雲端硬碟裡一個「隱藏的筆記資料夾」，在手機、平板、電腦都能看到同一份筆記。" }),
-        h("p", { text: "本站只能存取它自己建立的這個資料夾，看不到你雲端硬碟裡的任何其他檔案。筆記不會經過本站的伺服器。" }),
+        h("p", { text: "本站只能存取自己建立的這個專屬空間，看不到你雲端硬碟裡的任何其他檔案。筆記不會經過本站的伺服器。" }),
       ),
       buttons: [
         { id: "go", label: "繼續", kind: "primary", run: () => (pending = tokens.request()) },
@@ -188,6 +190,8 @@ export class Controller {
       const acc = await probe.account()
       this.tokens!.rememberEmail(acc.email)
       const info: AccountInfo = { permissionId: acc.permissionId, email: acc.email, displayName: acc.displayName }
+      // 先標記 token 的擁有者再切換資料庫：舊帳號的引擎從此拿不到這個 token
+      this.tokens!.setOwner(info.permissionId)
       if (this.account?.permissionId !== info.permissionId) {
         const anonRecords = this.account ? [] : await this.store.getAllOwn()
         const anonStore = this.account ? null : this.store
@@ -296,11 +300,14 @@ export class Controller {
             toast("Google 登入元件載入中，請稍候再試")
             return false
           }
-          const res = await (pending as ReturnType<TokenManager["request"]>)
-          if (!res.ok) {
-            if (res.reason !== "popup-closed") toast(res.message)
+          // 走完整登入流程：確認帳號；若選了另一個帳號就切換資料庫，這次先不開編輯器（Codex 審查 #1）
+          const before = this.account?.permissionId
+          await this.finishSignIn(pending as ReturnType<TokenManager["request"]>)
+          if (this.account?.permissionId !== before) {
+            toast("已切換到另一個帳號的筆記，請再按一次")
             return false
           }
+          if (!this.tokens?.tokenFor(before ?? "")) return false
           continue
         }
         return this.confirmOffline()
@@ -358,7 +365,7 @@ export class Controller {
         null,
         pending > 0 ? h("p", { class: "bwz-n-warn", text: "注意：還有修改尚未上傳到雲端。如果清除這台裝置上的筆記，這些修改會遺失。" }) : null,
         h("p", { text: "「保留」：筆記留在這台裝置，下次登入同一個帳號時繼續使用。" }),
-        h("p", { text: "「清除」：刪除這台裝置上的筆記（雲端上的不受影響）。公用電腦請選清除。" }),
+        h("p", { text: "「清除」：刪除這台裝置上的筆記與記住的帳號（雲端上的不受影響）。公用電腦請選清除，並記得也登出瀏覽器裡的 Google 帳號。" }),
       ),
       buttons: [
         { id: "keep", label: "保留這台裝置上的筆記", kind: "primary" },
@@ -371,8 +378,15 @@ export class Controller {
     this.tokens?.clear()
     writeJson(ACCOUNT_KEY, null)
     await this.openNamespace(null)
-    if (choice === "clear") await NotesStore.deleteDatabase(name)
-    toast("已登出")
+    if (choice === "clear") {
+      this.tokens?.forgetEmail()
+      // 先清空內容（其他分頁開著也能清），再盡量刪除資料庫（Codex 審查 #9）
+      const s = await NotesStore.open(name)
+      await s.clearAll()
+      s.close()
+      await NotesStore.deleteDatabase(name).catch(() => undefined)
+    }
+    toast(choice === "clear" ? "已登出，並清除這台裝置上的筆記" : "已登出")
   }
 
   async disconnect(): Promise<void> {
@@ -415,7 +429,10 @@ export class Controller {
       return
     }
     try {
-      await this.engine.deleteEverything()
+      // 與其他分頁的同步互斥，完成後通知它們重新載入（Codex 審查 #8）
+      if (this.scheduler) await this.scheduler.withLock(() => this.engine.deleteEverything())
+      else await this.engine.deleteEverything()
+      this.scheduler?.broadcastChanged()
       toast("已刪除全部筆記")
     } catch (e) {
       toast(e instanceof Error ? e.message : "刪除失敗，請稍後再試")

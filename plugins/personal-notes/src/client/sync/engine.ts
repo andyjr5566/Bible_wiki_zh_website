@@ -88,6 +88,8 @@ export class NotesEngine {
   private statusListeners = new Set<Listener>()
   private localWriteListeners = new Set<Listener>()
   private chain: Promise<unknown> = Promise.resolve()
+  /** 執行同步的方式；排程器會換成「包在 Web Lock 裡」的版本，讓所有入口都跨分頁互斥（Codex 審查 #2）。 */
+  private syncRunner: () => Promise<void> = () => this.sync()
   private writeTimes: number[] = []
   private consecutiveFailures = 0
   private circuitUntil = 0
@@ -446,16 +448,15 @@ export class NotesEngine {
     return result
   }
 
-  /** 把未登入時寫的匿名筆記加入此帳號（D-05）。 */
+  /**
+   * 把未登入時寫的匿名筆記加入此帳號（D-05）。走與匯入相同的規則：同 id 且內容不同時另存，不丟棄（Codex 審查 #6）。
+   * 回傳加入（含更新、另存）的筆數；呼叫端在此函式成功後才可清除匿名資料。
+   */
   async adoptRecords(records: NoteRecord[]): Promise<number> {
-    const entries = records
-      .filter((r) => !this.resolvedMap.has(r.id))
-      .map((r) => ({ record: r, expectedHlc: this.own.get(r.id)?.hlc ?? null, previous: this.own.get(r.id) }))
-    if (entries.length > 0) {
-      for (const e of entries) this.clock.observe(e.record.hlc)
-      await this.withCas(() => this.commit(entries))
-    }
-    return entries.length
+    const live = records.filter((r) => !r.deleted)
+    if (live.length === 0) return 0
+    const r = await this.importData({ records: live })
+    return r.added + r.updated + r.copied
   }
 
   // ---------- 同步 ----------
@@ -466,6 +467,10 @@ export class NotesEngine {
     this.hasToken = hasToken
     if (!adapter) this.setStatus({ kind: "local-only" })
     else this.setStatus(hasToken() ? { kind: "idle" } : { kind: "needs-reconnect" })
+  }
+
+  setSyncRunner(fn: () => Promise<void>): void {
+    this.syncRunner = fn
   }
 
   /** 授權狀態改變時由外部通知（取得新 token、token 過期）。 */
@@ -543,7 +548,7 @@ export class NotesEngine {
     const timeout = new Promise<"timeout">((resolve) => {
       timer = setTimeout(() => resolve("timeout"), timeoutMs)
     })
-    const r = await Promise.race([this.sync().then(() => "done" as const), timeout])
+    const r = await Promise.race([this.syncRunner().then(() => "done" as const), timeout])
     if (timer) clearTimeout(timer)
     if (r === "timeout") return "failed"
     const kind = this.statusValue.kind as string
@@ -641,6 +646,26 @@ export class NotesEngine {
     return true
   }
 
+  /**
+   * 雲端上「本裝置自己的檔案」版本和記錄的不同：可能是先前的更新其實成功、只是回應遺失。
+   * 讀取內容核對：每筆紀錄都等於或已被本機看過 → 是自己寫的，更新版本記錄即可；否則才視為被別人寫入（Codex 審查 #3）。
+   */
+  private async verifyOwnFile(file: RemoteFile, ownFiles: Record<string, OwnFile>): Promise<boolean> {
+    const v = validateShard(await this.adapter!.read(file.id))
+    if (!v.ok) return false
+    const known = (r: NoteRecord) => {
+      if (this.own.get(r.id)?.hlc === r.hlc) return true
+      const res = this.resolvedMap.get(r.id)
+      return !!res && [res.winner, ...res.conflicts].some((x) => x.hlc === r.hlc || vvDominatedBy(r.vv, x.vv))
+    }
+    if (!v.shard.records.every(known)) return false
+    if (file.shard) {
+      ownFiles[file.shard] = { id: file.id, version: file.version }
+      await this.store.setMeta("ownFiles", ownFiles)
+    }
+    return true
+  }
+
   private async bootstrapInner(): Promise<void> {
     const adapter = this.adapter!
     const token = await adapter.startToken()
@@ -690,6 +715,7 @@ export class NotesEngine {
         if (f.kind === "device" && (f.id === deviceFileId || (await this.adoptPending(f, ownFiles)))) continue
         const mine = ownById.get(f.id)
         if (mine && mine.version === f.version) continue
+        if (mine && f.kind === "shard" && (await this.verifyOwnFile(f, ownFiles))) continue
         if (!mine && (await this.adoptPending(f, ownFiles))) continue
         await this.forkDevice()
         forked = true
@@ -725,11 +751,18 @@ export class NotesEngine {
     return id
   }
 
-  private async writeFile(existing: OwnFile | undefined, meta: Parameters<SyncAdapter["create"]>[1], body: unknown): Promise<RemoteFile | "wiped"> {
+  private async writeFile(
+    existing: OwnFile | undefined,
+    meta: Parameters<SyncAdapter["create"]>[1],
+    body: unknown,
+    persistMapping: (file: RemoteFile) => Promise<void>,
+  ): Promise<RemoteFile | "wiped"> {
     const adapter = this.adapter!
     if (existing) {
       try {
-        return await adapter.update(existing.id, body)
+        const r = await adapter.update(existing.id, body)
+        await persistMapping(r)
+        return r
       } catch (e) {
         if (e instanceof AdapterError && e.kind === "notFound") return "wiped"
         throw e
@@ -750,6 +783,8 @@ export class NotesEngine {
       if (!(e instanceof AdapterError && e.kind === "fileIdInUse")) throw e
       result = await adapter.update(id, body)
     }
+    // 先把檔案對應存好，才清除暫存的 ID；兩步之間關掉分頁，下次仍能從 pendingId 認領（Codex 審查 #4）
+    await persistMapping(result)
     await this.store.setMeta(pendingKey, null)
     return result
   }
@@ -784,14 +819,16 @@ export class NotesEngine {
         existing,
         { name: shardFileName(shard, this.deviceId), kind: "shard", shard, device: this.deviceId },
         body,
+        async (file) => {
+          ownFiles[shard] = { id: file.id, version: file.version }
+          await this.store.setMeta("ownFiles", ownFiles)
+        },
       )
       if (result === "wiped") {
         await this.store.setMeta("cloudWiped", true)
         this.setStatus({ kind: "error", error: "cloud-wiped", message: "雲端的筆記資料似乎被刪除了" })
         return
       }
-      ownFiles[shard] = { id: result.id, version: result.version }
-      await this.store.setMeta("ownFiles", ownFiles)
       if (pruned.length > 0) {
         const deleted = await this.store.deleteOwnIfUnchanged(pruned.map((r) => ({ id: r.id, hlc: r.hlc })))
         for (const id of deleted) this.own.delete(id)
@@ -814,10 +851,13 @@ export class NotesEngine {
       fileId ? { id: fileId, version: "" } : undefined,
       { name: deviceFileName(this.deviceId), kind: "device", shard: null, device: this.deviceId },
       body,
+      async (file) => {
+        await this.store.setMeta("deviceFileId", file.id)
+        await this.store.setMeta("deviceFileUpdatedAt", this.now())
+      },
     )
-    if (result === "wiped") return
-    await this.store.setMeta("deviceFileId", result.id)
-    await this.store.setMeta("deviceFileUpdatedAt", this.now())
+    // 登記檔被刪除：清掉舊 ID，下次重建，不要每輪都重試不存在的檔案（Codex 審查 #11）
+    if (result === "wiped") await this.store.setMeta("deviceFileId", null)
   }
 
   /** 使用者確認「用這台裝置的資料重新上傳」（雲端被清空後）。 */
@@ -828,15 +868,30 @@ export class NotesEngine {
     await this.store.setMeta("deviceFileId", null)
     await this.store.setMeta("bootstrapped", false)
     await this.store.setMeta("startPageToken", null)
-    // 其他裝置的快取版本也由本裝置重新保存，確保不遺失
-    const remoteVersions = [...this.remote.values()].flatMap((c) => c.records)
-    const adopt = remoteVersions.filter((r) => !this.own.has(r.id) && this.resolvedMap.get(r.id)?.winner.hlc === r.hlc)
-    for (const r of adopt) this.own.set(r.id, r)
-    if (adopt.length > 0) await this.store.saveOwn(adopt, adopt.map(shardOf), this.now())
+    // 雲端上所有裝置的檔案都沒了：由本裝置重新保存「目前看得到的每一個版本」（Codex 審查 #5）。
+    // 每則筆記的顯示版本存為本裝置版本；同時修改的其他版本另存為新筆記，內容一個都不丟。
+    const rescue: NoteRecord[] = []
+    for (const r of this.resolvedMap.values()) {
+      if (this.own.get(r.id)?.hlc !== r.winner.hlc) rescue.push(r.winner)
+      for (const c of r.conflicts) {
+        if (c.deleted) continue
+        const chlc = this.clock.tick()
+        rescue.push({
+          ...c,
+          id: newNoteId(this.now()),
+          title: `${c.title || "筆記"}（另一個版本）`,
+          hlc: chlc,
+          vv: nextVv(null, this.deviceId, this.stamp(chlc)),
+          author: this.deviceId,
+        })
+      }
+    }
+    for (const r of rescue) this.own.set(r.id, r)
+    if (rescue.length > 0) await this.store.saveOwn(rescue, rescue.map(shardOf), this.now())
     const shards = [...new Set([...this.own.values()].map(shardOf))]
     if (shards.length > 0) await this.store.markDirty(shards, this.now())
     this.rebuild()
-    await this.sync()
+    await this.syncRunner()
   }
 
   /** 刪除雲端上本站的所有資料，並清空本機（使用者在「我的筆記」頁二次確認後）。 */

@@ -40,6 +40,8 @@ export class SyncScheduler {
   }
 
   start(): void {
+    // 「先同步再編輯」等所有同步入口都走同一把跨分頁鎖（Codex 審查 #2）
+    this.engine.setSyncRunner(() => this.withLock(() => this.engine.sync()).then(() => this.afterSync()))
     const on = (target: Window | Document, type: string, fn: (e: Event) => void) => {
       target.addEventListener(type, fn)
       this.cleanups.push(() => target.removeEventListener(type, fn))
@@ -79,7 +81,7 @@ export class SyncScheduler {
     this.channel?.close()
   }
 
-  private withLock<T>(fn: () => Promise<T>): Promise<T> {
+  withLock<T>(fn: () => Promise<T>): Promise<T> {
     const locks = (navigator as Navigator & { locks?: LockManager }).locks
     if (locks?.request) return locks.request(this.lockName, fn) as Promise<T>
     return fn()
@@ -89,7 +91,20 @@ export class SyncScheduler {
   async syncNow(): Promise<void> {
     if (this.stopped) return
     await this.withLock(() => this.engine.sync())
+    await this.afterSync()
+  }
+
+  broadcastChanged(): void {
     this.channel?.postMessage({ type: "changed" })
+  }
+
+  /** 同步後通知其他分頁；若因寫入額度還有待上傳的分片，稍後續傳（Codex 審查 #10）。 */
+  private async afterSync(): Promise<void> {
+    this.broadcastChanged()
+    if (this.stopped) return
+    if ((await this.engine.pendingShards()) > 0 && !this.pushTimer && this.engine.status.kind === "ready") {
+      this.pushTimer = setTimeout(() => void this.pushNow(), 20_000)
+    }
   }
 
   private localWrite(): void {
@@ -110,8 +125,9 @@ export class SyncScheduler {
   private async pushNow(): Promise<void> {
     this.pushTimer = null
     this.firstDirtyAt = 0
+    if (this.stopped) return
     await this.withLock(() => this.engine.push())
-    this.channel?.postMessage({ type: "changed" })
+    await this.afterSync()
   }
 
   /** 頁面隱藏、關閉、換頁：盡量立即上傳（資料已在本機，失敗也不會遺失）。 */

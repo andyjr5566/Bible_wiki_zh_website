@@ -112,6 +112,58 @@ export class NotesStore {
     await done(tx)
   }
 
+  /**
+   * 條件式儲存：只有在每筆紀錄目前的 own 版本 hlc 仍等於 expectedHlc 時才寫入（同一交易）。
+   * 防止同一台裝置的兩個分頁同時編輯同一則筆記時互相覆蓋。回傳 false 代表有人先改了，呼叫端應重新載入後再試。
+   */
+  async saveOwnIfUnchanged(
+    entries: { record: NoteRecord; expectedHlc: string | null }[],
+    shards: string[],
+    dirtyAt: number,
+  ): Promise<boolean> {
+    const tx = this.db.transaction(["own", "outbox"], "readwrite")
+    const own = tx.objectStore("own")
+    const outbox = tx.objectStore("outbox")
+    let ok = true
+    let pending = entries.length
+    const commit = () => {
+      for (const e of entries) own.put(e.record)
+      for (const shard of new Set(shards)) outbox.put({ shard, dirtyAt } satisfies OutboxEntry)
+    }
+    if (pending === 0) commit()
+    for (const e of entries) {
+      const get = own.get(e.record.id)
+      get.onsuccess = () => {
+        const current = get.result as NoteRecord | undefined
+        if ((current?.hlc ?? null) !== e.expectedHlc) ok = false
+        if (--pending === 0) {
+          if (ok) commit()
+        }
+      }
+    }
+    await done(tx)
+    return ok
+  }
+
+  /** 修剪用：只有 own 目前仍是指定 hlc 的版本才刪除（避免刪掉上傳期間的新編輯）。回傳實際刪除的 id。 */
+  async deleteOwnIfUnchanged(entries: { id: string; hlc: string }[]): Promise<string[]> {
+    if (entries.length === 0) return []
+    const tx = this.db.transaction("own", "readwrite")
+    const own = tx.objectStore("own")
+    const deleted: string[] = []
+    for (const e of entries) {
+      const get = own.get(e.id)
+      get.onsuccess = () => {
+        if ((get.result as NoteRecord | undefined)?.hlc === e.hlc) {
+          own.delete(e.id)
+          deleted.push(e.id)
+        }
+      }
+    }
+    await done(tx)
+    return deleted
+  }
+
   /** 修剪：只移除，不標記上傳（呼叫端會在上傳時寫入修剪後的內容）。 */
   async deleteOwn(ids: string[]): Promise<void> {
     if (ids.length === 0) return

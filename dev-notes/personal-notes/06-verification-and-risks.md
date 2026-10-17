@@ -10,7 +10,7 @@
 |---|---|---|---|
 | V-01 | GIS token client 在 iPhone Safari 一般分頁能否登入 | 主要行動使用情境 | ✅ 2026-10-18 iOS 18.7 Safari：登入成功（約 14 秒，含使用者操作），t01–t11 全通過 |
 | V-02 | GIS token client 在 iPhone 主畫面 App（standalone）能否登入；彈窗是否卡住 | 決定 Token 服務是否提前（D-31） | |
-| V-03 | LINE 內建瀏覽器的行為（預期 `disallowed_useragent`）；`openExternalBrowser=1` 是否有效 | 台灣使用者大量從 LINE 點連結 | |
+| V-03 | LINE 內建瀏覽器的行為（預期 `disallowed_useragent`）；`openExternalBrowser=1` 是否有效 | 台灣使用者大量從 LINE 點連結 | ✅ 2026-10-18 iPhone LINE：按登入後**自動跳到 Safari**（若已安裝本站主畫面 App 則跳到該 App），無法在 LINE 內完成登入 → 正式功能要在 LINE 內先引導「用 Safari 開啟」，不要直接嘗試登入 |
 | V-04 | `prompt:''`＋`login_hint` 續期時，彈窗是否不需使用者操作就自動關閉 | 決定 MVP「點一下繼續同步」的摩擦程度 | ✅ 2026-10-18 Windows Chrome：續期彈窗**閃一下自動關閉**，不需選帳號或再按允許 → MVP 續期只需一次點擊、無其他操作；iPhone Safari：續期**需要選帳號或再按允許**（約 3.8 秒）→ iOS 續期多一步操作 |
 | V-05 | `files.get?alt=media`、`files.create`、`changes.list` 實際耗用的配額單位 | 成本估算準確度（02 §4） | 待 P0-7 到 Cloud Console 比對。Windows 測試共呼叫 79 次（含跨裝置監看 changes.list 51 次） |
 | V-06 | `changes.list(spaces=appDataFolder)` 從一台裝置寫入到另一台看到的延遲 | 跨裝置同步體驗 | ✅ 2026-10-18 Windows Chrome 寫入 → iPhone Safari 輪詢（5 秒間隔）：伺服器寫入後約 3 秒被發現，端到端約 5 秒 → changes.list 延遲極低 |
@@ -36,7 +36,7 @@
 | iPhone Safari | ✅ 2026-10-18 | ✅ t01–t11 全通過 | 待測 | 待測 | ⚠️ 需選帳號／按允許 | iOS 18.7；跨裝置延遲約 3–5 秒 |
 | iPhone 主畫面 App | | | | | | 與 Safari 儲存分開 |
 | iPad Safari | | | | | | |
-| iPhone LINE 內建瀏覽器 | | — | — | — | — | 預期需引導外部瀏覽器 |
+| iPhone LINE 內建瀏覽器 | ❌ 跳到 Safari | — | — | — | — | 需引導外部瀏覽器（V-03） |
 | Android Chrome（模擬） | — | — | — | | — | 僅版面 |
 
 跨裝置情境（Phase 1 試用期間）：

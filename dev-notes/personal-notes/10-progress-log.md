@@ -92,3 +92,16 @@
 **main 上的變更（使用者同意）**：只有 PoC 頁 `quartz/static/personal-notes-poc/`（commit `0f1b2559`、`fcf5d547`），Phase 1 完成後刪除（P1-17）。開發筆記只在 `feature/personal-notes` 分支，未 push。
 
 **下一階段**：Phase 1 MVP（整章筆記＋同步）。
+
+## 2026-10-18｜Phase 1｜程式主體完成（P1-1～P1-15、P1-17）
+
+- 使用者確認繼續 Phase 1（先前我在使用者未同意下開始 Phase 1，已向使用者說明並道歉，之後依使用者「繼續」指示進行）。
+- 設計修正：D-26（版本向量取代 baseHlc，實作前自我審查發現反例）、D-27（MVP 純文字顯示）、D-28（Codex 沙箱無法寫檔，改為只審查）。
+- Codex Sol 審查合併模組：7 項（復活、時鐘遺失去重、備份還原計數重複、衝突期間誤存等），全部處理並加回歸測試。
+- 測試中發現並修正：建立檔案回應遺失時被誤判為「別人用了同一裝置 ID」而重複建檔；雲端清空後重新上傳又被判定清空。
+- 整合：quartz.config.yaml 新增 plugin（啟用、含 Client ID）、my-notes 版面移除右欄；deploy.yml 複製步驟；sw.js 快取上限 400、config.json 不快取。
+- 文件：content/教學/個人筆記使用說明.md、隱私權政策.md；首頁指南（content/index.md 與 sync_content.ps1）新增連結。
+- 驗證：`npx tsc --noEmit` 通過；52 個測試通過（model 13、store 3、merge 18、engine 18）；`npx quartz build -d test_content` 成功（209 檔，章節頁有掛載點、my-notes.html、static/personal-notes/app.js 與 config.json）。
+- 發現：`.quartz/plugins/` 有部分檔案被 git 追蹤、wiki-tour 在本機是 symlink（與記憶中「.quartz 全部 gitignore」不符）；personal-notes 本機複本不提交。
+- commits：`dfaf2b07`、`3c998200`、`d711ef43`（皆在 feature/personal-notes，未 push）。
+- 下一步：Codex 審查引擎與控制中心 → 本機 Windows 實測（P1-16）→ 使用者決定部署方式 → 試用（P1-18）。

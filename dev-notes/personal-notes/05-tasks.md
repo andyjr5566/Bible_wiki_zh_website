@@ -31,23 +31,23 @@
 
 | # | 任務 | 負責 | 完成 |
 |---|---|---|---|
-| P1-1 | plugin 骨架：package.json（多類別）、tsup、tsconfig、vitest；空元件可建置；quartz.config.yaml 加項目（先 `enabled: false` 驗證不影響網站）；deploy.yml 加複製步驟 | C | [ ] |
-| P1-2 | model：Record 型別與驗證、ULID、HLC、書卷代碼表（附錄 A）與章節頁 slug 解析；單元測試 | Cx（Luna） | [ ] |
-| P1-3 | merge：純函式合併（03 §4.4–4.5）含衝突、墓碑、修剪、冪等／交換律測試；性質測試（隨機操作序列） | Cx（Sol）＋AG 審查 | [ ] |
-| P1-4 | store：IndexedDB（03 §6），帳號命名空間、匿名庫、outbox、meta；用 fake-indexeddb 測試 | Cx（Luna） | [ ] |
-| P1-5 | adapter：SyncAdapter 介面＋GoogleDriveAppDataAdapter（list、generateIds、create、update、get、changes、delete、about）＋退避與限流；另做 InMemoryAdapter 供測試 | Cx（Luna）＋C 審查 | [ ] |
-| P1-6 | auth：GIS 延遲載入、token client、token 保存與到期、about.get、revoke、內建瀏覽器與 standalone 偵測 | C | [ ] |
-| P1-7 | sync 引擎：bootstrap、pull、push、outbox 去抖動、Web Locks 領導分頁、BroadcastChannel、雲端被清空偵測、schema 檢查、熔斷、遠端開關 config.json | C＋Cx（Sol） | [ ] |
-| P1-8 | 「先同步再編輯」狀態機與 UI（03 §5）：同步中、需要重新連線、離線確認視窗（D-04 文案）、離線編輯提示、錯誤狀態 | C | [ ] |
-| P1-9 | 章節筆記面板（afterBody）：新增／編輯／刪除、手動節數、Markdown 預覽（DOMPurify）、衝突顯示與解決 | C／Cx（Luna） | [ ] |
-| P1-10 | 工具列同步按鈕：登入、狀態、立即同步、登出（保留／清除本機）、中斷連線 | C | [ ] |
-| P1-11 | 「我的筆記」虛擬頁：列表、依書卷篩選、標題與內文簡易搜尋、跳回章節、JSON 匯出、JSON 匯入、刪除全部雲端資料 | Cx（Luna）＋C | [ ] |
-| P1-12 | 首次登入併入匿名筆記的詢問流程（D-05） | C | [ ] |
-| P1-13 | sw.js 快取上限與 config.json 不快取；登入後 storage.persist() | C | [ ] |
-| P1-14 | 多裝置模擬整合測試（InMemoryAdapter，3 台裝置）：同時編輯、離線後合併、刪改衝突、時鐘偏差、重複上傳、上傳中斷、雲端清空、舊版 schema | Cx（Sol）＋AG 補案例 | [ ] |
-| P1-15 | 文件：`content/教學/個人筆記使用說明.md`、隱私權政策頁；sync_content.ps1 首頁連結 | C＋AG 審文案 | [ ] |
+| P1-1 | plugin 骨架：package.json（多類別）、tsup、tsconfig、vitest；空元件可建置；quartz.config.yaml 加項目（先 `enabled: false` 驗證不影響網站）；deploy.yml 加複製步驟 | C | [x] 2026-10-18（多類別 emitter／pageType／component；deploy.yml 複製步驟；設定已啟用） |
+| P1-2 | model：Record 型別與驗證、ULID、HLC、書卷代碼表（附錄 A）與章節頁 slug 解析；單元測試 | Cx（Luna） | [x] 2026-10-18（實作：Claude，D-28） |
+| P1-3 | merge：純函式合併（03 §4.4–4.5）含衝突、墓碑、修剪、冪等／交換律測試；性質測試（隨機操作序列） | Cx（Sol）＋AG 審查 | [x] 2026-10-18（改用版本向量 D-26；Codex Sol 審查 7 項已處理；300 組隨機模擬） |
+| P1-4 | store：IndexedDB（03 §6），帳號命名空間、匿名庫、outbox、meta；用 fake-indexeddb 測試 | Cx（Luna） | [x] 2026-10-18（含跨分頁條件式寫入） |
+| P1-5 | adapter：SyncAdapter 介面＋GoogleDriveAppDataAdapter（list、generateIds、create、update、get、changes、delete、about）＋退避與限流；另做 InMemoryAdapter 供測試 | Cx（Luna）＋C 審查 | [x] 2026-10-18 |
+| P1-6 | auth：GIS 延遲載入、token client、token 保存與到期、about.get、revoke、內建瀏覽器與 standalone 偵測 | C | [x] 2026-10-18 |
+| P1-7 | sync 引擎：bootstrap、pull、push、outbox 去抖動、Web Locks 領導分頁、BroadcastChannel、雲端被清空偵測、schema 檢查、熔斷、遠端開關 config.json | C＋Cx（Sol） | [x] 2026-10-18（Codex Sol 審查中） |
+| P1-8 | 「先同步再編輯」狀態機與 UI（03 §5）：同步中、需要重新連線、離線確認視窗（D-04 文案）、離線編輯提示、錯誤狀態 | C | [x] 2026-10-18（待實機確認） |
+| P1-9 | 章節筆記面板（afterBody）：新增／編輯／刪除、手動節數、Markdown 預覽（DOMPurify）、衝突顯示與解決 | C／Cx（Luna） | [x] 2026-10-18（純文字顯示 D-27；待實機確認） |
+| P1-10 | 工具列同步按鈕：登入、狀態、立即同步、登出（保留／清除本機）、中斷連線 | C | [x] 2026-10-18（MVP 併入章節面板狀態列與「我的筆記」頁，未另做工具列按鈕：一個 plugin 只能放一個版面位置） |
+| P1-11 | 「我的筆記」虛擬頁：列表、依書卷篩選、標題與內文簡易搜尋、跳回章節、JSON 匯出、JSON 匯入、刪除全部雲端資料 | Cx（Luna）＋C | [x] 2026-10-18（待實機確認） |
+| P1-12 | 首次登入併入匿名筆記的詢問流程（D-05） | C | [x] 2026-10-18 |
+| P1-13 | sw.js 快取上限與 config.json 不快取；登入後 storage.persist() | C | [x] 2026-10-18（快取上限 400 筆） |
+| P1-14 | 多裝置模擬整合測試（InMemoryAdapter，3 台裝置）：同時編輯、離線後合併、刪改衝突、時鐘偏差、重複上傳、上傳中斷、雲端清空、舊版 schema | Cx（Sol）＋AG 補案例 | [x] 2026-10-18（18 個引擎整合測試；共 52 個測試通過） |
+| P1-15 | 文件：`content/教學/個人筆記使用說明.md`、隱私權政策頁；sync_content.ps1 首頁連結 | C＋AG 審文案 | [x] 2026-10-18（文案待 Antigravity 審閱） |
 | P1-16 | `test_content` 建置通過；手動確認既有功能（wiki-tour、搜尋、SPA 換頁、PWA、深色模式、閱讀模式）未受影響 | C | [ ] |
-| P1-17 | 移除 PoC 頁 | C | [ ] |
+| P1-17 | 移除 PoC 頁 | C | [x] 2026-10-18（分支上已刪除；main 上的 PoC 於合併時一併移除） |
 | P1-18 | 🙋 使用者以 2–3 台裝置（iPhone／iPad＋Windows）在測試模式試用 2 週，回報問題；期間不可有任何筆記遺失；試用期間到 Cloud Console 比對實際配額單位（原 P0-7、V-05） | U | [ ] |
 
 **驗收**：

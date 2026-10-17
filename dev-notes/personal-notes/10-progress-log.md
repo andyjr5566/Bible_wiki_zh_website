@@ -50,3 +50,8 @@
 - `storage.persist()` 未授予（Chrome 一般分頁，預期）。IndexedDB、Web Locks、BroadcastChannel 可用。
 - 尚缺：人工觀察 o1–o3、續期測試（V-04）、跨裝置延遲（V-06）。
 - 結果已寫入 06 §1、§2。
+
+## 2026-10-18｜Phase 0｜人工觀察與部署同意
+
+- 使用者回報（Windows Chrome）：無未驗證警告（V-11）；同意畫面只有一項權限、無勾選框；續期彈窗閃一下自動關閉（V-04 ✅）。
+- 使用者同意 P0-5 方案：**只把 PoC 頁推到 main 讓 GitHub Pages 發佈**；開發筆記與分支其他內容不推。

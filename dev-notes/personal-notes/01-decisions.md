@@ -115,6 +115,16 @@ Phase 2 加無資料庫的 Token 服務（GIS Code model）以達成免點擊續
 **`files.generateIds` 預先取得 ID 的建立方式確認可用。** 重複建立回 HTTP 409 `fileIdInUse`、不產生重複檔（V-07）。程式遇到 409 `fileIdInUse` 時視為「先前其實已建立成功」，改用 update。
 另外：Drive `version` 每次寫入不是 +1（實測 1→3），程式不可依賴連號。appDataFolder 檔案有版本紀錄（V-08），可作為資料救回手段。
 
+### D-26｜2026-10-18｜定案｜Claude（實作前自我審查）
+**衝突判斷改用版本向量（vv），取代 `baseHlc`。** 原規則「`W.baseHlc >= V.hlc` 代表 W 看過 V」不成立：HLC 只保證排序，不代表因果；兩台裝置各自從同一舊版編輯時，後寫者的 base 時間可能大於另一台的版本時間，會把真正的同時修改誤判為「已取代」而默默丟掉一個版本。
+vv 記錄每台裝置對該筆記的編輯次數，`V.vv ≤ X.vv` 才代表 X 看過 V。HLC 保留用於同時修改時決定顯示哪一版。詳見 03 §3.2、§4.4。
+
+### D-27｜2026-10-18｜定案｜Claude
+**MVP 的筆記內文以純文字顯示（保留換行），不渲染 Markdown。** 完全避免 XSS 風險、也不需要 DOMPurify 與 Markdown 函式庫，程式更小。Markdown 渲染移到 Phase 2（P2-6 一併處理）。內文仍以 Markdown 原文保存，日後可直接渲染與匯出。
+
+### D-28｜2026-10-18｜定案｜Claude（依本機實測）
+**Codex 目前只做審查、不做實作**：本機 Codex 的 read-only 與 workspace-write 沙箱都無法啟動子程序（07 §5）。實作由 Claude 主導者完成，Codex Sol 透過 stdin 審查關鍵模組。
+
 ---
 
 ## 待決事項

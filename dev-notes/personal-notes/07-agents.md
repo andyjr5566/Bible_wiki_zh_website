@@ -98,3 +98,9 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 2. 測試指令與輸出摘要
 3. 尚未處理或有疑慮的地方
 ```
+
+## 5. 本機實測限制（2026-10-18）
+
+- Codex `-s workspace-write` 也無法在這台 Windows 上執行（在 git worktree 中要求建立檔案，結果沒有產生檔案；與 read-only 同樣是沙箱無法啟動子程序）。
+- 因此**目前 Codex 只用於審查**（檔案內容經 stdin 傳入）；實作由 Claude 主導者完成。不使用 `--dangerously-bypass-approvals-and-sandbox`（違反 §3 規則）。
+- 若日後要讓 Codex 實作，需先排除沙箱問題（例如 `codex doctor`、更新 Codex，或由使用者在 Codex 桌面版中處理），並在 worktree 中重新驗證。

@@ -12,16 +12,16 @@
 | V-02 | GIS token client 在 iPhone 主畫面 App（standalone）能否登入；彈窗是否卡住 | 決定 Token 服務是否提前（D-31） | ✅ 2026-10-18 iOS 18.7 主畫面 App（standalone=是）：GIS 彈窗登入成功並回到 App；t01–t11 全通過 → **不需提前 Token 服務** |
 | V-03 | LINE 內建瀏覽器的行為（預期 `disallowed_useragent`）；`openExternalBrowser=1` 是否有效 | 台灣使用者大量從 LINE 點連結 | ✅ 2026-10-18 iPhone LINE：按登入後**自動跳到 Safari**（若已安裝本站主畫面 App 則跳到該 App），無法在 LINE 內完成登入 → 正式功能要在 LINE 內先引導「用 Safari 開啟」，不要直接嘗試登入 |
 | V-04 | `prompt:''`＋`login_hint` 續期時，彈窗是否不需使用者操作就自動關閉 | 決定 MVP「點一下繼續同步」的摩擦程度 | ✅ 2026-10-18 Windows Chrome：續期彈窗**閃一下自動關閉**，不需選帳號或再按允許 → MVP 續期只需一次點擊、無其他操作；iPhone Safari：續期**需要選帳號或再按允許**（約 3.8 秒）→ iOS 續期多一步操作；iPhone 主畫面 App：續期閃一下自動關閉（0.5 秒） |
-| V-05 | `files.get?alt=media`、`files.create`、`changes.list` 實際耗用的配額單位 | 成本估算準確度（02 §4） | 待 P0-7 到 Cloud Console 比對。Windows 測試共呼叫 79 次（含跨裝置監看 changes.list 51 次） |
+| V-05 | `files.get?alt=media`、`files.create`、`changes.list` 實際耗用的配額單位 | 成本估算準確度（02 §4） | 待 P0-7 到 Cloud Console 比對。Windows 測試共呼叫 79 次（含跨裝置監看 changes.list 51 次）；延後至 P1-18 試用期（使用者決定） |
 | V-06 | `changes.list(spaces=appDataFolder)` 從一台裝置寫入到另一台看到的延遲 | 跨裝置同步體驗 | ✅ 2026-10-18 Windows Chrome 寫入 → iPhone Safari 輪詢（5 秒間隔）：伺服器寫入後約 3 秒被發現，端到端約 5 秒 → changes.list 延遲極低；Windows → iPhone 主畫面 App 也約 3–6 秒 |
 | V-07 | 用 `generateIds` 的 id 重複建立同一檔案時的錯誤行為（確認不會產生重複檔） | 重試安全 | ✅ 2026-10-18 Windows Chrome：重複建立同一 ID 回 **HTTP 409 `fileIdInUse`**，未產生重複檔。設計可用 |
 | V-08 | appDataFolder 檔案是否保留版本紀錄（revisions.list） | 資料救回手段 | ✅ 2026-10-18：appDataFolder 檔案**有保留版本紀錄**（寫 2 次 → 2 個 revision）。保留期限未測 |
-| V-09 | 純網頁 App 是否出現在 Drive「管理應用程式」；「中斷連線」是否刪除隱藏資料 | 使用者說明與資料保護 | |
+| V-09 | 純網頁 App 是否出現在 Drive「管理應用程式」；「中斷連線」是否刪除隱藏資料 | 使用者說明與資料保護 | 延後：不影響 MVP，撰寫隱私權政策與「刪除資料」說明時（P1-15）再確認 |
 | V-10 | `storage.persist()` 在 Safari 一般分頁與主畫面 App 的結果；Windows Chrome／Edge 的結果 | 本機資料被清除的風險 | Windows Chrome（localhost、一般分頁）：`persist()` **未授予**（Chrome 依網站互動度判斷，屬預期）。Safari 待測；iPhone Safari 一般分頁：未授予（配額上限約 39 GB）；**iPhone 主畫面 App：`persist()` 已授予** → 建議引導 iPhone 使用者加入主畫面 |
 | V-11 | 測試中狀態下，測試使用者是否看到「Google 尚未驗證這個應用程式」畫面 | 試用說明 | ✅ 2026-10-18 Windows Chrome：測試中狀態、測試使用者登入時**沒有**出現未驗證警告；同意畫面只有一項權限、**沒有勾選框**（符合 D-11）；iPhone Safari 同樣無警告、只有一項權限；主畫面 App 第二次登入未再出現同意畫面（已授權過） |
-| V-12 | `andyjr5566.github.io` 能否在 Search Console 驗證（可能需另建使用者站台 repo），或需改用自訂網域 | 發佈正式版前必要（D-33） | |
-| V-13 | 學校／公司 Workspace 帳號與受監護的未成年帳號的行為 | 青少年團契、學校帳號使用者 | |
-| V-14 | Google 公布的 Drive API 超量計費單價（2026 稍晚） | 長期成本 | |
+| V-12 | `andyjr5566.github.io` 能否在 Search Console 驗證（可能需另建使用者站台 repo），或需改用自訂網域 | 發佈正式版前必要（D-33） | 延後：發佈正式版前（P2-10）處理 |
+| V-13 | 學校／公司 Workspace 帳號與受監護的未成年帳號的行為 | 青少年團契、學校帳號使用者 | 延後：無可用測試帳號；Phase 1 以 `admin_policy_enforced` 錯誤處理涵蓋 |
+| V-14 | Google 公布的 Drive API 超量計費單價（2026 稍晚） | 長期成本 | 等待 Google 公布（2026 稍晚） |
 
 ---
 

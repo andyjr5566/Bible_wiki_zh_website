@@ -20,7 +20,7 @@
 | P0-4 | 本機（localhost:8080）在 Windows Chrome／Edge 跑通 PoC | C | [x] 2026-10-18 Windows Chrome 全通過（Edge 未測，非必要） |
 | P0-5 | 🙋 使用者同意後部署 PoC 到 GitHub Pages（需要 push；或先只推分支並用其他方式提供 HTTPS 頁面，由使用者決定） | U／C | [x] 2026-10-18 只推 PoC 頁到 main（`0f1b2559`），已上線 https://andyjr5566.github.io/Bible_wiki_zh_website/static/personal-notes-poc/ |
 | P0-6 | 🙋 使用者實機測試：iPhone／iPad Safari、iPhone 主畫面 App、LINE 內建瀏覽器（含 `openExternalBrowser=1`）、Windows Chrome／Edge；依 06 §2 矩陣回報 | U | [x] 2026-10-18 Windows Chrome、iPhone Safari、iPhone 主畫面 App、iPhone LINE 皆完成（結果見 06） |
-| P0-7 | 到 Cloud Console 觀察各 API 實際耗用配額單位（特別是 files.get?alt=media、files.create、changes.list） | U／C | [ ] |
+| P0-7 | 到 Cloud Console 觀察各 API 實際耗用配額單位（特別是 files.get?alt=media、files.create、changes.list） | U／C | [x] 延後（使用者 2026-10-18 決定）→ 併入 P1-18：試用期有真實用量時再比對 |
 | P0-8 | 整理 PoC 結果寫入 06，並決定：MVP 的 iPhone 主畫面 App 策略、Token 服務是否提前（D-31） | C＋U | [x] 2026-10-18 結果寫入 06；新增決策 D-20～D-25（Token 服務不提前） |
 
 **驗收**：06 §1 的 PoC 項目都有結果；01 新增依結果做出的決策。
@@ -48,7 +48,7 @@
 | P1-15 | 文件：`content/教學/個人筆記使用說明.md`、隱私權政策頁；sync_content.ps1 首頁連結 | C＋AG 審文案 | [ ] |
 | P1-16 | `test_content` 建置通過；手動確認既有功能（wiki-tour、搜尋、SPA 換頁、PWA、深色模式、閱讀模式）未受影響 | C | [ ] |
 | P1-17 | 移除 PoC 頁 | C | [ ] |
-| P1-18 | 🙋 使用者以 2–3 台裝置（iPhone／iPad＋Windows）在測試模式試用 2 週，回報問題；期間不可有任何筆記遺失 | U | [ ] |
+| P1-18 | 🙋 使用者以 2–3 台裝置（iPhone／iPad＋Windows）在測試模式試用 2 週，回報問題；期間不可有任何筆記遺失；試用期間到 Cloud Console 比對實際配額單位（原 P0-7、V-05） | U | [ ] |
 
 **驗收**：
 1. 全部自動化測試通過（含 P1-14 的所有情境）。

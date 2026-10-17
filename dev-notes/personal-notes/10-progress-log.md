@@ -40,3 +40,13 @@
 - 委派：Codex `gpt-6-sol` 審查。第一次因 Windows read-only 沙箱無法啟動子程序而失敗（已記入 07）；改用 stdin 傳入檔案後完成，回報 11 項（高 2、中 8、低 1），全部採用並修正（權限未同意仍視為登入、t04/t05/t06/t08 判定、分頁、監看取消與自我寫入、時鐘差說明、include_granted_scopes=false、撤銷失敗保留狀態）。未發現 token 外洩或 API 用法錯誤。
 - 設計修正：03 §1、§7 補充「GIS 必須預先載入，點擊時同步呼叫 requestAccessToken，否則彈窗被封鎖」。
 - 本機測試伺服器：`python -m http.server 8080 --bind 127.0.0.1 --directory quartz/static`。
+
+## 2026-10-18｜Phase 0｜P0-4 Windows Chrome 測試通過
+
+使用者在 Windows Chrome 155（`http://localhost:8080`）執行 PoC，報告摘要：
+- 登入：通過，`expires_in=3599`，回傳 scope 只有 `drive.appdata`（授權來源、測試使用者、範圍設定都正確）。
+- Drive t01–t11 全部通過：generateIds（appDataFolder）、指定 ID 建立、重複 ID → **409 `fileIdInUse`**、media 覆寫（version 1→3，**不是 +1**，設計不可依賴版本連號）、下載內容一致、列表只有 1 個檔、changes.list 看到變更、**revisions 有 2 筆**、刪除 204。
+- API 延遲：讀取約 0.2–0.5 秒，寫入約 0.8–1.9 秒。
+- `storage.persist()` 未授予（Chrome 一般分頁，預期）。IndexedDB、Web Locks、BroadcastChannel 可用。
+- 尚缺：人工觀察 o1–o3、續期測試（V-04）、跨裝置延遲（V-06）。
+- 結果已寫入 06 §1、§2。

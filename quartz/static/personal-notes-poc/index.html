@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>個人筆記 PoC</title>
+    <!--
+      Phase 0 PoC（dev-notes/personal-notes/05-tasks.md P0-3）。
+      驗證 GIS Token model + Drive appDataFolder 在各裝置的實際行為。
+      暫時性頁面：Phase 1 完成後刪除（P1-17）。不連結、不索引。
+    -->
+    <style>
+      :root {
+        --bg: #faf7f0;
+        --fg: #1c1917;
+        --muted: #57534e;
+        --card: #ffffff;
+        --line: #e7e5e4;
+        --accent: #7a1c1c;
+        --ok: #166534;
+        --bad: #b91c1c;
+        --warn: #a16207;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1917;
+          --fg: #f5f5f4;
+          --muted: #a8a29e;
+          --card: #292524;
+          --line: #44403c;
+          --accent: #f87171;
+          --ok: #4ade80;
+          --bad: #f87171;
+          --warn: #facc15;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font: 16px/1.6 system-ui, -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      h1 {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 0 0 0.5rem;
+      }
+      section {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px;
+        margin: 14px 0;
+      }
+      p.note {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 0.25rem 0 0.75rem;
+      }
+      button {
+        font: inherit;
+        padding: 8px 14px;
+        margin: 4px 6px 4px 0;
+        border-radius: 8px;
+        border: 1px solid var(--accent);
+        background: transparent;
+        color: var(--accent);
+        cursor: pointer;
+      }
+      button.primary {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+      td,
+      th {
+        border-bottom: 1px solid var(--line);
+        padding: 6px 4px;
+        text-align: left;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .pass {
+        color: var(--ok);
+        font-weight: 600;
+      }
+      .fail {
+        color: var(--bad);
+        font-weight: 600;
+      }
+      .info {
+        color: var(--warn);
+        font-weight: 600;
+      }
+      code {
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        font-size: 0.85em;
+        word-break: break-all;
+      }
+      .banner {
+        border-left: 4px solid var(--warn);
+        padding: 8px 12px;
+        background: color-mix(in srgb, var(--warn) 12%, transparent);
+        margin: 8px 0;
+        display: none;
+      }
+      .q {
+        margin: 10px 0;
+      }
+      .q label {
+        display: block;
+        margin: 2px 0;
+      }
+      textarea,
+      input[type="text"] {
+        width: 100%;
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--bg);
+        color: var(--fg);
+      }
+      #log {
+        max-height: 260px;
+        overflow: auto;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>個人筆記功能 PoC 測試頁</h1>
+      <p class="note">
+        這是開發用的暫時測試頁，不會連結到網站其他地方。請依序按下各區的按鈕，最後按「複製測試報告」貼給 Claude。
+        報告不含任何登入憑證。
+      </p>
+
+      <div id="inAppBanner" class="banner"></div>
+      <div id="standaloneBanner" class="banner"></div>
+
+      <section>
+        <h2>0. 這台裝置的名稱</h2>
+        <p class="note">方便辨識報告來自哪台裝置，例如「Windows Chrome」「iPhone Safari」「iPhone 主畫面」。</p>
+        <input id="deviceLabel" type="text" />
+      </section>
+
+      <section>
+        <h2>1. 環境檢查</h2>
+        <button id="btnEnv">重新檢查</button>
+        <button id="btnPersist">要求持久儲存</button>
+        <table id="envTable"></table>
+      </section>
+
+      <section>
+        <h2>2. 登入 Google</h2>
+        <p class="note">
+          目前網址來源：<code id="originText"></code><br />
+          若彈窗出現 <code>origin_mismatch</code>：08 第 6 步「已授權的 JavaScript 來源」少了上面這個來源。<br />
+          若出現 <code>access_denied</code> 或「存取遭拒」：08 第 5 步測試使用者沒有加入這個 Gmail。
+        </p>
+        <button id="btnLogin" class="primary" disabled>登入並授權</button>
+        <button id="btnRenew" disabled>續期 token（第二次登入）</button>
+        <button id="btnRevoke" disabled>撤銷授權</button>
+        <p id="tokenStatus" class="note">GIS 載入中…</p>
+      </section>
+
+      <section>
+        <h2>3. Google Drive 讀寫測試</h2>
+        <p class="note">會在你的 Google 雲端硬碟「隱藏應用程式資料夾」建立測試檔，最後自動刪除。你在雲端硬碟裡看不到它們。</p>
+        <button id="btnRunAll" class="primary" disabled>全部依序執行</button>
+        <button id="btnCleanup" disabled>清除所有測試檔</button>
+        <table id="resultTable">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>結果</th>
+              <th>說明</th>
+              <th>耗時</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>4. 跨裝置同步延遲（需要兩台裝置）</h2>
+        <p class="note">
+          兩台裝置都登入同一個 Google 帳號。裝置 B 先按「開始監看」，再到裝置 A 按「寫入跨裝置測試檔」。B 會顯示多久看到 A 的修改。
+          監看最多 10 分鐘，每 5 秒檢查一次。
+        </p>
+        <button id="btnPing" disabled>寫入跨裝置測試檔</button>
+        <button id="btnWatch" disabled>開始監看</button>
+        <button id="btnStopWatch" disabled>停止監看</button>
+        <p id="watchStatus" class="note"></p>
+      </section>
+
+      <section>
+        <h2>5. 人工觀察（請勾選）</h2>
+        <div id="observations"></div>
+        <label for="freeNote">其他觀察或錯誤畫面的文字：</label>
+        <textarea id="freeNote" rows="3"></textarea>
+      </section>
+
+      <section>
+        <h2>6. 測試報告</h2>
+        <button id="btnReport" class="primary">產生並複製測試報告</button>
+        <p class="note">若複製失敗，請長按下方文字框全選複製。</p>
+        <textarea id="report" rows="10" readonly></textarea>
+      </section>
+
+      <section>
+        <h2>紀錄</h2>
+        <div id="log"></div>
+      </section>
+    </main>
+
+    <script>
+      "use strict"
+
+      const CLIENT_ID = "339980089528-va9622cqhnurr1sqrl8kl6aa5bim30fl.apps.googleusercontent.com"
+      const SCOPE = "https://www.googleapis.com/auth/drive.appdata"
+      const API = "https://www.googleapis.com/drive/v3"
+      const UPLOAD = "https://www.googleapis.com/upload/drive/v3"
+      const APP_TAG = "bwz-notes-poc"
+      const HINT_KEY = "bwz-poc-login-hint"
+      const LABEL_KEY = "bwz-poc-device-label"
+      // 每次開啟頁面都不同，用來讓監看端忽略自己寫入的測試檔
+      const PAGE_DEVICE_ID = Math.random().toString(36).slice(2, 10)
+
+      const state = {
+        token: null,
+        tokenExpiresAt: 0,
+        tokenClient: null,
+        tokenRequestStart: 0,
+        tokenRequestMode: null,
+        tokenGrants: 0,
+        email: null,
+        env: {},
+        results: {},
+        calls: {},
+        watchTimer: null,
+        watchStart: 0,
+        watchGen: 0,
+      }
+
+      const $ = (id) => document.getElementById(id)
+
+      function safeGet(store, key) {
+        try {
+          return store.getItem(key)
+        } catch {
+          return null
+        }
+      }
+      function safeSet(store, key, value) {
+        try {
+          store.setItem(key, value)
+        } catch {}
+      }
+
+      function log(msg) {
+        const line = `[${new Date().toLocaleTimeString()}] ${msg}`
+        const el = $("log")
+        el.textContent += line + "\n"
+        el.scrollTop = el.scrollHeight
+      }
+
+      function record(id, label, status, detail, ms) {
+        state.results[id] = { label, status, detail, ms }
+        const tbody = $("resultTable").querySelector("tbody")
+        let row = tbody.querySelector(`tr[data-id="${id}"]`)
+        if (!row) {
+          row = document.createElement("tr")
+          row.dataset.id = id
+          tbody.appendChild(row)
+        }
+        const mark = { pass: "通過", fail: "失敗", info: "資訊" }[status]
+        row.innerHTML = ""
+        for (const [text, cls] of [
+          [label, ""],
+          [mark, status],
+          [detail, ""],
+          [ms == null ? "" : `${ms} ms`, ""],
+        ]) {
+          const td = document.createElement("td")
+          td.textContent = text
+          if (cls) td.className = cls
+          row.appendChild(td)
+        }
+        log(`${label}：${mark} ${detail}`)
+      }
+
+      function maskEmail(email) {
+        if (!email) return "(未知)"
+        const [user, domain] = email.split("@")
+        return `${user.slice(0, 2)}***@${domain}`
+      }
+
+      // ---------- 1. 環境檢查 ----------
+
+      function detectInApp(ua) {
+        if (/\bLine\//i.test(ua)) return "LINE"
+        if (/FBAN|FBAV|FB_IAB/.test(ua)) return "Facebook"
+        if (/Instagram/i.test(ua)) return "Instagram"
+        if (/MicroMessenger/i.test(ua)) return "WeChat"
+        return null
+      }
+
+      function externalBrowserUrl() {
+        const url = new URL(location.href)
+        url.searchParams.set("openExternalBrowser", "1")
+        return url.toString()
+      }
+
+      async function checkIndexedDB() {
+        return new Promise((resolve) => {
+          try {
+            const req = indexedDB.open("bwz-poc-idb-test", 1)
+            req.onupgradeneeded = () => req.result.createObjectStore("t")
+            req.onerror = () => resolve(`失敗：${req.error && req.error.name}`)
+            req.onsuccess = () => {
+              const db = req.result
+              const tx = db.transaction("t", "readwrite")
+              tx.objectStore("t").put("ok", "k")
+              tx.oncomplete = () => {
+                db.close()
+                indexedDB.deleteDatabase("bwz-poc-idb-test")
+                resolve("可用")
+              }
+              tx.onerror = () => resolve(`寫入失敗：${tx.error && tx.error.name}`)
+            }
+          } catch (e) {
+            resolve(`例外：${e.message}`)
+          }
+        })
+      }
+
+      async function checkEnv() {
+        const ua = navigator.userAgent
+        const isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+        const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true
+        const inApp = detectInApp(ua)
+        let persisted = "不支援"
+        let estimate = "不支援"
+        if (navigator.storage && navigator.storage.persisted) {
+          persisted = (await navigator.storage.persisted()) ? "是" : "否"
+        }
+        if (navigator.storage && navigator.storage.estimate) {
+          const e = await navigator.storage.estimate()
+          estimate = `已用 ${(e.usage / 1048576).toFixed(1)} MB／上限 ${(e.quota / 1048576).toFixed(0)} MB`
+        }
+        let webLocks = "不支援"
+        if (navigator.locks && navigator.locks.request) {
+          try {
+            await navigator.locks.request("bwz-poc-lock", async () => true)
+            webLocks = "可用"
+          } catch (e) {
+            webLocks = `失敗：${e.message}`
+          }
+        }
+        const previousPersistRequest = state.env.storagePersistRequest
+        state.env = {
+          userAgent: ua,
+          origin: location.origin,
+          secureContext: window.isSecureContext ? "是" : "否",
+          isIOS: isIOS ? "是" : "否",
+          standalone: standalone ? "是" : "否",
+          inAppBrowser: inApp || "否",
+          online: navigator.onLine ? "是" : "否",
+          indexedDB: await checkIndexedDB(),
+          storagePersisted: persisted,
+          storageEstimate: estimate,
+          webLocks,
+          broadcastChannel: typeof BroadcastChannel === "function" ? "可用" : "不支援",
+          cookiesEnabled: navigator.cookieEnabled ? "是" : "否",
+        }
+        if (previousPersistRequest) state.env.storagePersistRequest = previousPersistRequest
+        renderEnv()
+
+        const inAppBanner = $("inAppBanner")
+        if (inApp) {
+          inAppBanner.style.display = "block"
+          inAppBanner.innerHTML = ""
+          inAppBanner.append(
+            `偵測到 ${inApp} 內建瀏覽器。Google 通常會拒絕在這裡登入（這正是要測的）。請先試按「登入並授權」並記錄結果，再試這個外部瀏覽器連結：`,
+          )
+          const a = document.createElement("a")
+          a.href = externalBrowserUrl()
+          a.textContent = "用外部瀏覽器開啟"
+          a.style.marginLeft = "6px"
+          inAppBanner.append(a)
+        }
+        if (standalone) {
+          const b = $("standaloneBanner")
+          b.style.display = "block"
+          b.textContent = "目前是「主畫面 App」模式。這是 iPhone 最需要驗證的情境：請測試登入彈窗能否正常回到這裡。"
+        }
+      }
+
+      function renderEnv() {
+        const labels = {
+          userAgent: "User-Agent",
+          origin: "網址來源",
+          secureContext: "安全環境（HTTPS／localhost）",
+          isIOS: "iOS／iPadOS",
+          standalone: "主畫面 App 模式",
+          inAppBrowser: "內建瀏覽器",
+          online: "連線中",
+          indexedDB: "IndexedDB",
+          storagePersisted: "已是持久儲存",
+          storagePersistRequest: "要求持久儲存的結果",
+          storageEstimate: "儲存空間",
+          webLocks: "Web Locks",
+          broadcastChannel: "BroadcastChannel",
+          cookiesEnabled: "Cookie",
+        }
+        const table = $("envTable")
+        table.innerHTML = ""
+        for (const [key, value] of Object.entries(state.env)) {
+          const tr = document.createElement("tr")
+          const th = document.createElement("th")
+          th.textContent = labels[key] || key
+          const td = document.createElement("td")
+          td.textContent = value
+          tr.append(th, td)
+          table.appendChild(tr)
+        }
+      }
+
+      async function requestPersist() {
+        if (!(navigator.storage && navigator.storage.persist)) {
+          state.env.storagePersistRequest = "不支援"
+        } else {
+          state.env.storagePersistRequest = (await navigator.storage.persist()) ? "已授予" : "未授予"
+        }
+        renderEnv()
+        log(`要求持久儲存：${state.env.storagePersistRequest}`)
+      }
+
+      // ---------- 2. 登入（GIS Token model） ----------
+      // GIS 必須在頁面載入時就先載好：若等到按鈕點擊才載入 script，
+      // 非同步等待會讓瀏覽器失去「使用者手勢」，彈窗會被封鎖。
+
+      function loadGis() {
+        return new Promise((resolve, reject) => {
+          if (window.google && google.accounts && google.accounts.oauth2) return resolve()
+          const s = document.createElement("script")
+          s.src = "https://accounts.google.com/gsi/client"
+          s.async = true
+          s.onload = () => resolve()
+          s.onerror = () => reject(new Error("GIS script 載入失敗"))
+          document.head.appendChild(s)
+        })
+      }
+
+      function initTokenClient() {
+        state.tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPE,
+          prompt: "",
+          include_granted_scopes: false,
+          callback: onTokenResponse,
+          error_callback: onTokenError,
+        })
+      }
+
+      function requestToken(mode) {
+        state.tokenRequestStart = performance.now()
+        state.tokenRequestMode = mode
+        const overrides = { prompt: "" }
+        const hint = safeGet(localStorage, HINT_KEY)
+        if (hint) overrides.login_hint = hint
+        log(`要求 token（${mode === "renew" ? "續期" : "首次"}，login_hint=${hint ? "有" : "無"}）`)
+        state.tokenClient.requestAccessToken(overrides)
+      }
+
+      function onTokenResponse(resp) {
+        const ms = Math.round(performance.now() - state.tokenRequestStart)
+        const id = state.tokenRequestMode === "renew" ? "auth.renew" : "auth.login"
+        const label = state.tokenRequestMode === "renew" ? "續期 token" : "登入並授權"
+        if (resp.error) {
+          record(id, label, "fail", `${resp.error} ${resp.error_description || ""}`, ms)
+          return
+        }
+        const granted = google.accounts.oauth2.hasGrantedAllScopes(resp, SCOPE)
+        if (!granted) {
+          record(id, label, "fail", `drive.appdata 未授權（使用者未同意）；回傳 scope=${resp.scope}`, ms)
+          state.token = null
+          state.tokenExpiresAt = 0
+          setSignedIn(false)
+          return
+        }
+        state.token = resp.access_token
+        state.tokenExpiresAt = Date.now() + Number(resp.expires_in) * 1000
+        state.tokenGrants += 1
+        record(id, label, "pass", `expires_in=${resp.expires_in} 秒；drive.appdata 已授權；回傳 scope=${resp.scope}`, ms)
+        setSignedIn(true)
+      }
+
+      function onTokenError(err) {
+        const ms = Math.round(performance.now() - state.tokenRequestStart)
+        const id = state.tokenRequestMode === "renew" ? "auth.renew" : "auth.login"
+        const label = state.tokenRequestMode === "renew" ? "續期 token" : "登入並授權"
+        const hint =
+          err.type === "popup_failed_to_open"
+            ? "（彈窗被封鎖或無法開啟）"
+            : err.type === "popup_closed"
+              ? "（彈窗在完成前被關閉）"
+              : ""
+        record(id, label, "fail", `${err.type}${hint} ${err.message || ""}`, ms)
+      }
+
+      function setSignedIn(on) {
+        for (const id of ["btnRenew", "btnRevoke", "btnRunAll", "btnCleanup", "btnPing", "btnWatch"]) {
+          $(id).disabled = !on
+        }
+        updateTokenStatus()
+      }
+
+      function updateTokenStatus() {
+        if (!state.token) {
+          $("tokenStatus").textContent = state.tokenClient ? "尚未登入。" : "GIS 載入中…"
+          return
+        }
+        const left = Math.max(0, Math.round((state.tokenExpiresAt - Date.now()) / 1000))
+        const who = state.email ? `，帳號 ${maskEmail(state.email)}` : ""
+        $("tokenStatus").textContent = left > 0 ? `已登入${who}；token 剩餘 ${Math.floor(left / 60)} 分 ${left % 60} 秒。` : "token 已過期，請按「續期 token」。"
+      }
+
+      function revoke() {
+        if (!state.token) return
+        const t0 = performance.now()
+        google.accounts.oauth2.revoke(state.token, (done) => {
+          const ms = Math.round(performance.now() - t0)
+          if (!(done && done.successful)) {
+            record("auth.revoke", "撤銷授權", "fail", `${(done && done.error) || "未知錯誤"}（登入狀態保留，可重試）`, ms)
+            return
+          }
+          record("auth.revoke", "撤銷授權", "pass", "已撤銷本網站的所有授權範圍", ms)
+          state.token = null
+          state.tokenExpiresAt = 0
+          setSignedIn(false)
+        })
+      }
+
+      // ---------- 3. Drive API ----------
+
+      async function drive(label, method, url, { body, contentType } = {}) {
+        if (!state.token) throw new Error("尚未取得 token")
+        state.calls[label] = (state.calls[label] || 0) + 1
+        const headers = { Authorization: `Bearer ${state.token}` }
+        if (contentType) headers["Content-Type"] = contentType
+        const t0 = performance.now()
+        const res = await fetch(url, { method, headers, body })
+        const ms = Math.round(performance.now() - t0)
+        const text = await res.text()
+        let data = null
+        try {
+          data = text ? JSON.parse(text) : null
+        } catch {
+          data = text
+        }
+        if (!res.ok) {
+          const errObj = data && data.error ? data.error : {}
+          const reason = (errObj.errors && errObj.errors[0] && errObj.errors[0].reason) || errObj.status || ""
+          const err = new Error(`HTTP ${res.status} ${reason}：${errObj.message || String(text).slice(0, 200)}`)
+          err.status = res.status
+          err.reason = reason
+          err.ms = ms
+          throw err
+        }
+        return { data, ms, status: res.status }
+      }
+
+      function errorHint(e) {
+        if (e.reason === "accessNotConfigured" || e.reason === "SERVICE_DISABLED") return "；Drive API 尚未啟用（08 第 2 步）"
+        if (e.status === 401) return "；token 失效，請重新登入"
+        if (e.reason === "insufficientPermissions" || e.reason === "insufficientScopes") return "；權限不足，請確認 08 第 4 步的範圍"
+        if (e.reason === "storageQuotaExceeded") return "；Google 雲端硬碟空間已滿"
+        return ""
+      }
+
+      function multipartBody(metadata, content) {
+        const boundary = "bwz" + Math.random().toString(36).slice(2)
+        const body =
+          `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+          `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${content}\r\n--${boundary}--`
+        return { body, contentType: `multipart/related; boundary=${boundary}` }
+      }
+
+      async function listAll(label, query, fields) {
+        const files = []
+        let pageToken = ""
+        let ms = 0
+        do {
+          const url =
+            `${API}/files?spaces=appDataFolder&q=${query}&pageSize=100&fields=nextPageToken,files(${fields})` +
+            (pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : "")
+          const r = await drive(label, "GET", url)
+          ms += r.ms
+          files.push(...r.data.files)
+          pageToken = r.data.nextPageToken
+        } while (pageToken)
+        return { files, ms }
+      }
+
+      const appQuery = (extra) =>
+        encodeURIComponent(`appProperties has { key='app' and value='${APP_TAG}' }` + (extra ? ` and ${extra}` : ""))
+
+      async function step(id, label, fn) {
+        try {
+          const out = await fn()
+          record(id, label, out.status || "pass", out.detail || "", out.ms)
+          return out
+        } catch (e) {
+          record(id, label, "fail", e.message + errorHint(e), e.ms)
+          return null
+        }
+      }
+
+      async function runAll() {
+        $("btnRunAll").disabled = true
+        try {
+          const ctx = {}
+
+          await step("t01", "about.get（帳號資訊）", async () => {
+            const r = await drive("about.get", "GET", `${API}/about?fields=user(displayName,emailAddress,permissionId)`)
+            state.email = r.data.user.emailAddress
+            safeSet(localStorage, HINT_KEY, state.email)
+            updateTokenStatus()
+            return { ms: r.ms, detail: `${r.data.user.displayName}／${maskEmail(state.email)}；permissionId 取得${r.data.user.permissionId ? "成功" : "失敗"}` }
+          })
+
+          await step("t02", "changes.getStartPageToken", async () => {
+            const r = await drive("changes.getStartPageToken", "GET", `${API}/changes/startPageToken`)
+            ctx.startToken = r.data.startPageToken
+            return { ms: r.ms, detail: `token=${ctx.startToken}` }
+          })
+
+          await step("t03", "files.generateIds（appDataFolder）", async () => {
+            const r = await drive("files.generateIds", "GET", `${API}/files/generateIds?count=2&space=appDataFolder&type=files`)
+            ctx.ids = r.data.ids
+            return { ms: r.ms, detail: `取得 ${ctx.ids.length} 個 ID` }
+          })
+
+          const runId = Math.random().toString(36).slice(2, 10)
+          const meta = (id) => ({
+            id,
+            name: "poc.test.json",
+            parents: ["appDataFolder"],
+            mimeType: "application/json",
+            appProperties: { app: APP_TAG, kind: "poc", run: runId },
+          })
+
+          await step("t04", "files.create（指定 ID，multipart）", async () => {
+            if (!ctx.ids) throw new Error("缺少 generateIds 結果")
+            const mp = multipartBody(meta(ctx.ids[0]), JSON.stringify({ hello: "world", n: 1, at: new Date().toISOString() }))
+            const r = await drive(
+              "files.create",
+              "POST",
+              `${UPLOAD}/files?uploadType=multipart&fields=id,name,version,modifiedTime`,
+              mp,
+            )
+            ctx.fileId = r.data.id
+            ctx.v1 = r.data.version
+            const same = r.data.id === ctx.ids[0]
+            return {
+              status: same ? "pass" : "fail",
+              ms: r.ms,
+              detail: `id 與指定相同：${same ? "是" : "否"}；version=${r.data.version}`,
+            }
+          })
+
+          await step("t05", "重複建立同一 ID（應失敗、不產生重複檔）", async () => {
+            if (!ctx.fileId) throw new Error("缺少 t04 檔案")
+            const mp = multipartBody(meta(ctx.fileId), JSON.stringify({ duplicate: true }))
+            try {
+              const r = await drive("files.create", "POST", `${UPLOAD}/files?uploadType=multipart&fields=id`, mp)
+              return { status: "fail", ms: r.ms, detail: `竟然成功了（id=${r.data.id}），需檢查是否產生重複檔` }
+            } catch (e) {
+              // 預期 409；其他 4xx 也記錄下來（V-07 要知道實際錯誤碼），401／5xx／網路錯誤才算測試失敗
+              if (e.status === 409) return { status: "pass", ms: e.ms, detail: `如預期失敗：HTTP 409 ${e.reason}` }
+              if (e.status >= 400 && e.status < 500 && e.status !== 401)
+                return { status: "info", ms: e.ms, detail: `被拒絕但不是 409：HTTP ${e.status} ${e.reason}（由 t08 確認是否有重複檔）` }
+              throw e
+            }
+          })
+
+          await step("t06", "files.update（覆寫內容，media）", async () => {
+            if (!ctx.fileId) throw new Error("缺少 t04 檔案")
+            const r = await drive(
+              "files.update",
+              "PATCH",
+              `${UPLOAD}/files/${ctx.fileId}?uploadType=media&fields=id,version,modifiedTime`,
+              { body: JSON.stringify({ hello: "updated", n: 2 }), contentType: "application/json; charset=UTF-8" },
+            )
+            ctx.v2 = r.data.version
+            let increased = null
+            try {
+              increased = BigInt(r.data.version) > BigInt(ctx.v1)
+            } catch {}
+            return {
+              status: increased === false ? "fail" : "pass",
+              ms: r.ms,
+              detail: `version ${ctx.v1} → ${r.data.version}${increased === false ? "（沒有增加）" : ""}`,
+            }
+          })
+
+          await step("t07", "files.get?alt=media（下載內容）", async () => {
+            if (!ctx.fileId) throw new Error("缺少 t04 檔案")
+            const r = await drive("files.get(alt=media)", "GET", `${API}/files/${ctx.fileId}?alt=media`)
+            const ok = r.data && r.data.n === 2
+            return { status: ok ? "pass" : "fail", ms: r.ms, detail: ok ? "內容與上傳一致" : `內容不符：${JSON.stringify(r.data).slice(0, 120)}` }
+          })
+
+          await step("t08", "files.list（spaces=appDataFolder）", async () => {
+            const r = await listAll("files.list", appQuery(), "id,name,appProperties")
+            const thisRun = r.files.filter((f) => f.appProperties && f.appProperties.run === runId)
+            const ok = thisRun.length === 1 && thisRun[0].id === ctx.fileId
+            const leftovers = r.files.length - thisRun.length
+            return {
+              status: ok ? "pass" : "fail",
+              ms: r.ms,
+              detail: `本次建立的檔案 ${thisRun.length} 個（應為 1，且 id 相同）${leftovers ? `；另有 ${leftovers} 個先前殘留的測試檔，可按「清除所有測試檔」` : ""}`,
+            }
+          })
+
+          await step("t09", "changes.list（偵測剛才的變更）", async () => {
+            if (!ctx.startToken) throw new Error("缺少 start page token")
+            let pageToken = ctx.startToken
+            let seen = false
+            let pages = 0
+            let totalMs = 0
+            while (pageToken && pages < 5) {
+              const r = await drive(
+                "changes.list",
+                "GET",
+                `${API}/changes?pageToken=${encodeURIComponent(pageToken)}&spaces=appDataFolder&includeRemoved=true` +
+                  `&fields=nextPageToken,newStartPageToken,changes(fileId,removed,time,file(name,version))`,
+              )
+              totalMs += r.ms
+              pages++
+              if (r.data.changes.some((c) => c.fileId === ctx.fileId)) seen = true
+              pageToken = r.data.nextPageToken
+            }
+            return { status: seen ? "pass" : "info", ms: totalMs, detail: seen ? `看到變更（${pages} 頁）` : `尚未看到變更（${pages} 頁），可能有延遲` }
+          })
+
+          await step("t10", "revisions.list（是否保留版本紀錄）", async () => {
+            if (!ctx.fileId) throw new Error("缺少 t04 檔案")
+            const r = await drive("revisions.list", "GET", `${API}/files/${ctx.fileId}/revisions?fields=revisions(id,modifiedTime,keepForever)`)
+            const n = (r.data.revisions || []).length
+            return { status: "info", ms: r.ms, detail: `有 ${n} 個版本紀錄（寫入過 2 次）` }
+          })
+
+          await step("t11", "files.delete（刪除測試檔）", async () => {
+            if (!ctx.fileId) throw new Error("缺少 t04 檔案")
+            const r = await drive("files.delete", "DELETE", `${API}/files/${ctx.fileId}`)
+            return { ms: r.ms, detail: `HTTP ${r.status}` }
+          })
+        } finally {
+          $("btnRunAll").disabled = !state.token
+        }
+      }
+
+      async function cleanup() {
+        await step("cleanup", "清除所有測試檔", async () => {
+          const r = await listAll("files.list", appQuery(), "id,name")
+          for (const f of r.files) {
+            await drive("files.delete", "DELETE", `${API}/files/${f.id}`)
+          }
+          return { ms: r.ms, detail: `刪除 ${r.files.length} 個檔案` }
+        })
+      }
+
+      // ---------- 4. 跨裝置延遲 ----------
+
+      async function findPingFile() {
+        const r = await listAll("files.list", appQuery("name='poc.ping.json'"), "id,version,modifiedTime")
+        return r.files[0] || null
+      }
+
+      async function writePing() {
+        await step("ping.write", "寫入跨裝置測試檔", async () => {
+          const content = JSON.stringify({ from: $("deviceLabel").value, deviceId: PAGE_DEVICE_ID, sentAt: Date.now() })
+          const existing = await findPingFile()
+          let r
+          if (existing) {
+            r = await drive("files.update", "PATCH", `${UPLOAD}/files/${existing.id}?uploadType=media&fields=id,modifiedTime`, {
+              body: content,
+              contentType: "application/json; charset=UTF-8",
+            })
+          } else {
+            const mp = multipartBody(
+              { name: "poc.ping.json", parents: ["appDataFolder"], mimeType: "application/json", appProperties: { app: APP_TAG, kind: "ping" } },
+              content,
+            )
+            r = await drive("files.create", "POST", `${UPLOAD}/files?uploadType=multipart&fields=id,modifiedTime`, mp)
+          }
+          return { ms: r.ms, detail: `已寫入（伺服器時間 ${r.data.modifiedTime}）` }
+        })
+      }
+
+      async function startWatch() {
+        stopWatch()
+        let token
+        try {
+          token = (await drive("changes.getStartPageToken", "GET", `${API}/changes/startPageToken`)).data.startPageToken
+        } catch (e) {
+          record("ping.watch", "跨裝置監看", "fail", e.message + errorHint(e))
+          return
+        }
+        state.watchStart = Date.now()
+        const gen = ++state.watchGen
+        const cancelled = () => gen !== state.watchGen
+        $("btnStopWatch").disabled = false
+        $("watchStatus").textContent = "監看中…請到另一台裝置按「寫入跨裝置測試檔」。"
+        const tick = async () => {
+          if (cancelled()) return
+          if (Date.now() - state.watchStart > 10 * 60 * 1000) {
+            record("ping.watch", "跨裝置監看", "info", "10 分鐘內沒有看到另一台裝置的修改")
+            stopWatch()
+            return
+          }
+          try {
+            const r = await drive(
+              "changes.list",
+              "GET",
+              `${API}/changes?pageToken=${encodeURIComponent(token)}&spaces=appDataFolder&fields=nextPageToken,newStartPageToken,changes(fileId,file(name,modifiedTime))`,
+            )
+            if (cancelled()) return
+            token = r.data.nextPageToken || r.data.newStartPageToken || token
+            const hits = r.data.changes.filter((c) => c.file && c.file.name === "poc.ping.json")
+            for (const hit of hits) {
+              const receivedAt = Date.now()
+              const content = (await drive("files.get(alt=media)", "GET", `${API}/files/${hit.fileId}?alt=media`)).data
+              if (cancelled()) return
+              if (!content || content.deviceId === PAGE_DEVICE_ID) continue // 忽略本頁自己寫入的
+              const serverLag = Math.round((receivedAt - Date.parse(hit.file.modifiedTime)) / 1000)
+              const e2e = content.sentAt ? Math.round((receivedAt - content.sentAt) / 1000) : "?"
+              record(
+                "ping.watch",
+                "跨裝置監看",
+                "pass",
+                `看到「${content.from || "?"}」的修改；伺服器寫入後約 ${serverLag} 秒被本機發現（本機與 Google 時鐘差會影響此值；輪詢間隔 5 秒）；` +
+                  `端到端約 ${e2e} 秒（受兩台裝置時鐘差影響）`,
+              )
+              stopWatch()
+              return
+            }
+            $("watchStatus").textContent = `監看中…已等待 ${Math.round((Date.now() - state.watchStart) / 1000)} 秒`
+          } catch (e) {
+            if (cancelled()) return
+            record("ping.watch", "跨裝置監看", "fail", e.message + errorHint(e))
+            stopWatch()
+            return
+          }
+          if (!cancelled()) state.watchTimer = setTimeout(tick, 5000)
+        }
+        tick()
+      }
+
+      function stopWatch() {
+        state.watchGen++
+        if (state.watchTimer) clearTimeout(state.watchTimer)
+        state.watchTimer = null
+        $("btnStopWatch").disabled = true
+        if (!state.results["ping.watch"]) $("watchStatus").textContent = ""
+        else $("watchStatus").textContent = "監看已停止。"
+      }
+
+      // ---------- 5. 人工觀察 ----------
+
+      const OBSERVATIONS = [
+        { id: "o1", q: "登入時有沒有出現「Google 尚未驗證這個應用程式」的畫面？", a: ["有", "沒有", "沒注意"] },
+        { id: "o2", q: "Google 同意畫面上的權限是否只有一項、而且沒有勾選框？", a: ["是", "否（請在下方描述）", "沒看到同意畫面"] },
+        { id: "o3", q: "按「續期 token（第二次登入）」時，彈窗的情況？", a: ["閃一下自動關閉，不用點", "要選帳號或再按允許", "被封鎖或卡住", "還沒測"] },
+        { id: "o4", q: "（主畫面 App 才需回答）登入彈窗能否回到 App 並完成登入？", a: ["可以", "卡住回不來", "不適用"] },
+        { id: "o5", q: "（LINE 內建瀏覽器才需回答）按登入後的結果？", a: ["出現 Google 錯誤（例如 403 disallowed_useragent）", "可以登入", "其他（請描述）", "不適用"] },
+        { id: "o6", q: "（LINE 才需回答）「用外部瀏覽器開啟」連結有沒有跳到 Safari／Chrome？", a: ["有", "沒有", "不適用"] },
+      ]
+
+      function renderObservations() {
+        const box = $("observations")
+        for (const o of OBSERVATIONS) {
+          const div = document.createElement("div")
+          div.className = "q"
+          const title = document.createElement("strong")
+          title.textContent = o.q
+          div.appendChild(title)
+          o.a.forEach((answer, i) => {
+            const label = document.createElement("label")
+            const input = document.createElement("input")
+            input.type = "radio"
+            input.name = o.id
+            input.value = answer
+            input.id = `${o.id}-${i}`
+            label.append(input, " " + answer)
+            div.appendChild(label)
+          })
+          box.appendChild(div)
+        }
+      }
+
+      // ---------- 6. 報告 ----------
+
+      function buildReport() {
+        const lines = []
+        lines.push("=== 個人筆記 PoC 測試報告 ===")
+        lines.push(`時間：${new Date().toISOString()}`)
+        lines.push(`裝置名稱：${$("deviceLabel").value || "(未填)"}`)
+        lines.push(`帳號：${maskEmail(state.email)}；token 取得次數：${state.tokenGrants}`)
+        lines.push("")
+        lines.push("[環境]")
+        for (const [k, v] of Object.entries(state.env)) lines.push(`${k}: ${v}`)
+        lines.push("")
+        lines.push("[測試結果]")
+        for (const [id, r] of Object.entries(state.results)) {
+          lines.push(`${id} ${r.label}：${r.status}｜${r.detail}${r.ms == null ? "" : `｜${r.ms}ms`}`)
+        }
+        lines.push("")
+        lines.push("[API 呼叫次數]（可與 Cloud Console 配額用量比對）")
+        for (const [k, v] of Object.entries(state.calls)) lines.push(`${k}: ${v}`)
+        lines.push("")
+        lines.push("[人工觀察]")
+        for (const o of OBSERVATIONS) {
+          const picked = document.querySelector(`input[name="${o.id}"]:checked`)
+          lines.push(`${o.id} ${o.q} → ${picked ? picked.value : "(未答)"}`)
+        }
+        const note = $("freeNote").value.trim()
+        if (note) lines.push(`備註：${note}`)
+        return lines.join("\n")
+      }
+
+      async function copyReport() {
+        const text = buildReport()
+        const box = $("report")
+        box.value = text
+        try {
+          await navigator.clipboard.writeText(text)
+          log("測試報告已複製到剪貼簿")
+        } catch {
+          box.focus()
+          box.select()
+          log("自動複製失敗，請手動全選複製文字框內容")
+        }
+      }
+
+      // ---------- 啟動 ----------
+
+      function bind(id, fn) {
+        $(id).addEventListener("click", fn)
+      }
+
+      function init() {
+        $("originText").textContent = location.origin
+        const savedLabel = safeGet(localStorage, LABEL_KEY)
+        $("deviceLabel").value = savedLabel || ""
+        $("deviceLabel").addEventListener("change", () => safeSet(localStorage, LABEL_KEY, $("deviceLabel").value))
+        renderObservations()
+        checkEnv()
+
+        bind("btnEnv", checkEnv)
+        bind("btnPersist", requestPersist)
+        bind("btnLogin", () => requestToken("login"))
+        bind("btnRenew", () => requestToken("renew"))
+        bind("btnRevoke", revoke)
+        bind("btnRunAll", runAll)
+        bind("btnCleanup", cleanup)
+        bind("btnPing", writePing)
+        bind("btnWatch", startWatch)
+        bind("btnStopWatch", stopWatch)
+        bind("btnReport", copyReport)
+        setInterval(updateTokenStatus, 1000)
+
+        loadGis()
+          .then(() => {
+            initTokenClient()
+            $("btnLogin").disabled = false
+            updateTokenStatus()
+            log("GIS 已載入")
+          })
+          .catch((e) => {
+            $("tokenStatus").textContent = e.message
+            record("gis.load", "載入 Google 登入元件", "fail", e.message)
+          })
+      }
+
+      init()
+    </script>
+  </body>
+</html>

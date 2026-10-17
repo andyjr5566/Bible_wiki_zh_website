@@ -198,6 +198,19 @@ plugins:
     layout:
       position: beforeBody
       priority: 5
+  # 個人研經筆記（Google 登入＋使用者自己的 Google Drive 同步）。設計見 dev-notes/personal-notes/。
+  # enabled: false 可整個關閉；syncEnabled: false 讓所有人改為本機模式（緊急開關）。
+  - source: ./plugins/personal-notes
+    enabled: true
+    options:
+      clientId: 339980089528-va9622cqhnurr1sqrl8kl6aa5bim30fl.apps.googleusercontent.com
+      syncEnabled: true
+      minPollSeconds: 180
+      maxWritesPerMinute: 6
+      notice: ""
+    layout:
+      position: afterBody
+      priority: 20
   - source: ./plugins/semantic-search
     enabled: true
     layout:
@@ -333,3 +346,6 @@ layout:
         right: []
     canvas: {}
     bases: {}
+    my-notes:
+      positions:
+        right: []

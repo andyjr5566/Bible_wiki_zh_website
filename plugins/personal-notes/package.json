@@ -5,17 +5,14 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
     "./components": {
-      "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsup",
@@ -40,7 +37,11 @@
   "quartz": {
     "name": "personal-notes",
     "displayName": "Personal Notes",
-    "category": ["emitter", "pageType", "component"],
+    "category": [
+      "emitter",
+      "pageType",
+      "component"
+    ],
     "version": "0.1.0",
     "quartzVersion": ">=5.0.0",
     "dependencies": [],

@@ -92,6 +92,8 @@ export class NotesEngine {
   private consecutiveFailures = 0
   private circuitUntil = 0
   lastPullAt = 0
+  /** 每次從雲端收到其他裝置的新資料就 +1（排程器據此調整輪詢間隔）。 */
+  remoteRevision = 0
 
   private constructor(store: NotesStore, deviceId: string, opts: EngineOptions) {
     this.store = store
@@ -494,6 +496,8 @@ export class NotesEngine {
       }
       this.setStatus({ kind: "syncing" })
       try {
+        // 先從 IndexedDB 重新載入：其他分頁可能剛寫入（多分頁時，排程器另用 Web Locks 確保一次只有一個分頁同步）
+        await this.reloadFromStore()
         const bootstrapped = await this.store.getMeta<boolean>("bootstrapped")
         if (bootstrapped) await this.pullInner()
         else await this.bootstrapInner()
@@ -515,6 +519,7 @@ export class NotesEngine {
       if (!(await this.store.getMeta<boolean>("bootstrapped"))) return
       if ((await this.store.getMeta<boolean>("cloudWiped")) === true) return
       try {
+        await this.reloadFromStore()
         await this.pushInner()
         if (this.statusValue.kind !== "error") {
           this.consecutiveFailures = 0
@@ -702,6 +707,7 @@ export class NotesEngine {
     // 其他裝置的檔案被移除：保守起見保留本機快取（03 §4.2）
     await this.store.setMeta("startPageToken", cs.token)
     this.lastPullAt = this.now()
+    if (changed) this.remoteRevision++
     if (changed || forked) this.rebuild()
   }
 

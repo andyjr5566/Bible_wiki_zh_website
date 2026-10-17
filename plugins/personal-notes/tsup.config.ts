@@ -47,7 +47,8 @@ export default defineConfig([
       "components/index": "src/components/index.ts",
     },
     format: ["esm"],
-    dts: true,
+    // Quartz 執行時不需要型別宣告；型別檢查改用 `npm run typecheck`
+    dts: false,
     sourcemap: true,
     clean: false,
     treeshake: true,

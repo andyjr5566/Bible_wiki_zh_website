@@ -105,3 +105,11 @@
 - 發現：`.quartz/plugins/` 有部分檔案被 git 追蹤、wiki-tour 在本機是 symlink（與記憶中「.quartz 全部 gitignore」不符）；personal-notes 本機複本不提交。
 - commits：`dfaf2b07`、`3c998200`、`d711ef43`（皆在 feature/personal-notes，未 push）。
 - 下一步：Codex 審查引擎與控制中心 → 本機 Windows 實測（P1-16）→ 使用者決定部署方式 → 試用（P1-18）。
+
+## 2026-10-18｜Phase 1｜審查修正與本機煙霧測試
+
+- Codex Sol 審查引擎／排程器／控制中心：11 項（高 8），全部屬實並修正：token 綁定已確認的帳號（避免 A 帳號筆記寫進 B 帳號）、所有同步入口走跨分頁 Web Lock、版本不符時先核對內容再決定是否換裝置 ID、檔案對應存好才清 pendingId、雲端清空重傳保住所有版本、匿名筆記併入走匯入規則、刪除全部加鎖、清除本機改用 clearAll、寫入額度用完會續傳、裝置登記檔遺失會重建。新增 3 個回歸測試（共 55 個）。
+- Antigravity（gemini-4-argon-high）審閱說明頁與隱私權政策：14 項，採納 13 項（台灣用語、刪除與撤銷授權分開說明、雲端硬碟看不到隱藏空間、開新分頁需重新連線、公用電腦登出 Google…）；第 1 項（誤以為需要額外 email 權限）不正確，但改寫文案避免同樣誤會。並據第 6 項修正程式：登出選「清除」時一併清除記住的 email。
+- 本機煙霧測試（`npx quartz build --serve -d test_content`，無頭 Chrome）：章節頁面板、狀態列「筆記目前只存在這台裝置」、「用 Google 同步」「＋ 新增筆記」、左下角筆記按鈕、「我的筆記」頁皆正常，無筆記功能錯誤。Service Worker 在本機 serve 模式註冊失敗為既有現象（本機無 Service-Worker-Allowed 標頭），與本次修改無關。
+- commit `8b8ad552`。
+- 下一步：使用者在 Windows 本機實測登入與跨瀏覽器同步。

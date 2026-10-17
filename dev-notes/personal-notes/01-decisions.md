@@ -90,14 +90,41 @@ Phase 2 加無資料庫的 Token 服務（GIS Code model）以達成免點擊續
 
 ---
 
+## Phase 0 PoC 結果帶來的決策（2026-10-18）
+
+### D-20｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**MVP 確定使用 GIS Token model，Token 服務不提前**（解決 D-31 的「是否提前」部分；Token 服務仍列 Phase 2）。
+依據：Windows Chrome、iPhone Safari、iPhone 主畫面 App 三種環境登入、續期、Drive 讀寫全部成功（06 §1 V-01、V-02、V-04）。
+
+### D-21｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**LINE 等內建瀏覽器：先引導，不直接嘗試登入。** 實測 LINE 按登入會跳到 Safari，無法在 LINE 內完成（V-03）。
+做法：偵測到內建瀏覽器時，同步按鈕改為「用 Safari／Chrome 開啟以同步筆記」（附 `openExternalBrowser=1` 連結與複製網址）；本機筆記照常可用。
+
+### D-22｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**續期體驗依環境不同，UI 文案不可假設「不用操作」。** Windows Chrome 與 iPhone 主畫面 App 續期彈窗自動關閉；iPhone Safari 需要選帳號或按允許（V-04）。
+「點一下繼續同步」按鈕旁不寫「自動完成」之類的保證。
+
+### D-23｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**鼓勵 iPhone 使用者把網站加入主畫面。** 主畫面 App 取得持久儲存（Safari 一般分頁沒有），本機筆記較不會被系統清除；續期也較順（V-10、V-04）。
+在筆記功能的說明與登入成功後，適時提示 iPhone 使用者可使用既有的「加入主畫面」引導（Head.tsx 已有 PWA 安裝引導）。
+
+### D-24｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**跨裝置同步輪詢間隔可以放寬。** changes.list 在伺服器寫入後約 3 秒即可看到（V-06）；03 §4.2 的「頁面可見時 3–10 分鐘輪詢＋開啟時先同步」足以讓使用者感受到即時，不需更密集的輪詢。
+
+### D-25｜2026-10-18｜定案｜Claude（依 PoC 結果）
+**`files.generateIds` 預先取得 ID 的建立方式確認可用。** 重複建立回 HTTP 409 `fileIdInUse`、不產生重複檔（V-07）。程式遇到 409 `fileIdInUse` 時視為「先前其實已建立成功」，改用 update。
+另外：Drive `version` 每次寫入不是 +1（實測 1→3），程式不可依賴連號。appDataFolder 檔案有版本紀錄（V-08），可作為資料救回手段。
+
+---
+
 ## 待決事項
 
 ### D-30｜待決｜使用者
 **自訂網域（約 US$10–15／年）。** 測試期先用 `andyjr5566.github.io`。正式公開前決定。
 好處：網域驗證與品牌驗證容易、與其他 GitHub Pages 專案站隔離（目前同源，共用 IndexedDB 與授權來源）、Phase 2 可用 same-site cookie、網址不綁 GitHub 帳號。
 
-### D-31｜待決｜使用者＋Claude（依 PoC 結果）
-**Token 服務放哪裡、何時做：** 現有 Vercel（已有 `api/search.js`）或 Cloudflare Workers。若 iPhone 主畫面 App 在 PoC 無法登入，考慮提前到 Phase 1 末。
+### D-31｜待決（部分已決）｜使用者＋Claude
+**Token 服務放哪裡：** 現有 Vercel（已有 `api/search.js`）或 Cloudflare Workers。**時程已決（D-20）：不提前，維持 Phase 2。**
 
 ### D-32｜待決｜使用者
 **Codex 的 Luna 與 Sol 分工。** 07 暫定：Sol 做複雜演算法與嚴格審查，Luna 做範圍清楚的實作。等使用者確認。

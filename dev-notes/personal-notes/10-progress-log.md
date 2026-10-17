@@ -73,3 +73,9 @@
 
 - 使用者回報 LINE：按登入會自動跳到 Safari（或已安裝的主畫面 App），無法在 LINE 內完成 → V-03 已記錄。
 - 使用者無法測主畫面 App：既有的網站主畫面 App 開啟首頁，PoC 頁沒有入口。→ PoC 加上獨立 manifest（scope 限 PoC 目錄）與 apple-mobile-web-app-capable，可從 Safari 單獨「加入主畫面」。commit `fcf5d547`（已 cherry-pick 並 push 到 main）。
+
+## 2026-10-18｜Phase 0｜P0-6、P0-8 完成：iPhone 主畫面 App 通過
+
+- iPhone 主畫面 App（standalone=是）：登入成功並回到 App、續期自動關閉（0.5 秒）、t01–t11 全通過、**persist() 已授予**、跨裝置約 3–6 秒。
+- 06 §1、§2 已更新；01 新增 D-20～D-25：MVP 確定用 Token model（Token 服務不提前）、LINE 先引導外部瀏覽器、續期文案依環境、鼓勵 iPhone 加入主畫面、輪詢間隔可放寬、generateIds＋409 處理方式。
+- Phase 0 剩 P0-7（Cloud Console 配額單位比對）需要使用者。

@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>個人筆記 PoC</title>
+    <!-- 讓這一頁可以單獨「加入主畫面」並以 App 模式開啟（測 V-02） -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="筆記測試" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
     <!--
       Phase 0 PoC（dev-notes/personal-notes/05-tasks.md P0-3）。
       驗證 GIS Token model + Drive appDataFolder 在各裝置的實際行為。

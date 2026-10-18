@@ -7,7 +7,8 @@ import type { TokenResult } from "../auth/gis"
 export type Notice =
   | { type: "signed-in"; name: string }
   | { type: "signed-out"; cleared: boolean }
-  | { type: "disconnected" }
+  /** revoked：是否真的向 Google 撤銷了授權（沒有有效連線時只能登出）。 */
+  | { type: "disconnected"; revoked: boolean }
   | { type: "adopted"; count: number }
   | { type: "switched-account" }
   | { type: "deleted-all" }
@@ -16,6 +17,8 @@ export type Notice =
   | { type: "sign-in-failed"; reason: Exclude<TokenResult, { ok: true }>["reason"]; message: string }
   | { type: "account-read-failed"; message: string }
   | { type: "connect-before-delete" }
+  /** 編輯中的內容存不進去、也無法備份，為了不弄丟而沒有切換帳號。 */
+  | { type: "switch-blocked" }
   | { type: "delete-failed"; message: string }
 
 export interface Prompts {
@@ -23,7 +26,7 @@ export interface Prompts {
    * 登入前說明權限。googleReady 完成前「繼續」不能按；使用者按「繼續」時要在點擊當下「同步」呼叫 start()
    * （它會開 Google 視窗，晚一步瀏覽器就會擋）。回傳使用者是否按了「繼續」。
    */
-  explainSignIn(googleReady: Promise<void>, start: () => void): Promise<boolean>
+  explainSignIn(googleReady: Promise<void>, start: () => void, notice: string): Promise<boolean>
   /** LINE 等內建瀏覽器無法登入 Google 時的引導（D-21）。 */
   inAppBrowser(browserName: string): Promise<void>
   /** 第一次登入時，是否把未登入時寫的紀錄加入帳號（D-05）。 */
@@ -33,7 +36,8 @@ export interface Prompts {
   /** 無法同步時的離線提示（D-04）。 */
   offline(withRetry: boolean): Promise<"ok" | "retry" | "cancel">
   signOut(hasUnsyncedChanges: boolean): Promise<"keep" | "clear" | null>
-  disconnect(): Promise<boolean>
+  /** canRevoke：目前有有效連線，可以向 Google 撤銷授權。 */
+  disconnect(opts: { canRevoke: boolean; hasUnsyncedChanges: boolean }): Promise<boolean>
   /** 刪除全部（UI 負責兩段確認）。 */
   deleteAll(): Promise<boolean>
   /** 雲端資料被清空後，是否用這台裝置的資料重新上傳。 */

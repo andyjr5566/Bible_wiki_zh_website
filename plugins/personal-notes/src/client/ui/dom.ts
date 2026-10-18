@@ -40,6 +40,8 @@ export interface DialogButton {
   waitingLabel?: string
   /** waitFor 失敗時按鈕顯示的文字（按鈕維持不能按）。 */
   failedLabel?: string
+  /** 開啟時先停在這個按鈕（危險操作讓焦點停在「取消」，按 Enter 不會直接刪除）。 */
+  autofocus?: boolean
 }
 
 let openDialogs = 0
@@ -48,15 +50,38 @@ let openDialogs = 0
 export function dialog(opts: { title: string; message: string | Node; buttons: DialogButton[]; dismissible?: boolean }): Promise<string | null> {
   return new Promise((resolve) => {
     const previousFocus = document.activeElement as HTMLElement | null
+    let closed = false
     const close = (id: string | null) => {
+      if (closed) return
+      closed = true
       overlay.remove()
       document.removeEventListener("keydown", onKey)
+      document.removeEventListener("prenav", onNav)
       openDialogs--
-      previousFocus?.focus?.()
+      if (previousFocus?.isConnected) previousFocus.focus?.()
       resolve(id)
     }
+    // SPA 換頁時關閉（當作取消），不要殘留在新頁面上（Codex 畫面審查 #7）
+    const onNav = () => close(null)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && opts.dismissible !== false) close(null)
+      // 焦點留在對話框內（Codex 畫面審查 #8）
+      if (e.key === "Tab") {
+        const items = [...box.querySelectorAll<HTMLElement>("button:not(:disabled), a[href], input, textarea, select")]
+        if (items.length === 0) return
+        const first = items[0]
+        const last = items[items.length - 1]
+        if (!box.contains(document.activeElement)) {
+          e.preventDefault()
+          first.focus()
+        } else if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
     }
     const body = typeof opts.message === "string" ? h("p", { text: opts.message }) : opts.message
     const buttons = opts.buttons.map((b) => {
@@ -105,8 +130,10 @@ export function dialog(opts: { title: string; message: string | Node; buttons: D
     overlay.append(box)
     document.body.append(overlay)
     document.addEventListener("keydown", onKey)
+    document.addEventListener("prenav", onNav)
     openDialogs++
-    buttons.find((b) => !b.disabled)?.focus()
+    const preferred = opts.buttons.findIndex((b) => b.autofocus)
+    ;(preferred >= 0 && !buttons[preferred].disabled ? buttons[preferred] : buttons.find((b) => !b.disabled))?.focus()
   })
 }
 
@@ -125,7 +152,8 @@ export function toast(message: string): void {
   el.textContent = message
   el.classList.add("show")
   if (toastTimer) clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => el!.classList.remove("show"), 3500)
+  // 長一點的提示多留幾秒，長輩才來得及讀完（Antigravity 審查 L-03）
+  toastTimer = setTimeout(() => el!.classList.remove("show"), Math.max(5000, message.length * 120))
 }
 
 export function formatTime(iso: string | number): string {

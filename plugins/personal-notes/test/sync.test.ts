@@ -468,3 +468,24 @@ describe("同步：Codex 重構審查回歸測試", () => {
     expect(cloud.files.size).toBeGreaterThan(0)
   })
 })
+
+describe("同步：多方檢查回歸測試（Antigravity）", () => {
+  it("M-04 一台刪除、一台修改時按「兩個都保留」：有內容的那一版留在原筆記，不會被刪掉", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const b = await device(cloud)
+    const n = await a.notes.create(note("原文"))
+    await a.syncer.sync()
+    await b.syncer.sync()
+    await b.notes.update(n.id, { body: "B 補充" })
+    a.clock.t += 60_000 // 刪除那邊比較新 → 刪除版本成為顯示中的版本
+    await a.notes.remove(n.id)
+    await a.syncer.sync()
+    await b.syncer.sync()
+    await a.syncer.sync()
+    expect(a.repo.get(n.id)!.winner.deleted).toBe(true)
+    await a.notes.resolveConflict(n.id, { keepBoth: true })
+    expect(a.repo.get(n.id)).toMatchObject({ winner: { body: "B 補充", deleted: false }, conflicts: [] })
+    expect(bodies(a)).toEqual(["B 補充"])
+  })
+})

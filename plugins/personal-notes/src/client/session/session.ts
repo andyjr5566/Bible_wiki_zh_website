@@ -86,12 +86,16 @@ export interface SessionDeps {
 
 const ACCOUNT_KEY = "bwz-notes-account" // 這台裝置上次登入的帳號
 
+/** 切換帳號前的存檔失敗（畫面丟出），這次不切換。 */
+class SwitchBlockedError extends Error {}
+
 type Listener = () => void
 
 export class Session {
   account: AccountInfo | null = null
   ws!: Workspace
   private listeners = new Set<Listener>()
+  private beforeSwitchListeners = new Set<() => Promise<void>>()
   private unsubscribe: (() => void)[] = []
   /** 本次工作階段已確認過離線提示（D-04：不要每開一則就跳一次）。 */
   private offlineAcknowledged = false
@@ -140,6 +144,39 @@ export class Session {
     return () => this.listeners.delete(fn)
   }
 
+  /**
+   * 切換帳號（登入、登出、中斷連線）之前呼叫，等它完成才切換。
+   * 畫面用來把編輯中的內容存進「原本的」帳號資料（Codex 畫面審查 #3）。
+   * 同一次切換可能呼叫不只一次，fn 必須可以重複呼叫（例如存完就關閉編輯器）。
+   * fn 丟出錯誤代表「現在切換會遺失資料」，這次就不切換（Codex 第二輪 #7）。
+   */
+  onBeforeSwitch(fn: () => Promise<void>): () => void {
+    this.beforeSwitchListeners.add(fn)
+    return () => this.beforeSwitchListeners.delete(fn)
+  }
+
+  private async runBeforeSwitch(): Promise<void> {
+    for (const fn of [...this.beforeSwitchListeners]) {
+      try {
+        await fn()
+      } catch (e) {
+        console.error("[personal-notes] 切換帳號前存檔失敗", e)
+        throw new SwitchBlockedError(errorMessage(e))
+      }
+    }
+  }
+
+  /** 切換前存檔；失敗時通知使用者並回傳 false。 */
+  private async readyToSwitch(): Promise<boolean> {
+    try {
+      await this.runBeforeSwitch()
+      return true
+    } catch {
+      this.prompts.notify({ type: "switch-blocked" })
+      return false
+    }
+  }
+
   private emit(): void {
     for (const fn of this.listeners) fn()
   }
@@ -158,6 +195,7 @@ export class Session {
 
   /** 切換到某個帳號（或未登入）的本機資料庫，並視情況啟動同步。 */
   private async openNamespace(account: AccountInfo | null): Promise<void> {
+    if (this.ws) await this.runBeforeSwitch()
     this.ws?.scheduler?.stop()
     for (const fn of this.unsubscribe) fn()
     this.unsubscribe = []
@@ -208,9 +246,13 @@ export class Session {
     const ready = tokens.prepare()
     ready.catch(() => undefined) // 載入失敗由說明視窗顯示
     return this.prompts
-      .explainSignIn(ready, () => {
-        box.request = tokens.request()
-      })
+      .explainSignIn(
+        ready,
+        () => {
+          box.request = tokens.request()
+        },
+        this.config.notice,
+      )
       .then((ok) => (ok && box.request ? this.finishSignIn(box.request) : undefined))
   }
 
@@ -228,6 +270,7 @@ export class Session {
       // 先標記 token 的擁有者再切換資料庫：舊帳號的同步從此拿不到這個 token
       tokens.setOwner(info.permissionId)
       if (this.account?.permissionId !== info.permissionId) {
+        await this.runBeforeSwitch() // 編輯中的未登入筆記先存好，才算得進「要不要加入帳號」
         const anonCount = this.account ? 0 : (await this.ws.store.getAllOwn()).filter((r) => !r.deleted).length
         this.writeAccount(info)
         await this.openNamespace(info)
@@ -239,7 +282,8 @@ export class Session {
       this.deps.requestPersistence?.()
       this.prompts.notify({ type: "signed-in", name: info.displayName })
     } catch (e) {
-      this.prompts.notify({ type: "account-read-failed", message: errorMessage(e) })
+      if (e instanceof SwitchBlockedError) this.prompts.notify({ type: "switch-blocked" })
+      else this.prompts.notify({ type: "account-read-failed", message: errorMessage(e) })
     }
   }
 
@@ -249,6 +293,26 @@ export class Session {
     if (!(await this.prompts.adoptAnonymous(count))) return
     // 等待回答期間帳號被切換了：不加入、也不清除匿名筆記（Codex 重構審查 B2）
     if (this.ws !== target || !this.account) return
+    await this.adoptAnonymousInto(target)
+  }
+
+  /** 登入中時，這台裝置還有幾則未登入時寫、尚未加入帳號的紀錄（選了「先不要」的人可以之後再加入）。 */
+  async pendingAnonymousCount(): Promise<number> {
+    if (!this.account) return 0
+    const anon = await this.deps.openStore(ANON_DB)
+    try {
+      return (await anon.getAllOwn()).filter((r) => !r.deleted).length
+    } finally {
+      anon.close()
+    }
+  }
+
+  /** 把未登入時寫的紀錄加入目前帳號（「我的筆記」頁的按鈕；Antigravity 審查 H-02）。 */
+  async adoptAnonymousNow(): Promise<void> {
+    if (this.account) await this.adoptAnonymousInto(this.ws)
+  }
+
+  private async adoptAnonymousInto(target: Workspace): Promise<void> {
     const anon = await this.deps.openStore(ANON_DB)
     try {
       const n = await adoptRecords(target.repo, await anon.getAllOwn())
@@ -258,6 +322,12 @@ export class Session {
     } finally {
       anon.close()
     }
+  }
+
+  /** 未登入時清除這台裝置上的所有紀錄（公用電腦用；已登入請用登出或刪除全部）。 */
+  async clearLocal(): Promise<void> {
+    if (this.account) return
+    await this.ws.repo.clearAll()
   }
 
   // ---------- 同步 ----------
@@ -335,12 +405,14 @@ export class Session {
     if (!this.account) return
     const choice = await this.prompts.signOut((await this.repo.pendingShards()) > 0)
     if (choice !== "keep" && choice !== "clear") return
+    if (!(await this.readyToSwitch())) return
     const name = accountDbName(this.account.permissionId)
     this.deps.tokens?.clear()
+    // 主動登出就忘記帳號提示，下次登入可以選別的帳號（Antigravity 審查 M-09）
+    this.deps.tokens?.forgetEmail()
     this.writeAccount(null)
     await this.openNamespace(null)
     if (choice === "clear") {
-      this.deps.tokens?.forgetEmail()
       // 先清空內容（其他分頁開著也能清），再盡量刪除資料庫（Codex 審查 #9）
       const s = await this.deps.openStore(name)
       await s.clearAll()
@@ -351,19 +423,24 @@ export class Session {
   }
 
   async disconnect(): Promise<void> {
-    if (!(await this.prompts.disconnect())) return
+    // 沒有有效連線時無法向 Google 撤銷授權，要先講清楚（Antigravity 審查 H-03）
+    const canRevoke = !!this.account && this.deps.tokens?.tokenFor(this.account.permissionId) != null
+    const hasUnsyncedChanges = (await this.repo.pendingShards()) > 0
+    if (!(await this.prompts.disconnect({ canRevoke, hasUnsyncedChanges }))) return
+    if (!(await this.readyToSwitch())) return
     await this.deps.tokens?.revoke()
     this.writeAccount(null)
     await this.openNamespace(null)
-    this.prompts.notify({ type: "disconnected" })
+    this.prompts.notify({ type: "disconnected", revoked: canRevoke })
   }
 
   async deleteEverything(): Promise<void> {
-    if (!(await this.prompts.deleteAll())) return
-    if (this.account && !this.deps.tokens?.hasToken()) {
+    // 先檢查連線再問兩次確認，不要讓人按完確認才說不行（Antigravity 審查 M-03）
+    if (this.account && !this.deps.tokens?.tokenFor(this.account.permissionId)) {
       this.prompts.notify({ type: "connect-before-delete" })
       return
     }
+    if (!(await this.prompts.deleteAll())) return
     try {
       // 與其他分頁的同步互斥，完成後通知它們重新載入（Codex 審查 #8）
       const { syncer, scheduler } = this.ws

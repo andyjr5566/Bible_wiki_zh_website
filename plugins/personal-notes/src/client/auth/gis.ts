@@ -162,7 +162,8 @@ export class TokenManager {
   private onToken(resp: any) {
     const g = (window as any).google
     if (resp.error) {
-      this.settle({ ok: false, reason: "denied", message: resp.error_description || resp.error })
+      const message = resp.error === "access_denied" ? "沒有完成授權，或這個 Google 帳號還不在雲端同步的試用名單裡" : resp.error_description || resp.error
+      this.settle({ ok: false, reason: "denied", message })
       return
     }
     if (!g.accounts.oauth2.hasGrantedAllScopes(resp, DRIVE_APPDATA_SCOPE)) {

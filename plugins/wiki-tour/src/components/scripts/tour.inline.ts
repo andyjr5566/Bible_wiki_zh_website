@@ -62,6 +62,7 @@ const TUTORIALS = [
   "如何跨書卷找相關條目",
   "熱鍵與功能速查",
   "註釋來源怎麼讀",
+  "個人筆記使用說明",
 ]
 
 /* ---------------- 小工具 ---------------- */
@@ -987,6 +988,7 @@ function openHelp() {
       <dt>互動網站</dt><dd>在各卷〈全書目錄及綱要〉最下方，把某一章的場景做成可以操作的網頁。<a data-h="outline">看出埃及記的例子 →</a></dd>
       <dt>聖經地圖</dt><dd>章節頁最下方的「附錄 · 相關地圖」，或從 <a data-h="maps">地圖索引</a> 進入。</dd>
       <dt>導讀影片</dt><dd>大衛鮑森舊約縱覽，同樣放在各卷〈全書目錄及綱要〉。</dd>
+      <dt>我的筆記</dt><dd>每一章最下方可以寫自己的研經筆記，登入 Google 後手機、電腦同步。<a data-h="doc" data-slug="my-notes">看我的筆記 →</a>　<a data-h="doc" data-slug="教學/個人筆記使用說明">怎麼用 →</a></dd>
     </dl>
     <p class="bwz-note">附錄（appendix）還在整理中，內容和位置之後可能會調整。</p>
     <h4>快捷鍵</h4>
@@ -1058,7 +1060,7 @@ function showFinish() {
     <p>你已掌握 <b>${got.length} / ${all.length}</b> 項研讀技能</p>
     <ul class="bwz-skills">${all.map((k) => `<li class="${got.includes(k) ? "" : "miss"}">${k}</li>`).join("")}</ul>
     ${got.length < all.length ? `<p class="bwz-note">跳過的項目，之後可以在說明中心重新走一次。</p>` : ""}
-    <div class="bwz-more"><b>還想多看一點？</b>各卷〈全書目錄及綱要〉最下方有互動網站和導讀影片，附錄裡也有聖經地圖（整理中）。</div>
+    <div class="bwz-more"><b>還想多看一點？</b>各卷〈全書目錄及綱要〉最下方有互動網站和導讀影片，附錄裡也有聖經地圖（整理中）。讀經時的心得，可以寫在每一章最下方的「我的筆記」。</div>
     <blockquote class="bwz-verse">你的話是我腳前的燈，是我路上的光。<cite>詩篇 119:105</cite></blockquote>
     <div class="bwz-row">
       <button class="bwz-btn primary" type="button" data-f="close">開始讀經</button>

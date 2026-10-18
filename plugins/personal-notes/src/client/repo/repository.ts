@@ -296,7 +296,8 @@ export class Repository {
       const r = this.resolvedMap.get(id)
       if (!r) throw new Error(`找不到紀錄 ${id}`)
       const versions = [r.winner, ...r.conflicts]
-      const chosen = "keep" in choice ? versions.find((v) => v.hlc === choice.keep) : r.winner
+      // 「兩個都保留」以有內容的版本為主（一刪一改時不要把筆記刪掉，Antigravity 審查 M-04）
+      const chosen = "keep" in choice ? versions.find((v) => v.hlc === choice.keep) : (versions.find((v) => !v.deleted) ?? r.winner)
       if (!chosen) throw new Error("找不到要保留的版本")
       const hlc = this.tick()
       const resolution: NoteRecord = {
@@ -306,7 +307,7 @@ export class Repository {
         vv: nextVv(r, this.deviceId, this.stampOf(hlc)),
         author: this.deviceId,
       }
-      const copies = "keepBoth" in choice ? r.conflicts.filter((c) => !c.deleted).map((c) => this.copyAsNew(c, "（另一個版本）", true)) : []
+      const copies = "keepBoth" in choice ? versions.filter((c) => c !== chosen && !c.deleted).map((c) => this.copyAsNew(c, "（另一個版本）", true)) : []
       await this.commit([
         { record: resolution, expectedHlc: this.own.get(id)?.hlc ?? null, previous: this.own.get(id) },
         ...copies.map((c) => ({ record: c, expectedHlc: null, previous: undefined })),

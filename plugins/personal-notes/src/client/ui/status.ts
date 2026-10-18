@@ -19,7 +19,8 @@ export function statusText(s: Session): { text: string; tone: "ok" | "busy" | "w
     case "local-only":
       return { text: s.syncAvailable ? "筆記目前只存在這台裝置" : "筆記存在這台裝置", tone: "local" }
     case "needs-reconnect":
-      return { text: "尚未連線，點「繼續同步」", tone: "warn" }
+      // 「尚未連線」聽起來像斷網或沒存到，改成講清楚（Antigravity 審查 L-01）
+      return { text: "筆記已存在這台裝置，點「繼續同步」連上雲端", tone: "warn" }
     case "idle":
     case "syncing":
       return { text: "同步中…", tone: "busy" }

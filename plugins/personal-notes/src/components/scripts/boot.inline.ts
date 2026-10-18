@@ -8,7 +8,11 @@ const w = window as Window & { __bwzNotesApp?: Promise<NotesApp>; __bwzNotesBoot
 
 function boot(): void {
   const el = document.querySelector<HTMLElement>("[data-bwz-notes]")
-  if (!el) return
+  if (!el) {
+    // 換到沒有筆記的頁面：App 已載入過就讓它清掉舊畫面（Codex 畫面審查 #6）
+    w.__bwzNotesApp?.then((app) => app.mountAll()).catch(() => undefined)
+    return
+  }
   if (!w.__bwzNotesApp) {
     const base = document.body.dataset.basepath ?? ""
     const v = el.dataset.bwzVersion ?? "0"

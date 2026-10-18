@@ -51,8 +51,11 @@ class FakeTokens implements TokenSource {
     this.listeners.add(fn)
     return () => this.listeners.delete(fn)
   }
+  forgotEmail = 0
   rememberEmail() {}
-  forgetEmail() {}
+  forgetEmail() {
+    this.forgotEmail++
+  }
   clear() {
     this.value = null
     this.owner = null
@@ -111,10 +114,12 @@ class FakePrompts implements Prompts {
     this.asked.push("sign-out")
     return this.answers.signOut
   }
-  async disconnect() {
+  async disconnect(opts: { canRevoke: boolean; hasUnsyncedChanges: boolean }) {
+    this.asked.push(`disconnect:${opts.canRevoke}`)
     return true
   }
   async deleteAll() {
+    this.asked.push("delete-all")
     return true
   }
   async reupload() {
@@ -316,13 +321,14 @@ describe("Session：登出與刪除", () => {
     expect(await s.getAllOwn()).toHaveLength(0)
   })
 
-  it("授權到期時不能刪除全部（避免只刪了本機、雲端還在）", async () => {
+  it("授權到期時不能刪除全部（避免只刪了本機、雲端還在），而且不會先問兩次確認才說不行", async () => {
     const e = await signedIn()
     await e.notes.create(note("x"))
     await e.session.ws.syncer.sync()
     e.tokens.expire()
     await e.session.deleteEverything()
     expect(e.prompts.notices).toContainEqual({ type: "connect-before-delete" })
+    expect(e.prompts.asked).not.toContain("delete-all")
     expect(e.notes.all()).toHaveLength(1)
     expect(e.cloud.files.size).toBeGreaterThan(0)
   })
@@ -355,5 +361,71 @@ describe("Session：Codex 重構審查回歸測試", () => {
     await e.session.signInFromClick()
     expect(e.session.account).toBeNull()
     expect(bodies(e.notes)).toEqual(["未登入時寫的"])
+  })
+
+  it("畫面 #3 切換帳號前先讓編輯中的內容存進原本的帳號，並算進「要不要加入」", async () => {
+    const e = env()
+    await e.session.init()
+    let editorOpen = true // 和真正的編輯器一樣：存完就關閉，之後再呼叫不做事
+    e.session.onBeforeSwitch(async () => {
+      if (!editorOpen) return
+      editorOpen = false
+      await e.notes.create(note("編輯中還沒存的"))
+    })
+    await e.session.signInFromClick()
+    expect(e.prompts.asked).toEqual(["explain", "adopt:1"])
+    expect(e.session.account?.permissionId).toBe("perm123")
+    expect(bodies(e.notes)).toEqual(["編輯中還沒存的"])
+  })
+})
+
+describe("Session：多方檢查回歸測試（Antigravity）", () => {
+  it("M-09 主動登出就忘記帳號提示，下次可以選別的帳號", async () => {
+    const e = await signedIn()
+    e.prompts.answers.signOut = "keep"
+    await e.session.signOut()
+    expect(e.tokens.forgotEmail).toBe(1)
+  })
+
+  it("H-03 沒有有效連線時中斷連線：先說明無法撤銷，結果通知 revoked=false", async () => {
+    const e = await signedIn()
+    e.tokens.expire()
+    await e.session.disconnect()
+    expect(e.prompts.asked).toEqual(["disconnect:false"])
+    expect(e.prompts.notices).toContainEqual({ type: "disconnected", revoked: false })
+    expect(e.session.account).toBeNull()
+  })
+
+  it("H-02 選了「先不要」之後，還能在「我的筆記」頁把未登入的筆記加入帳號", async () => {
+    const e = env()
+    await e.session.init()
+    await e.notes.create(note("未登入時寫的"))
+    e.prompts.answers.adopt = false
+    await e.session.signInFromClick()
+    expect(e.notes.all()).toHaveLength(0)
+    expect(await e.session.pendingAnonymousCount()).toBe(1)
+    await e.session.adoptAnonymousNow()
+    expect(bodies(e.notes)).toEqual(["未登入時寫的"])
+    expect(await e.session.pendingAnonymousCount()).toBe(0)
+  })
+
+  it("未登入時可以一次清除這台裝置上的筆記", async () => {
+    const e = env()
+    await e.session.init()
+    await e.notes.create(note("公用電腦上寫的"))
+    await e.session.clearLocal()
+    expect(e.notes.all()).toHaveLength(0)
+  })
+
+  it("第二輪 #7 編輯中的內容存不進去也無法備份：不切換帳號，告知使用者", async () => {
+    const e = await signedIn()
+    e.session.onBeforeSwitch(async () => {
+      throw new Error("存不進去")
+    })
+    e.prompts.answers.signOut = "keep"
+    await e.session.signOut()
+    expect(e.session.account?.permissionId).toBe("perm123")
+    expect(e.prompts.notices).toContainEqual({ type: "switch-blocked" })
+    expect(e.tokens.forgotEmail).toBe(0)
   })
 })

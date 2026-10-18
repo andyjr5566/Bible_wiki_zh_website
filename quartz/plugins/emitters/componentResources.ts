@@ -12,6 +12,8 @@ import collapsibleScript from "../../components/scripts/collapsible.inline"
 import bookNavScript from "../../components/scripts/bookNavigation.inline"
 // @ts-ignore
 import pureModeScript from "../../components/scripts/pureMode.inline"
+// @ts-ignore
+import explorerToolsScript from "../../components/scripts/explorerTools.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -106,6 +108,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
   // Pure mode (素色黑白 / 古典紙質底色切換)
   componentResources.beforeDOMLoaded.push(pureModeScript)
   componentResources.afterDOMLoaded.push(pureModeScript)
+
+  // Explorer tools (探索目錄「全部收合」)
+  componentResources.afterDOMLoaded.push(explorerToolsScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

@@ -247,3 +247,12 @@
 - **導覽「個人筆記」一站在線上偶爾沒框到面板**（上一筆修正後線上 tourcheck 仍約一半失敗）：tourprobe.mjs 記錄捲動位置，看到 3 秒時已捲到面板、6 秒又回到頂端；原因是測試用「重新整理」進入，線上頁面載入完成較晚，瀏覽器在載入完成時把捲動位置還原到重新整理前（頂端）。用一般換頁進入（tournav.mjs）5/5 通過。仍加上：導覽進行中 `history.scrollRestoration = "manual"`，結束時改回 auto，讓使用者在導覽中重新整理也不會被拉回頂端。
 - **驗證**：138 個單元測試、tsc 通過。新增 uicheck.mjs（無頭 Chrome）：舊版 4/13（重現「點別處不消失」），新版 16/16（閱讀模式已移除、圖示在明暗模式後、文字按鈕在圖示列下方與探索上方、選取後點別處與 Esc 真的消失、點重點只有「移除這個重點」且點別處消失、點圖示與文字按鈕都打開我的筆記且標示目前頁、換頁回來不重複、教學頁與資料夾頁也有、手機版圖示看得到且不顯示文字按鈕、無例外）。regress.mjs 的閱讀模式檢查改為檢查入口，15/15；p2check 34/34、fixcheck 11/11、mobilecheck 6/6、tourcheck 2/2（含 DELAY_APP=3000）。
 - 教學：快速入門、熱鍵與功能速查、個人筆記使用說明改寫工具列說明。
+- **部署**（使用者確認推送）：`735a3c9f..d0d5c3bb`。線上 uicheck 16/16、p2check 34/34、regress 15/15、fixcheck 11/11、mobilecheck 6/6、swcheck 11/11、tourcheck 連跑 3 次皆 2/2（重新整理進入也通過）。
+
+## 2026-10-18｜網站：探索目錄收起時標題被切、新增「全部收合」
+
+使用者回饋：左側「探索」收起時字只顯示一半；希望有按鈕把展開的資料夾一次收起來。（不是筆記功能，但記在這裡方便追蹤。）
+
+- **原因**（expmeasure.mjs 線上量測）：explorer 外掛收起時把高度固定為 1.2rem（19px），本站的「探索」標題約 25px，`overflow: hidden` 把下半部切掉。修正（custom.scss，電腦版）：收起時改為標題本身的高度、目錄內容 `display: none`。explorer 外掛在 `.quartz/`（CI 會重新下載），所以修正放在 repo 自己的 custom.scss。
+- **全部收合**：新增 `quartz/components/scripts/explorerTools.inline.ts`（在 componentResources.ts 註冊，做法同「素／紙」按鈕）。有資料夾展開時，目錄最上方右側出現「全部收合」；按下後全部收起，並照 explorer 外掛的格式寫回 `localStorage.fileTree`，換頁、重新整理後仍收著（目前章節所在的資料夾照外掛原本設計會自動打開）。資料夾清單是外掛非同步畫出的，用 MutationObserver 監看變化決定按鈕顯示與否。手機版在抽屜裡同樣可用。
+- **驗證**：expcheck.mjs（無頭 Chrome）線上舊版 2/9（重現標題被切 19px < 25px、沒有按鈕），本機新版 9/9；uicheck 16/16、p2check 34/34、regress 15/15、fixcheck 11/11、mobilecheck 6/6、tourcheck 2/2。tsc 沒有新增錯誤（既有錯誤只在 quartz/static/website 的互動網站原始碼）。

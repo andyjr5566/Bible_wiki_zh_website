@@ -271,6 +271,41 @@ article {
   overflow: visible !important;
 }
 
+/* 探索收起時：外掛把高度固定成 1.2rem，但本站的「探索」標題約 25px，會被切掉下半部。
+   改成標題本身的高度，並把目錄內容藏起來（電腦版；手機版的收起是側邊抽屜，另有規則） */
+@media all and (min-width: 801px) {
+  .explorer.collapsed {
+    flex: 0 0 auto !important;
+  }
+  .explorer.collapsed > .explorer-content {
+    display: none;
+  }
+}
+
+/* 探索目錄最上方的「全部收合」（有資料夾展開時才出現） */
+.explorer-collapse-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-end;
+  float: right;
+  margin: 0 0.2rem 0.3rem 0;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  background: var(--light);
+  color: var(--darkgray);
+  font-size: 0.8rem;
+  cursor: pointer;
+  &:hover {
+    color: var(--secondary);
+    border-color: var(--secondary);
+  }
+  &[hidden] {
+    display: none !important;
+  }
+}
+
 /* 亮色模式：純粹使用羊皮紙圖片，移除所有干擾漸層 */
 [saved-theme="light"] body {
   background: url('./static/parchment.jpg') center center / cover fixed !important;

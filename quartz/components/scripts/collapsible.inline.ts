@@ -15,10 +15,12 @@ const defaultRules: CollapseRule[] = [
 
 let activeRules: CollapseRule[] = [...defaultRules]
 
-// 載入自定義規則（從 /static/collapse-rules.json）
+// 載入自定義規則（從 <網站根目錄>/static/collapse-rules.json）。
+// 網站放在子路徑（GitHub Pages 的 /Bible_wiki_zh_website/）時要加上 basepath，否則線上會 404、只能用內建規則。
 async function loadCollapseRules() {
   try {
-    const res = await fetch("/static/collapse-rules.json")
+    const base = document.body.dataset.basepath ?? ""
+    const res = await fetch(`${base}/static/collapse-rules.json`)
     if (res.ok) {
       const data = await res.json()
       if (data && Array.isArray(data.sections)) {

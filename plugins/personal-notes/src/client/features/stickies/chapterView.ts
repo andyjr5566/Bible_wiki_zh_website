@@ -2,6 +2,7 @@ import type { Resolved } from "../../merge/merge"
 import type { Session } from "../../session/session"
 import { h, toast } from "../../ui/dom"
 import { annotateVerses, verseElement } from "../../ui/verses"
+import { bookByCode, chapterLabel } from "../../model/books"
 import { COMPOSE_STICKY_EVENT, type ComposeStickyDetail, type View } from "../types"
 import { getStickyMode, onStickyModeChange, type StickyMode } from "./settings"
 import { StickiesService, STICKY_COLORS, STICKY_MAX_LENGTH, stickyColor, type StickyColor } from "./stickies"
@@ -17,11 +18,54 @@ interface Card {
   closing?: boolean
   signature?: string
 }
-const button = (text: string, run: () => void, label = text) => h("button", {
-  class: "bwz-n-btn small bwz-v-ui", text, attrs: { type: "button", "aria-label": label }, on: { click: run },
-})
+
+const colorNames: Record<StickyColor, string> = {
+  yellow: "麥黃",
+  pink: "胭脂",
+  green: "橄欖",
+  blue: "黛藍",
+}
+
+const icons = {
+  edit: '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m14 4 6 6M3 21l4.2-1 11.3-11.3a2.1 2.1 0 0 0-3-3L4.2 17z"/></svg>',
+  collapse: '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5"/><path d="M5 19h14"/></svg>',
+  remove: '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>',
+  note: '<svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M3 1.5h7l3 3V14.5H3z"/><path d="M10 1.5v3h3"/></svg>',
+  noteFilled: '<svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path class="bwz-paper-fill" d="M3 1.5h7l3 3V14.5H3z"/><path d="M10 1.5v3h3"/></svg>',
+}
+
+/** 把上面固定的 SVG 字串變成元素（只用於本檔的常數，不接受使用者內容）。 */
+function svg(markup: string): Element {
+  // 用 HTML 解析器：SVG 字串沒有 xmlns 也會建立真正的 SVG 元素
+  return document.importNode(new DOMParser().parseFromString(markup, "text/html").body.firstElementChild!, true)
+}
+
+const button = (text: string, run: () => void, label = text, icon?: string) => {
+  const b = h("button", {
+    class: "bwz-n-btn small bwz-v-ui",
+    text: icon ? undefined : text,
+    attrs: { type: "button", "aria-label": label, ...(label !== text ? { title: label } : {}) },
+    on: { click: run },
+  })
+  if (icon) b.append(svg(icon))
+  return b
+}
+
+const tiltOf = (verse: number) => (verse % 2 === 0 ? "bwz-sticky-tilt-b" : "bwz-sticky-tilt-a")
+
 function lastColor(): StickyColor {
-  try { const c = localStorage.getItem("bwz-sticky-color"); return STICKY_COLORS.includes(c as StickyColor) ? c as StickyColor : "yellow" } catch { return "yellow" }
+  try {
+    const c = localStorage.getItem("bwz-sticky-color")
+    return STICKY_COLORS.includes(c as StickyColor) ? c as StickyColor : "yellow"
+  } catch {
+    return "yellow"
+  }
+}
+
+function labelFor(book: string, chapter: number, verse: number): string {
+  const name = bookByCode(book)?.name
+  const reference = chapterLabel(book, chapter)
+  return `✤ ${name || reference} ${chapter}:${verse}`
 }
 
 export class ChapterStickies implements View {
@@ -45,9 +89,15 @@ export class ChapterStickies implements View {
       const d = (e as CustomEvent<ComposeStickyDetail>).detail
       if (d?.book === book && d.chapter === chapter && Number.isInteger(d.verse) && d.verse > 0) this.act(() => this.edit(undefined, d.verse))
     }
-    const visibility = () => { if (document.hidden) this.act(() => this.flush()) }
-    const outside = (e: Event) => { if (this.pop && !this.pop.contains(e.target as Node) && !(e.target as Element).closest?.(".bwz-sticky-icon")) this.closePop() }
-    const key = (e: KeyboardEvent) => { if (e.key === "Escape") this.closePop() }
+    const visibility = () => {
+      if (document.hidden) this.act(() => this.flush())
+    }
+    const outside = (e: Event) => {
+      if (this.pop && !this.pop.contains(e.target as Node) && !(e.target as Element).closest?.(".bwz-sticky-icon")) this.closePop()
+    }
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") this.closePop()
+    }
     document.addEventListener(COMPOSE_STICKY_EVENT, compose)
     document.addEventListener("visibilitychange", visibility)
     document.addEventListener("click", outside)
@@ -59,44 +109,83 @@ export class ChapterStickies implements View {
       () => document.removeEventListener("keydown", key),
       session.onChange(() => this.refresh()),
       session.onBeforeSwitch(() => this.flush()),
-      onStickyModeChange(mode => { this.mode = mode; this.allMode = undefined; this.overrides.clear(); this.closePop(); this.refresh() }),
+      onStickyModeChange(mode => {
+        this.mode = mode
+        this.allMode = undefined
+        this.overrides.clear()
+        this.closePop()
+        this.refresh()
+      }),
     )
     this.refresh()
   }
+
   private act(run: () => Promise<unknown>): void {
-    void run().catch(() => { if (!this.dead) toast("便條儲存失敗，請再試一次") })
+    void run().catch(() => {
+      if (!this.dead) toast("便條儲存失敗，請再試一次")
+    })
   }
+
   // 所有寫入共用一條串列；一次失敗不阻塞後續重試。
   private enqueue(run: () => Promise<void>): Promise<void> {
     const next = this.queue.then(async () => {
       this.writing++
-      try { await run() } finally { this.writing--; this.refresh() }
+      try {
+        await run()
+      } finally {
+        this.writing--
+        this.refresh()
+      }
     })
     this.queue = next.catch(() => {})
     return next
   }
-  private displayMode(id: string): StickyMode { return this.overrides.get(id) ?? this.allMode ?? this.mode }
+
+  private displayMode(id: string): StickyMode {
+    return this.overrides.get(id) ?? this.allMode ?? this.mode
+  }
+
   private clearCards(): void {
-    for (const c of this.cards) { clearTimeout(c.timer); c.el.remove() }
+    for (const c of this.cards) {
+      clearTimeout(c.timer)
+      c.el.remove()
+    }
     this.cards.clear()
     this.closePop()
   }
+
   private refresh(): void {
     if (this.dead || this.writing) return
-    if (this.repo !== this.session.repo) { this.clearCards(); this.repo = this.session.repo; this.overrides.clear() }
+    if (this.repo !== this.session.repo) {
+      this.clearCards()
+      this.repo = this.session.repo
+      this.overrides.clear()
+    }
     const records = this.service.inChapter(this.book, this.chapter)
     const byId = new Map(records.map(r => [r.id, r]))
     for (const c of this.cards) {
-      if (c.id && !byId.has(c.id)) { clearTimeout(c.timer); c.el.remove(); this.cards.delete(c) }
+      if (c.id && !byId.has(c.id)) {
+        clearTimeout(c.timer)
+        c.el.remove()
+        this.cards.delete(c)
+      }
     }
     const list = annotateVerses()
     if (list) for (const r of records) {
       let c = [...this.cards].find(c => c.id === r.id)
       if (!c) {
-        const li = verseElement(list, r.winner.anchor.verseStart ?? 0)
+        const verse = r.winner.anchor.verseStart ?? 0
+        const li = verseElement(list, verse)
         if (!li) continue
-        c = { el: h("div", { class: "bwz-v-ui" }), id: r.id, verse: r.winner.anchor.verseStart!, color: stickyColor(r.winner), saved: "" }
-        this.cards.add(c); li.append(c.el)
+        c = {
+          el: h("div", { class: "bwz-v-ui bwz-sticky-motion" }),
+          id: r.id,
+          verse,
+          color: stickyColor(r.winner),
+          saved: "",
+        }
+        this.cards.add(c)
+        li.append(c.el)
       }
       if (!c.editor) this.render(c, r)
     }
@@ -107,11 +196,19 @@ export class ChapterStickies implements View {
       else this.showPop(c, r)
     }
     const hasOpen = records.some(r => this.displayMode(r.id) === "open")
-    this.host.replaceChildren(...(records.length ? [h("div", { class: "bwz-sticky-bar bwz-n-row bwz-v-ui" },
-      h("span", { class: "bwz-v-ui", text: "🗒️ 本章 " + records.length + " 張便條" }),
-      button(hasOpen ? "全部收起" : "全部展開", () => { this.allMode = hasOpen ? "icon" : "open"; this.overrides.clear(); this.closePop(); this.refresh() }),
-    )] : []))
+    this.host.replaceChildren(...(records.length ? [
+      h("div", { class: "bwz-sticky-bar bwz-n-row bwz-v-ui" },
+        h("span", { class: "bwz-v-ui", text: `✤ 本章 ${records.length} 張便條` }),
+        button(hasOpen ? "全部收起" : "全部展開", () => {
+          this.allMode = hasOpen ? "icon" : "open"
+          this.overrides.clear()
+          this.closePop()
+          this.refresh()
+        }),
+      ),
+    ] : []))
   }
+
   private render(c: Card, r: Resolved): void {
     const mode = this.displayMode(r.id)
     const signature = JSON.stringify([r.winner, r.conflicts, mode])
@@ -122,14 +219,15 @@ export class ChapterStickies implements View {
     c.el.dataset.color = c.color
     if (mode === "icon") {
       c.el.className = "bwz-sticky-slot bwz-v-ui"
-      const icon = button("🗒️", () => this.showPop(c, r), "查看便條")
+      const icon = button("", () => this.showPop(c, r), "查看便條", icons.noteFilled)
       icon.className = "bwz-sticky-icon bwz-v-ui"
       c.el.replaceChildren(icon)
     } else {
-      c.el.className = "bwz-sticky bwz-v-ui"
+      c.el.className = `bwz-sticky bwz-sticky-motion ${tiltOf(c.verse)} bwz-v-ui`
       c.el.replaceChildren(...this.contents(c, r, false))
     }
   }
+
   private contents(c: Card, r: Resolved, pop: boolean): HTMLElement[] {
     if (r.conflicts.length) return [
       h("p", { class: "bwz-v-ui", text: "這張便條在兩台裝置上同時被改過，選一個要保留的：" }),
@@ -141,30 +239,53 @@ export class ChapterStickies implements View {
       )),
     ]
     return [
+      h("div", { class: "bwz-sticky-label bwz-v-ui", text: labelFor(this.book, this.chapter, c.verse) }),
       h("div", { class: "bwz-sticky-text bwz-v-ui", text: r.winner.body, on: { click: () => this.act(() => this.edit(c)) } }),
       h("div", { class: "bwz-sticky-actions bwz-v-ui" },
-        pop ? button("展開", () => { this.overrides.set(r.id, "open"); this.closePop(); this.refresh() }) : null,
-        button(pop ? "編輯" : "✎ 編輯", () => this.act(() => this.edit(c)), "編輯便條"),
-        pop ? null : button("－ 收起", () => { this.overrides.set(r.id, "icon"); this.refresh() }, "收起便條"),
-        button(pop ? "刪除" : "✕ 刪除", () => this.act(() => this.remove(r.id)), "刪除便條"),
+        pop ? button("展開", () => {
+          this.overrides.set(r.id, "open")
+          this.closePop()
+          this.refresh()
+        }) : null,
+        // 浮出視窗用文字連結；卡片上用小圖示（滑鼠移上去才清楚顯示）
+        pop ? button("編輯", () => this.act(() => this.edit(c)), "編輯便條") : button("", () => this.act(() => this.edit(c)), "編輯便條", icons.edit),
+        pop ? null : button("", () => {
+          this.overrides.set(r.id, "icon")
+          this.refresh()
+        }, "收起便條", icons.collapse),
+        pop ? button("刪除", () => this.act(() => this.remove(r.id)), "刪除便條") : button("", () => this.act(() => this.remove(r.id)), "刪除便條", icons.remove),
       ),
     ]
   }
-  private closePop(): void { this.pop?.remove(); this.pop = undefined; this.popId = undefined }
+
+  private closePop(): void {
+    this.pop?.remove()
+    this.pop = undefined
+    this.popId = undefined
+  }
+
   private showPop(c: Card, r: Resolved): void {
     this.closePop()
     const icon = c.el.querySelector<HTMLElement>(".bwz-sticky-icon")
     if (!icon) return
     const rect = icon.getBoundingClientRect()
-    this.pop = h("div", { class: "bwz-sticky-pop bwz-v-ui", data: { color: stickyColor(r.winner) }, attrs: { role: "dialog", "aria-label": "便條" } }, ...this.contents(c, r, true))
+    this.pop = h("div", {
+      class: "bwz-sticky-pop bwz-v-ui",
+      data: { color: stickyColor(r.winner) },
+      attrs: { role: "dialog", "aria-label": "便條" },
+    }, ...this.contents(c, r, true))
     this.popId = r.id
     document.body.append(this.pop)
     this.pop.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - this.pop.offsetWidth - 8)) + window.scrollX + "px"
     this.pop.style.top = rect.bottom + window.scrollY + "px"
   }
+
   private async edit(existing?: Card, verse?: number): Promise<void> {
     if (!(await this.session.gateEdit()) || this.dead) return
-    if (existing?.editor) { existing.editor.focus(); return }
+    if (existing?.editor) {
+      existing.editor.focus()
+      return
+    }
     const r = existing?.id ? this.service.get(existing.id) : undefined
     if (existing && (!this.cards.has(existing) || !r || r.winner.deleted || r.conflicts.length)) return
     this.closePop()
@@ -173,16 +294,25 @@ export class ChapterStickies implements View {
       const list = annotateVerses()
       const li = list && verse ? verseElement(list, verse) : null
       if (!li) return
-      c = { el: h("div", { class: "bwz-sticky bwz-v-ui" }), verse: verse!, color: lastColor(), saved: "" }
-      this.cards.add(c); li.append(c.el)
+      c = {
+        el: h("div", { class: "bwz-sticky bwz-sticky-motion bwz-v-ui" }),
+        verse: verse!,
+        color: lastColor(),
+        saved: "",
+      }
+      this.cards.add(c)
+      li.append(c.el)
     }
     const card = c
     card.signature = undefined
     card.color = r ? stickyColor(r.winner) : card.color
     card.saved = r ? JSON.stringify([r.winner.body, card.color]) : ""
-    card.el.className = "bwz-sticky bwz-v-ui"
+    card.el.className = `bwz-sticky ${tiltOf(card.verse)} bwz-v-ui`
     card.el.dataset.color = card.color
-    const input = h("textarea", { class: "bwz-v-ui", attrs: { maxlength: String(STICKY_MAX_LENGTH), "aria-label": "便條內容" } })
+    const input = h("textarea", {
+      class: "bwz-v-ui",
+      attrs: { maxlength: String(STICKY_MAX_LENGTH), "aria-label": "便條內容" },
+    })
     input.value = r?.winner.body ?? ""
     card.editor = input
     input.addEventListener("input", () => {
@@ -190,22 +320,40 @@ export class ChapterStickies implements View {
       card.timer = setTimeout(() => this.act(() => this.save(card)), 600)
     })
     input.addEventListener("blur", () => this.act(() => this.save(card)))
-    input.addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); this.act(() => this.finish(card)) } })
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        this.act(() => this.finish(card))
+      }
+    })
     const colors = STICKY_COLORS.map(color => {
-      const b = button(({ yellow: "黃", pink: "粉", green: "綠", blue: "藍" })[color], () => {
+      const b = button("", () => {
         if (card.closing) return
-        card.color = color; card.el.dataset.color = color
-        try { localStorage.setItem("bwz-sticky-color", color) } catch { /* 偏好儲存不可阻擋編輯 */ }
-        colors.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.color === color)))
+        card.color = color
+        card.el.dataset.color = color
+        try {
+          localStorage.setItem("bwz-sticky-color", color)
+        } catch {
+          // 偏好儲存不可阻擋編輯
+        }
+        colors.forEach(item => item.setAttribute("aria-pressed", String(item.dataset.color === color)))
         this.act(() => this.save(card))
-      })
-      b.className = "bwz-sticky-color bwz-v-ui"; b.dataset.color = color
+      }, colorNames[color])
+      b.className = "bwz-sticky-color bwz-v-ui"
+      b.dataset.color = color
+      b.title = colorNames[color]
       b.setAttribute("aria-pressed", String(color === card.color))
       return b
     })
-    card.el.replaceChildren(input, h("div", { class: "bwz-sticky-actions bwz-v-ui" }, ...colors, button("完成", () => this.act(() => this.finish(card)))))
+    const label = h("div", { class: "bwz-sticky-label bwz-v-ui", text: labelFor(this.book, this.chapter, card.verse) })
+    const actions = h("div", { class: "bwz-sticky-actions bwz-v-ui" },
+      ...colors,
+      button("完成", () => this.act(() => this.finish(card))),
+    )
+    card.el.replaceChildren(label, input, actions)
     input.focus()
   }
+
   private save(c: Card, finish = false): Promise<void> {
     clearTimeout(c.timer)
     if (!c.editor) return this.queue
@@ -226,12 +374,12 @@ export class ChapterStickies implements View {
         const record = await service.add(this.book, this.chapter, c.verse, text, color)
         c.id = record.id
         c.el.dataset.id = record.id
-        // 剛貼的便條在這次瀏覽保持展開（設定是「收起」時，按完成也不要立刻縮成圖示）
         this.overrides.set(record.id, "open")
       }
       c.saved = signature
     })
   }
+
   private async finish(c: Card): Promise<void> {
     if (!c.editor || c.closing) return
     c.closing = true
@@ -240,11 +388,24 @@ export class ChapterStickies implements View {
       await this.save(c, true)
       c.editor = undefined
       c.signature = undefined
-      if (!c.id || !this.service.get(c.id) || this.service.get(c.id)!.winner.deleted) { c.el.remove(); this.cards.delete(c) }
+      if (!c.id || !this.service.get(c.id) || this.service.get(c.id)!.winner.deleted) {
+        c.el.remove()
+        this.cards.delete(c)
+      }
       this.refresh()
-    } finally { c.closing = false; if (c.editor) { c.editor.disabled = false; c.editor.focus() } }
+    } finally {
+      c.closing = false
+      if (c.editor) {
+        c.editor.disabled = false
+        c.editor.focus()
+      }
+    }
   }
-  private async flush(): Promise<void> { await Promise.all([...this.cards].filter(c => c.editor).map(c => this.save(c))) }
+
+  private async flush(): Promise<void> {
+    await Promise.all([...this.cards].filter(c => c.editor).map(c => this.save(c)))
+  }
+
   private async remove(id: string): Promise<void> {
     if (!(await this.session.gateEdit()) || this.dead) return
     const repo = this.repo
@@ -257,6 +418,7 @@ export class ChapterStickies implements View {
       toast("已刪除便條", { label: "復原", run: () => this.act(() => this.enqueue(() => service.restore(previous))) })
     })
   }
+
   destroy(): void {
     const pending = this.flush()
     this.dead = true

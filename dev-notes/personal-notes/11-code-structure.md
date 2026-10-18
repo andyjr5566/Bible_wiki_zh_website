@@ -22,7 +22,7 @@ plugins/personal-notes/src/
     ├── auth/                    Google 登入（GIS），瀏覽器專用
     ├── session/                 帳號工作階段：切換帳號資料、登入登出、先同步再編輯（不碰 DOM）
     ├── ui/                      共用畫面元件：DOM 工具、對話框、狀態列、Prompts 實作、環境偵測
-    └── features/                功能模組：每個功能一個資料夾（目前只有 notes/）
+    └── features/                功能模組：每個功能一個資料夾（notes/、highlights/）
 ```
 
 資料流（由下往上依賴，畫面永遠不直接碰 Google 或 IndexedDB）：
@@ -65,15 +65,19 @@ features/notes（畫面＋NotesService）
 |---|---|---|
 | `repo/repository.ts` | 本機資料核心 | `draft()` 產生新紀錄、`revise()` 產生新版本、`insert()`／`replace()`（CAS 寫入）、`remove()`、`resolveConflict()`、查詢 `visible()`／`inChapter()`／`get()`、事件 `onChange`／`onLocalWrite`；「同步層使用」一節的方法只給 syncer 與 backup 用 |
 | `repo/backup.ts` | 匯出／匯入／認領匿名紀錄 | 走正常合併規則，重複匯入無害 |
-| `sync/syncer.ts` | 同步協定 | `sync()`、`push()`、`ensureFresh()`、`reuploadAfterWipe()`、`deleteEverything()`；狀態 `SyncStatus` |
+| `sync/syncer.ts` | 同步協定 | `sync()`、`push()`、`ensureFresh()`、`reuploadAfterWipe()`、`acceptWipe()`、`deleteEverything()`；狀態 `SyncStatus`；裝置整理 `maybeRetireDevices()`、已移除快取處理 `rescueRemovedCaches()`（D-39） |
+| `model/linkIndex.ts`、`model/zip.ts` | 建置用連結索引格式；自寫 ZIP（匯出用） | 純函式 |
+| `ui/markdown.ts` | 安全 Markdown 渲染（D-37） | `parseMarkdown()`／`parseInline()` 純函式；`renderMarkdown()` 只用 DOM API，不用 innerHTML |
+| `ui/verses.ts` | 經節定位（D-38） | `annotateVerses()`、`selectionToVerses()`、`locateQuote()`、`wrapText()`／`unwrapAll()`、`textHash()` |
 | `sync/scheduler.ts` | 何時同步 | 去抖動上傳、輪詢、Web Locks、BroadcastChannel |
 | `session/session.ts` | 帳號工作階段 | `Workspace`（每個帳號一組 store＋repo＋syncer＋scheduler）、`signInFromClick()`、`gateEdit()`、`signOut()`…；依賴 `SessionDeps` 注入 |
 | `session/prompts.ts` | session 要問使用者的事 | `Prompts` 介面＋`Notice` 型別；瀏覽器實作在 `ui/prompts.ts`，測試用假的 |
-| `features/types.ts` | 功能模組介面 | `Feature { id, views: { 掛載點種類: (ctx) => View } }` |
+| `features/types.ts` | 功能模組介面＋跨功能事件 | `Feature { id, views: { 掛載點種類: (ctx) => View } }`；`COMPOSE_NOTE_EVENT`（畫重點工具列「寫筆記」→ 筆記模組開新筆記並帶入節數與引文） |
 | `features/index.ts` | 功能模組清單 | `FEATURES`、`viewFactories(kind)` |
-| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`、`MyNotesPage`、`drafts.ts`（編輯中草稿的本機備份與補存） |
+| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`（含經節 📝 標記）、`MyNotesPage`（搜尋、標籤、匯出）、`drafts.ts`（編輯中草稿的本機備份與補存）、`links.ts`＋`linkComplete.ts`（`[[` 解析與自動完成）、`markdownExport.ts`（Obsidian ZIP） |
+| `features/highlights/` | 畫重點與書籤 | `HighlightsService`（type "highlight"／"bookmark"）、`chapterView.ts`（選取工具列、螢光標示、本章重點與書籤列）、`myNotesView.ts`（我的筆記頁清單） |
 
-## 4. 怎麼新增一個功能（以「畫重點」為例）
+## 4. 怎麼新增一個功能（以「畫重點」為例，已照這個流程做成 `features/highlights/`）
 
 1. **資料格式**：`model/record.ts` 的 `RecordType` 已預留 `highlight`、`bookmark`；錨點 `Anchor` 已有經節、引文（quote、textHash）、節點欄位。需要新欄位時加在紀錄上（看不懂的欄位會原樣保留，03 §4.7），**不要改 merge 與 sync**。
 2. **資料操作**：新增 `features/highlights/highlights.ts`，仿照 `NotesService`：用 `repo.draft({ type: "highlight", anchor, ... })` 建立、`repo.revise()`＋`repo.replace()` 修改、`repo.remove()` 刪除；查詢時用 `type` 過濾（`repo.visible()` 會回傳所有種類）。
@@ -83,6 +87,8 @@ features/notes（畫面＋NotesService）
 6. **測試**：資料操作仿照 `test/sync.test.ts` 寫多裝置情境；跑 `npm test`（含架構規則）。
 
 不需要動的：`merge/`、`store/`、`adapter/`、`sync/`、`session/`、其他功能的資料夾。
+
+兩個功能需要互動時（例如畫重點工具列要開筆記編輯器），在 `features/types.ts` 定義事件名稱與資料型別，用 `document.dispatchEvent(new CustomEvent(...))` 傳遞，不要互相 import。
 
 ## 5. 其他慣例
 

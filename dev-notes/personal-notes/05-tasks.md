@@ -75,13 +75,13 @@
 |---|---|---|---|
 | P2-1 | 🙋 自訂網域決定（D-30）與設定 | U＋C | [ ] |
 | P2-2 | Token 服務（Code model，無資料庫）＋前端改用：免點擊續期；iPhone 主畫面 App 改用 redirect 登入 | C＋Cx（Sol） | [ ] |
-| P2-3 | 經節錨點（transformer 防禦式加 ID）＋點選經節建立筆記；**前提：章節格式已穩定，先問使用者** | C | [ ] |
-| P2-4 | 畫線與書籤（TextQuoteSelector＋textHash） | Cx | [ ] |
-| P2-5 | Markdown ZIP 匯出（Obsidian 相容） | Cx（Luna） | [ ] |
-| P2-6 | 全文搜尋（MiniSearch／FlexSearch）與標籤 | Cx（Luna） | [ ] |
-| P2-7 | `[[` 自動完成（emitter 輸出精簡連結索引） | C | [ ] |
-| P2-8 | 裝置退役與分片收養 | Cx（Sol） | [ ] |
-| P2-9 | wiki-tour 新增筆記功能導覽 | C | [ ] |
+| P2-3 | 經節錨點（transformer 防禦式加 ID）＋點選經節建立筆記；**前提：章節格式已穩定，先問使用者** | C | [x] 2026-10-18 |
+| P2-4 | 畫線與書籤（TextQuoteSelector＋textHash） | Cx | [x] 2026-10-18 |
+| P2-5 | Markdown ZIP 匯出（Obsidian 相容） | Cx（Luna） | [x] 2026-10-18 |
+| P2-6 | 全文搜尋與標籤（實作為多關鍵字＋#標籤篩選，未用搜尋函式庫；D-37） | Cx（Luna） | [x] 2026-10-18 |
+| P2-7 | `[[` 自動完成（emitter 輸出精簡連結索引） | C | [x] 2026-10-18 |
+| P2-8 | 裝置退役與分片收養 | Cx（Sol） | [x] 2026-10-18 |
+| P2-9 | wiki-tour 新增筆記功能導覽 | C | [x] 2026-10-18 |
 | P2-10 | 🙋 隱私權政策與首頁定稿、Search Console 網域驗證、品牌驗證、發佈為正式版（D-33） | U＋C | [ ] |
 
 ---

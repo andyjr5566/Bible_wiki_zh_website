@@ -50,6 +50,18 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 | Antigravity（Gemini 4 Argon High） | 不同模型家族的獨立第二意見 | 審查合併規則與測試案例、找邊界情況、中文介面文案與說明文件審閱 |
 | Claude 子代理 | 搜尋、規劃、平行小任務 | 找 Quartz 內部 API 用法、比對 plugin 範例 |
 
+### 任務分級（使用者 2026-10-19 要求「分配任務要分級」）
+
+每次委派先判斷等級，用 `-m` 與 `-c model_reasoning_effort=` 明確指定，不要依賴 config 預設值（使用者的 config 預設已改為 gpt-6-astra／medium）：
+
+| 等級 | 什麼樣的任務 | 模型與思考程度 | 例子 |
+|---|---|---|---|
+| 第 1 級 | 範圍清楚的小改動 | `gpt-6-luna`、`low` | 文字、樣式、小按鈕、補單元測試、文件 |
+| 第 2 級 | 一般功能實作 | `gpt-6-luna`、`medium` | 新畫面模組、匯出、設定頁、條目書籤 |
+| 第 3 級 | 出錯會掉資料或有安全疑慮 | `gpt-6-sol`、`high` | merge、sync、裝置整理、Token 服務、安全審查 |
+
+審查也分級：第 3 級的實作一定再用另一個模型（或 Sol 唯讀）審查一次；第 1、2 級由主導者審查 diff＋測試＋無頭 Chrome 即可。
+
 原則：正確性關鍵的模組（merge、sync）至少由兩個不同家族的模型交叉檢查（例如 Sol 實作、Argon 審查、主導者裁決）。
 
 ---
@@ -104,3 +116,4 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 - Codex `-s workspace-write` 也無法在這台 Windows 上執行（在 git worktree 中要求建立檔案，結果沒有產生檔案；與 read-only 同樣是沙箱無法啟動子程序）。
 - 因此**目前 Codex 只用於審查**（檔案內容經 stdin 傳入）；實作由 Claude 主導者完成。不使用 `--dangerously-bypass-approvals-and-sandbox`（違反 §3 規則）。
 - 若日後要讓 Codex 實作，需先排除沙箱問題（例如 `codex doctor`、更新 Codex，或由使用者在 Codex 桌面版中處理），並在 worktree 中重新驗證。
+- **2026-10-19 更新**：Codex CLI 0.162.1 的 `-s workspace-write` 已可寫檔（在 scratchpad 的測試 repo 建立 hello.txt 成功）。使用者要求「請 Codex 做，不要什麼都親力親為」→ 便條紙（12 N1）改由 Codex 實作：主導者先把共用基礎 commit 到 `feature/stickies`，再開 worktree `C:\Obsidianwz-codex-stickies`（分支 `codex/stickies`，plugin 的 node_modules 用 junction 指回主 repo），任務包經 stdin 傳入（`codex exec -s workspace-write -C <worktree>`）。主導者審查 diff、跑測試與無頭 Chrome 後才整合。

@@ -15,7 +15,7 @@ export class StickySettings implements View {
     if (this.closeDialog) return
     const inputs: HTMLInputElement[] = []
     const body = h("div", { class: "bwz-v-ui" }, h("p", { class: "bwz-v-ui", text: "便條紙平常要：" }))
-    for (const [value, label] of [["open", "展開，直接貼在經文下方"], ["icon", "收起成 🗒 小圖示，點了才看"]] as const) {
+    for (const [value, label] of [["open", "展開，直接貼在經文下方"], ["icon", "收起成 🗒️ 小圖示，點了才看"]] as const) {
       const input = h("input", { class: "bwz-v-ui", attrs: { type: "radio", name: "bwz-sticky-mode", value }, on: { change: () => setStickyMode(value) } })
       inputs.push(input)
       body.append(h("label", { class: "bwz-sticky-option bwz-v-ui" }, input, label))

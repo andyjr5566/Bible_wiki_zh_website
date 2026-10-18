@@ -108,7 +108,7 @@ export class ChapterStickies implements View {
     }
     const hasOpen = records.some(r => this.displayMode(r.id) === "open")
     this.host.replaceChildren(...(records.length ? [h("div", { class: "bwz-sticky-bar bwz-n-row bwz-v-ui" },
-      h("span", { class: "bwz-v-ui", text: "🗒 本章 " + records.length + " 張便條" }),
+      h("span", { class: "bwz-v-ui", text: "🗒️ 本章 " + records.length + " 張便條" }),
       button(hasOpen ? "全部收起" : "全部展開", () => { this.allMode = hasOpen ? "icon" : "open"; this.overrides.clear(); this.closePop(); this.refresh() }),
     )] : []))
   }
@@ -122,7 +122,7 @@ export class ChapterStickies implements View {
     c.el.dataset.color = c.color
     if (mode === "icon") {
       c.el.className = "bwz-sticky-slot bwz-v-ui"
-      const icon = button("🗒", () => this.showPop(c, r), "查看便條")
+      const icon = button("🗒️", () => this.showPop(c, r), "查看便條")
       icon.className = "bwz-sticky-icon bwz-v-ui"
       c.el.replaceChildren(icon)
     } else {

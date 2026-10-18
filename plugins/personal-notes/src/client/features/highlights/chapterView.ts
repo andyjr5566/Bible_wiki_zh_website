@@ -177,7 +177,7 @@ export class ChapterHighlights implements View {
       h("span", { class: "bwz-h-label", text: label }),
       h("button", { class: "bwz-n-btn small", text: "🖍 畫重點", attrs: { type: "button" }, on: { click: () => void this.addHighlight(p) } }),
       h("button", { class: "bwz-n-btn small", text: bookmarked ? "🔖 取消書籤" : "🔖 書籤", attrs: { type: "button" }, on: { click: () => void this.toggleBookmark(p.start, p.end) } }),
-      h("button", { class: "bwz-n-btn small", text: "🗒 便條", attrs: { type: "button" }, on: { click: () => {
+      h("button", { class: "bwz-n-btn small", text: "🗒️ 便條", attrs: { type: "button" }, on: { click: () => {
         this.done()
         document.dispatchEvent(new CustomEvent(COMPOSE_STICKY_EVENT, { detail: { book: this.book, chapter: this.chapter, verse: p.start } }))
       } } }),

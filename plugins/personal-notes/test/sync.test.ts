@@ -8,6 +8,7 @@ import { NotesService } from "../src/client/features/notes/notes"
 import { MemoryAdapter, MemoryCloud } from "../src/client/adapter/memory"
 import { AdapterError, type SyncAdapter } from "../src/client/adapter/types"
 import { vvDominatedBy } from "../src/client/model/vv"
+import { chapterAnchor } from "../src/client/model/record"
 
 // ---------- 測試環境：多台裝置共用一個雲端 ----------
 
@@ -403,5 +404,67 @@ describe("同步：Codex 審查回歸測試", () => {
     const added = await adoptRecords(a.repo, await anon.store.getAllOwn())
     expect(added).toBe(1)
     expect(bodies(a)).toEqual(["帳號裡又改了", "未登入時改的"].sort())
+  })
+})
+
+describe("同步：Codex 重構審查回歸測試", () => {
+  it("B1 備份檔裡同一則有兩個衝突版本：匯入到新裝置兩個都保住；再匯入一次不會重複", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const b = await device(cloud)
+    const n = await a.notes.create(note("原文"))
+    await a.syncer.sync()
+    await b.syncer.sync()
+    await a.notes.update(n.id, { body: "A 改" })
+    await b.notes.update(n.id, { body: "B 改" })
+    await a.syncer.sync()
+    await b.syncer.sync()
+    await a.syncer.sync()
+    const backup = JSON.parse(JSON.stringify(exportBackup(a.repo)))
+    expect(backup.records.filter((r: { id: string }) => r.id === n.id)).toHaveLength(2)
+    const c = await localDevice("restore-b1")
+    await importBackup(c.repo, backup)
+    expect(bodies(c)).toEqual(["A 改", "B 改"])
+    const again = await importBackup(c.repo, backup)
+    expect(again.added + again.updated).toBe(0)
+    expect(bodies(c)).toEqual(["A 改", "B 改"])
+  })
+
+  it("B1 同一次寫入有重複 id 時拒絕（不讓後者默默蓋掉前者）", async () => {
+    const d = await localDevice("dup-b1")
+    const r = d.repo.draft({ type: "note", anchor: chapterAnchor("GEN", 1), title: "", body: "x", tags: [] })
+    await expect(d.repo.commit([{ record: r, expectedHlc: null, previous: undefined }, { record: { ...r, body: "y" }, expectedHlc: null, previous: undefined }])).rejects.toThrow()
+  })
+
+  it("B4 別台裝置的檔案被移除後，不再用它的快取刪掉自己的版本", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const b = await device(cloud)
+    const n = await a.notes.create(note("A"))
+    await a.syncer.sync()
+    await b.syncer.sync()
+    await b.notes.update(n.id, { body: "B" })
+    await b.syncer.sync()
+    await a.syncer.sync()
+    const bFile = [...cloud.files.values()].find((f) => f.meta.kind === "shard" && f.meta.device === b.repo.deviceId)!
+    cloud.files.delete(bFile.meta.id)
+    cloud.record(bFile.meta.id)
+    await a.syncer.sync()
+    await a.notes.create(note("觸發 A 重寫分片"))
+    await a.syncer.sync()
+    const c = await device(cloud)
+    await c.syncer.sync()
+    expect(c.repo.get(n.id)).toBeDefined()
+  })
+
+  it("B5 有雲端但授權到期時，「刪除全部」失敗且不清本機", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    await a.notes.create(note("x"))
+    await a.syncer.sync()
+    a.token.ok = false
+    await expect(a.syncer.deleteEverything()).rejects.toThrow()
+    expect(a.notes.all()).toHaveLength(1)
+    expect(cloud.files.size).toBeGreaterThan(0)
   })
 })

@@ -17,6 +17,8 @@ export interface RemoteShardCache {
   shard: string
   version: string
   records: NoteRecord[]
+  /** 雲端上這個檔案已被移除：仍保留快取供顯示，但不可再當成「別人已保存」的依據（Codex 重構審查 B4）。 */
+  removed?: boolean
 }
 
 export interface OutboxEntry {
@@ -32,6 +34,20 @@ function req<T>(r: IDBRequest<T>): Promise<T> {
     r.onsuccess = () => resolve(r.result)
     r.onerror = () => reject(r.error)
   })
+}
+
+/**
+ * 在交易內標記分片待上傳。dirtyAt 一定比原本的大（同一毫秒內再改也會遞增），
+ * 這樣上傳期間的新修改不會被 clearDirty 誤清（Codex 重構審查 B3）。
+ */
+function markInTx(outbox: IDBObjectStore, shards: string[], dirtyAt: number): void {
+  for (const shard of new Set(shards)) {
+    const get = outbox.get(shard)
+    get.onsuccess = () => {
+      const prev = (get.result as OutboxEntry | undefined)?.dirtyAt ?? 0
+      outbox.put({ shard, dirtyAt: Math.max(dirtyAt, prev + 1) } satisfies OutboxEntry)
+    }
+  }
 }
 
 function done(tx: IDBTransaction): Promise<void> {
@@ -107,8 +123,7 @@ export class NotesStore {
     const tx = this.db.transaction(["own", "outbox"], "readwrite")
     const own = tx.objectStore("own")
     for (const r of records) own.put(r)
-    const outbox = tx.objectStore("outbox")
-    for (const shard of new Set(shards)) outbox.put({ shard, dirtyAt } satisfies OutboxEntry)
+    markInTx(tx.objectStore("outbox"), shards, dirtyAt)
     await done(tx)
   }
 
@@ -128,7 +143,7 @@ export class NotesStore {
     let pending = entries.length
     const commit = () => {
       for (const e of entries) own.put(e.record)
-      for (const shard of new Set(shards)) outbox.put({ shard, dirtyAt } satisfies OutboxEntry)
+      markInTx(outbox, shards, dirtyAt)
     }
     if (pending === 0) commit()
     for (const e of entries) {
@@ -200,7 +215,7 @@ export class NotesStore {
 
   async markDirty(shards: string[], dirtyAt: number): Promise<void> {
     const tx = this.db.transaction("outbox", "readwrite")
-    for (const shard of new Set(shards)) tx.objectStore("outbox").put({ shard, dirtyAt } satisfies OutboxEntry)
+    markInTx(tx.objectStore("outbox"), shards, dirtyAt)
     await done(tx)
   }
 

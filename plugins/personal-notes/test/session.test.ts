@@ -327,3 +327,33 @@ describe("Session：登出與刪除", () => {
     expect(e.cloud.files.size).toBeGreaterThan(0)
   })
 })
+
+describe("Session：Codex 重構審查回歸測試", () => {
+  it("A1 切換帳號時，畫面收到通知當下讀到的一定是新帳號的資料庫", async () => {
+    const e = env()
+    await e.session.init()
+    const mismatches: string[] = []
+    e.session.onChange(() => {
+      const expected = e.session.account ? accountDbName(e.session.account.permissionId) : ANON_DB
+      if (e.session.ws.store.name !== expected) mismatches.push(`${e.session.ws.store.name} ≠ ${expected}`)
+    })
+    await e.session.signInFromClick()
+    e.prompts.answers.signOut = "keep"
+    await e.session.signOut()
+    expect(mismatches).toEqual([])
+  })
+
+  it("B2 詢問「加入未登入的筆記」期間帳號被切換：不加入、也不清掉匿名筆記", async () => {
+    const e = env()
+    await e.session.init()
+    await e.notes.create(note("未登入時寫的"))
+    e.prompts.answers.signOut = "keep"
+    e.prompts.adoptAnonymous = async () => {
+      await e.session.signOut()
+      return true
+    }
+    await e.session.signInFromClick()
+    expect(e.session.account).toBeNull()
+    expect(bodies(e.notes)).toEqual(["未登入時寫的"])
+  })
+})

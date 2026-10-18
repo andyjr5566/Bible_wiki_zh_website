@@ -61,4 +61,13 @@ describe("NotesStore", () => {
     const s2 = await NotesStore.open("t3", f)
     expect(await s2.getOutbox()).toHaveLength(0)
   })
+
+  it("B3 同一毫秒內再標記待上傳：dirtyAt 仍會遞增，上傳完成時不會誤清新修改", async () => {
+    const store = await NotesStore.open("dirty-b3", new IDBFactory())
+    await store.markDirty(["GEN"], 1000)
+    const [first] = await store.getOutbox()
+    await store.markDirty(["GEN"], 1000)
+    expect(await store.clearDirty("GEN", first.dirtyAt)).toBe(false)
+    expect(await store.getOutbox()).toHaveLength(1)
+  })
 })

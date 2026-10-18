@@ -211,7 +211,9 @@ export class Syncer {
   /** 刪除雲端上本站的所有資料，並清空本機（使用者在「我的筆記」頁二次確認後）。 */
   async deleteEverything(): Promise<void> {
     await this.exclusive(async () => {
-      if (this.adapter && this.hasToken()) {
+      if (this.adapter) {
+        // 有雲端卻沒有授權：不可只清本機而讓使用者以為全刪了（Codex 重構審查 B5）
+        if (!this.hasToken()) throw new AdapterError("auth", "需要重新連線才能刪除雲端資料")
         for (const f of await this.adapter.listFiles()) await this.adapter.remove(f.id)
       }
       await this.repo.clearAll()
@@ -337,6 +339,7 @@ export class Syncer {
       if (this.repo.remoteVersion(f.id) === f.version) continue
       await this.readRemote(f)
     }
+    await this.repo.markRemoteRemoved(this.repo.cachedRemoteIdsNotIn(new Set(files.map((f) => f.id))))
     await this.store.setMeta("startPageToken", token)
     await this.store.setMeta("bootstrapped", true)
     await this.store.setMeta("everSynced", true)
@@ -374,7 +377,8 @@ export class Syncer {
       this.setStatus(CLOUD_WIPED)
       return
     }
-    // 其他裝置的檔案被移除：保守起見保留本機快取（03 §4.2）
+    // 其他裝置的檔案被移除：保守起見保留本機快取供顯示（03 §4.2），但不再當成修剪依據
+    await this.repo.markRemoteRemoved(cs.removed)
     await this.store.setMeta("startPageToken", cs.token)
     this.lastPullAt = this.now()
     if (changed) this.remoteRevision++
@@ -438,7 +442,7 @@ export class Syncer {
   private async pushInner(): Promise<void> {
     const outbox = await this.store.getOutbox()
     const ownFiles = await this.ownFiles()
-    const remoteRecords = this.repo.remoteRecords()
+    const remoteRecords = this.repo.remoteRecords({ live: true })
     for (const entry of outbox) {
       if (!this.allowWrite()) break
       const shard = entry.shard

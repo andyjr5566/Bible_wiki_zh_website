@@ -168,7 +168,6 @@ export class Session {
     const store = await this.deps.openStore(account ? accountDbName(account.permissionId) : ANON_DB)
     const repo = await Repository.create({ store, now: this.deps.now })
     const syncer = new Syncer({ repo, maxWritesPerMinute: config.maxWritesPerMinute, appVersion: config.appVersion, deviceLabel: this.deps.deviceLabel })
-    this.unsubscribe.push(repo.onChange(() => this.emit()), syncer.onStatus(() => this.emit()))
     let scheduler: SchedulerLike | null = null
     if (account && tokens) {
       const pid = account.permissionId
@@ -178,7 +177,9 @@ export class Session {
     } else {
       syncer.setAdapter(null)
     }
+    // 先換好工作區再接上事件：畫面收到通知時讀到的一定是新帳號的資料（Codex 重構審查 A1）
     this.ws = { store, repo, syncer, scheduler }
+    this.unsubscribe.push(repo.onChange(() => this.emit()), syncer.onStatus(() => this.emit()))
     scheduler?.start()
     this.emit()
   }
@@ -244,13 +245,16 @@ export class Session {
 
   /** D-05：第一次登入時詢問是否把未登入時寫的紀錄加入帳號。 */
   private async offerAdoption(count: number): Promise<void> {
+    const target = this.ws
     if (!(await this.prompts.adoptAnonymous(count))) return
+    // 等待回答期間帳號被切換了：不加入、也不清除匿名筆記（Codex 重構審查 B2）
+    if (this.ws !== target || !this.account) return
     const anon = await this.deps.openStore(ANON_DB)
     try {
-      const n = await adoptRecords(this.repo, await anon.getAllOwn())
+      const n = await adoptRecords(target.repo, await anon.getAllOwn())
       await anon.clearAll()
       this.prompts.notify({ type: "adopted", count: n })
-      void this.ws.scheduler?.syncNow()
+      void target.scheduler?.syncNow()
     } finally {
       anon.close()
     }

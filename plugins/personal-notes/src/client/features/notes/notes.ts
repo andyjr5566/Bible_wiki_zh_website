@@ -68,7 +68,7 @@ export class NotesService {
         anchor: { ...a, ...chapterAnchor(book, chapter, verseStart, verseEnd) },
         title: patch.title,
         body: patch.body,
-        tags: patch.tags ? cleanTags(patch.tags) : undefined,
+        tags: cleanTags(patch.tags ?? r.winner.tags),
       })
       return this.repo.replace(record)
     })

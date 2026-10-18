@@ -217,6 +217,17 @@ export class Repository {
     }
   }
 
+  /** 是否已有某個版本的另存複本（看所有版本，含已刪除）。 */
+  hasCopyOf(version: Pick<NoteRecord, "id" | "hlc">): boolean {
+    for (const r of this.resolvedMap.values()) {
+      for (const v of [r.winner, ...r.conflicts]) {
+        const from = v.copiedFrom as { id?: string; hlc?: string } | undefined
+        if (from?.id === version.id && from.hlc === version.hlc) return true
+      }
+    }
+    return false
+  }
+
   /** 取得可修改的紀錄；找不到或有待選定的衝突就丟例外。 */
   editable(id: string): Resolved {
     const r = this.resolvedMap.get(id)
@@ -242,6 +253,9 @@ export class Repository {
 
   /** 一次寫入多筆（同一個交易）；CAS 失敗丟 CasConflict。 */
   async commit(entries: CommitEntry[]): Promise<void> {
+    // 同一交易寫同一個 id 兩次，後者會蓋掉前者（Codex 重構審查 B1）
+    const ids = entries.map((e) => e.record.id)
+    if (new Set(ids).size !== ids.length) throw new Error("同一次寫入含有重複的紀錄 id")
     // 換書卷時，舊分片也要重寫（把舊版本移出）
     const shards = entries.flatMap((e) => [shardOf(e.record), ...(e.previous ? [shardOf(e.previous)] : [])])
     const ok = await this.store.saveOwnIfUnchanged(
@@ -292,10 +306,7 @@ export class Repository {
         vv: nextVv(r, this.deviceId, this.stampOf(hlc)),
         author: this.deviceId,
       }
-      const copies =
-        "keepBoth" in choice
-          ? r.conflicts.filter((c) => !c.deleted).map((c) => this.copyAsNew(c, "（另一個版本）", { createdAt: this.iso(), updatedAt: this.iso() }))
-          : []
+      const copies = "keepBoth" in choice ? r.conflicts.filter((c) => !c.deleted).map((c) => this.copyAsNew(c, "（另一個版本）", true)) : []
       await this.commit([
         { record: resolution, expectedHlc: this.own.get(id)?.hlc ?? null, previous: this.own.get(id) },
         ...copies.map((c) => ({ record: c, expectedHlc: null, previous: undefined })),
@@ -303,14 +314,16 @@ export class Repository {
     })
   }
 
-  /** 把某個版本複製成一則新紀錄（衝突時「兩個都保留」、匯入衝突、雲端清空後搶救）。 */
-  copyAsNew(version: NoteRecord, titleSuffix: string, extra: Partial<NoteRecord> = {}): NoteRecord {
+  /** 把某個版本複製成一則新紀錄（衝突時「兩個都保留」、匯入衝突、雲端清空後搶救）。restamp：建立與修改時間改為現在。 */
+  copyAsNew(version: NoteRecord, titleSuffix: string, restamp = false): NoteRecord {
     const hlc = this.tick()
     return {
       ...version,
       id: newNoteId(this.now()),
       title: `${version.title || "筆記"}${titleSuffix}`,
-      ...extra,
+      ...(restamp ? { createdAt: this.iso(), updatedAt: this.iso() } : {}),
+      // 記下來源，重複匯入同一份備份時才認得出「已經另存過」
+      copiedFrom: { id: version.id, hlc: version.hlc },
       hlc,
       vv: nextVv(null, this.deviceId, this.stampOf(hlc)),
       author: this.deviceId,
@@ -327,8 +340,25 @@ export class Repository {
     return [...this.own.values()]
   }
 
-  remoteRecords(): NoteRecord[] {
-    return [...this.remote.values()].flatMap((c) => c.records)
+  /** 其他裝置的版本。live：只算雲端上仍存在的檔案（修剪本機版本時必須用這個，Codex 重構審查 B4）。 */
+  remoteRecords(opts: { live?: boolean } = {}): NoteRecord[] {
+    return [...this.remote.values()].filter((c) => !(opts.live && c.removed)).flatMap((c) => c.records)
+  }
+
+  /** 已快取、但不在 fileIds 裡的其他裝置檔案。 */
+  cachedRemoteIdsNotIn(fileIds: Set<string>): string[] {
+    return [...this.remote.values()].filter((c) => !c.removed && !fileIds.has(c.fileId)).map((c) => c.fileId)
+  }
+
+  /** 雲端上其他裝置的檔案被移除：保留快取供顯示（保守），但標記為已移除。 */
+  async markRemoteRemoved(fileIds: string[]): Promise<void> {
+    for (const id of fileIds) {
+      const c = this.remote.get(id)
+      if (!c || c.removed) continue
+      const next = { ...c, removed: true }
+      await this.store.putRemote(next)
+      this.remote.set(id, next)
+    }
   }
 
   remoteVersion(fileId: string): string | undefined {

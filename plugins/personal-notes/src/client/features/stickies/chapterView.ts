@@ -222,7 +222,13 @@ export class ChapterStickies implements View {
       const signature = JSON.stringify([text, color])
       if (c.saved === signature) return
       if (c.id) await service.update(c.id, { text, color })
-      else { const record = await service.add(this.book, this.chapter, c.verse, text, color); c.id = record.id; c.el.dataset.id = record.id }
+      else {
+        const record = await service.add(this.book, this.chapter, c.verse, text, color)
+        c.id = record.id
+        c.el.dataset.id = record.id
+        // 剛貼的便條在這次瀏覽保持展開（設定是「收起」時，按完成也不要立刻縮成圖示）
+        this.overrides.set(record.id, "open")
+      }
       c.saved = signature
     })
   }

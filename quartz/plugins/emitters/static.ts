@@ -18,6 +18,14 @@ export const Static: QuartzEmitterPlugin = () => ({
       await fs.promises.copyFile(src, dest)
       yield dest
     }
+    // Service Worker 只能管「自己所在資料夾以下」的網址。放在 static/ 底下就管不到整個網站，
+    // 而 GitHub Pages 無法送 Service-Worker-Allowed 標頭放寬，所以另外輸出一份到網站根目錄。
+    const sw = joinSegments(staticPath, "sw.js") as FilePath
+    if (fs.existsSync(sw)) {
+      const dest = joinSegments(argv.output, "sw.js") as FilePath
+      await fs.promises.copyFile(sw, dest)
+      yield dest
+    }
   },
   async *partialEmit() {},
 })

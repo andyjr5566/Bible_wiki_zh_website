@@ -121,7 +121,7 @@ export default (() => {
               if ("serviceWorker" in navigator) {
                 window.addEventListener("load", function () {
                   navigator.serviceWorker
-                    .register("${joinSegments(baseDir, "static/sw.js")}", { scope: "${baseDir}" })
+                    .register("${joinSegments(baseDir, "sw.js")}", { scope: "${baseDir}" })
                     .catch(function (error) {
                       console.error("Bible Wiki Service Worker registration failed:", error);
                     });

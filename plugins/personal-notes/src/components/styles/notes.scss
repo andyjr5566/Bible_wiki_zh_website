@@ -31,6 +31,11 @@
 
 .bwz-n-link {
   font-size: 0.9rem;
+  @media (pointer: coarse) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 
 .bwz-n-status {
@@ -213,17 +218,21 @@
   gap: 0.4rem;
 }
 
-// 加重選擇器：網站主題對 input 的樣式不要蓋掉邊框（QA 回報標題、標籤框看起來像一般文字）
+// 網站主題（obsidian-theme 這個 CSS layer，排在我們的 quartz-base 之後）會把 input[type=text] 的框線、背景、內距清掉，
+// 跟選擇器權重無關，所以這幾個屬性用 !important（只影響筆記的輸入框；QA 回報標題、標籤框看起來像一般文字）
 .bwz-n-input.bwz-n-input,
 .bwz-n-textarea.bwz-n-textarea {
   font: inherit;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 8px;
-  background: var(--light);
+  padding: 0.45rem 0.6rem !important;
+  border: 1px solid var(--lightgray) !important;
+  border-radius: 8px !important;
+  background: var(--light) !important;
   color: var(--dark);
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
 
   &.small {
     width: 4.5rem;
@@ -289,6 +298,10 @@
   grid-template-columns: 1fr minmax(8rem, 14rem);
   gap: 0.5rem;
   margin: 1rem 0;
+  // 手機：搜尋框與書卷選單各佔一整行（原本搜尋框太窄，提示文字被截斷）
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .bwz-n-group {

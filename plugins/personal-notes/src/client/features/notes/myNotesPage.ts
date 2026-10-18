@@ -10,6 +10,7 @@ import { isIOS, isStandalone } from "../../ui/env"
 import { statusBar } from "../../ui/status"
 import type { View } from "../types"
 import { loadResolver, type LinkResolver } from "./links"
+import { exportMarkdownZip } from "./markdownExport"
 import { NotesService } from "./notes"
 
 export class MyNotesPage implements View {
@@ -105,12 +106,13 @@ export class MyNotesPage implements View {
         "section",
         { class: "bwz-n-section" },
         h("h3", { text: "備份" }),
-        h("p", { class: "bwz-n-muted", text: "匯出的 JSON 檔包含你所有的筆記，可以隨時再匯入（重複匯入不會產生重複筆記）。" }),
+        h("p", { class: "bwz-n-muted", text: "匯出的 JSON 檔包含你所有的筆記，可以隨時再匯入（重複匯入不會產生重複筆記）。Markdown 檔可以直接放進 Obsidian 等筆記軟體閱讀（只匯出、不能匯入回來）。" }),
         h(
           "div",
           { class: "bwz-n-row" },
           h("button", { class: "bwz-n-btn", text: "匯出備份（JSON）", attrs: { type: "button" }, on: { click: () => this.exportFile() } }),
           h("button", { class: "bwz-n-btn", text: "從備份匯入", attrs: { type: "button" }, on: { click: () => fileInput.click() } }),
+          h("button", { class: "bwz-n-btn", text: "匯出 Markdown（Obsidian）", attrs: { type: "button" }, on: { click: () => this.exportMarkdown() } }),
           fileInput,
         ),
       ),
@@ -328,14 +330,33 @@ export class MyNotesPage implements View {
       toast("目前沒有筆記可以匯出")
       return
     }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+    this.download(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }), `聖經筆記備份-${new Date().toISOString().slice(0, 10)}.json`)
+    toast(`已匯出 ${data.records.length} 則筆記`)
+  }
+
+  /** 匯出成 Obsidian 可用的 Markdown 檔（ZIP，12 C4）。 */
+  private exportMarkdown(): void {
+    const base = `${location.origin}${document.body.dataset.basepath ?? ""}`
+    const { zip, count } = exportMarkdownZip(this.notes.all(), (book, chapter) => {
+      const slug = chapterSlug(book, chapter)
+      return slug ? `${base}/${encodeURI(slug)}` : null
+    })
+    if (count === 0) {
+      toast("目前沒有筆記可以匯出")
+      return
+    }
+    this.download(new Blob([zip as BlobPart], { type: "application/zip" }), `聖經筆記-${new Date().toISOString().slice(0, 10)}.zip`)
+    toast(`已匯出 ${count} 個 Markdown 檔（ZIP）`)
+  }
+
+  /** 下載檔案。加 data-router-ignore：Quartz 的 SPA 會把同源的 blob 連結當成換頁攔截。 */
+  private download(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob)
-    const a = h("a", { attrs: { href: url, download: `聖經筆記備份-${new Date().toISOString().slice(0, 10)}.json`, "data-router-ignore": true } })
+    const a = h("a", { attrs: { href: url, download: filename, "data-router-ignore": true } })
     document.body.append(a)
     a.click()
     a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 10_000)
-    toast(`已匯出 ${data.records.length} 則筆記`)
   }
 
   private async importFile(input: HTMLInputElement): Promise<void> {

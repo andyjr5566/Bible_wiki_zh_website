@@ -211,3 +211,4 @@
   - 驗證（子路徑環境、無痕無頭 Chrome）：swcheck.mjs 11/11（註冊成功且 scope 為網站根目錄、接管頁面、快取有看過的頁面與筆記 App、羊皮紙背景不進快取、其他網域不進快取、config.json 不進快取、離線可開看過的頁面、離線筆記面板與筆記都在、離線開沒看過的頁面顯示首頁、恢復連線正常、無錯誤）；killcheck.mjs 2/2（部署撤回版後 Service Worker 與快取都被移除）；regress.mjs 15/15、fixcheck.mjs 11/11（匯出在無痕模式改驗下載連結與內容，因無頭無痕不允許下載；對照組：沒有 Service Worker 的線上網站在無痕下也一樣無法下載）。
 - 單元測試 93 個全過。commits：`c1b2bf98`（B2）、`8bda3e02`（B3）、`23e1d4bf`（B1），皆在本機 main，未 push。
 - A4 未做：使用者回覆尚未把 Google 應用程式改為正式版。
+- **部署**（使用者確認推送清單 13 檔）：`ecd9daaa..b73d3147`。線上 /sw.js 200 後檢查：swcheck 11/11（scope 為 https://andyjr5566.github.io/Bible_wiki_zh_website/，離線可開看過的頁面、筆記面板與筆記都在、大檔與其他網域不快取）、b2check 規則檔 200、regress 15/15（有 Service Worker）、fixcheck 11/11、b3check「刪除」可點、b3extra 4/4。

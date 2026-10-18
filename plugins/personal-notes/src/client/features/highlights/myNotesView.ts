@@ -12,6 +12,11 @@ const order = new Map(BOOKS.map((b, i) => [b.code, i]))
 function byPlace(a: Resolved, b: Resolved): number {
   const x = a.winner.anchor
   const y = b.winner.anchor
+  if (x.kind === "node" || y.kind === "node") {
+    if (x.kind !== "node") return -1
+    if (y.kind !== "node") return 1
+    return (x.node?.title ?? "").localeCompare(y.node?.title ?? "", "zh-Hant")
+  }
   return (order.get(x.book ?? "") ?? 999) - (order.get(y.book ?? "") ?? 999) || (x.chapter ?? 0) - (y.chapter ?? 0) || (x.verseStart ?? 0) - (y.verseStart ?? 0)
 }
 
@@ -36,6 +41,9 @@ export class HighlightsPage implements View {
   /** 該章（或該節）的網址。 */
   private href(r: Resolved): string | null {
     const a = r.winner.anchor
+    if (a.kind === "node") {
+      return a.node?.slug ? `${document.body.dataset.basepath ?? ""}/${encodeURI(a.node.slug)}` : null
+    }
     const slug = a.book && a.chapter ? chapterSlug(a.book, a.chapter) : null
     if (!slug) return null
     return `${document.body.dataset.basepath ?? ""}/${encodeURI(slug)}${a.verseStart ? `#v${a.verseStart}` : ""}`
@@ -43,6 +51,7 @@ export class HighlightsPage implements View {
 
   private place(r: Resolved): string {
     const a = r.winner.anchor
+    if (a.kind === "node") return `📚 ${a.node?.title ?? a.node?.slug ?? "其他"}`
     if (!a.book || !a.chapter) return "其他"
     return `${chapterLabel(a.book, a.chapter)}${a.verseStart ? ` ${verseLabel(a.verseStart, a.verseEnd)}` : ""}`
   }
@@ -62,7 +71,7 @@ export class HighlightsPage implements View {
     const highlights = this.service.allHighlights().sort(byPlace)
     if (bookmarks.length === 0 && highlights.length === 0) {
       this.host.replaceChildren(
-        h("section", { class: "bwz-n-section" }, h("h3", { text: "書籤與重點" }), h("p", { class: "bwz-n-muted", text: "在章節頁選取經文，就可以畫重點或加書籤；章節頁下方也可以把整章加入書籤。" })),
+        h("section", { class: "bwz-n-section" }, h("h3", { text: "書籤與重點" }), h("p", { class: "bwz-n-muted", text: "在章節頁選取經文，就可以畫重點或加書籤；章節頁下方也可以把整章加入書籤。知識庫條目頁也可以加入書籤。" })),
       )
       return
     }
@@ -82,7 +91,7 @@ export class HighlightsPage implements View {
         "section",
         { class: "bwz-n-section bwz-h-page" },
         h("h3", { text: `🔖 書籤（${bookmarks.length}）` }),
-        bookmarks.length ? h("ul", null, ...bookmarks.map((r) => row(r, null, "書籤"))) : h("p", { class: "bwz-n-muted", text: "還沒有書籤。" }),
+        bookmarks.length ? h("ul", null, ...bookmarks.map((r) => row(r, null, "書籤"))) : h("p", { class: "bwz-n-muted", text: "還沒有書籤。知識庫條目頁也可以加入書籤。" }),
         h("h3", { text: `🖍 畫的重點（${highlights.length}）` }),
         highlights.length
           ? h("ul", null, ...highlights.map((r) => row(r, h("span", { class: "bwz-h-quote", text: r.winner.anchor.quote ? `「${r.winner.anchor.quote.exact}」` : "（整節）" }), "重點")))

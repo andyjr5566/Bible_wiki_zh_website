@@ -9,12 +9,25 @@ import { appVersion } from "../shared"
 const version = () => appVersion(import.meta.url)
 
 /**
- * 章節頁底部的「我的筆記」掛載點（afterBody）。只在章節頁輸出；
+ * 章節頁筆記與知識庫條目書籤的掛載點（afterBody）。
  * 判斷依據是 slug 開頭的書卷編號與「第N章」，認不出就不輸出（content 仍在建置中，D-14）。
  */
 const PersonalNotes: QuartzComponentConstructor = () => {
   const Component: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
-    const ref = parseChapterSlug(String(fileData.slug ?? ""))
+    const slug = String(fileData.slug ?? "")
+    if (slug.startsWith("link_folder/") && !slug.endsWith("/index")) {
+      return (
+        <section
+          class="bwz-notes bwz-notes-node"
+          data-bwz-notes="node"
+          data-slug={slug}
+          data-title={fileData.frontmatter?.title ?? slug.split("/").pop()}
+          data-bwz-version={version()}
+          aria-label="條目書籤"
+        ></section>
+      )
+    }
+    const ref = parseChapterSlug(slug)
     if (!ref) return null
     return (
       <section

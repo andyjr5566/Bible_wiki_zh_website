@@ -743,3 +743,36 @@ button.bwz-sticky-color {
   .bwz-sticky button, .bwz-sticky-pop button, .bwz-sticky-icon, .bwz-settings-btn, .bwz-n-toast-action { min-width: 44px; min-height: 44px; }
   .bwz-sticky-option { min-height: 44px; }
 }
+
+// 知識庫條目：掛載點不佔空間，按鈕放在頁面標題下方。
+.bwz-notes-node {
+  display: contents;
+}
+
+.bwz-node-bookmark {
+  display: block;
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  padding: 0.25rem 0.65rem;
+  margin: 0.4rem 0;
+  border: 1px solid var(--secondary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+
+  &:hover { background: var(--highlight); }
+  &[aria-pressed="true"] {
+    background: var(--secondary);
+    color: var(--light);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+  @media (pointer: coarse) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

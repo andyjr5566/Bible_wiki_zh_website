@@ -63,6 +63,28 @@ export class HighlightsService {
     return this.repo.remove(id)
   }
 
+  findNodeBookmark(slug: string): Resolved | undefined {
+    return this.allBookmarks().find((r) => r.winner.anchor.kind === "node" && r.winner.anchor.node?.slug === slug)
+  }
+
+  async toggleNodeBookmark(slug: string, title: string): Promise<"added" | "removed"> {
+    const existing = this.findNodeBookmark(slug)
+    if (existing) {
+      await this.repo.remove(existing.id)
+      return "removed"
+    }
+    await this.repo.insert(this.repo.draft({
+      type: BOOKMARK_TYPE,
+      anchor: {
+        kind: "node", ref: null, book: null, chapter: null,
+        verseStart: null, verseEnd: null, endRef: null,
+        quote: null, textHash: null, node: { slug, title },
+      },
+      title: "", body: "", tags: [],
+    }))
+    return "added"
+  }
+
   /** 這一章（verseStart＝null）或這幾節的書籤。 */
   findBookmark(book: string, chapter: number, verseStart: number | null, verseEnd: number | null): Resolved | undefined {
     const end = verseEnd && verseEnd !== verseStart ? verseEnd : null

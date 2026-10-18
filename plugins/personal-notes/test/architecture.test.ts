@@ -90,6 +90,6 @@ describe("架構規則", () => {
     const ids = FEATURES.map((f) => f.id)
     expect(new Set(ids).size).toBe(ids.length)
     // src/components/PersonalNotes.tsx 輸出的掛載點種類
-    for (const kind of ["chapter", "mynotes"]) expect(viewFactories(kind).length).toBeGreaterThan(0)
+    for (const kind of ["chapter", "mynotes", "node"]) expect(viewFactories(kind).length).toBeGreaterThan(0)
   })
 })

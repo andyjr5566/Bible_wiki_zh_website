@@ -69,3 +69,60 @@ describe("畫重點與書籤（C3）", () => {
     expect(c.hl.allBookmarks()).toHaveLength(1)
   })
 })
+
+describe("知識庫條目書籤（N2）", () => {
+  const slug = "link_folder/人物/亞伯拉罕"
+  const title = "亞伯拉罕"
+
+  it("依 slug 查找，加入與移除不影響其他條目及經文書籤", async () => {
+    const d = await device()
+    expect(d.hl.findNodeBookmark(slug)).toBeUndefined()
+    await d.hl.toggleBookmark("GEN", 1, null, null)
+    await d.hl.toggleBookmark("GEN", 1, 3, 5)
+    expect(await d.hl.toggleNodeBookmark(slug, title)).toBe("added")
+    await d.hl.toggleNodeBookmark("link_folder/人物/摩西", "摩西")
+    expect(d.hl.findNodeBookmark(slug)?.winner).toMatchObject({
+      type: "bookmark",
+      anchor: {
+        kind: "node", ref: null, book: null, chapter: null,
+        verseStart: null, verseEnd: null, endRef: null,
+        quote: null, textHash: null, node: { slug, title },
+      },
+    })
+    expect(d.hl.allBookmarks()).toHaveLength(4)
+    expect(d.hl.bookmarksIn("GEN", 1)).toHaveLength(2)
+    expect(await d.hl.toggleNodeBookmark(slug, title)).toBe("removed")
+    expect(d.hl.findNodeBookmark(slug)).toBeUndefined()
+    expect(d.hl.findNodeBookmark("link_folder/人物/摩西")).toBeDefined()
+    expect(d.hl.findBookmark("GEN", 1, null, null)).toBeDefined()
+    expect(d.hl.findBookmark("GEN", 1, 3, 5)).toBeDefined()
+    expect(await d.hl.toggleNodeBookmark(slug, title)).toBe("added")
+    await d.hl.toggleBookmark("GEN", 1, null, null)
+    await d.hl.toggleBookmark("GEN", 1, 3, 5)
+    expect(d.hl.findNodeBookmark(slug)).toBeDefined()
+    expect(d.hl.allBookmarks()).toHaveLength(2)
+  })
+
+  it("寫入 _NODE 分片，兩台裝置可看到加入與移除", async () => {
+    const cloud = new MemoryCloud()
+    const a = await device(cloud)
+    const b = await device(cloud)
+    await a.hl.toggleNodeBookmark(slug, title)
+    const id = a.hl.findNodeBookmark(slug)!.id
+    await a.syncer.sync()
+    const shard = [...cloud.files.values()].find((f) => f.meta.shard === "_NODE")
+    expect(shard).toBeDefined()
+    expect(JSON.parse(shard!.body)).toMatchObject({
+      shard: "_NODE", records: [expect.objectContaining({ id, type: "bookmark" })],
+    })
+    await b.syncer.sync()
+    expect(b.hl.findNodeBookmark(slug)?.id).toBe(id)
+    expect(b.hl.findNodeBookmark(slug)?.winner.anchor.node).toEqual({ slug, title })
+    expect(await b.hl.toggleNodeBookmark(slug, title)).toBe("removed")
+    await b.syncer.sync()
+    await a.syncer.sync()
+    expect(a.hl.findNodeBookmark(slug)).toBeUndefined()
+    expect(b.hl.findNodeBookmark(slug)).toBeUndefined()
+    expect(a.hl.allBookmarks()).toHaveLength(0)
+  })
+})

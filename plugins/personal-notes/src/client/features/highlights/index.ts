@@ -3,6 +3,7 @@
 import type { Feature } from "../types"
 import { ChapterHighlights } from "./chapterView"
 import { HighlightsPage } from "./myNotesView"
+import { NodeBookmark } from "./nodeView"
 
 export const highlightsFeature: Feature = {
   id: "highlights",
@@ -12,6 +13,9 @@ export const highlightsFeature: Feature = {
       const chapter = Number(data.chapter)
       return book && chapter ? new ChapterHighlights(session, host, book, chapter) : null
     },
+    node: ({ session, host, data }) => data.slug
+      ? new NodeBookmark(session, host, data.slug, data.title ?? data.slug.split("/").pop() ?? data.slug)
+      : null,
     mynotes: ({ session, host }) => new HighlightsPage(session, host),
   },
 }

@@ -198,3 +198,16 @@
 - Claude 黑箱測試代理線上複測（新的瀏覽器設定檔）：匯出下載、重新整理／整頁跳轉後補存（新舊筆記 × 3 種延遲 × 2 種離開方式共 12 種，各剛好 1 份、無重複、無殘留草稿）、前往該章捲到面板、節數對調、刪除焦點、SPA 換到無筆記頁面無殘留按鈕，全部通過。
 - 剩下手機版面：標題、標籤框沒有框線且只有 28px；起迄 36px；我的筆記搜尋框太窄。原因（cssprobe.mjs 以 DevTools CSS.getMatchedStylesForNode 查證）：網站主題的樣式在 `obsidian-theme` CSS layer，排在本外掛所在的 `quartz-base` 之後，會清掉 `input[type=text]` 的框線、背景、內距，與選擇器權重無關。修正：筆記輸入框這幾個屬性加 `!important`；觸控裝置輸入框與連結至少 44px；手機版搜尋框與書卷選單各佔一行。本機 mobilecheck.mjs 6/6（所有輸入框 44px、有框線、16px；搜尋框 342px）；93 個測試、regress 15/15。
 - 待部署（需使用者確認）。新的低優先建議：「前往該章編輯 →」只捲到面板，未定位到那一則或直接開啟編輯器（記入 12 C10）。
+
+## 2026-10-18｜網站既有問題 B1–B3（/goal：12 的 B 組）
+
+- **子路徑測試環境**：線上網站在 `/Bible_wiki_zh_website/` 底下，本機 serve 的基底路徑是空的，重現不了路徑類問題。做法：暫時把 quartz.config.yaml 的 baseUrl 改成 `localhost:8090/Bible_wiki_zh_website` 建置到 scratchpad/build-sub（建完立刻 `git checkout` 還原），用 scratchpad/subpath-server.mjs 模擬 GitHub Pages（`/foo`→foo.html、不送 Service-Worker-Allowed）。
+- **B2 collapse-rules.json**：`collapsible.inline.ts` 用絕對路徑 `/static/...` → 線上 404（b2check.mjs：線上 2 次 404）。改用 `document.body.dataset.basepath`。子路徑環境：200、收合區塊正常。（目前內建規則與檔案相同，所以使用者看不出差別；修正後改 config/collapse-rules.txt 才會生效。）
+- **B3 首次造訪提示**：b3check.mjs 用 elementFromPoint 檢查每個筆記按鈕是否被蓋住。電腦 1280×900：「第一次來嗎？」卡片蓋住「刪除」→ 修正後全部可點；卡片在頁面上方仍照常出現、捲到底收起（b3extra.mjs）。手機：「加入主畫面」說明是一次性、按「知道了」就不再出現的提示，蓋住下方屬設計；修正為使用者正在輸入時延後跳出（b3extra.mjs：打字中不跳、停止後才出現）。
+- **B1 Service Worker（使用者選「修好並啟用」，D-36）**：
+  - 調查：sw.js 在 /static/，scope 要整個網站 → 瀏覽器拒絕（線上主控台 SecurityError）。策略本來就是先網路後快取、只處理本站網址、config.json 不快取。
+  - 修改：`quartz/plugins/emitters/static.ts` 另外輸出 sw.js 到網站根目錄；Head.tsx 改註冊根目錄的 sw.js；sw.js 路徑以根目錄為準、只快取成功回應、超過 3 MB／3D 模型／影片不快取（沒有 Content-Length 時讀實際大小）、CACHE_NAME 改 v3、開頭註解寫緊急撤回版本。
+  - 測試環境發現：這台電腦的無頭 Chrome 用磁碟設定檔時 Cache API 會出「Unexpected internal error」（連線上網站也一樣），加 `--incognito` 才正常 → 與網站無關，Service Worker 相關檢查都用無痕模式跑。
+  - 驗證（子路徑環境、無痕無頭 Chrome）：swcheck.mjs 11/11（註冊成功且 scope 為網站根目錄、接管頁面、快取有看過的頁面與筆記 App、羊皮紙背景不進快取、其他網域不進快取、config.json 不進快取、離線可開看過的頁面、離線筆記面板與筆記都在、離線開沒看過的頁面顯示首頁、恢復連線正常、無錯誤）；killcheck.mjs 2/2（部署撤回版後 Service Worker 與快取都被移除）；regress.mjs 15/15、fixcheck.mjs 11/11（匯出在無痕模式改驗下載連結與內容，因無頭無痕不允許下載；對照組：沒有 Service Worker 的線上網站在無痕下也一樣無法下載）。
+- 單元測試 93 個全過。commits：`c1b2bf98`（B2）、`8bda3e02`（B3）、`23e1d4bf`（B1），皆在本機 main，未 push。
+- A4 未做：使用者回覆尚未把 Google 應用程式改為正式版。

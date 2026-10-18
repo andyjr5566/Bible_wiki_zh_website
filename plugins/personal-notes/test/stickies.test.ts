@@ -107,7 +107,7 @@ describe("便條顯示偏好", () => {
 // 不呼叫 View 建構式，讓真實 Repository 驗證重疊儲存與銷毀時的結果。
 function persistence(repo: Repository) {
   const view = Object.create(ChapterStickies.prototype)
-  Object.assign(view, { repo, service: new StickiesService(() => repo), book: "GEN", chapter: 1, queue: Promise.resolve(), writing: 0, dead: true, cards: new Set(), cleanups: [], host: { replaceChildren() {} } })
+  Object.assign(view, { repo, service: new StickiesService(() => repo), book: "GEN", chapter: 1, queue: Promise.resolve(), writing: 0, dead: true, cards: new Set(), overrides: new Map(), cleanups: [], host: { replaceChildren() {} } })
   return view as {
     cards: Set<unknown>
     save(c: unknown, finish?: boolean): Promise<void>

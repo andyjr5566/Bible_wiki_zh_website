@@ -402,11 +402,20 @@ export default (() => {
                   // the user dismissed the auto-shown guide once.
                   window.__pwaInstallGuide = { show: render, isMobile: isMobile };
 
+                  // 使用者正在輸入（例如寫個人筆記）時不要突然跳出來蓋住畫面，等打完再說
+                  function isTyping() {
+                    var a = document.activeElement;
+                    return !!a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.isContentEditable);
+                  }
+
                   function autoShowOnce() {
                     if (!isMobile) return;
                     if (isStandaloneApp()) return;
                     if (localStorage.getItem(DISMISS_KEY)) return;
-                    setTimeout(render, 1800);
+                    setTimeout(function tryRender() {
+                      if (isTyping()) return setTimeout(tryRender, 3000);
+                      render();
+                    }, 1800);
                   }
 
                   if (document.readyState === "complete" || document.readyState === "interactive") {

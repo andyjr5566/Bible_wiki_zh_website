@@ -449,6 +449,8 @@ function ensureDom(): HTMLElement {
 
   $(".bwz-bubble", root)!.addEventListener("click", onBubbleClick)
   $(".bwz-welcome", root)!.addEventListener("click", onWelcomeClick)
+  window.addEventListener("scroll", yieldWelcomeIfNeeded, { passive: true })
+  document.addEventListener("focusin", yieldWelcomeIfNeeded)
   $(".bwz-fab", root)!.addEventListener("click", () => (helpOpen() ? closeHelp() : openHelp()))
   $('[data-modal="help"]', root)!.addEventListener("click", onHelpClick)
   $('[data-modal="finish"]', root)!.addEventListener("click", onFinishClick)
@@ -886,10 +888,27 @@ let welcomeVisible = false
 // 歡迎卡主要照顧從搜尋引擎直接進到某一章的讀者
 const onHome = () => !!$("[data-tour-launcher], article [data-tour-open]")
 
+// 歡迎卡固定在右下角，寬度會跨進內文欄。讀者已經讀到頁面下半部（例如章節底部的「我的筆記」），
+// 或正在輸入框打字時，先收起來，免得蓋住內文右側的按鈕；換頁後照常出現（不算「之後再說」）。
+function welcomeShouldYield(): boolean {
+  const a = document.activeElement as HTMLElement | null
+  if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT" || a.isContentEditable)) return true
+  const doc = document.documentElement
+  return window.scrollY + window.innerHeight > doc.scrollHeight - window.innerHeight * 1.2
+}
+
+function yieldWelcomeIfNeeded() {
+  if (welcomeVisible && welcomeShouldYield()) hideWelcome()
+}
+
 function maybeShowWelcome(delay = 1200) {
   if (st.status !== "new" || session.get(LATER_KEY) || onHome()) return
   setTimeout(function tryShow() {
     if (st.status !== "new" || session.get(LATER_KEY) || onHome()) return
+    if (welcomeShouldYield()) {
+      setTimeout(tryShow, 1500)
+      return
+    }
     // 手機的「加入主畫面」引導優先，等它關掉再出現
     if (document.getElementById("pwa-install-guide")) {
       setTimeout(tryShow, 1500)

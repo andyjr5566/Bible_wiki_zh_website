@@ -253,7 +253,7 @@ export class MyNotesPage implements View {
             ? h(
                 "div",
                 { class: "bwz-n-card-actions" },
-                h("a", { class: "bwz-n-link", text: r.conflicts.length ? "前往該章選擇版本 →" : "前往該章編輯 →", attrs: { href: `${base}/${encodeURI(cardSlug)}#bwz-notes` } }),
+                h("a", { class: "bwz-n-link", text: r.conflicts.length ? "前往該章選擇版本 →" : "前往該章編輯 →", attrs: { href: `${base}/${encodeURI(cardSlug)}#bwz-note-${r.id}` } }),
               )
             : null,
         ),

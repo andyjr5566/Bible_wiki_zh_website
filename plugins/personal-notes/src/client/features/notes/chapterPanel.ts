@@ -19,6 +19,8 @@ type EditorRoot = HTMLElement & {
   flush?: () => Promise<boolean>
   /** 目前的輸入是否至少有一份本機草稿備份。 */
   backedUp?: () => boolean
+  /** 同步狀態改變時更新「已儲存／已同步」文字（C9）。 */
+  refreshSaved?: () => void
   draftKey?: string
 }
 
@@ -73,7 +75,9 @@ export class ChapterPanel implements View {
     this.refresh()
     void this.recoverDrafts()
     // 從「我的筆記」頁點過來（網址帶 #bwz-notes）：面板是後來才畫出的，瀏覽器不會自己捲過來
-    if (decodeURIComponent(location.hash) === "#bwz-notes") requestAnimationFrame(() => this.mount.scrollIntoView({ block: "start" }))
+    const hash = decodeURIComponent(location.hash)
+    if (hash === "#bwz-notes") requestAnimationFrame(() => this.mount.scrollIntoView({ block: "start" }))
+    else if (hash.startsWith("#bwz-note-")) requestAnimationFrame(() => this.focusNote(hash.slice("#bwz-note-".length)))
   }
 
   destroy(): void {
@@ -162,6 +166,18 @@ export class ChapterPanel implements View {
     document.body.append(this.chip)
   }
 
+  /** 捲到某一則筆記並短暫標示（從「我的筆記」頁點過來時，C10）。 */
+  private focusNote(id: string): void {
+    const card = this.listEl.querySelector<HTMLElement>(`[data-note-id="${CSS.escape(id)}"]`)
+    if (!card) {
+      this.mount.scrollIntoView({ block: "start" })
+      return
+    }
+    card.scrollIntoView({ block: "center" })
+    card.classList.add("bwz-n-flash")
+    setTimeout(() => card.classList.remove("bwz-n-flash"), 2600)
+  }
+
   private chapterNotes(): Resolved[] {
     return this.notes.forChapter(this.book, this.chapter)
   }
@@ -183,12 +199,13 @@ export class ChapterPanel implements View {
       cards.push(h("p", { class: "bwz-n-empty", text: `還沒有${chapterLabel(this.book, this.chapter)}的筆記。按「新增筆記」開始寫。` }))
     }
     this.listEl.replaceChildren(...cards)
+    this.editor?.root.refreshSaved?.()
   }
 
   private noteCard(n: NoteRecord): HTMLElement {
     return h(
       "article",
-      { class: "bwz-n-card" },
+      { class: "bwz-n-card", attrs: { id: `bwz-note-${n.id}`, "data-note-id": n.id } },
       h(
         "div",
         { class: "bwz-n-card-head" },
@@ -222,7 +239,7 @@ export class ChapterPanel implements View {
     }
     return h(
       "article",
-      { class: "bwz-n-card conflict" },
+      { class: "bwz-n-card conflict", attrs: { id: `bwz-note-${r.id}`, "data-note-id": r.id } },
       h("p", { class: "bwz-n-warn", text: "這則筆記在兩台裝置上同時被修改了。請選擇要保留哪個版本：" }),
       h(
         "div",
@@ -335,7 +352,7 @@ export class ChapterPanel implements View {
     return true
   }
 
-  private savedText(): string {
+  private async savedText(): Promise<string> {
     if (!this.session.account) return "已儲存在這台裝置"
     switch (this.session.status.kind) {
       case "needs-reconnect":
@@ -343,8 +360,10 @@ export class ChapterPanel implements View {
       case "offline":
       case "error":
         return "已存在這台裝置（恢復連線後自動同步）"
+      case "ready":
+        return (await this.session.repo.pendingShards()) > 0 ? "已儲存，幾秒後自動同步到雲端" : "已儲存並同步到雲端 ✓"
       default:
-        return "已儲存，幾秒後自動同步到雲端"
+        return "已儲存，正在同步…"
     }
   }
 
@@ -370,6 +389,11 @@ export class ChapterPanel implements View {
     /** 最後一次成功存檔（或開啟時）的版本：補存草稿時用來判斷筆記有沒有被別處改過。 */
     let baseHlc: string | null = note?.hlc ?? null
     let backupOk = true
+    let savedOnce = false
+    const showSaved = () =>
+      void this.savedText().then((t) => {
+        if (savedOnce && !dirty) saved.textContent = t
+      })
     const inputs = [vStart, vEnd, title, body, tags]
     const read = (): NoteInput => {
       const s = Number.parseInt(vStart.value, 10)
@@ -414,7 +438,8 @@ export class ChapterPanel implements View {
         // 存檔期間又有輸入：更新草稿（帶上新筆記的 id 與版本，重新整理後才不會重複建立，Codex 第二輪 #5）
         if (dirty) backup()
         else clearDraft(key)
-        saved.textContent = this.savedText()
+        savedOnce = true
+        showSaved()
         return true
       } catch (e) {
         if (e instanceof ConflictPendingError) {
@@ -486,6 +511,7 @@ export class ChapterPanel implements View {
       return !dirty
     }
     root.backedUp = () => !dirty || backupOk
+    root.refreshSaved = showSaved
     root.draftKey = key
     return root
   }

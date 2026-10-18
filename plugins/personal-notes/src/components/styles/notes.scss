@@ -407,3 +407,18 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+// 從「我的筆記」頁點過來時，短暫標示那一則（C10）
+.bwz-n-card.bwz-n-flash {
+  animation: bwz-n-flash 2.4s ease-out;
+}
+
+@keyframes bwz-n-flash {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--secondary);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}

@@ -78,8 +78,6 @@ export class ChapterStickies implements View {
   private queue: Promise<void> = Promise.resolve()
   private writing = 0
   private dead = false
-  private pop?: HTMLElement
-  private popId?: string
   private cleanups: (() => void)[] = []
 
   constructor(private readonly session: Session, private readonly host: HTMLElement, private readonly book: string, private readonly chapter: number) {
@@ -92,28 +90,17 @@ export class ChapterStickies implements View {
     const visibility = () => {
       if (document.hidden) this.act(() => this.flush())
     }
-    const outside = (e: Event) => {
-      if (this.pop && !this.pop.contains(e.target as Node) && !(e.target as Element).closest?.(".bwz-sticky-icon")) this.closePop()
-    }
-    const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") this.closePop()
-    }
     document.addEventListener(COMPOSE_STICKY_EVENT, compose)
     document.addEventListener("visibilitychange", visibility)
-    document.addEventListener("click", outside)
-    document.addEventListener("keydown", key)
     this.cleanups.push(
       () => document.removeEventListener(COMPOSE_STICKY_EVENT, compose),
       () => document.removeEventListener("visibilitychange", visibility),
-      () => document.removeEventListener("click", outside),
-      () => document.removeEventListener("keydown", key),
       session.onChange(() => this.refresh()),
       session.onBeforeSwitch(() => this.flush()),
       onStickyModeChange(mode => {
         this.mode = mode
         this.allMode = undefined
         this.overrides.clear()
-        this.closePop()
         this.refresh()
       }),
     )
@@ -151,7 +138,6 @@ export class ChapterStickies implements View {
       c.el.remove()
     }
     this.cards.clear()
-    this.closePop()
   }
 
   private refresh(): void {
@@ -189,12 +175,6 @@ export class ChapterStickies implements View {
       }
       if (!c.editor) this.render(c, r)
     }
-    if (this.popId) {
-      const c = [...this.cards].find(c => c.id === this.popId)
-      const r = byId.get(this.popId)
-      if (!c || !r || this.displayMode(r.id) !== "icon") this.closePop()
-      else this.showPop(c, r)
-    }
     const hasOpen = records.some(r => this.displayMode(r.id) === "open")
     this.host.replaceChildren(...(records.length ? [
       h("div", { class: "bwz-sticky-bar bwz-n-row bwz-v-ui" },
@@ -202,8 +182,7 @@ export class ChapterStickies implements View {
         button(hasOpen ? "全部收起" : "全部展開", () => {
           this.allMode = hasOpen ? "icon" : "open"
           this.overrides.clear()
-          this.closePop()
-          this.refresh()
+            this.refresh()
         }),
       ),
     ] : []))
@@ -219,16 +198,20 @@ export class ChapterStickies implements View {
     c.el.dataset.color = c.color
     if (mode === "icon") {
       c.el.className = "bwz-sticky-slot bwz-v-ui"
-      const icon = button("", () => this.showPop(c, r), "查看便條", icons.noteFilled)
+      // 點小紙條：直接在經文下方展開這一張（不另外浮出視窗，使用者 2026-10-19）
+      const icon = button("", () => {
+        this.overrides.set(r.id, "open")
+        this.refresh()
+      }, "展開便條", icons.noteFilled)
       icon.className = "bwz-sticky-icon bwz-v-ui"
       c.el.replaceChildren(icon)
     } else {
       c.el.className = `bwz-sticky bwz-sticky-motion ${tiltOf(c.verse)} bwz-v-ui`
-      c.el.replaceChildren(...this.contents(c, r, false))
+      c.el.replaceChildren(...this.contents(c, r))
     }
   }
 
-  private contents(c: Card, r: Resolved, pop: boolean): HTMLElement[] {
+  private contents(c: Card, r: Resolved): HTMLElement[] {
     if (r.conflicts.length) return [
       h("p", { class: "bwz-v-ui", text: "這張便條在兩台裝置上同時被改過，選一個要保留的：" }),
       ...[r.winner, ...r.conflicts].map(v => h("div", { class: "bwz-sticky-version bwz-v-ui" },
@@ -242,42 +225,14 @@ export class ChapterStickies implements View {
       h("div", { class: "bwz-sticky-label bwz-v-ui", text: labelFor(this.book, this.chapter, c.verse) }),
       h("div", { class: "bwz-sticky-text bwz-v-ui", text: r.winner.body, on: { click: () => this.act(() => this.edit(c)) } }),
       h("div", { class: "bwz-sticky-actions bwz-v-ui" },
-        pop ? button("展開", () => {
-          this.overrides.set(r.id, "open")
-          this.closePop()
-          this.refresh()
-        }) : null,
-        // 浮出視窗用文字連結；卡片上用小圖示（滑鼠移上去才清楚顯示）
-        pop ? button("編輯", () => this.act(() => this.edit(c)), "編輯便條") : button("", () => this.act(() => this.edit(c)), "編輯便條", icons.edit),
-        pop ? null : button("", () => {
+        button("", () => this.act(() => this.edit(c)), "編輯便條", icons.edit),
+        button("", () => {
           this.overrides.set(r.id, "icon")
           this.refresh()
         }, "收起便條", icons.collapse),
-        pop ? button("刪除", () => this.act(() => this.remove(r.id)), "刪除便條") : button("", () => this.act(() => this.remove(r.id)), "刪除便條", icons.remove),
+        button("", () => this.act(() => this.remove(r.id)), "刪除便條", icons.remove),
       ),
     ]
-  }
-
-  private closePop(): void {
-    this.pop?.remove()
-    this.pop = undefined
-    this.popId = undefined
-  }
-
-  private showPop(c: Card, r: Resolved): void {
-    this.closePop()
-    const icon = c.el.querySelector<HTMLElement>(".bwz-sticky-icon")
-    if (!icon) return
-    const rect = icon.getBoundingClientRect()
-    this.pop = h("div", {
-      class: "bwz-sticky-pop bwz-v-ui",
-      data: { color: stickyColor(r.winner) },
-      attrs: { role: "dialog", "aria-label": "便條" },
-    }, ...this.contents(c, r, true))
-    this.popId = r.id
-    document.body.append(this.pop)
-    this.pop.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - this.pop.offsetWidth - 8)) + window.scrollX + "px"
-    this.pop.style.top = rect.bottom + window.scrollY + "px"
   }
 
   private async edit(existing?: Card, verse?: number): Promise<void> {
@@ -288,7 +243,6 @@ export class ChapterStickies implements View {
     }
     const r = existing?.id ? this.service.get(existing.id) : undefined
     if (existing && (!this.cards.has(existing) || !r || r.winner.deleted || r.conflicts.length)) return
-    this.closePop()
     let c = existing
     if (!c) {
       const list = annotateVerses()
@@ -414,7 +368,6 @@ export class ChapterStickies implements View {
       const previous = service.get(id)?.winner
       if (!previous || previous.deleted) return
       await service.remove(id)
-      this.closePop()
       toast("已刪除便條", { label: "復原", run: () => this.act(() => this.enqueue(() => service.restore(previous))) })
     })
   }

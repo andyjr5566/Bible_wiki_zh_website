@@ -372,7 +372,7 @@ const STEPS: Step[] = [
     title: () => "寫下你自己的筆記",
     text: () =>
       "每一章最下方的「我的筆記」可以寫自己的研經心得。在經文上<b>選取一段字</b>，還能畫重點、加書籤，或直接針對那幾節寫筆記。" +
-      "登入 Google 後，手機、平板、電腦看到的都是同一份；所有筆記都在〈我的筆記〉頁。",
+      "登入 Google 後，手機、平板、電腦看到的都是同一份；左上角的筆記本圖示可以隨時打開〈我的筆記〉頁。",
   },
   {
     id: "maps",
@@ -402,9 +402,9 @@ const STEPS: Step[] = [
     page: "any",
     skill: "閱讀設定",
     gate: true,
-    targets: () => $$(".darkmode, .puremode, .readermode").filter(visible),
+    targets: () => $$(".darkmode, .puremode").filter(visible),
     title: () => "調成你習慣的樣子",
-    text: () => "明暗模式、紙質／素色底色、閱讀模式（淡出側欄）。點一個試試。",
+    text: () => "明暗模式、紙質／素色底色。點一個試試。",
     done: () => toolTouched,
   },
   {
@@ -618,6 +618,8 @@ function show() {
   if (s.id !== lastStepId) resetStepFlags(s)
   document.documentElement.classList.add("bwz-touring")
   el(".bwz-layer").hidden = false
+  // 導覽中重新整理頁面時，瀏覽器會在頁面載入完後把捲動位置還原，蓋掉導覽剛捲到的目標
+  history.scrollRestoration = "manual"
 
   if (s.done?.()) {
     check()
@@ -640,6 +642,7 @@ function show() {
 function hideLayer() {
   el(".bwz-layer").hidden = true
   document.documentElement.classList.remove("bwz-touring")
+  history.scrollRestoration = "auto"
   stopTicker()
 }
 
@@ -1186,7 +1189,7 @@ function onKeydown(e: KeyboardEvent) {
 
 function onClickCapture(e: MouseEvent) {
   const target = e.target as HTMLElement
-  if (target.closest(".darkmode, .puremode, .readermode")) {
+  if (target.closest(".darkmode, .puremode")) {
     toolTouched = true
     setTimeout(check, 60)
   }

@@ -251,8 +251,9 @@ plugins:
       position: left
       priority: 30
       group: toolbar
+  # 閱讀模式按鈕已由個人筆記外掛的「我的筆記」入口取代（2026-10-18 使用者決定）
   - source: github:quartz-community/reader-mode
-    enabled: true
+    enabled: false
     layout:
       position: left
       priority: 35
@@ -336,13 +337,9 @@ layout:
         right: []
     content: {}
     folder:
-      exclude:
-        - reader-mode
       positions:
         right: []
     tag:
-      exclude:
-        - reader-mode
       positions:
         right: []
     canvas: {}

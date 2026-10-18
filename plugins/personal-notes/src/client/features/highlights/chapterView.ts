@@ -53,12 +53,17 @@ export class ChapterHighlights implements View {
     const onScroll = () => {
       if (!this.toolbar.hidden && window.getSelection()?.isCollapsed) this.hideToolbar()
     }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !this.toolbar.hidden) this.hideToolbar()
+    }
     document.addEventListener("selectionchange", onSelection)
+    document.addEventListener("keydown", onKey)
     document.addEventListener("click", onClick)
     window.addEventListener("scroll", onScroll, { passive: true })
     this.cleanups.push(
       () => document.removeEventListener("selectionchange", onSelection),
       () => document.removeEventListener("click", onClick),
+      () => document.removeEventListener("keydown", onKey),
       () => window.removeEventListener("scroll", onScroll),
     )
     this.unsubscribe = session.onChange(() => this.refresh())
@@ -182,7 +187,6 @@ export class ChapterHighlights implements View {
     this.removeMode = true
     this.toolbar.replaceChildren(
       h("button", { class: "bwz-n-btn small danger", text: "移除這個重點", attrs: { type: "button" }, on: { click: () => void this.removeHighlight(id) } }),
-      h("button", { class: "bwz-n-btn small", text: "取消", attrs: { type: "button" }, on: { click: () => this.hideToolbar() } }),
     )
     this.place(mark.getBoundingClientRect())
   }

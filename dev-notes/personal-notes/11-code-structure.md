@@ -9,7 +9,7 @@
 ```
 plugins/personal-notes/src/
 ├── index.ts, shared.ts          Quartz 端（建置時執行）：emitter、my-notes 頁型、版本號
-├── components/                  Quartz 元件：輸出「掛載點」<… data-bwz-notes="種類">、每頁的小型啟動腳本
+├── components/                  Quartz 元件：輸出「掛載點」<… data-bwz-notes="種類">、每頁的小型啟動腳本（也負責左上角「我的筆記」入口，D-40）
 └── client/                      瀏覽器端 App（app.js，只有頁面上有掛載點時才載入）
     ├── app.ts                   組裝根：建立 Session、把掛載點交給功能模組（唯一可以 import 所有層的檔案）
     │

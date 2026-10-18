@@ -564,6 +564,59 @@ li.bwz-v-flash {
 }
 
 // 選取經文時浮出的工具列
+/* 有 display 的元件設了 hidden 也要真的隱藏（否則 display 會蓋掉瀏覽器預設的 [hidden]，選取工具列點別處收不起來） */
+[class^="bwz-"][hidden],
+[class*=" bwz-"][hidden] {
+  display: none !important;
+}
+
+/* 左上角工具列的「我的筆記」入口（與 .darkmode／.puremode 對齊） */
+.bwz-notes-entry {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--darkgray) !important;
+  background: none !important;
+  text-decoration: none !important;
+  & svg {
+    width: 20px;
+    height: 20px;
+    transition: color 0.15s ease;
+  }
+  &:hover,
+  &[aria-current="page"] {
+    color: var(--secondary) !important;
+  }
+}
+
+/* 圖示列下方的文字入口「📝 我的筆記」（手機版頂部空間有限，只留圖示） */
+.bwz-notes-entry-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  color: var(--darkgray) !important;
+  background: var(--light) !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  &:hover,
+  &[aria-current="page"] {
+    color: var(--secondary) !important;
+    border-color: var(--secondary);
+  }
+  @media (max-width: 800px) {
+    display: none !important;
+  }
+}
+
 .bwz-h-toolbar {
   position: absolute;
   z-index: 900;

@@ -143,13 +143,31 @@ export function isDialogOpen(): boolean {
 
 let toastTimer: ReturnType<typeof setTimeout> | null = null
 
-export function toast(message: string): void {
+/** 畫面下方的短暫提示。action：提示旁的按鈕（例如「復原」），按下後提示收起。 */
+export function toast(message: string, action?: { label: string; run: () => void }): void {
   let el = document.querySelector<HTMLElement>(".bwz-n-toast")
   if (!el) {
     el = h("div", { class: "bwz-n-toast", attrs: { role: "status", "aria-live": "polite" } })
     document.body.append(el)
   }
   el.textContent = message
+  if (action) {
+    const box = el
+    el.append(
+      " ",
+      h("button", {
+        class: "bwz-n-toast-action",
+        text: action.label,
+        attrs: { type: "button" },
+        on: {
+          click: () => {
+            box.classList.remove("show")
+            action.run()
+          },
+        },
+      }),
+    )
+  }
   el.classList.add("show")
   if (toastTimer) clearTimeout(toastTimer)
   // 長一點的提示多留幾秒，長輩才來得及讀完（Antigravity 審查 L-03）

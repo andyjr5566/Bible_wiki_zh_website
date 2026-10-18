@@ -8,7 +8,8 @@ export const FEATURES: readonly Feature[] = [notesFeature, highlightsFeature]
 
 /** 某種掛載點上要建立的所有畫面（依登記順序）。 */
 export function viewFactories(kind: string): ((ctx: MountContext) => View | null)[] {
-  return FEATURES.flatMap((f) => {
+  const ordered = [...FEATURES.filter((f) => f.first?.includes(kind)), ...FEATURES.filter((f) => !f.first?.includes(kind))]
+  return ordered.flatMap((f) => {
     const make = f.views[kind]
     return make ? [make] : []
   })

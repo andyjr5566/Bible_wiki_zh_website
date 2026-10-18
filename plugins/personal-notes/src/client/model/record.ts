@@ -9,7 +9,10 @@ export const SCHEMA_VERSION = 1
 export const APP_TAG = "bwz-notes"
 export const MAX_BODY_LENGTH = 100_000
 
-export type RecordType = "note" | "highlight" | "bookmark"
+export type RecordType = "note" | "highlight" | "bookmark" | "sticky"
+
+/** 紀錄種類的格式。看不懂的種類（日後新增的功能）也接受並原樣保留，只是不顯示（D-41）。 */
+const RECORD_TYPE_PATTERN = /^[a-z][a-z0-9-]{0,31}$/
 export type AnchorKind = "chapter" | "verse" | "node" | "free"
 
 export interface Anchor {
@@ -110,7 +113,7 @@ export function validateRecord(raw: unknown): NoteRecord | null {
   if (!raw || typeof raw !== "object") return null
   const r = raw as Record<string, unknown>
   if (!isStr(r.id) || !NOTE_ID_PATTERN.test(r.id)) return null
-  if (!["note", "highlight", "bookmark"].includes(r.type as string)) return null
+  if (!isStr(r.type) || !RECORD_TYPE_PATTERN.test(r.type)) return null
   if (!validAnchor(r.anchor)) return null
   if (!isStr(r.title) || !isStr(r.body) || r.body.length > MAX_BODY_LENGTH * 2) return null
   if (!Array.isArray(r.tags) || !r.tags.every(isStr)) return null

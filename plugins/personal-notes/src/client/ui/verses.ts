@@ -65,7 +65,10 @@ export function verseText(li: Element): string {
 export function selectionToVerses(sel: Selection | null, list: HTMLElement): { start: number; end: number; quote: Quote | null } | null {
   if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null
   const range = sel.getRangeAt(0)
-  const liOf = (n: Node) => (n.nodeType === 1 ? (n as Element) : n.parentElement)?.closest<HTMLLIElement>("li[data-v]")
+  const elOf = (n: Node) => (n.nodeType === 1 ? (n as Element) : n.parentElement)
+  // 選取範圍在我們加的元素裡（例如便條紙的文字）不算選取經文
+  if (elOf(range.startContainer)?.closest(SKIP) || elOf(range.endContainer)?.closest(SKIP)) return null
+  const liOf = (n: Node) => elOf(n)?.closest<HTMLLIElement>("li[data-v]")
   const a = liOf(range.startContainer)
   const b = liOf(range.endContainer)
   if (!a || !b || a.parentElement !== list || b.parentElement !== list) return null

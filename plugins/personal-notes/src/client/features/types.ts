@@ -23,12 +23,23 @@ export interface Feature {
   id: string
   /** 掛載點種類 → 建立畫面；回傳 null 代表這個掛載點不適用。 */
   views: Partial<Record<string, (ctx: MountContext) => View | null>>
+  /** 某種掛載點上要排在最前面（例如「我的筆記」頁最上方的設定按鈕）；沒寫就依登記順序排在後面。 */
+  first?: string[]
 }
 
 // ---------- 功能之間的事件（功能模組不互相 import，需要互動時用 document 上的事件） ----------
 
 /** 要求筆記功能開一則「針對某幾節」的新筆記（例如畫重點工具列上的「寫筆記」）。 */
 export const COMPOSE_NOTE_EVENT = "bwz:compose-note"
+
+/** 要求便條紙功能在某一節貼一張新便條（畫重點工具列上的「便條」）。 */
+export const COMPOSE_STICKY_EVENT = "bwz:compose-sticky"
+
+export interface ComposeStickyDetail {
+  book: string
+  chapter: number
+  verse: number
+}
 
 export interface ComposeNoteDetail {
   book: string

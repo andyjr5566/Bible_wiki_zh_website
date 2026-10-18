@@ -6,7 +6,8 @@
 // - 多分頁：每次同步都包在 Web Locks 裡（同一帳號一次只有一個分頁在同步）；
 //   同步或本機修改後用 BroadcastChannel 通知其他分頁重新載入。
 
-import type { NotesEngine } from "./engine"
+import type { Repository } from "../repo/repository"
+import type { Syncer } from "./syncer"
 
 const PUSH_IDLE_MS = 5_000
 const PUSH_MAX_MS = 60_000
@@ -14,13 +15,15 @@ const FOCUS_PULL_MS = 30_000
 const MAX_POLL_MS = 10 * 60_000
 
 export interface SchedulerOptions {
-  engine: NotesEngine
+  repo: Repository
+  syncer: Syncer
   namespace: string
   minPollSeconds: number
 }
 
 export class SyncScheduler {
-  private readonly engine: NotesEngine
+  private readonly repo: Repository
+  private readonly syncer: Syncer
   private readonly lockName: string
   private readonly channel: BroadcastChannel | null
   private readonly minPollMs: number
@@ -32,7 +35,8 @@ export class SyncScheduler {
   private cleanups: (() => void)[] = []
 
   constructor(opts: SchedulerOptions) {
-    this.engine = opts.engine
+    this.repo = opts.repo
+    this.syncer = opts.syncer
     this.lockName = `bwz-notes-sync-${opts.namespace}`
     this.minPollMs = Math.max(60, opts.minPollSeconds) * 1000
     this.pollMs = this.minPollMs
@@ -41,7 +45,7 @@ export class SyncScheduler {
 
   start(): void {
     // 「先同步再編輯」等所有同步入口都走同一把跨分頁鎖（Codex 審查 #2）
-    this.engine.setSyncRunner(() => this.withLock(() => this.engine.sync()).then(() => this.afterSync()))
+    this.syncer.setRunner(() => this.withLock(() => this.syncer.sync()).then(() => this.afterSync()))
     const on = (target: Window | Document, type: string, fn: (e: Event) => void) => {
       target.addEventListener(type, fn)
       this.cleanups.push(() => target.removeEventListener(type, fn))
@@ -60,11 +64,11 @@ export class SyncScheduler {
     on(window, "focus", () => this.maybePullOnFocus())
     on(window, "online", () => void this.syncNow())
 
-    this.cleanups.push(this.engine.onLocalWrite(() => this.localWrite()))
+    this.cleanups.push(this.repo.onLocalWrite(() => this.localWrite()))
     if (this.channel) {
       this.channel.onmessage = (ev) => {
         const type = (ev.data as { type?: string })?.type
-        if (type === "changed") void this.engine.reloadFromStore()
+        if (type === "changed") void this.repo.reloadFromStore()
         if (type === "local-write") this.schedulePush()
       }
     }
@@ -90,7 +94,7 @@ export class SyncScheduler {
   /** 立即同步（拉取＋上傳）。 */
   async syncNow(): Promise<void> {
     if (this.stopped) return
-    await this.withLock(() => this.engine.sync())
+    await this.withLock(() => this.syncer.sync())
     await this.afterSync()
   }
 
@@ -102,7 +106,7 @@ export class SyncScheduler {
   private async afterSync(): Promise<void> {
     this.broadcastChanged()
     if (this.stopped) return
-    if ((await this.engine.pendingShards()) > 0 && !this.pushTimer && this.engine.status.kind === "ready") {
+    if ((await this.repo.pendingShards()) > 0 && !this.pushTimer && this.syncer.status.kind === "ready") {
       this.pushTimer = setTimeout(() => void this.pushNow(), 20_000)
     }
   }
@@ -126,7 +130,7 @@ export class SyncScheduler {
     this.pushTimer = null
     this.firstDirtyAt = 0
     if (this.stopped) return
-    await this.withLock(() => this.engine.push())
+    await this.withLock(() => this.syncer.push())
     await this.afterSync()
   }
 
@@ -139,7 +143,7 @@ export class SyncScheduler {
   }
 
   private maybePullOnFocus(): void {
-    if (Date.now() - this.engine.lastPullAt > FOCUS_PULL_MS) void this.syncNow()
+    if (Date.now() - this.syncer.lastPullAt > FOCUS_PULL_MS) void this.syncNow()
   }
 
   private stopPolling(): void {
@@ -151,10 +155,10 @@ export class SyncScheduler {
     this.stopPolling()
     if (this.stopped || document.visibilityState === "hidden") return
     this.pollTimer = setTimeout(async () => {
-      const before = this.engine.remoteRevision
+      const before = this.syncer.remoteRevision
       await this.syncNow()
       // 沒有收到新資料就逐步拉長間隔，有就回到最短間隔
-      const changed = this.engine.remoteRevision !== before
+      const changed = this.syncer.remoteRevision !== before
       this.pollMs = changed ? this.minPollMs : Math.min(Math.round(this.pollMs * 1.5), MAX_POLL_MS)
       this.schedulePoll()
     }, this.pollMs)

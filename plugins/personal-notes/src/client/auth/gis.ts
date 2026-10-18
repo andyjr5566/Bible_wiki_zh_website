@@ -1,7 +1,8 @@
 // Google 登入（GIS Token model，D-16、D-20）。只申請 drive.appdata（D-11）。
 //
-// 重要（PoC 確認）：GIS 必須「預先」載入並初始化；點擊處理函式要同步呼叫 request()，
+// 重要（PoC 確認）：GIS 必須在按下「開啟 Google 視窗」的那一下之前就載入並初始化；點擊處理函式要同步呼叫 request()，
 // 中間不能有 await，否則瀏覽器會失去使用者手勢、封鎖彈窗（03 §7）。
+// 何時載入見 D-34：未登入的人按下「用 Google 同步」之前，本站不會連到 Google。
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -50,6 +51,7 @@ export class TokenManager {
   private owner: string | null = null
   private listeners = new Set<Listener>()
   private pending: ((r: TokenResult) => void) | null = null
+  private preparing: Promise<void> | null = null
 
   constructor(private readonly clientId: string) {
     const saved = safe(() => JSON.parse(sessionStorage.getItem(TOKEN_KEY) ?? "null"), null) as {
@@ -68,19 +70,32 @@ export class TokenManager {
     return this.client !== null
   }
 
-  /** 預先載入 GIS 並初始化（在筆記面板出現時呼叫）。 */
-  async prepare(): Promise<void> {
-    if (this.client) return
-    await loadGis()
-    const g = (window as any).google
-    this.client = g.accounts.oauth2.initTokenClient({
-      client_id: this.clientId,
-      scope: DRIVE_APPDATA_SCOPE,
-      prompt: "",
-      include_granted_scopes: false,
-      callback: (resp: any) => this.onToken(resp),
-      error_callback: (err: any) => this.onError(err),
-    })
+  /**
+   * 載入 GIS 並初始化（可重複呼叫）。何時呼叫由 session 決定（D-34）：
+   * 曾登入過的裝置在啟動時；未登入的人要等按下「用 Google 同步」才載入。
+   */
+  prepare(): Promise<void> {
+    if (this.client) return Promise.resolve()
+    if (!this.preparing) {
+      this.preparing = loadGis().then(
+        () => {
+          const g = (window as any).google
+          this.client = g.accounts.oauth2.initTokenClient({
+            client_id: this.clientId,
+            scope: DRIVE_APPDATA_SCOPE,
+            prompt: "",
+            include_granted_scopes: false,
+            callback: (resp: any) => this.onToken(resp),
+            error_callback: (err: any) => this.onError(err),
+          })
+        },
+        (e: unknown) => {
+          this.preparing = null
+          throw e
+        },
+      )
+    }
+    return this.preparing
   }
 
   token(): string | null {
@@ -195,28 +210,4 @@ export class TokenManager {
     if (!token || !(window as any).google?.accounts?.oauth2) return Promise.resolve()
     return new Promise((resolve) => (window as any).google.accounts.oauth2.revoke(token, () => resolve()))
   }
-}
-
-/** 內建瀏覽器偵測（D-21）：Google 會拒絕在這些環境登入。 */
-export function detectInAppBrowser(ua: string = navigator.userAgent): string | null {
-  if (/\bLine\//i.test(ua)) return "LINE"
-  if (/FBAN|FBAV|FB_IAB/.test(ua)) return "Facebook"
-  if (/Instagram/i.test(ua)) return "Instagram"
-  if (/MicroMessenger/i.test(ua)) return "WeChat"
-  return null
-}
-
-export function isStandalone(): boolean {
-  return safe(() => window.matchMedia("(display-mode: standalone)").matches, false) || (navigator as any).standalone === true
-}
-
-export function isIOS(ua: string = navigator.userAgent): boolean {
-  return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-}
-
-/** 裝置顯示名稱（寫進裝置登記檔，方便日後辨認）。 */
-export function deviceLabel(ua: string = navigator.userAgent): string {
-  const os = isIOS(ua) ? (/iPad/.test(ua) ? "iPad" : "iPhone") : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac OS X/.test(ua) ? "Mac" : "其他"
-  const browser = /Edg\//.test(ua) ? "Edge" : /CriOS|Chrome\//.test(ua) ? "Chrome" : /FxiOS|Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : "瀏覽器"
-  return `${os} ${browser}${isStandalone() ? "（主畫面）" : ""}`
 }

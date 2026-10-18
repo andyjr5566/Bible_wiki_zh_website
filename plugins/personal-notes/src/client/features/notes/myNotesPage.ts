@@ -1,13 +1,16 @@
 // 「我的筆記」頁：全部筆記、搜尋、依書卷篩選、匯出入、帳號管理。
 
-import type { Controller } from "../controller"
-import { BOOKS, bookByCode, chapterLabel, chapterSlug } from "../model/books"
-import type { Resolved } from "../merge/merge"
-import { isIOS, isStandalone } from "../auth/gis"
-import { formatTime, h, textBlock, toast, verseLabel } from "./dom"
-import { statusBar } from "./status"
+import type { Resolved } from "../../merge/merge"
+import { BOOKS, bookByCode, chapterLabel, chapterSlug } from "../../model/books"
+import { exportBackup, importBackup } from "../../repo/backup"
+import type { Session } from "../../session/session"
+import { formatTime, h, textBlock, toast, verseLabel } from "../../ui/dom"
+import { isIOS, isStandalone } from "../../ui/env"
+import { statusBar } from "../../ui/status"
+import type { View } from "../types"
+import { NotesService } from "./notes"
 
-export class MyNotesPage {
+export class MyNotesPage implements View {
   private query = ""
   private book = ""
   private listEl!: HTMLElement
@@ -15,13 +18,15 @@ export class MyNotesPage {
   private accountEl!: HTMLElement
   private bookSelect!: HTMLSelectElement
   private unsubscribe: () => void
+  private readonly notes: NotesService
 
   constructor(
-    private readonly c: Controller,
+    private readonly session: Session,
     private readonly mount: HTMLElement,
   ) {
+    this.notes = new NotesService(() => session.repo)
     this.build()
-    this.unsubscribe = c.onChange(() => this.refresh())
+    this.unsubscribe = session.onChange(() => this.refresh())
     this.refresh()
   }
 
@@ -78,30 +83,30 @@ export class MyNotesPage {
   }
 
   refresh(): void {
-    this.c.resetOfflineAcknowledgement()
-    this.statusEl.replaceChildren(statusBar(this.c, { showAccount: true }))
+    this.session.resetOfflineAcknowledgement()
+    this.statusEl.replaceChildren(statusBar(this.session))
     this.renderAccount()
     this.renderBooks()
     this.renderList()
   }
 
   private renderAccount(): void {
-    const c = this.c
+    const s = this.session
     const parts: (HTMLElement | null)[] = []
-    if (c.config.notice) parts.push(h("p", { class: "bwz-n-warn", text: c.config.notice }))
-    if (!c.syncAvailable) {
+    if (s.config.notice) parts.push(h("p", { class: "bwz-n-warn", text: s.config.notice }))
+    if (!s.syncAvailable) {
       parts.push(h("p", { class: "bwz-n-muted", text: "目前未開放雲端同步，筆記只存在這台裝置。請記得定期匯出備份。" }))
-    } else if (!c.account) {
+    } else if (!s.account) {
       parts.push(h("p", { class: "bwz-n-muted", text: "登入 Google 後，筆記會存到你自己的 Google 雲端硬碟（隱藏資料夾），手機、平板、電腦都能看到同一份。本站看不到你雲端硬碟的其他檔案。" }))
     } else {
       parts.push(
-        h("p", null, "目前登入：", h("strong", { text: c.account.displayName }), ` （${c.account.email}）`),
+        h("p", null, "目前登入：", h("strong", { text: s.account.displayName }), ` （${s.account.email}）`),
         h(
           "div",
           { class: "bwz-n-row" },
-          h("button", { class: "bwz-n-btn", text: "登出", attrs: { type: "button" }, on: { click: () => void c.signOut() } }),
-          h("button", { class: "bwz-n-btn", text: "中斷與 Google 的連線", attrs: { type: "button" }, on: { click: () => void c.disconnect() } }),
-          h("button", { class: "bwz-n-btn danger", text: "刪除全部筆記", attrs: { type: "button" }, on: { click: () => void c.deleteEverything() } }),
+          h("button", { class: "bwz-n-btn", text: "登出", attrs: { type: "button" }, on: { click: () => void s.signOut() } }),
+          h("button", { class: "bwz-n-btn", text: "中斷與 Google 的連線", attrs: { type: "button" }, on: { click: () => void s.disconnect() } }),
+          h("button", { class: "bwz-n-btn danger", text: "刪除全部筆記", attrs: { type: "button" }, on: { click: () => void s.deleteEverything() } }),
         ),
       )
       // D-23：iPhone 加入主畫面後，本機筆記較不會被系統清除
@@ -114,7 +119,7 @@ export class MyNotesPage {
 
   private renderBooks(): void {
     const counts = new Map<string, number>()
-    for (const r of this.c.engine.visible()) {
+    for (const r of this.notes.all()) {
       const b = r.winner.anchor.book ?? ""
       counts.set(b, (counts.get(b) ?? 0) + 1)
     }
@@ -137,8 +142,8 @@ export class MyNotesPage {
   private renderList(): void {
     const base = document.body.dataset.basepath ?? ""
     const order = new Map(BOOKS.map((b, i) => [b.code, i]))
-    const notes = this.c.engine
-      .visible()
+    const notes = this.notes
+      .all()
       .filter((r) => this.matches(r))
       .sort((a, b) => {
         const x = a.winner.anchor
@@ -193,7 +198,7 @@ export class MyNotesPage {
   }
 
   private exportFile(): void {
-    const data = this.c.engine.exportData()
+    const data = exportBackup(this.session.repo)
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = h("a", { attrs: { href: url, download: `聖經筆記備份-${new Date().toISOString().slice(0, 10)}.json` } })
@@ -210,7 +215,7 @@ export class MyNotesPage {
     if (!file) return
     try {
       const data = JSON.parse(await file.text())
-      const r = await this.c.engine.importData(data)
+      const r = await importBackup(this.session.repo, data)
       toast(`匯入完成：新增 ${r.added}、更新 ${r.updated}、另存 ${r.copied}、略過 ${r.skipped}${r.invalid ? `、無效 ${r.invalid}` : ""}`)
     } catch (e) {
       toast(e instanceof Error ? `匯入失敗：${e.message}` : "匯入失敗")

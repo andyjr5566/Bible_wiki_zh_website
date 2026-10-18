@@ -35,6 +35,11 @@ export interface DialogButton {
   kind?: "primary" | "danger" | "plain"
   /** 在點擊事件中「同步」執行（例如要開 Google 登入彈窗時必須用這個）。 */
   run?: () => void
+  /** 這個 Promise 完成前按鈕不能按（例如 Google 登入元件還在載入）。 */
+  waitFor?: Promise<unknown>
+  waitingLabel?: string
+  /** waitFor 失敗時按鈕顯示的文字（按鈕維持不能按）。 */
+  failedLabel?: string
 }
 
 let openDialogs = 0
@@ -54,8 +59,8 @@ export function dialog(opts: { title: string; message: string | Node; buttons: D
       if (e.key === "Escape" && opts.dismissible !== false) close(null)
     }
     const body = typeof opts.message === "string" ? h("p", { text: opts.message }) : opts.message
-    const buttons = opts.buttons.map((b) =>
-      h("button", {
+    const buttons = opts.buttons.map((b) => {
+      const btn = h("button", {
         class: `bwz-n-btn ${b.kind === "primary" ? "primary" : b.kind === "danger" ? "danger" : ""}`,
         text: b.label,
         attrs: { type: "button" },
@@ -65,8 +70,23 @@ export function dialog(opts: { title: string; message: string | Node; buttons: D
             close(b.id)
           },
         },
-      }),
-    )
+      })
+      if (b.waitFor) {
+        btn.disabled = true
+        btn.textContent = b.waitingLabel ?? `${b.label}…`
+        b.waitFor.then(
+          () => {
+            btn.disabled = false
+            btn.textContent = b.label
+            if (!box.contains(document.activeElement)) btn.focus()
+          },
+          () => {
+            btn.textContent = b.failedLabel ?? b.label
+          },
+        )
+      }
+      return btn
+    })
     const box = h(
       "div",
       { class: "bwz-n-dialog", attrs: { role: "dialog", "aria-modal": "true", "aria-label": opts.title } },
@@ -86,7 +106,7 @@ export function dialog(opts: { title: string; message: string | Node; buttons: D
     document.body.append(overlay)
     document.addEventListener("keydown", onKey)
     openDialogs++
-    buttons[0]?.focus()
+    buttons.find((b) => !b.disabled)?.focus()
   })
 }
 

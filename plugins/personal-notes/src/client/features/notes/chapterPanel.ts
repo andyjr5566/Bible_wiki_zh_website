@@ -1,21 +1,26 @@
 // 章節頁底部的「我的筆記」面板（MVP：整章筆記＋手動節數，D-15）。
 
-import type { Controller } from "../controller"
-import { chapterLabel } from "../model/books"
-import { ConflictPendingError } from "../sync/engine"
-import type { Resolved } from "../merge/merge"
-import type { NoteRecord } from "../model/record"
-import { dialog, formatTime, h, textBlock, toast, verseLabel } from "./dom"
-import { statusBar } from "./status"
+import type { Resolved } from "../../merge/merge"
+import { chapterLabel } from "../../model/books"
+import type { NoteRecord } from "../../model/record"
+import { ConflictPendingError } from "../../repo/repository"
+import type { Session } from "../../session/session"
+import { dialog, formatTime, h, textBlock, toast, verseLabel } from "../../ui/dom"
+import { statusBar } from "../../ui/status"
+import type { View } from "../types"
+import { NotesService } from "./notes"
 
 const AUTOSAVE_MS = 600
+const CONFLICT_TEXT = "這則筆記在其他裝置也被修改了，請先選擇要保留的版本"
+
+type EditorRoot = HTMLElement & { flush?: () => Promise<void> }
 
 interface EditorState {
   noteId: string | null
-  root: HTMLElement
+  root: EditorRoot
 }
 
-export class ChapterPanel {
+export class ChapterPanel implements View {
   private editor: EditorState | null = null
   private listEl!: HTMLElement
   private editorHost!: HTMLElement
@@ -23,19 +28,23 @@ export class ChapterPanel {
   private headerCount!: HTMLElement
   private unsubscribe: () => void
   private chip: HTMLElement | null = null
+  private readonly notes: NotesService
 
   constructor(
-    private readonly c: Controller,
+    private readonly session: Session,
     private readonly mount: HTMLElement,
     private readonly book: string,
     private readonly chapter: number,
   ) {
+    this.notes = new NotesService(() => session.repo)
     this.build()
-    this.unsubscribe = c.onChange(() => this.refresh())
+    this.unsubscribe = session.onChange(() => this.refresh())
     this.refresh()
   }
 
   destroy(): void {
+    // 換頁時編輯器裡還沒存的字先存起來（資料已在記憶體，不必等畫面）
+    void this.editor?.root.flush?.()
     this.unsubscribe()
     this.chip?.remove()
     this.mount.replaceChildren()
@@ -69,16 +78,16 @@ export class ChapterPanel {
     document.body.append(this.chip)
   }
 
-  private notes(): Resolved[] {
-    return this.c.engine.forChapter(this.book, this.chapter)
+  private chapterNotes(): Resolved[] {
+    return this.notes.forChapter(this.book, this.chapter)
   }
 
   refresh(): void {
-    this.c.resetOfflineAcknowledgement()
-    const notes = this.notes()
+    this.session.resetOfflineAcknowledgement()
+    const notes = this.chapterNotes()
     this.headerCount.textContent = notes.length ? `（${notes.length}）` : ""
     if (this.chip) this.chip.textContent = notes.length ? `📝 筆記 ${notes.length}` : "📝 筆記"
-    this.statusEl.replaceChildren(statusBar(this.c))
+    this.statusEl.replaceChildren(statusBar(this.session))
     // 編輯器放在獨立容器，重畫列表時不移動它（避免打字時失去焦點）
     const editingId = this.editor?.noteId ?? null
     const cards: HTMLElement[] = []
@@ -119,7 +128,7 @@ export class ChapterPanel {
     const versions = [r.winner, ...r.conflicts]
     const choose = async (choice: { keep: string } | { keepBoth: true }) => {
       try {
-        await this.c.engine.resolveConflict(r.id, choice)
+        await this.notes.resolveConflict(r.id, choice)
         toast("已選定版本")
       } catch (e) {
         toast(e instanceof Error ? e.message : "處理失敗")
@@ -158,11 +167,11 @@ export class ChapterPanel {
       ],
     })
     if (ok !== "delete") return
-    if (!(await this.c.gateEdit())) return
+    if (!(await this.session.gateEdit())) return
     try {
-      await this.c.engine.remove(n.id)
+      await this.notes.remove(n.id)
     } catch (e) {
-      toast(e instanceof ConflictPendingError ? e.message : "刪除失敗")
+      toast(e instanceof ConflictPendingError ? CONFLICT_TEXT : "刪除失敗")
     }
   }
 
@@ -176,7 +185,7 @@ export class ChapterPanel {
     }
     let allowed = false
     try {
-      allowed = await this.c.gateEdit()
+      allowed = await this.session.gateEdit()
     } finally {
       if (trigger) {
         trigger.disabled = false
@@ -184,7 +193,7 @@ export class ChapterPanel {
       }
     }
     if (!allowed) return
-    const existing = noteId ? this.c.engine.get(noteId) : undefined
+    const existing = noteId ? this.notes.get(noteId) : undefined
     if (noteId && (!existing || existing.conflicts.length)) {
       toast("這則筆記剛在其他裝置被修改，請先選擇版本")
       this.refresh()
@@ -199,13 +208,13 @@ export class ChapterPanel {
   private async closeEditor(): Promise<void> {
     const ed = this.editor
     if (!ed) return
-    await (ed.root as HTMLElement & { flush?: () => Promise<void> }).flush?.()
+    await ed.root.flush?.()
     this.editor = null
     this.editorHost.replaceChildren()
     this.refresh()
   }
 
-  private buildEditor(note: NoteRecord | null): HTMLElement {
+  private buildEditor(note: NoteRecord | null): EditorRoot {
     const num = (v: number | null) => (v ? String(v) : "")
     const vStart = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "起", "aria-label": "起始節" } })
     const vEnd = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "迄", "aria-label": "結束節" } })
@@ -244,15 +253,15 @@ export class ChapterPanel {
       try {
         if (!ed.noteId) {
           if (!input.title && !input.body.trim()) return
-          const created = await this.c.engine.create(input)
+          const created = await this.notes.create(input)
           ed.noteId = created.id
         } else {
-          await this.c.engine.update(ed.noteId, input)
+          await this.notes.update(ed.noteId, input)
         }
-        saved.textContent = this.c.account ? "已儲存，稍後自動同步" : "已儲存在這台裝置"
+        saved.textContent = this.session.account ? "已儲存，稍後自動同步" : "已儲存在這台裝置"
       } catch (e) {
         if (e instanceof ConflictPendingError) {
-          toast("這則筆記在其他裝置也被修改了，請先選擇要保留的版本")
+          toast(CONFLICT_TEXT)
           this.editor = null
           this.editorHost.replaceChildren()
           this.refresh()
@@ -282,7 +291,7 @@ export class ChapterPanel {
         saved,
         h("button", { class: "bwz-n-btn primary small", text: "完成", attrs: { type: "button" }, on: { click: () => void this.closeEditor() } }),
       ),
-    ) as HTMLElement & { flush?: () => Promise<void> }
+    ) as EditorRoot
     root.flush = async () => {
       if (timer) {
         clearTimeout(timer)

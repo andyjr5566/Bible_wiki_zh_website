@@ -41,6 +41,12 @@ export function loadGis(): Promise<void> {
   return gisPromise
 }
 
+/** Google 授權視窗回傳錯誤時給使用者看的說明（應用程式已是正式版，不再提試用名單，12 A4）。 */
+export function tokenErrorMessage(error: string, description?: string): string {
+  if (error === "access_denied") return "沒有完成 Google 授權（在授權視窗按了取消，或沒有勾選存取權限）。可以再按一次「用 Google 同步」重試。"
+  return description || error
+}
+
 export type TokenResult = { ok: true } | { ok: false; reason: "denied" | "popup-closed" | "popup-blocked" | "error"; message: string }
 
 export class TokenManager {
@@ -162,7 +168,7 @@ export class TokenManager {
   private onToken(resp: any) {
     const g = (window as any).google
     if (resp.error) {
-      const message = resp.error === "access_denied" ? "沒有完成授權，或這個 Google 帳號還不在雲端同步的試用名單裡" : resp.error_description || resp.error
+      const message = tokenErrorMessage(resp.error, resp.error_description)
       this.settle({ ok: false, reason: "denied", message })
       return
     }

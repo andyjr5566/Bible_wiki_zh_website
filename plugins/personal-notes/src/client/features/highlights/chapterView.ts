@@ -8,7 +8,7 @@ import { chapterLabel } from "../../model/books"
 import type { Session } from "../../session/session"
 import { h, toast, verseLabel } from "../../ui/dom"
 import { annotateVerses, locateQuote, selectionToVerses, textHash, unwrapAll, verseElement, verseText, wrapText, type Quote } from "../../ui/verses"
-import { COMPOSE_NOTE_EVENT, type ComposeNoteDetail, type View } from "../types"
+import { COMPOSE_STICKY_EVENT, COMPOSE_NOTE_EVENT, type ComposeNoteDetail, type View } from "../types"
 import { HighlightsService } from "./highlights"
 
 interface Picked {
@@ -138,7 +138,7 @@ export class ChapterHighlights implements View {
       h(
         "div",
         { class: "bwz-h-bar" },
-        h("div", { class: "bwz-n-row" }, bookmarkBtn, h("span", { class: "bwz-n-muted", text: "選取經文可以畫重點、加書籤或寫筆記" })),
+        h("div", { class: "bwz-n-row" }, bookmarkBtn, h("span", { class: "bwz-n-muted", text: "選取經文可以畫重點、加書籤、貼便條或寫筆記" })),
         highlights.length
           ? h("details", { class: "bwz-h-list" }, h("summary", { text: `本章畫了 ${highlights.length} 個重點` }), h("ul", null, ...items))
           : null,
@@ -177,6 +177,10 @@ export class ChapterHighlights implements View {
       h("span", { class: "bwz-h-label", text: label }),
       h("button", { class: "bwz-n-btn small", text: "🖍 畫重點", attrs: { type: "button" }, on: { click: () => void this.addHighlight(p) } }),
       h("button", { class: "bwz-n-btn small", text: bookmarked ? "🔖 取消書籤" : "🔖 書籤", attrs: { type: "button" }, on: { click: () => void this.toggleBookmark(p.start, p.end) } }),
+      h("button", { class: "bwz-n-btn small", text: "🗒 便條", attrs: { type: "button" }, on: { click: () => {
+        this.done()
+        document.dispatchEvent(new CustomEvent(COMPOSE_STICKY_EVENT, { detail: { book: this.book, chapter: this.chapter, verse: p.start } }))
+      } } }),
       h("button", { class: "bwz-n-btn small", text: "📝 寫筆記", attrs: { type: "button" }, on: { click: () => this.composeNote(p) } }),
     )
     this.place(p.rect)

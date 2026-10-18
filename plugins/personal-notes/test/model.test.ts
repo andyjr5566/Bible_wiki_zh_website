@@ -138,3 +138,9 @@ describe("record", () => {
     expect(validateShard("text")).toMatchObject({ ok: false })
   })
 })
+
+it("保留未知小寫種類，拒絕非法或空種類", () => {
+  expect(validateRecord({ ...sampleRecord(), type: "future-type" })?.type).toBe("future-type")
+  expect(validateRecord({ ...sampleRecord(), type: "Bad Type" })).toBeNull()
+  expect(validateRecord({ ...sampleRecord(), type: "" })).toBeNull()
+})

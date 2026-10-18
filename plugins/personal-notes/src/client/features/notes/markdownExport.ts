@@ -33,9 +33,13 @@ export function noteToMarkdown(n: NoteRecord, chapterUrl: string | null): string
     if (verses) lines.push(`verses: ${yamlString(verses)}`)
     lines.push(`ref: ${a.book}.${a.chapter}${verses ? "." + verses : ""}`)
   }
+  if (n.type === "sticky") {
+    const color = ["yellow", "pink", "green", "blue"].includes(String(n.color)) ? String(n.color) : "yellow"
+    lines.push("type: 便條", `color: ${color}`)
+  }
   if (n.tags.length) lines.push("tags:", ...n.tags.map((t) => `  - ${yamlString(t)}`))
   lines.push(`created: ${n.createdAt}`, `updated: ${n.updatedAt}`, "source: 聖經研讀知識庫", "---", "")
-  const heading = n.title || (book && a.chapter ? `${chapterLabel(a.book!, a.chapter)}${verses ? ` ${verses} 節` : ""}` : "筆記")
+  const heading = n.type === "sticky" ? `便條 ${book && a.chapter ? chapterLabel(a.book!, a.chapter) : ""}${verses ? ` ${verses} 節` : ""}`.trim() : n.title || (book && a.chapter ? `${chapterLabel(a.book!, a.chapter)}${verses ? ` ${verses} 節` : ""}` : "筆記")
   lines.push(`# ${heading}`, "", n.body.trim(), "")
   if (chapterUrl && book && a.chapter) lines.push("---", `經文：[${chapterLabel(a.book!, a.chapter)}](${chapterUrl})`, "")
   return lines.join("\n")
@@ -48,7 +52,7 @@ export function notePath(n: NoteRecord): string {
   const folder = book && a.chapter ? `${String(book.num).padStart(2, "0")} ${book.name}/第${a.chapter}章` : "其他"
   const verses = verseRange(n)
   const label = safeName(n.title || n.body.split("\n").find((l) => l.trim()) || "筆記")
-  const name = [verses, label].filter(Boolean).join(" ")
+  const name = [verses, n.type === "sticky" ? "便條" : "", label].filter(Boolean).join(" ")
   return `${ROOT}/${folder}/${name} (${n.id.slice(-6)}).md`
 }
 

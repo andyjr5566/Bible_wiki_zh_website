@@ -337,7 +337,7 @@ export class MyNotesPage implements View {
   /** 匯出成 Obsidian 可用的 Markdown 檔（ZIP，12 C4）。 */
   private exportMarkdown(): void {
     const base = `${location.origin}${document.body.dataset.basepath ?? ""}`
-    const { zip, count } = exportMarkdownZip(this.notes.all(), (book, chapter) => {
+    const { zip, count } = exportMarkdownZip([...this.notes.all(), ...this.session.repo.visible().filter(r => r.winner.type === "sticky")], (book, chapter) => {
       const slug = chapterSlug(book, chapter)
       return slug ? `${base}/${encodeURI(slug)}` : null
     })

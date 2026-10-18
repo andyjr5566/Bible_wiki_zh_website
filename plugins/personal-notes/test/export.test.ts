@@ -110,3 +110,14 @@ describe("Markdown 匯出（C4）", () => {
     expect(files.every((f) => f.crcOk)).toBe(true)
   })
 })
+
+it("便條與筆記在同章資料夾，帶種類、顏色與經節標題", () => {
+  const n = rec({ type: "sticky", title: "", body: "記住這段\n第二行", color: "pink", anchor: chapterAnchor("GEN", 1, 3, null) })
+  expect(notePath(n)).toBe("聖經筆記/01 創世記/第1章/3 便條 記住這段 (VWXYZ0).md")
+  const md = noteToMarkdown(n, null)
+  expect(md).toContain("type: 便條\ncolor: pink")
+  expect(md).toContain("# 便條 創世記 第1章 3 節")
+  expect(md).toContain("記住這段\n第二行")
+  const r: Resolved = { id: n.id, winner: n, conflicts: [], frontierVv: n.vv }
+  expect(exportMarkdownZip([r], () => null).count).toBe(1)
+})

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "rootDir": ".",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "@quartz-community/types": [
+        "../../node_modules/@quartz-community/types/dist/index.d.ts"
+      ]
+    },
+    "baseUrl": "."
+  },
+  "include": [
+    "src",
+    "test",
+    "tsup.config.ts",
+    "vitest.config.ts"
+  ]
+}

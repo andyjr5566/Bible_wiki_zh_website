@@ -1,0 +1,65 @@
+{
+  "name": "@local/personal-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "dependencies": {
+    "@quartz-community/types": "github:quartz-community/types",
+    "preact": "^10.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "fake-indexeddb": "^6.0.0",
+    "sass": "^1.103.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "quartz": {
+    "name": "personal-notes",
+    "displayName": "Personal Notes",
+    "category": [
+      "emitter",
+      "pageType",
+      "component"
+    ],
+    "version": "0.1.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": false,
+    "defaultOptions": {
+      "clientId": "",
+      "syncEnabled": true,
+      "minPollSeconds": 180,
+      "maxWritesPerMinute": 6,
+      "notice": ""
+    },
+    "components": {
+      "PersonalNotes": {
+        "displayName": "Personal Notes",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 20
+      }
+    }
+  }
+}

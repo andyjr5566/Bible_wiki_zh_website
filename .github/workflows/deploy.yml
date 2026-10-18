@@ -74,9 +74,12 @@ jobs:
       - name: Setup local plugins
         run: |
           mkdir -p .quartz/plugins
-          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph
+          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph .quartz/plugins/personal-notes
           cp -r plugins/wiki-tour .quartz/plugins/wiki-tour
           cp -r plugins/semantic-search .quartz/plugins/semantic-search
+          # 個人筆記（dist/ 已進版控，不需在 CI 建置）
+          cp -r plugins/personal-notes .quartz/plugins/personal-notes
+          rm -rf .quartz/plugins/personal-notes/node_modules
 
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config

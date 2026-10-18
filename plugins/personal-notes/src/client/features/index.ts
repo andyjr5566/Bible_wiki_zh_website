@@ -1,0 +1,14 @@
+// 功能模組清單。新增功能時在這裡登記；同一種掛載點上的多個功能，依這裡的順序由上而下排列。
+
+import { notesFeature } from "./notes"
+import type { Feature, MountContext, View } from "./types"
+
+export const FEATURES: readonly Feature[] = [notesFeature]
+
+/** 某種掛載點上要建立的所有畫面（依登記順序）。 */
+export function viewFactories(kind: string): ((ctx: MountContext) => View | null)[] {
+  return FEATURES.flatMap((f) => {
+    const make = f.views[kind]
+    return make ? [make] : []
+  })
+}

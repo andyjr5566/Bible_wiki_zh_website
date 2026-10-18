@@ -26,6 +26,8 @@ export class MemoryCloud {
   failures: { kind: AdapterErrorKind; count: number; methods?: string[] }[] = []
   calls: Record<string, number> = {}
   account: Account = { displayName: "測試", email: "t@example.com", permissionId: "perm123" }
+  /** 檔案的修改時間用這個時鐘（測試可以控制） */
+  now: () => number = () => Date.now()
 
   check(method: string): void {
     this.calls[method] = (this.calls[method] ?? 0) + 1
@@ -108,7 +110,7 @@ export class MemoryAdapter implements SyncAdapter {
   async create(id: string, meta: FileMeta, body: unknown): Promise<RemoteFile> {
     this.cloud.check("create")
     if (this.cloud.files.has(id)) throw new AdapterError("fileIdInUse", "in use", 409, "fileIdInUse")
-    const remote: RemoteFile = { id, name: meta.name, kind: meta.kind, shard: meta.shard, device: meta.device, version: "1" }
+    const remote: RemoteFile = { id, name: meta.name, kind: meta.kind, shard: meta.shard, device: meta.device, version: "1", modified: this.cloud.now() }
     this.cloud.files.set(id, { meta: remote, body: JSON.stringify(body) })
     this.cloud.record(id)
     return { ...remote }
@@ -119,7 +121,7 @@ export class MemoryAdapter implements SyncAdapter {
     const f = this.cloud.files.get(fileId)
     if (!f) throw new AdapterError("notFound", "not found", 404)
     // Drive 的 version 不是 +1（PoC 實測 1→3）
-    f.meta = { ...f.meta, version: String(Number(f.meta.version) + 2) }
+    f.meta = { ...f.meta, version: String(Number(f.meta.version) + 2), modified: this.cloud.now() }
     f.body = JSON.stringify(body)
     this.cloud.record(fileId)
     return { ...f.meta }

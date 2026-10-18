@@ -40,7 +40,7 @@ export interface Prompts {
   disconnect(opts: { canRevoke: boolean; hasUnsyncedChanges: boolean }): Promise<boolean>
   /** 刪除全部（UI 負責兩段確認）。 */
   deleteAll(): Promise<boolean>
-  /** 雲端資料被清空後，是否用這台裝置的資料重新上傳。 */
-  reupload(): Promise<boolean>
+  /** 雲端資料被清空後：用這台裝置的資料重新上傳、清除這台裝置上的筆記、或稍後再說（null）。 */
+  reupload(): Promise<"reupload" | "clear" | null>
   notify(notice: Notice): void
 }

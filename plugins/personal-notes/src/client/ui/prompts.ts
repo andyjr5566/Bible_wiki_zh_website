@@ -202,13 +202,19 @@ export const browserPrompts: Prompts = {
   async reupload() {
     const choice = await dialog({
       title: "雲端的筆記資料似乎被刪除了",
-      message: "可能是在 Google 雲端硬碟的「管理應用程式」中刪除了本站的隱藏資料。這台裝置上還有筆記，要用這台裝置的資料重新上傳嗎？",
+      message: h(
+        "div",
+        null,
+        h("p", { text: "可能是在另一台裝置按了「刪除全部筆記」，或在 Google 雲端硬碟的「管理應用程式」刪除了本站的隱藏資料。這台裝置上還有筆記。" }),
+        h("p", { text: "如果是你刻意刪除的，請選「清除這台裝置上的筆記」；如果不是，選「重新上傳」用這台裝置的資料把雲端補回來。" }),
+      ),
       buttons: [
         { id: "reupload", label: "重新上傳", kind: "primary" },
-        { id: "later", label: "稍後再說" },
+        { id: "clear", label: "清除這台裝置上的筆記", kind: "danger" },
+        { id: "later", label: "稍後再說", autofocus: true },
       ],
     })
-    return choice === "reupload"
+    return choice === "reupload" || choice === "clear" ? choice : null
   },
 
   notify(n) {

@@ -5,7 +5,7 @@
 // - 本機修改在「確認上傳成功」前不會從 outbox 移除。
 // - 狀態只用種類表示（SyncStatus），要給使用者看的文字在 ui/status.ts。
 
-import { AdapterError, deviceFileName, shardFileName, type RemoteFile, type SyncAdapter } from "../adapter/types"
+import { AdapterError, deviceFileName, retiredFileName, shardFileName, type RemoteFile, type SyncAdapter } from "../adapter/types"
 import { APP_TAG, SCHEMA_VERSION, shardOf, validateShard, type NoteRecord, type ShardFile } from "../model/record"
 import { vvDominatedBy } from "../model/vv"
 import { pruneOwn } from "../merge/merge"
@@ -40,6 +40,11 @@ interface OwnFile {
 type Listener = () => void
 
 const CLOUD_WIPED: SyncStatus = { kind: "error", error: "cloud-wiped" }
+const DAY_MS = 24 * 60 * 60 * 1000
+/** 裝置超過這麼久沒有任何寫入就視為不再使用，由仍在使用的裝置接手（12 C7）。 */
+export const RETIRE_AFTER_MS = 180 * DAY_MS
+/** 寫下退役標記後，至少等這麼久才刪除檔案（舊裝置若回來，會先看到標記、換新 ID）。 */
+export const RETIRE_GRACE_MS = 14 * DAY_MS
 
 export class Syncer {
   private readonly repo: Repository
@@ -148,8 +153,12 @@ export class Syncer {
         if (bootstrapped) await this.pullInner()
         else await this.bootstrapInner()
         if (this.statusValue.kind === "error") return
+        await this.rescueRemovedCaches()
+        if ((this.statusValue.kind as string) === "error") return // 雲端被清空：等使用者決定，不要再上傳任何東西（Codex 第三輪）
         await this.pushInner()
         if ((this.statusValue.kind as string) === "error") return
+        await this.maybeRetireDevices()
+        await this.store.setMeta("lastSyncOkAt", this.now())
         this.consecutiveFailures = 0
         this.setStatus({ kind: "ready", lastSyncAt: this.now() })
       } catch (e) {
@@ -205,6 +214,16 @@ export class Syncer {
     await this.store.setMeta("deviceFileId", null)
     await this.store.setMeta("startPageToken", null)
     await this.repo.rescueAllVersions()
+    await this.repo.dropRemoteCaches(this.repo.remoteIds()) // 都已存成本裝置版本（Codex 第三輪）
+    await this.runner()
+  }
+
+  /** 雲端被清空後，使用者選「清除這台裝置上的筆記」：清空本機，之後當成全新的開始。 */
+  async acceptWipe(): Promise<void> {
+    await this.exclusive(async () => {
+      await this.repo.clearAll()
+      this.setStatus(this.adapter ? (this.hasToken() ? { kind: "idle" } : { kind: "needs-reconnect" }) : { kind: "local-only" })
+    })
     await this.runner()
   }
 
@@ -354,6 +373,9 @@ export class Syncer {
     const cs = await adapter.changes(token)
     const ownFiles = await this.ownFiles()
     const ownById = new Map(Object.values(ownFiles).map((f) => [f.id, f]))
+    // 本裝置被其他裝置判定退役（很久沒用後又打開）：下面的迴圈會因為這個標記換新 ID，
+    // 舊檔案被刪除就不能算「雲端被清空」（12 C7）
+    const retiredSelf = cs.files.some((f) => f.kind === "retired" && f.device === this.repo.deviceId)
     let changed = false
     let forked = false
     const deviceFileId = await this.store.getMeta<string | null>("deviceFileId")
@@ -371,7 +393,11 @@ export class Syncer {
       if (this.repo.remoteVersion(f.id) === f.version) continue
       if (await this.readRemote(f)) changed = true
     }
-    if (cs.removed.some((id) => ownById.has(id))) {
+    // 標記可能在更早一批變更裡（或這批沒帶到）：判定「雲端被清空」前再查一次目前的檔案清單（Codex 第三輪 #8）
+    if (cs.removed.some((id) => ownById.has(id)) && !retiredSelf && (await this.retiredSelf())) {
+      if (!forked) await this.forkDevice()
+      forked = true
+    } else if (!retiredSelf && cs.removed.some((id) => ownById.has(id))) {
       await this.store.setMeta("cloudWiped", true)
       await this.store.setMeta("startPageToken", cs.token)
       this.setStatus(CLOUD_WIPED)
@@ -440,6 +466,9 @@ export class Syncer {
   }
 
   private async pushInner(): Promise<void> {
+    // 很久沒成功同步的裝置（可能已被其他裝置整理掉）：上傳任何檔案前先確認，被退役就先換新 ID（Codex 整理審查 #3）
+    const lastOk = (await this.store.getMeta<number>("lastSyncOkAt")) ?? this.now()
+    if (this.now() - lastOk > RETIRE_AFTER_MS - 10 * DAY_MS && (await this.retiredSelf())) await this.forkDevice()
     const outbox = await this.store.getOutbox()
     const ownFiles = await this.ownFiles()
     const remoteRecords = this.repo.remoteRecords({ live: true })
@@ -463,6 +492,11 @@ export class Syncer {
         await this.store.setMeta("ownFiles", ownFiles)
       })
       if (result === "wiped") {
+        // 檔案不見了：若是本裝置被其他裝置判定退役，換新 ID 重新上傳即可，不是雲端被清空（12 C7）
+        if (await this.retiredSelf()) {
+          await this.forkDevice()
+          return
+        }
         await this.store.setMeta("cloudWiped", true)
         this.setStatus(CLOUD_WIPED)
         return
@@ -471,6 +505,109 @@ export class Syncer {
       await this.store.clearDirty(shard, entry.dirtyAt)
     }
     await this.writeDeviceFile()
+  }
+
+  // ---------- 裝置整理（12 C7） ----------
+
+  private async retiredSelf(): Promise<boolean> {
+    return (await this.adapter!.listFiles()).some((f) => f.kind === "retired" && f.device === this.repo.deviceId)
+  }
+
+  /**
+   * 其他裝置的檔案在雲端被移除（Codex 重構審查 B4 後半、Codex 整理審查 #5、第二輪 #7）：
+   * - 雲端已經一個檔案都沒有（「刪除全部」、在 Drive 刪除隱藏資料、或意外）：無法分辨是不是刻意的，
+   *   所以不自動處理，改為詢問使用者（重新上傳／清除這台裝置／稍後），絕不自動傳回、也不自動丟掉。
+   * - 那台裝置有退役標記（被其他裝置整理）：本機快取裡別處都沒有的版本由本機接手，之後刪除快取；
+   *   有並行版本就保留快取，衝突照常顯示讓使用者選，選好後下次自動接手。
+   * - 其他情況（原因不明）：保留快取供顯示、不當修剪依據、不自動上傳。
+   */
+  private async rescueRemovedCaches(): Promise<void> {
+    const removed = this.repo.removedCaches()
+    if (removed.length === 0) return
+    const files = await this.adapter!.listFiles()
+    // 雲端已沒有任何筆記分片（只剩登記檔或標記也算：其他裝置可能已重建登記檔，Codex 第四輪）
+    if (!files.some((f) => f.kind === "shard")) {
+      // 看得到的筆記就詢問使用者；只剩已刪除的紀錄時保留快取（不丟刪除證據，也不必打擾使用者）
+      if (this.repo.visible().length > 0) {
+        await this.store.setMeta("cloudWiped", true)
+        this.setStatus(CLOUD_WIPED)
+      }
+      return
+    }
+    const retired = new Set(files.filter((f) => f.kind === "retired").map((f) => f.device))
+    const target = removed.filter((c) => retired.has(c.device))
+    if (target.length === 0) return
+    const ids = target.map((c) => c.fileId)
+    if ((await this.repo.adoptVersions(target.flatMap((c) => c.records), new Set(ids))) !== "conflict") await this.repo.dropRemoteCaches(ids)
+  }
+
+  /**
+   * 整理很久沒用的裝置（每天最多檢查一次），分兩階段（Codex 整理審查兩輪；Drive 不能「版本沒變才刪」）：
+   * 第一階段（某台裝置所有檔案、包括每天更新的登記檔，超過 RETIRE_AFTER_MS 沒有寫入）：
+   *   接手它的版本（只算本機保存的才算涵蓋；有並行版本就先不整理）→ 確定上傳 → 寫下退役標記。不刪任何檔案。
+   * 第二階段（標記寫下超過 RETIRE_GRACE_MS、且那台裝置在標記之後完全沒有寫入）：
+   *   再確認一次本機已涵蓋它所有版本 → 刪除它的檔案。
+   * 舊裝置若在兩階段之間回來，同步時會先看到標記、換新 ID，把本機資料重新上傳，不會再寫舊 ID 的檔案。
+   * 閒置時間用雲端伺服器的檔案時間判斷，不用本機時鐘；檔案缺修改時間、或分片讀不到，都不整理。
+   */
+  private async maybeRetireDevices(): Promise<void> {
+    const last = (await this.store.getMeta<number>("retireCheckAt")) ?? 0
+    if (this.now() - last < DAY_MS) return
+    await this.store.setMeta("retireCheckAt", this.now())
+    try {
+      const files = await this.adapter!.listFiles()
+      // 伺服器時間：本裝置剛寫過的檔案（登記檔每天更新）最接近「現在」
+      const serverNow = Math.max(0, ...files.map((f) => f.modified ?? 0))
+      if (!serverNow) return
+      const markers = new Map<string, number>() // 裝置 → 最新的退役標記時間
+      for (const f of files) {
+        if (f.kind !== "retired" || !f.modified) continue
+        markers.set(f.device, Math.max(markers.get(f.device) ?? 0, f.modified))
+      }
+      const byDevice = new Map<string, RemoteFile[]>()
+      for (const f of files) {
+        if (f.kind === "retired" || f.device === this.repo.deviceId) continue
+        byDevice.set(f.device, [...(byDevice.get(f.device) ?? []), f])
+      }
+      for (const [device, devFiles] of byDevice) {
+        if (devFiles.some((f) => !f.modified)) continue
+        const lastWrite = Math.max(...devFiles.map((f) => f.modified!))
+        if (serverNow - lastWrite <= RETIRE_AFTER_MS) continue
+        let readable = true
+        for (const f of devFiles) {
+          if (f.kind === "shard" && this.repo.remoteVersion(f.id) !== f.version && !(await this.readRemote(f))) readable = false
+        }
+        if (!readable) continue
+        const ids = devFiles.map((f) => f.id)
+        const records = this.repo.remoteCaches(ids).flatMap((c) => c.records)
+        const adopted = await this.repo.adoptVersions(records, new Set(ids), { onlyOwnCovers: true })
+        if (adopted === "conflict") continue
+        if (adopted === "adopted" || (await this.store.getOutbox()).length > 0) {
+          await this.pushInner()
+          if ((await this.store.getOutbox()).length > 0 || this.statusValue.kind === "error") return // 還沒傳完，下次再繼續
+        }
+        const marked = markers.get(device)
+        if (marked === undefined || lastWrite >= marked) {
+          // 第一階段（或標記之後它又寫入過、現在又閒置了半年 → 重新寫一個標記，從頭等，Codex 第三輪）：只寫標記
+          const body = { kind: "retired", app: APP_TAG, device, retiredBy: this.repo.deviceId, at: this.repo.iso() }
+          await this.writeFile(undefined, { name: retiredFileName(device), kind: "retired", shard: null, device }, body, async () => undefined)
+          continue
+        }
+        // 第二階段：等待期已過，而且本機沒有剛接手新東西
+        if (serverNow - marked < RETIRE_GRACE_MS || adopted === "adopted") continue
+        for (const id of ids) {
+          try {
+            await this.adapter!.remove(id)
+          } catch (e) {
+            if (!(e instanceof AdapterError && e.kind === "notFound")) throw e
+          }
+        }
+        await this.repo.dropRemoteCaches(ids)
+      }
+    } catch (e) {
+      // 整理是額外的維護工作，失敗不影響這次同步；明天再試
+      console.warn("[personal-notes] 裝置整理失敗", e)
+    }
   }
 
   /** 裝置登記檔（03 §2）：首次建立，之後每天最多更新一次。 */

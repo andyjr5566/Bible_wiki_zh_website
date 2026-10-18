@@ -27,14 +27,19 @@ export class AdapterError extends Error {
   }
 }
 
+/** shard：筆記分片；device：裝置登記檔；retired：裝置退役標記（12 C7） */
+export type FileKind = "shard" | "device" | "retired"
+
 export interface RemoteFile {
   id: string
   name: string
-  kind: "shard" | "device"
+  kind: FileKind
   shard: string | null
   device: string
   /** Drive 的 version（每次寫入遞增，但不是 +1）。 */
   version: string
+  /** 最後修改時間（毫秒）；判斷裝置多久沒動靜用 */
+  modified?: number
 }
 
 export interface ChangeSet {
@@ -52,7 +57,7 @@ export interface Account {
 
 export interface FileMeta {
   name: string
-  kind: "shard" | "device"
+  kind: FileKind
   shard: string | null
   device: string
 }
@@ -71,3 +76,4 @@ export interface SyncAdapter {
 
 export const shardFileName = (shard: string, device: string) => `notes.${shard}.${device}.json`
 export const deviceFileName = (device: string) => `device.${device}.json`
+export const retiredFileName = (device: string) => `retired.${device}.json`

@@ -123,7 +123,7 @@ class FakePrompts implements Prompts {
     return true
   }
   async reupload() {
-    return true
+    return "reupload" as const
   }
   notify(n: Notice) {
     this.notices.push(n)

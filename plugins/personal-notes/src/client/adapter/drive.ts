@@ -12,7 +12,7 @@ import {
 
 const API = "https://www.googleapis.com/drive/v3"
 const UPLOAD = "https://www.googleapis.com/upload/drive/v3"
-const FILE_FIELDS = "id,name,version,appProperties"
+const FILE_FIELDS = "id,name,version,modifiedTime,appProperties"
 
 export interface DriveAdapterOptions {
   getToken: () => string | null
@@ -27,6 +27,7 @@ interface DriveFile {
   id: string
   name: string
   version: string
+  modifiedTime?: string
   appProperties?: Record<string, string>
 }
 
@@ -50,7 +51,7 @@ export function classifyError(status: number, reason: string, message: string): 
 
 function toRemote(f: DriveFile): RemoteFile | null {
   const p = f.appProperties ?? {}
-  if (p.app !== APP_TAG || (p.kind !== "shard" && p.kind !== "device") || !p.device) return null
+  if (p.app !== APP_TAG || (p.kind !== "shard" && p.kind !== "device" && p.kind !== "retired") || !p.device) return null
   return {
     id: f.id,
     name: f.name,
@@ -58,6 +59,7 @@ function toRemote(f: DriveFile): RemoteFile | null {
     shard: p.kind === "shard" ? (p.shard ?? null) : null,
     device: p.device,
     version: String(f.version),
+    ...(f.modifiedTime ? { modified: Date.parse(f.modifiedTime) } : {}),
   }
 }
 

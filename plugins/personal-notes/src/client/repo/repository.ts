@@ -11,6 +11,7 @@
 import { HlcClock, parseHlc } from "../model/hlc"
 import { newDeviceId, newNoteId } from "../model/ids"
 import { extractLinks, shardOf, type Anchor, type NoteRecord, type RecordType } from "../model/record"
+import { vvDominatedBy, vvLeq } from "../model/vv"
 import { nextVv, resolveAll, type Resolved } from "../merge/merge"
 import type { NotesStore, RemoteShardCache } from "../store/db"
 
@@ -349,6 +350,68 @@ export class Repository {
   /** 已快取、但不在 fileIds 裡的其他裝置檔案。 */
   cachedRemoteIdsNotIn(fileIds: Set<string>): string[] {
     return [...this.remote.values()].filter((c) => !c.removed && !fileIds.has(c.fileId)).map((c) => c.fileId)
+  }
+
+  /** 指定檔案的快取（其他裝置的分片）。 */
+  remoteCaches(fileIds: Iterable<string>): RemoteShardCache[] {
+    return [...fileIds].map((id) => this.remote.get(id)).filter((c): c is RemoteShardCache => !!c)
+  }
+
+  /** 所有快取的檔案 ID。 */
+  remoteIds(): string[] {
+    return [...this.remote.keys()]
+  }
+
+  /** 已標記為「雲端上已移除」的快取。 */
+  removedCaches(): RemoteShardCache[] {
+    return [...this.remote.values()].filter((c) => c.removed)
+  }
+
+  /** 刪除快取（裝置退役、本機已接手之後）。 */
+  async dropRemoteCaches(fileIds: string[]): Promise<void> {
+    for (const id of fileIds) {
+      if (!this.remote.has(id)) continue
+      await this.store.deleteRemote(id)
+      this.remote.delete(id)
+    }
+    this.rebuild()
+  }
+
+  /**
+   * 把其他裝置的版本接手存進本裝置（裝置整理，12 C7）。同一則筆記的所有候選版本一起比較（Codex 整理審查 #4）。
+   * - 已被涵蓋的版本略過：onlyOwnCovers 時只算本機保存的版本（整理時不依賴其他也可能被整理掉的檔案，
+   *   Codex 第二輪 #2）；否則也算「仍存在、且不在 excludeFileIds」的其他檔案。
+   * - 剩下的候選裡有一個版本看過其他所有候選與本機版本 → 存成本裝置保存的版本（內容、版本資訊原樣保留）。
+   * - 只要有任何並行版本（包括刪除與修改並行）：回傳 "conflict" 且不做任何修改。呼叫端保留來源，
+   *   衝突照常顯示在畫面上讓使用者選；選好之後再接手（不自動另存，避免復活或重試時重複，Codex 第二輪 #3、#5）。
+   * 回傳 "none"（沒有需要接手的）、"adopted"、"conflict"。
+   */
+  async adoptVersions(records: NoteRecord[], excludeFileIds: Set<string>, opts: { onlyOwnCovers?: boolean } = {}): Promise<"none" | "adopted" | "conflict"> {
+    const others = opts.onlyOwnCovers ? [] : [...this.remote.values()].filter((c) => !c.removed && !excludeFileIds.has(c.fileId)).flatMap((c) => c.records)
+    const byId = new Map<string, NoteRecord[]>()
+    for (const r of records) {
+      const own = this.own.get(r.id)
+      if (own && vvLeq(r.vv, own.vv)) continue
+      if (others.some((x) => x.id === r.id && vvLeq(r.vv, x.vv))) continue
+      const list = byId.get(r.id) ?? []
+      if (!list.some((x) => vvLeq(r.vv, x.vv) && vvLeq(x.vv, r.vv))) list.push(r) // 相同版本只留一份
+      byId.set(r.id, list)
+    }
+    const entries: CommitEntry[] = []
+    for (const [id, candidates] of byId) {
+      const own = this.own.get(id)
+      const front = candidates.filter((c) => !candidates.some((x) => x !== c && vvDominatedBy(c.vv, x.vv)))
+      if (front.length !== 1 || (own && !vvDominatedBy(own.vv, front[0].vv))) return "conflict"
+      entries.push({ record: front[0], expectedHlc: own?.hlc ?? null, previous: own })
+    }
+    if (entries.length === 0) return "none"
+    try {
+      await this.commit(entries)
+    } catch (e) {
+      if (e instanceof CasConflict) return "conflict" // 同裝置其他分頁剛改了，下次再接手
+      throw e
+    }
+    return "adopted"
   }
 
   /** 雲端上其他裝置的檔案被移除：保留快取供顯示（保守），但標記為已移除。 */

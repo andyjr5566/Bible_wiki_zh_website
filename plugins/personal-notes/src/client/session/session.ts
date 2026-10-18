@@ -454,7 +454,9 @@ export class Session {
   }
 
   async confirmReupload(): Promise<void> {
-    if (await this.prompts.reupload()) await this.ws.syncer.reuploadAfterWipe()
+    const choice = await this.prompts.reupload()
+    if (choice === "reupload") await this.ws.syncer.reuploadAfterWipe()
+    else if (choice === "clear") await this.ws.syncer.acceptWipe()
   }
 }
 

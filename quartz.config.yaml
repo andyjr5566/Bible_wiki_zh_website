@@ -207,8 +207,8 @@ plugins:
       syncEnabled: true
       minPollSeconds: 180
       maxWritesPerMinute: 6
-      # 試用期公告（顯示在登入說明視窗與「我的筆記」頁）；Google 應用程式改為正式版（D-33）後清空
-      notice: "雲端同步目前小規模試用中，只開放已登記的 Google 帳號登入；沒有登記也可以直接在這台裝置寫筆記。"
+      # 公告（顯示在登入說明視窗與「我的筆記」頁）；空白＝不顯示
+      notice: ""
     layout:
       position: afterBody
       priority: 20

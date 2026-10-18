@@ -364,6 +364,17 @@ const STEPS: Step[] = [
       "每章整理的最後附上這一章用到的 CT、GT、KC、BH 原始網址。想讀註釋全文，或核對上面整理的內容，就從這裡點過去。",
   },
   {
+    id: "notes",
+    page: SLUG.ch12,
+    skill: "個人筆記",
+    // 個人筆記外掛畫出的面板（plugins/personal-notes）；外掛關閉時沒有目標，泡泡照常說明
+    targets: () => [$(".bwz-notes .bwz-n-head"), $(".bwz-notes .bwz-n-toolbar")].filter(visible) as Element[],
+    title: () => "寫下你自己的筆記",
+    text: () =>
+      "每一章最下方的「我的筆記」可以寫自己的研經心得。在經文上<b>選取一段字</b>，還能畫重點、加書籤，或直接針對那幾節寫筆記。" +
+      "登入 Google 後，手機、平板、電腦看到的都是同一份；所有筆記都在〈我的筆記〉頁。",
+  },
+  {
     id: "maps",
     page: SLUG.ch12,
     skill: "相關地圖",

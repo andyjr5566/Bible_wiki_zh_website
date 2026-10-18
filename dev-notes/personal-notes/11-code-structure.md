@@ -71,7 +71,7 @@ features/notes（畫面＋NotesService）
 | `session/prompts.ts` | session 要問使用者的事 | `Prompts` 介面＋`Notice` 型別；瀏覽器實作在 `ui/prompts.ts`，測試用假的 |
 | `features/types.ts` | 功能模組介面 | `Feature { id, views: { 掛載點種類: (ctx) => View } }` |
 | `features/index.ts` | 功能模組清單 | `FEATURES`、`viewFactories(kind)` |
-| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`、`MyNotesPage` |
+| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`、`MyNotesPage`、`drafts.ts`（編輯中草稿的本機備份與補存） |
 
 ## 4. 怎麼新增一個功能（以「畫重點」為例）
 
@@ -87,6 +87,9 @@ features/notes（畫面＋NotesService）
 ## 5. 其他慣例
 
 - **掛載與換頁**：Quartz 換頁（micromorph）會沿用同一個元素、只換內容與屬性。`app.ts` 會檢查容器是否還在、掛載點的 `data-*` 是否改變，必要時呼叫 `destroy()` 再重新掛載。View 不要假設自己只會被建立一次。
+- **編輯器不可遺失輸入**：自動儲存 600 毫秒；分頁隱藏／關閉時立刻存；每個編輯框另有 localStorage 草稿（`drafts.ts`），重新整理或關分頁後下次進章節頁補存（筆記已被別處改過就另存，不覆蓋）。儲存失敗時「完成」不會關閉編輯器。新功能若有編輯器，照同樣做法。
+- **切換帳號**：`session.onBeforeSwitch(fn)` 讓畫面先把編輯中的內容存進原本的帳號；fn 丟出錯誤代表「現在切換會遺失資料」，session 就不切換並通知使用者。fn 必須可以重複呼叫。
+- **對話框**：`ui/dom.ts` 的 `dialog()` 會在 SPA 換頁時自動關閉、把 Tab 焦點留在框內；危險操作用 `autofocus` 讓焦點停在「取消」。
 - **開 Google 視窗**：必須在點擊事件中同步呼叫（不可先 await）。對話框按鈕用 `run`，並用 `waitFor` 在元件載入完成前停用按鈕。
 - **Google 元件何時載入**（D-34）：未登入的人按下「用 Google 同步」才載入；曾在這台裝置登入過才在啟動時預先載入。不要在其他地方呼叫 `tokens.prepare()`。
 - **測試分工**：model／merge／store 單元測試；`sync.test.ts` 多裝置同步（MemoryCloud）；`session.test.ts` 登入與「先同步再編輯」流程（假的 Prompts 與 TokenSource）；`architecture.test.ts` 架構規則。瀏覽器實際行為（彈窗、換頁、對外請求）用無頭 Chrome 驗證（10 進度日誌有紀錄方法）。

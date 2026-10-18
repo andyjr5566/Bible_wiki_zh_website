@@ -22,6 +22,7 @@
 | [09-goal-prompt.md](09-goal-prompt.md) | 給 `/goal` 用的提示詞（4000 字元以內） | 啟動每個階段時 |
 | [10-progress-log.md](10-progress-log.md) | 進度日誌（只追加，不改寫） | 每次開工與收工 |
 | [11-code-structure.md](11-code-structure.md) | 程式分層、依賴規則（有自動測試）、新增功能的步驟 | 改程式或加新功能前 |
+| [12-backlog.md](12-backlog.md) | 待辦總表（討論過但還沒做的事）與下一步 `/goal` 提示詞 | 決定下一步要做什麼時 |
 
 ## 一句話摘要
 

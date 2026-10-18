@@ -273,7 +273,8 @@
 - 主導者先把共用基礎 commit 到 `feature/stickies`（紀錄種類 sticky、未知種類保留、選取在 `.bwz-v-ui` 內不算選經文、toast 復原按鈕、`Feature.first`、StickiesService），再交給 Codex。
 - 便條畫面（第 2 級）與條目書籤（第 1–2 級）：Codex 在 worktree 實作（當時尚未訂分級，用的是 config 預設 gpt-6-astra／medium），主導者審查 diff、修正（新便條在本次瀏覽保持展開、測試替身補 overrides）、合併。
 - 使用者看到初版後說「超級醜」→ 主導者訂出「紙箋」視覺規格（網站的羊皮紙色、深紅與琥珀、霞鶩文楷、✤ 裝飾），交給 **gpt-6-luna／medium（第 2 級）**。
-- **Codex 沙箱問題**：worktree 與獨立 clone 都出現 `setup refresh had errors`。查 `~/.codex/.sandbox/sandbox.*.log`：沙箱每次啟動要設定 `...\Codexuntimes\cua_node\...
+- **Codex 沙箱問題**：worktree 與獨立 clone 都出現 `setup refresh had errors`。查 `~/.codex/.sandbox/sandbox.*.log`：沙箱每次啟動要設定 `...\Codex
+untimes\cua_node\...
 ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 自己的 node_repl／cua_repl MCP 一啟動就會占用它。用 `-c mcp_servers.node_repl.enabled=false` 與關閉 computer-use 外掛都沒有解決（另有使用者的 Codex 桌面版也在用同一個執行環境）。改用 07 的 stdin 模式：把規格與現有檔案經 stdin 傳給 Luna（read-only、不執行指令），請它輸出完整新檔案，由主導者貼上、測試。
 - Luna 產出的問題（主導者修正）：用了 `h()` 不支援的 `html:` 屬性（圖示與「本章 N 張便條」都變空白）、卡片 class 少了 `bwz-sticky`、`className` 覆蓋掉傾斜 class、進場動畫 `fill: both` 讓傾斜失效、`clip-path` 把陰影切掉、SVG 字串沒有 xmlns 用 XML 解析不會變成 SVG（改用 HTML 解析器）、SVG `fill="var(--paper)"` 屬性無效、浮出視窗按鈕被「滑鼠移上去才顯示」規則藏起來。主導者依截圖逐輪調整：右下角翹起的陰影改落在紙外、橫線只畫在文字下方、動作圖示改放右上角、設定按鈕加明顯框線。
 - 便條的 🗒 一開始在無頭 Chrome 顯示成小方框（缺 emoji 變體選擇符）→ 加 U+FE0F；收起圖示後來改為 SVG 迷你紙條。
@@ -282,3 +283,16 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - 單元測試 155 個（新增 auth 3、stickies 9、highlights 條目書籤、model 未知種類、verses 選取排除、export 便條），tsc 通過。
 - 無頭 Chrome：stickycheck.mjs 23/23（工具列有便條、空白便條聚焦、自動儲存＋換色、經文文字不受影響、在便條上選字不跳工具列、有便條的經節仍可畫重點、本章 N 張與全部收起／展開、🗒 浮出、Esc 關閉、展開、重新整理後還在、刪除＋復原、空白不留、編輯中自動存、換頁不殘留、回來只有一張、〈我的筆記〉最上方⚙設定、設定預設展開、設為收起後是小圖示、手機版在畫面內且按鈕 ≥44px、無例外）；nodecheck.mjs 10/10（條目標題下方有按鈕、加入／取消、重新整理後仍在、資料夾首頁與章節頁沒有、〈我的筆記〉列出 📚 條目並可回去、SPA 換頁不重複、手機 44px、無例外）；回歸 uicheck 16/16、p2check 34/34、regress 15/15、fixcheck 11/11、mobilecheck 6/6、tourcheck 2/2、expcheck 9/9。
 - 視覺：stickyshots.mjs 亮色／暗色的卡片、滑鼠移上、編輯中、收起＋浮出、手機、設定視窗截圖逐一檢查。
+- **部署**（使用者確認推送）：`a045fd3b..4a1e190e`。線上 stickycheck 23/23、nodecheck 11/11、uicheck 16/16、p2check 34/34、mobilecheck 6/6、tourcheck 2/2、expcheck 9/9、regress 15/15、fixcheck 11/11、swcheck 11/11。
+
+## 2026-10-19｜〈我的筆記〉頁為大量筆記重新整理（D-42）
+
+- **起因**：使用者問「用很久的人有很豐富的筆記，這個頁面是否有做好收納跟整理？」→ 原本確實是全部列出（沒有分頁、折疊、分批），筆記多時頁面會非常長；書籤、重點也全列在下方，帳號與備份夾在中間。
+- **設計確認**（AskUserQuestion，附示意圖）：最近 10 則與依書卷**同時顯示**（使用者自訂）、分頁標籤、管理功能收進「⚙ 設定與備份」、兩行預覽。
+- **分工**：Codex 沙箱仍因 node_repl.exe 被占用無法執行（07 §5 備案）。外框、清單元件、各分頁的程式由主導者寫（與現有架構緊密相關、Codex 不能跑測試時容易出整合錯誤）；樣式交給 gpt-6-luna／medium（第 2 級，stdin 模式），主導者依截圖修正：網站主題的 layer 會蓋掉 `<article>` 的底色與 `<p>` 的字級（迷你紙箋變暗、總覽字太大）、短筆記也套用淡出遮罩（改成只有 `.long` 才截斷，用 mask-image）、分頁列出現垂直捲軸、手機分頁擠不下、頁尾被後來加入的分頁擠到中間（改成每次更新都移到最後）。
+- **另修**：重新整理後沒有停在上次的分頁——第一個登記的分頁把偏好覆蓋掉了；改為偏好與目前顯示分開記。
+- **驗證**：
+  - 單元測試 160 個（新增 test/library.test.ts 5 個：經文順序、最近 n 則、書卷→章分組與計數、AND／#標籤搜尋、1200 則分組不遺漏不重複）。tsc 通過。
+  - 新增 gen-backup.ts（用外掛自己的程式產生 400 筆記、80 便條、120 重點、25 書籤共 625 筆的備份）與 mynotescheck.mjs（無頭 Chrome 透過頁面的「從備份匯入」匯入）：24/24——四個分頁與設定按鈕、空白說明、總覽一行與分頁數量、筆記分頁只畫 10 張卡片且 12 卷全部收起（頁高 2868px）、最近依時間排序、打開創世記列出各章且數量加總相符、打開章才畫卡片並有「前往該章」、兩行預覽與展開全文、重畫後打開的書卷維持打開、搜尋平鋪 20 則與再顯示、分頁數量變成符合數、點標籤篩選、便條分頁四色迷你紙箋、紙箋真的是紙色底、頁尾在最後、重點分頁、書籤分頁的知識庫條目分組、重新整理後停在上次分頁、設定面板四個區塊、備份按鈕只在設定裡、手機不左右捲且分頁與目錄列 ≥44px、無例外。
+  - 舊的檢查腳本改用新選擇器（p2check 的我的筆記搜尋／標籤／書籤與重點分頁／匯出在設定裡、mobilecheck 的搜尋框、fixcheck 的匯出備份與前往該章）：p2check 34/34、mobilecheck 6/6、fixcheck 11/11；其餘 stickycheck 23/23、nodecheck 10/10、uicheck 16/16、tourcheck 2/2、expcheck 9/9、regress 15/15。
+- 教學：個人筆記使用說明加「〈我的筆記〉頁的整理方式」，備份／登出／刪除的位置改成「⚙ 設定與備份」；隱私權政策的操作路徑同步更新。

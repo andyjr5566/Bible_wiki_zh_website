@@ -68,6 +68,8 @@ features/notes（畫面＋NotesService）
 | `sync/syncer.ts` | 同步協定 | `sync()`、`push()`、`ensureFresh()`、`reuploadAfterWipe()`、`acceptWipe()`、`deleteEverything()`；狀態 `SyncStatus`；裝置整理 `maybeRetireDevices()`、已移除快取處理 `rescueRemovedCaches()`（D-39） |
 | `model/linkIndex.ts`、`model/zip.ts` | 建置用連結索引格式；自寫 ZIP（匯出用） | 純函式 |
 | `ui/markdown.ts` | 安全 Markdown 渲染（D-37） | `parseMarkdown()`／`parseInline()` 純函式；`renderMarkdown()` 只用 DOM API，不用 innerHTML |
+| `ui/myNotesShell.ts` | 〈我的筆記〉頁外框（D-42） | `shellFor(host, session)` 取得掛載點唯一的外框；`addTab({ id, label, unit, order, el, count, total, onQuery })`、`addSection({ id, title, order, render })`、`setNotice(id, el)`、`setQuery()`；destroy 時要 `removeTab`／`removeSection` |
+| `ui/library.ts` | 〈我的筆記〉清單元件（D-42） | `Library`（最近 n 則＋依書卷→章折疊、章打開才畫、搜尋平鋪每次 20 則、記住打開狀態）；純函式 `byPlace`、`recent`、`matchesQuery`、`groupByBook` 有單元測試 |
 | `ui/verses.ts` | 經節定位（D-38） | `annotateVerses()`、`selectionToVerses()`、`locateQuote()`、`wrapText()`／`unwrapAll()`、`textHash()` |
 | `sync/scheduler.ts` | 何時同步 | 去抖動上傳、輪詢、Web Locks、BroadcastChannel |
 | `session/session.ts` | 帳號工作階段 | `Workspace`（每個帳號一組 store＋repo＋syncer＋scheduler）、`signInFromClick()`、`gateEdit()`、`signOut()`…；依賴 `SessionDeps` 注入 |
@@ -89,7 +91,9 @@ features/notes（畫面＋NotesService）
 
 不需要動的：`merge/`、`store/`、`adapter/`、`sync/`、`session/`、其他功能的資料夾。
 
-某個功能要排在掛載點最前面（例如〈我的筆記〉頁最上方的設定按鈕），在 Feature 加 `first: ["mynotes"]`。
+某個功能要排在掛載點最前面，在 Feature 加 `first: ["種類"]`（目前沒有功能使用；〈我的筆記〉頁改由外框統一排版）。
+
+〈我的筆記〉頁新增一種內容時：在功能的 mynotes 畫面裡用 `shellFor(host, session)` 登記一個分頁（內容用 `ui/library.ts` 的 `Library`），需要設定就 `addSection`。不要在頁面上直接加按鈕或區塊，讓頁面維持短而整齊。
 
 畫面裡的固定 SVG 圖示：`h()` 只用 textContent，不支援 HTML 字串；要用常數 SVG 時以 `new DOMParser().parseFromString(svg, "text/html")` 建立（不要用 XML 模式，沒有 xmlns 不會變成 SVG），只用於程式裡的常數，絕不用於使用者內容。
 

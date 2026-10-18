@@ -256,3 +256,4 @@
 - **原因**（expmeasure.mjs 線上量測）：explorer 外掛收起時把高度固定為 1.2rem（19px），本站的「探索」標題約 25px，`overflow: hidden` 把下半部切掉。修正（custom.scss，電腦版）：收起時改為標題本身的高度、目錄內容 `display: none`。explorer 外掛在 `.quartz/`（CI 會重新下載），所以修正放在 repo 自己的 custom.scss。
 - **全部收合**：新增 `quartz/components/scripts/explorerTools.inline.ts`（在 componentResources.ts 註冊，做法同「素／紙」按鈕）。有資料夾展開時，目錄最上方右側出現「全部收合」；按下後全部收起，並照 explorer 外掛的格式寫回 `localStorage.fileTree`，換頁、重新整理後仍收著（目前章節所在的資料夾照外掛原本設計會自動打開）。資料夾清單是外掛非同步畫出的，用 MutationObserver 監看變化決定按鈕顯示與否。手機版在抽屜裡同樣可用。
 - **驗證**：expcheck.mjs（無頭 Chrome）線上舊版 2/9（重現標題被切 19px < 25px、沒有按鈕），本機新版 9/9；uicheck 16/16、p2check 34/34、regress 15/15、fixcheck 11/11、mobilecheck 6/6、tourcheck 2/2。tsc 沒有新增錯誤（既有錯誤只在 quartz/static/website 的互動網站原始碼）。
+- **部署**（使用者確認推送）：`d0d5c3bb..a045fd3b`。線上 expcheck 9/9、uicheck 16/16、regress 15/15、mobilecheck 6/6、tourcheck 2/2。

@@ -5,6 +5,7 @@ import { promises as fs } from "fs"
 import path from "path"
 import type { QuartzEmitterPlugin, QuartzPageTypePlugin, FullSlug, FilePath } from "@quartz-community/types"
 import { MyNotesBody } from "./components/PersonalNotes"
+import { buildLinkIndex } from "./client/model/linkIndex"
 import { appVersion, clientAppPath } from "./shared"
 
 export { default as PersonalNotes, MyNotesBody } from "./components/PersonalNotes"
@@ -22,10 +23,10 @@ export interface PersonalNotesOptions {
 
 const MY_NOTES_SLUG = "my-notes"
 
-/** 輸出 static/personal-notes/app.js 與 config.json。 */
+/** 輸出 static/personal-notes/app.js、config.json 與 links.json（筆記 [[條目]] 用的精簡連結索引）。 */
 export const PersonalNotesEmitter: QuartzEmitterPlugin<PersonalNotesOptions> = (opts) => ({
   name: "PersonalNotesEmitter",
-  async emit(ctx) {
+  async emit(ctx, content) {
     const src = clientAppPath(import.meta.url)
     const outDir = path.join(ctx.argv.output, "static", "personal-notes")
     await fs.mkdir(outDir, { recursive: true })
@@ -41,7 +42,15 @@ export const PersonalNotesEmitter: QuartzEmitterPlugin<PersonalNotesOptions> = (
     }
     const configOut = path.join(outDir, "config.json")
     await fs.writeFile(configOut, JSON.stringify(config, null, 2))
-    return [appOut, configOut] as FilePath[]
+    const index = buildLinkIndex(
+      content.map(([, file]) => {
+        const data = file.data as { slug?: string; frontmatter?: { title?: unknown; aliases?: unknown } }
+        return { slug: String(data.slug ?? ""), title: data.frontmatter?.title, aliases: data.frontmatter?.aliases }
+      }),
+    )
+    const linksOut = path.join(outDir, "links.json")
+    await fs.writeFile(linksOut, JSON.stringify(index))
+    return [appOut, configOut, linksOut] as FilePath[]
   },
   partialEmit() {
     return null

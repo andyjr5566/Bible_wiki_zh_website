@@ -1,4 +1,4 @@
-// 小型 DOM 工具。所有文字一律用 textContent 寫入（筆記內容不當 HTML 解析，D-27）。
+// 小型 DOM 工具。所有文字一律用 textContent 寫入（筆記內容不當 HTML 解析；Markdown 見 ui/markdown.ts）。
 
 type Child = Node | string | number | null | undefined | false
 type Props = {
@@ -169,9 +169,4 @@ export function verseLabel(start: number | null, end: number | null): string {
   if (!start) return "整章"
   if (!end || end === start) return `第 ${start} 節`
   return `第 ${start}–${end} 節`
-}
-
-/** 純文字內文，保留換行（不渲染 Markdown，D-27）。 */
-export function textBlock(text: string, cls = "bwz-n-body"): HTMLElement {
-  return h("div", { class: cls, text })
 }

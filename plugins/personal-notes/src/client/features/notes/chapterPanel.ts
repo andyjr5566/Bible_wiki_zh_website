@@ -5,10 +5,13 @@ import { chapterLabel } from "../../model/books"
 import type { NoteRecord } from "../../model/record"
 import { ConflictPendingError } from "../../repo/repository"
 import type { Session } from "../../session/session"
-import { dialog, formatTime, h, textBlock, toast, verseLabel } from "../../ui/dom"
+import { dialog, formatTime, h, toast, verseLabel } from "../../ui/dom"
+import { renderMarkdown } from "../../ui/markdown"
 import { statusBar } from "../../ui/status"
 import type { View } from "../types"
 import { clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft, type Draft } from "./drafts"
+import { attachLinkComplete } from "./linkComplete"
+import { loadResolver, type LinkResolver } from "./links"
 import { NotesService, type NoteInput } from "./notes"
 
 const AUTOSAVE_MS = 600
@@ -40,6 +43,8 @@ export class ChapterPanel implements View {
   private addBtn!: HTMLButtonElement
   private readonly notes: NotesService
   private cleanups: (() => void)[] = []
+  private resolver: LinkResolver | null = null
+  private resolverRequested = false
 
   constructor(
     private readonly session: Session,
@@ -178,6 +183,22 @@ export class ChapterPanel implements View {
     setTimeout(() => card.classList.remove("bwz-n-flash"), 2600)
   }
 
+  /** 筆記內文（Markdown；[[條目]] 在連結索引載入後變成連結）。 */
+  private body(text: string): HTMLElement {
+    const r = this.resolver
+    return renderMarkdown(text, r ? { resolveWiki: (t) => r.resolve(t) } : {})
+  }
+
+  /** 有筆記用到 [[條目]] 才下載連結索引，下載完重畫一次。 */
+  private maybeLoadResolver(notes: Resolved[]): void {
+    if (this.resolverRequested || !notes.some((r) => [r.winner, ...r.conflicts].some((v) => v.body.includes("[[")))) return
+    this.resolverRequested = true
+    void loadResolver().then((r) => {
+      this.resolver = r
+      if (r) this.refresh()
+    })
+  }
+
   private chapterNotes(): Resolved[] {
     return this.notes.forChapter(this.book, this.chapter)
   }
@@ -185,6 +206,7 @@ export class ChapterPanel implements View {
   refresh(): void {
     this.session.resetOfflineAcknowledgement()
     const notes = this.chapterNotes()
+    this.maybeLoadResolver(notes)
     this.headerCount.textContent = notes.length ? `（${notes.length}）` : ""
     if (this.chip) this.chip.textContent = notes.length ? `📝 筆記 ${notes.length}` : "📝 筆記"
     this.statusEl.replaceChildren(statusBar(this.session))
@@ -213,7 +235,7 @@ export class ChapterPanel implements View {
         n.title ? h("strong", { text: n.title }) : null,
         h("span", { class: "bwz-n-time", text: formatTime(n.updatedAt) }),
       ),
-      textBlock(n.body),
+      this.body(n.body),
       n.tags.length ? h("div", { class: "bwz-n-tags" }, ...n.tags.map((t) => h("span", { class: "bwz-n-tag", text: `#${t}` }))) : null,
       h(
         "div",
@@ -256,7 +278,7 @@ export class ChapterPanel implements View {
             ),
             v.deleted ? h("p", { class: "bwz-n-muted", text: "（這個版本把筆記刪除了）" }) : null,
             v.title ? h("strong", { text: v.title }) : null,
-            v.deleted ? null : textBlock(v.body),
+            v.deleted ? null : this.body(v.body),
             !v.deleted && v.tags.length ? h("div", { class: "bwz-n-tags" }, ...v.tags.map((t) => h("span", { class: "bwz-n-tag", text: `#${t}` }))) : null,
             h("button", { class: "bwz-n-btn small primary", text: v.deleted ? "刪除這則筆記" : "保留這個版本", attrs: { type: "button" }, on: { click: () => void choose({ keep: v.hlc }) } }),
           ),
@@ -372,7 +394,7 @@ export class ChapterPanel implements View {
     const vStart = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "起", "aria-label": "起始節" } })
     const vEnd = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "迄", "aria-label": "結束節" } })
     const title = h("input", { class: "bwz-n-input", attrs: { type: "text", placeholder: "標題（可不填）", maxlength: "200", "aria-label": "筆記標題" } })
-    const body = h("textarea", { class: "bwz-n-textarea", attrs: { rows: "6", placeholder: "寫下你的研經筆記或讀經心得…", "aria-label": "筆記內容" } })
+    const body = h("textarea", { class: "bwz-n-textarea", attrs: { rows: "6", placeholder: "寫下你的研經筆記或讀經心得…（可用 **粗體**、- 清單；輸入 [[ 可連到知識庫條目）", "aria-label": "筆記內容" } })
     const tags = h("input", { class: "bwz-n-input", attrs: { type: "text", placeholder: "標籤，用空白或逗號分隔（可不填）", "aria-label": "標籤" } })
     const saved = h("span", { class: "bwz-n-muted", attrs: { "aria-live": "polite" } })
     vStart.value = num(note?.anchor.verseStart ?? null)
@@ -489,6 +511,7 @@ export class ChapterPanel implements View {
       h("div", { class: "bwz-n-row" }, h("label", { class: "bwz-n-label", text: "節數" }), vStart, h("span", { text: "–" }), vEnd, h("span", { class: "bwz-n-muted", text: "（不填＝整章）" })),
       title,
       body,
+      attachLinkComplete(body).el,
       tags,
       h(
         "div",

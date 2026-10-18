@@ -178,6 +178,105 @@
   line-height: 1.7;
 }
 
+// Markdown 內文（D-37）：換行已轉成 <br>／段落，不用 pre-wrap
+.bwz-n-body.bwz-n-md {
+  white-space: normal;
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
+  p,
+  ul,
+  ol,
+  blockquote,
+  pre {
+    margin: 0.4rem 0;
+  }
+  ul,
+  ol {
+    padding-left: 1.4rem;
+  }
+  h3,
+  h4,
+  h5 {
+    margin: 0.6rem 0 0.3rem;
+    font-size: 1rem;
+  }
+  blockquote {
+    border-left: 3px solid var(--lightgray);
+    padding-left: 0.7rem;
+    color: var(--darkgray);
+  }
+  pre {
+    overflow-x: auto;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: var(--highlight);
+  }
+}
+
+// [[條目]]：找得到是站內連結；找不到用虛線底線提示
+.bwz-n-wiki.missing {
+  text-decoration: underline dashed var(--gray);
+  cursor: help;
+}
+
+// 輸入 [[ 時的條目候選清單
+.bwz-n-complete {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0.25rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  max-height: 14rem;
+  overflow-y: auto;
+  li {
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @media (pointer: coarse) {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    &.active,
+    &:hover {
+      background: var(--highlight);
+      color: var(--secondary);
+    }
+  }
+}
+
+// 我的筆記頁的標籤篩選
+.bwz-n-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: -0.5rem 0 1rem;
+  button.bwz-n-tag {
+    font: inherit;
+    font-size: 0.82rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    background: transparent;
+    color: var(--tertiary);
+    cursor: pointer;
+    @media (pointer: coarse) {
+      min-height: 36px;
+    }
+    &.on {
+      background: var(--secondary);
+      border-color: var(--secondary);
+      color: var(--light);
+    }
+  }
+}
+
 .bwz-n-tags {
   display: flex;
   flex-wrap: wrap;

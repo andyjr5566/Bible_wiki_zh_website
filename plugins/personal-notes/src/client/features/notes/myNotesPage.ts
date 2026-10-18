@@ -4,10 +4,12 @@ import type { Resolved } from "../../merge/merge"
 import { BOOKS, chapterLabel, chapterSlug } from "../../model/books"
 import { exportBackup, importBackup } from "../../repo/backup"
 import type { Session } from "../../session/session"
-import { dialog, formatTime, h, textBlock, toast, verseLabel } from "../../ui/dom"
+import { dialog, formatTime, h, toast, verseLabel } from "../../ui/dom"
+import { renderMarkdown } from "../../ui/markdown"
 import { isIOS, isStandalone } from "../../ui/env"
 import { statusBar } from "../../ui/status"
 import type { View } from "../types"
+import { loadResolver, type LinkResolver } from "./links"
 import { NotesService } from "./notes"
 
 export class MyNotesPage implements View {
@@ -20,6 +22,10 @@ export class MyNotesPage implements View {
   private unsubscribe: () => void
   private readonly notes: NotesService
   private pendingAnon = 0
+  private searchInput!: HTMLInputElement
+  private tagsEl!: HTMLElement
+  private resolver: LinkResolver | null = null
+  private resolverRequested = false
 
   constructor(
     private readonly session: Session,
@@ -65,14 +71,17 @@ export class MyNotesPage implements View {
     this.accountEl = h("div", { class: "bwz-n-account-box" })
     const search = h("input", {
       class: "bwz-n-input",
-      attrs: { type: "search", placeholder: "搜尋標題、內文、標籤…", "aria-label": "搜尋筆記" },
+      attrs: { type: "search", placeholder: "搜尋（可輸入多個詞、#標籤、書卷章節）", "aria-label": "搜尋筆記" },
       on: {
         input: (e) => {
           this.query = (e.target as HTMLInputElement).value.trim().toLowerCase()
+          this.renderTags()
           this.renderList()
         },
       },
     })
+    this.searchInput = search
+    this.tagsEl = h("div", { class: "bwz-n-tag-filter" })
     this.bookSelect = h("select", {
       class: "bwz-n-input",
       attrs: { "aria-label": "依書卷篩選" },
@@ -90,6 +99,7 @@ export class MyNotesPage implements View {
       this.statusEl,
       this.accountEl,
       h("div", { class: "bwz-n-filters" }, search, this.bookSelect),
+      this.tagsEl,
       this.listEl,
       h(
         "section",
@@ -119,7 +129,45 @@ export class MyNotesPage implements View {
     this.statusEl.replaceChildren(statusBar(this.session))
     this.renderAccount()
     this.renderBooks()
+    this.renderTags()
     this.renderList()
+  }
+
+  /** 所有標籤與筆數；點一下就用這個標籤篩選，再點一次取消（12 C5）。 */
+  private renderTags(): void {
+    const counts = new Map<string, number>()
+    for (const r of this.notes.all()) for (const t of r.winner.tags) counts.set(t, (counts.get(t) ?? 0) + 1)
+    if (counts.size === 0) {
+      this.tagsEl.replaceChildren()
+      return
+    }
+    const terms = this.query.split(/\s+/).filter(Boolean)
+    const chips = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-Hant"))
+      .map(([tag, n]) => {
+        const term = `#${tag.toLowerCase()}`
+        const on = terms.includes(term)
+        return h("button", {
+          class: `bwz-n-tag${on ? " on" : ""}`,
+          text: `#${tag}（${n}）`,
+          attrs: { type: "button", "aria-pressed": String(on) },
+          on: {
+            click: () => {
+              const next = on ? terms.filter((t) => t !== term) : [...terms, term]
+              this.searchInput.value = next.join(" ")
+              this.query = this.searchInput.value.trim().toLowerCase()
+              this.renderTags()
+              this.renderList()
+            },
+          },
+        })
+      })
+    this.tagsEl.replaceChildren(h("span", { class: "bwz-n-muted", text: "標籤：" }), ...chips)
+  }
+
+  private body(text: string): HTMLElement {
+    const r = this.resolver
+    return renderMarkdown(text, r ? { resolveWiki: (t) => r.resolve(t) } : {})
   }
 
   private renderAccount(): void {
@@ -188,13 +236,18 @@ export class MyNotesPage implements View {
     this.bookSelect.value = counts.has(this.book) ? this.book : ""
   }
 
+  /** 每個詞都要符合（AND）；「#標籤」比對標籤，其他比對書卷章節、標題、內文、標籤（12 C5）。 */
   private matches(r: Resolved): boolean {
     if (this.book && r.winner.anchor.book !== this.book) return false
-    if (!this.query) return true
-    const q = this.query.replace(/^#/, "")
+    const terms = this.query.split(/\s+/).filter((t) => t && t !== "#")
+    if (terms.length === 0) return true
     const a = r.winner.anchor
     const place = a.book && a.chapter ? `${chapterLabel(a.book, a.chapter)} ${verseLabel(a.verseStart, a.verseEnd)}` : ""
-    return [r.winner, ...r.conflicts].some((v) => `${place}\n${v.title}\n${v.body}\n${v.tags.join(" ")}`.toLowerCase().includes(q))
+    return [r.winner, ...r.conflicts].some((v) => {
+      const tags = v.tags.map((t) => t.toLowerCase())
+      const text = `${place}\n${v.title}\n${v.body}\n${tags.join(" ")}`.toLowerCase()
+      return terms.every((t) => (t.startsWith("#") ? tags.some((tag) => tag.startsWith(t.slice(1))) : text.includes(t)))
+    })
   }
 
   private renderList(): void {
@@ -212,6 +265,13 @@ export class MyNotesPage implements View {
           (x.verseStart ?? 0) - (y.verseStart ?? 0)
         )
       })
+    if (!this.resolverRequested && notes.some((r) => r.winner.body.includes("[["))) {
+      this.resolverRequested = true
+      void loadResolver().then((res) => {
+        this.resolver = res
+        if (res) this.renderList()
+      })
+    }
     if (notes.length === 0) {
       this.listEl.replaceChildren(h("p", { class: "bwz-n-empty", text: this.query || this.book ? "沒有符合的筆記。" : "還沒有筆記。到任何一章的頁面底部，按「新增筆記」開始寫。" }))
       return
@@ -247,7 +307,7 @@ export class MyNotesPage implements View {
             h("span", { class: "bwz-n-time", text: formatTime(n.updatedAt) }),
           ),
           r.conflicts.length ? h("p", { class: "bwz-n-warn", text: "有兩個版本待選擇，請到該章頁面處理。" }) : null,
-          textBlock(n.body),
+          this.body(n.body),
           n.tags.length ? h("div", { class: "bwz-n-tags" }, ...n.tags.map((t) => h("span", { class: "bwz-n-tag", text: `#${t}` }))) : null,
           cardSlug
             ? h(

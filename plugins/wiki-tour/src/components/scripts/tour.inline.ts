@@ -493,6 +493,8 @@ function loadState(): TourState {
 
 let st: TourState = loadState()
 let lastStepId = ""
+// 這一站是否已把目標捲進畫面；目標晚一點才出現（例如筆記面板非同步載入）時，出現後補捲一次
+let scrolledStepId = ""
 let busy = false
 let ticker: ReturnType<typeof setInterval> | undefined
 
@@ -589,6 +591,13 @@ function check() {
     }, 380)
     return
   }
+  if (scrolledStepId !== s.id && onPage(s)) {
+    const t = s.targets().filter(visible)[0]
+    if (t) {
+      scrolledStepId = s.id
+      bringIntoView(t)
+    }
+  }
   place(s)
 }
 
@@ -622,7 +631,9 @@ function show() {
 
   renderBubble(s)
   s.ensure?.()
-  bringIntoView(s.targets()[0])
+  const target = s.targets()[0]
+  scrolledStepId = target ? s.id : ""
+  bringIntoView(target)
   place(s)
 }
 

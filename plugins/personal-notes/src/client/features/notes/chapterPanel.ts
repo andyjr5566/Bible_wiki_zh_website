@@ -7,8 +7,9 @@ import { ConflictPendingError } from "../../repo/repository"
 import type { Session } from "../../session/session"
 import { dialog, formatTime, h, toast, verseLabel } from "../../ui/dom"
 import { renderMarkdown } from "../../ui/markdown"
+import { annotateVerses, verseElement } from "../../ui/verses"
 import { statusBar } from "../../ui/status"
-import type { View } from "../types"
+import { COMPOSE_NOTE_EVENT, type ComposeNoteDetail, type View } from "../types"
 import { clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft, type Draft } from "./drafts"
 import { attachLinkComplete } from "./linkComplete"
 import { loadResolver, type LinkResolver } from "./links"
@@ -25,6 +26,13 @@ type EditorRoot = HTMLElement & {
   /** 同步狀態改變時更新「已儲存／已同步」文字（C9）。 */
   refreshSaved?: () => void
   draftKey?: string
+}
+
+/** 開新筆記時預先填好的內容（從經文選取「寫筆記」時）。 */
+interface Prefill {
+  verseStart: number | null
+  verseEnd: number | null
+  body: string
 }
 
 interface EditorState {
@@ -83,6 +91,15 @@ export class ChapterPanel implements View {
     const hash = decodeURIComponent(location.hash)
     if (hash === "#bwz-notes") requestAnimationFrame(() => this.mount.scrollIntoView({ block: "start" }))
     else if (hash.startsWith("#bwz-note-")) requestAnimationFrame(() => this.focusNote(hash.slice("#bwz-note-".length)))
+    else if (/^#v\d+$/.test(hash)) requestAnimationFrame(() => this.focusVerse(Number(hash.slice(2))))
+    // 畫重點工具列的「寫筆記」（features/types.ts 的事件約定）
+    const onCompose = (e: Event) => {
+      const d = (e as CustomEvent<ComposeNoteDetail>).detail
+      if (!d || d.book !== this.book || d.chapter !== this.chapter) return
+      void this.openEditor(null, undefined, { verseStart: d.verseStart, verseEnd: d.verseEnd, body: d.quote ? `> ${d.quote}\n\n` : "" })
+    }
+    document.addEventListener(COMPOSE_NOTE_EVENT, onCompose)
+    this.cleanups.push(() => document.removeEventListener(COMPOSE_NOTE_EVENT, onCompose))
   }
 
   destroy(): void {
@@ -94,6 +111,7 @@ export class ChapterPanel implements View {
     }
     this.unsubscribe()
     for (const fn of this.cleanups) fn()
+    for (const b of Array.from(document.querySelectorAll(".bwz-v-badge"))) b.remove()
     this.chip?.remove()
     this.mount.replaceChildren()
   }
@@ -171,6 +189,40 @@ export class ChapterPanel implements View {
     document.body.append(this.chip)
   }
 
+  /** 捲到某一節經文並短暫標示（網址 #v5）。 */
+  private focusVerse(v: number): void {
+    const list = annotateVerses()
+    const li = list ? verseElement(list, v) : null
+    if (!li) return
+    li.scrollIntoView({ block: "center" })
+    li.classList.add("bwz-v-flash")
+    setTimeout(() => li.classList.remove("bwz-v-flash"), 2600)
+  }
+
+  /** 有筆記的經節後面加上「📝」標記，點一下跳到那則筆記（12 C2）。 */
+  private renderVerseBadges(notes: Resolved[]): void {
+    const list = annotateVerses()
+    for (const b of Array.from(document.querySelectorAll(".bwz-v-badge"))) b.remove()
+    if (!list) return
+    const byVerse = new Map<number, string[]>()
+    for (const r of notes) {
+      const v = r.winner.anchor.verseStart
+      if (v) byVerse.set(v, [...(byVerse.get(v) ?? []), r.id])
+    }
+    for (const [v, ids] of byVerse) {
+      const li = verseElement(list, v)
+      if (!li) continue
+      li.append(
+        h("button", {
+          class: "bwz-v-ui bwz-v-badge",
+          text: ids.length > 1 ? `📝${ids.length}` : "📝",
+          attrs: { type: "button", "aria-label": `第 ${v} 節有 ${ids.length} 則筆記`, title: "看這一節的筆記" },
+          on: { click: () => this.focusNote(ids[0]) },
+        }),
+      )
+    }
+  }
+
   /** 捲到某一則筆記並短暫標示（從「我的筆記」頁點過來時，C10）。 */
   private focusNote(id: string): void {
     const card = this.listEl.querySelector<HTMLElement>(`[data-note-id="${CSS.escape(id)}"]`)
@@ -222,6 +274,7 @@ export class ChapterPanel implements View {
     }
     this.listEl.replaceChildren(...cards)
     this.editor?.root.refreshSaved?.()
+    this.renderVerseBadges(notes)
   }
 
   private noteCard(n: NoteRecord): HTMLElement {
@@ -317,7 +370,7 @@ export class ChapterPanel implements View {
   }
 
   /** 開啟編輯器前先同步（D-03）。 */
-  private async openEditor(noteId: string | null, trigger?: HTMLButtonElement): Promise<void> {
+  private async openEditor(noteId: string | null, trigger?: HTMLButtonElement, prefill?: Prefill): Promise<void> {
     if (this.editor && !(await this.closeEditor())) return
     const label = trigger?.textContent ?? ""
     if (trigger) {
@@ -340,10 +393,13 @@ export class ChapterPanel implements View {
       this.refresh()
       return
     }
-    this.editor = { noteId, root: this.buildEditor(existing?.winner ?? null) }
+    this.editor = { noteId, root: this.buildEditor(existing?.winner ?? null, prefill) }
     this.editorHost.replaceChildren(this.editor.root)
     this.refresh()
-    this.editor.root.querySelector<HTMLTextAreaElement>("textarea")?.focus()
+    const ta = this.editor.root.querySelector<HTMLTextAreaElement>("textarea")
+    if (prefill) this.editor.root.scrollIntoView({ block: "center" })
+    ta?.focus()
+    ta?.setSelectionRange(ta.value.length, ta.value.length)
   }
 
   /**
@@ -389,7 +445,7 @@ export class ChapterPanel implements View {
     }
   }
 
-  private buildEditor(note: NoteRecord | null): EditorRoot {
+  private buildEditor(note: NoteRecord | null, prefill?: Prefill): EditorRoot {
     const num = (v: number | null) => (v ? String(v) : "")
     const vStart = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "起", "aria-label": "起始節" } })
     const vEnd = h("input", { class: "bwz-n-input small", attrs: { type: "number", min: "1", max: "200", inputmode: "numeric", placeholder: "迄", "aria-label": "結束節" } })
@@ -397,10 +453,10 @@ export class ChapterPanel implements View {
     const body = h("textarea", { class: "bwz-n-textarea", attrs: { rows: "6", placeholder: "寫下你的研經筆記或讀經心得…（可用 **粗體**、- 清單；輸入 [[ 可連到知識庫條目）", "aria-label": "筆記內容" } })
     const tags = h("input", { class: "bwz-n-input", attrs: { type: "text", placeholder: "標籤，用空白或逗號分隔（可不填）", "aria-label": "標籤" } })
     const saved = h("span", { class: "bwz-n-muted", attrs: { "aria-live": "polite" } })
-    vStart.value = num(note?.anchor.verseStart ?? null)
-    vEnd.value = num(note?.anchor.verseEnd ?? null)
+    vStart.value = num(note?.anchor.verseStart ?? prefill?.verseStart ?? null)
+    vEnd.value = num(note?.anchor.verseEnd ?? prefill?.verseEnd ?? null)
     title.value = note?.title ?? ""
-    body.value = note?.body ?? ""
+    body.value = note?.body ?? prefill?.body ?? ""
     tags.value = note?.tags.join(" ") ?? ""
 
     const key = newDraftKey(this.session.account?.permissionId ?? "anon")

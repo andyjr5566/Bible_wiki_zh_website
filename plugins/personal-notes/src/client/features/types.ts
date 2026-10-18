@@ -24,3 +24,17 @@ export interface Feature {
   /** 掛載點種類 → 建立畫面；回傳 null 代表這個掛載點不適用。 */
   views: Partial<Record<string, (ctx: MountContext) => View | null>>
 }
+
+// ---------- 功能之間的事件（功能模組不互相 import，需要互動時用 document 上的事件） ----------
+
+/** 要求筆記功能開一則「針對某幾節」的新筆記（例如畫重點工具列上的「寫筆記」）。 */
+export const COMPOSE_NOTE_EVENT = "bwz:compose-note"
+
+export interface ComposeNoteDetail {
+  book: string
+  chapter: number
+  verseStart: number
+  verseEnd: number | null
+  /** 選取的經文（會放進筆記開頭當引用） */
+  quote?: string
+}

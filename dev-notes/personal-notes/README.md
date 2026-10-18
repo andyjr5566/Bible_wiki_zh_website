@@ -4,7 +4,7 @@
 所有討論結論、研究資料、設計、階段任務、進度都記在這裡，讓開發可以分階段、跨多次對話、由多個幫手（Claude 子代理、Codex、Antigravity）接力進行。
 
 - 建立日期：2026-10-18
-- 目前狀態：**Phase 1 程式完成，使用者本機實測中**（見 [10-progress-log.md](10-progress-log.md)）
+- 目前狀態：**Phase 1 已部署到公開網站，兩週試用中（P1-18）**（見 [10-progress-log.md](10-progress-log.md)、試用指南 06 §2.1）
 - 這個資料夾不會被發佈到網站（不在 `content/` 內，也不在 deploy.yml 的觸發路徑內）。
 
 ## 閱讀順序

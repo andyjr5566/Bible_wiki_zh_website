@@ -153,3 +153,14 @@
 - PWA：manifest（聖經研讀知識庫）與 sw.js 可取得（本機 serve 無法註冊 Service Worker 為既有現象，部署後在線上確認）。
 - 我的筆記頁畫出；全程未登入時對 Google 帳號／雲端硬碟的請求 0 筆；沒有 JavaScript 例外。
 - 截圖人工檢視（深色與淺色的筆記面板、導覽泡泡、閱讀模式、搜尋）無跑版。
+
+## 2026-10-18｜Phase 1｜部署試用版到公開網站（P1-23）
+
+- 使用者同意部署並確認推送清單（71 檔：plugin、教學頁、隱私權政策、quartz.config.yaml、deploy.yml、sw.js、首頁指南一行、dev-notes；刪除 PoC 頁）。推送前檢查：無密鑰（只有研究筆記裡一個網址含 client_secret 字樣）、無 email；Client ID 為公開資訊。
+- `main`：本機 `git merge --no-ff feature/personal-notes`，PoC 頁在 feature 分支是「先加後刪」，合併時另外 `git rm` 才真的移除 → merge commit `e5f6bd9b`，push `fcf5d547..e5f6bd9b`。
+- GitHub Actions「Deploy Quartz to GitHub Pages」成功（約 18 分鐘；「Setup local plugins」「Install Quartz plugins」步驟正常）。
+- 線上檢查：config.json、app.js（md5 與本機 dist 相同）、章節頁（掛載點 GEN／1）、my-notes、兩個教學頁皆 200；PoC 頁 404。
+- 線上無頭 Chrome 回歸（regress.mjs）15/15 通過（wiki-tour、搜尋 503 筆、深色、閱讀模式、SPA 換頁與上一頁、PWA 檔案、我的筆記頁、無例外、未登入 0 筆 Google 帳號／雲端硬碟請求）。netprobe：點「用 Google 同步」前 gsi 請求 0 筆、點後 1 筆，說明視窗「繼續」在載入完成後才可按。
+- 發現既有問題（P1-24，非本功能造成）：線上 Service Worker 註冊失敗（SecurityError：scope 不在 /static/ 底下）。Head.tsx 本分支未改動；網站離線快取一直沒有生效。筆記功能不依賴 Service Worker。待使用者決定是否修。
+- 06 §2.1 新增試用操作指南（Windows、iPhone／iPad、8 個情境、回報方式、筆記不見時怎麼辦、配額檢查、緊急開關、通過條件）。
+- 下一步：使用者開始 P1-18 兩週試用（需先把試用者 Gmail 加入 Google Cloud 測試使用者）。

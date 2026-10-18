@@ -75,7 +75,8 @@ features/notes（畫面＋NotesService）
 | `features/types.ts` | 功能模組介面＋跨功能事件 | `Feature { id, views: { 掛載點種類: (ctx) => View } }`；`COMPOSE_NOTE_EVENT`（畫重點工具列「寫筆記」→ 筆記模組開新筆記並帶入節數與引文） |
 | `features/index.ts` | 功能模組清單 | `FEATURES`、`viewFactories(kind)` |
 | `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`（含經節 📝 標記）、`MyNotesPage`（搜尋、標籤、匯出）、`drafts.ts`（編輯中草稿的本機備份與補存）、`links.ts`＋`linkComplete.ts`（`[[` 解析與自動完成）、`markdownExport.ts`（Obsidian ZIP） |
-| `features/highlights/` | 畫重點與書籤 | `HighlightsService`（type "highlight"／"bookmark"）、`chapterView.ts`（選取工具列、螢光標示、本章重點與書籤列）、`myNotesView.ts`（我的筆記頁清單） |
+| `features/stickies/` | 便條紙（D-41） | `StickiesService`（type "sticky"、color 欄位）、`chapterView.ts`（經節下方的紙箋、收起的小紙條與浮出視窗、儲存佇列、復原、衝突選擇）、`settings.ts`（每台裝置的展開／收起偏好）、`myNotesView.ts`（〈我的筆記〉最上方的 ⚙ 設定，用 `Feature.first`） |
+| `features/highlights/` | 畫重點與書籤 | `HighlightsService`（type "highlight"／"bookmark"；條目書籤用 node 錨點）、`chapterView.ts`（選取工具列、螢光標示、本章重點與書籤列）、`nodeView.ts`（知識庫條目頁標題下方的「🔖 加入書籤」，掛載點種類 `node`）、`myNotesView.ts`（我的筆記頁清單） |
 
 ## 4. 怎麼新增一個功能（以「畫重點」為例，已照這個流程做成 `features/highlights/`）
 
@@ -87,6 +88,10 @@ features/notes（畫面＋NotesService）
 6. **測試**：資料操作仿照 `test/sync.test.ts` 寫多裝置情境；跑 `npm test`（含架構規則）。
 
 不需要動的：`merge/`、`store/`、`adapter/`、`sync/`、`session/`、其他功能的資料夾。
+
+某個功能要排在掛載點最前面（例如〈我的筆記〉頁最上方的設定按鈕），在 Feature 加 `first: ["mynotes"]`。
+
+畫面裡的固定 SVG 圖示：`h()` 只用 textContent，不支援 HTML 字串；要用常數 SVG 時以 `new DOMParser().parseFromString(svg, "text/html")` 建立（不要用 XML 模式，沒有 xmlns 不會變成 SVG），只用於程式裡的常數，絕不用於使用者內容。
 
 兩個功能需要互動時（例如畫重點工具列要開筆記編輯器），在 `features/types.ts` 定義事件名稱與資料型別，用 `document.dispatchEvent(new CustomEvent(...))` 傳遞，不要互相 import。
 

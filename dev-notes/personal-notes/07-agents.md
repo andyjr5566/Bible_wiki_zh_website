@@ -62,6 +62,9 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 
 審查也分級：第 3 級的實作一定再用另一個模型（或 Sol 唯讀）審查一次；第 1、2 級由主導者審查 diff＋測試＋無頭 Chrome 即可。
 
+**沙箱失效時的備案（2026-10-19）**：若 `codex exec -s workspace-write` 出現 `setup refresh had errors`，看 `~/.codex/.sandbox/sandbox.<日期>.log`。這台電腦的原因是沙箱要改 `Codexuntimes\cua_node\...
+ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_repl MCP 或使用者的 Codex 桌面版）。不要改用 danger-full-access；改成 stdin 模式：規格＋現有檔案經 stdin 傳入（`-s read-only`，叮嚀不要執行指令），請它用 `===FILE 名稱===`／`===END===` 輸出完整檔案，由主導者貼上並測試。注意：Codex 不能自己跑測試時，要特別檢查它有沒有用了專案 helper 不支援的寫法（例如本專案的 `h()` 不支援 `html:`）。
+
 原則：正確性關鍵的模組（merge、sync）至少由兩個不同家族的模型交叉檢查（例如 Sol 實作、Argon 審查、主導者裁決）。
 
 ---

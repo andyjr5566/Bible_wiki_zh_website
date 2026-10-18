@@ -264,3 +264,21 @@
 - 檢查範圍：外掛原始碼、content/教學（含隱私權政策）、quartz.config.yaml、wiki-tour。唯一的「試用」在 Google 授權被拒時的訊息（「還不在雲端同步的試用名單裡」）→ 抽成 `auth/gis.ts` 的 `tokenErrorMessage()`，改為「沒有完成 Google 授權（在授權視窗按了取消，或沒有勾選存取權限）。可以再按一次「用 Google 同步」重試。」`notice` 維持空白。
 - 首頁 `content/index.md` 的「邀請大家一起試用」講的是整個網站，且是 vault 同步內容，不動。
 - 驗證：新增 test/auth.test.ts 3 個（拒絕授權訊息不含試用且說明重試、其他錯誤沿用 Google 說明、src 內非註解的程式碼沒有「試用」字樣）；改回舊版時 3 個都失敗。全部 141 個測試通過、tsc 通過；dist/app.js 已無「試用名單」。
+
+## 2026-10-19｜便條紙（12 N1、D-41）＋條目書籤（12 N2）
+
+**設計確認**：先用 AskUserQuestion 給使用者三種位置（附示意圖）、內容豐富度、附加功能。使用者選：貼在經節下方＋收起時像小圖示點了浮出；〈我的筆記〉頁加「⚙ 設定」統一選展開或收起；短文字＋四色；本章一鍵收起／展開、Markdown 匯出、導覽與教學提到。另外提出「知識庫條目加入書籤」（N2）。
+
+**委派（使用者要求「請 Codex 做，不要什麼事情都親力親為」「分配任務要分級」）**
+- 主導者先把共用基礎 commit 到 `feature/stickies`（紀錄種類 sticky、未知種類保留、選取在 `.bwz-v-ui` 內不算選經文、toast 復原按鈕、`Feature.first`、StickiesService），再交給 Codex。
+- 便條畫面（第 2 級）與條目書籤（第 1–2 級）：Codex 在 worktree 實作（當時尚未訂分級，用的是 config 預設 gpt-6-astra／medium），主導者審查 diff、修正（新便條在本次瀏覽保持展開、測試替身補 overrides）、合併。
+- 使用者看到初版後說「超級醜」→ 主導者訂出「紙箋」視覺規格（網站的羊皮紙色、深紅與琥珀、霞鶩文楷、✤ 裝飾），交給 **gpt-6-luna／medium（第 2 級）**。
+- **Codex 沙箱問題**：worktree 與獨立 clone 都出現 `setup refresh had errors`。查 `~/.codex/.sandbox/sandbox.*.log`：沙箱每次啟動要設定 `...\Codexuntimes\cua_node\...
+ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 自己的 node_repl／cua_repl MCP 一啟動就會占用它。用 `-c mcp_servers.node_repl.enabled=false` 與關閉 computer-use 外掛都沒有解決（另有使用者的 Codex 桌面版也在用同一個執行環境）。改用 07 的 stdin 模式：把規格與現有檔案經 stdin 傳給 Luna（read-only、不執行指令），請它輸出完整新檔案，由主導者貼上、測試。
+- Luna 產出的問題（主導者修正）：用了 `h()` 不支援的 `html:` 屬性（圖示與「本章 N 張便條」都變空白）、卡片 class 少了 `bwz-sticky`、`className` 覆蓋掉傾斜 class、進場動畫 `fill: both` 讓傾斜失效、`clip-path` 把陰影切掉、SVG 字串沒有 xmlns 用 XML 解析不會變成 SVG（改用 HTML 解析器）、SVG `fill="var(--paper)"` 屬性無效、浮出視窗按鈕被「滑鼠移上去才顯示」規則藏起來。主導者依截圖逐輪調整：右下角翹起的陰影改落在紙外、橫線只畫在文字下方、動作圖示改放右上角、設定按鈕加明顯框線。
+- 便條的 🗒 一開始在無頭 Chrome 顯示成小方框（缺 emoji 變體選擇符）→ 加 U+FE0F；收起圖示後來改為 SVG 迷你紙條。
+
+**驗證**
+- 單元測試 155 個（新增 auth 3、stickies 9、highlights 條目書籤、model 未知種類、verses 選取排除、export 便條），tsc 通過。
+- 無頭 Chrome：stickycheck.mjs 23/23（工具列有便條、空白便條聚焦、自動儲存＋換色、經文文字不受影響、在便條上選字不跳工具列、有便條的經節仍可畫重點、本章 N 張與全部收起／展開、🗒 浮出、Esc 關閉、展開、重新整理後還在、刪除＋復原、空白不留、編輯中自動存、換頁不殘留、回來只有一張、〈我的筆記〉最上方⚙設定、設定預設展開、設為收起後是小圖示、手機版在畫面內且按鈕 ≥44px、無例外）；nodecheck.mjs 10/10（條目標題下方有按鈕、加入／取消、重新整理後仍在、資料夾首頁與章節頁沒有、〈我的筆記〉列出 📚 條目並可回去、SPA 換頁不重複、手機 44px、無例外）；回歸 uicheck 16/16、p2check 34/34、regress 15/15、fixcheck 11/11、mobilecheck 6/6、tourcheck 2/2、expcheck 9/9。
+- 視覺：stickyshots.mjs 亮色／暗色的卡片、滑鼠移上、編輯中、收起＋浮出、手機、設定視窗截圖逐一檢查。

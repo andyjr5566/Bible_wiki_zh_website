@@ -69,7 +69,7 @@ plugins/personal-notes/
 │   │   ├── NotesToolbarButton.tsx  工具列：登入／同步狀態（延遲載入 app）
 │   │   ├── ChapterNotesMount.tsx   afterBody：章節頁的筆記面板掛載點
 │   │   └── scripts/*.inline.ts     小型啟動腳本：偵測頁面、按需載入 app
-│   └── client/                  延遲載入的筆記引擎（store/model/merge/sync/adapter/auth/ui）
+│   └── client/                  延遲載入的筆記 App（實際分層見 11-code-structure.md）
 ├── test/                       合併、HLC、schema、假 Drive 多裝置模擬
 └── dist/                       建置產物（進版控）
 ```

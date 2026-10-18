@@ -113,3 +113,20 @@
 - 本機煙霧測試（`npx quartz build --serve -d test_content`，無頭 Chrome）：章節頁面板、狀態列「筆記目前只存在這台裝置」、「用 Google 同步」「＋ 新增筆記」、左下角筆記按鈕、「我的筆記」頁皆正常，無筆記功能錯誤。Service Worker 在本機 serve 模式註冊失敗為既有現象（本機無 Service-Worker-Allowed 標頭），與本次修改無關。
 - commit `8b8ad552`。
 - 下一步：使用者在 Windows 本機實測登入與跨瀏覽器同步。
+
+## 2026-10-18｜Phase 1｜使用者本機實測回饋：兩個問題修正＋程式分層重構
+
+使用者在 Windows 本機試用後回報：
+1. **點到另一章時面板停在「我的筆記載入中…」，重新整理才正常。** 原因：Quartz SPA 換頁用 micromorph 沿用同一個 `<section data-bwz-notes>` 元素，只換掉內容與屬性；App 以「元素是否還在頁面上」判斷是否已掛載，因此沒有重畫。修正：`app.ts` 另外檢查我們放進去的容器是否還在、`data-*`（書卷、章）是否改變，不符就 `destroy()` 後重新掛載；`ChapterPanel.destroy()` 會先存編輯中的文字（P1-19）。
+2. **還沒按同步就顯示「已同步」，是否未經同意就做事？** 查證：程式沒有任何在使用者於 Google 視窗同意前同步的路徑；「已同步」只會在登入後出現（同一分頁內重新整理或換頁仍保有授權，所以會自動同步，這是先同步再編輯的設計）。但確實有一件事未經同意：每個章節頁一打開就載入 `accounts.google.com/gsi/client`。改為 D-34（未登入者按下「用 Google 同步」才載入）；狀態列在章節面板也顯示目前登入的帳號，讓「已同步」的來由清楚（P1-20）。隱私權政策加一句說明。
+3. **架構要好維護、好擴充**：依 D-35 重構，新增 11-code-structure.md；`test/architecture.test.ts` 自動檢查依賴方向、功能模組互不 import、資料層不碰 DOM（用刻意放入的違規檔確認三條規則都會報錯）。新增 `test/session.test.ts` 13 個流程測試（未登入不連 Google、登入與認領匿名筆記、取消／拒絕、離線提示只出現一次、授權到期重連、登出清除、未連線不可刪除全部）（P1-21）。
+
+驗證：
+- `npx tsc --noEmit` 通過；`npx vitest run` 73 個測試通過（model 13、store 3、merge 18、sync 21、session 13、architecture 5）。
+- `npm run build`：app.js 76.9 KB（未壓縮）。複製到 `.quartz/plugins/personal-notes` 後 `npx quartz build --serve -d test_content`。
+- 無頭 Chrome（全新設定檔，scratchpad/netprobe.mjs 透過 DevTools 協定記錄請求）：
+  - 修正前：SPA 換到第 2 章 → 面板 `rendered:false`「我的筆記載入中…」；未點擊就有 `https://accounts.google.com/gsi/client` 請求。
+  - 修正後：換到第 2 章 → 面板正常（chapter 2、狀態列與按鈕都在）；未點擊前 Google 帳號網域請求 0 筆。點「用 Google 同步」→ 說明視窗立刻出現、「繼續」顯示「Google 元件載入中…」並停用 → 載入完成後可按，此時才有 1 筆 gsi 請求。
+- 其他對外請求（Google Fonts、jsdelivr、Plausible）是網站既有設定，與筆記功能無關。
+
+遺留：使用者需重新實測登入流程（真的 Google 視窗無法在無頭瀏覽器測）；P1-16 既有功能回歸檢查、P1-18 多裝置試用仍待完成。

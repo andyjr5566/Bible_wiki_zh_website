@@ -125,6 +125,22 @@ vv 記錄每台裝置對該筆記的編輯次數，`V.vv ≤ X.vv` 才代表 X �
 ### D-28｜2026-10-18｜定案｜Claude（依本機實測）
 **Codex 目前只做審查、不做實作**：本機 Codex 的 read-only 與 workspace-write 沙箱都無法啟動子程序（07 §5）。實作由 Claude 主導者完成，Codex Sol 透過 stdin 審查關鍵模組。
 
+### D-34｜2026-10-18｜定案｜Claude（依使用者實測回饋）
+**未登入的人按下「用 Google 同步」之前，本站不連到 Google。** 原本每個章節頁一打開就預先載入 Google 登入元件（`accounts.google.com/gsi/client`），雖然沒有同步任何資料，仍是「未經同意就連到 Google」。改為：
+- 未登入：按下「用 Google 同步」時才開始載入，同時顯示權限說明；載入完成前「繼續」按鈕停用（仍符合 D-20「點擊當下才開彈窗、不可先 await」）。
+- 曾在這台裝置登入過：啟動時預先載入（之前已同意過），「繼續同步」可直接開視窗。
+- 權限說明改為每次從未登入狀態登入都顯示（原本只顯示第一次）。
+無頭 Chrome 實測：未點擊前對 Google 帳號網域的請求 0 筆，點擊後 1 筆。
+（網站本身的 Google Fonts 字型請求與筆記功能無關，不在此範圍。）
+
+### D-35｜2026-10-18｜定案｜Claude（依使用者要求：架構要好維護、好擴充）
+**程式分層＋功能模組化，規則由測試自動檢查。** 詳見 11。重點：
+- 原本 900 行的 `sync/engine.ts` 拆成 `repo/repository.ts`（本機資料核心，與紀錄種類無關）、`repo/backup.ts`（匯出入）、`sync/syncer.ts`（同步協定）、`features/notes/notes.ts`（筆記專屬的輸入轉換）。
+- `controller.ts` 改為 `session/session.ts`：不含畫面程式碼，對話框透過 `Prompts` 介面（實作在 `ui/prompts.ts`），瀏覽器能力由 `app.ts` 注入 → 登入、先同步再編輯、登出流程第一次有自動測試。
+- 畫面改為功能模組（`features/<名稱>/`＋`features/index.ts` 登記），之後的畫重點、書籤、節點筆記各自一個資料夾，不改既有功能。
+- 使用者看得到的文字集中在 `ui/`、`features/`；同步層只回報狀態種類。
+- `test/architecture.test.ts` 檢查依賴方向、功能模組互不 import、資料層不碰 DOM。
+
 ---
 
 ## 待決事項

@@ -12,14 +12,11 @@
 │  ├ personal-notes 元件（建置時注入）：同步狀態按鈕、章節筆記掛載點 │
 │  └ 延遲載入 notes-app.js（使用者第一次互動才下載）             │
 │                                                               │
-│ 筆記引擎（window 上的單一實例，SPA 換頁持續存在）              │
-│  ├ store/   IndexedDB：records／outbox／syncState／meta         │
-│  ├ model/   紀錄格式、ULID、HLC、書卷代碼、驗證                │
-│  ├ merge/   純函式合併（無 I/O，可完整單元測試）               │
-│  ├ sync/    同步引擎：狀態機、outbox、輪詢、Web Locks 領導分頁   │
-│  ├ adapter/ SyncAdapter 介面 → GoogleDriveAppDataAdapter         │
-│  ├ auth/    GIS Token Client（drive.appdata），延遲載入 GIS      │
-│  └ ui/      筆記面板、我的筆記頁、提示視窗、衝突處理            │
+│ 筆記 App（單一實例，SPA 換頁持續存在；分層詳見 11）            │
+│  ├ model/ merge/ store/ repo/  資料格式、合併、IndexedDB、本機核心 │
+│  ├ adapter/ sync/   Drive 介面、同步協定、排程與 Web Locks        │
+│  ├ auth/ session/   GIS（drive.appdata）、帳號與先同步再編輯      │
+│  └ ui/ features/    共用畫面元件、功能模組（目前：筆記）          │
 └────────┬───────────────────────────────┬─────────────────────┘
          │ HTTPS + Bearer token           │（Phase 2）
          ▼                                ▼

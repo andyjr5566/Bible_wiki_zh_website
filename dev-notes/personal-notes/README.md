@@ -4,7 +4,7 @@
 所有討論結論、研究資料、設計、階段任務、進度都記在這裡，讓開發可以分階段、跨多次對話、由多個幫手（Claude 子代理、Codex、Antigravity）接力進行。
 
 - 建立日期：2026-10-18
-- 目前狀態：**研究與規劃完成，尚未開始實作**（見 [10-progress-log.md](10-progress-log.md)）
+- 目前狀態：**Phase 1 程式完成，使用者本機實測中**（見 [10-progress-log.md](10-progress-log.md)）
 - 這個資料夾不會被發佈到網站（不在 `content/` 內，也不在 deploy.yml 的觸發路徑內）。
 
 ## 閱讀順序
@@ -21,6 +21,7 @@
 | [08-google-cloud-setup.md](08-google-cloud-setup.md) | 使用者要做的 Google Cloud 設定步驟 | Phase 0 |
 | [09-goal-prompt.md](09-goal-prompt.md) | 給 `/goal` 用的提示詞（4000 字元以內） | 啟動每個階段時 |
 | [10-progress-log.md](10-progress-log.md) | 進度日誌（只追加，不改寫） | 每次開工與收工 |
+| [11-code-structure.md](11-code-structure.md) | 程式分層、依賴規則（有自動測試）、新增功能的步驟 | 改程式或加新功能前 |
 
 ## 一句話摘要
 

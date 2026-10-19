@@ -364,3 +364,5 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
   - `auth/gis.ts`：**找到 1 點**——使用者開過 drive.file 後，在同意畫面取消勾選或到 Google 帳戶移除權限，本機「開過」記錄仍在，之後每次「繼續同步」都會再跳出要求 Drive 權限的同意畫面。修正：一起申請了 drive.file 卻沒拿到時忘掉記錄（`forgetBackupGrant`），補測試（續期沒拿到 → 同步照常、下次只申請 appdata）。
   - F5a 錨點與 D-50 刪除備份：維持 Sol／Gemini 審查後的修正，無新問題。
   - 測試 303 個通過。本機 commit，待與實機測試後的修正一起部署。
+- **部署**（使用者選「推送」）：`99787098..c4dad889`（授權續期修正＋文件）。GitHub Actions 排隊較久，約 13 分鐘後線上 app.js 與本機一致。線上 backupcheck 10/10、regress 15/15、helpcheck 8/8、stickycheck 21/21。
+- 等使用者加 drive.file 後依 13 §10 實機測試（P2-15、P2-26）。

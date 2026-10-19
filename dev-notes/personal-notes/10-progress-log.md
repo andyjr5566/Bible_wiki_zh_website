@@ -366,3 +366,4 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
   - 測試 303 個通過。本機 commit，待與實機測試後的修正一起部署。
 - **部署**（使用者選「推送」）：`99787098..c4dad889`（授權續期修正＋文件）。GitHub Actions 排隊較久，約 13 分鐘後線上 app.js 與本機一致。線上 backupcheck 10/10、regress 15/15、helpcheck 8/8、stickycheck 21/21。
 - 等使用者加 drive.file 後依 13 §10 實機測試（P2-15、P2-26）。
+- 2026-10-20：使用者在 Google Cloud 加好 `drive.file`（截圖：OAuth 同意畫面「非機密範圍」列出 `drive.file` 與 `drive.appdata`）→ 05 P2-15 勾選。已把 13 §10 實機測試步驟交給使用者；P2-26 等使用者回報結果。

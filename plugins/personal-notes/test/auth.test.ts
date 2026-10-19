@@ -138,6 +138,6 @@ describe("增量備份授權", () => {
     const fresh = new TokenManager("client")
     await fresh.prepare()
     void fresh.request()
-    expect(requestAccessToken.mock.calls.at(-1)[0].scope).toBe(`${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}`)
+    expect(requestAccessToken.mock.calls[requestAccessToken.mock.calls.length - 1][0].scope).toBe(`${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}`)
   })
 })

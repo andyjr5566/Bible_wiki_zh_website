@@ -74,7 +74,8 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 - 每次委派都在 10 記一行：任務、給誰（模型與等級）、結果、主導者修了什麼。
 - 第三輪的具體分派表見 13 §8。
 
-**沙箱失效時的備案（2026-10-19）**：若 `codex exec -s workspace-write` 出現 `setup refresh had errors`，看 `~/.codex/.sandbox/sandbox.<日期>.log`。這台電腦的原因是沙箱要改 `Codexuntimes\cua_node\...
+**沙箱失效時的備案（2026-10-19）**：若 `codex exec -s workspace-write` 出現 `setup refresh had errors`，看 `~/.codex/.sandbox/sandbox.<日期>.log`。這台電腦的原因是沙箱要改 `Codex
+untimes\cua_node\...
 ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_repl MCP 或使用者的 Codex 桌面版）。不要改用 danger-full-access；改成 stdin 模式：規格＋現有檔案經 stdin 傳入（`-s read-only`，叮嚀不要執行指令），請它用 `===FILE 名稱===`／`===END===` 輸出完整檔案，由主導者貼上並測試。注意：Codex 不能自己跑測試時，要特別檢查它有沒有用了專案 helper 不支援的寫法（例如本專案的 `h()` 不支援 `html:`）。
 
 原則：正確性關鍵的模組（merge、sync）至少由兩個不同家族的模型交叉檢查（例如 Sol 實作、Argon 審查、主導者裁決）。
@@ -132,3 +133,11 @@ ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_r
 - 因此**目前 Codex 只用於審查**（檔案內容經 stdin 傳入）；實作由 Claude 主導者完成。不使用 `--dangerously-bypass-approvals-and-sandbox`（違反 §3 規則）。
 - 若日後要讓 Codex 實作，需先排除沙箱問題（例如 `codex doctor`、更新 Codex，或由使用者在 Codex 桌面版中處理），並在 worktree 中重新驗證。
 - **2026-10-19 更新**：Codex CLI 0.162.1 的 `-s workspace-write` 已可寫檔（在 scratchpad 的測試 repo 建立 hello.txt 成功）。使用者要求「請 Codex 做，不要什麼都親力親為」→ 便條紙（12 N1）改由 Codex 實作：主導者先把共用基礎 commit 到 `feature/stickies`，再開 worktree `C:\Obsidianwz-codex-stickies`（分支 `codex/stickies`，plugin 的 node_modules 用 junction 指回主 repo），任務包經 stdin 傳入（`codex exec -s workspace-write -C <worktree>`）。主導者審查 diff、跑測試與無頭 Chrome 後才整合。
+
+## 第三輪的經驗（2026-10-19）
+
+- **Codex**：`-s read-only` 加 `-C <外掛資料夾>` 有時能自己讀檔、有時沙箱啟動失敗（同一天兩種都遇到）；`workspace-write` 仍失敗。可靠做法仍是 stdin 模式（規格＋相關檔案整包，80 KB 左右沒問題）。**Sol 與 Luna 輸出完整檔案時會刪掉原有註解、甚至刪掉無關的方法**（這輪 session.ts、gis.ts、app.ts、myNotesPage.ts 都發生）→ 整合時一律看 `git diff -w` 的刪除行，必要時還原原檔只套功能改動。
+- **Antigravity**：`agy -p` 的提示太長會「Argument list too long」→ 把任務寫成檔案，提示只寫「請閱讀檔案…」並加 `--add-dir`。`gemini-4-argon-high` 回 429（個人額度用完，約 5 天後重置）→ 用 `gemini-3.8-flash-high` 做交叉審查、`gemini-3.8-flash-medium` 審文案，品質足夠（F5a 的 6 點與 Sol 一致）。
+- **Claude 子代理的 worktree** 從線上版本（origin/main）分出去，**不含本機 commit** → 任務包第一步請它 `git merge --ff-only main`；主導者要先把它需要的改動 commit。子代理不 commit，主導者用 `git add -A && git diff --cached`（排除 dist）做成 patch，`git apply -3` 套回主目錄。
+- 無頭 Chrome 預設 `prefers-reduced-motion: reduce`：驗證動畫要先 `Emulation.setEmulatedMedia` 設成 `no-preference`。
+

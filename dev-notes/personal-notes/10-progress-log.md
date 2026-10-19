@@ -358,3 +358,4 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **部署**（使用者選「推送」；drive.file 使用者尚未加）：`fdd94811..99787098`（15 個 commit、113 個檔案）。GitHub Actions：build（含新的「Verse list check report」步驟）與 deploy 都成功；沒有經文清單警告、沒有「找不到報告」提示、沒有開 Issue → 線上內容所有章節都通過。
 - **線上驗證**：tourcheck 2/2（網站導覽筆記站，含新連結）、stickycheck 21/21、nodecheck 11/11、p2check 34/34、mobilecheck 6/6、regress 15/15、swcheck 11/11、uicheck 16/16、expcheck 9/9、mynotescheck 24/24、entrycheck 15/15、quotecheck 11/11、backupcheck 10/10、helpcheck 8/8、tutorialcheck 10/10、fixcheck 11/11（INCOG=1）。
 - 待使用者：08 步驟 4b 加 drive.file；之後實機試「存一份到我的 Google Drive」→ 到 Drive 看資料夾 →「從這份還原」。
+- 收尾查核（goal 檢查提出兩個缺口）：①真正的 Google Drive 上傳／清單／還原／刪除時一起移備份，需要使用者先加 drive.file 再用自己的帳號實機測 → 05 P2-26 保持未勾；②13 §8 指定的 `gemini-4-argon-high` 交叉審查未做：重試 argon-high／medium／low 都回 429（約 120 小時後重置），第 3 級已由 Sol（OpenAI）＋gemini-3.8-flash-high（Google）兩個家族審過 → 新增 05 P2-27「額度恢復後補 Argon 審查」，請使用者決定是否接受 Flash 代替。

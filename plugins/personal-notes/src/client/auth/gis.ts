@@ -141,7 +141,12 @@ export class TokenManager {
   /** 用 about.get 確認帳號後呼叫。 */
   setOwner(permissionId: string): void {
     this.owner = permissionId
-    if (this.backupGranted) this.rememberBackupGrant(permissionId)
+    if (this.backupGranted) {
+      // 換分頁或 token 過期後 owner 是空的，續期只能靠記住的 email 判斷要不要一起申請 drive.file（Gemini 審查 F3a #1）
+      this.rememberBackupGrant(permissionId)
+      const hint = safe(() => localStorage.getItem(HINT_KEY), null)
+      if (hint) this.rememberBackupGrant(hint)
+    }
     this.persist()
     this.emit()
   }

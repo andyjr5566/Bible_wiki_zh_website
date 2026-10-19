@@ -103,7 +103,7 @@ export class DriveFiles implements DriveFilesLike {
         createdTime: file.createdTime ?? "",
         records: Math.max(0, Number.parseInt(file.appProperties?.records ?? "0", 10) || 0),
       }))
-      .sort((a, b) => Date.parse(b.createdTime) - Date.parse(a.createdTime))
+      .sort((a, b) => (Date.parse(b.createdTime) || 0) - (Date.parse(a.createdTime) || 0))
   }
 
   async createBackup(folderId: string, name: string, json: string, records: number): Promise<string> {

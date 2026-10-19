@@ -41,7 +41,7 @@ export function backupsToTrash<T extends { id: string; createdTime: string }>(
   keep = KEEP_BACKUPS,
 ): string[] {
   return [...list]
-    .sort((a, b) => Date.parse(b.createdTime) - Date.parse(a.createdTime))
+    .sort((a, b) => (Date.parse(b.createdTime) || 0) - (Date.parse(a.createdTime) || 0))
     .slice(Math.max(0, keep))
     .map((backup) => backup.id)
 }

@@ -84,7 +84,8 @@ function changeTimes(repo: Repository): { lastChangeAt: number | null; firstReco
 }
 
 export class DriveBackup {
-  private running: Promise<BackupResult> | null = null
+  /** 進行中的備份（記住是哪個帳號的，切換帳號後不共用，Gemini 審查 F3a #6）。 */
+  private running: { permissionId: string; work: Promise<BackupResult> } | null = null
   private autoRunning = false
 
   constructor(private readonly deps: DriveBackupDeps) {}
@@ -149,7 +150,7 @@ export class DriveBackup {
   backupNow(fromClick: boolean): Promise<BackupResult> {
     const { account, ws } = this.deps.current()
     if (!account) return Promise.resolve({ ok: false, reason: "signed-out" })
-    if (this.running) return this.running
+    if (this.running?.permissionId === account.permissionId) return this.running.work
 
     const tokens = this.deps.tokens
     if (!tokens || !this.deps.createDriveFiles) return Promise.resolve({ ok: false, reason: "auth" })
@@ -167,9 +168,10 @@ export class DriveBackup {
     }
 
     const work = this.performBackup(account, ws, request)
-    this.running = work
+    const entry = { permissionId: account.permissionId, work }
+    this.running = entry
     void work.finally(() => {
-      if (this.running === work) this.running = null
+      if (this.running === entry) this.running = null
     })
     return work
   }
@@ -189,7 +191,11 @@ export class DriveBackup {
         // 即使只取得 appdata，也確認 token 擁有者，讓原本的同步繼續使用。
         if (!tokens.token()) return { ok: false, reason: "auth" }
         const identified = await this.deps.identifyToken()
-        if (identified.permissionId !== account.permissionId) return { ok: false, reason: "auth" }
+        if (identified.permissionId !== account.permissionId) {
+          // 在 Google 視窗選了別的帳號：丟掉這個 token，不然目前帳號的同步會一直拿不到 token（Gemini 審查 F3a #2）
+          tokens.clear()
+          return { ok: false, reason: "auth" }
+        }
         tokens.setOwner(account.permissionId)
         if (!tokens.hasBackupScope?.(account.permissionId)) return { ok: false, reason: "no-scope" }
       }
@@ -202,8 +208,13 @@ export class DriveBackup {
       const now = this.deps.now()
       const folderId = await files.ensureFolder()
       const id = await files.createBackup(folderId, backupName(now), JSON.stringify(data), data.records.length)
-      const list = await files.listBackups()
-      for (const oldId of backupsToTrash(list)) await files.trash(oldId)
+      // 修剪舊備份失敗不影響這次備份成功（新檔已經上傳；下次備份會再修剪，Gemini 審查 F3a #3）
+      try {
+        const list = await files.listBackups()
+        for (const oldId of backupsToTrash(list)) await files.trash(oldId)
+      } catch (error) {
+        console.warn("[personal-notes] 舊備份移到垃圾桶失敗，下次再試", error)
+      }
 
       // 切換帳號期間完成的請求不可寫進新工作區。
       if (this.deps.current().ws === ws) {
@@ -249,6 +260,14 @@ export class DriveBackup {
     return importBackup(ws.repo, JSON.parse(json) as unknown)
   }
 
+  /** 「刪除全部筆記」時使用者勾了「同時把 Drive 裡的備份移到垃圾桶」（D-50）：只動本站建立的備份檔。回傳移了幾份。 */
+  async trashAllBackups(): Promise<number> {
+    const files = this.files()
+    const list = await files.listBackups()
+    for (const b of list) await files.trash(b.id)
+    return list.length
+  }
+
   async autoBackupIfDue(): Promise<void> {
     if (this.autoRunning || this.running) return
     this.autoRunning = true
@@ -273,7 +292,7 @@ export class DriveBackup {
       if (!dueForAutoBackup({ ...state, lastBackupAt: refreshed.at })) return
 
       const result = await this.backupNow(false)
-      if (!result.ok) await ws.store.setMeta(FAILURES, refreshed.failures + 1)
+      if (!result.ok && this.deps.current().ws === ws) await ws.store.setMeta(FAILURES, refreshed.failures + 1)
     } catch (error) {
       try {
         const failures = (await ws.store.getMeta<number>(FAILURES)) ?? 0

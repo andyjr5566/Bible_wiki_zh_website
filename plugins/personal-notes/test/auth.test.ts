@@ -124,4 +124,20 @@ describe("增量備份授權", () => {
     expect(manager.tokenFor("account")).toBe("appdata-only")
     expect(manager.hasBackupScope("account")).toBe(false)
   })
+
+  it("Gemini 審查 F3a #1：開過備份後換新分頁（owner 是空的）續期，靠記住的 email 仍兩個範圍一起申請", async () => {
+    local.setItem("bwz-notes-login-hint", "a@example.com") // 之前登入過、記住的 email
+    const manager = new TokenManager("client")
+    await manager.prepare()
+    const first = manager.requestBackupScope()
+    callback({ access_token: "a", expires_in: 3600, scope: `${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}` })
+    await first
+    manager.setOwner("account") // 備份流程只呼叫 setOwner，不會再呼叫 rememberEmail
+    // 新分頁：sessionStorage 是空的
+    session.removeItem("bwz-notes-token")
+    const fresh = new TokenManager("client")
+    await fresh.prepare()
+    void fresh.request()
+    expect(requestAccessToken.mock.calls.at(-1)[0].scope).toBe(`${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}`)
+  })
 })

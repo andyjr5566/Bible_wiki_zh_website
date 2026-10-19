@@ -403,6 +403,11 @@ export class Session {
     return this.backup.markDownloaded()
   }
 
+  /** 刪除全部筆記時一起把 Drive 備份移到垃圾桶（使用者勾選才做，D-50）。 */
+  trashAllBackups(): Promise<number> {
+    return this.backup.trashAllBackups()
+  }
+
   /** 每週自動備份開關（每台裝置各自記）。 */
   setAutoBackupEnabled(enabled: boolean): void {
     this.backup.setAutoEnabled(enabled)

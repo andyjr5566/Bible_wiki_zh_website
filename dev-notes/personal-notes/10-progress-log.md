@@ -367,3 +367,5 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **部署**（使用者選「推送」）：`99787098..c4dad889`（授權續期修正＋文件）。GitHub Actions 排隊較久，約 13 分鐘後線上 app.js 與本機一致。線上 backupcheck 10/10、regress 15/15、helpcheck 8/8、stickycheck 21/21。
 - 等使用者加 drive.file 後依 13 §10 實機測試（P2-15、P2-26）。
 - 2026-10-20：使用者在 Google Cloud 加好 `drive.file`（截圖：OAuth 同意畫面「非機密範圍」列出 `drive.file` 與 `drive.appdata`）→ 05 P2-15 勾選。已把 13 §10 實機測試步驟交給使用者；P2-26 等使用者回報結果。
+- 2026-10-20 **實機測試第一次回報**（截圖）：存到 Google Drive 成功——「上次備份：今天（Google Drive）」、「每週自動備份（這台裝置）」已勾、「查看備份與還原」列出 2026/10/20 01:58、4 則。還原結果與 Drive 資料夾確認待回報。
+- 同一張截圖看到**排版問題**：「每週自動備份」的勾選框蓋到「立即備份」按鈕。原因：網站主題替所有勾選框加負的左邊距（quartz-base 的 `margin-inline: -1.4rem`，以及排在外掛後面的 obsidian-theme 層 `-24px`），後者層級較後，選擇器再精確也贏不了。主導者修（美術調整，第 1 級）：`backup.scss` 對 `.bwz-backup-check`、`.bwz-n-check`（刪除全部視窗的 D-50 勾選）的勾選框用 `!important` 歸零。新增 `e2e/checkboxcheck.mjs`（用網站真正的 CSS 量勾選框與按鈕位置，電腦＋手機）：修正前 3/7（勾選框往左 24px、蓋到按鈕 9px），修正後 7/7；npm test 303、typecheck、backupcheck 10/10。本機 commit，待部署。

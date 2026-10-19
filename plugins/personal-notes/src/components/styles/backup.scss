@@ -90,6 +90,27 @@
   height: 1rem;
 }
 
+// 網站主題（quartz-base 的 margin-inline: -1.4rem、後面 obsidian-theme 層的 -24px）替所有勾選框加了負的左邊距（給任務清單用），
+// 會蓋到左邊的按鈕或跑出框外。obsidian-theme 層排在外掛的層後面，選擇器再精確也贏不了，只能用 !important。
+.bwz-backup-check input[type="checkbox"],
+.bwz-n-check input[type="checkbox"] {
+  flex: none;
+  margin: 0 !important;
+  margin-inline: 0 !important;
+  transform: none;
+}
+
+// 「刪除全部筆記」視窗的勾選（D-50）
+.bwz-n-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.bwz-n-check input[type="checkbox"] {
+  margin-top: 0.3rem !important;
+}
+
 .bwz-backup-list-wrap {
   width: 100%;
 }

@@ -6,11 +6,13 @@
 //   所以這裡沒有 DOM 程式碼，可在 Node 測試。
 
 import type { TokenResult } from "../auth/gis"
+import type { BackupListing, DriveFilesLike } from "../adapter/driveFiles"
 import type { SyncAdapter } from "../adapter/types"
-import { adoptRecords } from "../repo/backup"
+import { adoptRecords, type ImportResult } from "../repo/backup"
 import { Repository } from "../repo/repository"
 import { ANON_DB, accountDbName, type NotesStore } from "../store/db"
 import { Syncer, type SyncStatus } from "../sync/syncer"
+import { DriveBackup, type BackupReminder, type BackupResult, type LastBackup } from "./driveBackup"
 import type { Prompts } from "./prompts"
 
 export interface ClientConfig {
@@ -34,6 +36,10 @@ export interface TokenSource {
   prepare(): Promise<void>
   /** 必須在點擊事件中同步呼叫。 */
   request(): Promise<TokenResult>
+  /** 「存一份到我的 Google Drive」（D-45）：drive.appdata 與 drive.file 一起申請；必須在點擊事件中同步呼叫。選用：舊的測試替身沒有。 */
+  requestBackupScope?(): Promise<TokenResult>
+  /** 這個帳號是否已開過 drive.file。 */
+  hasBackupScope?(permissionId: string): boolean
   token(): string | null
   tokenFor(permissionId: string): string | null
   hasToken(): boolean
@@ -78,6 +84,8 @@ export interface SessionDeps {
   openStore(name: string): Promise<NotesStore>
   deleteStore(name: string): Promise<void>
   createAdapter(getToken: () => string | null): SyncAdapter
+  /** 可見資料夾的備份檔操作（D-45）。選用：只測登入與同步的測試替身沒有。 */
+  createDriveFiles?(getToken: () => string | null): DriveFilesLike
   createScheduler(parts: { repo: Repository; syncer: Syncer }, namespace: string): SchedulerLike
   requestPersistence?(): void
   /** 測試用：控制時間。 */
@@ -100,7 +108,19 @@ export class Session {
   /** 本次工作階段已確認過離線提示（D-04：不要每開一則就跳一次）。 */
   private offlineAcknowledged = false
 
-  constructor(private readonly deps: SessionDeps) {}
+  /** 存到 Google Drive 的備份（D-45、session/driveBackup.ts）。 */
+  private readonly backup: DriveBackup
+
+  constructor(private readonly deps: SessionDeps) {
+    this.backup = new DriveBackup({
+      current: () => ({ account: this.account, ws: this.ws }),
+      tokens: deps.tokens,
+      storage: deps.storage,
+      createDriveFiles: deps.createDriveFiles,
+      identifyToken: () => deps.createAdapter(() => deps.tokens?.token() ?? null).account(),
+      now: deps.now ?? Date.now,
+    })
+  }
 
   get config(): ClientConfig {
     return this.deps.config
@@ -217,7 +237,14 @@ export class Session {
     }
     // 先換好工作區再接上事件：畫面收到通知時讀到的一定是新帳號的資料（Codex 重構審查 A1）
     this.ws = { store, repo, syncer, scheduler }
-    this.unsubscribe.push(repo.onChange(() => this.emit()), syncer.onStatus(() => this.emit()))
+    this.unsubscribe.push(
+      repo.onChange(() => this.emit()),
+      syncer.onStatus(() => {
+        this.emit()
+        // 每次同步成功後看看要不要自動備份（D-45：超過 7 天且有改過）；錯誤都在 DriveBackup 裡吞掉，不影響同步
+        if (this.ws.syncer === syncer && syncer.status.kind === "ready") void this.backup.autoBackupIfDue()
+      }),
+    )
     scheduler?.start()
     this.emit()
   }
@@ -334,6 +361,52 @@ export class Session {
 
   syncNow(): void {
     void this.ws.scheduler?.syncNow()
+  }
+
+  // ---------- 存到 Google Drive 的備份（D-45；畫面在 features/backup/） ----------
+
+  /** 立即備份。從按鈕呼叫時 fromClick=true：還沒開過 drive.file 會在這次點擊裡申請。 */
+  backupNow(fromClick: boolean): Promise<BackupResult> {
+    return this.backup.backupNow(fromClick)
+  }
+
+  autoBackupIfDue(): Promise<void> {
+    return this.backup.autoBackupIfDue()
+  }
+
+  listBackups(): Promise<BackupListing[]> {
+    return this.backup.listBackups()
+  }
+
+  /** 從 Drive 的某份備份合併還原（不刪除、不覆蓋，同「從備份匯入」）。 */
+  restore(fileId: string): Promise<ImportResult> {
+    return this.backup.restore(fileId)
+  }
+
+  lastBackup(): Promise<LastBackup> {
+    return this.backup.lastBackup()
+  }
+
+  /** 〈我的筆記〉頁頂端要不要提醒備份。 */
+  backupReminder(): Promise<BackupReminder> {
+    return this.backup.reminder()
+  }
+
+  /** 備份提醒按「之後再說」。 */
+  snoozeBackupReminder(): void {
+    this.backup.snoozeReminder()
+    this.emit()
+  }
+
+  /** 使用者下載了 JSON 備份檔（也算一次備份，提醒用）。 */
+  markDownloaded(): Promise<void> {
+    return this.backup.markDownloaded()
+  }
+
+  /** 每週自動備份開關（每台裝置各自記）。 */
+  setAutoBackupEnabled(enabled: boolean): void {
+    this.backup.setAutoEnabled(enabled)
+    this.emit()
   }
 
   /**

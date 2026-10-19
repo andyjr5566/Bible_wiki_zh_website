@@ -2,6 +2,7 @@
 // 由頁面上的啟動腳本在需要時 import，並在每次 SPA 換頁後呼叫 mountAll()。
 
 import { DriveAdapter } from "./adapter/drive"
+import { DriveFiles } from "./adapter/driveFiles"
 import { TokenManager } from "./auth/gis"
 import { viewFactories } from "./features"
 import type { View } from "./features/types"
@@ -59,6 +60,8 @@ function createSession(config: ClientConfig): Session {
     openStore: (name) => NotesStore.open(name),
     deleteStore: (name) => NotesStore.deleteDatabase(name),
     createAdapter: (getToken) => new DriveAdapter({ getToken, maxCallsPerMinute: 60 }),
+    // 「存一份到我的 Google Drive」（D-45）：與同步共用同一個 token
+    createDriveFiles: (getToken) => new DriveFiles({ getToken, maxCallsPerMinute: 60 }),
     createScheduler: ({ repo, syncer }, namespace) => new SyncScheduler({ repo, syncer, namespace, minPollSeconds: config.minPollSeconds }),
     requestPersistence: () => void navigator.storage?.persist?.().catch(() => undefined),
   })

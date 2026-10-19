@@ -1,6 +1,8 @@
 // Google Drive appDataFolder 後端（03 §2、§4；PoC 已驗證所有端點，06 §1）。
+// HTTP、節流、退避與錯誤分類在 adapter/http.ts（與備份用的 driveFiles.ts 共用）。
 
 import { APP_TAG, SCHEMA_VERSION } from "../model/record"
+import { DriveHttp, type DriveHttpOptions } from "./http"
 import {
   AdapterError,
   type Account,
@@ -14,14 +16,7 @@ const API = "https://www.googleapis.com/drive/v3"
 const UPLOAD = "https://www.googleapis.com/upload/drive/v3"
 const FILE_FIELDS = "id,name,version,modifiedTime,appProperties"
 
-export interface DriveAdapterOptions {
-  getToken: () => string | null
-  fetchImpl?: typeof fetch
-  sleep?: (ms: number) => Promise<void>
-  /** 每分鐘最多幾次 API 呼叫（客戶端限流，03 §4.7）。 */
-  maxCallsPerMinute?: number
-  maxRetries?: number
-}
+export interface DriveAdapterOptions extends DriveHttpOptions {}
 
 interface DriveFile {
   id: string
@@ -31,23 +26,7 @@ interface DriveFile {
   appProperties?: Record<string, string>
 }
 
-export function classifyError(status: number, reason: string, message: string): AdapterError {
-  if (status === 401) return new AdapterError("auth", message, status, reason)
-  if (status === 429) return new AdapterError("rateLimit", message, status, reason)
-  if (status === 403) {
-    if (["userRateLimitExceeded", "rateLimitExceeded", "RATE_LIMIT_EXCEEDED"].includes(reason))
-      return new AdapterError("rateLimit", message, status, reason)
-    if (reason === "storageQuotaExceeded") return new AdapterError("storageFull", message, status, reason)
-    if (reason === "domainPolicy" || reason === "admin_policy_enforced") return new AdapterError("admin", message, status, reason)
-    if (reason === "insufficientPermissions" || reason === "insufficientScopes" || reason === "ACCESS_TOKEN_SCOPE_INSUFFICIENT")
-      return new AdapterError("auth", message, status, reason)
-    return new AdapterError("other", message, status, reason)
-  }
-  if (status === 404) return new AdapterError("notFound", message, status, reason)
-  if (status === 409 && reason === "fileIdInUse") return new AdapterError("fileIdInUse", message, status, reason)
-  if (status >= 500) return new AdapterError("server", message, status, reason)
-  return new AdapterError("other", message, status, reason)
-}
+export { classifyError } from "./http"
 
 function toRemote(f: DriveFile): RemoteFile | null {
   const p = f.appProperties ?? {}
@@ -64,69 +43,14 @@ function toRemote(f: DriveFile): RemoteFile | null {
 }
 
 export class DriveAdapter implements SyncAdapter {
-  private readonly fetchImpl: typeof fetch
-  private readonly sleep: (ms: number) => Promise<void>
-  private readonly maxCallsPerMinute: number
-  private readonly maxRetries: number
-  private callTimes: number[] = []
+  private readonly http: DriveHttp
 
-  constructor(private readonly opts: DriveAdapterOptions) {
-    this.fetchImpl = opts.fetchImpl ?? ((...args) => fetch(...args))
-    this.sleep = opts.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)))
-    this.maxCallsPerMinute = opts.maxCallsPerMinute ?? 60
-    this.maxRetries = opts.maxRetries ?? 4
+  constructor(opts: DriveAdapterOptions) {
+    this.http = new DriveHttp(opts)
   }
 
-  private async throttle(): Promise<void> {
-    const now = Date.now()
-    this.callTimes = this.callTimes.filter((t) => now - t < 60_000)
-    if (this.callTimes.length >= this.maxCallsPerMinute) {
-      const wait = 60_000 - (now - this.callTimes[0]) + 50
-      await this.sleep(wait)
-    }
-    this.callTimes.push(Date.now())
-  }
-
-  private async request(method: string, url: string, body?: BodyInit, contentType?: string): Promise<unknown> {
-    for (let attempt = 0; ; attempt++) {
-      const token = this.opts.getToken()
-      if (!token) throw new AdapterError("auth", "沒有有效的 Google 授權")
-      await this.throttle()
-      let res: Response
-      try {
-        const headers: Record<string, string> = { Authorization: `Bearer ${token}` }
-        if (contentType) headers["Content-Type"] = contentType
-        res = await this.fetchImpl(url, { method, headers, body })
-      } catch (e) {
-        const err = new AdapterError("network", e instanceof Error ? e.message : "network error")
-        if (attempt < this.maxRetries) {
-          await this.sleep(this.backoff(attempt))
-          continue
-        }
-        throw err
-      }
-      const text = await res.text()
-      let data: unknown = null
-      try {
-        data = text ? JSON.parse(text) : null
-      } catch {
-        data = text
-      }
-      if (res.ok) return data
-      const e = (data as { error?: { message?: string; status?: string; errors?: { reason?: string }[] } })?.error
-      const reason = e?.errors?.[0]?.reason ?? e?.status ?? ""
-      const err = classifyError(res.status, reason, e?.message ?? `HTTP ${res.status}`)
-      if (err.retryable && attempt < this.maxRetries) {
-        await this.sleep(this.backoff(attempt))
-        continue
-      }
-      throw err
-    }
-  }
-
-  /** 截斷指數退避：1、2、4、8… 秒＋最多 1 秒隨機，上限 64 秒（Google 建議）。 */
-  private backoff(attempt: number): number {
-    return Math.min(2 ** attempt * 1000 + Math.random() * 1000, 64_000)
+  private request(method: string, url: string, body?: BodyInit, contentType?: string): Promise<unknown> {
+    return this.http.request(method, url, body, contentType)
   }
 
   async account(): Promise<Account> {

@@ -106,7 +106,7 @@
 | P2-24 | F7b 章節筆記面板「?」文字版教學（最下面連到動畫教學） | Sub（Haiku）＋AG（flash 審文案） | [x] 2026-10-19（`helpGuide.ts`；helpcheck 8/8） |
 | P2-25 | 教學頁（個人筆記使用說明、熱鍵速查）、隱私權政策（drive.file）、08 更新 | Sub（Haiku）＋AG（flash） | [x] 2026-10-19（使用說明、隱私權政策、速查；Gemini 審文案） |
 | P2-26 | 🙋 部署（列檔案經使用者選「推送」）＋線上驗證；使用者實機確認一次存到 Drive 與還原 | C＋U | [ ] 2026-10-19 已部署（使用者選「推送」，`fdd94811..99787098`），線上檢查全部通過；**待使用者**加 drive.file 後實機試一次存到 Drive 與還原 |
-| P2-27 | 第 3 級改動（F5a 條目筆記錨點、F3a 授權與 Drive 備份、D-50 刪除備份）補 Antigravity `gemini-4-argon-high` 交叉審查（13 §8 指定；2026-10-19 Argon 三個等級都 429，約 2026-10-24 重置，當時改用 gemini-3.8-flash-high 完成交叉審查） | AG（Argon）＋C | [ ] |
+| P2-27 | 第 3 級改動（F5a 條目筆記錨點、F3a 授權與 Drive 備份、D-50 刪除備份）補 Antigravity `gemini-4-argon-high` 交叉審查（13 §8 指定；2026-10-19 Argon 三個等級都 429，約 2026-10-24 重置，當時改用 gemini-3.8-flash-high 完成交叉審查） | AG（Argon）＋C | [x] 2026-10-19 使用者選「你也看一下」：由主導者（Claude，Anthropic 家族）做第三方審查代替 Argon，找到並修正 1 點（見 10） |
 
 ---
 

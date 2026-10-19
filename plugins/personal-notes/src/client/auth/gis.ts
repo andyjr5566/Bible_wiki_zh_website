@@ -70,6 +70,8 @@ export class TokenManager {
   private pending: ((r: TokenResult) => void) | null = null
   /** 這次請求是不是「一定要拿到 drive.file」（第一次手動備份）。 */
   private requestedBackup = false
+  /** 這次請求有沒有一起申請 drive.file（續期時依「開過」記錄決定）。 */
+  private askedBackup = false
   private preparing: Promise<void> | null = null
 
   constructor(private readonly clientId: string) {
@@ -155,6 +157,12 @@ export class TokenManager {
     safe(() => localStorage.setItem(grantKey(identity), "1"), undefined)
   }
 
+  private forgetBackupGrant(): void {
+    const hint = safe(() => localStorage.getItem(HINT_KEY), null)
+    if (this.owner) safe(() => localStorage.removeItem(grantKey(this.owner!)), undefined)
+    if (hint) safe(() => localStorage.removeItem(grantKey(hint)), undefined)
+  }
+
   private hadBackupGrant(): boolean {
     const hint = safe(() => localStorage.getItem(HINT_KEY), null)
     return (
@@ -213,6 +221,7 @@ export class TokenManager {
     }
     const hint = safe(() => localStorage.getItem(HINT_KEY), null)
     this.requestedBackup = requireBackup
+    this.askedBackup = includeBackup
     const result = new Promise<TokenResult>((resolve) => {
       this.pending = resolve
     })
@@ -242,6 +251,9 @@ export class TokenManager {
     }
 
     const backupGranted = oauth2.hasGrantedAllScopes(resp, DRIVE_FILE_SCOPE)
+    // 一起申請了 drive.file 卻沒拿到（使用者在同意畫面取消勾選，或到 Google 帳戶移除了權限）：忘掉「開過」的記錄，
+    // 不然之後每次「繼續同步」都會再跳出要求 Drive 權限的同意畫面（Claude 審查 F3a）
+    if (this.askedBackup && !backupGranted) this.forgetBackupGrant()
     this.accessToken = resp.access_token
     this.expiresAt = Date.now() + Number(resp.expires_in) * 1000
     this.owner = null // 新 token 尚未確認屬於哪個帳號

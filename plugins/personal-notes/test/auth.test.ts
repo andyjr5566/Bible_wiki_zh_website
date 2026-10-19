@@ -140,4 +140,24 @@ describe("增量備份授權", () => {
     void fresh.request()
     expect(requestAccessToken.mock.calls[requestAccessToken.mock.calls.length - 1][0].scope).toBe(`${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}`)
   })
+
+  it("Claude 審查 F3a：開過 drive.file 後在 Google 取消了這個權限，續期沒拿到 → 忘掉記錄，之後不再一直要求", async () => {
+    local.setItem("bwz-notes-login-hint", "a@example.com")
+    const manager = new TokenManager("client")
+    await manager.prepare()
+    const first = manager.requestBackupScope()
+    callback({ access_token: "a", expires_in: 3600, scope: `${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}` })
+    await first
+    manager.setOwner("account")
+    // 一小時後續期：還是兩個一起要，但使用者已在 Google 帳戶移除 drive.file
+    const renewal = manager.request()
+    expect(requestAccessToken.mock.calls[1][0].scope).toBe(`${DRIVE_APPDATA_SCOPE} ${DRIVE_FILE_SCOPE}`)
+    callback({ access_token: "b", expires_in: 3600, scope: DRIVE_APPDATA_SCOPE })
+    expect(await renewal).toEqual({ ok: true }) // 同步照常
+    manager.setOwner("account")
+    expect(manager.hasBackupScope("account")).toBe(false)
+    // 再下一次續期只申請 appdata
+    void manager.request()
+    expect(requestAccessToken.mock.calls[2][0].scope).toBe(DRIVE_APPDATA_SCOPE)
+  })
 })

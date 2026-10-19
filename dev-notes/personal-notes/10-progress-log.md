@@ -359,3 +359,8 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **線上驗證**：tourcheck 2/2（網站導覽筆記站，含新連結）、stickycheck 21/21、nodecheck 11/11、p2check 34/34、mobilecheck 6/6、regress 15/15、swcheck 11/11、uicheck 16/16、expcheck 9/9、mynotescheck 24/24、entrycheck 15/15、quotecheck 11/11、backupcheck 10/10、helpcheck 8/8、tutorialcheck 10/10、fixcheck 11/11（INCOG=1）。
 - 待使用者：08 步驟 4b 加 drive.file；之後實機試「存一份到我的 Google Drive」→ 到 Drive 看資料夾 →「從這份還原」。
 - 收尾查核（goal 檢查提出兩個缺口）：①真正的 Google Drive 上傳／清單／還原／刪除時一起移備份，需要使用者先加 drive.file 再用自己的帳號實機測 → 05 P2-26 保持未勾；②13 §8 指定的 `gemini-4-argon-high` 交叉審查未做：重試 argon-high／medium／low 都回 429（約 120 小時後重置），第 3 級已由 Sol（OpenAI）＋gemini-3.8-flash-high（Google）兩個家族審過 → 新增 05 P2-27「額度恢復後補 Argon 審查」，請使用者決定是否接受 Flash 代替。
+- **Argon 審查的處理**（使用者回答「你也看一下」）：主導者（Claude Opus，Anthropic，與 Sol／Gemini 不同家族）逐行審第 3 級程式：
+  - `adapter/driveFiles.ts`：以 appProperties 找資料夾與備份（spaces=drive，drive.file 只看得到本站建立的檔）、trash／read 前重新核對是本站備份、multipart 中文內容編碼——無問題。
+  - `auth/gis.ts`：**找到 1 點**——使用者開過 drive.file 後，在同意畫面取消勾選或到 Google 帳戶移除權限，本機「開過」記錄仍在，之後每次「繼續同步」都會再跳出要求 Drive 權限的同意畫面。修正：一起申請了 drive.file 卻沒拿到時忘掉記錄（`forgetBackupGrant`），補測試（續期沒拿到 → 同步照常、下次只申請 appdata）。
+  - F5a 錨點與 D-50 刪除備份：維持 Sol／Gemini 審查後的修正，無新問題。
+  - 測試 303 個通過。本機 commit，待與實機測試後的修正一起部署。

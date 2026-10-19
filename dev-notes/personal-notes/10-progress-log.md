@@ -337,3 +337,5 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
   - `npm test` 235 個、typecheck 通過。
   - 建置檢查：test_content 副本故意把創世記 2 章的經文清單在第 3 節後插一段文字 → 建置成功（exit 0），摘要「2 章通過、1 章有問題：清單在第 3 節之後被分成兩段」，報告 JSON 正確；CI 腳本用無效權杖與不存在的 repo 執行 → 警告與步驟摘要正確、`gh` 失敗也 exit 0（本機沒有 gh；GitHub 執行環境內建）。正常 test_content：3 章通過。
   - 無頭 Chrome（子路徑模擬環境）：新增 entrycheck.mjs 15/15（舊網址條目書籤在〈我的筆記〉連到新網址、找不到的標示且無連結、條目頁認得舊書籤、擋掉 links.json 後仍認得＝紀錄已改成新網址、條目面板與按鈕文字、編輯框沒有節數、重新整理還在、相關筆記兩組與排序與合計、點卡片到創世記 2 章並捲到那一則、SPA 換頁到〈大衛〉只顯示大衛的筆記、〈我的筆記〉有「知識庫條目」組、手機不左右捲且 ≥44px、無例外）。回歸：stickycheck 21/21、nodecheck 10/10、p2check 34/34、mobilecheck 6/6、regress 15/15、uicheck 16/16、swcheck 11/11、expcheck 9/9、mynotescheck 24/24（625 筆）、fixcheck 11/11（INCOG=1）。tourcheck 需完整內容，部署後線上跑。
+- F5a 交叉審查（Antigravity gemini-3.8-flash-high，讀審查資料包）：6 點，與 Sol 的 ①–⑤ 相同（另把「條目筆記每次存都改標題」列為次要），建議修法與主導者已做的修正一致 → 第 3 級「兩個不同家族」審查完成。F5 本機 commit `1e559e5e`。
+- 委派：F3a（授權多權限、Drive 可見資料夾、備份編排）｜Codex gpt-6-sol high｜3｜第一次用 `-C` 讓它自己讀檔，唯讀沙箱這次啟動失敗、沒有產出 → 改 stdin 模式（規格＋10 個相關檔案共 82 KB）重跑。F6｜Claude 子代理 Sonnet（worktree，先 `git merge --ff-only main`）｜2。F7a 動畫教學｜Claude 子代理 Sonnet（worktree）｜2。

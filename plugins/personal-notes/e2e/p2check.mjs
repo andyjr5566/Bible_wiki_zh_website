@@ -134,10 +134,12 @@ if (!only || only.includes("5") || only.includes("6")) {
   // SPA 換頁回來：不重複
   await ev(`window.spaNavigate(new URL('../01-創世記/第2章', location.href))`)
   await sleep(3000)
-  check("C3：換到第 2 章時不殘留工具列與第 1 章的重點", (await ev(`document.querySelectorAll('.bwz-h-toolbar').length`)) === 1 && (await ev(`document.querySelectorAll('mark.bwz-hl').length`)) === 0)
+  // 經文工具列與引用工具列（F6，同樣用 .bwz-h-toolbar 的樣式）各只能有一份
+  const toolbarCounts = `[document.querySelectorAll('.bwz-h-toolbar:not(.bwz-q-toolbar)').length, document.querySelectorAll('.bwz-q-toolbar').length].join(',')`
+  check("C3：換到第 2 章時不殘留工具列與第 1 章的重點", (await ev(toolbarCounts)) === "1,1" && (await ev(`document.querySelectorAll('mark.bwz-hl').length`)) === 0, await ev(toolbarCounts))
   await ev(`history.back()`)
   await sleep(3000)
-  check("C3：換頁回第 1 章，重點重新標上且只有一份", (await ev(`[...document.querySelectorAll('li[data-v="3"] mark.bwz-hl')].map(m => m.textContent).join('')`)) === "要有光" && (await ev(`document.querySelectorAll('.bwz-h-toolbar').length`)) === 1)
+  check("C3：換頁回第 1 章，重點重新標上且只有一份", (await ev(`[...document.querySelectorAll('li[data-v="3"] mark.bwz-hl')].map(m => m.textContent).join('')`)) === "要有光" && (await ev(toolbarCounts)) === "1,1", await ev(toolbarCounts))
   // 我的筆記頁
   await go("/my-notes")
   // D-42 之後：書籤與重點是〈我的筆記〉的兩個分頁

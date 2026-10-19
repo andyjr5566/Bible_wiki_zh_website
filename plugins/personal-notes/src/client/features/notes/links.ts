@@ -2,6 +2,7 @@
 // 索引由建置時的 emitter 輸出（格式見 model/linkIndex.ts），第一次需要時才下載。
 
 import type { LinkIndex, LinkPage } from "../../model/linkIndex"
+import { loadLinkIndex } from "../../ui/linkIndex"
 
 export interface LinkResolver {
   /** [[名稱]] 對應的 slug；找不到回傳 null。 */
@@ -47,12 +48,6 @@ let loading: Promise<LinkResolver | null> | null = null
 
 /** 下載索引（只下載一次）；失敗時回傳 null，筆記照常顯示，只是 [[條目]] 不會變成連結。 */
 export function loadResolver(): Promise<LinkResolver | null> {
-  if (!loading) {
-    const base = document.body.dataset.basepath ?? ""
-    loading = fetch(`${base}/static/personal-notes/links.json`)
-      .then((r) => (r.ok ? (r.json() as Promise<LinkIndex>) : null))
-      .then((index) => (index && index.v === 1 ? createResolver(index) : null))
-      .catch(() => null)
-  }
+  if (!loading) loading = loadLinkIndex().then((index) => (index ? createResolver(index) : null))
   return loading
 }

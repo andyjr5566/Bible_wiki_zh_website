@@ -1,11 +1,14 @@
 // 「我的筆記」頁的「重點」與「書籤」兩個分頁（12 C3、D-42）：最近 10 則＋依書卷折疊，點一下回到經文。
-// 知識庫條目的書籤（12 N2）放在「依書卷」最後的「知識庫條目」分組。
+// 知識庫條目的書籤（12 N2）放在「依書卷」最後的「知識庫條目」分組；條目搬移或改名後連到新網址，找不到時標示（D-46）。
 
 import type { Resolved } from "../../merge/merge"
 import { chapterLabel, chapterSlug } from "../../model/books"
+import type { Relocation } from "../../model/nodeLocate"
+import { locateNodeRecords } from "../../repo/nodeHeal"
 import type { Session } from "../../session/session"
 import { formatTime, h, toast, verseLabel } from "../../ui/dom"
 import { Library, type LibraryItem } from "../../ui/library"
+import { loadLinkIndex } from "../../ui/linkIndex"
 import { shellFor, type MyNotesShell } from "../../ui/myNotesShell"
 import type { View } from "../types"
 import { HighlightsService } from "./highlights"
@@ -18,6 +21,9 @@ export class HighlightsPage implements View {
   private readonly highlights = new Library({ unit: "個重點", empty: "還沒有畫重點。在章節頁選取經文，按「🖍 畫重點」。" })
   private readonly bookmarks = new Library({ unit: "個書籤", empty: "還沒有書籤。章節頁可以把整章或選取的經文加入書籤；知識庫條目頁也可以加入書籤。" })
   private readonly unsubscribe: () => void
+  /** 條目書籤目前該連到哪裡（id → 結果）；索引還沒載入時是 null（照原網址）。 */
+  private relocations: Map<string, Relocation> | null = null
+  private indexRequested = false
 
   constructor(
     private readonly session: Session,
@@ -63,7 +69,12 @@ export class HighlightsPage implements View {
   private href(r: Resolved): string | null {
     const a = r.winner.anchor
     const base = document.body.dataset.basepath ?? ""
-    if (a.kind === "node") return a.node?.slug ? `${base}/${encodeURI(a.node.slug)}` : null
+    if (a.kind === "node") {
+      const loc = this.relocations?.get(r.id)
+      if (loc?.kind === "missing") return null
+      const slug = loc?.kind === "moved" ? loc.slug : a.node?.slug
+      return slug ? `${base}/${encodeURI(slug)}` : null
+    }
     const slug = a.book && a.chapter ? chapterSlug(a.book, a.chapter) : null
     if (!slug) return null
     return `${base}/${encodeURI(slug)}${a.verseStart ? `#v${a.verseStart}` : ""}`
@@ -71,7 +82,11 @@ export class HighlightsPage implements View {
 
   private place(r: Resolved): string {
     const a = r.winner.anchor
-    if (a.kind === "node") return `📚 ${a.node?.title ?? a.node?.slug ?? "其他"}`
+    if (a.kind === "node") {
+      const loc = this.relocations?.get(r.id)
+      const title = loc?.kind === "moved" ? loc.title : (a.node?.title ?? a.node?.slug ?? "其他")
+      return `📚 ${title}${loc?.kind === "missing" ? "（條目可能已改名或刪除）" : ""}`
+    }
     if (!a.book || !a.chapter) return "其他"
     return `${chapterLabel(a.book, a.chapter)}${a.verseStart ? ` ${verseLabel(a.verseStart, a.verseEnd)}` : "（整章）"}`
   }
@@ -114,7 +129,20 @@ export class HighlightsPage implements View {
     }
   }
 
+  /** 有條目書籤時才下載連結索引，算出每一筆現在的網址。 */
+  private async locateNodes(): Promise<void> {
+    this.indexRequested = true
+    const index = await loadLinkIndex()
+    if (!index || !this.host.isConnected) return
+    const nodes = this.service.allBookmarks().filter((r) => r.winner.anchor.kind === "node" && r.winner.anchor.node?.slug)
+    this.relocations = locateNodeRecords(nodes, index.pages)
+    this.render()
+  }
+
   private render(): void {
+    const hasNode = this.service.allBookmarks().some((r) => r.winner.anchor.kind === "node")
+    if (hasNode && this.relocations && this.service.allBookmarks().some((r) => r.winner.anchor.kind === "node" && !this.relocations!.has(r.id))) this.indexRequested = false
+    if (hasNode && !this.indexRequested) void this.locateNodes()
     this.highlights.setItems(this.service.allHighlights().map((r) => this.item(r, "重點", r.winner.anchor.quote ? `「${r.winner.anchor.quote.exact}」` : "（整節）")))
     this.bookmarks.setItems(this.service.allBookmarks().map((r) => this.item(r, "書籤", null)))
     this.shell.update()

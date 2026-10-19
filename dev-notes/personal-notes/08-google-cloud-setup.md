@@ -32,6 +32,15 @@ Google Cloud Console 的介面名稱偶爾會改，若找不到對應按鈕，�
 2. 在手動輸入欄貼上：`https://www.googleapis.com/auth/drive.appdata` → 加入 → 更新 → **儲存**。
 3. 確認它出現在「非機密範圍」區。**不要**加入其他 Drive 範圍。
 
+### 步驟 4b（2026-10-19 第三輪新增，D-45）：加上 `drive.file`
+「存一份到我的 Google Drive」要用。只能碰本站自己建立的檔案，看不到使用者 Drive 裡的其他東西；Google 歸類為非機密範圍，不需要審查。
+1. 打開 https://console.cloud.google.com/ ，左上角確認是本站的專案。
+2. 左側選單 → **Google Auth Platform** →（左側）**資料存取（Data Access）**。
+3. 按 **新增或移除範圍（Add or remove scopes）**。
+4. 拉到最下面「手動新增範圍」，貼上：`https://www.googleapis.com/auth/drive.file` → **加到表格** → **更新**。
+5. 回到資料存取頁，確認「非機密範圍」裡有 `drive.appdata` 和 `drive.file` 兩個 → 按頁面最下面的 **儲存（Save）**。
+6. 其他都不用動（用戶端 ID、授權來源不變）。做完跟 Claude 說一聲即可。
+
 ## 步驟 5：測試使用者
 1. Google Auth Platform → **目標對象（Audience）**。
 2. 發布狀態保持 **測試中（Testing）**。

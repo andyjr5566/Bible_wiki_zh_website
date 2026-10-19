@@ -87,6 +87,26 @@
 | P2-12 | 知識庫條目加入書籤（12 N2） | C | [x] 2026-10-19 |
 | P2-13 | 〈我的筆記〉頁為大量筆記重新整理 | C＋Cx（Luna） | [x] 2026-10-19（D-42） |
 
+### 第三輪（12 F3～F7，規格見 13，決定 D-45～D-49）
+
+負責欄的模型分級見 13 §8。
+
+| # | 任務 | 負責 | 完成 |
+|---|---|---|---|
+| P2-14 | 準備：無頭 Chrome 檢查腳本搬進 `plugins/personal-notes/e2e/`（共用模組＋README＋`npm run e2e:*`）（13 §1） | Sub（Haiku） | [ ] |
+| P2-15 | 🙋 開工時請使用者在 Google Cloud 加 `drive.file` 範圍；08 補步驟（13 §2.3） | U＋C | [ ] |
+| P2-16 | F4a 經文清單規則抽成共用純函式；建置時檢查所有章節頁；CI 警告＋開／更新／關閉 Issue（13 §3.2） | Sub（Sonnet） | [ ] |
+| P2-17 | F4b 條目紀錄舊網址失效時用標題／別名／檔名找回並修正；找不到時標示（13 §3.3） | Cx（Luna low）＋C | [ ] |
+| P2-18 | F5a 筆記可以掛在條目上：notes service、`update()` 保留錨點、草稿復原、〈我的筆記〉「知識庫條目」組、匯出（13 §4.3） | Sub（Sonnet）＋Cx（Sol 審查） | [ ] |
+| P2-19 | F5b 條目頁「我的筆記」面板與「我的相關筆記」兩組（13 §4.2） | Cx（Luna medium）＋C | [ ] |
+| P2-20 | F6 引用到筆記：`features/quotes/`、事件擴充、插在游標位置（13 §5） | Cx（Luna medium）或 Sub（Sonnet） | [ ] |
+| P2-21 | F3a 授權多權限、`adapter/http.ts` 共用、`adapter/driveFiles.ts`、session 備份編排、每週自動、保留 10 份、還原（13 §2.3） | Cx（Sol high）＋AG（Argon 審查） | [ ] |
+| P2-22 | F3b `features/backup/`：設定區塊（一行說明＋收合的「這是什麼？」）、〈我的筆記〉頂端提醒（含未登入） | Cx（Luna medium） | [ ] |
+| P2-23 | F7a 動畫筆記教學（8 段＋自己試沙盒）、外框 `addAction()`、`?tutorial=1`、網站導覽筆記站連結（13 §6） | Sub（Sonnet）＋C（美術） | [ ] |
+| P2-24 | F7b 章節筆記面板「?」文字版教學（最下面連到動畫教學） | Sub（Haiku）＋AG（flash 審文案） | [ ] |
+| P2-25 | 教學頁（個人筆記使用說明、熱鍵速查）、隱私權政策（drive.file）、08 更新 | Sub（Haiku）＋AG（flash） | [ ] |
+| P2-26 | 🙋 部署（列檔案經使用者選「推送」）＋線上驗證；使用者實機確認一次存到 Drive 與還原 | C＋U | [ ] |
+
 ---
 
 ## Phase 3：長期擴充

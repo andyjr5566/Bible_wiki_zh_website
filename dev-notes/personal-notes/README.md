@@ -24,6 +24,7 @@
 | [10-progress-log.md](10-progress-log.md) | 進度日誌（只追加，不改寫） | 每次開工與收工 |
 | [11-code-structure.md](11-code-structure.md) | 程式分層、依賴規則（有自動測試）、新增功能的步驟 | 改程式或加新功能前 |
 | [12-backlog.md](12-backlog.md) | 待辦總表（討論過但還沒做的事）與下一步 `/goal` 提示詞 | 決定下一步要做什麼時 |
+| [13-round3-spec.md](13-round3-spec.md) | 第三輪規格：存到 Google Drive、建置檢查與條目找回、條目筆記與相關筆記、引用到筆記、筆記教學（F3–F7），含驗證清單與模型分工 | 做第三輪時 |
 
 ## 一句話摘要
 

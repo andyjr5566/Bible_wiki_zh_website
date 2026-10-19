@@ -315,3 +315,7 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
   - **驗證（本機）**：用 Vercel 同版的 path-to-regexp 6.1.0 測轉址規則 12/12（首頁、我的筆記、中文章節路徑、static 檔會轉；`/api/search`、`/sw.js`、`/static/sw.js` 不轉；`/sw.json`、`/apix` 等相似路徑照常轉）；vercel.json 為合法 JSON。
   - 線上驗證要等推送後 Vercel 重新部署（vercel.json 不在 deploy.yml 的觸發路徑內，GitHub Pages 不會重建）。
 - 分工：使用者說可以請子代理做事 → 第 3～6 項的程式背景調查交給 3 個 Explore 子代理（唯讀）。
+- **F2 部署**（使用者選「推送」）：`cc205c4b..fdd94811`（含上一輪只改文件的 `e9dc55f6`）。線上確認：`/`、`/my-notes`、中文章節路徑、`/static/manifest.json` 都 307 轉到 GitHub Pages 同一路徑（中文路徑編碼正確，目標頁 200）；`/sw.js` 與 `/static/sw.js` 回傳自我移除版本，後者帶 `Service-Worker-Allowed: /`；`/api/search` 從 GitHub 網址的預檢 204、查詢 200 且有結果。
+- **第三輪設計確認**（三輪選擇題）：F3 每週自動＋手動、保留 10 份、只存 JSON、提醒在〈我的筆記〉頁頂端且未登入也提醒、用不雜亂的方式說明功能；F4 基本檢查、警告＋自動開 Issue；F5 條目頁也能寫筆記、相關筆記分「連到」與「提到」兩組；F6 有開著的筆記就插在游標位置；F7（使用者追加）動畫示範＋自己試，入口為〈我的筆記〉按鈕、網站導覽筆記站連結、章節面板「?」只開文字版。→ 01 D-45～D-49、規格 13、05 P2-14～P2-26、12 F 表與第三輪 `/goal` 提示詞（1,228 字元）。
+- 子代理調查補充的重點（已寫進 13）：`notes.ts` 的 `update()` 會把非章節錨點重建成 `_FREE` 章節錨點（做條目筆記時必修）；`ComposeNoteDetail.verseStart` 必填；GIS token client `include_granted_scopes:false`、scope 寫死，加 drive.file 要兩個一起要；Drive 的 request／退避是 `drive.ts` 私有函式；vitest 沒有 DOM 環境；CI 沿用快取的 `public/` 且增量建置不清空 → 建置檢查改在 emitter 內做；Quartz 別名轉址只在網站根目錄產生，不會替舊的 `link_folder/` 路徑轉址。
+- 使用者要求之後的 goal 檔都要寫明分工：Claude 子代理 Sonnet／Haiku、Codex Sol／Luna、Antigravity Gemini，依難度分派 → 07 新增「全部幫手的分級」表，13 §8 列第三輪的分派。

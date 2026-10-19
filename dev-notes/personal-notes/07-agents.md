@@ -62,6 +62,18 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 
 審查也分級：第 3 級的實作一定再用另一個模型（或 Sol 唯讀）審查一次；第 1、2 級由主導者審查 diff＋測試＋無頭 Chrome 即可。
 
+**全部幫手的分級（使用者 2026-10-19 要求：用子代理做事，適當分派 Sonnet／Haiku、Codex Sol／Luna、Antigravity Gemini；不要自己單幹，也不要每件事都用最強的）**
+
+| 等級 | Claude 子代理（Agent 工具 `model`） | Codex | Antigravity（`agy --model`） |
+|---|---|---|---|
+| 第 1 級 | `haiku`：搜尋（`Explore`）、機械性修改、檢查腳本、文件勾選、文案初稿 | `gpt-6-luna` low | `gemini-3.8-flash-medium`：中文文案、教學審閱 |
+| 第 2 級 | `sonnet`：跨多檔的一般實作、規劃（`Plan`）、動畫或畫面骨架；改檔用 `isolation: "worktree"` | `gpt-6-luna` medium | `gemini-4-argon-high`：使用體驗審查（附截圖與流程） |
+| 第 3 級 | `sonnet` 實作也可以，但一定要有第 3 級審查 | `gpt-6-sol` high（實作或唯讀審查） | `gemini-4-argon-high`：交叉審查（`--mode plan`） |
+
+- 主導者（Opus）保留：拆任務、任務包、審查 diff、整合、親自跑測試與無頭 Chrome、美術調整、和使用者溝通、最後報告。不用 Opus 子代理做一般工作。
+- 每次委派都在 10 記一行：任務、給誰（模型與等級）、結果、主導者修了什麼。
+- 第三輪的具體分派表見 13 §8。
+
 **沙箱失效時的備案（2026-10-19）**：若 `codex exec -s workspace-write` 出現 `setup refresh had errors`，看 `~/.codex/.sandbox/sandbox.<日期>.log`。這台電腦的原因是沙箱要改 `Codexuntimes\cua_node\...
 ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_repl MCP 或使用者的 Codex 桌面版）。不要改用 danger-full-access；改成 stdin 模式：規格＋現有檔案經 stdin 傳入（`-s read-only`，叮嚀不要執行指令），請它用 `===FILE 名稱===`／`===END===` 輸出完整檔案，由主導者貼上並測試。注意：Codex 不能自己跑測試時，要特別檢查它有沒有用了專案 helper 不支援的寫法（例如本專案的 `h()` 不支援 `html:`）。
 

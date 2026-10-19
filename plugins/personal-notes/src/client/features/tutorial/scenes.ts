@@ -79,7 +79,7 @@ const selectVerse: Scene = {
   id: "select",
   title: "選經文",
   caption: "在經文上選一段字，會跳出工具列：畫重點、書籤、便條、寫筆記。",
-  steps: ["用手指或滑鼠選取一段經文", "選好後，上方跳出工具列", "按「🖍 畫重點」，那段字就畫上螢光筆", "再選一段，按「📝 寫筆記」，會開一則針對這幾節的筆記，並把經文帶進來"],
+  steps: ["用手指或滑鼠選取一段經文", "選好後，下方跳出工具列", "按「🖍 畫重點」，那段字就畫上螢光筆", "再選一段，按「📝 寫筆記」，會開一則針對這幾節的筆記，並把經文帶進來"],
   tryText: "點一下有虛線的經文（當作選好了），再按工具列上的按鈕。",
   tryTarget: "sel",
   build(s) {
@@ -116,7 +116,7 @@ const stickyScene: Scene = {
   id: "sticky",
   title: "便條紙",
   caption: "選經文按「🗒️ 便條」，經文下方會貼上一張便條紙。能換顏色，也能收成小紙條。",
-  steps: ["選取經文，按「🗒️ 便條」", "便條紙貼在那一節的下方，稍微有點歪", "寫幾個字，點小圓點換顏色，按「完成」", "按收起的箭頭，變成小紙條；點小紙條再展開"],
+  steps: ["選取經文，按「🗒️ 便條」", "便條紙貼在那一節的下方，稍微有點歪", "寫幾個字，點小圓點換顏色，按「完成」", "按右上角的收起圖示，變成小紙條；點小紙條再展開"],
   tryText: "點一下有虛線的經文，按「🗒️ 便條」，再試試換顏色、收起、展開。",
   tryTarget: "sel",
   build(s) {
@@ -222,7 +222,7 @@ const linkScene: Scene = {
 const quoteScene: Scene = {
   id: "quote",
   title: "引用到筆記",
-  caption: "在經文以外的註釋選一段字，按「❝ 引用到筆記」，引文和出處會自動寫進筆記。",
+  caption: "在註釋或條目頁選一段字，按「❝ 引用到筆記」，引文和出處會自動寫進筆記。",
   steps: ["在註釋文字裡選取一段", "按「❝ 引用到筆記」", "筆記裡自動出現引文，和一行出處「—— 創世記 1 · 本章整理」", "在引文下面寫自己的想法，按「完成」"],
   tryText: "點一下有虛線的文字（當作選好了），按「❝ 引用到筆記」，再接著寫。",
   tryTarget: "sel",
@@ -277,7 +277,7 @@ const entryScene: Scene = {
   id: "entry",
   title: "條目頁",
   caption: "知識庫的條目頁也能「🔖 加入書籤」，或直接寫一則關於這個條目的筆記。",
-  steps: ["打開知識庫的條目頁（例如〈亞伯拉罕〉）", "按標題下方的「🔖 加入書籤」", "按「＋ 寫一則關於〈亞伯拉罕〉的筆記」", "寫完按「完成」，筆記掛在這個條目上"],
+  steps: ["打開知識庫的條目頁（例如〈亞伯拉罕〉）", "按標題下方的「🔖 加入書籤」", "按「＋ 寫一則關於〈亞伯拉罕〉的筆記」", "寫完按「完成」，筆記就收進這個條目裡"],
   tryText: "按「🔖 加入書籤」，再按「＋ 寫一則關於〈亞伯拉罕〉的筆記」寫一則。",
   tryTarget: "bm",
   build(s) {
@@ -560,7 +560,7 @@ function buildSync(s: Stage): void {
         { class: "bwz-n-dialog bwz-tut-settings bwz-tut-pop", attrs: { role: "presentation" } },
         h("h3", { text: "設定與備份" }),
         h("section", {}, h("h4", { text: "備份" }), drive, note),
-        h("section", {}, h("h4", { text: "匯出" }), exp, h("button", { class: "bwz-n-btn", text: "匯出 Markdown", attrs: { type: "button" } })),
+        h("section", {}, h("h4", { text: "匯出" }), exp, h("button", { class: "bwz-n-btn", text: "匯出 Markdown（Obsidian）", attrs: { type: "button" } })),
         h("div", { class: "bwz-n-dialog-actions" }, close),
       ),
     )
@@ -576,8 +576,8 @@ function buildSync(s: Stage): void {
 const syncScene: Scene = {
   id: "sync",
   title: "同步與備份",
-  caption: "登入 Google 後，手機和電腦的筆記會同步；也能另外存一份到自己的 Drive，或匯出成檔案。",
-  steps: ["〈我的筆記〉頁上方按「用 Google 同步」，選你的帳戶", "狀態變成「已登入、已同步」，手機和電腦看到同一份", "按「⚙ 設定與備份」，再按「存一份到我的 Google Drive」", "想自己收著，就按「匯出備份」存成檔案"],
+  caption: "登入 Google 後，手機和電腦的筆記會同步；也能另外存一份到自己的 Google Drive，或匯出成檔案。",
+  steps: ["〈我的筆記〉頁上方按「用 Google 同步」，選你的帳戶", "狀態變成「已登入、已同步」，手機和電腦看到同一份", "按「⚙ 設定與備份」，再按「存一份到我的 Google Drive」", "想自己收著，就按「匯出備份（JSON）」存成檔案"],
   tryText: "按「用 Google 同步」，選帳戶，再打開「⚙ 設定與備份」。（這裡是假的，不會真的登入。）",
   tryTarget: "signin",
   build: buildSync,

@@ -339,3 +339,19 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
   - 無頭 Chrome（子路徑模擬環境）：新增 entrycheck.mjs 15/15（舊網址條目書籤在〈我的筆記〉連到新網址、找不到的標示且無連結、條目頁認得舊書籤、擋掉 links.json 後仍認得＝紀錄已改成新網址、條目面板與按鈕文字、編輯框沒有節數、重新整理還在、相關筆記兩組與排序與合計、點卡片到創世記 2 章並捲到那一則、SPA 換頁到〈大衛〉只顯示大衛的筆記、〈我的筆記〉有「知識庫條目」組、手機不左右捲且 ≥44px、無例外）。回歸：stickycheck 21/21、nodecheck 10/10、p2check 34/34、mobilecheck 6/6、regress 15/15、uicheck 16/16、swcheck 11/11、expcheck 9/9、mynotescheck 24/24（625 筆）、fixcheck 11/11（INCOG=1）。tourcheck 需完整內容，部署後線上跑。
 - F5a 交叉審查（Antigravity gemini-3.8-flash-high，讀審查資料包）：6 點，與 Sol 的 ①–⑤ 相同（另把「條目筆記每次存都改標題」列為次要），建議修法與主導者已做的修正一致 → 第 3 級「兩個不同家族」審查完成。F5 本機 commit `1e559e5e`。
 - 委派：F3a（授權多權限、Drive 可見資料夾、備份編排）｜Codex gpt-6-sol high｜3｜第一次用 `-C` 讓它自己讀檔，唯讀沙箱這次啟動失敗、沒有產出 → 改 stdin 模式（規格＋10 個相關檔案共 82 KB）重跑。F6｜Claude 子代理 Sonnet（worktree，先 `git merge --ff-only main`）｜2。F7a 動畫教學｜Claude 子代理 Sonnet（worktree）｜2。
+
+## 2026-10-19｜第三輪 F3–F7（續）：F6、F3、F7、文案
+
+- **委派紀錄**（任務｜給誰｜等級｜結果）：
+  - P2-20 F6 引用到筆記｜Claude 子代理 Sonnet（worktree）｜2｜完成（`features/quotes/`、`COMPOSE_QUOTE_EVENT`、`ui/textInsert.ts`）；主導者補充「可收合區塊的小標題沒有 id」（記憶裡的網站導覽筆記）→ 子代理改用 summary 文字當出處、連結退回最近有 id 的標題。主導者驗證時發現 p2check 把兩種工具列算在一起 → 改檢查腳本（兩種各一份）。
+  - P2-21 F3a 授權多權限＋Drive 可見資料夾＋備份流程｜Codex gpt-6-sol high｜3｜第一次讀檔模式沙箱失敗 → stdin 模式（82 KB）完成 11 個檔案。主導者修：Sol 刪掉了 session.ts／gis.ts／app.ts／drive.ts 大量原有註解（改為保留原檔只套功能、或逐條補回）；「每週自動備份」只在第一次申請權限的裝置開啟 → 改成有權限就預設開（每台裝置可關）；補 `reminder()`／「之後再說」。
+    - 測試：driveBackup.test.ts 由 Claude 子代理 Sonnet 寫（22＋主導者 4 個，含 10 份修剪只動本站檔、還原只合併、兩台裝置同時到期、切換帳號不寫錯工作區）。子代理另指出「修剪失敗會讓整次備份算失敗、之後重複上傳」。
+    - 第 3 級交叉審查：Antigravity gemini-3.8-flash-high（Argon 仍是額度 429）｜8 點，主導者修 6 點：換分頁續期掉 drive.file（授權記錄也用 email 記）、在 Google 視窗選錯帳號時丟掉那個 token、修剪失敗不算備份失敗、NaN 排序、進行中的備份依帳號區分、切換後不寫舊工作區；「新使用者沿用上一位的授權記錄」不修（Google 同意畫面會明確列出，不是默默開啟，且換分頁續期需要）、「trash 每次都重列清單」不修（每次通常只移 1 份）。各補回歸測試。
+  - D-50（13 沒寫到，選擇題問使用者 →「讓我勾選要不要一起刪」）：刪除全部筆記時可勾選一起把 Drive 備份移到垃圾桶｜主導者實作（第 3 級：刪 Drive 檔）＋session 測試 4 個（沒權限不提供、沒勾不動、勾了只在刪除成功後移、刪除失敗不動）。
+  - P2-22 F3b 設定區塊與提醒｜Codex gpt-6-luna medium（stdin）｜2｜主導者修：Luna 刪掉了無關的 `clearLocal()`（改回原檔只套兩處）、features 不能 import adapter 的型別（改由 session 轉出）、「只下載過備份檔」時錯顯示 Drive 控制項、「這是什麼？」排在說明上面、按鈕與字級和網站不一致、下載後提醒沒有立刻消失。
+  - P2-23 F7a 動畫教學｜Claude 子代理 Sonnet（worktree）｜2｜完成 8 段＋換你試試＋外框 `addAction()`＋網站導覽連結。主導者驗證時發現**無頭 Chrome 預設回報「減少動態效果」**，先前截圖都是靜態版 → 檢查腳本改成明確設定一般動態，並用對話框的 `data-mode`（demo／try）判斷每段真的播完。
+  - P2-24 F7b「?」文字版教學｜Claude 子代理 Haiku（worktree）｜1｜完成。
+  - P2-25 教學文件初稿｜Claude 子代理 Haiku（worktree）｜1｜完成；中文文案審閱｜Antigravity gemini-3.8-flash-medium｜25 點，套用 20 點（例如教學寫「上方跳出工具列」實際在下方、刪除確認只寫「所有筆記」其實也刪便條重點書籤、按鈕名稱不一致）由 Claude 子代理 Haiku 套用；「Google Drive 一律改成雲端硬碟」不採用（功能名稱是使用者確認的「存一份到我的 Google Drive」，只改成同一句不混用）；速查表「加入主畫面」連到 INSTALL_MOBILE 是這輪以前的問題，未改、列入報告。
+- 其他修正：外框的設定按鈕加 `data-shell="settings"`（教學按鈕共用外觀，舊檢查腳本會點錯）。本機 Quartz 的 `.quartz/plugins/wiki-tour` 是指向 `plugins/wiki-tour` 的符號連結：主導者一次複製指令誤在 `plugins/wiki-tour/wiki-tour` 建了部分複本，已確認是自己剛建的、刪除，原始檔完好（git 只有預期的修改）。
+- **驗證**（全部在子路徑模擬環境）：`npm test` 302 個、typecheck 通過；建置檢查 3 章通過。無頭 Chrome：stickycheck 21/21、nodecheck 10/10、p2check 34/34、mobilecheck 6/6、fixcheck 11/11（INCOG=1）、regress 15/15、uicheck 16/16、swcheck 11/11、expcheck 9/9、mynotescheck 24/24（625 筆）、entrycheck 15/15、**quotecheck 11/11**（註釋區選字只出現引用工具列、開新整章筆記、插在游標位置、經文選字只出現經文工具列、條目頁引用成條目筆記、筆記卡片裡不出現、手機 44px）、**backupcheck 10/10**（新筆記不提醒、設定區塊說明與收合、時間往後 40 天出現未登入提醒、之後再說 7 天、下載備份檔後立刻不再提醒、手機）、**helpcheck 8/8**、**tutorialcheck 10/10**（8 段真的播完進入換你試試、示範區不改真正的筆記數、鍵盤與焦點、減少動態效果、手機）。tourcheck 需要出埃及記 12 章，部署後線上跑。
+- 未能在本機驗證：真正的 Google Drive 上傳、清單、還原、刪除時一起移備份（需要使用者在 Google Cloud 加 drive.file 後用自己的帳號實機試）。

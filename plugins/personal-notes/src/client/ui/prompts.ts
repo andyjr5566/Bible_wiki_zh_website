@@ -18,8 +18,8 @@ function noticeText(n: Notice): string {
     case "switched-account":
       return "已切換到另一個帳號的筆記，請再按一次"
     case "deleted-all":
-      if (n.backupTrashFailed) return "已刪除全部筆記；Google Drive 裡的備份沒有移到垃圾桶，請到雲端硬碟刪除「聖經知識庫筆記備份」資料夾"
-      if (n.trashedBackups) return `已刪除全部筆記，並把 ${n.trashedBackups} 份備份移到 Google Drive 的垃圾桶（30 天內可救回）`
+      if (n.backupTrashFailed) return "已刪除全部筆記；Google Drive 裡的備份沒有移到垃圾桶，請到 Google Drive 刪除「聖經知識庫筆記備份」資料夾"
+      if (n.trashedBackups) return `已刪除全部筆記，並把 ${n.trashedBackups} 份備份移到 Google Drive 的垃圾桶（30 天內可以救回）`
       return "已刪除全部筆記"
     case "google-loading":
       return "Google 登入元件載入中，請稍候再按一次"
@@ -188,10 +188,10 @@ export const browserPrompts: Prompts = {
       message: h(
         "div",
         null,
-        h("p", { text: "這會刪除你在 Google 雲端硬碟上本站的所有筆記，以及這台裝置上的筆記，無法復原。建議先按「匯出備份」。" }),
+        h("p", { text: "這會刪除雲端與這台裝置上的所有筆記、便條、重點與書籤，無法復原。建議先按「匯出備份（JSON）」。" }),
         offerBackups
           ? h("label", { class: "bwz-n-check" }, trash, " 同時把 Google Drive「聖經知識庫筆記備份」資料夾裡的備份移到垃圾桶（30 天內可以救回）")
-          : h("p", { class: "bwz-n-muted", text: "如果你曾存到 Google Drive，那些備份檔不會被刪除；要刪請到雲端硬碟刪除「聖經知識庫筆記備份」資料夾。" }),
+          : h("p", { class: "bwz-n-muted", text: "如果你曾存到 Google Drive，那些備份檔不會被刪除；要刪請到 Google Drive 刪除「聖經知識庫筆記備份」資料夾。" }),
       ),
       buttons: [
         { id: "next", label: "我了解，繼續", kind: "danger" },

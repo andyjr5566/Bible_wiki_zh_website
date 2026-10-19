@@ -104,9 +104,9 @@ export class BackupView implements View {
     if (result.ok) toast(`已存到 Google Drive（${result.records} 則）`)
     else {
       const messages: Record<string, string> = {
-        "no-scope": "沒有取得 Google Drive 權限，可以再按一次，並在 Google 視窗勾選「Google 雲端硬碟」",
+        "no-scope": "沒有取得 Google Drive 權限。可以再按一次，並在 Google 授權畫面勾選「Google 雲端硬碟」。",
         denied: "沒有完成 Google 授權",
-        offline: "網路不穩，稍後再試",
+        offline: "目前無法連線網路，請稍後再試",
         auth: "需要重新連線 Google，請先按「繼續同步」",
         quota: "Google 雲端硬碟空間或流量不足",
       }
@@ -258,7 +258,7 @@ export class BackupView implements View {
     if (choice !== "restore") return
     try {
       const result: ImportResult = await this.session.restore(id)
-      toast(`還原完成：新增 ${result.added}、更新 ${result.updated}、另存 ${result.copied}`)
+      toast(`還原完成：新增 ${result.added} 則、更新 ${result.updated} 則、衝突另存 ${result.copied} 則`)
       await this.onSessionChange()
     } catch {
       toast("還原失敗，請稍後再試")
@@ -272,7 +272,7 @@ export class BackupView implements View {
       h("summary", { text: "這是什麼？" }),
       h("ul", null,
         h("li", { text: "備份會存在雲端硬碟裡的「聖經知識庫筆記備份」資料夾。" }),
-        h("li", { text: "本站只能碰自己建立的備份檔，看不到你雲端硬碟裡的其他東西。" }),
+        h("li", { text: "本站只能存取自己建立的備份檔，看不到你雲端硬碟裡的其他東西。" }),
         h("li", { text: "可以從備份還原；只會補上筆記，不會刪除或蓋掉現有筆記。" }),
         h("li", { text: "每週自動備份可以在這裡關掉；每台裝置各自設定。" }),
       ),

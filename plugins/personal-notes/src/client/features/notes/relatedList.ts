@@ -180,7 +180,7 @@ export class RelatedList {
     )
     addGroup(
       `提到〈${this.entryTitle}〉`,
-      "內文出現這個名稱",
+      "筆記內文出現這個名稱或別名",
       mentioned,
       this.mentionedLimit,
       "mentioned",

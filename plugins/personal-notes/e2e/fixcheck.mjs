@@ -76,7 +76,7 @@ await ev(`document.querySelector('[data-modal=help] [data-h=close]')?.click()`)
 await go("/my-notes")
 // 無痕模式下無頭 Chrome 不允許下載：改成攔截匯出時產生的下載連結，在頁面裡讀出內容核對
 if (process.env.INCOG) await ev(`(() => { const orig = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { if (this.download) { window.__exported = { name: this.download, href: this.href, routerIgnore: 'routerIgnore' in this.dataset }; return } return orig.call(this) } })()`)
-await ev(`document.querySelector('.bwz-settings-btn')?.click()`)
+await ev(`document.querySelector('.bwz-settings-btn[data-shell="settings"]')?.click()`)
 await sleep(400)
 await ev(`[...document.querySelectorAll('button')].find(b => b.textContent.includes('匯出備份')).click()`)
 if (process.env.INCOG) {

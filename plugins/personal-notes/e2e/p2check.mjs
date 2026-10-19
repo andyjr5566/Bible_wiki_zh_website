@@ -152,7 +152,7 @@ if (!only || only.includes("4")) {
   // ---------- 第 4 項：Markdown 匯出 ----------
   await go("/my-notes")
   await ev(`(() => { const orig = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { if (this.download) { window.__dl = { name: this.download, href: this.href }; return } return orig.call(this) } })()`)
-  await ev(`document.querySelector('.bwz-settings-btn').click()`)
+  await ev(`document.querySelector('.bwz-settings-btn[data-shell="settings"]').click()`)
   await sleep(400)
   await ev(clickText("button", "匯出 Markdown"))
   await sleep(800)

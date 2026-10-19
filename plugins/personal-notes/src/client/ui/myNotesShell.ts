@@ -61,7 +61,7 @@ export class MyNotesShell {
   private readonly sections = new Map<string, ShellSection>()
   private readonly actions = new Map<string, { action: ShellAction; button: HTMLButtonElement }>()
   private readonly actionsEl = h("div", { class: "bwz-shell-actions" })
-  private readonly settingsBtn = h("button", { class: "bwz-n-btn bwz-settings-btn", text: "⚙ 設定與備份", attrs: { type: "button" }, on: { click: () => void this.openSettings() } })
+  private readonly settingsBtn = h("button", { class: "bwz-n-btn bwz-settings-btn", text: "⚙ 設定與備份", attrs: { type: "button", "data-shell": "settings" }, on: { click: () => void this.openSettings() } })
   private readonly statusEl = h("div", { class: "bwz-shell-status" })
   private readonly summaryEl = h("p", { class: "bwz-shell-summary" })
   private readonly tabBar = h("div", { class: "bwz-shell-tabs", attrs: { role: "tablist", "aria-label": "筆記種類" } })

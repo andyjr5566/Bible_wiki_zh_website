@@ -1,4 +1,5 @@
-// 章節頁底部的「我的筆記」面板（MVP：整章筆記＋手動節數，D-15）。
+// 筆記面板：章節頁底部（整章筆記＋手動節數，D-15）與知識庫條目頁（D-47）共用同一份編輯器、卡片、衝突與草稿程式。
+// 差別只在「目標」（PanelTarget）：筆記掛在哪、怎麼查、標題與提示文字、有沒有節數與經節標記。
 
 import type { Resolved } from "../../merge/merge"
 import { chapterLabel } from "../../model/books"
@@ -10,10 +11,13 @@ import { renderMarkdown } from "../../ui/markdown"
 import { annotateVerses, verseElement } from "../../ui/verses"
 import { statusBar } from "../../ui/status"
 import { COMPOSE_NOTE_EVENT, type ComposeNoteDetail, type View } from "../types"
-import { clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft, type Draft } from "./drafts"
+import { applyDraft, clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft } from "./drafts"
 import { attachLinkComplete } from "./linkComplete"
+import { loadLinkIndex } from "../../ui/linkIndex"
 import { loadResolver, type LinkResolver } from "./links"
-import { NotesService, type NoteInput } from "./notes"
+import { NotesService, type NodeRef, type NoteInput } from "./notes"
+import { relatedNotes } from "./related"
+import { RelatedList } from "./relatedList"
 
 const AUTOSAVE_MS = 600
 const CONFLICT_TEXT = "這則筆記在其他裝置也被修改了，請先選擇要保留的版本"
@@ -35,12 +39,54 @@ interface Prefill {
   body: string
 }
 
+/** 面板的目標：這個面板管哪一組筆記。章節頁用 chapterTarget、條目頁用 entryTarget。 */
+export interface PanelTarget {
+  readonly kind: "chapter" | "entry"
+  /** 有節數欄位、經節 📝 標記、網址 #v5 定位與「寫筆記」工具列事件（只有章節頁）。 */
+  readonly verses: boolean
+  /** 條目頁的條目（章節頁沒有）。 */
+  readonly node?: NodeRef
+  readonly addLabel: string
+  readonly emptyText: string
+  /** 新筆記與草稿的位置欄位（章節：book／chapter；條目：node，book／chapter 填 ""、0）。 */
+  place(): Pick<NoteInput, "book" | "chapter" | "node">
+  /** 目標底下的筆記（不含其他種類的紀錄）。 */
+  notesOf(svc: NotesService): Resolved[]
+  /** 畫重點工具列的「寫筆記」是不是要開在這個面板。 */
+  acceptsCompose(d: ComposeNoteDetail): boolean
+}
+
+export function chapterTarget(book: string, chapter: number): PanelTarget {
+  return {
+    kind: "chapter",
+    verses: true,
+    addLabel: "＋ 新增筆記",
+    emptyText: `還沒有${chapterLabel(book, chapter)}的筆記。按「新增筆記」開始寫。`,
+    place: () => ({ book, chapter }),
+    notesOf: (svc) => svc.forChapter(book, chapter),
+    acceptsCompose: (d) => d.book === book && d.chapter === chapter,
+  }
+}
+
+export function entryTarget(node: NodeRef): PanelTarget {
+  return {
+    kind: "entry",
+    verses: false,
+    node,
+    addLabel: `＋ 寫一則關於〈${node.title}〉的筆記`,
+    emptyText: `還沒有關於〈${node.title}〉的筆記。按上面的按鈕開始寫。`,
+    place: () => ({ book: "", chapter: 0, node: { slug: node.slug, title: node.title } }),
+    notesOf: (svc) => svc.forEntry(node.slug),
+    acceptsCompose: () => false,
+  }
+}
+
 interface EditorState {
   noteId: string | null
   root: EditorRoot
 }
 
-export class ChapterPanel implements View {
+export class NotesPanel implements View {
   private editor: EditorState | null = null
   private listEl!: HTMLElement
   private editorHost!: HTMLElement
@@ -53,12 +99,14 @@ export class ChapterPanel implements View {
   private cleanups: (() => void)[] = []
   private resolver: LinkResolver | null = null
   private resolverRequested = false
+  /** 條目頁的「我的相關筆記」（F5b）與條目的別名（來自連結索引）。 */
+  private related: RelatedList | null = null
+  private entryAliases: string[] = []
 
   constructor(
     private readonly session: Session,
     private readonly mount: HTMLElement,
-    private readonly book: string,
-    private readonly chapter: number,
+    private readonly target: PanelTarget,
   ) {
     this.notes = new NotesService(() => session.repo)
     this.build()
@@ -91,15 +139,17 @@ export class ChapterPanel implements View {
     const hash = decodeURIComponent(location.hash)
     if (hash === "#bwz-notes") requestAnimationFrame(() => this.mount.scrollIntoView({ block: "start" }))
     else if (hash.startsWith("#bwz-note-")) requestAnimationFrame(() => this.focusNote(hash.slice("#bwz-note-".length)))
-    else if (/^#v\d+$/.test(hash)) requestAnimationFrame(() => this.focusVerse(Number(hash.slice(2))))
-    // 畫重點工具列的「寫筆記」（features/types.ts 的事件約定）
-    const onCompose = (e: Event) => {
-      const d = (e as CustomEvent<ComposeNoteDetail>).detail
-      if (!d || d.book !== this.book || d.chapter !== this.chapter) return
-      void this.openEditor(null, undefined, { verseStart: d.verseStart, verseEnd: d.verseEnd, body: d.quote ? `> ${d.quote}\n\n` : "" })
+    else if (this.target.verses && /^#v\d+$/.test(hash)) requestAnimationFrame(() => this.focusVerse(Number(hash.slice(2))))
+    // 畫重點工具列的「寫筆記」（features/types.ts 的事件約定）；條目頁沒有經文，不接收
+    if (this.target.verses) {
+      const onCompose = (e: Event) => {
+        const d = (e as CustomEvent<ComposeNoteDetail>).detail
+        if (!d || !this.target.acceptsCompose(d)) return
+        void this.openEditor(null, undefined, { verseStart: d.verseStart, verseEnd: d.verseEnd, body: d.quote ? `> ${d.quote}\n\n` : "" })
+      }
+      document.addEventListener(COMPOSE_NOTE_EVENT, onCompose)
+      this.cleanups.push(() => document.removeEventListener(COMPOSE_NOTE_EVENT, onCompose))
     }
-    document.addEventListener(COMPOSE_NOTE_EVENT, onCompose)
-    this.cleanups.push(() => document.removeEventListener(COMPOSE_NOTE_EVENT, onCompose))
   }
 
   destroy(): void {
@@ -111,19 +161,20 @@ export class ChapterPanel implements View {
     }
     this.unsubscribe()
     for (const fn of this.cleanups) fn()
-    for (const b of Array.from(document.querySelectorAll(".bwz-v-badge"))) b.remove()
+    if (this.target.verses) for (const b of Array.from(document.querySelectorAll(".bwz-v-badge"))) b.remove()
     this.chip?.remove()
+    this.mount.classList.remove("bwz-n-entry-panel")
     this.mount.replaceChildren()
   }
 
-  /** 上次分頁關掉、重新整理或切換帳號時沒來得及存的草稿，補存回去（每次進入章節頁都檢查）。 */
+  /** 上次分頁關掉、重新整理或切換帳號時沒來得及存的草稿，補存回去（每次進入章節頁或條目頁都檢查；章節與條目的草稿互通）。 */
   private async recoverDrafts(): Promise<void> {
     const ns = this.session.account?.permissionId ?? "anon"
     let recovered = 0
     for (const { key, draft } of recoverableDrafts(ns)) {
       await withDraftLock(key, async () => {
         try {
-          if (await this.applyDraft(draft)) recovered++
+          if (await applyDraft(this.notes, draft)) recovered++
           clearDraft(key) // 確定寫進去（或確認不需要）才刪除；失敗就留著下次再試
         } catch (e) {
           console.error("[personal-notes] 補存草稿失敗", e)
@@ -133,23 +184,6 @@ export class ChapterPanel implements View {
     if (recovered > 0) toast(recovered === 1 ? "已補存上次還沒存到的筆記" : `已補存 ${recovered} 則上次還沒存到的筆記`)
   }
 
-  /** 補存一份草稿；回傳是否真的寫入了東西。 */
-  private async applyDraft(d: Draft): Promise<boolean> {
-    if (!d.input.title && !d.input.body.trim()) return false
-    const same = (r: NoteRecord) => !r.deleted && r.title === d.input.title && r.body === d.input.body
-    const existing = d.noteId ? this.notes.get(d.noteId) : undefined
-    if (existing && same(existing.winner)) return false // 其實已經存到了
-    if (existing && !existing.winner.deleted && existing.conflicts.length === 0 && existing.winner.hlc === d.baseHlc) {
-      // 筆記從上次存檔後沒被別處改過：直接補上
-      await this.notes.update(existing.id, d.input)
-      return true
-    }
-    if (!d.noteId && this.notes.forChapter(d.input.book, d.input.chapter).some((r) => same(r.winner))) return false // 新筆記其實建立成功了
-    // 筆記已被別的分頁或裝置改過（或不見了）：另存，不覆蓋較新的內容（Codex 第二輪 #1）
-    await this.notes.create(d.noteId ? { ...d.input, title: `${d.input.title || "筆記"}（恢復的草稿）` } : d.input)
-    return true
-  }
-
   private build(): void {
     this.headerCount = h("span", { class: "bwz-n-count" })
     this.statusEl = h("div")
@@ -157,12 +191,14 @@ export class ChapterPanel implements View {
     this.editorHost = h("div", { class: "bwz-n-editor-host" })
     const addBtn = h("button", {
       class: "bwz-n-btn primary",
-      text: "＋ 新增筆記",
+      text: this.target.addLabel,
       attrs: { type: "button" },
       on: { click: () => void this.openEditor(null, addBtn) },
     })
     this.addBtn = addBtn
     const base = document.body.dataset.basepath ?? ""
+    // 條目頁的掛載點是 display: contents（不佔版面），所以邊線與間距加在這個面板自己的容器上
+    if (this.target.kind === "entry") this.mount.classList.add("bwz-n-entry-panel")
     this.mount.replaceChildren(
       h(
         "div",
@@ -179,14 +215,22 @@ export class ChapterPanel implements View {
       h("div", { class: "bwz-n-toolbar" }, addBtn),
       this.editorHost,
       this.listEl,
+      // 預留給「我的相關筆記」（之後的任務在這裡畫清單；目前是空的，不佔版面）
+      h("div", { class: "bwz-related-slot", attrs: { "data-slot": "related-notes" } }),
     )
-    // 左下角的「筆記」按鈕：長章節可快速跳到面板（右下角是導覽說明按鈕，避免重疊）
-    this.chip = h("button", {
-      class: "bwz-n-chip",
-      attrs: { type: "button", "aria-label": "跳到我的筆記" },
-      on: { click: () => this.mount.scrollIntoView({ behavior: "smooth", block: "start" }) },
-    })
-    document.body.append(this.chip)
+    if (this.target.node) {
+      this.related = new RelatedList(this.target.node.title)
+      this.mount.querySelector(".bwz-related-slot")?.append(this.related.el)
+    }
+    // 左下角的「筆記」按鈕：長章節可快速跳到面板（右下角是導覽說明按鈕，避免重疊）；條目頁不需要
+    if (this.target.verses) {
+      this.chip = h("button", {
+        class: "bwz-n-chip",
+        attrs: { type: "button", "aria-label": "跳到我的筆記" },
+        on: { click: () => this.mount.scrollIntoView({ behavior: "smooth", block: "start" }) },
+      })
+      document.body.append(this.chip)
+    }
   }
 
   /** 捲到某一節經文並短暫標示（網址 #v5）。 */
@@ -243,22 +287,32 @@ export class ChapterPanel implements View {
 
   /** 有筆記用到 [[條目]] 才下載連結索引，下載完重畫一次。 */
   private maybeLoadResolver(notes: Resolved[]): void {
-    if (this.resolverRequested || !notes.some((r) => [r.winner, ...r.conflicts].some((v) => v.body.includes("[[")))) return
+    if (this.resolverRequested) return
+    // 條目頁一定要下載：「我的相關筆記」要用連結索引比對 [[條目]] 與別名
+    const entry = this.target.node
+    if (!entry && !notes.some((r) => [r.winner, ...r.conflicts].some((v) => v.body.includes("[[")))) return
     this.resolverRequested = true
-    void loadResolver().then((r) => {
+    void Promise.all([loadResolver(), entry ? loadLinkIndex() : Promise.resolve(null)]).then(([r, index]) => {
       this.resolver = r
-      if (r) this.refresh()
+      if (entry) this.entryAliases = index?.pages.find((p) => p.s === entry.slug)?.a ?? []
+      if (r || entry) this.refresh()
     })
   }
 
-  private chapterNotes(): Resolved[] {
-    return this.notes.forChapter(this.book, this.chapter)
+  /** 條目頁：重算「我的相關筆記」。 */
+  private renderRelated(own: Resolved[]): void {
+    const entry = this.target.node
+    if (!this.related || !entry) return
+    const r = this.resolver
+    const result = relatedNotes(this.notes.all(), { slug: entry.slug, title: entry.title, aliases: this.entryAliases }, (name) => r?.resolve(name) ?? null)
+    this.related.update(result, document.body.dataset.basepath ?? "", own.length > 0)
   }
 
   refresh(): void {
     this.session.resetOfflineAcknowledgement()
-    const notes = this.chapterNotes()
+    const notes = this.target.notesOf(this.notes)
     this.maybeLoadResolver(notes)
+    this.renderRelated(notes)
     this.headerCount.textContent = notes.length ? `（${notes.length}）` : ""
     if (this.chip) this.chip.textContent = notes.length ? `📝 筆記 ${notes.length}` : "📝 筆記"
     this.statusEl.replaceChildren(statusBar(this.session))
@@ -270,11 +324,11 @@ export class ChapterPanel implements View {
       cards.push(r.conflicts.length ? this.conflictCard(r) : this.noteCard(r.winner))
     }
     if (cards.length === 0 && !this.editor) {
-      cards.push(h("p", { class: "bwz-n-empty", text: `還沒有${chapterLabel(this.book, this.chapter)}的筆記。按「新增筆記」開始寫。` }))
+      cards.push(h("p", { class: "bwz-n-empty", text: this.target.emptyText }))
     }
     this.listEl.replaceChildren(...cards)
     this.editor?.root.refreshSaved?.()
-    this.renderVerseBadges(notes)
+    if (this.target.verses) this.renderVerseBadges(notes)
   }
 
   private noteCard(n: NoteRecord): HTMLElement {
@@ -284,7 +338,7 @@ export class ChapterPanel implements View {
       h(
         "div",
         { class: "bwz-n-card-head" },
-        h("span", { class: "bwz-n-verse", text: verseLabel(n.anchor.verseStart, n.anchor.verseEnd) }),
+        this.target.verses ? h("span", { class: "bwz-n-verse", text: verseLabel(n.anchor.verseStart, n.anchor.verseEnd) }) : null,
         n.title ? h("strong", { text: n.title }) : null,
         h("span", { class: "bwz-n-time", text: formatTime(n.updatedAt) }),
       ),
@@ -326,7 +380,7 @@ export class ChapterPanel implements View {
             h(
               "div",
               { class: "bwz-n-card-head" },
-              h("span", { class: "bwz-n-verse", text: verseLabel(v.anchor.verseStart, v.anchor.verseEnd) }),
+              this.target.verses ? h("span", { class: "bwz-n-verse", text: verseLabel(v.anchor.verseStart, v.anchor.verseEnd) }) : null,
               h("span", { class: "bwz-n-time", text: `${formatTime(v.updatedAt)} 在${v.author === me ? "這台裝置" : "其他裝置"}修改` }),
             ),
             v.deleted ? h("p", { class: "bwz-n-muted", text: "（這個版本把筆記刪除了）" }) : null,
@@ -484,8 +538,7 @@ export class ChapterPanel implements View {
       const verseStart = lo
       const verseEnd = hi !== null && hi !== lo ? hi : null
       return {
-        book: this.book,
-        chapter: this.chapter,
+        ...this.target.place(),
         verseStart,
         verseEnd,
         title: title.value.trim(),
@@ -550,7 +603,8 @@ export class ChapterPanel implements View {
       }
     }
     const backup = () => {
-      backupOk = writeDraft(key, { book: this.book, chapter: this.chapter, noteId: isMine() ? this.editor!.noteId : null, baseHlc, input: read(), at: Date.now(), tab: tabId })
+      const place = this.target.place()
+      backupOk = writeDraft(key, { book: place.book, chapter: place.chapter, ...(place.node ? { node: place.node } : {}), noteId: isMine() ? this.editor!.noteId : null, baseHlc, input: read(), at: Date.now(), tab: tabId })
     }
     const schedule = () => {
       dirty = true
@@ -564,7 +618,7 @@ export class ChapterPanel implements View {
     const root = h(
       "div",
       { class: "bwz-n-card editing" },
-      h("div", { class: "bwz-n-row" }, h("label", { class: "bwz-n-label", text: "節數" }), vStart, h("span", { text: "–" }), vEnd, h("span", { class: "bwz-n-muted", text: "（不填＝整章）" })),
+      this.target.verses ? h("div", { class: "bwz-n-row" }, h("label", { class: "bwz-n-label", text: "節數" }), vStart, h("span", { text: "–" }), vEnd, h("span", { class: "bwz-n-muted", text: "（不填＝整章）" })) : null,
       title,
       body,
       attachLinkComplete(body).el,

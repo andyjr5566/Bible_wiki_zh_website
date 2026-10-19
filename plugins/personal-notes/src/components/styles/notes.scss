@@ -11,6 +11,20 @@
   padding-top: 1rem;
 }
 
+// 知識庫條目頁的筆記面板（D-47）：掛載點是 display: contents（見下方 .bwz-notes-node），
+// 所以章節頁 .bwz-notes 的邊線與間距改加在面板自己的容器上。
+.bwz-n-entry-panel {
+  margin-top: 2.5rem;
+  scroll-margin-top: 1rem;
+  border-top: 1px solid var(--lightgray);
+  padding-top: 1rem;
+}
+
+// 預留給「我的相關筆記」的容器（空的時候不佔版面）。
+.bwz-related-slot:empty {
+  display: none;
+}
+
 .bwz-n-head {
   display: flex;
   align-items: baseline;
@@ -1618,3 +1632,134 @@ button.bwz-sticky-color {
   .bwz-shell-tab-num { padding: 0 0.35rem !important; font-size: 0.72rem; }
 }
 
+// ---------- 條目頁「我的相關筆記」（F5b，D-47） ----------
+.bwz-related {
+  margin-top: 1rem;
+  color: var(--dark);
+
+  &[hidden] {
+    display: none !important;
+  }
+
+  .bwz-related-heading,
+  .bwz-related-group-heading {
+    color: var(--dark);
+  }
+
+  .bwz-related-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin: 0 0 0.8rem;
+    font-size: 1.1rem;
+  }
+
+  .bwz-related-group {
+    margin-top: 0.9rem;
+  }
+
+  .bwz-related-group-heading {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .bwz-related-count {
+    color: var(--gray);
+    font-size: 0.88em;
+    font-weight: normal;
+  }
+
+  .bwz-related-description,
+  .bwz-related-empty {
+    margin: 0.25rem 0 0.6rem;
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  .bwz-related-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  a.bwz-related-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    background: var(--light);
+    color: inherit !important;
+    text-decoration: none !important;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--secondary);
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+  }
+
+  .bwz-related-place {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--secondary);
+    font-size: 0.82rem;
+  }
+
+  .bwz-related-title {
+    color: var(--darkgray);
+    font-size: 0.95rem;
+  }
+
+  .bwz-related-preview {
+    display: -webkit-box;
+    overflow: hidden;
+    // 卡片是 <a>：網站主題會把連結裡的字加粗、換色
+    color: var(--darkgray) !important;
+    font-weight: 400 !important;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .bwz-related-conflict {
+    flex: 0 0 auto;
+    padding: 0.1rem 0.35rem;
+    border-radius: 999px;
+    background: var(--highlight);
+    color: var(--dark);
+    font-size: 0.72rem;
+  }
+
+  .bwz-related-more {
+    min-height: 44px;
+    margin-top: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 6px;
+    background: var(--light);
+    color: var(--darkgray);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--secondary);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .bwz-related-cards {
+      width: 100%;
+    }
+
+    a.bwz-related-card {
+      width: 100%;
+      min-height: 44px;
+    }
+  }
+}

@@ -319,3 +319,21 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **第三輪設計確認**（三輪選擇題）：F3 每週自動＋手動、保留 10 份、只存 JSON、提醒在〈我的筆記〉頁頂端且未登入也提醒、用不雜亂的方式說明功能；F4 基本檢查、警告＋自動開 Issue；F5 條目頁也能寫筆記、相關筆記分「連到」與「提到」兩組；F6 有開著的筆記就插在游標位置；F7（使用者追加）動畫示範＋自己試，入口為〈我的筆記〉按鈕、網站導覽筆記站連結、章節面板「?」只開文字版。→ 01 D-45～D-49、規格 13、05 P2-14～P2-26、12 F 表與第三輪 `/goal` 提示詞（1,228 字元）。
 - 子代理調查補充的重點（已寫進 13）：`notes.ts` 的 `update()` 會把非章節錨點重建成 `_FREE` 章節錨點（做條目筆記時必修）；`ComposeNoteDetail.verseStart` 必填；GIS token client `include_granted_scopes:false`、scope 寫死，加 drive.file 要兩個一起要；Drive 的 request／退避是 `drive.ts` 私有函式；vitest 沒有 DOM 環境；CI 沿用快取的 `public/` 且增量建置不清空 → 建置檢查改在 emitter 內做；Quartz 別名轉址只在網站根目錄產生，不會替舊的 `link_folder/` 路徑轉址。
 - 使用者要求之後的 goal 檔都要寫明分工：Claude 子代理 Sonnet／Haiku、Codex Sol／Luna、Antigravity Gemini，依難度分派 → 07 新增「全部幫手的分級」表，13 §8 列第三輪的分派。
+
+## 2026-10-19｜第三輪 F3–F7（/goal）：準備、F4、F5
+
+- 開工：Google Cloud 加 `drive.file` 的步驟寫進 08 步驟 4b，並已用白話告訴使用者（P2-15，等使用者操作）。
+- **委派紀錄**（任務｜給誰｜等級｜結果）：
+  - P2-14 檢查腳本搬進 repo｜Claude 子代理 Haiku（worktree）｜1｜完成 13 個檔案＋共用 lib＋README＋npm scripts。主導者修：便條腳本漏了「先打開創世記第 1 章」（11/21 失敗的原因）；README 補「子路徑建置要暫時改 baseUrl」、fixcheck 匯出要用 `INCOG=1`、tourcheck 需要出埃及記 12 章。
+  - P2-16 F4a 建置檢查＋CI｜Claude 子代理 Sonnet（worktree）｜2｜完成；查證 emitter 拿到的樹就是 `.markdown-preview-view` 的子節點、一般與增量建置都會檢查全部章節（`partialEmit` 只在 --watch）。主導者審查後無修改。
+  - P2-17 F4b `relocateNode` 純函式＋測試｜Codex gpt-6-luna low（stdin、唯讀）｜1｜完成；主導者刪掉兩段沒用到的程式、修正一個寫錯的測試案例（slug 沒變應回傳 same）。接到條目書籤（`repo/nodeHeal.ts`、`ui/linkIndex.ts`、nodeView、我的筆記書籤分頁）由主導者寫。
+  - P2-18 F5a 筆記掛在條目｜Claude 子代理 Sonnet（worktree）｜3｜完成：`ChapterPanel` 改成 `NotesPanel(target)`（章節／條目兩種目標）、`update()` 陷阱修正、草稿支援條目、匯出「知識庫條目」資料夾。
+    - 第 3 級審查：Codex gpt-6-sol high（唯讀）列 5 點、結論「修正後可以合併」：①草稿只比標題內文 → 只改標籤／節數的草稿會被當成已存好而遺失；②跨種類輸入讓章節筆記掉進 `_FREE`、草稿補存沒核對紀錄是否還在原位置；③條目筆記每次編輯都重寫錨點標題；④章節筆記位置沒變也重建錨點（蓋掉 quote 等欄位）；⑤缺面板整合測試。主導者修 ①–④ 並各補回歸測試（drafts 3 個、entryNotes 3 個）；⑤沒有 DOM 測試環境，改由無頭 Chrome entrycheck 驗證。
+    - 交叉審查：Antigravity gemini-4-argon-high 回 429（個人額度用完，122 小時後重置）→ 改用 gemini-3.8-flash-high。
+  - P2-19 F5b 相關筆記比對純函式｜Codex gpt-6-luna low｜1｜完成；主導者修測試資料（筆記存的連結名稱已去掉 `#`、`|`）。
+  - P2-19 F5b 相關筆記清單畫面｜Codex gpt-6-luna medium（唯讀，可讀原始碼）｜2｜完成；主導者修：帶節數的章節筆記錨點種類可能不是 chapter（改成「不是 node」）、說明文字、預覽字被網站主題加粗（`!important`）；接到條目面板由主導者寫。
+- Codex 沙箱：`-s read-only` 現在可以讀檔（加 `-C` 指到外掛資料夾即可讓它自己讀原始碼）；`workspace-write` 仍是 `setup refresh had errors` → 實作一律「唯讀＋輸出完整檔案」。
+- **驗證**：
+  - `npm test` 235 個、typecheck 通過。
+  - 建置檢查：test_content 副本故意把創世記 2 章的經文清單在第 3 節後插一段文字 → 建置成功（exit 0），摘要「2 章通過、1 章有問題：清單在第 3 節之後被分成兩段」，報告 JSON 正確；CI 腳本用無效權杖與不存在的 repo 執行 → 警告與步驟摘要正確、`gh` 失敗也 exit 0（本機沒有 gh；GitHub 執行環境內建）。正常 test_content：3 章通過。
+  - 無頭 Chrome（子路徑模擬環境）：新增 entrycheck.mjs 15/15（舊網址條目書籤在〈我的筆記〉連到新網址、找不到的標示且無連結、條目頁認得舊書籤、擋掉 links.json 後仍認得＝紀錄已改成新網址、條目面板與按鈕文字、編輯框沒有節數、重新整理還在、相關筆記兩組與排序與合計、點卡片到創世記 2 章並捲到那一則、SPA 換頁到〈大衛〉只顯示大衛的筆記、〈我的筆記〉有「知識庫條目」組、手機不左右捲且 ≥44px、無例外）。回歸：stickycheck 21/21、nodecheck 10/10、p2check 34/34、mobilecheck 6/6、regress 15/15、uicheck 16/16、swcheck 11/11、expcheck 9/9、mynotescheck 24/24（625 筆）、fixcheck 11/11（INCOG=1）。tourcheck 需完整內容，部署後線上跑。

@@ -111,3 +111,13 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 ## 已知限制
 
 - `fixcheck.mjs` 的「匯出備份」：這台電腦的無頭 Chrome 不會把下載真的寫到資料夾（2026-10-19 起，搬家前的版本也一樣），請用 `INCOG=1` 執行，改成攔截下載連結並讀取內容來驗證。
+- `tourcheck.mjs`：導覽「個人筆記」那一站在出埃及記第 12 章，test_content 沒有這一章（會顯示「逛到別頁了」），請對完整內容的建置或線上網站執行。
+
+## 條目檢查（F4b、F5）
+
+```bash
+npx tsx e2e/gen-entry-backup.ts <輸出資料夾>/entry.json
+node e2e/entrycheck.mjs http://localhost:8090/Bible_wiki_zh_website <profile> <輸出資料夾>/entry.json [shotDir]
+```
+
+檢查：搬過資料夾的條目書籤在〈我的筆記〉連到新網址、找不到時標示；條目頁認得舊書籤並改成新網址；條目頁寫筆記；「我的相關筆記」兩組與排序；點卡片到那一章那一則；SPA 換頁；〈我的筆記〉「知識庫條目」組；手機。

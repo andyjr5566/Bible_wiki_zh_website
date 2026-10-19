@@ -121,3 +121,55 @@ it("便條與筆記在同章資料夾，帶種類、顏色與經節標題", () =
   const r: Resolved = { id: n.id, winner: n, conflicts: [], frontierVv: n.vv }
   expect(exportMarkdownZip([r], () => null).count).toBe(1)
 })
+
+describe("條目筆記匯出（F5）", () => {
+  const nodeAnchor = {
+    kind: "node" as const, ref: null, book: null, chapter: null, verseStart: null, verseEnd: null, endRef: null, quote: null, textHash: null,
+    node: { slug: "link_folder/人物/亞伯拉罕", title: "亞伯拉罕" },
+  }
+
+  it("放在「知識庫條目」資料夾，檔名帶條目名與標題", () => {
+    expect(notePath(rec({ anchor: nodeAnchor }))).toBe("聖經筆記/知識庫條目/亞伯拉罕 光與暗 (VWXYZ0).md")
+    expect(notePath(rec({ anchor: nodeAnchor, title: "", body: "第一行\n第二行" }))).toBe("聖經筆記/知識庫條目/亞伯拉罕 第一行 (VWXYZ0).md")
+  })
+
+  it("YAML 有 type: 條目筆記 與 entry，沒有 book／chapter；檔尾連回條目頁", () => {
+    const md = noteToMarkdown(rec({ anchor: nodeAnchor }), "https://example.com/link_folder/人物/亞伯拉罕")
+    expect(md).toBe(
+      [
+        "---",
+        "id: n_01JABCDEFGHJKMNPQRSTVWXYZ0",
+        "type: 條目筆記",
+        'entry: "亞伯拉罕"',
+        "tags:",
+        '  - "創造"',
+        '  - "光"',
+        "created: 2026-10-18T01:00:00.000Z",
+        "updated: 2026-10-18T02:00:00.000Z",
+        "source: 聖經研讀知識庫",
+        "---",
+        "",
+        "# 光與暗",
+        "",
+        "**神說要有光**\n- 見 [[創造]]",
+        "",
+        "---",
+        "條目：[亞伯拉罕](https://example.com/link_folder/人物/亞伯拉罕)",
+        "",
+      ].join("\n"),
+    )
+    expect(noteToMarkdown(rec({ anchor: nodeAnchor, title: "" }), null)).toContain("# 亞伯拉罕")
+  })
+
+  it("匯出 ZIP：章節筆記與條目筆記各在自己的資料夾，條目筆記用 entryUrlOf", () => {
+    const c = rec()
+    const n = rec({ id: "n_01JABCDEFGHJKMNPQRSTVWXYZ1", anchor: nodeAnchor })
+    const rs = [c, n].map((x) => ({ id: x.id, winner: x, conflicts: [], frontierVv: x.vv })) as unknown as Resolved[]
+    const { zip, count } = exportMarkdownZip(rs, () => "https://example.com/chapter", (slug) => `https://example.com/${slug}`)
+    const files = readZip(zip)
+    expect(count).toBe(2)
+    expect(files.map((f) => f.name)).toEqual(["聖經筆記/01 創世記/第1章/3-5 光與暗 (VWXYZ0).md", "聖經筆記/知識庫條目/亞伯拉罕 光與暗 (VWXYZ1).md"])
+    expect(files[1].text).toContain("條目：[亞伯拉罕](https://example.com/link_folder/人物/亞伯拉罕)")
+    expect(files[0].text).toContain("經文：[創世記 第1章](https://example.com/chapter)")
+  })
+})

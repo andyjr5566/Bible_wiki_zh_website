@@ -76,7 +76,7 @@ features/notes（畫面＋NotesService）
 | `session/prompts.ts` | session 要問使用者的事 | `Prompts` 介面＋`Notice` 型別；瀏覽器實作在 `ui/prompts.ts`，測試用假的 |
 | `features/types.ts` | 功能模組介面＋跨功能事件 | `Feature { id, views: { 掛載點種類: (ctx) => View } }`；`COMPOSE_NOTE_EVENT`（畫重點工具列「寫筆記」→ 筆記模組開新筆記並帶入節數與引文） |
 | `features/index.ts` | 功能模組清單 | `FEATURES`、`viewFactories(kind)` |
-| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`ChapterPanel`（含經節 📝 標記）、`MyNotesPage`（搜尋、標籤、匯出）、`drafts.ts`（編輯中草稿的本機備份與補存）、`links.ts`＋`linkComplete.ts`（`[[` 解析與自動完成）、`markdownExport.ts`（Obsidian ZIP） |
+| `features/notes/` | 筆記功能 | `NotesService`（把輸入轉成 type "note" 的紀錄）、`NotesPanel`（`notesPanel.ts`；章節頁與知識庫條目頁共用，差別在 `PanelTarget`：`chapterTarget`／`entryTarget`；章節目標含經節 📝 標記，條目頁預留空容器 `.bwz-related-slot`）、`MyNotesPage`（搜尋、標籤、匯出）、`drafts.ts`（編輯中草稿的本機備份與補存）、`links.ts`＋`linkComplete.ts`（`[[` 解析與自動完成）、`markdownExport.ts`（Obsidian ZIP） |
 | `features/stickies/` | 便條紙（D-41） | `StickiesService`（type "sticky"、color 欄位）、`chapterView.ts`（經節下方的紙箋、收起的小紙條與浮出視窗、儲存佇列、復原、衝突選擇）、`settings.ts`（每台裝置的展開／收起偏好）、`myNotesView.ts`（〈我的筆記〉最上方的 ⚙ 設定，用 `Feature.first`） |
 | `features/highlights/` | 畫重點與書籤 | `HighlightsService`（type "highlight"／"bookmark"；條目書籤用 node 錨點）、`chapterView.ts`（選取工具列、螢光標示、本章重點與書籤列）、`nodeView.ts`（知識庫條目頁標題下方的「🔖 加入書籤」，掛載點種類 `node`）、`myNotesView.ts`（我的筆記頁清單） |
 

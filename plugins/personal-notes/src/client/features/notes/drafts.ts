@@ -6,11 +6,15 @@
 // - 確定寫進資料庫後才刪除草稿；失敗就留著，下次再試。
 // - 這個分頁裡還開著的編輯框、正在補存中的草稿不會被拿去補存；別的分頁的草稿超過 30 秒沒被清掉才補存。
 
-import type { NoteInput } from "./notes"
+import type { NoteRecord } from "../../model/record"
+import type { NodeRef, NoteInput, NotesService } from "./notes"
 
 export interface Draft {
+  /** 章節筆記的書卷與章；條目筆記填 ""、0（看 node）。 */
   book: string
   chapter: number
+  /** 條目筆記（F5）：寫在哪個知識庫條目上（以 slug 對應）；章節筆記與舊草稿沒有這個欄位。 */
+  node?: NodeRef
   /** 這個編輯框對應的筆記；新筆記還沒建立時是 null。 */
   noteId: string | null
   /** 最後一次成功存檔（或開啟編輯器）時的版本；新筆記是 null。 */
@@ -94,4 +98,37 @@ export async function withDraftLock(key: string, fn: () => Promise<void>): Promi
   } finally {
     recovering.delete(key)
   }
+}
+
+/**
+ * 補存一份草稿；回傳是否真的寫入了東西。與目前在哪個頁面無關：章節草稿與條目草稿都靠草稿本身記的位置
+ * （book／chapter 或 node.slug）判斷，所以在任何一種頁面都能補存另一種的草稿。
+ */
+export async function applyDraft(notes: NotesService, d: Draft): Promise<boolean> {
+  if (!d.input.title && !d.input.body.trim()) return false
+  // 條目草稿以 draft.node 為準（舊版草稿沒有這個欄位）；input.node 一併帶上，補存時才會建成條目筆記
+  const input: NoteInput = d.node ? { ...d.input, node: d.node } : d.input
+  // 「已經存到了」要連標籤與節數一起比（只改標籤或節數的草稿不能被當成已存好，Codex Sol 審查 F5a #1）
+  const tagsKey = (t: readonly string[]) => [...t].sort().join("|")
+  const same = (r: NoteRecord) =>
+    !r.deleted &&
+    r.title === input.title &&
+    r.body === input.body &&
+    tagsKey(r.tags) === tagsKey(input.tags ?? []) &&
+    (d.node || ((r.anchor.verseStart ?? null) === (input.verseStart ?? null) && (r.anchor.verseEnd ?? null) === (input.verseEnd ?? null)))
+  // 紀錄現在是不是還在草稿記的位置（同一個條目／同一章）；不是就另存，不改到別的位置（#2）
+  const sameTarget = (r: NoteRecord) =>
+    d.node ? r.anchor.kind === "node" && r.anchor.node?.slug === d.node.slug : r.anchor.kind !== "node" && r.anchor.book === input.book && r.anchor.chapter === input.chapter
+  const existing = d.noteId ? notes.get(d.noteId) : undefined
+  if (existing && same(existing.winner)) return false // 其實已經存到了
+  if (existing && !existing.winner.deleted && existing.conflicts.length === 0 && existing.winner.hlc === d.baseHlc && sameTarget(existing.winner)) {
+    // 筆記從上次存檔後沒被別處改過：直接補上
+    await notes.update(existing.id, input)
+    return true
+  }
+  const siblings = d.node ? notes.forEntry(d.node.slug) : notes.forChapter(input.book, input.chapter)
+  if (!d.noteId && siblings.some((r) => same(r.winner))) return false // 新筆記其實建立成功了
+  // 筆記已被別的分頁或裝置改過（或不見了）：另存，不覆蓋較新的內容（Codex 第二輪 #1）
+  await notes.create(d.noteId ? { ...input, title: `${input.title || "筆記"}（恢復的草稿）` } : input)
+  return true
 }

@@ -13,12 +13,12 @@ import { shellFor, type MyNotesShell } from "../../ui/myNotesShell"
 import type { View } from "../types"
 import { loadResolver, type LinkResolver } from "./links"
 import { exportMarkdownZip } from "./markdownExport"
-import { NotesService } from "./notes"
+import { NotesService, isNodeAnchor } from "./notes"
 
 export class MyNotesPage implements View {
   private readonly notes: NotesService
   private readonly shell: MyNotesShell
-  private readonly library = new Library({ unit: "則筆記", empty: "還沒有筆記。到任何一章的頁面底部，按「新增筆記」開始寫。", chapterLinks: true })
+  private readonly library = new Library({ unit: "則筆記", empty: "還沒有筆記。到任何一章（或知識庫條目）的頁面底部，按「新增筆記」開始寫。", chapterLinks: true })
   private readonly tagsEl = h("div", { class: "bwz-n-tag-filter" })
   private readonly fileInput = h("input", { attrs: { type: "file", accept: "application/json,.json", hidden: true } })
   private unsubscribe: () => void
@@ -82,6 +82,7 @@ export class MyNotesPage implements View {
 
   private place(r: Resolved): string {
     const a = r.winner.anchor
+    if (isNodeAnchor(a)) return `📚 ${a.node?.title ?? a.node?.slug ?? "其他"}`
     if (!a.book || !a.chapter) return "其他"
     return `${chapterLabel(a.book, a.chapter)}${a.verseStart ? ` ${verseLabel(a.verseStart, a.verseEnd)}` : ""}`
   }
@@ -89,11 +90,13 @@ export class MyNotesPage implements View {
   private item(r: Resolved): LibraryItem {
     const a = r.winner.anchor
     const place = this.place(r)
+    const node = isNodeAnchor(a)
     return {
       id: r.id,
-      book: a.book,
-      chapter: a.chapter,
-      verse: a.verseStart,
+      book: node ? null : a.book,
+      chapter: node ? null : a.chapter,
+      verse: node ? null : a.verseStart,
+      groupLabel: node ? "知識庫條目" : undefined,
       updated: r.winner.updatedAt,
       text: [place, ...[r.winner, ...r.conflicts].flatMap((v) => [v.title, v.body])].join("\n"),
       tags: r.winner.tags,
@@ -111,7 +114,10 @@ export class MyNotesPage implements View {
     const base = document.body.dataset.basepath ?? ""
     const n = r.winner
     const a = n.anchor
-    const slug = a.book && a.chapter ? chapterSlug(a.book, a.chapter) : null
+    // 章節筆記連到該章，條目筆記連到條目頁；兩者都帶 #bwz-note-<id>，開啟後捲到那則
+    const node = isNodeAnchor(a)
+    const slug = node ? (a.node?.slug ?? null) : a.book && a.chapter ? chapterSlug(a.book, a.chapter) : null
+    const where = node ? "該條目" : "該章"
     const preview = h("div", { class: "bwz-lib-preview" }, this.body(n.body))
     const long = n.body.length > 60 || n.body.trim().includes("\n")
     const card = h("article", { class: `bwz-n-card bwz-lib-card${long ? " long" : ""}${r.conflicts.length ? " conflict" : ""}`, data: { id: r.id } })
@@ -137,14 +143,14 @@ export class MyNotesPage implements View {
         n.title ? h("strong", { class: "bwz-lib-heading", text: n.title }) : null,
         h("span", { class: "bwz-n-time", text: formatTime(n.updatedAt) }),
       ),
-      r.conflicts.length ? h("p", { class: "bwz-n-warn", text: "有兩個版本待選擇，請到該章頁面處理。" }) : null,
+      r.conflicts.length ? h("p", { class: "bwz-n-warn", text: `有兩個版本待選擇，請到${where}頁面處理。` }) : null,
       preview,
       h(
         "div",
         { class: "bwz-lib-card-foot" },
         n.tags.length ? h("span", { class: "bwz-n-tags" }, ...n.tags.map((t) => h("span", { class: "bwz-n-tag", text: `#${t}` }))) : null,
         toggle,
-        slug ? h("a", { class: "bwz-n-link", text: r.conflicts.length ? "前往該章選擇版本 →" : "前往該章編輯 →", attrs: { href: `${base}/${encodeURI(slug)}#bwz-note-${r.id}` } }) : null,
+        slug ? h("a", { class: "bwz-n-link", text: r.conflicts.length ? `前往${where}選擇版本 →` : `前往${where}編輯 →`, attrs: { href: `${base}/${encodeURI(slug)}#bwz-note-${r.id}` } }) : null,
       ),
     ]
     card.append(...parts.filter((x): x is HTMLElement => x !== null))
@@ -305,7 +311,7 @@ export class MyNotesPage implements View {
     const { zip, count } = exportMarkdownZip([...this.notes.all(), ...this.session.repo.visible().filter((r) => r.winner.type === "sticky")], (book, chapter) => {
       const slug = chapterSlug(book, chapter)
       return slug ? `${base}/${encodeURI(slug)}` : null
-    })
+    }, (slug) => `${base}/${encodeURI(slug)}`)
     if (count === 0) {
       toast("目前沒有筆記可以匯出")
       return

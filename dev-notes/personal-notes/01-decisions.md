@@ -197,11 +197,24 @@ vv 記錄每台裝置對該筆記的編輯次數，`V.vv ≤ X.vv` 才代表 X �
 - 帳號、登出、備份與匯出入、刪除資料、便條顯示設定都收進「⚙ 設定與備份」；頁面上只留同步狀態列、總覽一行（共 N 則筆記 · …）與「未登入時寫的筆記還沒加入帳號」提醒。
 - 實作：`ui/myNotesShell.ts`（外框：分頁、搜尋、設定面板；各功能模組用 `shellFor(host, session)` 登記分頁與設定區塊，彼此不 import）、`ui/library.ts`（清單元件：分組／篩選／排序是純函式，有單元測試）。`Feature.first` 不再使用（保留機制）。
 
+### D-43｜2026-10-19｜定案｜使用者（部分取代 D-30）
+**正式網址只用 GitHub Pages（`andyjr5566.github.io/Bible_wiki_zh_website`），先不買自訂網域；Vercel 不再建置網站。** 起因：外部顧問檢查指出兩個網址的瀏覽器資料（IndexedDB、Service Worker）各自獨立。Claude 查證時發現 Vercel 版當天也部署了筆記功能（`/my-notes` 打得開），在那裡寫的筆記只會留在那個網址的本機。
+- Vercel 仍要保留：GitHub 網站的語意搜尋呼叫 `https://bible-wiki-zh-website.vercel.app/api/search`（`plugins/semantic-search`、`api/search.js`）。
+- `vercel.json`：不再執行 Quartz 建置（輸出目錄改為只有一個檔案的 `vercel-static/`）；`/api/*` 以外的網址一律轉到 GitHub Pages 的同一路徑。用暫時轉址（307），之後想恢復 Vercel 網站時瀏覽器不會記住舊的轉址。
+- `/sw.js`、`/static/sw.js` 不轉址，回傳「自我移除」的 Service Worker：以前在 Vercel 註冊過的 Service Worker 檢查更新時會清掉快取、移除自己並重新載入分頁（若轉到別的網域，更新檢查會失敗，舊的 Service Worker 會一直留著）。
+- 沒處理：在 Vercel 網址寫過、沒有登入同步的筆記仍留在那個瀏覽器裡，但頁面已轉走、無法再打開。有登入的人不受影響（雲端那份在 GitHub 網址登入後會拉回來）。
+- `quartz.config.yaml` 的預設 baseUrl 仍是 vercel.app（deploy.yml 建置時改成 GitHub 網址），沒有改：改了會影響本機開發的路徑。
+
+### D-44｜2026-10-19｜定案｜使用者（結案 D-33）
+**Google 應用程式已發佈為正式版**（使用者照 08 操作，12 A3）。教學頁與隱私權政策拿掉「試用」字樣（12 A4）。沒有做 Search Console 網域驗證、品牌驗證（只用非敏感範圍 `drive.appdata`，Google 未要求）。
+
 ---
 
 ## 待決事項
 
 ### D-30｜待決｜使用者
+> 2026-10-19：先不買，只用 GitHub Pages → 見 D-43。
+
 **自訂網域（約 US$10–15／年）。** 測試期先用 `andyjr5566.github.io`。正式公開前決定。
 好處：網域驗證與品牌驗證容易、與其他 GitHub Pages 專案站隔離（目前同源，共用 IndexedDB 與授權來源）、Phase 2 可用 same-site cookie、網址不綁 GitHub 帳號。
 
@@ -212,4 +225,6 @@ vv 記錄每台裝置對該筆記的編輯次數，`V.vv ≤ X.vv` 才代表 X �
 **Codex 的 Luna 與 Sol 分工。** 07 暫定：Sol 做複雜演算法與嚴格審查，Luna 做範圍清楚的實作。等使用者確認。
 
 ### D-33｜待決｜使用者
+> 2026-10-19：已發佈正式版 → 見 D-44。
+
 **何時把 OAuth 應用程式從「測試中」發佈為「正式版」**（需要隱私權政策頁、首頁、網域驗證、品牌驗證）。測試中最多 100 位測試使用者。

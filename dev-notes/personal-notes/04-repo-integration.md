@@ -20,6 +20,7 @@
   - 「Setup local plugins」把 `plugins/wiki-tour`、`plugins/semantic-search` 複製進 `.quartz/plugins/`。
   - 互動網站由 `quartz/static/website/build.py --ci-build` 建置，只發佈各 app 的 `dist/`。
 - **Vercel**：`vercel.json`（`cleanUrls`、`/static/sw.js` 加 `Service-Worker-Allowed`）。`quartz.config.yaml` 預設 baseUrl 是 `bible-wiki-zh-website.vercel.app`。
+  - **2026-10-19 起（D-43）Vercel 不再建置網站**：只提供 `/api/search`，其他網址轉到 GitHub Pages；`vercel-static/sw.js` 是給舊訪客的自我移除 Service Worker。
 - **已有 serverless 後端**：`api/search.js`（Vercel Function，語意搜尋，CORS 只允許 `https://andyjr5566.github.io`）。Phase 2 Token 服務可沿用此平台。
 - 建置驗證規則（`AGENT.md`）：用 `test_content`，`npx quartz build -d test_content -o <scratch>`；`content` 有一萬多個檔案，建置很久。
 
@@ -95,4 +96,4 @@ plugins/personal-notes/
 ### 2.3 OAuth 授權來源
 - Google 的「已授權 JavaScript 來源」只認 origin（不含路徑）：`https://andyjr5566.github.io` 會涵蓋此帳號所有 GitHub Pages 專案站。
 - 本機測試：`http://localhost:8080`（`npx quartz build --serve` 預設埠）。
-- 若 Vercel 版也要能登入：加 `https://bible-wiki-zh-website.vercel.app`。
+- 若 Vercel 版也要能登入：加 `https://bible-wiki-zh-website.vercel.app`。（2026-10-19 起不適用：Vercel 不再提供網站，D-43）

@@ -43,7 +43,7 @@ Google Cloud Console 的介面名稱偶爾會改，若找不到對應按鈕，�
 3. **已授權的 JavaScript 來源**，新增：
    - `https://andyjr5566.github.io`
    - `http://localhost:8080`（本機測試用）
-   - （如果 Vercel 版也要能登入）`https://bible-wiki-zh-website.vercel.app`
+   - ~~（如果 Vercel 版也要能登入）`https://bible-wiki-zh-website.vercel.app`~~ 2026-10-19 起不需要：Vercel 不再提供網站（D-43）。之前若加過可以留著，也可以刪掉。
 4. **已授權的重新導向 URI**：第一階段不用填。
 5. 建立 → 畫面會顯示 **用戶端 ID**（長得像 `123456789-abc...apps.googleusercontent.com`）。
 

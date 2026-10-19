@@ -1,7 +1,17 @@
 {
-  "buildCommand": "node -e \"require('fs').rmSync('.quartz/plugins/semantic-search',{recursive:true,force:true})\" && npx quartz build",
-  "cleanUrls": true,
+  "buildCommand": "node -e \"console.log('網站只在 GitHub Pages 建置（D-43）；Vercel 只提供 /api')\"",
+  "outputDirectory": "vercel-static",
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path((?!api/|sw\\.js$|static/sw\\.js$).*)",
+      "destination": "https://andyjr5566.github.io/Bible_wiki_zh_website/:path",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    { "source": "/static/sw.js", "destination": "/sw.js" }
+  ],
   "headers": [
     {
       "source": "/static/sw.js",

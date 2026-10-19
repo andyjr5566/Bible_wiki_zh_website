@@ -299,3 +299,19 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **部署**（使用者確認推送）：`4a1e190e..c2d131f0`。線上 mynotescheck 24/24（625 筆匯入）、p2check 34/34、mobilecheck 6/6、fixcheck 11/11、regress 15/15。
 - **便條收起後點小紙條直接展開**（使用者：「還要按展開才會貼在字下面，請把繁瑣的步驟除掉」）：拿掉浮出視窗，點迷你小紙條就在經文下方展開那一張。stickycheck 改為「點小紙條：直接在第 3 節下方展開（不浮出視窗）」，本機 21/21。D-41、教學同步更新。
 - **部署**（使用者確認推送）：`c2d131f0..cc205c4b`。線上 stickycheck 21/21、mynotescheck 24/24。（GitHub API 匿名查詢達到每小時上限，改用「線上 app.js 與本機相同」判斷部署完成。）
+
+## 2026-10-19｜外部顧問檢查：查證與決定（12 F）
+
+- **起因**：使用者把另一個 AI 對整個專案的診斷貼過來，要求「不要全盘接收，當顧問來討論」。
+- **Claude 查證**（對照程式碼）：
+  - 沒有 Web Locks 時直接同步、03 寫的 IndexedDB 租約沒做 → 屬實（`sync/scheduler.ts` `withLock`）。各瀏覽器 2022 年後都支援，實際上碰不到 → 03 §4.6 補註，列為暫不做。
+  - 經節偵測依賴頁面上的 `<ol>` → 屬實，但資料本身存節數＋原文片段＋雜湊，找不到時會列出提示；真正風險是章節格式改了功能靜靜不出現 → 改做建置後檢查（F4）。
+  - GitHub Pages 與 Vercel 並存 → 屬實，而且 Vercel 當天也部署了筆記功能（`/my-notes` 200）；GitHub 網站的語意搜尋依賴 Vercel 的 `/api/search`，Vercel 不能整個關掉。
+  - README 還寫「測試模式試用中」、05 的 P2-10 沒勾 → 屬實。
+  - 顧問沒提到的：appDataFolder 只有本站的 Google Cloud 專案讀得到，專案被停權／刪除時雲端那份拿不回來 → 支持做可見備份（F3）。
+- **使用者決定**：F1–F6（見 12 F）；F1、F2 先做，F3–F6 先討論設計、用問題確認後再寫 goal 提示詞。
+- **F1 文件狀態**：README 狀態改為「已公開、正式版」並指向 12 為唯一狀態總表；05 的 P1-18 改為正式版觀察、P2-1／P2-10 勾選、補 P2-11～13（便條、條目書籤、我的筆記整理）；01 新增 D-43（只用 GitHub Pages）、D-44（正式版，結案 D-33），D-30／D-33 加指向；03 §4.6 補註租約未實作；04、08 的 Vercel 說明加註。
+- **F2 Vercel 不再建置網站**（D-43）：`vercel.json` 改為不跑 Quartz、輸出目錄 `vercel-static/`；`/api/*`、`/sw.js`、`/static/sw.js` 以外一律暫時轉址（307）到 GitHub Pages 同一路徑；`/static/sw.js` 改寫到 `/sw.js`，回傳自我移除的 Service Worker（清快取、移除自己、重新載入分頁）。
+  - **驗證（本機）**：用 Vercel 同版的 path-to-regexp 6.1.0 測轉址規則 12/12（首頁、我的筆記、中文章節路徑、static 檔會轉；`/api/search`、`/sw.js`、`/static/sw.js` 不轉；`/sw.json`、`/apix` 等相似路徑照常轉）；vercel.json 為合法 JSON。
+  - 線上驗證要等推送後 Vercel 重新部署（vercel.json 不在 deploy.yml 的觸發路徑內，GitHub Pages 不會重建）。
+- 分工：使用者說可以請子代理做事 → 第 3～6 項的程式背景調查交給 3 個 Explore 子代理（唯讀）。

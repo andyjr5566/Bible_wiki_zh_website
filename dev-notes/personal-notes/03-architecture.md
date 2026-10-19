@@ -171,6 +171,7 @@ appDataFolder/                      （使用者看不到）
 ### 4.6 多分頁
 - 用 `navigator.locks.request("bwz-notes-sync-<permissionId>")` 選出唯一同步分頁；其他分頁只寫 IndexedDB 並透過 `BroadcastChannel("bwz-notes")` 通知與接收更新。
 - 不支援 Web Locks 的瀏覽器 → 以 IndexedDB 租約（lease，含到期時間）退而求其次。
+  - **2026-10-19 查核：租約沒有實作。** 沒有 Web Locks 時 `SyncScheduler.withLock()` 直接執行同步。Web Locks 在 Chrome 69+、Safari 15.4+（iOS 15.4，2022 年）、Firefox 96+ 都支援，實際上幾乎走不到這條路；是否補做列在 12 的低優先項目。
 
 ### 4.7 保護機制
 - **雲端被清空偵測**：本裝置曾成功同步、本機有資料，但雲端列表為空 → 停止自動同步，詢問「雲端資料似乎被刪除了（可能是在 Google 雲端硬碟中移除了本站的應用程式資料），要用這台裝置的資料重新上傳嗎？」

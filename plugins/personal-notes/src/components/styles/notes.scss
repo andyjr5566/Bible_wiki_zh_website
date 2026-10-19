@@ -651,6 +651,12 @@ li.bwz-v-flash {
   }
 }
 
+// 「引用到筆記」工具列（F6）：外觀與位置沿用 .bwz-h-toolbar（同一組規則，按鈕是 .bwz-n-btn，手機 ≥44px）；
+// 只多一條：單顆按鈕不換行。兩個工具列範圍互斥，不會同時出現。
+.bwz-q-toolbar .bwz-n-btn {
+  white-space: nowrap;
+}
+
 // 筆記面板下方的書籤與本章重點
 .bwz-h-bar {
   margin-top: 1rem;

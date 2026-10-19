@@ -10,7 +10,8 @@ import { dialog, formatTime, h, toast, verseLabel } from "../../ui/dom"
 import { renderMarkdown } from "../../ui/markdown"
 import { annotateVerses, verseElement } from "../../ui/verses"
 import { statusBar } from "../../ui/status"
-import { COMPOSE_NOTE_EVENT, type ComposeNoteDetail, type View } from "../types"
+import { insertAtCaret } from "../../ui/textInsert"
+import { COMPOSE_NOTE_EVENT, COMPOSE_QUOTE_EVENT, type ComposeNoteDetail, type ComposeQuoteDetail, type View } from "../types"
 import { applyDraft, clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft } from "./drafts"
 import { attachLinkComplete } from "./linkComplete"
 import { loadLinkIndex } from "../../ui/linkIndex"
@@ -29,6 +30,8 @@ type EditorRoot = HTMLElement & {
   backedUp?: () => boolean
   /** 同步狀態改變時更新「已儲存／已同步」文字（C9）。 */
   refreshSaved?: () => void
+  /** 把一段文字（引文）插在編輯框最後的游標位置，並觸發自動儲存。 */
+  insertText?: (text: string) => void
   draftKey?: string
 }
 
@@ -37,6 +40,8 @@ interface Prefill {
   verseStart: number | null
   verseEnd: number | null
   body: string
+  /** 內容是程式放進去的（引文）：不必等使用者打字就自動儲存。 */
+  save?: boolean
 }
 
 /** 面板的目標：這個面板管哪一組筆記。章節頁用 chapterTarget、條目頁用 entryTarget。 */
@@ -54,6 +59,8 @@ export interface PanelTarget {
   notesOf(svc: NotesService): Resolved[]
   /** 畫重點工具列的「寫筆記」是不是要開在這個面板。 */
   acceptsCompose(d: ComposeNoteDetail): boolean
+  /** 「引用到筆記」的引文是不是要放在這個面板。 */
+  acceptsQuote(d: ComposeQuoteDetail): boolean
 }
 
 export function chapterTarget(book: string, chapter: number): PanelTarget {
@@ -65,6 +72,7 @@ export function chapterTarget(book: string, chapter: number): PanelTarget {
     place: () => ({ book, chapter }),
     notesOf: (svc) => svc.forChapter(book, chapter),
     acceptsCompose: (d) => d.book === book && d.chapter === chapter,
+    acceptsQuote: (d) => d.page.kind === "chapter" && d.page.book === book && d.page.chapter === chapter,
   }
 }
 
@@ -78,6 +86,7 @@ export function entryTarget(node: NodeRef): PanelTarget {
     place: () => ({ book: "", chapter: 0, node: { slug: node.slug, title: node.title } }),
     notesOf: (svc) => svc.forEntry(node.slug),
     acceptsCompose: () => false,
+    acceptsQuote: (d) => d.page.kind === "entry" && d.page.slug === node.slug,
   }
 }
 
@@ -150,6 +159,14 @@ export class NotesPanel implements View {
       document.addEventListener(COMPOSE_NOTE_EVENT, onCompose)
       this.cleanups.push(() => document.removeEventListener(COMPOSE_NOTE_EVENT, onCompose))
     }
+    // 「引用到筆記」（章節頁與條目頁都接收）：有開著的編輯器就插在游標位置，沒有就開新筆記
+    const onQuote = (e: Event) => {
+      const d = (e as CustomEvent<ComposeQuoteDetail>).detail
+      if (!d?.markdown || !this.target.acceptsQuote(d)) return
+      void this.addQuote(d.markdown)
+    }
+    document.addEventListener(COMPOSE_QUOTE_EVENT, onQuote)
+    this.cleanups.push(() => document.removeEventListener(COMPOSE_QUOTE_EVENT, onQuote))
   }
 
   destroy(): void {
@@ -423,6 +440,16 @@ export class NotesPanel implements View {
     }
   }
 
+  private async addQuote(markdown: string): Promise<void> {
+    const ed = this.editor
+    if (ed?.root.insertText) {
+      ed.root.insertText(markdown)
+      return
+    }
+    // 沒有編輯器：開新筆記（章節頁＝整章筆記、不填節數；條目頁＝條目筆記），開啟前一樣先 gateEdit
+    await this.openEditor(null, undefined, { verseStart: null, verseEnd: null, body: markdown, save: true })
+  }
+
   /** 開啟編輯器前先同步（D-03）。 */
   private async openEditor(noteId: string | null, trigger?: HTMLButtonElement, prefill?: Prefill): Promise<void> {
     if (this.editor && !(await this.closeEditor())) return
@@ -614,6 +641,12 @@ export class NotesPanel implements View {
       timer = setTimeout(() => void (saving = saving.then(save)), AUTOSAVE_MS)
     }
     for (const el of inputs) el.addEventListener("input", schedule)
+    // 記住文字框最後的游標位置（引用到筆記時插在這裡；選取頁面文字時文字框會失去焦點）
+    let caret = body.value.length
+    const remember = () => {
+      if (typeof body.selectionStart === "number") caret = body.selectionStart
+    }
+    for (const ev of ["blur", "keyup", "click", "select", "input"]) body.addEventListener(ev, remember)
 
     const root = h(
       "div",
@@ -646,6 +679,17 @@ export class NotesPanel implements View {
     root.backedUp = () => !dirty || backupOk
     root.refreshSaved = showSaved
     root.draftKey = key
+    root.insertText = (text) => {
+      const r = insertAtCaret(body.value, caret, text)
+      body.value = r.value
+      caret = r.caret
+      body.setSelectionRange(caret, caret)
+      body.dispatchEvent(new Event("input", { bubbles: true })) // 觸發自動儲存與草稿備份
+      root.scrollIntoView({ block: "center" })
+      body.focus({ preventScroll: true })
+      body.setSelectionRange(caret, caret)
+    }
+    if (prefill?.save) schedule()
     return root
   }
 }

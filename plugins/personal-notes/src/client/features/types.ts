@@ -35,6 +35,18 @@ export const COMPOSE_NOTE_EVENT = "bwz:compose-note"
 /** 要求便條紙功能在某一節貼一張新便條（畫重點工具列上的「便條」）。 */
 export const COMPOSE_STICKY_EVENT = "bwz:compose-sticky"
 
+/**
+ * 要求筆記功能把一段引文放進這一頁的筆記（「❝ 引用到筆記」）：
+ * 這一頁有開著的編輯器就插在游標位置，沒有就開一則新筆記（章節頁＝整章筆記、條目頁＝條目筆記）。
+ */
+export const COMPOSE_QUOTE_EVENT = "bwz:compose-quote"
+
+export interface ComposeQuoteDetail {
+  page: { kind: "chapter"; book: string; chapter: number } | { kind: "entry"; slug: string }
+  /** 已排好的 Markdown 引文（含出處連結，結尾留一個空行） */
+  markdown: string
+}
+
 export interface ComposeStickyDetail {
   book: string
   chapter: number

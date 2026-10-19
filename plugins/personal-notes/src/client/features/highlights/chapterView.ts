@@ -167,7 +167,8 @@ export class ChapterHighlights implements View {
   private updateToolbar(): void {
     const p = this.picked()
     if (!p) {
-      if (!this.removeMode && window.getSelection()?.isCollapsed !== false) this.hideToolbar()
+      // 選取移到經文以外（例如註釋區，那裡由「引用到筆記」工具列負責）時也要收起，兩個工具列不同時出現
+      if (!this.removeMode || window.getSelection()?.isCollapsed === false) this.hideToolbar()
       return
     }
     this.removeMode = false

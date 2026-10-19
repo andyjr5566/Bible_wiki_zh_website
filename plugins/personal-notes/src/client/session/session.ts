@@ -518,14 +518,27 @@ export class Session {
       this.prompts.notify({ type: "connect-before-delete" })
       return
     }
-    if (!(await this.prompts.deleteAll())) return
+    // 有 Drive 備份權限才問要不要一起把備份移到垃圾桶（D-50）
+    const offerBackups = !!this.account && !!this.deps.tokens?.hasBackupScope?.(this.account.permissionId)
+    const choice = await this.prompts.deleteAll({ offerBackups })
+    if (!choice) return
     try {
       // 與其他分頁的同步互斥，完成後通知它們重新載入（Codex 審查 #8）
       const { syncer, scheduler } = this.ws
       if (scheduler) await scheduler.withLock(() => syncer.deleteEverything())
       else await syncer.deleteEverything()
       scheduler?.broadcastChanged()
-      this.prompts.notify({ type: "deleted-all" })
+      // 筆記刪除成功之後才動備份；備份移不成功不影響「已刪除全部筆記」，只另外告訴使用者
+      let trashedBackups: number | null = null
+      let backupTrashFailed = false
+      if (choice.trashBackups && offerBackups) {
+        try {
+          trashedBackups = await this.backup.trashAllBackups()
+        } catch {
+          backupTrashFailed = true
+        }
+      }
+      this.prompts.notify({ type: "deleted-all", trashedBackups, backupTrashFailed })
     } catch (e) {
       this.prompts.notify({ type: "delete-failed", message: errorMessage(e) })
     }

@@ -16,6 +16,11 @@ class FakeTokens implements TokenSource {
   requestCalls = 0
   failPrepare = false
   nextResult: TokenResult = { ok: true }
+  /** 這個 token 有沒有 drive.file（D-45）。 */
+  backupGranted = false
+  hasBackupScope(pid: string) {
+    return this.backupGranted && this.tokenFor(pid) !== null
+  }
   private value: string | null = null
   private owner: string | null = null
   private listeners = new Set<() => void>()
@@ -118,9 +123,9 @@ class FakePrompts implements Prompts {
     this.asked.push(`disconnect:${opts.canRevoke}`)
     return true
   }
-  async deleteAll() {
-    this.asked.push("delete-all")
-    return true
+  async deleteAll(opts: { offerBackups: boolean }) {
+    this.asked.push(`delete-all:${opts.offerBackups}`)
+    return { trashBackups: false }
   }
   async reupload() {
     return "reupload" as const
@@ -148,6 +153,16 @@ function env(opts: { cloud?: MemoryCloud; inAppBrowser?: string } = {}) {
   const tokens = new FakeTokens()
   const prompts = new FakePrompts()
   const clock = { t: Date.parse("2026-10-18T00:00:00.000Z") }
+  // Drive 上本站的備份（D-45、D-50）：只記錄被移到垃圾桶的 id
+  const drive = {
+    backups: [] as { id: string; name: string; createdTime: string; records: number }[],
+    trashed: [] as string[],
+    async ensureFolder() { return "folder" },
+    async listBackups() { return drive.backups.filter((b) => !drive.trashed.includes(b.id)) },
+    async createBackup() { return "new" },
+    async trash(id: string) { drive.trashed.push(id) },
+    async read() { return "{}" },
+  }
   const deps: SessionDeps = {
     config: { clientId: "test", syncEnabled: true, minPollSeconds: 180, maxWritesPerMinute: 1000, notice: "", appVersion: "t" },
     prompts,
@@ -158,11 +173,12 @@ function env(opts: { cloud?: MemoryCloud; inAppBrowser?: string } = {}) {
     openStore: (name) => NotesStore.open(name, factory),
     deleteStore: (name) => NotesStore.deleteDatabase(name, factory),
     createAdapter: (getToken) => guarded(new MemoryAdapter(cloud), getToken),
+    createDriveFiles: () => drive,
     createScheduler: ({ syncer }) => ({ start() {}, stop() {}, syncNow: () => syncer.sync(), withLock: (fn) => fn(), broadcastChanged() {} }),
     now: () => clock.t,
   }
   const session = new Session(deps)
-  return { session, cloud, tokens, prompts, storage, factory, clock, notes: new NotesService(() => session.repo) }
+  return { session, cloud, tokens, prompts, storage, factory, clock, drive, notes: new NotesService(() => session.repo) }
 }
 
 const note = (body: string) => ({ book: "GEN", chapter: 1, verseStart: null, verseEnd: null, title: "", body, tags: [] })
@@ -328,7 +344,7 @@ describe("Session：登出與刪除", () => {
     e.tokens.expire()
     await e.session.deleteEverything()
     expect(e.prompts.notices).toContainEqual({ type: "connect-before-delete" })
-    expect(e.prompts.asked).not.toContain("delete-all")
+    expect(e.prompts.asked.some((a) => a.startsWith("delete-all"))).toBe(false)
     expect(e.notes.all()).toHaveLength(1)
     expect(e.cloud.files.size).toBeGreaterThan(0)
   })
@@ -429,3 +445,59 @@ describe("Session：多方檢查回歸測試（Antigravity）", () => {
     expect(e.tokens.forgotEmail).toBe(0)
   })
 })
+
+describe("刪除全部筆記與 Drive 備份（D-50）", () => {
+  const twoBackups = (e: Awaited<ReturnType<typeof signedIn>>) => {
+    e.drive.backups.push({ id: "b1", name: "1.json", createdTime: "2026-10-01T00:00:00.000Z", records: 1 }, { id: "b2", name: "2.json", createdTime: "2026-10-02T00:00:00.000Z", records: 1 })
+  }
+
+  it("沒有 Drive 備份權限：不提供勾選、不動備份", async () => {
+    const e = await signedIn()
+    twoBackups(e)
+    await e.notes.create(note("x"))
+    await e.session.deleteEverything()
+    expect(e.prompts.asked).toContain("delete-all:false")
+    expect(e.drive.trashed).toEqual([])
+    expect(e.prompts.notices).toContainEqual({ type: "deleted-all", trashedBackups: null, backupTrashFailed: false })
+  })
+
+  it("有權限、沒勾：筆記刪掉，備份留著", async () => {
+    const e = await signedIn()
+    e.tokens.backupGranted = true
+    twoBackups(e)
+    await e.notes.create(note("x"))
+    await e.session.deleteEverything()
+    expect(e.prompts.asked).toContain("delete-all:true")
+    expect(e.notes.all()).toHaveLength(0)
+    expect(e.drive.trashed).toEqual([])
+  })
+
+  it("有權限、勾了：筆記刪掉之後，本站備份全部移到垃圾桶", async () => {
+    const e = await signedIn()
+    e.tokens.backupGranted = true
+    twoBackups(e)
+    e.prompts.deleteAll = async (opts) => {
+      e.prompts.asked.push(`delete-all:${opts.offerBackups}`)
+      return { trashBackups: true }
+    }
+    await e.notes.create(note("x"))
+    await e.session.deleteEverything()
+    expect(e.notes.all()).toHaveLength(0)
+    expect(e.drive.trashed.sort()).toEqual(["b1", "b2"])
+    expect(e.prompts.notices).toContainEqual({ type: "deleted-all", trashedBackups: 2, backupTrashFailed: false })
+  })
+
+  it("勾了但刪除筆記失敗：備份完全不動（還是安全網）", async () => {
+    const e = await signedIn()
+    e.tokens.backupGranted = true
+    twoBackups(e)
+    e.prompts.deleteAll = async () => ({ trashBackups: true })
+    await e.notes.create(note("x"))
+    await e.session.ws.syncer.sync()
+    e.cloud.offline = true
+    await e.session.deleteEverything()
+    expect(e.drive.trashed).toEqual([])
+    expect(e.prompts.notices.some((n) => n.type === "delete-failed")).toBe(true)
+  })
+})
+

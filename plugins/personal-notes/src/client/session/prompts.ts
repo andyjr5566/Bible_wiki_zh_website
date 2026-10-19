@@ -11,7 +11,8 @@ export type Notice =
   | { type: "disconnected"; revoked: boolean }
   | { type: "adopted"; count: number }
   | { type: "switched-account" }
-  | { type: "deleted-all" }
+  /** trashedBackups：一起移到垃圾桶的 Drive 備份份數（沒勾選是 null）；backupTrashFailed：勾了但沒移成功（D-50）。 */
+  | { type: "deleted-all"; trashedBackups?: number | null; backupTrashFailed?: boolean }
   | { type: "google-loading" }
   | { type: "google-load-failed"; message: string }
   | { type: "sign-in-failed"; reason: Exclude<TokenResult, { ok: true }>["reason"]; message: string }
@@ -38,8 +39,11 @@ export interface Prompts {
   signOut(hasUnsyncedChanges: boolean): Promise<"keep" | "clear" | null>
   /** canRevoke：目前有有效連線，可以向 Google 撤銷授權。 */
   disconnect(opts: { canRevoke: boolean; hasUnsyncedChanges: boolean }): Promise<boolean>
-  /** 刪除全部（UI 負責兩段確認）。 */
-  deleteAll(): Promise<boolean>
+  /**
+   * 刪除全部（UI 負責兩段確認）。offerBackups：這個帳號有 Drive 備份權限，要多一個「同時把 Drive 裡的備份移到垃圾桶」
+   * 勾選框（預設不勾，D-50）。取消回傳 false。
+   */
+  deleteAll(opts: { offerBackups: boolean }): Promise<false | { trashBackups: boolean }>
   /** 雲端資料被清空後：用這台裝置的資料重新上傳、清除這台裝置上的筆記、或稍後再說（null）。 */
   reupload(): Promise<"reupload" | "clear" | null>
   notify(notice: Notice): void

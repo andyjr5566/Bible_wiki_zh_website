@@ -17,7 +17,18 @@
   "scripts": {
     "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsup",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "e2e:sticky": "node e2e/stickycheck.mjs",
+    "e2e:mynotes": "node e2e/mynotescheck.mjs",
+    "e2e:node": "node e2e/nodecheck.mjs",
+    "e2e:p2": "node e2e/p2check.mjs",
+    "e2e:mobile": "node e2e/mobilecheck.mjs",
+    "e2e:fix": "node e2e/fixcheck.mjs",
+    "e2e:regress": "node e2e/regress.mjs",
+    "e2e:ui": "node e2e/uicheck.mjs",
+    "e2e:tour": "node e2e/tourcheck.mjs",
+    "e2e:exp": "node e2e/expcheck.mjs",
+    "e2e:sw": "node e2e/swcheck.mjs"
   },
   "peerDependencies": {
     "preact": "^10.0.0"

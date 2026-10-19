@@ -18,6 +18,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -109,6 +110,13 @@ jobs:
         run: |
           echo "QUARTZ_INCREMENTAL=$QUARTZ_INCREMENTAL"
           npx quartz build --concurrency=2
+
+      - name: Verse list check report
+        # 經文清單檢查結果 → 警告、步驟摘要、Issue（失敗不擋部署）
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node plugins/personal-notes/scripts/verse-check-report.mjs
 
       - name: Save public/ output cache
         uses: actions/cache/save@v4

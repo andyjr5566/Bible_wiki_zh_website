@@ -4,10 +4,19 @@
 // 防禦式：章節頁的經文目前是「導覽表之後、第一條分隔線之前的有序清單」（content 仍在建置中，D-14）。
 // 認不出這個結構就什麼都不做，不影響頁面與筆記功能。
 
+import { findVerseList, type NodeAdapter } from "../model/verseList"
+
 export interface Quote {
   exact: string
   prefix: string
   suffix: string
+}
+
+/** 讓共用的經文清單規則（model/verseList.ts）在 DOM 元素上執行。 */
+const domAdapter: NodeAdapter<Element> = {
+  tag: (n) => n.tagName.toLowerCase(),
+  children: (n) => Array.from(n.children),
+  attr: (n, name) => n.getAttribute(name),
 }
 
 const SKIP = ".bwz-v-ui" // 我們自己加在經文裡的元素（標記、按鈕），取文字時略過
@@ -18,19 +27,11 @@ export function annotateVerses(root: ParentNode = document): HTMLOListElement | 
   if (!article) return null
   // 網站主題會把內文包在 .markdown-preview-view 裡；沒有這一層就直接看 article
   const content = article.querySelector(":scope > .markdown-preview-view") ?? article
-  let list: HTMLOListElement | null = null
-  for (const el of Array.from(content.children)) {
-    if (el.tagName === "HR") break // 經文清單一定在第一條分隔線之前
-    if (el.tagName === "OL") {
-      list = el as HTMLOListElement
-      break
-    }
-  }
-  if (!list) return null
-  const items = Array.from(list.children).filter((c): c is HTMLLIElement => c.tagName === "LI")
-  if (items.length === 0 || items.length > 200) return null
-  const start = Number(list.getAttribute("start") ?? "1") || 1
-  items.forEach((li, i) => {
+  const found = findVerseList<Element>(content, domAdapter)
+  if (!found) return null
+  const list = found.list as HTMLOListElement
+  const start = found.start
+  ;(found.items as HTMLLIElement[]).forEach((li, i) => {
     const v = String(start + i)
     if (li.dataset.v !== v) {
       li.dataset.v = v

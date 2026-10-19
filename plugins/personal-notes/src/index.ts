@@ -7,6 +7,7 @@ import type { QuartzEmitterPlugin, QuartzPageTypePlugin, FullSlug, FilePath } fr
 import { MyNotesBody } from "./components/PersonalNotes"
 import { buildLinkIndex } from "./client/model/linkIndex"
 import { appVersion, clientAppPath } from "./shared"
+import { runVerseCheck } from "./verseCheck"
 
 export { default as PersonalNotes, MyNotesBody } from "./components/PersonalNotes"
 
@@ -50,10 +51,14 @@ export const PersonalNotesEmitter: QuartzEmitterPlugin<PersonalNotesOptions> = (
     )
     const linksOut = path.join(outDir, "links.json")
     await fs.writeFile(linksOut, JSON.stringify(index))
+    // 經文清單檢查（13 §3.2）：絕不讓建置失敗，runVerseCheck 內部已 try/catch
+    await runVerseCheck(content)
     return [appOut, configOut, linksOut] as FilePath[]
   },
-  partialEmit() {
-    return null
+  // 增量（--watch）重建時 Quartz 傳進來的仍是全部 markdown 頁面（build.ts 的 contentMap），所以每次都檢查全部章節
+  async partialEmit(_ctx, content) {
+    await runVerseCheck(content)
+    return [] as FilePath[] // 靜態檔不必重輸出（型別不允許 Promise<null>）
   },
 })
 

@@ -3,6 +3,9 @@
 
 import type { TokenResult } from "../auth/gis"
 import type { BackupListing, DriveFilesLike } from "../adapter/driveFiles"
+
+// 畫面（features/backup）不能直接 import adapter，經由這裡取得備份清單的型別
+export type { BackupListing }
 import { AdapterError } from "../adapter/types"
 import { backupsToTrash, dueForAutoBackup, needsReminder } from "../model/backupPolicy"
 import { exportBackup, importBackup, type ImportResult } from "../repo/backup"

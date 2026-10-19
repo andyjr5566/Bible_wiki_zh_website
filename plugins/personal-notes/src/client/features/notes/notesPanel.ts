@@ -14,6 +14,7 @@ import { insertAtCaret } from "../../ui/textInsert"
 import { COMPOSE_NOTE_EVENT, COMPOSE_QUOTE_EVENT, type ComposeNoteDetail, type ComposeQuoteDetail, type View } from "../types"
 import { applyDraft, clearDraft, newDraftKey, recoverableDrafts, releaseDraftKey, tabId, withDraftLock, writeDraft } from "./drafts"
 import { attachLinkComplete } from "./linkComplete"
+import { buildHelpGuide } from "./helpGuide"
 import { loadLinkIndex } from "../../ui/linkIndex"
 import { loadResolver, type LinkResolver } from "./links"
 import { NotesService, type NodeRef, type NoteInput } from "./notes"
@@ -201,6 +202,15 @@ export class NotesPanel implements View {
     if (recovered > 0) toast(recovered === 1 ? "已補存上次還沒存到的筆記" : `已補存 ${recovered} 則上次還沒存到的筆記`)
   }
 
+  /** 標題旁的「?」：文字版的筆記用法（不是導覽；動畫教學由對話框裡的連結另開）。 */
+  private async showHelp(): Promise<void> {
+    await dialog({
+      title: "筆記怎麼用",
+      message: buildHelpGuide(document.body.dataset.basepath ?? "", this.target.kind === "entry"),
+      buttons: [{ id: "ok", label: "知道了", kind: "primary", autofocus: true }],
+    })
+  }
+
   private build(): void {
     this.headerCount = h("span", { class: "bwz-n-count" })
     this.statusEl = h("div")
@@ -220,7 +230,17 @@ export class NotesPanel implements View {
       h(
         "div",
         { class: "bwz-n-head" },
-        h("h2", { attrs: { id: "bwz-notes" } }, "我的筆記", this.headerCount),
+        h(
+          "span",
+          { class: "bwz-n-title" },
+          h("h2", { attrs: { id: "bwz-notes" } }, "我的筆記", this.headerCount),
+          h("button", {
+            class: "bwz-n-help-btn",
+            text: "?",
+            attrs: { type: "button", "aria-label": "筆記怎麼用", title: "筆記怎麼用" },
+            on: { click: () => void this.showHelp() },
+          }),
+        ),
         h(
           "span",
           { class: "bwz-n-links" },

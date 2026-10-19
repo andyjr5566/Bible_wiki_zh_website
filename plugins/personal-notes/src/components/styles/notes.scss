@@ -1770,5 +1770,69 @@ button.bwz-sticky-color {
   }
 }
 
+// 標題旁的「?」小說明（features/notes/helpGuide）：網站主題會改按鈕樣式，所以關鍵屬性用 !important
+.bwz-n-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bwz-n-help-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid var(--lightgray) !important;
+  border-radius: 50% !important;
+  background: var(--light) !important;
+  color: var(--darkgray) !important;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  &:hover,
+  &:focus-visible {
+    color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+  }
+  @media (pointer: coarse) {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.bwz-n-help-list {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bwz-n-help-line {
+  display: grid;
+  grid-template-columns: 2em 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  list-style: none !important;
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bwz-n-help-icon {
+  text-align: center;
+}
+
+.bwz-n-help-more {
+  margin: 0.8rem 0 0;
+  font-size: 0.95rem;
+}
+
 // 筆記教學（features/tutorial）
 @import "tutorial";
+@import "backup";

@@ -1,13 +1,14 @@
-// 功能模組清單。新增功能時在這裡登記；同一種掛載點上的多個功能，依這裡的順序由上而下排列。
+ // 功能模組清單。新增功能時在這裡登記；同一種掛載點上的多個功能，依這裡的順序由上而下排列。
 
 import { highlightsFeature } from "./highlights"
 import { stickiesFeature } from "./stickies"
 import { tutorialFeature } from "./tutorial"
 import { notesFeature } from "./notes"
 import { quotesFeature } from "./quotes"
+import { backupFeature } from "./backup"
 import type { Feature, MountContext, View } from "./types"
 
-export const FEATURES: readonly Feature[] = [notesFeature, highlightsFeature, stickiesFeature, quotesFeature, tutorialFeature]
+export const FEATURES: readonly Feature[] = [notesFeature, highlightsFeature, stickiesFeature, quotesFeature, tutorialFeature, backupFeature]
 
 /** 某種掛載點上要建立的所有畫面（依登記順序）。 */
 export function viewFactories(kind: string): ((ctx: MountContext) => View | null)[] {

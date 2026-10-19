@@ -1,0 +1,126 @@
+.bwz-backup-section,
+.bwz-backup-reminder {
+  color: var(--dark);
+}
+
+// 網站主題的 layer 會把 <p> 放大，這裡跟設定視窗其他區塊一樣用小一號的字
+.bwz-backup-section p,
+.bwz-backup-reminder p {
+  margin: 0 0 0.55rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.6 !important;
+}
+
+.bwz-backup-muted {
+  color: var(--gray);
+}
+
+.bwz-backup-status {
+  color: var(--darkgray);
+  font-weight: 600;
+}
+
+.bwz-backup-warning {
+  color: var(--secondary);
+}
+
+.bwz-backup-button {
+  // 顏色與外框沿用網站的 .bwz-n-btn，這裡只管間距
+  margin: 0 0.4rem 0.4rem 0;
+}
+
+.bwz-backup-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.bwz-backup-details {
+  margin-top: 0.65rem;
+  color: var(--darkgray);
+}
+
+.bwz-backup-details summary {
+  color: var(--secondary) !important;
+  cursor: pointer;
+}
+
+.bwz-backup-details ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.35rem;
+}
+
+.bwz-backup-details li {
+  margin: 0.3rem 0;
+}
+
+.bwz-backup-controls,
+.bwz-backup-reminder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.bwz-backup-controls .bwz-backup-status {
+  flex-basis: 100%;
+}
+
+.bwz-backup-status-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.bwz-backup-status-area .bwz-backup-status,
+.bwz-backup-status-area .bwz-backup-warning {
+  flex-basis: 100%;
+}
+
+.bwz-backup-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--darkgray);
+  cursor: pointer;
+}
+
+.bwz-backup-check input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bwz-backup-list-wrap {
+  width: 100%;
+}
+
+.bwz-backup-list {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.bwz-backup-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--lightgray);
+  color: var(--darkgray);
+}
+
+.bwz-backup-row span:first-child {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .bwz-backup-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .bwz-backup-row {
+    align-items: stretch;
+  }
+}

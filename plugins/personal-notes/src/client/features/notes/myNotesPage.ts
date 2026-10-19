@@ -3,7 +3,8 @@
 
 import type { Resolved } from "../../merge/merge"
 import { chapterLabel, chapterSlug } from "../../model/books"
-import { exportBackup, importBackup } from "../../repo/backup"
+import { importBackup } from "../../repo/backup"
+import { downloadBackupFile } from "../../ui/backupFile"
 import type { Session } from "../../session/session"
 import { dialog, formatTime, h, toast, verseLabel } from "../../ui/dom"
 import { isIOS, isStandalone } from "../../ui/env"
@@ -252,7 +253,7 @@ export class MyNotesPage implements View {
       h(
         "div",
         { class: "bwz-n-row" },
-        h("button", { class: "bwz-n-btn", text: "匯出備份（JSON）", attrs: { type: "button" }, on: { click: () => this.exportFile() } }),
+        h("button", { class: "bwz-n-btn", text: "匯出備份（JSON）", attrs: { type: "button" }, on: { click: () => void downloadBackupFile(this.session) } }),
         h("button", { class: "bwz-n-btn", text: "從備份匯入", attrs: { type: "button" }, on: { click: () => this.fileInput.click() } }),
         h("button", { class: "bwz-n-btn", text: "匯出 Markdown（Obsidian）", attrs: { type: "button" }, on: { click: () => this.exportMarkdown() } }),
       ),
@@ -295,15 +296,6 @@ export class MyNotesPage implements View {
     toast("已清除這台裝置上的筆記")
   }
 
-  private exportFile(): void {
-    const data = exportBackup(this.session.repo)
-    if (data.records.length === 0) {
-      toast("目前沒有筆記可以匯出")
-      return
-    }
-    this.download(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }), `聖經筆記備份-${new Date().toISOString().slice(0, 10)}.json`)
-    toast(`已匯出 ${data.records.length} 則筆記`)
-  }
 
   /** 匯出成 Obsidian 可用的 Markdown 檔（ZIP，12 C4）。 */
   private exportMarkdown(): void {

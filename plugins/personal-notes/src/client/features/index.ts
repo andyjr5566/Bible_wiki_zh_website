@@ -2,11 +2,12 @@
 
 import { highlightsFeature } from "./highlights"
 import { stickiesFeature } from "./stickies"
+import { tutorialFeature } from "./tutorial"
 import { notesFeature } from "./notes"
 import { quotesFeature } from "./quotes"
 import type { Feature, MountContext, View } from "./types"
 
-export const FEATURES: readonly Feature[] = [notesFeature, highlightsFeature, stickiesFeature, quotesFeature]
+export const FEATURES: readonly Feature[] = [notesFeature, highlightsFeature, stickiesFeature, quotesFeature, tutorialFeature]
 
 /** 某種掛載點上要建立的所有畫面（依登記順序）。 */
 export function viewFactories(kind: string): ((ctx: MountContext) => View | null)[] {

@@ -23,6 +23,16 @@ export interface ShellTab {
   onQuery(query: string): void
 }
 
+export interface ShellAction {
+  id: string
+  /** 按鈕文字，例如「▶ 筆記教學」 */
+  label: string
+  /** 小的排前面；都排在「⚙ 設定與備份」左邊 */
+  order: number
+  /** 按下時呼叫（傳入按鈕本身，方便功能模組在關閉後把焦點還給它） */
+  onClick(button: HTMLButtonElement): void
+}
+
 export interface ShellSection {
   id: string
   title: string
@@ -49,6 +59,9 @@ export class MyNotesShell {
   readonly root = h("div", { class: "bwz-shell" })
   private readonly tabs = new Map<string, ShellTab>()
   private readonly sections = new Map<string, ShellSection>()
+  private readonly actions = new Map<string, { action: ShellAction; button: HTMLButtonElement }>()
+  private readonly actionsEl = h("div", { class: "bwz-shell-actions" })
+  private readonly settingsBtn = h("button", { class: "bwz-n-btn bwz-settings-btn", text: "⚙ 設定與備份", attrs: { type: "button" }, on: { click: () => void this.openSettings() } })
   private readonly statusEl = h("div", { class: "bwz-shell-status" })
   private readonly summaryEl = h("p", { class: "bwz-shell-summary" })
   private readonly tabBar = h("div", { class: "bwz-shell-tabs", attrs: { role: "tablist", "aria-label": "筆記種類" } })
@@ -80,7 +93,7 @@ export class MyNotesShell {
         "div",
         { class: "bwz-shell-head" },
         this.statusEl,
-        h("button", { class: "bwz-n-btn bwz-settings-btn", text: "⚙ 設定與備份", attrs: { type: "button" }, on: { click: () => void this.openSettings() } }),
+        this.actionsEl,
       ),
       this.summaryEl,
       this.noticeEl,
@@ -100,6 +113,7 @@ export class MyNotesShell {
     this.renderStatus()
     // 掛載點被清空（換頁）時一起收掉
     this.footer = footer
+    this.layoutActions()
   }
 
   private readonly footer: HTMLElement
@@ -116,6 +130,32 @@ export class MyNotesShell {
     this.tabs.delete(id)
     this.update()
     this.disposeIfEmpty()
+  }
+
+  /** 在標題列「⚙ 設定與備份」旁加一個按鈕（功能模組不要自己改外框的 DOM）。同一個 id 再加一次會取代。 */
+  addAction(action: ShellAction): void {
+    this.actions.get(action.id)?.button.remove()
+    const button = h("button", {
+      class: "bwz-n-btn bwz-settings-btn",
+      text: action.label,
+      attrs: { type: "button" },
+      data: { action: action.id },
+    })
+    button.addEventListener("click", () => action.onClick(button))
+    this.actions.set(action.id, { action, button })
+    this.layoutActions()
+  }
+
+  removeAction(id: string): void {
+    this.actions.get(id)?.button.remove()
+    this.actions.delete(id)
+    this.layoutActions()
+    this.disposeIfEmpty()
+  }
+
+  private layoutActions(): void {
+    const sorted = [...this.actions.values()].sort((a, b) => a.action.order - b.action.order)
+    this.actionsEl.replaceChildren(...sorted.map((a) => a.button), this.settingsBtn)
   }
 
   addSection(section: ShellSection): void {
@@ -210,7 +250,7 @@ export class MyNotesShell {
   }
 
   private disposeIfEmpty(): void {
-    if (this.tabs.size > 0 || this.sections.size > 0) return
+    if (this.tabs.size > 0 || this.sections.size > 0 || this.actions.size > 0) return
     this.unsubscribe()
     this.root.remove()
     this.footer.remove()

@@ -68,6 +68,8 @@ interface EventTargetLike {
 }
 
 interface ActiveUtterance {
+  /** 持有 utterance 的參照：Chrome 會把沒人持有的 utterance 當垃圾回收，之後永遠不會送出 end 事件 */
+  utterance: SpeechSynthesisUtterance;
   token: number;
   startChar: number;
   originalLength: number;
@@ -223,6 +225,7 @@ export function createSpeech(options?: {
       utterance.rate = rate;
 
       const state: ActiveUtterance = {
+        utterance,
         token,
         startChar,
         originalLength: text.length,
@@ -263,13 +266,17 @@ export function createSpeech(options?: {
         state.onBoundary(mapped, false);
       });
 
-      listen(utterance, "end", () => {
+      const finish = (): void => {
         if (!isCurrent(state)) return;
         clearTimers(state);
         state.ended = true;
         active = null;
         state.onEnd();
-      });
+      };
+      listen(utterance, "end", finish);
+      // 語音出錯（例如音訊裝置忙碌）時瀏覽器只送 error、不送 end；當作這段結束，呼叫端才不會卡在播放中。
+      // 我們自己 stop()／換下一段造成的 error（canceled、interrupted）在這裡已不是目前這一段，會被略過。
+      listen(utterance, "error", finish);
 
       state.startWatchId = win.setTimeout(() => {
         state.startWatchId = undefined;

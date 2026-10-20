@@ -91,6 +91,14 @@ describe("經文擷取", () => {
     expect(findScriptureVerses(doc)?.[0].text).toBe("經文內容")
   })
 
+  it("略過 aria-hidden 元素中的文字", () => {
+    const doc = makeDocument(`
+      <article><ol><li>經文<span aria-hidden="true">🔖</span>內容</li></ol></article>
+    `)
+
+    expect(findScriptureVerses(doc)?.[0].text).toBe("經文內容")
+  })
+
   it("略過隱藏、指令碼與樣式元素中的文字", () => {
     const doc = makeDocument(`
       <article>

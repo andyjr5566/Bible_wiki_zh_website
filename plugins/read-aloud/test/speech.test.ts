@@ -25,9 +25,9 @@ class FakeUtterance {
     this.listeners.set(type, set);
   }
 
-  emit(type: "start" | "boundary" | "end", detail: { charIndex?: number } = {}): void {
+  emit(type: "start" | "boundary" | "end" | "error", detail: { charIndex?: number } = {}): void {
     const event = { type, ...detail } as FakeEvent;
-    const propertyHandler = type === "start" ? this.onstart : type === "boundary" ? this.onboundary : this.onend;
+    const propertyHandler = type === "start" ? this.onstart : type === "boundary" ? this.onboundary : type === "end" ? this.onend : null;
     propertyHandler?.(event);
     for (const listener of this.listeners.get(type) ?? []) listener(event);
   }
@@ -187,6 +187,35 @@ describe("utterance lifecycle and fallback", () => {
     expect(calls.onBoundary).not.toHaveBeenCalled();
     expect(calls.onEnd).not.toHaveBeenCalled();
     expect(controller.speaking()).toBe(false);
+  });
+
+  it("treats an error event like the end so callers never hang", () => {
+    const synthesis = new FakeSpeechSynthesis();
+    const controller = createSpeech({ win: makeWindow(synthesis) });
+    const calls = callbacks();
+    controller.speak("verse", { rate: 1, ...calls });
+
+    synthesis.utterances[0].emit("error");
+
+    expect(calls.onEnd).toHaveBeenCalledTimes(1);
+    expect(controller.speaking()).toBe(false);
+  });
+
+  it("ignores the error that a stop() or a newer speak causes", () => {
+    const synthesis = new FakeSpeechSynthesis();
+    const controller = createSpeech({ win: makeWindow(synthesis) });
+    const first = callbacks();
+    const second = callbacks();
+    controller.speak("first", { rate: 1, ...first });
+    controller.speak("second", { rate: 1, ...second });
+
+    synthesis.utterances[0].emit("error");
+    expect(first.onEnd).not.toHaveBeenCalled();
+    expect(second.onEnd).not.toHaveBeenCalled();
+
+    controller.stop();
+    synthesis.utterances[1].emit("error");
+    expect(second.onEnd).not.toHaveBeenCalled();
   });
 
   it("ignores events from an utterance replaced by a newer speak", () => {

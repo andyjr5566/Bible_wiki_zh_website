@@ -36,7 +36,7 @@ export function findScriptureVerses(root: ParentNode = document): Verse[] | null
   }))
 }
 
-const SKIP_TEXT_SELECTOR = ".bwz-v-ui, [hidden], script, style"
+const SKIP_TEXT_SELECTOR = ".bwz-v-ui, [hidden], [aria-hidden='true'], script, style"
 
 function collectText(node: Node, output: string[]): void {
   if (node.nodeType === 3) {

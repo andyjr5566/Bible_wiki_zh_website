@@ -162,7 +162,7 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
       })
     },
 
-    onIdle() {
+    onIdle(reason) {
       if (highlighted) {
         highlighted.classList.remove("bwz-ra-now")
         highlighted = null
@@ -173,7 +173,8 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
       bar.classList.remove("is-playing")
       button.textContent = "▶ 播放"
       button.setAttribute("aria-pressed", "false")
-      startSelect.value = "0"
+      // 整章唸完才回到第 1 節；中途停止就留在最後唸的那一節，方便接著再聽
+      if (reason === "finished") startSelect.value = "0"
     },
   })
 
@@ -223,5 +224,5 @@ if (!readAloudWindow.__bwzReadAloudBound) {
   })
 
   // 腳本若晚於第一個 nav 才載入，補掛一次（mount 開頭會先 teardown，重複呼叫是安全的）
-  if (document.readyState === "complete") void mount()
+  if (document.readyState !== "loading") void mount()
 }

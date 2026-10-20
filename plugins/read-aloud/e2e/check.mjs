@@ -115,6 +115,10 @@ async function playShot(file, label) {
   check(label + " 朗讀列貼在視窗頂端、被唸的那節在視窗內且沒被朗讀列蓋住", st.pos === "sticky" && st.barTop >= 0 && st.barTop < 80 && st.liTop >= st.barBottom - 2 && st.liBottom <= st.innerH, JSON.stringify(st))
   await ev(`${playBtn}.click()`)
   await waitFor(`${btnText} === '▶ 播放'`)
+  // 中途停止時下拉留在最後唸的那一節（方便接著再聽）；整章唸完才回到第 1 節
+  const kept = await j(`document.querySelector('.bwz-ra select').value`)
+  check(label + " 手動停止後「從第 N 節」留在最後唸的那一節", kept === "14", `value=${kept}`)
+  await ev(setSelect(0, 0)) // 後面的檢查都從第 1 節開始
 }
 
 // ===== 1. 章節頁結構 =====

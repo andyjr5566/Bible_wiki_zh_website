@@ -99,11 +99,11 @@ describe("朗讀播放器", () => {
 
   it("停止後忽略遲到的唸完回呼", () => {
     const fake = fakeSpeech()
-    let idleCount = 0
+    const idleReasons: string[] = []
     const player = createPlayer([{ number: 1, text: "第一節" }], fake.speech, {
       onVerse() {},
-      onIdle() {
-        idleCount += 1
+      onIdle(reason) {
+        idleReasons.push(reason)
       },
     })
 
@@ -115,7 +115,26 @@ describe("朗讀播放器", () => {
 
     expect(player.playing()).toBe(false)
     expect(fake.calls).toHaveLength(1)
-    expect(idleCount).toBe(1)
+    expect(idleReasons).toEqual(["stopped"])
+  })
+
+  it("整段唸完回報 finished，中途停止回報 stopped", () => {
+    const fake = fakeSpeech()
+    const idleReasons: string[] = []
+    const player = createPlayer([{ number: 1, text: "第一節" }, { number: 2, text: "第二節" }], fake.speech, {
+      onVerse() {},
+      onIdle(reason) {
+        idleReasons.push(reason)
+      },
+    })
+
+    player.play(0, 1)
+    fake.calls[0].options.onEnd()
+    fake.calls[1].options.onEnd()
+    player.play(0, 1)
+    player.stop()
+
+    expect(idleReasons).toEqual(["finished", "stopped"])
   })
 
   it("播放中調整語速時從目前這一節重新開始", () => {

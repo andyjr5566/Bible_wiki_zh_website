@@ -7,7 +7,8 @@ export interface PlayerVerse {
 
 export interface PlayerEvents {
   onVerse(index: number): void
-  onIdle(): void
+  /** finished＝整段唸完；stopped＝使用者（或換頁）中途停止 */
+  onIdle(reason: "finished" | "stopped"): void
 }
 
 export interface Player {
@@ -37,7 +38,7 @@ export function createPlayer(
     currentIndex = -1
     activeUtterance = null
     dispatch += 1
-    events.onIdle()
+    events.onIdle("finished")
   }
 
   const startAt = (run: number, fromIndex: number): void => {
@@ -114,7 +115,7 @@ export function createPlayer(
 
       speech.stop()
       if (wasActive && stopRun === generation && !active) {
-        events.onIdle()
+        events.onIdle("stopped")
       }
     },
 

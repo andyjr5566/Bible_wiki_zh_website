@@ -696,6 +696,11 @@ html.bwz-touring .popover {
   .bwz-modal-card {
     padding: 18px 16px;
   }
+
+  // 導覽泡泡的按鈕：手機要好點（≥44px）
+  .bwz-bubble .bwz-btn {
+    min-height: 44px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -9,6 +9,7 @@
 type Status = "new" | "active" | "paused" | "done" | "dismissed"
 
 interface TourState {
+  v?: number // 進度格式版本；見 STATE_VERSION
   status: Status
   step: number
   skills: string[]
@@ -19,7 +20,7 @@ interface Step {
   id: string
   page: string // slug，或 "any"
   skill?: string
-  gate?: boolean // 需要讀者操作才前進
+  gate?: boolean | (() => boolean) // 需要讀者操作才前進；用函式可依目前頁面動態決定（目標不存在時不擋路）
   desktopOnly?: boolean // 需要滑鼠懸停
   side?: boolean // 泡泡優先放在目標旁邊（避開連結預覽）
   match?: (slug: string) => boolean // 多個頁面都算「在這一站」，例如任何一張地圖
@@ -35,6 +36,11 @@ interface Step {
 
 const KEY = "bwz-tour-v2"
 const LEGACY_KEY = "wikiTourCompleted"
+// step 存的是 STEPS 的陣列索引。v2 在 notes 之後插入 notes-entry、mynotes 兩站，之後的索引都 +2；
+// 沒有 v 的舊進度要在載入時搬過去（見 migrateState）。
+const STATE_VERSION = 2
+const OLD_NOTES_INDEX = 14 // 舊版 STEPS 裡 notes 的索引
+const INSERTED_AFTER_NOTES = 2
 const LATER_KEY = "bwz-tour-later" // sessionStorage：「之後再說」
 const HINT_KEY = "bwz-hint-website"
 
@@ -43,6 +49,7 @@ const SLUG = {
   ch12: "02-出埃及記/第12章",
   entry: "link_folder/歷史/逾越節羔羊",
   outline: "02-出埃及記/全書目錄及綱要",
+  myNotes: "my-notes",
   maps: "appendix/fhl_maps/地圖索引",
   map: "appendix/fhl_maps/maps/018",
 }
@@ -53,6 +60,7 @@ const PAGE_TITLE: Record<string, string> = {
   [SLUG.home]: "首頁",
   [SLUG.ch12]: "出埃及記 第12章",
   [SLUG.entry]: "逾越節羔羊",
+  [SLUG.myNotes]: "我的筆記",
   [SLUG.map]: "聖經地圖",
 }
 
@@ -176,6 +184,9 @@ const refsBlock = () =>
   $$("article strong")
     .find((x) => x.textContent?.trim() === "參考資料")
     ?.closest("p") ?? null
+
+// 個人筆記外掛放在左上工具列的筆記本圖示；外掛關閉時找不到
+const notesEntryIcon = () => $$<HTMLAnchorElement>("a.bwz-notes-entry").find(visible) ?? null
 
 const onMapPage = (slug: string) => slug.startsWith(MAP_PREFIX)
 
@@ -372,8 +383,36 @@ const STEPS: Step[] = [
     title: () => "寫下你自己的筆記",
     text: () =>
       "每一章最下方的「我的筆記」可以寫自己的研經心得。在經文上<b>選取一段字</b>，還能畫重點、加書籤、貼便條，或直接針對那幾節寫筆記。" +
-      "登入 Google 後，手機、平板、電腦看到的都是同一份；左上角的筆記本圖示可以隨時打開〈我的筆記〉頁。" +
-      `<br>筆記功能比較多，想完整了解 → <a href="${slugUrl("my-notes").pathname}?tutorial=1">看筆記教學</a>`,
+      "登入 Google 後，手機、平板、電腦看到的都是同一份。" +
+      `<br>筆記功能比較多，想完整了解 → <a href="${slugUrl(SLUG.myNotes).pathname}?tutorial=1">看筆記教學</a>`,
+  },
+  {
+    id: "notes-entry",
+    page: SLUG.ch12,
+    // 圖示在就換讀者操作；個人筆記外掛關閉、找不到圖示時不設關卡，免得卡住（顯示「下一步」）
+    gate: () => !!notesEntryIcon(),
+    targets: () => [notesEntryIcon()].filter(visible) as Element[],
+    title: () => "所有筆記，都在這裡",
+    text: () =>
+      notesEntryIcon()
+        ? "點這個筆記本圖示，打開〈我的筆記〉：每一章寫過的筆記、便條、重點、書籤都收在一起。"
+        : "〈我的筆記〉把每一章寫過的筆記、便條、重點、書籤收在一起。目前這個網站沒有開啟筆記功能，這一站可以略過。",
+    done: () => currentSlug() === SLUG.myNotes,
+    onSkip: () => go(SLUG.myNotes),
+  },
+  {
+    id: "mynotes",
+    page: SLUG.myNotes,
+    // 〈我的筆記〉頁由個人筆記外掛非同步畫出；晚一點才出現時，引擎的定時對位會補上聚光圈
+    targets: () =>
+      [$(".bwz-shell .bwz-shell-head"), $('.bwz-shell .bwz-shell-actions [data-action="tutorial"]')].filter(
+        visible,
+      ) as Element[],
+    title: () => "〈我的筆記〉",
+    text: () =>
+      "這裡可以分頁看筆記、便條、重點、書籤，也能搜尋、依書卷找。第一次用，按「▶ 筆記教學」看怎麼操作。",
+    nextLabel: "回到第12章",
+    then: SLUG.ch12,
   },
   {
     id: "maps",
@@ -422,6 +461,9 @@ const STEPS: Step[] = [
       `${isMobile() ? "選單裡" : "左邊"}的 appendix（附錄）除了剛剛看到的地圖，之後還會放進其他延伸資料，目前還在整理中。`,
   },
 ]
+
+// gate 可以是函式（依目前頁面決定要不要擋路）
+const isGate = (s: Step) => (typeof s.gate === "function" ? s.gate() : !!s.gate)
 
 const hiddenStep = (s: Step) => !!s.desktopOnly && (isMobile() || !canHover())
 
@@ -484,12 +526,31 @@ function toast(msg: string) {
 
 /* ---------------- 導覽引擎 ---------------- */
 
+// 舊進度（沒有 v）的 step 是舊版 STEPS 的索引：落在 notes 之後的要 +2，才會對到同一站。
+// 資料壞掉（欄位型別不對）時退回安全值，不讓導覽卡在不存在的站。
+function migrateState(raw: unknown): TourState | null {
+  if (!raw || typeof raw !== "object") return null
+  const r = raw as Partial<TourState>
+  const statuses: Status[] = ["new", "active", "paused", "done", "dismissed"]
+  const status = statuses.includes(r.status as Status) ? (r.status as Status) : "new"
+  let step = typeof r.step === "number" && Number.isInteger(r.step) && r.step >= 0 ? r.step : 0
+  if (!r.v && step > OLD_NOTES_INDEX) step += INSERTED_AFTER_NOTES
+  step = Math.min(step, STEPS.length)
+  const strs = (a: unknown) => (Array.isArray(a) ? a.filter((x): x is string => typeof x === "string") : [])
+  return { v: STATE_VERSION, status, step, skills: strs(r.skills), skipped: strs(r.skipped) }
+}
+
 function loadState(): TourState {
-  const saved = local.get<TourState | null>(KEY, null)
-  if (saved) return saved
+  const rawSaved = local.get<unknown>(KEY, null)
+  const saved = migrateState(rawSaved)
+  if (saved) {
+    // 搬過的進度馬上寫回去，下次不會再 +2
+    if ((rawSaved as { v?: number }).v !== STATE_VERSION) local.set(KEY, saved)
+    return saved
+  }
   // 看過舊版導覽的讀者不再主動打擾，但問號按鈕會提示有新導覽
   const legacyDone = attempt(() => localStorage.getItem(LEGACY_KEY) === "1", false)
-  return { status: legacyDone ? "dismissed" : "new", step: 0, skills: [], skipped: [] }
+  return { v: STATE_VERSION, status: legacyDone ? "dismissed" : "new", step: 0, skills: [], skipped: [] }
 }
 
 let st: TourState = loadState()
@@ -516,7 +577,7 @@ function curIndex(): number {
 const cur = (): Step | undefined => STEPS[curIndex()]
 
 function startTour(fresh: boolean) {
-  if (fresh || st.status === "done") st = { status: "active", step: 0, skills: [], skipped: [] }
+  if (fresh || st.status === "done") st = { v: STATE_VERSION, status: "active", step: 0, skills: [], skipped: [] }
   else st.status = "active"
   toolTouched = false
   lastStepId = ""
@@ -693,7 +754,8 @@ function renderBubble(s: Step) {
   const n = steps.indexOf(s) + 1
   const N = steps.length
   const prev = steps[n - 2]
-  const canBack = !!prev && !prev.gate && !s.gate && (prev.page === s.page || prev.page === "any")
+  const gate = isGate(s)
+  const canBack = !!prev && !isGate(prev) && !gate && (prev.page === s.page || prev.page === "any")
   const last = n === N
   const b = el(".bwz-bubble")
   b.innerHTML = `
@@ -704,20 +766,21 @@ function renderBubble(s: Step) {
       <button class="bwz-x" type="button" data-t="pause" aria-label="暫停導覽" title="暫停導覽（Esc）">✕</button>
     </div>
     <p class="bwz-text">${s.text()}</p>
-    ${s.gate ? `<p class="bwz-todo"><i></i>換你操作，完成後自動進到下一站</p>` : ""}
+    ${gate ? `<p class="bwz-todo"><i></i>換你操作，完成後自動進到下一站</p>` : ""}
     <div class="bwz-foot">
       <div class="bwz-dots" aria-hidden="true">${dotsHtml(steps, n)}</div>
       <div class="bwz-btns">
         ${canBack ? `<button class="bwz-btn" type="button" data-t="back">上一步</button>` : ""}
         ${
-          s.gate
+          gate
             ? `<button class="bwz-btn" type="button" data-t="skip">跳過這步</button>`
             : `<button class="bwz-btn primary" type="button" data-t="next">${last ? "完成" : (s.nextLabel ?? "下一步")}</button>`
         }
       </div>
     </div>`
   b.dataset.step = s.id
-  if (!s.gate) setTimeout(() => $<HTMLButtonElement>("[data-t=next]", b)?.focus({ preventScroll: true }), 30)
+  b.dataset.gate = gate ? "1" : "0"
+  if (!gate) setTimeout(() => $<HTMLButtonElement>("[data-t=next]", b)?.focus({ preventScroll: true }), 30)
 }
 
 function renderDetour(s: Step) {
@@ -798,7 +861,8 @@ function setHole(rect: Box | null, passthrough = false): Box {
 function place(s: Step) {
   if (st.status !== "active" || !onPage(s)) return
   const b = el(".bwz-bubble")
-  if (b.dataset.step !== s.id) renderBubble(s)
+  // 關卡狀態中途改變（例如圖示晚一點才出現）時，也要重畫按鈕
+  if (b.dataset.step !== s.id || b.dataset.gate !== (isGate(s) ? "1" : "0")) renderBubble(s)
   s.ensure?.()
   // 文字會隨搜尋框開關而變，順手更新
   const textEl = $(".bwz-text", b)
@@ -807,7 +871,7 @@ function place(s: Step) {
   const targets = s.targets().filter(visible)
   const rect = targets.length ? unionRect(targets) : null
   const hr = setHole(rect)
-  el(".bwz-hole").classList.toggle("bwz-gate", !!s.gate && !!rect)
+  el(".bwz-hole").classList.toggle("bwz-gate", isGate(s) && !!rect)
   const arrow = $<HTMLElement>(".bwz-arrow", b)
 
   if (isMobile()) {

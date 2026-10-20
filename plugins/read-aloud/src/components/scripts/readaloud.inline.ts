@@ -14,6 +14,8 @@ const RATE_OPTIONS = [
   { value: 1, label: "1.0×" },
   { value: 1.25, label: "1.25×" },
   { value: 1.5, label: "1.5×" },
+  { value: 1.75, label: "1.75×" },
+  { value: 2, label: "2.0×" },
 ] as const
 
 const RATE_STORAGE_KEY = "bwz-read-aloud-rate"

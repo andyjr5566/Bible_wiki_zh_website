@@ -227,6 +227,19 @@ const spokenAfter = await ev(spokenLen)
 check("6a 按「■ 停止」：__cancelCount 增加、按鈕回「▶ 播放」、標示移除", p6.cancel > cancelBefore && p6.btn === "▶ 播放" && p6.now === 0, JSON.stringify({ cancelBefore, ...p6 }))
 check("6b 停止後再觸發舊的 end，不會朗讀下一節", spokenAfter === spokenBefore, `spoken ${spokenBefore} -> ${spokenAfter}（重新載入後以 rate ${rate6} 播放）`)
 
+// ===== 6b2. 語速可選到 2 倍 =====
+const rateLabels = await j(`[...document.querySelectorAll('.bwz-ra select')[1].options].map((o) => o.textContent)`)
+check("6b2 語速選項含 1.75× 與 2.0×", JSON.stringify(rateLabels) === JSON.stringify(["0.75×", "1.0×", "1.25×", "1.5×", "1.75×", "2.0×"]), JSON.stringify(rateLabels))
+await ev(`window.__spoken.length = 0; window.__utts.length = 0`)
+await ev(setSelect(1, 2))
+await ev(`${playBtn}.click()`)
+await waitFor(`${spokenLen} >= 1`)
+const rate2 = await j(`({ rate: window.__spoken[0].rate, saved: localStorage.getItem('bwz-read-aloud-rate') })`)
+check("6b3 選 2.0× 後以 rate 2 朗讀並記住", rate2.rate === 2 && rate2.saved === "2", JSON.stringify(rate2))
+await ev(`${playBtn}.click()`) // 停止
+await sleep(300)
+await ev(setSelect(1, 1))
+
 // ===== 6c. 語音出錯：停下來並說明，不會悄悄跳過後面的節 =====
 await ev(`window.__spoken.length = 0; window.__utts.length = 0`)
 await ev(`${playBtn}.click()`) // ▶ 播放

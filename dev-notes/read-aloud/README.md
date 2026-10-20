@@ -42,7 +42,7 @@
 1. 頁面載入與 Quartz SPA 換頁（`nav` 事件）時：先 `stop()`、清掉舊的列，再找經文清單，找不到就結束。
 2. 播放：從選定的節開始，取該節文字 → `speech.speak(text, { rate, onEnd })` → `onEnd` 時標示並唸下一節；最後一節唸完回到待命。
 3. 標示：被唸的 `<li>` 加 class `bwz-ra-now`（淡色背景＋左邊線），並 `scrollIntoView({ block: "center", behavior: reduced-motion ? "auto" : "smooth" })`；停止或換頁時移除。
-4. 語速：0.75／1.0／1.25／1.5，存 `localStorage`（讀寫都包 try/catch）。播放中改語速：從當前節重新開始。
+4. 語速：0.75／1.0／1.25／1.5／1.75／2.0（引擎上限 2 倍；使用者 2026-10-21 要求加到 2 倍），存 `localStorage`（讀寫都包 try/catch）。播放中改語速：從當前節重新開始。
 5. 換頁、關分頁、`pagehide` 時一律 `stop()`。
 
 **不變式**：只有 `<ol>` 的 `<li>` 文字會被送進語音；導覽表、`.bwz-v-ui`、隱藏元素的文字都不能出現在朗讀文字裡（有單元測試）。
@@ -75,7 +75,7 @@
 - [x] 瀏覽器沒有中文語音時不報錯、不留空殼。（單元測試涵蓋 `ready()` 回傳 false；e2e 沒有模擬無語音的瀏覽器）
 - [x] 深色模式、手機寬度（375px）排版正常；個人筆記的畫重點與便條紙照常運作。
 - [x] `npm test`、`test_content` 建置、既有功能無回歸。
-- [ ] 使用者在至少兩種裝置（Windows 加 iPhone 或 Android）聽過並確認可用。（**待使用者**。已自動驗證的部分：本機 Windows＋Chrome＋Microsoft Hanhan，真人滑鼠點擊後逐節前進與停止正常；聽感、iPhone、Android 尚未驗證）
+- [x] 使用者在至少兩種裝置（Windows 加 iPhone 或 Android）聽過並確認可用。（2026-10-21 使用者回覆「我覺得可以了」，並表示不必再重建完整站；他沒有說明聽測用了幾種裝置，所以這一項是依使用者的確認勾選，不是我逐裝置驗證的。自動驗證的部分：本機 Windows＋Chrome＋Microsoft Hanhan，真人滑鼠點擊後逐節前進與停止正常；聽感、iPhone、Android 尚未驗證）
 
 ## 6. 已知限制（要先告訴使用者）
 

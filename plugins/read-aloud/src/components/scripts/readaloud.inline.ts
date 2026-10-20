@@ -49,6 +49,15 @@ function teardown(): void {
   activeVerses = []
 }
 
+// 手機版站上的頂端列（.left.sidebar）是 sticky 貼頂的；朗讀列貼頂時要排在它下面，不能蓋住它。
+// 桌面版左欄是獨立的一欄，朗讀列貼在視窗最上面即可。
+function stickyTop(): number {
+  if (!window.matchMedia("(max-width: 800px)").matches) return 0
+  const header = document.querySelector<HTMLElement>(".left.sidebar")
+  if (!header || getComputedStyle(header).position !== "sticky") return 0
+  return Math.max(0, Math.round(header.getBoundingClientRect().height))
+}
+
 function readSavedRate(): number {
   try {
     const saved = window.localStorage.getItem(RATE_STORAGE_KEY)
@@ -139,6 +148,7 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
       verse.el.classList.add("bwz-ra-now")
 
       startSelect.value = String(index)
+      bar.style.top = `${stickyTop()}px`
       bar.classList.add("is-playing")
       button.textContent = "■ 停止"
       button.setAttribute("aria-pressed", "true")

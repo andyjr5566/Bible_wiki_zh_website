@@ -9,8 +9,9 @@ $bar-tint: color-mix(in srgb, var(--secondary) 12%, transparent);
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--lightgray);
   border-radius: 10px;
-  background: var(--light);
-  background: $bar-tint;
+  // 底色一定要不透明：播放中會貼在視窗頂端，經文從底下捲過去不能透出來
+  background-color: var(--light);
+  background-image: linear-gradient($bar-tint, $bar-tint);
   color: var(--darkgray);
   font-family: var(--bodyFont);
   line-height: 1.4;
@@ -74,17 +75,25 @@ ol > li.bwz-ra-now {
   transition: background-color 150ms ease, border-color 150ms ease;
 }
 
+// 手機版壓成兩排：第一排「從第 N 節」與「語速」，第二排「🔊 朗讀」與播放鈕（貼頂時少佔一半高度）
 @media (max-width: 600px) {
   .bwz-ra {
-    align-items: stretch;
+    gap: 0.4rem 0.6rem;
+    padding: 0.5rem 0.6rem;
 
-    > span {
-      flex-basis: 100%;
+    label {
+      order: 1;
+      flex: 1 1 8rem;
     }
 
-    label,
+    > span {
+      order: 2;
+      flex: 0 0 auto;
+    }
+
     button {
-      flex: 1 1 8rem;
+      order: 3;
+      flex: 1 1 0;
     }
   }
 }

@@ -56,7 +56,7 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 
 | 等級 | 什麼樣的任務 | 模型與思考程度 | 例子 |
 |---|---|---|---|
-| 第 1 級 | 範圍清楚的小改動 | `gpt-6-luna`、`medium`（2026-10-20 起不用 low） | 文字、樣式、小按鈕、補單元測試、文件 |
+| 第 1 級 | 範圍清楚的小改動 | `gpt-6-luna`、`xhigh`（使用者 2026-10-20：Luna 以後一律 xhigh） | 文字、樣式、小按鈕、補單元測試、文件 |
 | 第 2 級 | 一般功能實作 | `gpt-6-luna`、`xhigh` | 新畫面模組、匯出、設定頁、條目書籤 |
 | 第 3 級 | 出錯會掉資料或有安全疑慮 | `gpt-6-sol`、`high` | merge、sync、裝置整理、Token 服務、安全審查 |
 
@@ -66,7 +66,7 @@ agy -p "$(cat task.md)" --model gemini-4-argon-high --mode plan --sandbox
 
 | 等級 | Claude 子代理（Agent 工具 `model`） | Codex | Antigravity（`agy --model`） |
 |---|---|---|---|
-| 第 1 級 | `haiku`：搜尋（`Explore`）、機械性修改、檢查腳本、文件勾選、文案初稿 | `gpt-6-luna` medium | `gemini-3.8-flash-medium`：中文文案、教學審閱 |
+| 第 1 級 | `haiku`：搜尋（`Explore`）、機械性修改、檢查腳本、文件勾選、文案初稿 | `gpt-6-luna` xhigh | `gemini-3.8-flash-high`：中文文案、教學審閱（使用者 2026-10-20：3.8 flash 一律 high） |
 | 第 2 級 | `sonnet`：跨多檔的一般實作、規劃（`Plan`）、動畫或畫面骨架；改檔用 `isolation: "worktree"` | `gpt-6-luna` xhigh | `gemini-4-argon-high`：使用體驗審查（附截圖與流程） |
 | 第 3 級 | `sonnet` 實作也可以，但一定要有第 3 級審查 | `gpt-6-sol` high（實作或唯讀審查） | `gemini-4-argon-high`：交叉審查（`--mode plan`） |
 

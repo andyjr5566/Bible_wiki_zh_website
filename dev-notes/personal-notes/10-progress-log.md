@@ -390,3 +390,4 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - 委派 P2-30（第 2 級）→ Codex `gpt-6-luna` **xhigh**（stdin 模式）：8 段的 captionTouch／stepsTouch／tryTextTouch（照 copy-final 定稿）、say 步驟加 `touch` 說法、手機版劇本無 hover、測試（進行中）。
 - 委派 P2-31＋P2-34（第 2 級）→ Sonnet 子代理（worktree）：手機版「換你試試」（真的長按選字 → 工具列在下方、不畫假的選單／鍵盤）、tutorialcheck 加手機段、helpcheck 加兩種說法（進行中；任務包限 60～90 分鐘）。
 - P2-30 交件（Codex `gpt-6-luna` xhigh，stdin，一次完整輸出）：8 段的 captionTouch／stepsTouch／tryTextTouch 照定稿寫入；engine 的 say 步驟加 `touch`（手機說法），link／mynotes 的 say 加 touch；新增測試（手機劇本無 hover、select／sticky／quote 的手機說明含「長按」、手機文字不含「滑鼠」與「按「」、stepsTouch 條數相同、touch say 非空）。沒有刪掉原有註解或測試。主導者：補 sync 段 say 的 touch（Codex 漏了）、在 Step 型別加註解。手機版假頁面 CSS：P2-29 的緊湊版面＋寬度撐滿後截圖已清楚，判定不另加。npm test 321、tsc 過。
+- 2026-10-20 Claude Code 程序中途重新啟動：P2-31／P2-34 的 Sonnet 子代理被中斷（已寫好 selection.ts＋單元測試、mock.ts、樣式、helpcheck 一半；tutorialcheck 手機段未寫）→ 用 SendMessage 讓同一個子代理從中斷處接著做（保留它的對話紀錄，不重派）。

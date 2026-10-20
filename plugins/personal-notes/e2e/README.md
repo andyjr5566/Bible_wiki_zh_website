@@ -83,6 +83,8 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 
 如果 `npx` 在外掛資料夾找不到 `tsx`，先在倉庫根目錄執行 `npm install`，再改用根目錄的 `node_modules/.bin/tsx`（Windows 上是 `tsx.cmd`）執行同一個腳本。
 
+
+執行 `mynotescheck.mjs` 時，備份檔要給**絕對路徑**（例如 `C:\...\plugins\personal-notes\prof\heavy-backup.json`）：CDP 的 `DOM.setFileInputFiles` 不接受相對路徑，給相對路徑時匯入會默默失敗、後面的檢查全部 FAIL。
 ## 腳本一覽
 
 | 腳本 | npm 指令 | 檢查內容 | 參數 |

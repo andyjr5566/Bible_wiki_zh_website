@@ -380,3 +380,6 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - 委派 P2-37（第 2 級）→ Sonnet 子代理（worktree）：網站導覽新增「點筆記本圖示」與〈我的筆記〉兩站＋舊進度位移、tourcheck 擴充（進行中）。
 - 委派 P2-33 初稿（第 1 級）→ Haiku 子代理：8 段手機版 caption／steps／tryText／say 初稿完成（存 scratchpad r4/copy-draft.md），待 Flash 審。
 - 委派 CDP `(pointer: coarse)` 模擬調查（第 1 級）→ Haiku 子代理（進行中）。
+- 使用者：「Luna 最高層級用 xhigh」→ 07、14、記憶改成 Luna 第 2 級（最高一級）用 xhigh。
+- 委派 P2-29（第 2 級）→ Sonnet 子代理（worktree）：引擎手機元素（直式示範區、手指、longpress＋把手＋系統選單示意、鍵盤）、Scene 的 *Touch 欄位、「電腦｜手機」切換、電腦上看手機版的手機外框（進行中）。
+- 委派 P2-33 文案審閱（第 1 級）→ Antigravity `gemini-3.8-flash-medium`（進行中）。

@@ -110,7 +110,7 @@
 | 找程式位置、查 CDP 觸控／`pointer` 模擬怎麼做 | 1 | Claude `Explore` 子代理，`model: haiku` |
 | `primaryInput()`、裝置選擇純函式＋單元測試；`helpGuide` 兩種說法＋測試 | 1 | Codex `gpt-6-luna`、`medium`（或 Haiku 子代理；2026-10-20 起 Luna 不用 low） |
 | 引擎的手機元素（手指、長按、把手、系統選單、鍵盤、直式示範區）＋切換按鈕 | 2 | Claude `general-purpose` 子代理，`model: sonnet`，`isolation: "worktree"` |
-| 8 段的手機版步驟、手機版假頁面 CSS | 2 | Codex `gpt-6-luna`、`high`（stdin 模式，見 07）或 Sonnet 子代理 |
+| 8 段的手機版步驟、手機版假頁面 CSS | 2 | Codex `gpt-6-luna`、`xhigh`（stdin 模式，見 07）或 Sonnet 子代理 |
 | 手機版「換你試試」與 e2e 擴充（tutorialcheck 手機版、helpcheck） | 2 | Sonnet 子代理（worktree） |
 | 手機版說明文字初稿 | 1 | Haiku 子代理 |
 | 中文文案審閱 | 1 | Antigravity `gemini-3.8-flash-medium` |
@@ -167,6 +167,6 @@
 - 只改 `plugins/wiki-tour`（不動個人筆記外掛；導覽用 CSS 選擇器找圖示，不 import 外掛程式）。SLUG 加 `myNotes: "my-notes"`。
 - 導覽的「看過幾站」進度若有存站數或站 id，確認舊進度的讀者不會壞掉（新站插在中間）。
 - 驗證：`tourcheck`（電腦＋手機）加三項——新站框住 `a.bwz-notes-entry`；點圖示後進到 `my-notes` 並出現 `mynotes` 站；「回到第12章」後接到 `maps` 站。tourcheck 需要完整內容，線上跑一次（見 e2e README）。
-- 等級：第 2 級。實作：Sonnet 子代理（worktree）或 Codex `gpt-6-luna` high；文案交 `gemini-3.8-flash-medium` 審。
+- 等級：第 2 級。實作：Sonnet 子代理（worktree）或 Codex `gpt-6-luna` xhigh；文案交 `gemini-3.8-flash-medium` 審。
 
 把每一步的結果（成功、或畫面上的樣子／訊息）告訴 Claude，會記進 10。

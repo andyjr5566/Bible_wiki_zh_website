@@ -25,7 +25,7 @@ class FakeUtterance {
     this.listeners.set(type, set);
   }
 
-  emit(type: "start" | "boundary" | "end" | "error", detail: { charIndex?: number } = {}): void {
+  emit(type: "start" | "boundary" | "end" | "error", detail: { charIndex?: number; error?: string } = {}): void {
     const event = { type, ...detail } as FakeEvent;
     const propertyHandler = type === "start" ? this.onstart : type === "boundary" ? this.onboundary : type === "end" ? this.onend : null;
     propertyHandler?.(event);
@@ -198,6 +198,20 @@ describe("utterance lifecycle and fallback", () => {
     synthesis.utterances[0].emit("error");
 
     expect(calls.onEnd).toHaveBeenCalledTimes(1);
+    expect(controller.speaking()).toBe(false);
+  });
+
+  it("reports an error through onError (not onEnd) when the caller provides it", () => {
+    const synthesis = new FakeSpeechSynthesis();
+    const controller = createSpeech({ win: makeWindow(synthesis) });
+    const calls = callbacks();
+    const onError = vi.fn();
+    controller.speak("verse", { rate: 1, ...calls, onError });
+
+    synthesis.utterances[0].emit("error", { error: "not-allowed" });
+
+    expect(onError).toHaveBeenCalledWith("not-allowed");
+    expect(calls.onEnd).not.toHaveBeenCalled();
     expect(controller.speaking()).toBe(false);
   });
 

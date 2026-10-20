@@ -118,6 +118,38 @@ describe("朗讀播放器", () => {
     expect(idleReasons).toEqual(["stopped"])
   })
 
+  it("語音出錯就停下來回報 error，不會悄悄跳過後面的節", () => {
+    const fake = fakeSpeech()
+    const announced: number[] = []
+    const idleReasons: string[] = []
+    const player = createPlayer(
+      [{ number: 1, text: "第一節" }, { number: 2, text: "第二節" }, { number: 3, text: "第三節" }],
+      fake.speech,
+      {
+        onVerse(index) {
+          announced.push(index)
+        },
+        onIdle(reason) {
+          idleReasons.push(reason)
+        },
+      },
+    )
+
+    player.play(0, 1)
+    const stopsBefore = fake.stopCount()
+    fake.calls[0].options.onError?.("not-allowed")
+
+    expect(player.playing()).toBe(false)
+    expect(fake.calls).toHaveLength(1)
+    expect(announced).toEqual([0])
+    expect(idleReasons).toEqual(["error"])
+    expect(fake.stopCount()).toBe(stopsBefore + 1)
+
+    // 出錯之後遲到的 onEnd 不可再繼續唸
+    fake.calls[0].options.onEnd()
+    expect(fake.calls).toHaveLength(1)
+  })
+
   it("整段唸完回報 finished，中途停止回報 stopped", () => {
     const fake = fakeSpeech()
     const idleReasons: string[] = []

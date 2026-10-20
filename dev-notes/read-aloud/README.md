@@ -75,7 +75,7 @@
 - [x] 瀏覽器沒有中文語音時不報錯、不留空殼。（單元測試涵蓋 `ready()` 回傳 false；e2e 沒有模擬無語音的瀏覽器）
 - [x] 深色模式、手機寬度（375px）排版正常；個人筆記的畫重點與便條紙照常運作。
 - [x] `npm test`、`test_content` 建置、既有功能無回歸。
-- [ ] 使用者在至少兩種裝置（Windows 加 iPhone 或 Android）聽過並確認可用。
+- [ ] 使用者在至少兩種裝置（Windows 加 iPhone 或 Android）聽過並確認可用。（**待使用者**。已自動驗證的部分：本機 Windows＋Chrome＋Microsoft Hanhan，真人滑鼠點擊後逐節前進與停止正常；聽感、iPhone、Android 尚未驗證）
 
 ## 6. 已知限制（要先告訴使用者）
 

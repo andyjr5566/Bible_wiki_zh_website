@@ -134,6 +134,12 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
   button.setAttribute("aria-pressed", "false")
   bar.append(button)
 
+  // 語音出錯時在這裡說明（空的時候 CSS 會把它收起來）
+  const message = document.createElement("div")
+  message.className = "bwz-ra-msg"
+  message.setAttribute("role", "status")
+  bar.append(message)
+
   let highlighted: HTMLLIElement | null = null
 
   const currentPlayer = createPlayer(verses, speech, {
@@ -148,6 +154,7 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
       verse.el.classList.add("bwz-ra-now")
 
       startSelect.value = String(index)
+      message.textContent = ""
       bar.style.top = `${stickyTop()}px`
       bar.classList.add("is-playing")
       button.textContent = "■ 停止"
@@ -175,6 +182,7 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
       button.setAttribute("aria-pressed", "false")
       // 整章唸完才回到第 1 節；中途停止就留在最後唸的那一節，方便接著再聽
       if (reason === "finished") startSelect.value = "0"
+      if (reason === "error") message.textContent = "沒辦法朗讀：瀏覽器沒有允許發聲，或語音出了問題。請再按一次「播放」。"
     },
   })
 

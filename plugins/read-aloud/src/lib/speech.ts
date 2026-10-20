@@ -8,6 +8,11 @@ export interface SpeakOptions {
   onBoundary(charIndex: number, estimated: boolean): void;
   /** called once when the utterance finishes normally (not after stop()) */
   onEnd(): void;
+  /**
+   * called once when the engine reports an error (e.g. "not-allowed" before a user gesture, "audio-busy").
+   * Errors caused by our own stop() or a newer speak() are never reported. Without this callback an error counts as the end.
+   */
+  onError?(error: string): void;
 }
 
 export interface SpeechController {
@@ -77,6 +82,7 @@ interface ActiveUtterance {
   rate: number;
   onBoundary: SpeakOptions["onBoundary"];
   onEnd: SpeakOptions["onEnd"];
+  onError: SpeakOptions["onError"];
   startWatchId?: number;
   fallbackIntervalId?: number;
   fallbackStartedAt?: number;
@@ -233,6 +239,7 @@ export function createSpeech(options?: {
         rate,
         onBoundary: speakOptions.onBoundary,
         onEnd: speakOptions.onEnd,
+        onError: speakOptions.onError,
         fallbackStopped: false,
         lastEstimate: startChar,
         ended: false,
@@ -266,17 +273,19 @@ export function createSpeech(options?: {
         state.onBoundary(mapped, false);
       });
 
-      const finish = (): void => {
+      const finish = (error: string | null): void => {
         if (!isCurrent(state)) return;
         clearTimers(state);
         state.ended = true;
         active = null;
-        state.onEnd();
+        if (error !== null && state.onError) state.onError(error);
+        else state.onEnd();
       };
-      listen(utterance, "end", finish);
-      // 語音出錯（例如音訊裝置忙碌）時瀏覽器只送 error、不送 end；當作這段結束，呼叫端才不會卡在播放中。
+      listen(utterance, "end", () => finish(null));
+      // 語音出錯（沒有使用者點擊就發聲的 not-allowed、音訊裝置忙碌等）時瀏覽器只送 error、不送 end，
+      // 呼叫端不處理的話就會卡在播放中，所以一定要有出口：有 onError 就交給它，沒有就當作這段結束。
       // 我們自己 stop()／換下一段造成的 error（canceled、interrupted）在這裡已不是目前這一段，會被略過。
-      listen(utterance, "error", finish);
+      listen(utterance, "error", (event) => finish((event as Event & { error?: string }).error ?? "unknown"));
 
       state.startWatchId = win.setTimeout(() => {
         state.startWatchId = undefined;

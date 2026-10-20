@@ -227,6 +227,20 @@ const spokenAfter = await ev(spokenLen)
 check("6a 按「■ 停止」：__cancelCount 增加、按鈕回「▶ 播放」、標示移除", p6.cancel > cancelBefore && p6.btn === "▶ 播放" && p6.now === 0, JSON.stringify({ cancelBefore, ...p6 }))
 check("6b 停止後再觸發舊的 end，不會朗讀下一節", spokenAfter === spokenBefore, `spoken ${spokenBefore} -> ${spokenAfter}（重新載入後以 rate ${rate6} 播放）`)
 
+// ===== 6c. 語音出錯：停下來並說明，不會悄悄跳過後面的節 =====
+await ev(`window.__spoken.length = 0; window.__utts.length = 0`)
+await ev(`${playBtn}.click()`) // ▶ 播放
+await waitFor(`${spokenLen} >= 1`)
+await ev(`(() => { const u = window.__utts[window.__utts.length - 1]; const e = new Event("error"); e.error = "not-allowed"; u.dispatchEvent(e) })()`)
+await sleep(400)
+const p6c = await j(`({ btn: ${btnText}, spoken: ${spokenLen}, now: document.querySelectorAll('.bwz-ra-now').length, msg: document.querySelector('.bwz-ra-msg')?.textContent || '' })`)
+check("6c 語音出錯：回到待命、只唸過 1 節、顯示說明文字", p6c.btn === "▶ 播放" && p6c.spoken === 1 && p6c.now === 0 && p6c.msg.includes("沒辦法朗讀"), JSON.stringify(p6c))
+await ev(`${playBtn}.click()`) // 再按一次播放：說明文字消失
+await waitFor(`${spokenLen} >= 2`)
+check("6d 重新播放後說明文字消失", (await ev(`document.querySelector('.bwz-ra-msg')?.textContent || ''`)) === "")
+await ev(`${playBtn}.click()`) // 停止，恢復待命
+await sleep(300)
+
 // ===== 7. 非章節頁 =====
 const nonChapter = {}
 for (const [name, p] of [["首頁", "/?skip=1"], ["全書目錄及綱要", toc + "?skip=1"]]) {

@@ -7,8 +7,8 @@ export interface PlayerVerse {
 
 export interface PlayerEvents {
   onVerse(index: number): void
-  /** finished＝整段唸完；stopped＝使用者（或換頁）中途停止 */
-  onIdle(reason: "finished" | "stopped"): void
+  /** finished＝整段唸完；stopped＝使用者（或換頁）中途停止；error＝語音引擎出錯，播放中止 */
+  onIdle(reason: "finished" | "stopped" | "error"): void
 }
 
 export interface Player {
@@ -31,14 +31,14 @@ export function createPlayer(
   let currentIndex = -1
   let currentRate = 1
 
-  const finish = (run: number): void => {
+  const finish = (run: number, reason: "finished" | "error" = "finished"): void => {
     if (run !== generation || !active) return
 
     active = false
     currentIndex = -1
     activeUtterance = null
     dispatch += 1
-    events.onIdle("finished")
+    events.onIdle(reason)
   }
 
   const startAt = (run: number, fromIndex: number): void => {
@@ -84,6 +84,13 @@ export function createPlayer(
 
         activeUtterance = null
         startAt(run, index + 1)
+      },
+      // 出錯就整個停下來，不要悄悄跳過每一節、把整章快速「唸」完
+      onError: () => {
+        if (run !== generation || !active || activeUtterance !== utterance) return
+
+        speech.stop()
+        finish(run, "error")
       },
     })
   }

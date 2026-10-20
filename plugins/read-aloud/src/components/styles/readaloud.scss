@@ -61,6 +61,17 @@ $bar-tint: color-mix(in srgb, var(--secondary) 12%, transparent);
     }
   }
 
+  .bwz-ra-msg {
+    flex: 1 1 100%;
+    order: 4;
+    font-size: 0.9rem;
+    color: var(--secondary);
+
+    &:empty {
+      display: none;
+    }
+  }
+
   &.is-playing {
     position: sticky;
     top: 0;

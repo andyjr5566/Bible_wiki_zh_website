@@ -31,7 +31,7 @@ export type Where = "center" | "left" | "right" | "top" | "bottom"
 /** 動作的目標是假頁面裡標了 data-t="名稱" 的元素。 */
 export type Step =
   | { wait: number }
-  | { say: string }
+  | { say: string; touch?: string } // touch：手機版的說法（沒有就用 say）
   | { move: string; at?: Where; ms?: number }
   | { hover: string; ms?: number }
   | { click: string; at?: Where }
@@ -480,7 +480,7 @@ export class Stage {
     for (const step of steps) {
       if (this.signal.aborted) throw new Stopped()
       if ("wait" in step) await this.sleep(step.wait)
-      else if ("say" in step) this.onSay?.(step.say)
+      else if ("say" in step) this.onSay?.(this.device === "touch" && step.touch !== undefined ? step.touch : step.say)
       else if ("move" in step) await this.move(step.move, step.at, step.ms)
       else if ("hover" in step) await this.hover(step.hover, step.ms)
       else if ("click" in step) await this.click(step.click, step.at)

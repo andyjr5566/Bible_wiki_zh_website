@@ -77,6 +77,42 @@ describe("教學段落資料", () => {
     expect(select.demoTouch!.some((st) => "longpress" in st)).toBe(true)
     expect(select.demoTouch!.some((st) => "hover" in st)).toBe(false)
   })
+
+  it("手機版劇本都不含 hover", () => {
+    for (const s of SCENES) {
+      const touch = forDevice(s, "touch")
+      expect(touch.demo.some((st) => "hover" in st), s.id).toBe(false)
+    }
+  })
+
+  it("手機版文字符合說法，步驟數與電腦版相同", () => {
+    for (const s of SCENES) {
+      if (s.stepsTouch) expect(s.stepsTouch.length, `${s.id} stepsTouch`).toBe(s.steps.length)
+      for (const [key, value] of Object.entries(s)) {
+        if (key.endsWith("Touch") && value !== undefined) {
+          expect(JSON.stringify(value) ?? "", `${s.id} ${key}`).not.toContain("滑鼠")
+        }
+      }
+      const touch = forDevice(s, "touch")
+      for (const text of [touch.caption, ...touch.steps, touch.tryText]) {
+        expect(text, `${s.id}: ${text}`).not.toContain("按「")
+      }
+    }
+    for (const id of ["select", "sticky", "quote"]) {
+      const scene = SCENES.find((s) => s.id === id)!
+      expect(scene.captionTouch, `${id} captionTouch`).toContain("長按")
+    }
+  })
+
+  it("手機版 say 有內容", () => {
+    for (const s of SCENES) {
+      for (const step of [...s.demo, ...(s.demoTouch ?? [])]) {
+        if ("say" in step && step.touch !== undefined) {
+          expect(step.touch.trim(), `${s.id} say.touch`).not.toBe("")
+        }
+      }
+    }
+  })
 })
 
 describe("示範區尺寸", () => {

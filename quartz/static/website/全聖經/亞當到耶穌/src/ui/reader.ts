@@ -636,21 +636,41 @@ export function createReader(reading: ReadingData, stages: Record<StageId, Readi
     window.clearTimeout(gapTimer);
     options.speech?.stop();
   }
-  async function toggleVoice() {
-    const speech = options.speech;
-    if (!voiceOn) {
-      const ok = Boolean(speech?.supported()) && Boolean(await speech?.ready());
-      voiceNote.hidden = ok;
-      if (!ok) return;
-      voiceOn = true;
-      if (playing) speakFromCursor();
-    } else {
-      voiceOn = false;
-      stopVoice();
-      lastFrame = performance.now();
-    }
+  /** 朗讀預設開啟；讀者自己關掉才記下來，之後開啟就維持關閉 */
+  const voiceWanted = () => storage.get('voice') !== 'off';
+  let voiceSeq = 0;
+  function paintVoice() {
     voiceButton.setAttribute('aria-pressed', String(voiceOn));
     voiceButton.classList.toggle('is-on', voiceOn);
+  }
+  async function enableVoice() {
+    if (voiceOn) return;
+    const seq = ++voiceSeq;
+    const speech = options.speech;
+    const ok = Boolean(speech?.supported()) && Boolean(await speech?.ready());
+    if (seq !== voiceSeq) return;
+    voiceNote.hidden = ok;
+    if (!ok) return;
+    voiceOn = true;
+    paintVoice();
+    if (playing) speakFromCursor();
+  }
+  function disableVoice() {
+    voiceSeq += 1;
+    voiceOn = false;
+    voiceNote.hidden = true;
+    stopVoice();
+    lastFrame = performance.now();
+    paintVoice();
+  }
+  function toggleVoice() {
+    if (voiceOn) {
+      storage.set('voice', 'off');
+      disableVoice();
+    } else {
+      storage.set('voice', 'on');
+      void enableVoice();
+    }
   }
 
   // ── 標題卡 ───────────────────────────────────────────
@@ -712,6 +732,7 @@ export function createReader(reading: ReadingData, stages: Record<StageId, Readi
     focusCamera(false);
     pauseUntil = performance.now() + (card ? 2600 : 400);
     if (autoplay) play(); else pause();
+    if (voiceWanted()) void enableVoice(); else disableVoice();
   }
 
   function close() {

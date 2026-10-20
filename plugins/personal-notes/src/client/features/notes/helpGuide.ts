@@ -5,7 +5,7 @@ import { h } from "../../ui/dom"
 import { primaryInput, type InputKind } from "../../ui/env"
 
 export const HELP_LINES: { icon: string; text: string; touch?: string }[] = [
-  { icon: "📝", text: "按「＋ 新增筆記」寫這一章的筆記，邊寫邊自動儲存。" },
+  { icon: "📝", text: "按「＋ 新增筆記」寫這一章的筆記，邊寫邊自動儲存。", touch: "點「＋ 新增筆記」寫這一章的筆記，邊寫邊自動儲存。" },
   { icon: "🖍", text: "用滑鼠在經文上選一段字，跳出工具列：畫重點、書籤、便條、寫筆記。", touch: "長按經文，拉動藍色把手選範圍，下方會跳出工具列：畫重點、書籤、便條、寫筆記。" },
   { icon: "🗒️", text: "便條紙貼在那一節下面，可以換顏色、收起成小紙條。" },
   { icon: "🔗", text: "筆記裡打「[[」加條目名稱，就能連到知識庫；條目頁會列出「我的相關筆記」。" },

@@ -86,7 +86,8 @@
   display: flex;
   flex: none;
   align-items: center;
-  gap: 0.5rem;
+  // 切換鈕和關閉鈕拉開一點，免得想關閉卻按到「手機」（體驗審查）
+  gap: 0.9rem;
 }
 
 .bwz-tut-switch {
@@ -1040,16 +1041,24 @@ mark.bwz-tut-hl {
       background: rgba(255, 255, 255, 0.5);
     }
   }
+  // 只是說明小字，不畫框（有框看起來像可以點的按鈕——體驗審查）
   small {
-    padding: 2px 7px;
-    border: 1px dashed var(--gray);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--light) 92%, transparent);
-    color: var(--darkgray);
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--light) 85%, transparent);
+    color: var(--gray);
     font-size: 10.5px;
     line-height: 1.3;
     white-space: nowrap;
   }
+}
+
+// 手機版：工具列橫跨整個示範頁寬度，整條蓋住底下那一行，不會只蓋住半行字看起來像破圖（體驗審查）
+.bwz-tut-canvas[data-device="touch"] .bwz-tut-toolbar {
+  right: 8px;
+  left: 8px !important;
+  justify-content: space-between;
+  width: auto;
 }
 
 // 手機版：選取範圍的工具列在「下方」，按鈕比電腦版大一點好點

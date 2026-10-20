@@ -410,7 +410,7 @@ const STEPS: Step[] = [
       ) as Element[],
     title: () => "〈我的筆記〉",
     text: () =>
-      "這裡可以分頁看筆記、便條、重點、書籤，也能搜尋、依書卷找。第一次用，按「▶ 筆記教學」看怎麼操作。",
+      `這裡可以分頁看筆記、便條、重點、書籤，也能搜尋、依書卷找。第一次用，${isMobile() ? "點" : "按"}「▶ 筆記教學」看怎麼操作。`,
     nextLabel: "回到第12章",
     then: SLUG.ch12,
   },
@@ -881,6 +881,10 @@ function place(s: Step) {
     if (rect && hr.bottom > window.innerHeight - bh - 24 && hr.top > bh + 80) {
       b.className = "bwz-bubble bwz-float"
       b.style.top = `${Math.max(60, hr.top - bh - 14)}px`
+    } else if (rect && hr.bottom < window.innerHeight * 0.35 && hr.bottom + 14 + bh < window.innerHeight - 8) {
+      // 目標在畫面頂端（例如工具列的筆記本圖示）：導覽卡放在目標正下方，不要隔著大半個畫面放到底部（體驗審查）
+      b.className = "bwz-bubble bwz-float"
+      b.style.top = `${hr.bottom + 14}px`
     } else {
       b.className = "bwz-bubble bwz-dock"
       b.style.top = ""

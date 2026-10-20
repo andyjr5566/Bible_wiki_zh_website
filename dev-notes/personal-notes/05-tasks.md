@@ -121,7 +121,7 @@
 | P2-32 | 「?」文字說明依裝置換說法（選經文、引用兩行）＋測試（14 §2.5） | Cx（Luna low）或 Haiku | [x] 2026-10-20 Codex Luna low（同一包） |
 | P2-33 | 文案：手機版說明初稿（Haiku）→ `gemini-3.8-flash-medium` 審；教學頁〈個人筆記使用說明〉補一句「手機的教學是手機版，可以切換」 | Haiku＋AG（Flash） | [x] 2026-10-20 Haiku 初稿 → Flash 審 → 主導者裁決（定稿交 P2-30 寫進 scenes）；使用說明已補 |
 | P2-34 | 無頭 Chrome：tutorialcheck 加手機版、helpcheck 加兩種說法；確認讓 `(pointer: coarse)` 成立的 CDP 設定寫進 e2e README（14 §4） | Sonnet＋C | [x] 2026-10-20 Sonnet；tutorialcheck 36/36、helpcheck 13/13（主導者本機重跑） |
-| P2-35 | 整體使用體驗審查（兩種版本截圖與流程）：`gemini-4-argon-high`（額度未恢復時 `gemini-3.8-flash-high`，在 10 註明） | AG＋C | [ ] |
+| P2-35 | 整體使用體驗審查（兩種版本截圖與流程）：`gemini-4-argon-high`（額度未恢復時 `gemini-3.8-flash-high`，在 10 註明） | AG＋C | [x] 2026-10-20 Argon 仍 429（約 106 小時後重置）→ `gemini-3.8-flash-high` 審 21 張截圖；採用 7 點、不採 4 點（見 10） |
 | P2-37 | 網站導覽：`notes` 站之後新增「點筆記本圖示」（換你操作）與〈我的筆記〉站，再回第 12 章；tourcheck 電腦＋手機（14 §8） | Sonnet（worktree）或 Cx（Luna medium） | [x] 2026-10-20 Sonnet（worktree），tourcheck 電腦 20/20、手機 23/23（完整內容建置）；主導者審查整合 |
 | P2-36 | 🙋 部署（列檔案經使用者選「推送」）＋線上驗證；使用者用手機實機測試（14 §7） | C＋U | [ ] |
 

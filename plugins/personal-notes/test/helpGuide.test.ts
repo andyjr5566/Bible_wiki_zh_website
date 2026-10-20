@@ -29,13 +29,14 @@ describe("筆記怎麼用（?小說明）內容", () => {
     expect(desktop.find((line) => line.icon === "❝")?.text).toContain("滑鼠")
   })
 
-  it("其餘五行在兩種裝置版本中相同，兩種版本都各有七行", () => {
+  it("其餘四行（🗒️、🔗、📚、☁️）在兩種裝置版本中相同，兩種版本都各有七行", () => {
     const touch = helpLines("touch")
     const desktop = helpLines("desktop")
     expect(touch).toHaveLength(7)
     expect(desktop).toHaveLength(7)
-    for (const icon of ["📝", "🗒️", "🔗", "📚", "☁️"]) {
+    for (const icon of ["🗒️", "🔗", "📚", "☁️"]) {
       expect(touch.find((line) => line.icon === icon)).toEqual(desktop.find((line) => line.icon === icon))
     }
+    expect(touch.find((line) => line.icon === "📝")?.text).toMatch(/^點「＋ 新增筆記」/)
   })
 })

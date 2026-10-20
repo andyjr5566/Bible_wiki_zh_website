@@ -329,6 +329,16 @@ class TutorialDialog {
     const w = this.wrap.clientWidth - padX - bezel
     const hgt = this.wrap.clientHeight - padY - bezel
     if (w <= 0 || hgt <= 0) return
+    if (this.device === "touch" && bezel && this.stage) {
+      // 電腦上看手機版：高度一樣跟著空間伸縮，示範區才不會被 600 高壓得太小（體驗審查：外框裡的字太小）
+      const k = Math.min(w / size.w, hgt / PHONE_MIN_H, 1.3)
+      const stageH = Math.max(PHONE_MIN_H, Math.min(PHONE_MAX_H, Math.floor(hgt / k)))
+      this.stage.setHeight(stageH)
+      this.frame.style.width = `${Math.floor(size.w * k)}px`
+      this.frame.style.height = `${Math.floor(stageH * k)}px`
+      this.frame.style.setProperty("--tut-scale", k.toFixed(4))
+      return
+    }
     if (this.device === "touch" && !bezel && this.stage) {
       // 手機上：寬度撐滿（使用者 2026-10-20：「手機螢幕已經夠小」），高度跟著剩下的空間伸縮；
       // 剩下的空間太矮時才退回「依高度縮小」，不讓示範區超出畫面

@@ -103,6 +103,7 @@ check(`[${tag}] 泡泡沒有蓋住圖示`, !overlaps(i.bubble, i.icon), JSON.str
 if (phone) {
   check(`[${tag}] 按鈕高度 ≥ 44px`, i.btns.length > 0 && i.btns.every((b) => b.h >= 43.5), JSON.stringify(i.btns))
   check(`[${tag}] 泡泡不超出畫面左右`, i.bubble.left >= 0 && i.bubble.right <= 390.5, JSON.stringify(i.bubble))
+  check(`[${tag}] 泡泡緊貼在圖示下方（間距不超過 60px）`, i.bubble.top >= i.icon.bottom && i.bubble.top - i.icon.bottom <= 60, JSON.stringify({ bubble: i.bubble, icon: i.icon }))
 }
 await saveShot(shots.entry)
 
@@ -114,7 +115,8 @@ check(`[${tag}] (b) 點圖示後進到 my-notes 並出現 mynotes 站`, i.slug =
 check(`[${tag}] (b) 聚光圈包含我的筆記標題列與「▶ 筆記教學」按鈕`, contains(i.hole, i.shellHead) && contains(i.hole, i.tutBtn), JSON.stringify({ hole: i.hole, head: i.shellHead, btn: i.tutBtn }))
 const myText = await ev(`document.querySelector('.bwz-bubble .bwz-text')?.innerText ?? ''`)
 const tutLabel = await ev(`document.querySelector('.bwz-shell [data-action="tutorial"]')?.textContent`)
-check(`[${tag}] mynotes 文字引用的按鈕名稱與頁面上一致`, tutLabel === "▶ 筆記教學" && myText === "這裡可以分頁看筆記、便條、重點、書籤，也能搜尋、依書卷找。第一次用，按「▶ 筆記教學」看怎麼操作。", `${tutLabel} / ${myText}`)
+const expectedMyText = `這裡可以分頁看筆記、便條、重點、書籤，也能搜尋、依書卷找。第一次用，${phone ? "點" : "按"}「▶ 筆記教學」看怎麼操作。`
+check(`[${tag}] mynotes 文字引用的按鈕名稱與頁面上一致`, tutLabel === "▶ 筆記教學" && myText === expectedMyText, `${tutLabel} / ${myText}`)
 check(`[${tag}] mynotes 按鈕是「回到第12章」`, i.btns.some((b) => b.t === "回到第12章" && b.tt === "next"), JSON.stringify(i.btns))
 if (phone) check(`[${tag}] mynotes 按鈕高度 ≥ 44px`, i.btns.every((b) => b.h >= 43.5), JSON.stringify(i.btns))
 await saveShot(shots.mynotes)

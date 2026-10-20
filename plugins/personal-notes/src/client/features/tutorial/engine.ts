@@ -24,7 +24,7 @@ export function stageSize(device: TutorialDevice): { w: number; h: number } {
 }
 
 /** 虛擬鍵盤佔示範區高度的比例（手機版打字時從下方升起）。 */
-const KEYBOARD_RATIO = 0.38
+const KEYBOARD_RATIO = 0.4
 
 export type Where = "center" | "left" | "right" | "top" | "bottom"
 
@@ -418,10 +418,12 @@ export class Stage {
         this.kbd = h(
           "div",
           { class: "bwz-tut-kbd", attrs: { "aria-hidden": "true" } },
-          keys([..."qwertyuiop"]),
-          keys([..."asdfghjkl"]),
-          keys(["⇧", ..."zxcvbnm", "⌫"]),
-          keys(["123", ",", " ", ".", "↵"]),
+          // 注音鍵盤（體驗審查：英文字母鍵盤會讓長輩以為要打英文）
+          keys(["ㄅ", "ㄉ", "ˇ", "ˋ", "ㄓ", "ˊ", "˙", "ㄚ", "ㄞ", "ㄢ", "ㄦ"]),
+          keys(["ㄆ", "ㄊ", "ㄍ", "ㄐ", "ㄔ", "ㄗ", "ㄧ", "ㄛ", "ㄟ", "ㄣ"]),
+          keys(["ㄇ", "ㄋ", "ㄎ", "ㄑ", "ㄕ", "ㄘ", "ㄨ", "ㄜ", "ㄠ", "ㄤ"]),
+          keys(["ㄈ", "ㄌ", "ㄏ", "ㄒ", "ㄖ", "ㄙ", "ㄩ", "ㄝ", "ㄡ", "ㄥ", "⌫"]),
+          keys(["123", "，", " ", "。", "↵"]),
         )
         this.kbd.style.height = `${kbH}px`
         this.root.append(this.kbd)

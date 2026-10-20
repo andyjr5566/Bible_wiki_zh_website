@@ -624,6 +624,13 @@
   border-bottom: 1.5px dashed var(--secondary);
 }
 
+// 手機版「換你試試」：經文要能用手指真的長按選取（外層預設 user-select: none；也不擋 iOS 的長按選單）
+.bwz-tut-canvas.try[data-device="touch"] .bwz-tut-vt {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
 mark.bwz-tut-hl {
   white-space: nowrap;
 }

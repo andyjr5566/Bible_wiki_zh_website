@@ -28,7 +28,9 @@
     "e2e:ui": "node e2e/uicheck.mjs",
     "e2e:tour": "node e2e/tourcheck.mjs",
     "e2e:exp": "node e2e/expcheck.mjs",
-    "e2e:sw": "node e2e/swcheck.mjs"
+    "e2e:sw": "node e2e/swcheck.mjs",
+    "e2e:tutorial": "node e2e/tutorialcheck.mjs",
+    "e2e:help": "node e2e/helpcheck.mjs"
   },
   "peerDependencies": {
     "preact": "^10.0.0"

@@ -4,6 +4,7 @@
 
 import { h } from "../../ui/dom"
 import type { Stage } from "./engine"
+import { watchSelection } from "./selection"
 import { ICONS, svg } from "./svg"
 
 // ---------- 經文 ----------
@@ -103,10 +104,14 @@ export interface ToolDef {
   run(): void
 }
 
-export function hideToolbar(s: Stage): void {
+/** 手機版「換你試試」用的是讀者真實的選取（手機自己畫把手與系統選單）；不是由真實選取觸發的收起，順便把它清掉。 */
+const realSelection = (s: Stage) => s.trying && s.device === "touch"
+
+export function hideToolbar(s: Stage, keepSelection = false): void {
   s.root.querySelector(".bwz-tut-toolbar")?.remove()
   s.clearSelectionUi()
   for (const el of s.root.querySelectorAll(".bwz-tut-phrase.sel")) el.classList.remove("sel")
+  if (!keepSelection && realSelection(s)) getSelection()?.removeAllRanges()
 }
 
 /**
@@ -145,21 +150,54 @@ export function showToolbar(s: Stage, anchor: HTMLElement, defs: readonly ToolDe
   return bar
 }
 
+/** 每個示範區裡「可以選取」的虛線字：名稱 → 選好之後的工具列與下一個提示 */
+interface Wired {
+  defs: () => readonly ToolDef[]
+  next?: string
+}
+const wired = new WeakMap<Stage, Map<string, Wired>>()
+
 /**
  * 讓一段字可以「選取」：點一下就視為選好了，彈出工具列。
  * 示範時游標掃過之後呼叫 phrase.click()；「換你試試」時使用者自己點。點別處收起工具列。
+ * 手機版「換你試試」：讀者用手指真的長按選字（選取範圍碰到這段字）也算選好了，工具列放在選取範圍下方；
+ * 這時手機自己會畫把手與系統選單，所以不畫假的。點這段字仍然有效（備案）。
  */
 export function wireSelection(s: Stage, name: string, defs: () => readonly ToolDef[], next?: string): HTMLElement {
   const phrase = s.q(name)
-  phrase.addEventListener("click", () => {
+  const select = (el: HTMLElement, w: Wired, range?: Range) => {
     // 手機版長按選字之後，點擊只是「接著跳出工具列」：把手與系統選單要留著
-    const keep = s.selectionFor === phrase
-    hideToolbar(s)
-    phrase.classList.add("sel")
-    if (keep) s.showSelectionUi(phrase, false)
-    showToolbar(s, phrase, defs())
-    s.hint(next ?? null)
-  })
+    const keep = s.selectionFor === el
+    hideToolbar(s, !!range)
+    el.classList.add("sel")
+    if (keep) s.showSelectionUi(el, false)
+    const bar = showToolbar(s, el, w.defs())
+    if (range) belowRange(s, bar, range)
+    s.hint(w.next ?? null)
+  }
+  const w: Wired = { defs, next }
+  phrase.addEventListener("click", () => select(phrase, w))
+  let map = wired.get(s)
+  if (!map) {
+    map = new Map()
+    wired.set(s, map)
+    if (realSelection(s)) {
+      const all = map
+      watchSelection(
+        s,
+        () => [...all.keys()].flatMap((n) => [...s.root.querySelectorAll<HTMLElement>(`.bwz-tut-phrase[data-t="${n}"]`)].map((el) => ({ name: n, el }))),
+        (n, el, range) => {
+          // 同一段選取沒變、工具列還在，就不重畫（選取每動一下都會再通知）
+          const key = `${n}:${range.toString()}`
+          if (s.root.dataset.realSel === key && s.root.querySelector(".bwz-tut-toolbar")) return
+          s.root.dataset.realSel = key
+          const item = all.get(n)
+          if (item) select(el, item, range)
+        },
+      )
+    }
+  }
+  map.set(name, w)
   if (!s.root.dataset.outside) {
     s.root.dataset.outside = "1"
     s.root.addEventListener("click", (e) => {
@@ -168,6 +206,15 @@ export function wireSelection(s: Stage, name: string, defs: () => readonly ToolD
     })
   }
   return phrase
+}
+
+/** 工具列放在真實選取範圍的下方（把手垂在選取下面，系統選單在上面），不要蓋住選取的字。 */
+function belowRange(s: Stage, bar: HTMLElement, range: Range): void {
+  const rr = s.root.getBoundingClientRect()
+  const k = s.root.offsetWidth ? rr.width / s.root.offsetWidth : 1
+  const bottom = (range.getBoundingClientRect().bottom - rr.top) / k
+  const top = Math.max(parseFloat(bar.style.top) || 0, bottom + 24)
+  bar.style.top = `${Math.min(top, s.size.h - bar.offsetHeight - 6)}px`
 }
 
 /** 把選取的字變成螢光筆重點。 */

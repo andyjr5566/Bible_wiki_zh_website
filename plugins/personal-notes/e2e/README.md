@@ -96,6 +96,8 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 | `regress.mjs` | `e2e:regress` | 既有功能回歸：首頁 wiki-tour 啟動與導覽泡泡、章節頁筆記面板、深色模式切換、閱讀模式已移除且「我的筆記」入口可見、搜尋有結果、SPA 換頁（主題保持、面板換章）與上一頁、PWA manifest 與 sw.js、我的筆記頁畫出內容、全程未登入不連到 Google、沒有 JavaScript 例外 | `<baseUrl> <profile> [shotDir]`；`INCOG=1` 同上 |
 | `uicheck.mjs` | `e2e:ui` | 選取工具列：選取後點別處收起、按 Esc 收起、點已畫的重點只出現「移除這個重點」（沒有取消）、左上角「我的筆記」入口的位置與大小、點入口與文字按鈕進入我的筆記（只有一個入口、標示目前頁）、一般頁與資料夾頁有入口、手機版入口可見 | `<siteRoot> <profile> [shotFile]`：第三個參數是**截圖檔路徑**（不是資料夾），手機版截圖存在這裡，桌面版存成同名的 `-desktop.png` |
 | `tourcheck.mjs` | `e2e:tour` | 導覽的個人筆記相關站（電腦＋手機 390x844 各跑一次）：`notes` 站框住筆記面板；下一步到 `notes-entry` 站、聚光圈包含 `a.bwz-notes-entry`；點圖示後進 `my-notes` 並出現 `mynotes` 站；「回到第12章」後接 `maps` 站；舊進度（沒有 `v`、step 指向舊 maps）搬到新 maps；圖示不在時不擋路；手機按鈕 ≥44px、泡泡不蓋住圖示；無 JS 例外。環境變數 `DELAY_APP=毫秒` 模擬筆記 App 晚載入 | `<siteRoot> <profile> <shotFile>`（profile 用絕對路徑；會用 `<profile>-desktop`、`<profile>-phone`；截圖檔路徑，另存 -entry、-mynotes、-phone… 各站） |
+| `tutorialcheck.mjs` | `e2e:tutorial` | 筆記教學（F7／F8）：電腦版——〈我的筆記〉有「▶ 筆記教學」、`?tutorial=1` 自動打開並拿掉參數、8 段播完出現「換你試試」、示範區不寫進真正的筆記、← Esc 與焦點、減少動態效果、深色、手機 44px。手機版（第 9 節，觸控模擬、不帶 `device`）——自動選手機版（`data-device="touch"`）、示範區寬度 ≥95%、手指不是箭頭、8 段播完無 JS 例外、第 1 段鍵盤升起再收起、第 2 段有把手＋系統選單＋工具列在選取下方、「電腦｜手機」切換（記住、`?device=` 蓋過、←→）、**手機換你試試**（網頁內建立真實選取蓋住虛線字 → 工具列出現在選取下方、選取不被取消、不畫假把手；用 `Input.dispatchTouchEvent` 點「🖍 畫重點」與備案點虛線字；選到無虛線的字不跳工具列）、真實筆記數量前後相同、按鈕 ≥44px 不左右捲、減少動態效果（最後畫面＋步驟、無鍵盤）、深色與淺色截圖；最後用 `Emulation.setTouchEmulationEnabled { enabled: false }` ＋ 電腦視窗換回電腦，清掉記住的選擇後自動是電腦版 | `<siteRoot> <profile> [shotDir]`（profile 用絕對路徑；截圖資料夾要事先存在；約 4 分鐘） |
+| `helpcheck.mjs` | `e2e:help` | 章節／條目筆記面板「?」的文字說明（F7b）：7 條、連到動畫教學、第一條依章節／條目換說法；電腦尺寸的 🖍 與 ❝ 兩行寫「滑鼠」，觸控模擬（手機）寫「長按」「拉動」，其他行兩邊相同；手機「?」按鈕 ≥44px | `<siteRoot> <profile> [shotDir]` |
 | `expcheck.mjs` | `e2e:exp` | 探索目錄：目前章節所在的資料夾展開時就有「全部收合」、按下後全部收起且按鈕消失、重新整理後收起的資料夾仍收著、再展開後按鈕回來、SPA 換頁後只有一個按鈕、收起時「探索」兩字完整、收起時看不到目錄、手機抽屜裡也能全部收合 | `<siteRoot> <profile> <shotFile>`（截圖檔路徑；手機版存成 `-mobile.png`） |
 | `swcheck.mjs` | `e2e:sw` | Service Worker：註冊成功且管整個網站、頁面被接管、快取裡有看過的頁面與筆記 App、大圖（羊皮紙背景）沒進快取、其他網域沒進快取、`config.json` 沒進快取、離線時看過的頁面與筆記可用、沒看過的頁面顯示首頁、恢復連線後正常、沒有 Service Worker 相關錯誤 | `<siteRoot（結尾不加 /）> <profile>` |
 | `subpath-server.mjs` | （不是檢查，直接用 `node` 執行） | 模擬 GitHub Pages 專案站的靜態伺服器：`/foo` 對應 `foo.html`、`/dir/` 對應 `dir/index.html`、不送 `Service-Worker-Allowed` | `<publicDir> <port>` |
@@ -116,6 +118,7 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 - 只設手機尺寸（`setDeviceMetricsOverride` 的 `mobile: true`）**不會**變成 coarse。
 - `Emulation.setEmulatedMedia` 的 `pointer`／`hover` 特性會被接受但**沒有效果**，不要用。
 - 切回電腦（fine）：要明確送 `Emulation.setTouchEmulationEnabled { enabled: false }`。`setViewport(…, { touch: false })` 只是不送觸控設定，**不會關掉**已開的觸控模擬。
+- 手指點按：用 `Input.dispatchTouchEvent`（`touchStart` 再 `touchEnd`，間隔約 70ms）會產生真的 `click`（`tutorialcheck.mjs` 的 `tap(x, y)`）。真實長按選字無法在無頭 Chrome 做，改在頁面裡用 `Range` ＋ `getSelection().addRange()` 建立選取（會觸發 `selectionchange`，等於讀者長按拉出的選取範圍）。
 - 所有模擬設定都在同一個 CDP 連線上送（開第二條連線到同一頁時結果不一致）。
 
 ## 已知限制

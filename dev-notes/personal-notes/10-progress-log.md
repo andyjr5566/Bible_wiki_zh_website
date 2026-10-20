@@ -373,3 +373,10 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - **部署**（使用者選「推送」）：`c4dad889..b9df3d25`（勾選框排版修正＋文件）。線上 CSS 已含修正；線上 checkboxcheck 7/7、backupcheck 10/10。（註：Git Bash 裡沒有 `gh`，等待部署的迴圈改看線上 CSS 是否已更新。）
 - 2026-10-20 **第四輪設計討論**（使用者：教學只有電腦版，手機呢？怎麼切換？）：主導者用 390×844 截圖確認手機看到的是電腦版縮小＋滑鼠游標；以選擇題確認四點（同 8 段改手機畫面、自動判斷＋「電腦｜手機」切換、「?」依裝置換說法、手機也能換你試試）→ D-51、規格 14、05 P2-28～P2-36、12 F8 與第四輪 /goal 提示詞（完成條件寫明：交出手機實機測試清單即可結束，不必等使用者回報）。
 - 2026-10-20 使用者追加：網站導覽講到筆記時也帶讀者點筆記本圖示進〈我的筆記〉→ 14 §8（新站 notes-entry 換你操作＋mynotes 站，再回第 12 章）、D-51 ⑤、05 P2-37、12 F8 與提示詞更新。
+
+### 第四輪 F8（2026-10-20 開工）
+- 委派 P2-28＋P2-32（第 1 級）→ Codex `gpt-6-luna` **low**（stdin 模式）：第一次輸出到 dialog.ts 中途停掉（dialog.ts 空、helpGuide 與測試沒交），補交一次才完整。採用 env.ts `primaryInput()`、`features/tutorial/device.ts`（網址 > 記住 > 自動；網址參數不記住）、index.ts（`?device=` 一起從網址拿掉）、helpGuide 兩種說法＋`helpLines()`、test/device.test.ts、helpGuide 與 tutorial 測試更新；沒有刪掉原有註解。主導者：dialog.ts 收 `device`（存欄位、`data-device`）、補檔頭與函式註解、修 Python 寫檔造成的 CRLF。npm test 314、typecheck 過。
+- 使用者：「Luna efforts 太低了」→ 07、14 改成 Luna 第 1 級 medium、第 2 級 high（不再用 low），記憶同步。
+- 委派 P2-37（第 2 級）→ Sonnet 子代理（worktree）：網站導覽新增「點筆記本圖示」與〈我的筆記〉兩站＋舊進度位移、tourcheck 擴充（進行中）。
+- 委派 P2-33 初稿（第 1 級）→ Haiku 子代理：8 段手機版 caption／steps／tryText／say 初稿完成（存 scratchpad r4/copy-draft.md），待 Flash 審。
+- 委派 CDP `(pointer: coarse)` 模擬調查（第 1 級）→ Haiku 子代理（進行中）。

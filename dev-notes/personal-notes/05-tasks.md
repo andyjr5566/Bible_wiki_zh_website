@@ -114,11 +114,11 @@
 
 | # | 任務 | 負責 | 完成 |
 |---|---|---|---|
-| P2-28 | 裝置判斷 `ui/env.ts` `primaryInput()`；教學的裝置選擇（網址 > 手動記住 > 自動）＋單元測試（14 §2.1、§3） | Cx（Luna low）或 Haiku | [ ] |
+| P2-28 | 裝置判斷 `ui/env.ts` `primaryInput()`；教學的裝置選擇（網址 > 手動記住 > 自動）＋單元測試（14 §2.1、§3） | Cx（Luna low）或 Haiku | [x] 2026-10-20 Codex Luna low（後改 medium）；主導者補 dialog.ts 欄位與註解 |
 | P2-29 | 示範引擎手機元素：直式示範區、手指、`tap`／`longpress`（把手＋系統選單示意＋工具列在下方）、虛擬鍵盤；教學視窗「電腦｜手機」切換（14 §2.1、§2.2） | Sonnet（worktree） | [ ] |
 | P2-30 | 8 段的手機版步驟與 `captionTouch`；手機版假頁面 CSS；手機版不含 hover（單元測試擋）（14 §2.2、§2.3） | Cx（Luna medium）或 Sonnet | [ ] |
 | P2-31 | 手機版「換你試試」：示範頁可長按選取、工具列在下方、沙盒不寫進筆記（測試擴充到手機版）（14 §2.4） | Sonnet（worktree） | [ ] |
-| P2-32 | 「?」文字說明依裝置換說法（選經文、引用兩行）＋測試（14 §2.5） | Cx（Luna low）或 Haiku | [ ] |
+| P2-32 | 「?」文字說明依裝置換說法（選經文、引用兩行）＋測試（14 §2.5） | Cx（Luna low）或 Haiku | [x] 2026-10-20 Codex Luna low（同一包） |
 | P2-33 | 文案：手機版說明初稿（Haiku）→ `gemini-3.8-flash-medium` 審；教學頁〈個人筆記使用說明〉補一句「手機的教學是手機版，可以切換」 | Haiku＋AG（Flash） | [ ] |
 | P2-34 | 無頭 Chrome：tutorialcheck 加手機版、helpcheck 加兩種說法；確認讓 `(pointer: coarse)` 成立的 CDP 設定寫進 e2e README（14 §4） | Sonnet＋C | [ ] |
 | P2-35 | 整體使用體驗審查（兩種版本截圖與流程）：`gemini-4-argon-high`（額度未恢復時 `gemini-3.8-flash-high`，在 10 註明） | AG＋C | [ ] |

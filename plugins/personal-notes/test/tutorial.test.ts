@@ -62,8 +62,8 @@ describe("沙盒隔離", () => {
     }
   })
 
-  it("只有「記住看到第幾段」會寫 localStorage（dialog.ts 一處）", () => {
+  it("只有記住看到第幾段（dialog.ts）與電腦／手機選擇（device.ts）會寫 localStorage", () => {
     const writers = files.filter((f) => /localStorage\.setItem|sessionStorage\.setItem/.test(stripComments(readFileSync(path.join(DIR, f), "utf8"))))
-    expect(writers).toEqual(["dialog.ts"])
+    expect(writers.sort()).toEqual(["device.ts", "dialog.ts"].sort())
   })
 })

@@ -8,6 +8,13 @@ function safe<T>(fn: () => T, fallback: T): T {
   }
 }
 
+/** 主要輸入方式：觸控為主（手機、平板）→ "touch"；滑鼠／觸控板 → "desktop"（D-51）。觸控筆電的主要指標是觸控板，算 desktop。 */
+export type InputKind = "touch" | "desktop"
+
+export function primaryInput(): InputKind {
+  return safe(() => (matchMedia("(pointer: coarse)").matches ? "touch" : "desktop"), "desktop")
+}
+
 /** 內建瀏覽器偵測（D-21）：Google 會拒絕在這些環境登入。 */
 export function detectInAppBrowser(ua: string = navigator.userAgent): string | null {
   if (/\bLine\//i.test(ua)) return "LINE"

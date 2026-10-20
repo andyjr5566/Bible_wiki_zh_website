@@ -3,6 +3,7 @@
 // 減少動態效果（prefers-reduced-motion）時不播動畫：直接顯示每段的最後畫面，並列出編號步驟。
 
 import { h } from "../../ui/dom"
+import { initialDevice, type TutorialDevice } from "./device"
 import { runSafely, Stage, STAGE_H, STAGE_W } from "./engine"
 import { SCENES, type Scene } from "./scenes"
 
@@ -33,9 +34,9 @@ export interface TutorialHandle {
   closed: Promise<void>
 }
 
-/** 打開教學。opener：關閉後要把焦點還給誰。startAt：從第幾段開始（預設上次看到的）。 */
-export function openTutorial(opener: HTMLElement | null, startAt = lastSceneIndex()): TutorialHandle {
-  const dlg = new TutorialDialog(opener, startAt)
+/** 打開教學。opener：關閉後要把焦點還給誰。startAt：從第幾段開始（預設上次看到的）。device：電腦版或手機版（D-51）。 */
+export function openTutorial(opener: HTMLElement | null, startAt = lastSceneIndex(), device: TutorialDevice = initialDevice()): TutorialHandle {
+  const dlg = new TutorialDialog(opener, startAt, device)
   return { close: () => dlg.close(), closed: dlg.closed }
 }
 
@@ -73,6 +74,7 @@ class TutorialDialog {
   constructor(
     private readonly opener: HTMLElement | null,
     startAt: number,
+    private device: TutorialDevice,
   ) {
     this.index = Math.min(Math.max(startAt, 0), SCENES.length - 1)
     this.closed = new Promise((resolve) => (this.resolveClosed = resolve))
@@ -89,6 +91,7 @@ class TutorialDialog {
       this.wrap,
       h("div", { class: "bwz-tut-foot" }, this.caption, this.tryLine, this.steps, h("div", { class: "bwz-tut-skiprow" }, this.skip, this.tryBtn), h("div", { class: "bwz-tut-controls" }, this.prev, this.replay, this.next)),
     )
+    this.box.dataset.device = device
     this.wrap.append(this.frame)
     SCENES.forEach((scene, i) => {
       this.dots.append(

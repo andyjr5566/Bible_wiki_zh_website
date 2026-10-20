@@ -1,0 +1,97 @@
+$bar-tint: color-mix(in srgb, var(--secondary) 12%, transparent);
+
+.bwz-ra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 10px;
+  background: var(--light);
+  background: $bar-tint;
+  color: var(--darkgray);
+  font-family: var(--bodyFont);
+  line-height: 1.4;
+
+  > span {
+    color: var(--dark);
+    font-family: var(--headerFont);
+    font-weight: 700;
+  }
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  button,
+  select {
+    min-height: 36px;
+    border: 1px solid var(--lightgray);
+    border-radius: 7px;
+    background: var(--light);
+    color: var(--darkgray);
+    font: inherit;
+  }
+
+  button {
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--gray);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: 2px;
+    }
+  }
+
+  select {
+    padding: 0.25rem 0.5rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: 2px;
+    }
+  }
+
+  &.is-playing {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+}
+
+.bwz-verses > li.bwz-ra-now,
+ol > li.bwz-ra-now {
+  border-left: 3px solid var(--secondary);
+  background-color: color-mix(in srgb, var(--highlight) 55%, var(--light));
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+@media (max-width: 600px) {
+  .bwz-ra {
+    align-items: stretch;
+
+    > span {
+      flex-basis: 100%;
+    }
+
+    label,
+    button {
+      flex: 1 1 8rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-verses > li.bwz-ra-now,
+  ol > li.bwz-ra-now {
+    transition: none;
+  }
+}

@@ -11,7 +11,7 @@
 
 【做法】新增 plugins/read-aloud（結構照 wiki-tour，dist/ 要提交）。speech.ts 與經文清單規則用「複製」，不跨專案 import、不依賴 personal-notes。送進語音的文字只能是經文，略過 .bwz-v-ui；認不出經文清單就完全不顯示朗讀列，不可報錯或讓建置失敗。換頁（nav 事件）與 pagehide 一律 stop。localStorage 讀寫包 try/catch。
 
-【分工】依 README §4 的 T1～T8，並照 07-agents.md 分級：T1 Claude haiku；T2、T3 Codex gpt-6-luna medium（不用 low）；T4 Codex gpt-6-luna xhigh（備案 sonnet 子代理 worktree，先 git merge --ff-only main）；T5 sonnet 子代理；T7 Antigravity gemini-3.8-flash-high 交叉審查含中文文案；T6 部署設定由你親自做。Codex 沙箱寫檔失敗就改 stdin 模式。幫手一律寫任務包（目標、可改檔案、驗收標準），不得 commit／push、不得讀 .env。幫手整檔輸出常刪掉原註解，用 git diff -w 檢查刪除行。幫手成果由你審查 diff 並親自跑測試後才採用。每次委派在 dev-notes/read-aloud/progress.md 記一行（誰、做什麼、結果、是否採用）。
+【分工】依 README §4 的 T1～T8，並照 07-agents.md 分級：T1 Claude haiku；T2 Claude haiku；T3、T4 Codex gpt-6-luna，Luna 一律用 xhigh（使用者指示，不用 medium／low）（T4 備案 sonnet 子代理 worktree，先 git merge --ff-only main）；T5 sonnet 子代理；T7 Antigravity gemini-3.8-flash-high 交叉審查含中文文案；T6 部署設定由你親自做。Codex 沙箱寫檔失敗就改 stdin 模式。幫手一律寫任務包（目標、可改檔案、驗收標準），不得 commit／push、不得讀 .env。幫手整檔輸出常刪掉原註解，用 git diff -w 檢查刪除行。幫手成果由你審查 diff 並親自跑測試後才採用。每次委派在 dev-notes/read-aloud/progress.md 記一行（誰、做什麼、結果、是否採用）。
 
 【硬性規則】在 feature/read-aloud 分支工作（不存在就從 main 建立），可本地 commit；不得 push、不得動 main，除非我明確同意。不修改 content/、C:\Obsidian\Hermes、.quartz/。部署要持久：quartz.config.yaml 加 plugin，deploy.yml 加 rm 與 cp 兩行。建置驗證用 npx quartz build -d test_content -o <scratch 目錄>。需要我做的事（實機聽、部署、決定）：停下來用選擇題問我，附建議與理由，不要猜。
 

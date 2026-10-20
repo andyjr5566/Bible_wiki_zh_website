@@ -198,6 +198,12 @@ plugins:
     layout:
       position: beforeBody
       priority: 5
+  # 章節頁的經文朗讀（瀏覽器內建語音，只朗讀經文）。設計見 dev-notes/read-aloud/。
+  - source: ./plugins/read-aloud
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 6
   # 個人研經筆記（Google 登入＋使用者自己的 Google Drive 同步）。設計見 dev-notes/personal-notes/。
   # enabled: false 可整個關閉；syncEnabled: false 讓所有人改為本機模式（緊急開關）。
   - source: ./plugins/personal-notes

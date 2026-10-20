@@ -51,13 +51,13 @@
 
 ## 4. 任務與分工
 
-依 `dev-notes/personal-notes/07-agents.md` 的分級（Luna 不用 low；Codex `workspace-write` 失敗時改 stdin 模式；Claude 子代理用 worktree 時先 `git merge --ff-only main`；幫手不 commit／push、不碰 `.env`、`content/`、`.quartz/`）。
+依 `dev-notes/personal-notes/07-agents.md` 的分級（**使用者 2026-10-20 指示：Luna 以後一律 xhigh、Gemini 3.8 flash 一律 high**，覆蓋 07 表格裡的 medium；Codex `workspace-write` 失敗時改 stdin 模式；Claude 子代理用 worktree 時先 `git merge --ff-only main`；幫手不 commit／push、不碰 `.env`、`content/`、`.quartz/`）。
 
 | # | 任務 | 等級 | 給誰 |
 |---|---|---|---|
 | T1 | 從 `plugins/wiki-tour` 複製出 `plugins/read-aloud` 骨架（package.json、tsup、tsconfig、index.ts、空元件、空 scss），改名；`npm install && npm run build` 通過 | 1 | Claude 子代理 `haiku` |
-| T2 | 複製 `speech.ts`、`speech.test.ts`、`speech-fixes.ts` 到新 plugin，修 import 路徑，`vitest` 通過（不改邏輯） | 1 | Codex `gpt-6-luna` medium（備案：`haiku`） |
-| T3 | `verses.ts`：複製 `findVerseList` 規則＋`verseTexts(root)`（略過 `.bwz-v-ui`、隱藏元素）＋單元測試（有／沒有清單、超過 200 節、`start≠1`、含連結、含 `<mark>`、含 `.bwz-v-ui`） | 1 | Codex `gpt-6-luna` medium |
+| T2 | 複製 `speech.ts`、`speech.test.ts`、`speech-fixes.ts` 到新 plugin，修 import 路徑，`vitest` 通過（不改邏輯） | 1 | Haiku 子代理（Codex Luna 一律 xhigh，不值得為純複製動用） |
+| T3 | `verses.ts`：複製 `findVerseList` 規則＋`verseTexts(root)`（略過 `.bwz-v-ui`、隱藏元素）＋單元測試（有／沒有清單、超過 200 節、`start≠1`、含連結、含 `<mark>`、含 `.bwz-v-ui`） | 1 | Codex `gpt-6-luna` xhigh |
 | T4 | UI 模組：朗讀列、逐節佇列、標示與捲動、語速存取、SPA 換頁與 `pagehide` 清理、scss（含深色、手機） | 2 | Codex `gpt-6-luna` xhigh（備案：`sonnet` worktree） |
 | T5 | 以假的 `speechSynthesis` 寫 UI 層測試（逐節順序、最後一節自動停止、換頁停止、改語速重唸）；無頭 Chrome 腳本（stub `speechSynthesis`，驗證 `speak` 收到的文字只有經文） | 2 | Claude 子代理 `sonnet` |
 | T6 | `quartz.config.yaml`、`deploy.yml` 修改；`npm run build` 並提交 `dist/`；`npx quartz build -d test_content -o <scratch>` 驗證；既有功能（wiki-tour、搜尋、SPA、個人筆記標記、深色模式）沒有回歸 | 2 | 主導者親自做（改部署流程，不外包） |

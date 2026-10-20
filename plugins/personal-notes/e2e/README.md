@@ -108,6 +108,16 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 新增一支檢查時，只要寫自己的步驟，最後呼叫 `finish()`。
 
 
+## 模擬觸控螢幕（`(pointer: coarse)`）
+
+2026-10-20 在無頭 Chrome 實測（第四輪 F8 手機版教學要用）：
+
+- **要用 `Emulation.setTouchEmulationEnabled { enabled: true, maxTouchPoints: 5 }`** 才會讓 `(pointer: coarse)`、`(hover: none)`、`(any-pointer: coarse)` 成立；`lib.mjs` 的 `setViewport(w, h, { touch: true })` 會送這個。立即生效，不用重新整理（只有 `'ontouchstart' in window` 要重新整理後才會變 true）。
+- 只設手機尺寸（`setDeviceMetricsOverride` 的 `mobile: true`）**不會**變成 coarse。
+- `Emulation.setEmulatedMedia` 的 `pointer`／`hover` 特性會被接受但**沒有效果**，不要用。
+- 切回電腦（fine）：要明確送 `Emulation.setTouchEmulationEnabled { enabled: false }`。`setViewport(…, { touch: false })` 只是不送觸控設定，**不會關掉**已開的觸控模擬。
+- 所有模擬設定都在同一個 CDP 連線上送（開第二條連線到同一頁時結果不一致）。
+
 ## 已知限制
 
 - `fixcheck.mjs` 的「匯出備份」：這台電腦的無頭 Chrome 不會把下載真的寫到資料夾（2026-10-19 起，搬家前的版本也一樣），請用 `INCOG=1` 執行，改成攔截下載連結並讀取內容來驗證。

@@ -383,3 +383,5 @@ ode_repl.exe` 的權限，但該檔案正被使用（os error 32），而 Codex 
 - 使用者：「Luna 最高層級用 xhigh」→ 07、14、記憶改成 Luna 第 2 級（最高一級）用 xhigh。
 - 委派 P2-29（第 2 級）→ Sonnet 子代理（worktree）：引擎手機元素（直式示範區、手指、longpress＋把手＋系統選單示意、鍵盤）、Scene 的 *Touch 欄位、「電腦｜手機」切換、電腦上看手機版的手機外框（進行中）。
 - 委派 P2-33 文案審閱（第 1 級）→ Antigravity `gemini-3.8-flash-medium`（進行中）。
+- CDP 觸控模擬調查（Haiku）完成：只有 `Emulation.setTouchEmulationEnabled` 會讓 `(pointer: coarse)` 成立，`setEmulatedMedia` 的 pointer/hover 無效；`setViewport(…,{touch:false})` 不會關掉觸控 → 寫進 e2e README「模擬觸控螢幕」。
+- P2-33 文案：`gemini-3.8-flash-medium` 審 Haiku 初稿（逐段意見）。主導者裁決：採用「拉動」取代「拖動」（helpGuide、14 一併改）、select 說明縮短、「筆記工具列」、`[[` 加「要切到符號鍵盤」、「寫幾個字」、刪「長按一下」的語病；**不採用**「換你試試改回點一下」（D-51 ④ 手機要能真的長按）→ 改成「長按有虛線的經文（點一下也可以）」。定稿存 scratchpad r4/copy-final.md，交 P2-30。〈個人筆記使用說明〉補手機版與「電腦｜手機」切換一句。

@@ -3,9 +3,9 @@
 // 減少動態效果（prefers-reduced-motion）時不播動畫：直接顯示每段的最後畫面，並列出編號步驟。
 
 import { h } from "../../ui/dom"
-import { initialDevice, type TutorialDevice } from "./device"
-import { runSafely, Stage, STAGE_H, STAGE_W } from "./engine"
-import { SCENES, type Scene } from "./scenes"
+import { initialDevice, rememberDevice, type TutorialDevice } from "./device"
+import { PHONE_MAX_H, PHONE_MIN_H, runSafely, Stage, stageSize } from "./engine"
+import { forDevice, SCENES, type Scene } from "./scenes"
 
 const STORAGE_KEY = "bwz-tutorial-scene"
 
@@ -48,6 +48,8 @@ class TutorialDialog {
   private index: number
   private readonly reduced = reducedMotion()
   private run: AbortController | null = null
+  /** 目前畫在示範區的那一份（手機上 fit() 要調它的高度） */
+  private stage: Stage | null = null
   private runId = 0
   private dead = false
 
@@ -55,6 +57,9 @@ class TutorialDialog {
   private readonly box: HTMLElement
   private readonly kicker = h("div", { class: "bwz-tut-kicker" })
   private readonly title = h("h3", { class: "bwz-tut-title" })
+  /** 標題列右側的「電腦｜手機」分段按鈕（radiogroup） */
+  private readonly switcher = h("div", { class: "bwz-tut-switch", attrs: { role: "radiogroup", "aria-label": "示範版本" } })
+  private readonly radios = new Map<TutorialDevice, HTMLElement>()
   private readonly dots = h("div", { class: "bwz-tut-dots", attrs: { role: "group", "aria-label": "教學段落" } })
   private readonly wrap = h("div", { class: "bwz-tut-stagewrap" })
   private readonly frame = h("div", { class: "bwz-tut-frame" })
@@ -85,13 +90,31 @@ class TutorialDialog {
         "div",
         { class: "bwz-tut-head" },
         h("div", { class: "bwz-tut-headtext" }, this.kicker, this.title),
-        h("button", { class: "bwz-tut-close", text: "✕", attrs: { type: "button", "aria-label": "關閉教學", title: "關閉（Esc）" }, on: { click: () => this.close() } }),
+        h(
+          "div",
+          { class: "bwz-tut-headtools" },
+          this.switcher,
+          h("button", { class: "bwz-tut-close", text: "✕", attrs: { type: "button", "aria-label": "關閉教學", title: "關閉（Esc）" }, on: { click: () => this.close() } }),
+        ),
       ),
       this.dots,
       this.wrap,
       h("div", { class: "bwz-tut-foot" }, this.caption, this.tryLine, this.steps, h("div", { class: "bwz-tut-skiprow" }, this.skip, this.tryBtn), h("div", { class: "bwz-tut-controls" }, this.prev, this.replay, this.next)),
     )
     this.box.dataset.device = device
+    for (const [value, label] of [["desktop", "電腦"], ["touch", "手機"]] as const) {
+      const radio = h("button", {
+        class: "bwz-tut-radio",
+        text: label,
+        attrs: { type: "button", role: "radio", "aria-checked": String(value === device), tabindex: value === device ? "0" : "-1" },
+        on: {
+          click: () => this.setDevice(value),
+          keydown: (e) => this.radioKey(e as KeyboardEvent),
+        },
+      })
+      this.radios.set(value, radio)
+      this.switcher.append(radio)
+    }
     this.wrap.append(this.frame)
     SCENES.forEach((scene, i) => {
       this.dots.append(
@@ -151,7 +174,8 @@ class TutorialDialog {
       return
     }
     const t = e.target as HTMLElement | null
-    const typing = !!t && t.matches("input, textarea, select")
+    // 「電腦｜手機」的方向鍵是用來在兩個選項間移動，不是換段
+    const typing = !!t && (t.matches("input, textarea, select") || !!t.closest(".bwz-tut-switch"))
     if (!typing && !e.altKey && !e.ctrlKey && !e.metaKey && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
       e.preventDefault()
       this.go(this.index + (e.key === "ArrowRight" ? 1 : -1))
@@ -202,11 +226,13 @@ class TutorialDialog {
     this.run?.abort()
     this.run = new AbortController()
 
-    this.kicker.textContent = `✤ 筆記教學　第 ${i + 1} / ${SCENES.length} 段`
+    const v = forDevice(scene, this.device)
+    // 窄螢幕（手機）隱藏「✤ 筆記教學」幾個字，只留「第 N / 8 段」，標題列才放得下「電腦｜手機」
+    this.kicker.replaceChildren(h("span", { class: "bwz-tut-kicker-name", text: "✤ 筆記教學　" }), `第 ${i + 1} / ${SCENES.length} 段`)
     this.title.textContent = scene.title
-    this.caption.textContent = scene.caption
+    this.caption.textContent = v.caption
     this.tryLine.textContent = ""
-    this.steps.replaceChildren(...scene.steps.map((text) => h("li", { text })))
+    this.steps.replaceChildren(...v.steps.map((text) => h("li", { text })))
     ;[...this.dots.children].forEach((d, n) => {
       d.classList.toggle("on", n === i)
       d.classList.toggle("seen", n < i)
@@ -217,7 +243,7 @@ class TutorialDialog {
     this.next.textContent = i === SCENES.length - 1 ? "完成 ✓" : "下一段 ›"
     this.box.dataset.mode = this.reduced ? "still" : "demo"
 
-    const stage = new Stage(this.reduced ? "instant" : "demo", this.run.signal)
+    const stage = new Stage(this.reduced ? "instant" : "demo", this.run.signal, this.device)
     stage.onSay = (text) => {
       if (id === this.runId) this.caption.textContent = text
     }
@@ -227,7 +253,7 @@ class TutorialDialog {
   }
 
   private async play(stage: Stage, id: number): Promise<void> {
-    const ok = await runSafely(stage, this.scene.demo)
+    const ok = await runSafely(stage, forDevice(this.scene, this.device).demo)
     if (!ok || id !== this.runId || this.dead) return
     if (this.reduced) {
       this.box.dataset.mode = "still"
@@ -245,28 +271,82 @@ class TutorialDialog {
     this.run?.abort()
     this.run = new AbortController()
     const scene = this.scene
-    const stage = new Stage("try", this.run.signal)
-    this.caption.textContent = scene.caption
-    this.tryLine.replaceChildren(h("span", { class: "bwz-tut-hand", text: "✋ 換你試試" }), `　${scene.tryText}`)
+    const stage = new Stage("try", this.run.signal, this.device)
+    const v = forDevice(scene, this.device)
+    this.caption.textContent = v.caption
+    this.tryLine.replaceChildren(h("span", { class: "bwz-tut-hand", text: "✋ 換你試試" }), `　${v.tryText}`)
     this.box.dataset.mode = "try"
     this.mount(stage)
     scene.build(stage)
     stage.hint(scene.tryTarget)
   }
 
+  /** 切換「電腦｜手機」：記住選擇，停在同一段，用另一個版本重播（原本在「換你試試」就重新進入換你試試）。 */
+  private setDevice(device: TutorialDevice): void {
+    if (this.dead || device === this.device) return
+    const trying = this.box.dataset.mode === "try"
+    this.device = device
+    rememberDevice(device)
+    this.box.dataset.device = device
+    for (const [value, radio] of this.radios) {
+      radio.setAttribute("aria-checked", String(value === device))
+      radio.tabIndex = value === device ? 0 : -1
+    }
+    if (trying) void this.enterTry()
+    else this.show(this.index)
+  }
+
+  /** radiogroup 的鍵盤：方向鍵在兩個選項間移動並選取（Tab 進得去、Enter／空白鍵也能選）。 */
+  private radioKey(e: KeyboardEvent): void {
+    const order: TutorialDevice[] = ["desktop", "touch"]
+    const at = order.findIndex((d) => this.radios.get(d) === e.currentTarget)
+    let to = -1
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") to = (at + order.length - 1) % order.length
+    else if (e.key === "ArrowRight" || e.key === "ArrowDown") to = (at + 1) % order.length
+    else if (e.key === "Home") to = 0
+    else if (e.key === "End") to = order.length - 1
+    if (to < 0) return
+    e.preventDefault()
+    e.stopPropagation()
+    this.setDevice(order[to])
+    this.radios.get(order[to])?.focus()
+  }
+
   private mount(stage: Stage): void {
+    this.stage = stage
     this.frame.replaceChildren(stage.root)
     this.fit()
   }
 
-  /** 示範區等比例縮放，塞進可用空間（手機縮小、桌面最多放大 1.5 倍）。 */
+  /** 示範區等比例縮放，塞進可用空間（手機縮小、桌面最多放大 1.5 倍）。尺寸依目前的裝置版本。 */
   private fit(): void {
-    const w = this.wrap.clientWidth - 24
-    const hgt = this.wrap.clientHeight - 24
+    const size = stageSize(this.device)
+    // 外框（wrap）的內距照 CSS；寬螢幕上看手機版時，外面還有一圈手機外框要留位置
+    const cs = getComputedStyle(this.wrap)
+    const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+    const padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+    const bezel = this.device === "touch" && typeof matchMedia === "function" && matchMedia("(min-width: 701px)").matches ? 32 : 0
+    const w = this.wrap.clientWidth - padX - bezel
+    const hgt = this.wrap.clientHeight - padY - bezel
     if (w <= 0 || hgt <= 0) return
-    const scale = Math.max(0.4, Math.min(w / STAGE_W, hgt / STAGE_H, 1.5))
-    this.frame.style.width = `${Math.floor(STAGE_W * scale)}px`
-    this.frame.style.height = `${Math.floor(STAGE_H * scale)}px`
+    if (this.device === "touch" && !bezel && this.stage) {
+      // 手機上：寬度撐滿（使用者 2026-10-20：「手機螢幕已經夠小」），高度跟著剩下的空間伸縮；
+      // 剩下的空間太矮時才退回「依高度縮小」，不讓示範區超出畫面
+      let k = w / size.w
+      let stageH = Math.min(PHONE_MAX_H, Math.floor(hgt / k))
+      if (stageH < PHONE_MIN_H) {
+        stageH = PHONE_MIN_H
+        k = hgt / PHONE_MIN_H
+      }
+      this.stage.setHeight(stageH)
+      this.frame.style.width = `${Math.floor(size.w * k)}px`
+      this.frame.style.height = `${Math.floor(stageH * k)}px`
+      this.frame.style.setProperty("--tut-scale", k.toFixed(4))
+      return
+    }
+    const scale = Math.max(0.4, Math.min(w / size.w, hgt / size.h, 1.5))
+    this.frame.style.width = `${Math.floor(size.w * scale)}px`
+    this.frame.style.height = `${Math.floor(size.h * scale)}px`
     this.frame.style.setProperty("--tut-scale", scale.toFixed(4))
   }
 }

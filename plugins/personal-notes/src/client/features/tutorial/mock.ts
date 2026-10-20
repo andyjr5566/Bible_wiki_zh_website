@@ -4,7 +4,6 @@
 
 import { h } from "../../ui/dom"
 import type { Stage } from "./engine"
-import { STAGE_W } from "./engine"
 import { ICONS, svg } from "./svg"
 
 // ---------- 經文 ----------
@@ -106,10 +105,15 @@ export interface ToolDef {
 
 export function hideToolbar(s: Stage): void {
   s.root.querySelector(".bwz-tut-toolbar")?.remove()
+  s.clearSelectionUi()
   for (const el of s.root.querySelectorAll(".bwz-tut-phrase.sel")) el.classList.remove("sel")
 }
 
-/** 在選取的那段字上方彈出工具列（跟真的一樣用 .bwz-h-toolbar）。 */
+/**
+ * 在選取的那段字上方彈出工具列（跟真的一樣用 .bwz-h-toolbar）。
+ * 手機版：一律放在選取範圍「下方」（真的網站也是 rect.bottom 之下），因為上方是手機自己的系統選單，
+ * 而且下方還要讓出選取把手的高度，免得蓋到把手。
+ */
 export function showToolbar(s: Stage, anchor: HTMLElement, defs: readonly ToolDef[]): HTMLElement {
   s.root.querySelector(".bwz-tut-toolbar")?.remove()
   const bar = h(
@@ -135,8 +139,9 @@ export function showToolbar(s: Stage, anchor: HTMLElement, defs: readonly ToolDe
   const bottom = s.point(anchor, "bottom").y + 3
   const w = bar.offsetWidth
   const hgt = bar.offsetHeight
-  bar.style.left = `${Math.max(6, Math.min(STAGE_W - w - 6, cx - w / 2))}px`
-  bar.style.top = `${top - hgt - 8 > 30 ? top - hgt - 8 : bottom + 8}px`
+  bar.style.left = `${Math.max(6, Math.min(s.size.w - w - 6, cx - w / 2))}px`
+  if (s.device === "touch") bar.style.top = `${Math.min(bottom + 24, s.size.h - hgt - 6)}px`
+  else bar.style.top = `${top - hgt - 8 > 30 ? top - hgt - 8 : bottom + 8}px`
   return bar
 }
 
@@ -147,8 +152,11 @@ export function showToolbar(s: Stage, anchor: HTMLElement, defs: readonly ToolDe
 export function wireSelection(s: Stage, name: string, defs: () => readonly ToolDef[], next?: string): HTMLElement {
   const phrase = s.q(name)
   phrase.addEventListener("click", () => {
+    // 手機版長按選字之後，點擊只是「接著跳出工具列」：把手與系統選單要留著
+    const keep = s.selectionFor === phrase
     hideToolbar(s)
     phrase.classList.add("sel")
+    if (keep) s.showSelectionUi(phrase, false)
     showToolbar(s, phrase, defs())
     s.hint(next ?? null)
   })

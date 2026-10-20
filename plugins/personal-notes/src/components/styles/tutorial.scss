@@ -1,6 +1,6 @@
 // 筆記教學（features/tutorial，D-49）的樣式。由 notes.scss 最後一行引入。
 // 全部放在 .bwz-tut-* 之下；網站主題會蓋掉 button／a／p／h 的樣式，所以必要處用 !important（同 notes.scss）。
-// 示範區（.bwz-tut-canvas）是固定 440×420 的「假頁面」，外框用 transform 等比例縮放；
+// 示範區（.bwz-tut-canvas）是固定尺寸的「假頁面」（電腦版 440×420、手機版直式 360×600，實際尺寸由 engine.ts 的 stageSize 設定），外框用 transform 等比例縮放；
 // 裡面盡量沿用真正的 class（工具列、便條紙、重點、候選清單、分頁…），所以樣式與深色模式跟真的畫面一致。
 
 // 〈我的筆記〉標題列：按鈕群（「▶ 筆記教學」＋「⚙ 設定與備份」）
@@ -79,6 +79,63 @@
 
 .bwz-tut-headtext {
   min-width: 0;
+}
+
+// 標題列右側：「電腦｜手機」分段按鈕＋關閉鈕
+.bwz-tut-headtools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bwz-tut-switch {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lightgray) 38%, var(--light));
+}
+
+.bwz-tut .bwz-tut-switch button.bwz-tut-radio {
+  min-width: 44px;
+  min-height: 36px;
+  padding: 0 0.85rem !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--darkgray) !important;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+  &:hover:not([aria-checked="true"]) {
+    color: var(--secondary) !important;
+  }
+  &[aria-checked="true"] {
+    background: var(--secondary) !important;
+    color: #fff !important;
+    font-weight: 600;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: -3px;
+  }
+  @media (pointer: coarse), (max-width: 700px) {
+    min-height: 44px;
+  }
+  @media (max-width: 480px) {
+    padding: 0 0.7rem !important;
+  }
+}
+
+// 窄螢幕：藏起「✤ 筆記教學」幾個字，只留「第 N / 8 段」，標題列才放得下切換按鈕
+.bwz-tut-kicker-name {
+  @media (max-width: 480px) {
+    display: none;
+  }
 }
 
 .bwz-tut-kicker {
@@ -189,6 +246,67 @@
     0 0 0 1px var(--lightgray),
     0 2px 4px rgba(60, 40, 10, 0.12),
     0 18px 34px -16px rgba(60, 40, 10, 0.5);
+}
+
+// 手機版（D-51）在手機上：標題列、說明區都壓緊，把高度讓給直式示範區（390 寬的手機上示範區佔 85% 以上寬度）
+@media (max-width: 700px) {
+  .bwz-tut[data-device="touch"] {
+    .bwz-tut-head {
+      padding: 0.45rem 0.6rem 0 1rem;
+    }
+    .bwz-tut-title {
+      font-size: 1.2rem !important;
+    }
+    .bwz-tut-stagewrap {
+      margin-top: 0;
+      padding: 4px;
+    }
+    .bwz-tut-foot {
+      gap: 0.2rem;
+      padding: 0.4rem 0.9rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    }
+    .bwz-tut-caption {
+      min-height: 2.9em !important;
+      font-size: 0.95rem !important;
+      line-height: 1.5 !important;
+    }
+    .bwz-tut-try {
+      min-height: 0 !important;
+      font-size: 0.9rem !important;
+      line-height: 1.5 !important;
+    }
+    .bwz-tut-skiprow {
+      min-height: 0;
+    }
+  }
+}
+
+// 手機版在寬螢幕（電腦）上：外面畫一個圓角手機外框，一看就知道是手機畫面
+@media (min-width: 701px) {
+  .bwz-tut[data-device="touch"] .bwz-tut-frame {
+    overflow: visible;
+    border-radius: calc(26px * var(--tut-scale, 1));
+    box-shadow:
+      0 0 0 12px #1e1f24,
+      0 0 0 13.5px var(--gray),
+      0 22px 36px -8px rgba(0, 0, 0, 0.5);
+    // 上方的小瀏海／喇叭
+    &::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      z-index: 5;
+      width: 54px;
+      height: 5px;
+      margin-left: -27px;
+      border-radius: 3px;
+      background: #50525b;
+    }
+    .bwz-tut-canvas {
+      border-radius: 26px;
+    }
+  }
 }
 
 // ---------- 下方：說明與操作 ----------
@@ -822,6 +940,164 @@ mark.bwz-tut-hl {
       fill: var(--dark);
       stroke: var(--light);
     }
+  }
+}
+
+// 手機版的「手指」：半透明圓點（深淺色模式都看得見）；長按時外圈慢慢長滿
+.bwz-tut-cursor.finger {
+  width: 0;
+  height: 0;
+  margin: 0;
+  filter: none;
+  .bwz-tut-finger-dot {
+    position: absolute;
+    top: -17px;
+    left: -17px;
+    width: 34px;
+    height: 34px;
+    border: 2px solid color-mix(in srgb, var(--light) 85%, transparent);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--dark) 40%, transparent);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  .bwz-tut-ring {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+    // 上面箭頭游標的 svg 設了 transform-origin: 5px 3px；外圈要繞自己的中心轉
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    circle {
+      fill: none;
+      stroke: var(--secondary);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+  }
+  &.holding .bwz-tut-ring {
+    opacity: 1;
+  }
+}
+
+// 長按選字之後：選取範圍兩端的水滴把手
+.bwz-tut-handle {
+  position: absolute;
+  z-index: 1300;
+  width: 15px;
+  height: 15px;
+  background: #2f6fe4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  &.start {
+    border-radius: 50% 0 50% 50%;
+  }
+  &.end {
+    border-radius: 0 50% 50% 50%;
+  }
+}
+
+:root[saved-theme="dark"] .bwz-tut-handle {
+  background: #6b9bf5;
+}
+
+// 手機自己的「系統選單」示意：中性灰、跟網站的工具列刻意不同，旁邊一行小字說明
+.bwz-tut-sysmenu {
+  position: absolute;
+  z-index: 1250;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  .bwz-tut-sysmenu-bar {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 3px;
+    border-radius: 8px;
+    background: #48494f;
+    color: #f2f2f4;
+    font-size: 13px;
+    line-height: 1;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+    span {
+      padding: 0 11px;
+    }
+    i {
+      width: 1px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+  small {
+    padding: 2px 7px;
+    border: 1px dashed var(--gray);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--light) 92%, transparent);
+    color: var(--darkgray);
+    font-size: 10.5px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+}
+
+// 手機版：選取範圍的工具列在「下方」，按鈕比電腦版大一點好點
+.bwz-tut-canvas[data-device="touch"] .bwz-tut-toolbar .bwz-n-btn {
+  min-height: 34px;
+  padding: 4px 7px;
+}
+
+// 手機版打字時從下方升起的簡化鍵盤（示意用，不能點）
+.bwz-tut-kbd {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1600;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 4px 10px;
+  border-top: 1px solid #b5b8c1;
+  background: #d2d4da;
+  pointer-events: none;
+  .bwz-tut-kbd-row {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 5px;
+    min-height: 0;
+  }
+  .bwz-tut-key {
+    display: grid;
+    flex: 1 1 0;
+    place-items: center;
+    min-width: 0;
+    max-width: 31px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 0 #9a9ea8;
+    color: #222;
+    font-size: 14px;
+    line-height: 1;
+    &.space {
+      flex: 5 1 0;
+      max-width: none;
+    }
+  }
+}
+
+:root[saved-theme="dark"] .bwz-tut-kbd {
+  border-top-color: #14151a;
+  background: #2b2c31;
+  .bwz-tut-key {
+    background: #4b4c54;
+    box-shadow: 0 1px 0 #15161a;
+    color: #ececf0;
   }
 }
 

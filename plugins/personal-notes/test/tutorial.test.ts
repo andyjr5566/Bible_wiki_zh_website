@@ -4,7 +4,9 @@ import { readFileSync, readdirSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { SCENES } from "../src/client/features/tutorial/scenes"
+import { stageSize } from "../src/client/features/tutorial/engine"
+import { forDevice, SCENES } from "../src/client/features/tutorial/scenes"
+import type { Step } from "../src/client/features/tutorial/engine"
 
 const DIR = fileURLToPath(new URL("../src/client/features/tutorial/", import.meta.url))
 const stripComments = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1")
@@ -35,17 +37,57 @@ describe("教學段落資料", () => {
     }
   })
 
-  it("示範用到的 data-t 目標都有在這一段的程式裡出現（避免打錯名字）", () => {
+  it("示範（電腦版與手機版）用到的 data-t 目標都有在這一段的程式裡出現（避免打錯名字）", () => {
     const src = readFileSync(path.join(DIR, "scenes.ts"), "utf8") + readFileSync(path.join(DIR, "mock.ts"), "utf8")
+    const targetOf = (step: Step): string | null =>
+      "move" in step ? step.move : "hover" in step ? step.hover : "click" in step ? step.click : "type" in step ? step.type : "sweep" in step ? step.sweep : "longpress" in step ? step.longpress : null
     for (const s of SCENES) {
-      for (const step of s.demo) {
-        const target = "move" in step ? step.move : "hover" in step ? step.hover : "click" in step ? step.click : "type" in step ? step.type : "sweep" in step ? step.sweep : null
-        if (!target) continue
-        // 動態名稱（如 tab-${id}、cand-…）只檢查固定的前綴
-        const key = target.replace(/-.*/, "")
-        expect(src.includes(`"${target}"`) || src.includes(`${key}-`) || src.includes(`\`${key}`), `${s.id}: ${target}`).toBe(true)
+      for (const steps of [s.demo, s.demoTouch ?? []]) {
+        for (const step of steps) {
+          const target = targetOf(step)
+          if (!target) continue
+          // 動態名稱（如 tab-${id}、cand-…）只檢查固定的前綴
+          const key = target.replace(/-.*/, "")
+          expect(src.includes(`"${target}"`) || src.includes(`${key}-`) || src.includes(`\`${key}`), `${s.id}: ${target}`).toBe(true)
+        }
       }
     }
+  })
+
+  it("手機版的選填欄位若有寫就不能是空的；沒寫就退回電腦版", () => {
+    for (const s of SCENES) {
+      if (s.captionTouch !== undefined) expect(s.captionTouch.trim(), `${s.id} captionTouch`).not.toBe("")
+      if (s.tryTextTouch !== undefined) expect(s.tryTextTouch.trim(), `${s.id} tryTextTouch`).not.toBe("")
+      if (s.stepsTouch) expect(s.stepsTouch.length, `${s.id} stepsTouch`).toBeGreaterThanOrEqual(2)
+      if (s.demoTouch) expect(s.demoTouch.length, `${s.id} demoTouch`).toBeGreaterThan(3)
+      const desktop = forDevice(s, "desktop")
+      expect(desktop.caption).toBe(s.caption)
+      expect(desktop.demo).toBe(s.demo)
+      const touch = forDevice(s, "touch")
+      expect(touch.caption).toBe(s.captionTouch ?? s.caption)
+      expect(touch.steps).toBe(s.stepsTouch ?? s.steps)
+      expect(touch.tryText).toBe(s.tryTextTouch ?? s.tryText)
+      expect(touch.demo).toBe(s.demoTouch ?? s.demo)
+    }
+  })
+
+  it("「選經文」有手機版劇本：用 longpress、沒有 hover", () => {
+    const select = SCENES.find((s) => s.id === "select")!
+    expect(select.demoTouch).toBeDefined()
+    expect(select.demoTouch!.some((st) => "longpress" in st)).toBe(true)
+    expect(select.demoTouch!.some((st) => "hover" in st)).toBe(false)
+  })
+})
+
+describe("示範區尺寸", () => {
+  it("電腦版 440×420 橫式", () => {
+    expect(stageSize("desktop")).toEqual({ w: 440, h: 420 })
+  })
+
+  it("手機版是直式（高大於寬）", () => {
+    const { w, h } = stageSize("touch")
+    expect(h).toBeGreaterThan(w)
+    expect(w).toBe(360)
   })
 })
 

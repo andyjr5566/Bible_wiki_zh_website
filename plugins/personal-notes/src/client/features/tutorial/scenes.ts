@@ -6,6 +6,7 @@
 // 模組載入時不碰 document（build 與 demo 內的函式才會碰），所以測試可以在 Node 直接檢查這份資料。
 
 import { h } from "../../ui/dom"
+import type { TutorialDevice } from "./device"
 import type { Stage, Step } from "./engine"
 import {
   bookmarkButton,
@@ -38,6 +39,22 @@ export interface Scene {
   build(s: Stage): void
   /** 示範動作（8～15 秒） */
   demo: Step[]
+  /** 手機版（D-51）的說法與劇本；沒有寫的欄位就用電腦版的（見 forDevice）。 */
+  captionTouch?: string
+  stepsTouch?: string[]
+  tryTextTouch?: string
+  demoTouch?: Step[]
+}
+
+/** 這一段在某個裝置版本要顯示的文字與劇本：手機版有寫就用手機版，否則退回電腦版。 */
+export function forDevice(scene: Scene, device: TutorialDevice): { caption: string; steps: string[]; tryText: string; demo: Step[] } {
+  const touch = device === "touch"
+  return {
+    caption: (touch && scene.captionTouch) || scene.caption,
+    steps: (touch && scene.stepsTouch) || scene.steps,
+    tryText: (touch && scene.tryTextTouch) || scene.tryText,
+    demo: (touch && scene.demoTouch) || scene.demo,
+  }
 }
 
 /** 示範時「選取」完一段字，等於使用者點了那段字（彈出工具列）。 */
@@ -103,6 +120,23 @@ const selectVerse: Scene = {
     { sweep: "sel2", ms: 800 },
     pop("sel2"),
     { wait: 250 },
+    { click: "note" },
+    { wait: 400 },
+    { type: "ta", text: "天地萬物都是神造的", ms: 90 },
+    { wait: 1300 },
+  ],
+  // 手機版：長按選字（不用 hover——手機沒有游標；四顆按鈕的名稱直接寫在工具列上，所以省略）
+  demoTouch: [
+    { wait: 400 },
+    { longpress: "sel" },
+    pop("sel"),
+    { wait: 900 },
+    { click: "hl" },
+    { wait: 700 },
+    { say: "再選一段，按「📝 寫筆記」，經文會一起帶進筆記。" },
+    { longpress: "sel2" },
+    pop("sel2"),
+    { wait: 700 },
     { click: "note" },
     { wait: 400 },
     { type: "ta", text: "天地萬物都是神造的", ms: 90 },

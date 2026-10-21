@@ -219,6 +219,9 @@ function setupSearch() {
     }
 
     let currentHover: HTMLElement | null = null;
+    // 使用者這次查詢有沒有自己移動過選取（方向鍵、滑鼠、Tab）。沒動過時，結果重畫一律選最上面那一張；
+    // 經文跳轉卡片比全文結果晚出現（要先查小索引），不這樣做的話選取會停在第一筆全文結果，按 Enter 就跳錯頁
+    let selectionTouched = false;
     let previewToken = 0;
     let previewDebounceTimer: ReturnType<typeof setTimeout> | null = null;
     let latestSearchRequest = 0;
@@ -408,7 +411,7 @@ function setupSearch() {
       finalResults: SearchDisplayResult[],
       options: DisplayResultsOptions = {},
     ) => {
-      const previousFocus = options.preserveFocus ? currentHover : null;
+      const previousFocus = options.preserveFocus && selectionTouched ? currentHover : null;
       const previousFocusSlug = previousFocus?.dataset.slug;
       const previousToolbarScroll =
         searchLayout.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
@@ -659,6 +662,7 @@ function setupSearch() {
         currentIndex === visibleOptions.length - 1 &&
         results.querySelector(".search-more-btn")
       ) {
+        selectionTouched = true;
         appendNextResults(true);
         return;
       }
@@ -667,7 +671,10 @@ function setupSearch() {
         direction,
         allOptions.map((option) => !option.hidden),
       );
-      if (nextIndex >= 0) setFocus(allOptions[nextIndex] ?? null);
+      if (nextIndex >= 0) {
+        selectionTouched = true;
+        setFocus(allOptions[nextIndex] ?? null);
+      }
     };
 
     const onType = (e: Event) => {
@@ -676,6 +683,7 @@ function setupSearch() {
       const requestId = ++latestSearchRequest;
       activeCategory = null;
       scriptureCard = null;
+      selectionTouched = false;
       announcedMessages.clear();
       status!.textContent = "";
       semanticRequestController?.abort();
@@ -963,6 +971,7 @@ function setupSearch() {
       const target = (e.target as HTMLElement).closest(".result-card") as HTMLElement | null;
       if (!target || target.classList.contains("no-match")) return;
       if (target.classList.contains("scripture-missing")) return;
+      selectionTouched = true;
       setFocus(target);
     };
     const onResultsFocusIn = (e: Event) => {
@@ -970,6 +979,7 @@ function setupSearch() {
         ".result-card[role='option']",
       ) as HTMLElement | null;
       if (!target || target.hidden) return;
+      selectionTouched = true;
       setFocus(target);
     };
     const onFilterClick = (e: Event) => {

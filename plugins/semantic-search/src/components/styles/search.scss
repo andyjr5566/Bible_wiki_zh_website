@@ -114,13 +114,19 @@
 }
 
 @media all and not (max-width: 800px) {
+  /* 桌機：摘要最多 1 行（原本有預覽窗格時整個隱藏） */
   .search
     > .search-container
     > .search-space
-    > .search-layout[data-preview]
+    > .search-layout
+    > .results-container
     .result-card
     > p.card-description {
-    display: none;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    overflow: hidden;
   }
 
   .search > .search-container > .search-space > .search-layout[data-preview] > div:first-child {
@@ -166,6 +172,7 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
   }
 }
@@ -401,4 +408,205 @@
   padding: 0.8em 1em;
   color: var(--gray);
   font-size: 0.85em;
+}
+
+/* ---- B4-3：結果卡片的類型標籤、比對徽章、類型篩選列 ---- */
+
+/* 篩選掉的結果（!important：主題外掛在桌機會把 .result-card 設成 display:flex） */
+.search .results-container .result-card[hidden] {
+  display: none !important;
+}
+
+/* 主題外掛在桌機會把 .result-card 排成橫向 flex；摘要現在也會顯示，所以強制改成直向堆疊 */
+.search .results-container .result-card:not(.no-match) {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.search .results-container .result-card:not(.no-match) > * {
+  min-width: 0;
+}
+
+.search .results-container .result-card > h3.card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25em 0.5em;
+  margin: 0 !important; /* 主題外掛的 h3 margin（16px 0）會蓋過一般寫法 */
+}
+
+.search .results-container .result-card .result-title-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 類型標籤：顏色與關係圖一致（淺色／深色各一組），文字用同色、細框；不加底色，文字對比才能在 var(--light) 上達 WCAG AA */
+.search .result-category {
+  --cat-color: #78716c;
+  flex: none;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0.05em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--cat-color) 55%, transparent);
+  border-radius: 4px;
+  color: var(--cat-color);
+  font-size: 0.72em;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+:root[saved-theme="dark"] .search .result-category {
+  --cat-color: #a8a29e;
+}
+
+/* 比對方式徽章（精準比對／語意相關）：比類型標籤次要，靠右、無框、灰字 */
+.search .result-match-badge {
+  flex: none;
+  margin-left: auto;
+  color: var(--gray);
+  font-size: 0.7em;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.search .result-match-badge.result-match-semantic {
+  font-style: italic;
+}
+
+/* 類型篩選列：貼在結果清單頂端 */
+.search .results-container .result-filters {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  box-sizing: border-box;
+  background: var(--light);
+  border-bottom: 1px solid var(--lightgray);
+}
+
+.search .results-container .result-filter {
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin: 0;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--darkgray);
+  font-family: inherit;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.search .results-container .result-filter:hover {
+  background: var(--lightgray);
+}
+
+.search .results-container .result-filter[aria-pressed="true"] {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--light);
+}
+
+.search .results-container .result-filter-count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+@media all and (max-width: 800px) {
+  /* 手機：篩選列水平捲動，不撐出頁面橫向捲軸 */
+  .search .results-container .result-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .search .results-container .result-filters::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.search .result-category[data-category="章節"] {
+  --cat-color: #44403c;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="章節"] {
+  --cat-color: #e7e5e4;
+}
+.search .result-category[data-category="人物"] {
+  --cat-color: #b45309;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="人物"] {
+  --cat-color: #fbbf24;
+}
+.search .result-category[data-category="地點"] {
+  --cat-color: #15803d;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="地點"] {
+  --cat-color: #4ade80;
+}
+.search .result-category[data-category="事件"] {
+  --cat-color: #c2410c;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="事件"] {
+  --cat-color: #fb923c;
+}
+.search .result-category[data-category="歷史"] {
+  --cat-color: #b91c1c;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="歷史"] {
+  --cat-color: #f87171;
+}
+.search .result-category[data-category="背景"] {
+  --cat-color: #0f766e;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="背景"] {
+  --cat-color: #5eead4;
+}
+.search .result-category[data-category="文化"] {
+  --cat-color: #be185d;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="文化"] {
+  --cat-color: #f9a8d4;
+}
+.search .result-category[data-category="神學"] {
+  --cat-color: #6d28d9;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="神學"] {
+  --cat-color: #c4b5fd;
+}
+.search .result-category[data-category="主題"] {
+  --cat-color: #4338ca;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="主題"] {
+  --cat-color: #a5b4fc;
+}
+.search .result-category[data-category="原文"] {
+  --cat-color: #0369a1;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="原文"] {
+  --cat-color: #7dd3fc;
+}
+.search .result-category[data-category="互文"] {
+  --cat-color: #0e7490;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="互文"] {
+  --cat-color: #67e8f9;
+}
+.search .result-category[data-category="解經爭議"] {
+  --cat-color: #4d7c0f;
+}
+:root[saved-theme="dark"] .search .result-category[data-category="解經爭議"] {
+  --cat-color: #bef264;
 }

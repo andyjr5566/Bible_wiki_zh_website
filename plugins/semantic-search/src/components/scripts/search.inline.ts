@@ -12,6 +12,9 @@ import {
   isSearchExcludedSlug,
   shouldRunExactSearch,
   rankExactMatches,
+  getResultCategory,
+  summarizeCategories,
+  CATEGORY_CHAPTER,
 } from "../searchLogic";
 import {
   appendSemanticResults,
@@ -208,6 +211,8 @@ async function setupSearch() {
     let latestSearchRequest = 0;
     let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
     let semanticRequestController: AbortController | null = null;
+    // 目前選的類型篩選；null 代表「全部」。換新查詢時重設，語意結果晚到時保留。
+    let activeCategory: string | null = null;
 
     const hideSearch = () => {
       container.classList.remove("active");
@@ -238,6 +243,8 @@ async function setupSearch() {
     ) => {
       const previousFocus = options.preserveFocus ? currentHover : null;
       const previousFocusSlug = previousFocus?.id;
+      const previousToolbarScroll =
+        results.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
       removeAllChildren(results);
 
       if (finalResults.length === 0) {
@@ -259,45 +266,42 @@ async function setupSearch() {
           results.appendChild(noMatch);
         }
       } else {
+        renderFilterToolbar(finalResults.map((item) => getResultCategory(item.slug)));
         for (const item of finalResults) {
           const itemTile = document.createElement("a");
           itemTile.className = "result-card";
           itemTile.id = item.slug;
           itemTile.href = resolveSearchPath(item.slug);
 
+          const category = getResultCategory(item.slug);
+          itemTile.dataset.category = category;
+
           const titleEl = document.createElement("h3");
           titleEl.className = "card-title";
-          // Add a badge depending on the match type
-          if (item.type === "semantic") {
-            const badge = document.createElement("span");
-            badge.style.fontSize = "0.7em";
-            badge.style.backgroundColor = "var(--secondary)";
-            badge.style.color = "var(--light)";
-            badge.style.padding = "2px 6px";
-            badge.style.borderRadius = "4px";
-            badge.style.marginRight = "6px";
-            badge.style.verticalAlign = "middle";
-            badge.textContent = "語意相關";
-            titleEl.appendChild(badge);
-          } else if (item.type === "keyword") {
-            const badge = document.createElement("span");
-            badge.style.fontSize = "0.7em";
-            badge.style.backgroundColor = "var(--tertiary)";
-            badge.style.color = "var(--light)";
-            badge.style.padding = "2px 6px";
-            badge.style.borderRadius = "4px";
-            badge.style.marginRight = "6px";
-            badge.style.verticalAlign = "middle";
-            badge.textContent = "精準比對";
-            titleEl.appendChild(badge);
-          }
+
+          const categoryTag = document.createElement("span");
+          categoryTag.className = "result-category";
+          categoryTag.dataset.category = category;
+          categoryTag.textContent = category;
+          titleEl.appendChild(categoryTag);
+
           const titleText = document.createElement("span");
-          const bookName = getBookNameFromSlug(item.slug);
+          titleText.className = "result-title-text";
+          // 書卷名只加在章節前面；條目的 link_folder 資料夾名稱已由類型標籤顯示
+          const bookName = category === CATEGORY_CHAPTER ? getBookNameFromSlug(item.slug) : "";
           const plainTitle = item.title.replace(/<[^>]*>/g, "");
           const bookPrefix =
             bookName && !plainTitle.includes(bookName) ? escapeHTML(bookName) + " " : "";
           titleText.innerHTML = bookPrefix + item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
           titleEl.appendChild(titleText);
+
+          // 比對方式徽章：樣式由 CSS class 控制，視覺上比類型標籤次要
+          if (item.type === "semantic" || item.type === "keyword") {
+            const badge = document.createElement("span");
+            badge.className = `result-match-badge result-match-${item.type}`;
+            badge.textContent = item.type === "semantic" ? "語意相關" : "精準比對";
+            titleEl.appendChild(badge);
+          }
 
           itemTile.appendChild(titleEl);
 
@@ -308,10 +312,14 @@ async function setupSearch() {
             itemTile.appendChild(tagList);
           }
 
-          const descEl = document.createElement("p");
-          descEl.className = "card-description";
-          descEl.innerHTML = item.content.replace(/<(?!\/?span\b)[^>]*>/gi, "");
-          itemTile.appendChild(descEl);
+          // 一行摘要（含命中字的片段）；內容是空的就不顯示摘要列
+          const snippetHtml = String(item.content ?? "").replace(/<(?!\/?span\b)[^>]*>/gi, "");
+          if (snippetHtml.replace(/<[^>]*>/g, "").trim() !== "") {
+            const descEl = document.createElement("p");
+            descEl.className = "card-description";
+            descEl.innerHTML = snippetHtml;
+            itemTile.appendChild(descEl);
+          }
 
           results.appendChild(itemTile);
         }
@@ -324,6 +332,9 @@ async function setupSearch() {
         results.appendChild(semanticNote);
       }
 
+      applyCategoryFilter();
+      const toolbarEl = results.querySelector<HTMLElement>(".result-filters");
+      if (toolbarEl) toolbarEl.scrollLeft = previousToolbarScroll;
       const resultElements = getResultElements();
       if (resultElements.length === 0) {
         currentHover = null;
@@ -342,7 +353,59 @@ async function setupSearch() {
       }
     };
     const getResultElements = (): HTMLElement[] => {
-      return Array.from(results.querySelectorAll<HTMLElement>(".result-card:not(.no-match)"));
+      return Array.from(
+        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match):not([hidden])"),
+      );
+    };
+
+    // 結果清單上方的類型篩選列：只在結果有兩種以上類型時顯示
+    const renderFilterToolbar = (categories: string[]) => {
+      const summary = summarizeCategories(categories);
+      if (summary.length < 2) {
+        activeCategory = null;
+        return;
+      }
+      // 保留使用者已選的篩選；若該類型已不在結果中才退回「全部」
+      if (activeCategory !== null && !summary.some((entry) => entry.name === activeCategory)) {
+        activeCategory = null;
+      }
+
+      const toolbar = document.createElement("div");
+      toolbar.className = "result-filters";
+      toolbar.setAttribute("role", "toolbar");
+      toolbar.setAttribute("aria-label", "依類型篩選");
+
+      const addButton = (label: string, count: number, value: string | null) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "result-filter";
+        button.dataset.filter = value ?? "";
+        button.setAttribute("aria-pressed", "false");
+        const labelEl = document.createElement("span");
+        labelEl.textContent = label;
+        const countEl = document.createElement("span");
+        countEl.className = "result-filter-count";
+        countEl.textContent = String(count);
+        button.appendChild(labelEl);
+        button.appendChild(countEl);
+        toolbar.appendChild(button);
+      };
+      addButton("全部", categories.length, null);
+      for (const entry of summary) addButton(entry.name, entry.count, entry.name);
+      results.appendChild(toolbar);
+    };
+
+    // 依 activeCategory 顯示／隱藏結果卡片，並同步篩選鈕的 aria-pressed
+    const applyCategoryFilter = () => {
+      for (const card of Array.from(
+        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match)"),
+      )) {
+        card.hidden = activeCategory !== null && card.dataset.category !== activeCategory;
+      }
+      for (const button of Array.from(results.querySelectorAll<HTMLElement>(".result-filter"))) {
+        const value = button.dataset.filter ? button.dataset.filter : null;
+        button.setAttribute("aria-pressed", String(value === activeCategory));
+      }
     };
 
     const highlightTerm = () => {
@@ -425,6 +488,7 @@ async function setupSearch() {
       const inputValue = (e.target as HTMLInputElement).value;
       currentSearchTerm = inputValue;
       const requestId = ++latestSearchRequest;
+      activeCategory = null;
       semanticRequestController?.abort();
       semanticRequestController = null;
       if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
@@ -570,9 +634,29 @@ async function setupSearch() {
       if (!target || target.classList.contains("no-match")) return;
       setFocus(target);
     };
+    const onFilterClick = (e: Event) => {
+      const button = (e.target as HTMLElement).closest(".result-filter") as HTMLElement | null;
+      if (!button) return;
+      activeCategory = button.dataset.filter ? button.dataset.filter : null;
+      applyCategoryFilter();
+      const visible = getResultElements();
+      if (!currentHover || !visible.includes(currentHover)) {
+        if (currentHover) currentHover.classList.remove("focus");
+        currentHover = null;
+        setFocus(visible[0] ?? null);
+      }
+    };
+    // 按篩選鈕時不要讓搜尋框失去焦點（手機上才不會收起鍵盤、方向鍵也還能用）
+    const onFilterMousedown = (e: Event) => {
+      if ((e.target as HTMLElement).closest(".result-filters")) e.preventDefault();
+    };
+    results.addEventListener("click", onFilterClick);
+    results.addEventListener("mousedown", onFilterMousedown);
     results.addEventListener("click", onResultsClick);
     results.addEventListener("mouseover", onResultsMouseover);
     addCleanup(() => {
+      results!.removeEventListener("click", onFilterClick);
+      results!.removeEventListener("mousedown", onFilterMousedown);
       results!.removeEventListener("click", onResultsClick);
       results!.removeEventListener("mouseover", onResultsMouseover);
     });

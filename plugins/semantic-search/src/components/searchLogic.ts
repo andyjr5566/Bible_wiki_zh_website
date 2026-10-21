@@ -172,3 +172,70 @@ export function getBookNameFromSlug(slug: string): string {
     .replace(/-/g, " ")
     .trim();
 }
+
+/** link_folder 底下的分類順序（與關係圖一致）；新出現的資料夾排在這些之後。 */
+export const LINK_FOLDER_CATEGORY_ORDER = [
+  "人物",
+  "地點",
+  "事件",
+  "歷史",
+  "背景",
+  "文化",
+  "神學",
+  "主題",
+  "原文",
+  "互文",
+  "解經爭議",
+] as const;
+
+export const CATEGORY_OTHER = "其他";
+export const CATEGORY_APPENDIX = "附錄";
+export const CATEGORY_TEACHING = "教學";
+export const CATEGORY_CHAPTER = "章節";
+
+/**
+ * 搜尋結果的類型標籤，與關係圖使用同一套分類。
+ * link_folder/<資料夾>/<條目> 直接用資料夾名稱；章節、附錄、教學各一類；其餘為「其他」。
+ */
+export function getResultCategory(slug: string): string {
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // Keep the original slug when it contains malformed URL encoding.
+  }
+
+  const folder = decodedSlug.match(/^link_folder\/([^/]+)\//)?.[1];
+  if (folder) return folder;
+  if (/^\d\d-/.test(decodedSlug)) return CATEGORY_CHAPTER;
+  if (decodedSlug.startsWith("appendix/")) return CATEGORY_APPENDIX;
+  if (decodedSlug.startsWith("教學/")) return CATEGORY_TEACHING;
+  return CATEGORY_OTHER;
+}
+
+function getCategorySortKey(category: string, firstSeen: number): [number, number] {
+  const known = (LINK_FOLDER_CATEGORY_ORDER as readonly string[]).indexOf(category);
+  if (known !== -1) return [known, 0];
+  if (category === CATEGORY_OTHER) return [LINK_FOLDER_CATEGORY_ORDER.length + 1, 0];
+  if (category === CATEGORY_APPENDIX) return [LINK_FOLDER_CATEGORY_ORDER.length + 2, 0];
+  if (category === CATEGORY_TEACHING) return [LINK_FOLDER_CATEGORY_ORDER.length + 3, 0];
+  if (category === CATEGORY_CHAPTER) return [LINK_FOLDER_CATEGORY_ORDER.length + 4, 0];
+  // 新的 link_folder 資料夾：排在已知分類之後、「其他」之前，依出現順序
+  return [LINK_FOLDER_CATEGORY_ORDER.length, firstSeen];
+}
+
+/** 統計各類型筆數，順序與關係圖一致：人物…解經爭議、新資料夾、其他、附錄、教學、章節。 */
+export function summarizeCategories(
+  categories: readonly string[],
+): { name: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const category of categories) counts.set(category, (counts.get(category) ?? 0) + 1);
+  const firstSeen = new Map<string, number>();
+  Array.from(counts.keys()).forEach((name, index) => firstSeen.set(name, index));
+
+  return Array.from(counts, ([name, count]) => ({ name, count })).sort((a, b) => {
+    const [aGroup, aSeen] = getCategorySortKey(a.name, firstSeen.get(a.name) ?? 0);
+    const [bGroup, bSeen] = getCategorySortKey(b.name, firstSeen.get(b.name) ?? 0);
+    return aGroup - bGroup || aSeen - bSeen;
+  });
+}

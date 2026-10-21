@@ -1105,8 +1105,9 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
 /* Mobile graph block height:end */
 
 /* Expanded graph hides overlays:start */
-/* 關係圖放大時，首訪導覽卡、浮動按鈕、加入主畫面橫幅都先藏起來，不要蓋在放大的圖上（關掉後恢復） */
-html:has(.global-graph-outer.active) {
+/* 關係圖放大或搜尋視窗打開時，首訪導覽卡、浮動按鈕、加入主畫面橫幅都先藏起來，不要蓋在上面（關掉後恢復） */
+html:has(.global-graph-outer.active),
+html:has(.search > .search-container.active) {
   .bwz-welcome,
   .bwz-fab,
   .bwz-n-chip,
@@ -1160,3 +1161,17 @@ html:has(.global-graph-outer.active) {
   }
 }
 /* Desktop right sidebar stacking:end */
+
+/* Search panel background:start */
+/* 搜尋視窗的底色：主題外掛把 .search-space 底下的元素都設成透明（它預期外框自己有底色），這個網站的外框沒有底色，
+   結果清單就和後面的頁面文字疊在一起看不清楚（手機特別明顯）。搜尋外掛的樣式在最低的 quartz-base 層，
+   贏不了主題的層，所以寫在這裡（不在任何 layer 裡）。結果區給不透明底色；背後的頁面再壓暗一點，和關係圖放大時一致。 */
+.search > .search-container.active {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.search > .search-container > .search-space > .search-layout.display-results {
+  background-color: var(--light);
+  box-shadow: 0 14px 50px rgba(27, 33, 48, 0.2);
+}
+/* Search panel background:end */

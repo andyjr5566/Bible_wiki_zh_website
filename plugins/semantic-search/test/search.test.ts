@@ -8,6 +8,8 @@ import {
   shouldRunExactSearch,
   rankExactMatches,
   getSlugKind,
+  getResultCategory,
+  summarizeCategories,
 } from "../src/components/searchLogic";
 import { appendSemanticResults, fetchJsonWithTimeout } from "../src/components/searchFlow";
 
@@ -156,6 +158,73 @@ describe("Slug kind", () => {
     expect(getSlugKind("04-民數記/第3章")).toBe("chapter");
     expect(getSlugKind("link_folder/人物/摩西")).toBe("entry");
     expect(getSlugKind("appendix/附錄")).toBe("other");
+  });
+});
+
+describe("Result category", () => {
+  it("uses the link_folder folder name for entries", () => {
+    for (const name of [
+      "人物",
+      "地點",
+      "事件",
+      "歷史",
+      "背景",
+      "文化",
+      "神學",
+      "主題",
+      "原文",
+      "互文",
+      "解經爭議",
+    ]) {
+      expect(getResultCategory("link_folder/" + name + "/某條目")).toBe(name);
+    }
+  });
+
+  it("uses the folder name for a brand-new link_folder folder", () => {
+    expect(getResultCategory("link_folder/考古/死海古卷")).toBe("考古");
+  });
+
+  it("classifies chapters, appendix, teaching, and others", () => {
+    expect(getResultCategory("02-出埃及記/第12章")).toBe("章節");
+    expect(getResultCategory("appendix/附錄一")).toBe("附錄");
+    expect(getResultCategory("教學/讀經方法")).toBe("教學");
+    expect(getResultCategory("tags/摩西")).toBe("其他");
+    expect(getResultCategory("link_folder/index")).toBe("其他");
+  });
+
+  it("decodes URL-encoded slugs and tolerates malformed encoding", () => {
+    expect(
+      getResultCategory(encodeURIComponent("link_folder/人物/摩西").replace(/%2F/g, "/")),
+    ).toBe("人物");
+    expect(getResultCategory("02-%E5%87%BA/%E7%AC%AC1%E7%AB%A0")).toBe("章節");
+    expect(getResultCategory("link_folder/%E4%BA%BA%E7%89%A9/%E6%91%A9%E8%A5%BF")).toBe("人物");
+    expect(getResultCategory("02-%E0%A4%A/x")).toBe("章節");
+  });
+
+  it("summarizes categories in graph order with counts", () => {
+    const summary = summarizeCategories([
+      "章節",
+      "教學",
+      "其他",
+      "人物",
+      "考古",
+      "章節",
+      "附錄",
+      "解經爭議",
+      "人物",
+      "地點",
+      "人物",
+    ]);
+    expect(summary).toEqual([
+      { name: "人物", count: 3 },
+      { name: "地點", count: 1 },
+      { name: "解經爭議", count: 1 },
+      { name: "考古", count: 1 },
+      { name: "其他", count: 1 },
+      { name: "附錄", count: 1 },
+      { name: "教學", count: 1 },
+      { name: "章節", count: 2 },
+    ]);
   });
 });
 

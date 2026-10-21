@@ -1,11 +1,11 @@
 # @quartz-community/search
 
-The Search component for Quartz - full-text search with FlexSearch integration.
+The Search component for Quartz - full-text and semantic search for your content.
 
 ## Features
 
 - 🔍 **Full-Text Search** - Search across all your content instantly
-- ⚡ **Fast Indexing** - Uses FlexSearch for high-performance search
+- ⚡ **Fast Exact Matching** - Searches the content index only when needed
 - 📱 **Mobile Responsive** - Works great on all devices
 - 🎯 **Search Preview** - Optional content preview panel
 - 🌐 **Multi-Language** - Supports 30+ locales
@@ -66,20 +66,20 @@ By default, the search component:
 - Shows up to 8 search results
 - Enables content preview on desktop (can be disabled)
 - Supports keyboard navigation (arrow keys, Enter, Escape)
-- Uses FlexSearch from CDN for indexing
+- Loads the full content index when you start using search
 
 ## How It Works
 
 The Search component:
 
-1. Loads FlexSearch library from CDN when initialized
-2. Fetches content data via the `fetchData` global (resolves `contentIndex.json` with the correct base path)
-3. Builds a search index from your content
-4. Performs real-time search as you type
-5. Shows results with optional content preview
+1. Uses the small global fetchData index for page metadata, such as slugs, titles, links, and tags.
+2. Downloads the full content index only after a search intent: hovering over or activating the search button, focusing the search field, or pressing Ctrl/Cmd + K. With navigator.connection.saveData enabled, it waits until you start typing.
+3. Runs exact matching against the downloaded content index; it does not build or query a FlexSearch index.
+4. Starts semantic search as you type and combines its results after exact matches, removing duplicates.
+5. Fetches page HTML separately when it needs to show a search preview.
 
 > [!info]
-> Search requires the `ContentIndex` emitter plugin to be present in your Quartz configuration.
+> Search requires the ContentIndex emitter plugin to be present in your Quartz configuration.
 
 ## Keyboard Shortcuts
 

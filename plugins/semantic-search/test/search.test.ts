@@ -11,7 +11,12 @@ import {
   getResultCategory,
   summarizeCategories,
 } from "../src/components/searchLogic";
-import { appendSemanticResults, fetchJsonWithTimeout } from "../src/components/searchFlow";
+import {
+  appendSemanticResults,
+  composeSearchView,
+  createIndexLoader,
+  fetchJsonWithTimeout,
+} from "../src/components/searchFlow";
 
 describe("Search Component", () => {
   it("exports a component factory function", () => {
@@ -311,5 +316,99 @@ describe("Semantic search flow", () => {
     );
 
     expect(results).toEqual([{ slug: "link_folder/人物/摩西" }]);
+  });
+});
+
+
+describe("Search view composition", () => {
+  const exact = [{ slug: "exact", type: "keyword" }];
+  const semantic = [{ slug: "semantic", type: "semantic" }];
+
+  it("shows semantic results while exact matches are still loading", () => {
+    expect(
+      composeSearchView({
+        exact: [],
+        semantic,
+        indexState: "loading",
+        semanticState: "ready",
+      }),
+    ).toEqual({
+      results: semantic,
+      notes: ["exact-loading"],
+      pending: true,
+    });
+  });
+
+  it("puts exact results first and deduplicates semantic results", () => {
+    const duplicatedSemantic = [{ slug: "exact", type: "semantic" }, ...semantic];
+    expect(
+      composeSearchView({
+        exact,
+        semantic: duplicatedSemantic,
+        indexState: "ready",
+        semanticState: "ready",
+      }),
+    ).toEqual({
+      results: [...exact, ...semantic],
+      notes: [],
+      pending: false,
+    });
+  });
+
+  it("keeps semantic results when the exact index fails", () => {
+    expect(
+      composeSearchView({
+        exact: [],
+        semantic,
+        indexState: "error",
+        semanticState: "ready",
+      }),
+    ).toEqual({
+      results: semantic,
+      notes: ["index-unavailable"],
+      pending: false,
+    });
+  });
+
+  it("returns no results after both searches fail", () => {
+    expect(
+      composeSearchView({
+        exact: [],
+        semantic: [],
+        indexState: "error",
+        semanticState: "error",
+      }),
+    ).toEqual({
+      results: [],
+      notes: ["index-unavailable"],
+      pending: false,
+    });
+  });
+});
+
+describe("Index loader", () => {
+  it("shares one download among concurrent and later callers", async () => {
+    let calls = 0;
+    const ensureIndex = createIndexLoader(async () => {
+      calls++;
+      return { loaded: true };
+    });
+
+    await expect(Promise.all([ensureIndex(), ensureIndex()])).resolves.toEqual([true, true]);
+    await expect(ensureIndex()).resolves.toBe(true);
+    expect(calls).toBe(1);
+  });
+
+  it("clears a failed download so the next call can retry", async () => {
+    let calls = 0;
+    const ensureIndex = createIndexLoader(async () => {
+      calls++;
+      if (calls === 1) throw new Error("download failed");
+      return { loaded: true };
+    });
+
+    await expect(ensureIndex()).resolves.toBe(false);
+    await expect(ensureIndex()).resolves.toBe(true);
+    expect(calls).toBe(2);
   });
 });

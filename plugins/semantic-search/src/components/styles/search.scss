@@ -403,7 +403,8 @@
 }
 
 .search .search-semantic-note,
-.search .search-pending-note {
+.search .search-pending-note,
+.search .search-index-note {
   margin: 0;
   padding: 0.8em 1em;
   color: var(--gray);
@@ -461,7 +462,7 @@
   --cat-color: #a8a29e;
 }
 
-/* 比對方式徽章（精準比對／語意相關）：比類型標籤次要，靠右、無框、灰字 */
+/* 比對方式徽章（完全相符／語意相關）：比類型標籤次要，靠右、無框、灰字 */
 .search .result-match-badge {
   flex: none;
   margin-left: auto;

@@ -1,4 +1,3 @@
-import FlexSearch from "flexsearch";
 import {
   removeAllChildren,
   normalizeRelativeURLs,
@@ -18,8 +17,13 @@ import {
 } from "../searchLogic";
 import {
   appendSemanticResults,
+  composeSearchView,
+  createIndexLoader,
   fetchJsonWithTimeout,
   SEMANTIC_SEARCH_TIMEOUT_MS,
+  type SearchIndexState,
+  type SearchViewNote,
+  type SemanticSearchState,
 } from "../searchFlow";
 import {
   buildScriptureCard,
@@ -65,66 +69,17 @@ interface Item {
 let currentSearchTerm: string = "";
 const contextWindowWords = 30;
 
-const encoder = (str: string): string[] => {
-  const tokens: string[] = [];
-  let bufferStart = -1;
-  let bufferEnd = -1;
-  const lower = str.toLowerCase();
-  let i = 0;
-
-  for (const char of lower) {
-    const code = char.codePointAt(0)!;
-
-    const isCJK =
-      (code >= 0x3040 && code <= 0x309f) ||
-      (code >= 0x30a0 && code <= 0x30ff) ||
-      (code >= 0x4e00 && code <= 0x9fff) ||
-      (code >= 0xac00 && code <= 0xd7af) ||
-      (code >= 0x20000 && code <= 0x2a6df);
-
-    const isWhitespace = code === 32 || code === 9 || code === 10 || code === 13;
-
-    if (isCJK) {
-      if (bufferStart !== -1) {
-        tokens.push(lower.slice(bufferStart, bufferEnd));
-        bufferStart = -1;
-      }
-      tokens.push(char);
-    } else if (isWhitespace) {
-      if (bufferStart !== -1) {
-        tokens.push(lower.slice(bufferStart, bufferEnd));
-        bufferStart = -1;
-      }
-    } else {
-      if (bufferStart === -1) bufferStart = i;
-      bufferEnd = i + 1;
-    }
-    i += char.length;
-  }
-
-  if (bufferStart !== -1) {
-    tokens.push(lower.slice(bufferStart));
-  }
-
-  return tokens;
-};
-
-const index = new FlexSearch.Document({
-  encode: encoder,
-  document: {
-    id: "id",
-    tag: "tags",
-    index: [
-      { field: "title", tokenize: "forward" },
-      { field: "content", tokenize: "forward" },
-      { field: "tags", tokenize: "forward" },
-    ],
-  },
-});
-
 let contentData: Record<string, Item> | null = null;
-let idDataMap: string[] = [];
+const pendingContentIndexUpdates = new Set<string>();
+const ensureIndex = createIndexLoader(fetchContentIndex, async (data) => {
+  contentData = data;
+  await applyPendingContentIndexUpdates();
+});
 const fetchContentCache = new Map<string, Element[]>();
+
+function canPreloadContentIndex(): boolean {
+  return (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData !== true;
+}
 
 interface SemanticSearchResultData {
   slug: string;
@@ -174,7 +129,7 @@ function runCleanups() {
   cleanupFns.length = 0;
 }
 
-async function setupSearch() {
+function setupSearch() {
   const searchElements = document.querySelectorAll(".search");
 
   for (const searchEl of Array.from(searchElements)) {
@@ -222,6 +177,10 @@ async function setupSearch() {
     // 目前查詢若是經文參照（出12:3），結果清單最上面的「經文跳轉」卡片資料
     let scriptureCard: ScriptureCard | null = null;
 
+    const preloadIndex = () => {
+      if (canPreloadContentIndex()) void ensureIndex();
+    };
+
     const hideSearch = () => {
       container.classList.remove("active");
       if (sidebar) sidebar.style.zIndex = "";
@@ -239,6 +198,7 @@ async function setupSearch() {
     };
 
     const showSearch = () => {
+      preloadIndex();
       if (sidebar) sidebar.style.zIndex = "9999";
       container.classList.add("active");
       searchButton.setAttribute("aria-expanded", "true");
@@ -247,7 +207,12 @@ async function setupSearch() {
 
     const displayResults = (
       finalResults: any[],
-      options: { pending?: boolean; semanticUnavailable?: boolean; preserveFocus?: boolean } = {},
+      options: {
+        pending?: boolean;
+        semanticUnavailable?: boolean;
+        indexNote?: SearchViewNote;
+        preserveFocus?: boolean;
+      } = {},
     ) => {
       const previousFocus = options.preserveFocus ? currentHover : null;
       const previousFocusSlug = previousFocus?.id;
@@ -259,10 +224,12 @@ async function setupSearch() {
 
       if (finalResults.length === 0) {
         if (options.pending) {
-          const pendingNote = document.createElement("p");
-          pendingNote.className = "search-pending-note";
-          pendingNote.textContent = "搜尋中…";
-          results.appendChild(pendingNote);
+          if (options.indexNote !== "index-loading" && options.indexNote !== "exact-loading") {
+            const pendingNote = document.createElement("p");
+            pendingNote.className = "search-pending-note";
+            pendingNote.textContent = "搜尋中…";
+            results.appendChild(pendingNote);
+          }
         } else if (!scriptureCard || scriptureCard.kind === "missing") {
           const noMatch = document.createElement("a");
           noMatch.className = "result-card no-match";
@@ -270,7 +237,7 @@ async function setupSearch() {
           noMatchTitle.textContent = "找不到相符的結果";
           const noMatchHint = document.createElement("p");
           noMatchHint.textContent =
-            searchLayout.getAttribute("data-no-results-hint") || "請嘗試其他搜尋關鍵字。";
+            searchLayout.getAttribute("data-no-results-hint") || "換個關鍵字試試看？";
           noMatch.appendChild(noMatchTitle);
           noMatch.appendChild(noMatchHint);
           results.appendChild(noMatch);
@@ -309,7 +276,7 @@ async function setupSearch() {
           if (item.type === "semantic" || item.type === "keyword") {
             const badge = document.createElement("span");
             badge.className = `result-match-badge result-match-${item.type}`;
-            badge.textContent = item.type === "semantic" ? "語意相關" : "精準比對";
+            badge.textContent = item.type === "semantic" ? "語意相關" : "完全相符";
             titleEl.appendChild(badge);
           }
 
@@ -335,10 +302,24 @@ async function setupSearch() {
         }
       }
 
+      if (options.indexNote) {
+        const indexNote = document.createElement("p");
+        indexNote.className = "search-index-note";
+        const indexNoteMessages: Record<Exclude<SearchViewNote, "semantic-unavailable">, string> = {
+          "index-loading": "搜尋資料載入中…",
+          "exact-loading": "正在尋找完全相符的結果…",
+          "index-unavailable": "完全相符的結果暫時無法載入，目前只顯示語意相關的結果。",
+        };
+        if (options.indexNote !== "semantic-unavailable") {
+          indexNote.textContent = indexNoteMessages[options.indexNote];
+          results.appendChild(indexNote);
+        }
+      }
+
       if (options.semanticUnavailable) {
         const semanticNote = document.createElement("p");
         semanticNote.className = "search-semantic-note";
-        semanticNote.textContent = "語意搜尋暫時沒有回應，目前只顯示精準比對結果。";
+        semanticNote.textContent = "語意搜尋暫時沒有回應，目前只顯示完全相符的結果。";
         results.appendChild(semanticNote);
       }
 
@@ -555,79 +536,109 @@ async function setupSearch() {
         return;
       }
 
-      searchDebounceTimer = setTimeout(async () => {
+      searchDebounceTimer = setTimeout(() => {
         if (requestId !== latestSearchRequest) return;
         const displayTerm = parsed.query;
-        const exactSlugs = shouldRunExactSearch(parsed.query)
-          ? rankExactMatches(
-              contentData ?? {},
-              findExactMatchSlugs(contentData ?? {}, parsed.query),
-              parsed.query,
-            )
-          : [];
-        const exactResults = exactSlugs.flatMap((slug) => {
-          const doc = contentData?.[slug];
-          if (!doc) return [];
-          return [
-            {
-              id: slug,
-              slug,
-              title: highlight(displayTerm, doc.title || slug),
-              content: highlight(displayTerm, doc.content || "", true),
-              tags: doc.tags || [],
-              type: "keyword",
-            },
-          ];
-        });
+        let indexState: SearchIndexState = contentData ? "ready" : "loading";
+        let semanticState: SemanticSearchState = "loading";
+        let exactResults: Array<{ id: string; slug: string; title: string; content: string; tags: string[]; type: string }> = [];
+        let semanticResults: Array<{ id: string; slug: string; title: string; content: string; tags: string[]; type: string }> = [];
 
-        // 經文參照（出12:3）：用小索引（fetchData）的 key 判斷這一章／這一卷有沒有內容，不等完整內文索引
-        const knownSlugs = await getKnownSlugs();
-        if (requestId !== latestSearchRequest) return;
-        scriptureCard = knownSlugs
-          ? buildScriptureCard(parsed.query, (slug) => knownSlugs.has(slug))
-          : null;
+        const buildExactResults = () => {
+          const data = contentData ?? {};
+          const exactSlugs = shouldRunExactSearch(parsed.query)
+            ? rankExactMatches(data, findExactMatchSlugs(data, parsed.query), parsed.query)
+            : [];
+          return exactSlugs.flatMap((slug) => {
+            const doc = data[slug];
+            if (!doc) return [];
+            return [
+              {
+                id: slug,
+                slug,
+                title: highlight(displayTerm, doc.title || slug),
+                content: highlight(displayTerm, doc.content || "", true),
+                tags: doc.tags || [],
+                type: "keyword",
+              },
+            ];
+          });
+        };
 
-        displayResults(exactResults, { pending: true });
-        if (requestId !== latestSearchRequest) return;
-
-        const controller = new AbortController();
-        semanticRequestController = controller;
-        const semanticResponse = await fetchJsonWithTimeout(getSearchApiUrl(parsed.query), {
-          timeoutMs: SEMANTIC_SEARCH_TIMEOUT_MS,
-          signal: controller.signal,
-        });
-        if (requestId !== latestSearchRequest) return;
-        if (semanticRequestController === controller) semanticRequestController = null;
-
-        if (semanticResponse.status !== "ok" || !isSemanticSearchPayload(semanticResponse.data)) {
-          displayResults(exactResults, {
-            semanticUnavailable: true,
+        const renderCurrentResults = () => {
+          const view = composeSearchView({
+            exact: exactResults,
+            semantic: semanticResults,
+            indexState,
+            semanticState,
+          });
+          displayResults(view.results, {
+            pending: view.pending,
+            semanticUnavailable: view.notes.includes("semantic-unavailable"),
+            indexNote: view.notes.find((note) => note !== "semantic-unavailable"),
             preserveFocus: true,
           });
-          return;
+        };
+
+        if (contentData) exactResults = buildExactResults();
+        renderCurrentResults();
+
+        // 經文參照（出12:3）：用小索引（fetchData）的 key 判斷這一章／這一卷有沒有內容，不等完整內文索引
+        void getKnownSlugs().then((knownSlugs) => {
+          if (requestId !== latestSearchRequest) return;
+          scriptureCard = knownSlugs
+            ? buildScriptureCard(parsed.query, (slug) => knownSlugs.has(slug))
+            : null;
+          renderCurrentResults();
+        });
+
+        if (indexState === "loading") {
+          void ensureIndex().then((loaded) => {
+            if (requestId !== latestSearchRequest) return;
+            indexState = loaded ? "ready" : "error";
+            if (loaded) exactResults = buildExactResults();
+            renderCurrentResults();
+          });
         }
 
-        const semanticSlugs = appendSemanticResults(
-          exactSlugs,
-          semanticResponse.data.results.filter(
-            (result): result is SemanticSearchResultData =>
-              typeof result === "object" && result !== null && typeof result.slug === "string",
-          ),
-          isSearchExcludedSlug,
-        );
-        const semanticResults = semanticSlugs.map((result) => ({
-          id: result.slug,
-          slug: result.slug,
-          title: highlight(
-            displayTerm,
-            typeof result.title === "string" ? result.title : result.slug,
-          ),
-          content: highlight(displayTerm, typeof result.text === "string" ? result.text : "", true),
-          tags: [],
-          type: "semantic",
-        }));
+        // Start semantic search immediately; index loading proceeds independently.
+        const controller = new AbortController();
+        semanticRequestController = controller;
+        void fetchJsonWithTimeout(getSearchApiUrl(parsed.query), {
+          timeoutMs: SEMANTIC_SEARCH_TIMEOUT_MS,
+          signal: controller.signal,
+        }).then((semanticResponse) => {
+          if (requestId !== latestSearchRequest) return;
+          if (semanticRequestController === controller) semanticRequestController = null;
 
-        displayResults([...exactResults, ...semanticResults], { preserveFocus: true });
+          if (semanticResponse.status !== "ok" || !isSemanticSearchPayload(semanticResponse.data)) {
+            semanticState = "error";
+            renderCurrentResults();
+            return;
+          }
+
+          const semanticSlugs = appendSemanticResults(
+            exactResults.map((result) => result.slug),
+            semanticResponse.data.results.filter(
+              (result): result is SemanticSearchResultData =>
+                typeof result === "object" && result !== null && typeof result.slug === "string",
+            ),
+            isSearchExcludedSlug,
+          );
+          semanticResults = semanticSlugs.map((result) => ({
+            id: result.slug,
+            slug: result.slug,
+            title: highlight(
+              displayTerm,
+              typeof result.title === "string" ? result.title : result.slug,
+            ),
+            content: highlight(displayTerm, typeof result.text === "string" ? result.text : "", true),
+            tags: [],
+            type: "semantic",
+          }));
+          semanticState = "ready";
+          renderCurrentResults();
+        });
       }, 150);
     };
     const onButtonClick = (e: Event) => {
@@ -636,6 +647,17 @@ async function setupSearch() {
     };
     searchButton.addEventListener("click", onButtonClick);
     addCleanup(() => searchButton.removeEventListener("click", onButtonClick));
+
+    searchButton.addEventListener("pointerenter", preloadIndex);
+    searchButton.addEventListener("focus", preloadIndex);
+    searchButton.addEventListener("touchstart", preloadIndex, { passive: true });
+    searchBar.addEventListener("focus", preloadIndex);
+    addCleanup(() => {
+      searchButton.removeEventListener("pointerenter", preloadIndex);
+      searchButton.removeEventListener("focus", preloadIndex);
+      searchButton.removeEventListener("touchstart", preloadIndex);
+      searchBar.removeEventListener("focus", preloadIndex);
+    });
 
     searchBar.addEventListener("input", onType);
     addCleanup(() => searchBar.removeEventListener("input", onType));
@@ -850,28 +872,6 @@ function highlight(searchTerm: string, text: string, trim?: boolean): string {
   );
 }
 
-async function fillDocument() {
-  if (!contentData) return;
-  let id = 0;
-  const promises: Array<Promise<unknown>> = [];
-  for (const slug of Object.keys(contentData)) {
-    const fileData = contentData[slug];
-    if (!fileData) continue;
-    idDataMap[id] = slug;
-    promises.push(
-      index.addAsync(id, {
-        id: id,
-        slug: slug,
-        title: fileData.title || "",
-        content: fileData.content || "",
-        tags: fileData.tags || [],
-      }),
-    );
-    id++;
-  }
-  await Promise.all(promises);
-}
-
 async function fetchContentIndex(): Promise<Record<string, Item>> {
   // fetchData 現在是只有標題與連結的小索引（U-18）；搜尋需要全文，改讀完整索引（舊版頁面沒有這個函式時退回 fetchData）
   const data =
@@ -892,64 +892,60 @@ async function getKnownSlugs(): Promise<Set<string> | null> {
   }
 }
 
-let indexInitialized = false;
-
-async function initIndex() {
-  if (indexInitialized) return;
-  contentData = await fetchContentIndex();
-  await fillDocument();
-  indexInitialized = true;
-}
-
 async function addContentIndexEntries(patch: Record<string, Item>): Promise<number> {
-  if (!indexInitialized || !contentData) return 0;
+  if (!contentData) return 0;
   let added = 0;
   for (const slug of Object.keys(patch)) {
     if (contentData[slug]) continue;
     const fileData = patch[slug];
     if (!fileData) continue;
-    const id = idDataMap.length;
-    idDataMap[id] = slug;
     contentData[slug] = fileData;
-    await index.addAsync(id, {
-      id,
-      slug,
-      title: fileData.title || "",
-      content: fileData.content || "",
-      tags: fileData.tags || [],
-    });
     added++;
   }
   return added;
 }
 
+async function applyContentIndexUpdates(slugs: string[]): Promise<boolean> {
+  try {
+    const base = (await fetchData) as unknown as Record<string, unknown>;
+    if (!base || typeof base !== "object") return false;
+    const root =
+      (base as Record<string, unknown>).content &&
+      typeof (base as Record<string, unknown>).content === "object"
+        ? ((base as Record<string, unknown>).content as Record<string, unknown>)
+        : (base as Record<string, unknown>);
+    const patch: Record<string, Item> = {};
+    for (const slug of slugs) {
+      const entry = root[slug];
+      if (entry && typeof entry === "object") {
+        patch[slug] = entry as Item;
+      }
+    }
+    await addContentIndexEntries(patch);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function applyPendingContentIndexUpdates(): Promise<void> {
+  if (pendingContentIndexUpdates.size === 0) return;
+  const slugs = [...pendingContentIndexUpdates];
+  if (await applyContentIndexUpdates(slugs)) {
+    for (const slug of slugs) pendingContentIndexUpdates.delete(slug);
+  }
+}
+
 document.addEventListener("content-index-updated", (event) => {
   const detail = (event as CustomEvent).detail as { slugs?: string[] } | undefined;
-  if (!indexInitialized || !contentData) return;
   const slugs = detail?.slugs;
   if (!Array.isArray(slugs) || slugs.length === 0) return;
 
-  (async () => {
-    try {
-      const base = (await fetchData) as unknown as Record<string, unknown>;
-      if (!base || typeof base !== "object") return;
-      const root =
-        (base as Record<string, unknown>).content &&
-        typeof (base as Record<string, unknown>).content === "object"
-          ? ((base as Record<string, unknown>).content as Record<string, unknown>)
-          : (base as Record<string, unknown>);
-      const patch: Record<string, Item> = {};
-      for (const slug of slugs) {
-        const entry = root[slug];
-        if (entry && typeof entry === "object") {
-          patch[slug] = entry as Item;
-        }
-      }
-      await addContentIndexEntries(patch);
-    } catch {
-      // non-fatal: shadow index patch failed
-    }
-  })();
+  if (!contentData) {
+    for (const slug of slugs) pendingContentIndexUpdates.add(slug);
+    return;
+  }
+  void applyContentIndexUpdates(slugs);
 });
 
 function scrollToSearchTerm() {
@@ -1070,12 +1066,11 @@ function scrollToSearchVerse(): boolean {
   return true;
 }
 
-async function handleNavOrRender() {
+function handleNavOrRender() {
   runCleanups();
   // 先處理經文跳轉（不用等完整內文索引）；有 search-verse 時不再跑搜尋字捲動，避免兩個捲動打架
   const handledVerse = scrollToSearchVerse();
-  await initIndex();
-  await setupSearch();
+  setupSearch();
   if (!handledVerse) scrollToSearchTerm();
 }
 

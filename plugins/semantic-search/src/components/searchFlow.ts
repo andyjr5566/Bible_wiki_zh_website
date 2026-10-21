@@ -65,6 +65,81 @@ export interface SemanticSearchResultLike {
   slug: string;
 }
 
+export type SearchIndexState = "loading" | "ready" | "error";
+export type SemanticSearchState = "loading" | "ready" | "error";
+export type SearchViewNote =
+  | "index-loading"
+  | "exact-loading"
+  | "index-unavailable"
+  | "semantic-unavailable";
+
+export interface SearchView<T extends SemanticSearchResultLike> {
+  results: T[];
+  notes: SearchViewNote[];
+  pending: boolean;
+}
+
+/** Combine exact and semantic results while describing which asynchronous work is still pending. */
+export function composeSearchView<T extends SemanticSearchResultLike>(
+  {
+    exact,
+    semantic,
+    indexState,
+    semanticState,
+  }: {
+    exact: readonly T[];
+    semantic: readonly T[];
+    indexState: SearchIndexState;
+    semanticState: SemanticSearchState;
+  },
+): SearchView<T> {
+  const seen = new Set<string>();
+  const results: T[] = [];
+  for (const result of [...exact, ...semantic]) {
+    if (!result.slug || seen.has(result.slug)) continue;
+    seen.add(result.slug);
+    results.push(result);
+  }
+
+  const notes: SearchViewNote[] = [];
+  if (indexState === "loading") {
+    notes.push(semanticState === "loading" ? "index-loading" : "exact-loading");
+  } else if (indexState === "error") {
+    notes.push("index-unavailable");
+  }
+  if (indexState === "ready" && semanticState === "error") {
+    notes.push("semantic-unavailable");
+  }
+
+  return {
+    results,
+    notes,
+    pending: indexState === "loading" || semanticState === "loading",
+  };
+}
+
+/** Create one shared index-loading promise and clear it after a failure so callers can retry. */
+export function createIndexLoader<T>(
+  fetchIndex: () => Promise<T>,
+  onLoaded: (data: T) => void | Promise<void> = () => {},
+): () => Promise<boolean> {
+  let indexPromise: Promise<boolean> | null = null;
+
+  return () => {
+    if (!indexPromise) {
+      indexPromise = Promise.resolve()
+        .then(fetchIndex)
+        .then(onLoaded)
+        .then(() => true)
+        .catch(() => {
+          indexPromise = null;
+          return false;
+        });
+    }
+    return indexPromise;
+  };
+}
+
 export function appendSemanticResults<T extends SemanticSearchResultLike>(
   exactSlugs: readonly string[],
   semanticResults: readonly T[],

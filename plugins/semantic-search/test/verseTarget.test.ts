@@ -36,7 +36,7 @@ describe("buildScriptureCard", () => {
     expect(card).toMatchObject({
       kind: "chapter",
       title: "跳到 出埃及記 12",
-      subtitle: "打開這一章",
+      subtitle: "閱讀這一章",
     });
   });
 
@@ -53,12 +53,12 @@ describe("buildScriptureCard", () => {
     expect(buildScriptureCard("創 99:1", hasSlug)).toEqual({
       kind: "book-only",
       slug: "01-創世記/全書目錄及綱要",
-      title: "創世記 第 99 章還沒有內容",
-      subtitle: "先看創世記的全書目錄",
+      title: "創世記第 99 章的研讀頁還在整理中",
+      subtitle: "先看創世記的目錄與綱要",
     });
     expect(buildScriptureCard("士師記 3", hasSlug)).toEqual({
       kind: "missing",
-      title: "士師記還沒有內容",
+      title: "士師記的研讀頁還在整理中",
       subtitle: "網站正在逐卷整理中，可以先搜尋相關的人物或主題",
     });
   });

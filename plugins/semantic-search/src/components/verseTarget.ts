@@ -38,20 +38,20 @@ export function buildScriptureCard(
       ...(target.verse === undefined ? {} : { verse: target.verse }),
       ...(target.verseEnd === undefined ? {} : { verseEnd: target.verseEnd }),
       title: `跳到 ${formatScriptureRef(ref)}`,
-      subtitle: verseText === null ? "打開這一章" : `第 ${verseText} 節會標示出來`,
+      subtitle: verseText === null ? "閱讀這一章" : `第 ${verseText} 節會標示出來`,
     };
   }
   if (target.kind === "book-only") {
     return {
       kind: "book-only",
       slug: target.slug,
-      title: `${ref.book.zh} 第 ${ref.chapter} 章還沒有內容`,
-      subtitle: `先看${ref.book.zh}的全書目錄`,
+      title: `${ref.book.zh}第 ${ref.chapter} 章的研讀頁還在整理中`,
+      subtitle: `先看${ref.book.zh}的目錄與綱要`,
     };
   }
   return {
     kind: "missing",
-    title: `${ref.book.zh}還沒有內容`,
+    title: `${ref.book.zh}的研讀頁還在整理中`,
     subtitle: "網站正在逐卷整理中，可以先搜尋相關的人物或主題",
   };
 }

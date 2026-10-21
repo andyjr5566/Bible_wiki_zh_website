@@ -1064,3 +1064,13 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 }
 /* Chapter quick bar:end */
+
+/* Strong numbers:start */
+.strong-no {
+  font-size: 0.78em;
+  color: var(--darkgray);
+  font-family: var(--codeFont), monospace;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+/* Strong numbers:end */

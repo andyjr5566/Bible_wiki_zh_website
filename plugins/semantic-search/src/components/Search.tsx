@@ -21,12 +21,15 @@ const defaultOptions: SearchOptions = {
   fieldPriority: ["title", "content", "tags"],
 };
 
+let searchResultsSequence = 0;
+
 export default ((userOpts?: Partial<SearchOptions>) => {
   const Search: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const opts = { ...defaultOptions, ...userOpts };
     const locale = cfg.locale ?? "en-US";
     const searchText = i18n(locale).components.search;
     const searchPlaceholder = searchText.searchBarPlaceholder;
+    const resultsId = `search-results-${++searchResultsSequence}`;
 
     return (
       <div class={classNames(displayClass, "search")}>
@@ -44,13 +47,17 @@ export default ((userOpts?: Partial<SearchOptions>) => {
           </svg>
           <p>{i18n(locale).components.search.title}</p>
         </button>
-        <div class="search-container">
+        <div class="search-container" role="dialog" aria-modal="true" aria-label="搜尋">
           <div class="search-space">
             <input
               autocomplete="off"
               class="search-bar"
               name="search"
               type="text"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls={resultsId}
+              aria-expanded="false"
               aria-label={searchPlaceholder}
               placeholder={searchPlaceholder}
             />
@@ -60,9 +67,17 @@ export default ((userOpts?: Partial<SearchOptions>) => {
               data-field-priority={JSON.stringify(opts.fieldPriority)}
               data-no-results={searchText.noResults}
               data-no-results-hint={searchText.noResultsHint}
-              data-results-label={searchText.title}
-            ></div>
+              data-results-label="搜尋結果"
+            >
+              <div
+                class="results-container"
+                id={resultsId}
+                role="listbox"
+                aria-label="搜尋結果"
+              ></div>
+            </div>
           </div>
+          <div class="search-sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
         </div>
       </div>
     );

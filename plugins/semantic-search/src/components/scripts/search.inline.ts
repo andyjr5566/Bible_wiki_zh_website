@@ -31,6 +31,7 @@ import {
   pickVerseItems,
   type ScriptureCard,
 } from "../verseTarget";
+import { getNextVisibleIndex, getSearchAnnouncement, shouldAnnounce } from "../searchA11y";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -68,6 +69,8 @@ interface Item {
 
 let currentSearchTerm: string = "";
 const contextWindowWords = 30;
+let resultOptionSequence = 0;
+let resultsContainerSequence = 0;
 
 let contentData: Record<string, Item> | null = null;
 const pendingContentIndexUpdates = new Set<string>();
@@ -78,7 +81,9 @@ const ensureIndex = createIndexLoader(fetchContentIndex, async (data) => {
 const fetchContentCache = new Map<string, Element[]>();
 
 function canPreloadContentIndex(): boolean {
-  return (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData !== true;
+  return (
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData !== true
+  );
 }
 
 interface SemanticSearchResultData {
@@ -151,12 +156,30 @@ function setupSearch() {
     if (!results) {
       results = document.createElement("div");
       results.className = "results-container";
-      results.setAttribute("role", "listbox");
-      results.setAttribute(
-        "aria-label",
-        searchLayout.getAttribute("data-results-label") || "Search results",
-      );
       searchLayout.appendChild(results);
+    }
+    if (!results.id) {
+      let resultsId = "";
+      do {
+        resultsId = `search-results-${++resultsContainerSequence}`;
+      } while (document.getElementById(resultsId));
+      results.id = resultsId;
+    }
+    results.setAttribute("role", "listbox");
+    results.setAttribute("aria-label", "搜尋結果");
+    searchBar.setAttribute("aria-controls", results.id);
+    searchBar.setAttribute("role", "combobox");
+    searchBar.setAttribute("aria-autocomplete", "list");
+    searchBar.setAttribute("aria-expanded", "false");
+
+    let status = container.querySelector(".search-sr-only") as HTMLElement | null;
+    if (!status) {
+      status = document.createElement("div");
+      status.className = "search-sr-only";
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      status.setAttribute("aria-atomic", "true");
+      container.appendChild(status);
     }
 
     let preview = searchLayout.querySelector(".preview-container") as HTMLDivElement | null;
@@ -176,6 +199,11 @@ function setupSearch() {
     let activeCategory: string | null = null;
     // 目前查詢若是經文參照（出12:3），結果清單最上面的「經文跳轉」卡片資料
     let scriptureCard: ScriptureCard | null = null;
+    const announcedMessages = new Set<string>();
+
+    const announce = (message: string | null) => {
+      if (shouldAnnounce(announcedMessages, message)) status!.textContent = message!;
+    };
 
     const preloadIndex = () => {
       if (canPreloadContentIndex()) void ensureIndex();
@@ -185,9 +213,13 @@ function setupSearch() {
       container.classList.remove("active");
       if (sidebar) sidebar.style.zIndex = "";
       searchButton.setAttribute("aria-expanded", "false");
+      searchBar.setAttribute("aria-expanded", "false");
+      searchBar.removeAttribute("aria-activedescendant");
       searchBar.value = "";
       removeAllChildren(results!);
+      searchLayout.querySelector(".result-filters")?.remove();
       if (preview) removeAllChildren(preview);
+      status!.textContent = "";
       searchLayout.classList.remove("display-results");
       latestSearchRequest++;
       if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
@@ -205,6 +237,30 @@ function setupSearch() {
       searchBar.focus();
     };
 
+    const getResultElements = (): HTMLElement[] => {
+      return Array.from(
+        results.querySelectorAll<HTMLElement>(
+          ".result-card[role='option']:not(.no-match):not(.scripture-missing):not([hidden])",
+        ),
+      );
+    };
+
+    const updateComboboxState = () => {
+      const visibleResults = getResultElements();
+      const selected = currentHover && visibleResults.includes(currentHover) ? currentHover : null;
+      for (const option of Array.from(
+        results.querySelectorAll<HTMLElement>(".result-card[role='option']"),
+      )) {
+        option.setAttribute("aria-selected", String(option === selected));
+      }
+      if (selected?.id) {
+        searchBar.setAttribute("aria-activedescendant", selected.id);
+      } else {
+        searchBar.removeAttribute("aria-activedescendant");
+      }
+      searchBar.setAttribute("aria-expanded", String(visibleResults.length > 0));
+    };
+
     const displayResults = (
       finalResults: any[],
       options: {
@@ -215,10 +271,13 @@ function setupSearch() {
       } = {},
     ) => {
       const previousFocus = options.preserveFocus ? currentHover : null;
-      const previousFocusSlug = previousFocus?.id;
+      const previousFocusSlug = previousFocus?.dataset.slug;
       const previousToolbarScroll =
-        results.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
+        searchLayout.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
       removeAllChildren(results);
+      currentHover = null;
+      searchBar.removeAttribute("aria-activedescendant");
+      renderFilterToolbar(finalResults.map((item) => getResultCategory(item.slug)));
 
       if (scriptureCard) results.appendChild(createScriptureCardElement(scriptureCard));
 
@@ -243,11 +302,13 @@ function setupSearch() {
           results.appendChild(noMatch);
         }
       } else {
-        renderFilterToolbar(finalResults.map((item) => getResultCategory(item.slug)));
         for (const item of finalResults) {
           const itemTile = document.createElement("a");
           itemTile.className = "result-card";
-          itemTile.id = item.slug;
+          itemTile.id = `search-opt-${++resultOptionSequence}`;
+          itemTile.dataset.slug = item.slug;
+          itemTile.setAttribute("role", "option");
+          itemTile.setAttribute("aria-selected", "false");
           itemTile.href = resolveSearchPath(item.slug);
 
           const category = getResultCategory(item.slug);
@@ -285,7 +346,10 @@ function setupSearch() {
           if (item.tags.length > 0) {
             const tagList = document.createElement("ul");
             tagList.className = "tags";
-            tagList.innerHTML = item.tags.join("");
+            // 每個標籤包在 <li> 裡（axe：<ul> 只能直接包 <li>）
+            tagList.innerHTML = item.tags
+              .map((tag: string) => `<li><p>${escapeHTML(String(tag))}</p></li>`)
+              .join("");
             itemTile.appendChild(tagList);
           }
 
@@ -324,35 +388,38 @@ function setupSearch() {
       }
 
       applyCategoryFilter();
-      const toolbarEl = results.querySelector<HTMLElement>(".result-filters");
+      const toolbarEl = searchLayout.querySelector<HTMLElement>(".result-filters");
       if (toolbarEl) toolbarEl.scrollLeft = previousToolbarScroll;
       const resultElements = getResultElements();
       if (resultElements.length === 0) {
-        currentHover = null;
+        setFocus(null);
         if (preview) removeAllChildren(preview);
       } else if (previousFocus && previousFocusSlug) {
-        const nextFocus = resultElements.find((element) => element.id === previousFocusSlug);
+        const nextFocus = resultElements.find(
+          (element) => element.dataset.slug === previousFocusSlug,
+        );
         if (nextFocus) {
-          previousFocus.classList.remove("focus");
-          currentHover = nextFocus;
-          currentHover.classList.add("focus");
+          setFocus(nextFocus);
         } else {
           setFocus(resultElements[0] ?? null);
         }
       } else {
         setFocus(resultElements[0] ?? null);
       }
+      updateComboboxState();
     };
     // 經文跳轉卡片不屬於任何類型：篩選時一直留在最上面。找不到內容的那一張（scripture-missing）不能被選到。
     const createScriptureCardElement = (card: ScriptureCard): HTMLElement => {
       const el = document.createElement(card.kind === "missing" ? "div" : "a");
       el.className = "result-card scripture-jump";
-      el.id = "scripture-jump";
       if (card.kind === "missing") {
         el.classList.add("scripture-missing");
       } else {
+        el.id = `search-opt-${++resultOptionSequence}`;
+        el.dataset.slug = card.slug;
+        el.setAttribute("role", "option");
+        el.setAttribute("aria-selected", "false");
         (el as HTMLAnchorElement).href = resolveSearchPath(card.slug);
-        el.dataset.previewSlug = card.slug;
         if (card.kind === "chapter" && card.verse !== undefined) {
           el.dataset.verse = String(card.verse);
           if (card.verseEnd !== undefined) el.dataset.verseEnd = String(card.verseEnd);
@@ -379,16 +446,9 @@ function setupSearch() {
       return el;
     };
 
-    const getResultElements = (): HTMLElement[] => {
-      return Array.from(
-        results.querySelectorAll<HTMLElement>(
-          ".result-card:not(.no-match):not(.scripture-missing):not([hidden])",
-        ),
-      );
-    };
-
     // 結果清單上方的類型篩選列：只在結果有兩種以上類型時顯示
     const renderFilterToolbar = (categories: string[]) => {
+      searchLayout.querySelector(".result-filters")?.remove();
       const summary = summarizeCategories(categories);
       if (summary.length < 2) {
         activeCategory = null;
@@ -421,7 +481,7 @@ function setupSearch() {
       };
       addButton("全部", categories.length, null);
       for (const entry of summary) addButton(entry.name, entry.count, entry.name);
-      results.appendChild(toolbar);
+      searchLayout.insertBefore(toolbar, results);
     };
 
     // 依 activeCategory 顯示／隱藏結果卡片，並同步篩選鈕的 aria-pressed
@@ -431,10 +491,13 @@ function setupSearch() {
       )) {
         card.hidden = activeCategory !== null && card.dataset.category !== activeCategory;
       }
-      for (const button of Array.from(results.querySelectorAll<HTMLElement>(".result-filter"))) {
+      for (const button of Array.from(
+        searchLayout.querySelectorAll<HTMLElement>(".result-filter"),
+      )) {
         const value = button.dataset.filter ? button.dataset.filter : null;
         button.setAttribute("aria-pressed", String(value === activeCategory));
       }
+      updateComboboxState();
     };
 
     const highlightTerm = () => {
@@ -445,7 +508,8 @@ function setupSearch() {
       if (!preview) return;
       removeAllChildren(preview);
       if (!el) return;
-      const slug = el.dataset.previewSlug || el.id;
+      const slug = el.dataset.slug;
+      if (!slug) return;
       const token = ++previewToken;
       const contents = await fetchContent(slug);
       if (token !== previewToken) return;
@@ -483,34 +547,22 @@ function setupSearch() {
         currentHover.classList.add("focus");
         currentHover.scrollIntoView({ block: "nearest" });
       }
+      updateComboboxState();
       if (previewDebounceTimer) clearTimeout(previewDebounceTimer);
       previewDebounceTimer = setTimeout(() => updatePreview(currentHover), 150);
     };
 
-    const focusByIndex = (index: number) => {
-      const resultElements = getResultElements();
-      if (resultElements.length === 0) {
-        setFocus(null);
-        return;
-      }
-      const clamped = Math.min(Math.max(index, 0), resultElements.length - 1);
-      setFocus(resultElements[clamped] ?? null);
-    };
-
-    const focusNext = () => {
-      const resultElements = getResultElements();
-      if (resultElements.length === 0) return;
-      const currentIndex = currentHover ? resultElements.indexOf(currentHover) : -1;
-      focusByIndex(currentIndex + 1);
-    };
-
-    const focusPrevious = () => {
-      const resultElements = getResultElements();
-      if (resultElements.length === 0) return;
-      const currentIndex = currentHover
-        ? resultElements.indexOf(currentHover)
-        : resultElements.length;
-      focusByIndex(currentIndex - 1);
+    const focusByDirection = (direction: -1 | 1) => {
+      const allOptions = Array.from(
+        results.querySelectorAll<HTMLElement>(".result-card[role='option']"),
+      );
+      const currentIndex = currentHover ? allOptions.indexOf(currentHover) : -1;
+      const nextIndex = getNextVisibleIndex(
+        currentIndex,
+        direction,
+        allOptions.map((option) => !option.hidden),
+      );
+      setFocus(nextIndex >= 0 ? (allOptions[nextIndex] ?? null) : null);
     };
 
     const onType = (e: Event) => {
@@ -519,6 +571,8 @@ function setupSearch() {
       const requestId = ++latestSearchRequest;
       activeCategory = null;
       scriptureCard = null;
+      announcedMessages.clear();
+      status!.textContent = "";
       semanticRequestController?.abort();
       semanticRequestController = null;
       if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
@@ -532,7 +586,10 @@ function setupSearch() {
 
       if (!hasContent) {
         removeAllChildren(results);
+        searchLayout.querySelector(".result-filters")?.remove();
         if (preview) removeAllChildren(preview);
+        searchBar.setAttribute("aria-expanded", "false");
+        searchBar.removeAttribute("aria-activedescendant");
         return;
       }
 
@@ -541,8 +598,22 @@ function setupSearch() {
         const displayTerm = parsed.query;
         let indexState: SearchIndexState = contentData ? "ready" : "loading";
         let semanticState: SemanticSearchState = "loading";
-        let exactResults: Array<{ id: string; slug: string; title: string; content: string; tags: string[]; type: string }> = [];
-        let semanticResults: Array<{ id: string; slug: string; title: string; content: string; tags: string[]; type: string }> = [];
+        let exactResults: Array<{
+          id: string;
+          slug: string;
+          title: string;
+          content: string;
+          tags: string[];
+          type: string;
+        }> = [];
+        let semanticResults: Array<{
+          id: string;
+          slug: string;
+          title: string;
+          content: string;
+          tags: string[];
+          type: string;
+        }> = [];
 
         const buildExactResults = () => {
           const data = contentData ?? {};
@@ -578,6 +649,9 @@ function setupSearch() {
             indexNote: view.notes.find((note) => note !== "semantic-unavailable"),
             preserveFocus: true,
           });
+          if (indexState === "ready") {
+            announce(getSearchAnnouncement("exact", exactResults.length));
+          }
         };
 
         if (contentData) exactResults = buildExactResults();
@@ -589,6 +663,11 @@ function setupSearch() {
           scriptureCard = knownSlugs
             ? buildScriptureCard(parsed.query, (slug) => knownSlugs.has(slug))
             : null;
+          if (scriptureCard && scriptureCard.kind !== "missing") {
+            announce(
+              getSearchAnnouncement("scripture", scriptureCard.title.replace(/^跳到\s*/, "")),
+            );
+          }
           renderCurrentResults();
         });
 
@@ -617,7 +696,7 @@ function setupSearch() {
             return;
           }
 
-          const semanticSlugs = appendSemanticResults(
+          const semanticAdditions = appendSemanticResults(
             exactResults.map((result) => result.slug),
             semanticResponse.data.results.filter(
               (result): result is SemanticSearchResultData =>
@@ -625,18 +704,25 @@ function setupSearch() {
             ),
             isSearchExcludedSlug,
           );
-          semanticResults = semanticSlugs.map((result) => ({
+          semanticResults = semanticAdditions.map((result) => ({
             id: result.slug,
             slug: result.slug,
             title: highlight(
               displayTerm,
               typeof result.title === "string" ? result.title : result.slug,
             ),
-            content: highlight(displayTerm, typeof result.text === "string" ? result.text : "", true),
+            content: highlight(
+              displayTerm,
+              typeof result.text === "string" ? result.text : "",
+              true,
+            ),
             tags: [],
             type: "semantic",
           }));
           semanticState = "ready";
+          if (semanticAdditions.length > 0) {
+            announce(getSearchAnnouncement("semantic", semanticAdditions.length));
+          }
           renderCurrentResults();
         });
       }, 150);
@@ -663,20 +749,25 @@ function setupSearch() {
     addCleanup(() => searchBar.removeEventListener("input", onType));
 
     const onSearchBarKeydown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab")) {
+      if (e.key === "ArrowUp") {
         e.preventDefault();
-        focusPrevious();
+        focusByDirection(-1);
         return;
       }
-      if (e.key === "ArrowDown" || e.key === "Tab") {
+      if (e.key === "ArrowDown") {
         e.preventDefault();
-        focusNext();
+        focusByDirection(1);
         return;
       }
       if (e.key === "Enter" && !e.isComposing) {
-        const focused = currentHover;
+        const visibleResults = getResultElements();
+        const focused =
+          currentHover && visibleResults.includes(currentHover)
+            ? currentHover
+            : (visibleResults[0] ?? null);
         if (focused instanceof HTMLAnchorElement) {
           e.preventDefault();
+          setFocus(focused);
           storeNavigationHint(focused);
           hideSearch();
           focused.click();
@@ -685,6 +776,31 @@ function setupSearch() {
     };
     searchBar.addEventListener("keydown", onSearchBarKeydown);
     addCleanup(() => searchBar.removeEventListener("keydown", onSearchBarKeydown));
+
+    const onDialogKeydown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusableSelector =
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const focusableElements = Array.from(
+        container.querySelectorAll<HTMLElement>(focusableSelector),
+      ).filter(
+        (element) =>
+          !element.hidden &&
+          element.getAttribute("aria-hidden") !== "true" &&
+          element.getClientRects().length > 0,
+      );
+      const lastFocusable = focusableElements[focusableElements.length - 1] ?? searchBar;
+
+      if (e.target === searchBar && e.shiftKey) {
+        e.preventDefault();
+        lastFocusable.focus();
+      } else if (e.target === lastFocusable && !e.shiftKey) {
+        e.preventDefault();
+        searchBar.focus();
+      }
+    };
+    container.addEventListener("keydown", onDialogKeydown);
+    addCleanup(() => container.removeEventListener("keydown", onDialogKeydown));
 
     const onDocumentKeydown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
@@ -708,12 +824,12 @@ function setupSearch() {
           return;
         }
         const verse = Number(card.dataset.verse);
-        if (!card.dataset.previewSlug || !Number.isInteger(verse) || verse < 1) return;
+        if (!card.dataset.slug || !Number.isInteger(verse) || verse < 1) return;
         const verseEnd = Number(card.dataset.verseEnd);
         sessionStorage.setItem(
           "search-verse",
           JSON.stringify({
-            slug: card.dataset.previewSlug,
+            slug: card.dataset.slug,
             verse,
             verseEnd: Number.isInteger(verseEnd) && verseEnd >= verse ? verseEnd : verse,
           }),
@@ -737,6 +853,13 @@ function setupSearch() {
       if (target.classList.contains("scripture-missing")) return;
       setFocus(target);
     };
+    const onResultsFocusIn = (e: Event) => {
+      const target = (e.target as HTMLElement).closest(
+        ".result-card[role='option']",
+      ) as HTMLElement | null;
+      if (!target || target.hidden) return;
+      setFocus(target);
+    };
     const onFilterClick = (e: Event) => {
       const button = (e.target as HTMLElement).closest(".result-filter") as HTMLElement | null;
       if (!button) return;
@@ -753,15 +876,17 @@ function setupSearch() {
     const onFilterMousedown = (e: Event) => {
       if ((e.target as HTMLElement).closest(".result-filters")) e.preventDefault();
     };
-    results.addEventListener("click", onFilterClick);
-    results.addEventListener("mousedown", onFilterMousedown);
+    searchLayout.addEventListener("click", onFilterClick);
+    searchLayout.addEventListener("mousedown", onFilterMousedown);
     results.addEventListener("click", onResultsClick);
     results.addEventListener("mouseover", onResultsMouseover);
+    results.addEventListener("focusin", onResultsFocusIn);
     addCleanup(() => {
-      results!.removeEventListener("click", onFilterClick);
-      results!.removeEventListener("mousedown", onFilterMousedown);
+      searchLayout.removeEventListener("click", onFilterClick);
+      searchLayout.removeEventListener("mousedown", onFilterMousedown);
       results!.removeEventListener("click", onResultsClick);
       results!.removeEventListener("mouseover", onResultsMouseover);
+      results!.removeEventListener("focusin", onResultsFocusIn);
     });
 
     const cleanupEscapeHandler = registerEscapeHandler(container, hideSearch);

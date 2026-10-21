@@ -1174,4 +1174,8 @@ html:has(.search > .search-container.active) {
   background-color: var(--light);
   box-shadow: 0 14px 50px rgba(27, 33, 48, 0.2);
 }
+/* 深色模式的命中字：主題的黃底是 #776411 左右，配淺灰字對比只有 4.15（axe），字改成白色（約 5:1） */
+html[saved-theme="dark"] .search .search-layout .highlight {
+  color: #fff;
+}
 /* Search panel background:end */

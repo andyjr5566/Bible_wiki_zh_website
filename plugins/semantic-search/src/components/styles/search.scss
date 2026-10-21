@@ -99,21 +99,54 @@
 
 .search > .search-container > .search-space > .search-layout {
   display: none;
-  flex-direction: row;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   border: 1px solid var(--lightgray);
   flex: 0 0 100%;
   box-sizing: border-box;
 }
 
 .search > .search-container > .search-space > .search-layout.display-results {
-  display: flex;
-}
-
-.search > .search-container > .search-space > .search-layout[data-preview] > .results-container {
-  flex: 0 0 min(30%, 450px);
+  display: grid;
 }
 
 @media all and not (max-width: 800px) {
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"].display-results {
+    grid-template-columns: minmax(0, min(30%, 450px)) minmax(0, 1fr);
+  }
+
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .result-filters {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .results-container {
+    grid-column: 1;
+    grid-row: 2;
+    height: calc(75vh - 12vh);
+  }
+
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .preview-container {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    height: calc(75vh - 12vh);
+  }
+
   /* 桌機：摘要最多 1 行（原本有預覽窗格時整個隱藏） */
   .search
     > .search-container
@@ -129,13 +162,21 @@
     overflow: hidden;
   }
 
-  .search > .search-container > .search-space > .search-layout[data-preview] > div:first-child {
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .results-container {
     border-right: 1px solid var(--lightgray);
     border-top-right-radius: unset;
     border-bottom-right-radius: unset;
   }
 
-  .search > .search-container > .search-space > .search-layout[data-preview] > div:last-child {
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .preview-container {
     border-top-left-radius: unset;
     border-bottom-left-radius: unset;
   }
@@ -146,8 +187,13 @@
   border-radius: 5px;
 }
 
+.search > .search-container > .search-space > .search-layout > .result-filters {
+  height: auto;
+}
+
 @media all and (max-width: 800px) {
-  .search > .search-container > .search-space > .search-layout {
+  .search > .search-container > .search-space > .search-layout.display-results {
+    display: flex;
     flex-direction: column;
   }
 
@@ -155,7 +201,11 @@
     display: none !important;
   }
 
-  .search > .search-container > .search-space > .search-layout[data-preview] > .results-container {
+  .search
+    > .search-container
+    > .search-space
+    > .search-layout[data-preview="true"]
+    > .results-container {
     width: 100%;
     height: auto;
     max-height: 60vh;
@@ -411,6 +461,18 @@
   font-size: 0.85em;
 }
 
+.search-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---- B4-3：結果卡片的類型標籤、比對徽章、類型篩選列 ---- */
 
 /* 篩選掉的結果（!important：主題外掛在桌機會把 .result-card 設成 display:flex） */
@@ -478,7 +540,7 @@
 }
 
 /* 類型篩選列：貼在結果清單頂端 */
-.search .results-container .result-filters {
+.search .result-filters {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -491,7 +553,7 @@
   border-bottom: 1px solid var(--lightgray);
 }
 
-.search .results-container .result-filter {
+.search .result-filter {
   flex: none;
   display: inline-flex;
   align-items: baseline;
@@ -509,24 +571,24 @@
   cursor: pointer;
 }
 
-.search .results-container .result-filter:hover {
+.search .result-filter:hover {
   background: var(--lightgray);
 }
 
-.search .results-container .result-filter[aria-pressed="true"] {
+.search .result-filter[aria-pressed="true"] {
   background: var(--dark);
   border-color: var(--dark);
   color: var(--light);
 }
 
-.search .results-container .result-filter-count {
+.search .result-filter-count {
   font-variant-numeric: tabular-nums;
   opacity: 0.8;
 }
 
 @media all and (max-width: 800px) {
   /* 手機：篩選列水平捲動，不撐出頁面橫向捲軸 */
-  .search .results-container .result-filters {
+  .search .result-filters {
     flex-wrap: nowrap;
     overflow-x: auto;
     overscroll-behavior-x: contain;
@@ -534,7 +596,7 @@
     scrollbar-width: none;
   }
 
-  .search .results-container .result-filters::-webkit-scrollbar {
+  .search .result-filters::-webkit-scrollbar {
     display: none;
   }
 }

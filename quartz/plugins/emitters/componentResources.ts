@@ -16,6 +16,8 @@ import pureModeScript from "../../components/scripts/pureMode.inline"
 import explorerToolsScript from "../../components/scripts/explorerTools.inline"
 // @ts-ignore
 import notePropertiesZhScript from "../../components/scripts/notePropertiesZh.inline"
+// @ts-ignore
+import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -116,6 +118,7 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Note properties tidy-up (條目頁「屬性」區塊的欄位名中文化、隱藏空列)
   componentResources.afterDOMLoaded.push(notePropertiesZhScript)
+  componentResources.afterDOMLoaded.push(youtubeFacadeScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

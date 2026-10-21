@@ -17,6 +17,7 @@ import { resolveFrame } from "./frames"
 import { htmlLang } from "../util/pageMeta"
 import type { TreeTransform } from "../plugins/types"
 import type { BuildCtx } from "../util/ctx"
+import { transformYoutubeEmbeds } from "../util/youtubeFacade"
 
 interface RenderComponents {
   head: QuartzComponent
@@ -318,6 +319,8 @@ export function renderPage(
       transform(root, slug, componentData)
     }
   }
+
+  root.children = transformYoutubeEmbeds(root).children
 
   // set componentData.tree to the edited html that has transclusions rendered
   componentData.tree = root

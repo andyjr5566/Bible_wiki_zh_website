@@ -63,6 +63,13 @@ function normalizedSearchableText(item: ExactSearchItem): string {
   return text;
 }
 
+/** 先把每筆的正規化全文算好放進快取（完整索引載入後呼叫）。 */
+export function warmExactSearchCache(items: Record<string, ExactSearchItem>): void {
+  for (const item of Object.values(items)) {
+    if (item && typeof item === "object") normalizedSearchableText(item);
+  }
+}
+
 export function findExactMatchSlugs(
   items: Record<string, ExactSearchItem>,
   query: string,

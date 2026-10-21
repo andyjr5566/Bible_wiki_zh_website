@@ -713,3 +713,30 @@
   background: transparent;
   box-shadow: 0 0 0 0.3rem transparent;
 }
+
+.search-more-note {
+  @extend .search-pending-note;
+}
+
+.search-more-btn {
+  display: block;
+  min-height: 40px;
+  margin: 0.5rem auto;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.35rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.875em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--lightgray);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--lightgray);
+    outline-offset: 2px;
+  }
+}

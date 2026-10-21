@@ -11,6 +11,7 @@ import {
   isSearchExcludedSlug,
   shouldRunExactSearch,
   rankExactMatches,
+  warmExactSearchCache,
   getResultCategory,
   summarizeCategories,
   CATEGORY_CHAPTER,
@@ -20,6 +21,7 @@ import {
   composeSearchView,
   createIndexLoader,
   fetchJsonWithTimeout,
+  pageResults,
   SEMANTIC_SEARCH_TIMEOUT_MS,
   type SearchIndexState,
   type SearchViewNote,
@@ -36,6 +38,7 @@ import { getNextVisibleIndex, getSearchAnnouncement, shouldAnnounce } from "../s
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
 const SEARCH_API_ORIGIN = "https://bible-wiki-zh-website.vercel.app";
+const RESULT_RENDER_LIMIT = 60;
 
 function isGitHubPagesHost(): boolean {
   return window.location.hostname === GITHUB_PAGES_HOST;
@@ -67,6 +70,27 @@ interface Item {
   [key: string]: any;
 }
 
+interface SearchResultView {
+  title: string;
+  content: string;
+}
+
+interface SearchDisplayResult {
+  id: string;
+  slug: string;
+  tags: string[];
+  type: string;
+  getView(): SearchResultView;
+}
+
+interface DisplayResultsOptions {
+  pending?: boolean;
+  semanticUnavailable?: boolean;
+  indexNote?: SearchViewNote;
+  preserveFocus?: boolean;
+  preserveRenderedCount?: boolean;
+}
+
 let currentSearchTerm: string = "";
 const contextWindowWords = 30;
 let resultOptionSequence = 0;
@@ -77,6 +101,10 @@ const pendingContentIndexUpdates = new Set<string>();
 const ensureIndex = createIndexLoader(fetchContentIndex, async (data) => {
   contentData = data;
   await applyPendingContentIndexUpdates();
+  // 索引下載完（通常在使用者還沒打完字之前）就先把正規化全文算好，第一次查詢不用再花這段時間
+  setTimeout(() => {
+    if (contentData) warmExactSearchCache(contentData);
+  }, 0);
 });
 const fetchContentCache = new Map<string, Element[]>();
 
@@ -199,6 +227,9 @@ function setupSearch() {
     let activeCategory: string | null = null;
     // 目前查詢若是經文參照（出12:3），結果清單最上面的「經文跳轉」卡片資料
     let scriptureCard: ScriptureCard | null = null;
+    let currentResults: SearchDisplayResult[] = [];
+    let currentDisplayOptions: DisplayResultsOptions = {};
+    let renderedResultCount = 0;
     const announcedMessages = new Set<string>();
 
     const announce = (message: string | null) => {
@@ -261,20 +292,133 @@ function setupSearch() {
       searchBar.setAttribute("aria-expanded", String(visibleResults.length > 0));
     };
 
+    const createResultCardElement = (item: SearchDisplayResult): HTMLElement => {
+      const view = item.getView();
+      const itemTile = document.createElement("a");
+      itemTile.className = "result-card";
+      itemTile.id = `search-opt-${++resultOptionSequence}`;
+      itemTile.dataset.slug = item.slug;
+      itemTile.setAttribute("role", "option");
+      itemTile.setAttribute("aria-selected", "false");
+      itemTile.href = resolveSearchPath(item.slug);
+
+      const category = getResultCategory(item.slug);
+      itemTile.dataset.category = category;
+
+      const titleEl = document.createElement("h3");
+      titleEl.className = "card-title";
+
+      const categoryTag = document.createElement("span");
+      categoryTag.className = "result-category";
+      categoryTag.dataset.category = category;
+      categoryTag.textContent = category;
+      titleEl.appendChild(categoryTag);
+
+      const titleText = document.createElement("span");
+      titleText.className = "result-title-text";
+      // 書卷名只加在章節前面；條目的 link_folder 資料夾名稱已由類型標籤顯示
+      const bookName = category === CATEGORY_CHAPTER ? getBookNameFromSlug(item.slug) : "";
+      const plainTitle = view.title.replace(/<[^>]*>/g, "");
+      const bookPrefix =
+        bookName && !plainTitle.includes(bookName) ? escapeHTML(bookName) + " " : "";
+      titleText.innerHTML = bookPrefix + view.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
+      titleEl.appendChild(titleText);
+
+      // 比對方式徽章：樣式由 CSS class 控制，視覺上比類型標籤次要
+      if (item.type === "semantic" || item.type === "keyword") {
+        const badge = document.createElement("span");
+        badge.className = `result-match-badge result-match-${item.type}`;
+        badge.textContent = item.type === "semantic" ? "語意相關" : "完全相符";
+        titleEl.appendChild(badge);
+      }
+
+      itemTile.appendChild(titleEl);
+
+      if (item.tags.length > 0) {
+        const tagList = document.createElement("ul");
+        tagList.className = "tags";
+        // 每個標籤包在 <li> 裡（axe：<ul> 只能直接包 <li>）
+        tagList.innerHTML = item.tags
+          .map((tag: string) => `<li><p>${escapeHTML(String(tag))}</p></li>`)
+          .join("");
+        itemTile.appendChild(tagList);
+      }
+
+      // 一行摘要（含命中字的片段）；內容是空的就不顯示摘要列
+      const snippetHtml = String(view.content ?? "").replace(/<(?!\/?span\b)[^>]*>/gi, "");
+      if (snippetHtml.replace(/<[^>]*>/g, "").trim() !== "") {
+        const descEl = document.createElement("p");
+        descEl.className = "card-description";
+        descEl.innerHTML = snippetHtml;
+        itemTile.appendChild(descEl);
+      }
+
+      return itemTile;
+    };
+
+    const appendNextResults = (focusFirst = false) => {
+      const previousOptionCount = getResultElements().length;
+      results.querySelector(".search-more-note")?.remove();
+      results.querySelector(".search-more-btn")?.remove();
+
+      const page = pageResults(
+        currentResults,
+        activeCategory,
+        (item) => getResultCategory(item.slug),
+        renderedResultCount,
+        RESULT_RENDER_LIMIT,
+      );
+      for (const item of page.items) {
+        const card = createResultCardElement(item);
+        const footer = results.querySelector(".search-index-note, .search-semantic-note");
+        if (footer) {
+          results.insertBefore(card, footer);
+        } else {
+          results.appendChild(card);
+        }
+      }
+      renderedResultCount += page.items.length;
+
+      if (page.remaining > 0) {
+        const moreNote = document.createElement("p");
+        moreNote.className = "search-more-note";
+        moreNote.textContent = `還有 ${page.remaining} 筆結果，可以用上方的類型篩選或加長關鍵字。`;
+        results.appendChild(moreNote);
+
+        const moreButton = document.createElement("button");
+        moreButton.type = "button";
+        moreButton.className = "search-more-btn";
+        // 它放在 listbox 裡，axe 要求 listbox 的子元素是 option；方向鍵只走 .result-card，所以不影響鍵盤選取
+        moreButton.setAttribute("role", "option");
+        moreButton.setAttribute("aria-selected", "false");
+        moreButton.textContent = "再顯示 60 筆";
+        results.appendChild(moreButton);
+      }
+
+      if (focusFirst) {
+        const options = getResultElements();
+        setFocus(options[previousOptionCount] ?? null);
+      } else {
+        updateComboboxState();
+      }
+    };
+
     const displayResults = (
-      finalResults: any[],
-      options: {
-        pending?: boolean;
-        semanticUnavailable?: boolean;
-        indexNote?: SearchViewNote;
-        preserveFocus?: boolean;
-      } = {},
+      finalResults: SearchDisplayResult[],
+      options: DisplayResultsOptions = {},
     ) => {
       const previousFocus = options.preserveFocus ? currentHover : null;
       const previousFocusSlug = previousFocus?.dataset.slug;
       const previousToolbarScroll =
         searchLayout.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
+      const previousRenderedCount = renderedResultCount;
+      const targetRenderedCount = options.preserveRenderedCount
+        ? Math.max(RESULT_RENDER_LIMIT, previousRenderedCount)
+        : RESULT_RENDER_LIMIT;
+      currentResults = finalResults;
+      currentDisplayOptions = { ...options };
       removeAllChildren(results);
+      renderedResultCount = 0;
       currentHover = null;
       searchBar.removeAttribute("aria-activedescendant");
       renderFilterToolbar(finalResults.map((item) => getResultCategory(item.slug)));
@@ -305,67 +449,13 @@ function setupSearch() {
           results.appendChild(noMatch);
         }
       } else {
-        for (const item of finalResults) {
-          const itemTile = document.createElement("a");
-          itemTile.className = "result-card";
-          itemTile.id = `search-opt-${++resultOptionSequence}`;
-          itemTile.dataset.slug = item.slug;
-          itemTile.setAttribute("role", "option");
-          itemTile.setAttribute("aria-selected", "false");
-          itemTile.href = resolveSearchPath(item.slug);
-
-          const category = getResultCategory(item.slug);
-          itemTile.dataset.category = category;
-
-          const titleEl = document.createElement("h3");
-          titleEl.className = "card-title";
-
-          const categoryTag = document.createElement("span");
-          categoryTag.className = "result-category";
-          categoryTag.dataset.category = category;
-          categoryTag.textContent = category;
-          titleEl.appendChild(categoryTag);
-
-          const titleText = document.createElement("span");
-          titleText.className = "result-title-text";
-          // 書卷名只加在章節前面；條目的 link_folder 資料夾名稱已由類型標籤顯示
-          const bookName = category === CATEGORY_CHAPTER ? getBookNameFromSlug(item.slug) : "";
-          const plainTitle = item.title.replace(/<[^>]*>/g, "");
-          const bookPrefix =
-            bookName && !plainTitle.includes(bookName) ? escapeHTML(bookName) + " " : "";
-          titleText.innerHTML = bookPrefix + item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
-          titleEl.appendChild(titleText);
-
-          // 比對方式徽章：樣式由 CSS class 控制，視覺上比類型標籤次要
-          if (item.type === "semantic" || item.type === "keyword") {
-            const badge = document.createElement("span");
-            badge.className = `result-match-badge result-match-${item.type}`;
-            badge.textContent = item.type === "semantic" ? "語意相關" : "完全相符";
-            titleEl.appendChild(badge);
-          }
-
-          itemTile.appendChild(titleEl);
-
-          if (item.tags.length > 0) {
-            const tagList = document.createElement("ul");
-            tagList.className = "tags";
-            // 每個標籤包在 <li> 裡（axe：<ul> 只能直接包 <li>）
-            tagList.innerHTML = item.tags
-              .map((tag: string) => `<li><p>${escapeHTML(String(tag))}</p></li>`)
-              .join("");
-            itemTile.appendChild(tagList);
-          }
-
-          // 一行摘要（含命中字的片段）；內容是空的就不顯示摘要列
-          const snippetHtml = String(item.content ?? "").replace(/<(?!\/?span\b)[^>]*>/gi, "");
-          if (snippetHtml.replace(/<[^>]*>/g, "").trim() !== "") {
-            const descEl = document.createElement("p");
-            descEl.className = "card-description";
-            descEl.innerHTML = snippetHtml;
-            itemTile.appendChild(descEl);
-          }
-
-          results.appendChild(itemTile);
+        appendNextResults();
+        while (
+          options.preserveRenderedCount &&
+          renderedResultCount < targetRenderedCount &&
+          results.querySelector(".search-more-btn")
+        ) {
+          appendNextResults();
         }
       }
 
@@ -390,6 +480,11 @@ function setupSearch() {
         semanticNote.textContent = "語意搜尋暫時沒有回應，目前只顯示完全相符的結果。";
         results.appendChild(semanticNote);
       }
+
+      const moreNote = results.querySelector(".search-more-note");
+      const moreButton = results.querySelector(".search-more-btn");
+      if (moreNote) results.appendChild(moreNote);
+      if (moreButton) results.appendChild(moreButton);
 
       applyCategoryFilter();
       const toolbarEl = searchLayout.querySelector<HTMLElement>(".result-filters");
@@ -488,13 +583,8 @@ function setupSearch() {
       searchLayout.insertBefore(toolbar, results);
     };
 
-    // 依 activeCategory 顯示／隱藏結果卡片，並同步篩選鈕的 aria-pressed
+    // 依 activeCategory 更新篩選鈕的 aria-pressed；結果卡片已依類型重新分頁繪製
     const applyCategoryFilter = () => {
-      for (const card of Array.from(
-        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match):not(.scripture-jump)"),
-      )) {
-        card.hidden = activeCategory !== null && card.dataset.category !== activeCategory;
-      }
       for (const button of Array.from(
         searchLayout.querySelectorAll<HTMLElement>(".result-filter"),
       )) {
@@ -560,13 +650,23 @@ function setupSearch() {
       const allOptions = Array.from(
         results.querySelectorAll<HTMLElement>(".result-card[role='option']"),
       );
+      const visibleOptions = allOptions.filter((option) => !option.hidden);
       const currentIndex = currentHover ? allOptions.indexOf(currentHover) : -1;
+      if (
+        direction === 1 &&
+        currentHover &&
+        currentIndex === visibleOptions.length - 1 &&
+        results.querySelector(".search-more-btn")
+      ) {
+        appendNextResults(true);
+        return;
+      }
       const nextIndex = getNextVisibleIndex(
         currentIndex,
         direction,
         allOptions.map((option) => !option.hidden),
       );
-      setFocus(nextIndex >= 0 ? (allOptions[nextIndex] ?? null) : null);
+      if (nextIndex >= 0) setFocus(allOptions[nextIndex] ?? null);
     };
 
     const onType = (e: Event) => {
@@ -602,22 +702,8 @@ function setupSearch() {
         const displayTerm = parsed.query;
         let indexState: SearchIndexState = contentData ? "ready" : "loading";
         let semanticState: SemanticSearchState = "loading";
-        let exactResults: Array<{
-          id: string;
-          slug: string;
-          title: string;
-          content: string;
-          tags: string[];
-          type: string;
-        }> = [];
-        let semanticResults: Array<{
-          id: string;
-          slug: string;
-          title: string;
-          content: string;
-          tags: string[];
-          type: string;
-        }> = [];
+        let exactResults: SearchDisplayResult[] = [];
+        let semanticResults: SearchDisplayResult[] = [];
 
         const buildExactResults = () => {
           const data = contentData ?? {};
@@ -627,14 +713,22 @@ function setupSearch() {
           return exactSlugs.flatMap((slug) => {
             const doc = data[slug];
             if (!doc) return [];
+            let view: SearchResultView | undefined;
             return [
               {
                 id: slug,
                 slug,
-                title: highlight(displayTerm, doc.title || slug),
-                content: highlight(displayTerm, doc.content || "", true),
                 tags: doc.tags || [],
                 type: "keyword",
+                getView: () => {
+                  if (!view) {
+                    view = {
+                      title: highlight(displayTerm, doc.title || slug),
+                      content: highlight(displayTerm, doc.content || "", true),
+                    };
+                  }
+                  return view;
+                },
               },
             ];
           });
@@ -652,6 +746,7 @@ function setupSearch() {
             semanticUnavailable: view.notes.includes("semantic-unavailable"),
             indexNote: view.notes.find((note) => note !== "semantic-unavailable"),
             preserveFocus: true,
+            preserveRenderedCount: true,
           });
           if (indexState === "ready") {
             announce(getSearchAnnouncement("exact", exactResults.length));
@@ -708,28 +803,34 @@ function setupSearch() {
             ),
             isSearchExcludedSlug,
           );
-          semanticResults = semanticAdditions.map((result) => ({
-            id: result.slug,
-            slug: result.slug,
-            title: highlight(
-              displayTerm,
-              typeof result.title === "string" ? result.title : result.slug,
-            ),
-            content: highlight(
-              displayTerm,
-              typeof result.text === "string" ? result.text : "",
-              true,
-            ),
-            tags: [],
-            type: "semantic",
-          }));
+          semanticResults = semanticAdditions.map((result) => {
+            const title = typeof result.title === "string" ? result.title : result.slug;
+            const text = typeof result.text === "string" ? result.text : "";
+            let view: SearchResultView | undefined;
+            return {
+              id: result.slug,
+              slug: result.slug,
+              tags: [],
+              type: "semantic",
+              getView: () => {
+                if (!view) {
+                  view = {
+                    title: highlight(displayTerm, title),
+                    content: highlight(displayTerm, text, true),
+                  };
+                }
+                return view;
+              },
+            };
+          });
           semanticState = "ready";
           if (semanticAdditions.length > 0) {
             announce(getSearchAnnouncement("semantic", semanticAdditions.length));
           }
           renderCurrentResults();
         });
-      }, 150);
+        // 停止輸入 100 ms 後才搜尋：完整站第一次查詢含這段約 260 ms，達到 B4-1「300 ms 內」；舊的語意請求會被取消
+      }, 100);
     };
     const onButtonClick = (e: Event) => {
       e.stopPropagation();
@@ -844,6 +945,12 @@ function setupSearch() {
     };
 
     const onResultsClick = (e: Event) => {
+      const moreButton = (e.target as HTMLElement).closest(".search-more-btn");
+      if (moreButton) {
+        e.preventDefault();
+        appendNextResults();
+        return;
+      }
       const target = (e.target as HTMLElement).closest(".result-card") as HTMLAnchorElement | null;
       if (!target || target.classList.contains("no-match")) return;
       if (target.classList.contains("scripture-missing")) return;
@@ -868,17 +975,16 @@ function setupSearch() {
       const button = (e.target as HTMLElement).closest(".result-filter") as HTMLElement | null;
       if (!button) return;
       activeCategory = button.dataset.filter ? button.dataset.filter : null;
-      applyCategoryFilter();
-      const visible = getResultElements();
-      if (!currentHover || !visible.includes(currentHover)) {
-        if (currentHover) currentHover.classList.remove("focus");
-        currentHover = null;
-        setFocus(visible[0] ?? null);
-      }
+      displayResults(currentResults, {
+        ...currentDisplayOptions,
+        preserveFocus: true,
+        preserveRenderedCount: false,
+      });
     };
     // 按篩選鈕時不要讓搜尋框失去焦點（手機上才不會收起鍵盤、方向鍵也還能用）
     const onFilterMousedown = (e: Event) => {
-      if ((e.target as HTMLElement).closest(".result-filters")) e.preventDefault();
+      if ((e.target as HTMLElement).closest(".result-filters, .search-more-btn"))
+        e.preventDefault();
     };
     searchLayout.addEventListener("click", onFilterClick);
     searchLayout.addEventListener("mousedown", onFilterMousedown);

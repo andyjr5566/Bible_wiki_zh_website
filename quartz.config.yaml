@@ -28,7 +28,7 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Noto Sans Traditional Chinese
+      header: Noto Sans TC
       body: LXGW WenKai TC
       code: IBM Plex Mono
     colors:

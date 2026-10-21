@@ -108,3 +108,137 @@
   width: 100%;
   height: 100%;
 }
+
+
+.graph-sector-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.graph-sector-node {
+  cursor: pointer;
+  outline: none;
+
+  &.is-highlighted > :not(.graph-sector-node-label):not(title) {
+    filter: drop-shadow(0 0 3px var(--secondary));
+  }
+
+  &:focus-visible .graph-sector-node-label,
+  &.is-highlighted .graph-sector-node-label {
+    opacity: 1;
+  }
+}
+
+.graph-sector-node-label {
+  fill: var(--dark);
+  font-size: 10px;
+  opacity: 0;
+  paint-order: stroke;
+  pointer-events: none;
+  stroke: var(--light);
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+.graph-sector-label {
+  font-size: 11px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--light);
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+.graph-sector-center-label {
+  fill: var(--dark);
+  font-size: 10px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--light);
+  stroke-linejoin: round;
+  stroke-width: 3px;
+}
+
+.graph-category-list {
+  box-sizing: border-box;
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 0.35rem 0 0;
+  padding: 6px 10px 8px;
+  border: 1px solid var(--lightgray);
+  border-radius: 5px;
+  background: var(--light);
+  color: var(--dark);
+  font-size: 13.5px;
+  line-height: 1.8;
+  overscroll-behavior: contain;
+
+  .graph-category-group + .graph-category-group {
+    margin-top: 5px;
+  }
+
+  .graph-category-heading {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    font-weight: 700;
+  }
+
+  .graph-category-count {
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .graph-category-items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1px 3px;
+  }
+
+  .graph-category-link,
+  .graph-category-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    box-sizing: border-box;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font: inherit;
+    line-height: 1.8;
+  }
+
+  .graph-category-link {
+    color: var(--secondary);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--highlight);
+      text-decoration: underline;
+    }
+  }
+
+  .graph-category-toggle {
+    border: 1px solid var(--lightgray);
+    background: transparent;
+    color: var(--dark);
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--lightgray);
+    }
+  }
+
+  .graph-empty-message {
+    margin: 0;
+    padding: 5px 0;
+    color: var(--gray);
+  }
+}

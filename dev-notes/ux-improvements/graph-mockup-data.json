@@ -1,0 +1,484 @@
+{
+ "center": {
+  "id": "02-出埃及記/第12章",
+  "title": "出埃及記 第12章"
+ },
+ "nodes": [
+  {
+   "id": "02-出埃及記/第11章",
+   "title": "第11章",
+   "type": "章節",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "02-出埃及記/全書目錄及綱要",
+   "title": "全書目錄及綱要",
+   "type": "章節",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "02-出埃及記/第13章",
+   "title": "第13章",
+   "type": "章節",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/耶和華的話臨到",
+   "title": "耶和華的話臨到",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/人物/摩西",
+   "title": "摩西",
+   "type": "人物",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/人物/亞倫",
+   "title": "亞倫",
+   "type": "人物",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/主題/以本月為正月",
+   "title": "以本月為正月",
+   "type": "主題",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/主題/一家一隻",
+   "title": "一家一隻",
+   "type": "主題",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/在黃昏的時候",
+   "title": "在黃昏的時候",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節羔羊",
+   "title": "逾越節羔羊",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節血記",
+   "title": "逾越節血記",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/無酵餅",
+   "title": "無酵餅",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/苦菜",
+   "title": "苦菜",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節的吃法",
+   "title": "逾越節的吃法",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/逾越（pesach）",
+   "title": "逾越（Pesach）",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/地點/埃及",
+   "title": "埃及",
+   "type": "地點",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/耶和華敗壞埃及一切神",
+   "title": "耶和華敗壞埃及一切神",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/知道我是耶和華",
+   "title": "知道我是耶和華",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/災殃",
+   "title": "災殃",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節定為永遠定例",
+   "title": "逾越節定為永遠定例",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/傳於後代",
+   "title": "傳於後代",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/從以色列中剪除",
+   "title": "從以色列中剪除",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/文化/聖會",
+   "title": "聖會",
+   "type": "文化",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/無酵節",
+   "title": "無酵節",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/以色列人的軍隊",
+   "title": "以色列人的軍隊",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/亞筆月",
+   "title": "亞筆月",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/寄居的",
+   "title": "寄居的",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節",
+   "title": "逾越節",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/牛膝草",
+   "title": "牛膝草",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/主題/誰也不可出自己的房門",
+   "title": "誰也不可出自己的房門",
+   "type": "主題",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/耶和華",
+   "title": "耶和華",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/滅命的",
+   "title": "滅命的",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/救贖",
+   "title": "救贖",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/長子之死",
+   "title": "長子之死",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/人物/法老",
+   "title": "法老",
+   "type": "人物",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/解經爭議/神為何擊殺埃及眾長子",
+   "title": "神為何擊殺埃及眾長子",
+   "type": "解經爭議",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/第十災（殺長子之災）",
+   "title": "第十災（殺長子之災）",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/法老召摩西",
+   "title": "法老召摩西",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/出埃及為要事奉神",
+   "title": "出埃及為要事奉神",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/催逼離開",
+   "title": "催逼離開",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/文化/爐灶和摶麵盆",
+   "title": "爐灶和摶麵盆",
+   "type": "文化",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/埃及人給以色列人財物",
+   "title": "埃及人給以色列人財物",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/分別百姓",
+   "title": "分別百姓",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/地點/蘭塞",
+   "title": "蘭塞",
+   "type": "地點",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/地點/疏割",
+   "title": "疏割",
+   "type": "地點",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/解經爭議/六十萬人的數目",
+   "title": "六十萬人的數目",
+   "type": "解經爭議",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/人物/閒雜人",
+   "title": "閒雜人",
+   "type": "人物",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/原文/四百三十年",
+   "title": "四百三十年",
+   "type": "原文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/神的主權與預定",
+   "title": "神的主權與預定",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/出埃及",
+   "title": "出埃及",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/逾越節條例（外邦人與寄居者）",
+   "title": "逾越節條例（外邦人與寄居者）",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/主題/割禮作為立約記號",
+   "title": "割禮作為立約記號",
+   "type": "主題",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/基督預表（逾越節羔羊）",
+   "title": "基督預表（逾越節羔羊）",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/歷史/法老長子之死的埃及旁證",
+   "title": "法老長子之死的埃及旁證",
+   "type": "歷史",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/神蹟（miraculous-signs）",
+   "title": "神蹟（miraculous signs）",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/法老心剛硬",
+   "title": "法老心剛硬",
+   "type": "神學",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/解經爭議/閒雜人是誰（出12：38）",
+   "title": "閒雜人是誰（出12：38）",
+   "type": "解經爭議",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/互文/創十五13-四百年寄居預言",
+   "title": "創十五13 四百年寄居預言",
+   "type": "互文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/互文/創十五14-亞伯拉罕之約的財物應驗",
+   "title": "創十五14 亞伯拉罕之約的財物應驗",
+   "type": "互文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/互文/詩七八51、一三六10-擊殺長子",
+   "title": "詩七八51、一三六10 擊殺長子",
+   "type": "互文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "link_folder/互文/約翰福音十九36-羔羊骨頭不折",
+   "title": "約翰福音十九36 羔羊骨頭不折",
+   "type": "互文",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "appendix/fhl_maps/maps/018",
+   "title": "〈出圖一〉摩西的早年",
+   "type": "appendix",
+   "out": true,
+   "back": false
+  },
+  {
+   "id": "appendix/fhl_maps/maps/019",
+   "title": "〈出圖二〉以色列人出埃及到西乃山",
+   "type": "appendix",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "appendix/fhl_maps/maps/024",
+   "title": "〈民圖五〉出埃及和進迦南的旅程",
+   "type": "appendix",
+   "out": true,
+   "back": true
+  },
+  {
+   "id": "appendix/website/index",
+   "title": "website",
+   "type": "appendix",
+   "out": false,
+   "back": true
+  },
+  {
+   "id": "link_folder/神學/埃及的豫言",
+   "title": "埃及的豫言",
+   "type": "神學",
+   "out": false,
+   "back": true
+  },
+  {
+   "id": "教學/如何跨書卷找相關條目",
+   "title": "如何跨書卷找相關條目",
+   "type": "教學",
+   "out": false,
+   "back": true
+  },
+  {
+   "id": "教學/註釋來源怎麼讀",
+   "title": "註釋來源怎麼讀",
+   "type": "教學",
+   "out": false,
+   "back": true
+  }
+ ]
+}

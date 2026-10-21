@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8" />
+<title>關係圖譜樣稿</title>
+<style>
+  :root { --bg: #faf7f0; --panel: #f3efe6; --text: #1c1917; --muted: #57534e; --line: #a8a29e; --accent: #7a1c1c; }
+  [data-theme="dark"] { --bg: #1c1917; --panel: #292524; --text: #f5f5f4; --muted: #d6d3d1; --line: #78716c; --accent: #f59e0b; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+  .side { width: 270px; padding: 18px 14px; }
+  h3 { margin: 0 0 8px; font-size: 20px; }
+  .box { background: var(--panel); border-radius: 10px; position: relative; }
+  svg { display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 8px 10px 10px; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 4px; }
+  .tag { font-size: 11px; color: var(--muted); padding: 6px 10px 0; }
+  .list { padding: 4px 10px 10px; font-size: 13px; }
+  .list .grp { margin-top: 8px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .list .grp em { font-style: normal; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .list a { color: var(--accent); text-decoration: none; margin-right: 8px; line-height: 1.8; white-space: nowrap; }
+  .expand { position: absolute; right: 8px; top: 6px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="side">
+  <h3>關係圖譜</h3>
+  <div class="box" id="box"></div>
+</div>
+<script>
+const params = new URLSearchParams(location.search)
+const V = params.get("v") || "A"
+document.documentElement.dataset.theme = params.get("theme") || "light"
+const dark = document.documentElement.dataset.theme === "dark"
+
+const CAT = {
+  章節: { label: "章節", color: dark ? "#e7e5e4" : "#44403c", shape: "ring" },
+  人物: { label: "人物", color: dark ? "#fbbf24" : "#b45309", shape: "circle" },
+  地點: { label: "地點", color: dark ? "#4ade80" : "#15803d", shape: "square" },
+  歷史: { label: "歷史／事件", color: dark ? "#f87171" : "#b91c1c", shape: "diamond" },
+  神學: { label: "神學", color: dark ? "#c4b5fd" : "#6d28d9", shape: "triangle" },
+  原文: { label: "原文", color: dark ? "#7dd3fc" : "#0369a1", shape: "hex" },
+  其他: { label: "主題・文化・互文", color: dark ? "#a8a29e" : "#78716c", shape: "circle" },
+}
+const catOf = (t) => (t === "事件" ? "歷史" : CAT[t] ? t : "其他")
+
+function shape(cat, x, y, r) {
+  const c = CAT[cat], s = c.color
+  switch (c.shape) {
+    case "ring": return `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${s}" stroke-width="2"/>`
+    case "square": return `<rect x="${x - r}" y="${y - r}" width="${2 * r}" height="${2 * r}" rx="1.5" fill="${s}"/>`
+    case "diamond": return `<path d="M${x} ${y - r * 1.25}L${x + r * 1.25} ${y}L${x} ${y + r * 1.25}L${x - r * 1.25} ${y}Z" fill="${s}"/>`
+    case "triangle": return `<path d="M${x} ${y - r * 1.3}L${x + r * 1.2} ${y + r * 0.9}L${x - r * 1.2} ${y + r * 0.9}Z" fill="${s}"/>`
+    case "hex": { let p = ""; for (let i = 0; i < 6; i++) { const a = Math.PI / 3 * i; p += (i ? "L" : "M") + (x + r * 1.15 * Math.cos(a)).toFixed(1) + " " + (y + r * 1.15 * Math.sin(a)).toFixed(1) } return `<path d="${p}Z" fill="${s}"/>` }
+    default: return `<circle cx="${x}" cy="${y}" r="${r}" fill="${s}"/>`
+  }
+}
+const legendHTML = (cats) => `<div class="legend">${cats.map((k) => `<span><svg width="14" height="14">${shape(k, 7, 7, 4.5)}</svg>${CAT[k].label}</span>`).join("")}</div>`
+const label = (x, y, t, bold) => `<text x="${x}" y="${y}" font-size="${bold ? 12 : 11}" font-weight="${bold ? 700 : 400}" text-anchor="middle" fill="var(--text)" paint-order="stroke" stroke="var(--panel)" stroke-width="3">${t}</text>`
+
+fetch("data.json").then((r) => r.json()).then(({ center, nodes }) => {
+  nodes.forEach((n) => (n.cat = catOf(n.type)))
+  const order = ["章節", "人物", "地點", "歷史", "神學", "原文", "其他"]
+  const W = 242, H = 230, cx = W / 2, cy = H / 2
+  const box = document.getElementById("box")
+  let svg = ""
+
+  if (V === "A") {
+    // A：全部節點依類型上色、上形狀；只標出目前頁和雙向連結的重點
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+    const pts = nodes.map((n) => ({ n, x: cx + (rnd() - 0.5) * 180, y: cy + (rnd() - 0.5) * 170 }))
+    for (let it = 0; it < 400; it++) {
+      for (const p of pts) {
+        let fx = (cx - p.x) * 0.012, fy = (cy - p.y) * 0.012
+        for (const q of pts) if (q !== p) { const dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy + 0.01; if (d2 < 900) { fx += dx / d2 * 9; fy += dy / d2 * 9 } }
+        const dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy); if (d < 34) { fx += dx / d * 2; fy += dy / d * 2 }
+        p.x = Math.max(10, Math.min(W - 10, p.x + fx)); p.y = Math.max(12, Math.min(H - 12, p.y + fy))
+      }
+    }
+    pts.forEach((p) => (svg += `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="var(--line)" stroke-opacity="0.35"/>`))
+    pts.forEach((p) => (svg += shape(p.n.cat, p.x, p.y, 3.6)))
+    const pick = []; for (const p of pts.filter((p) => p.n.out && p.n.back && p.n.cat !== "章節")) { if (pick.length >= 4) break; if (Math.hypot(p.x - cx, p.y - cy) < 40) continue; if (pick.every((q) => Math.abs(q.x - p.x) > 70 || Math.abs(q.y - p.y) > 18)) pick.push(p) }
+    pick.forEach((p) => (svg += label(p.x, p.y - 7, p.n.title.length > 6 ? p.n.title.slice(0, 6) + "…" : p.n.title)))
+    svg += `<circle cx="${cx}" cy="${cy}" r="7" fill="var(--accent)"/>` + label(cx, cy + 20, "出埃及記 12", true)
+    box.innerHTML = `<span class="expand">⤢ 放大</span><svg width="${W}" height="${H}">${svg}</svg>` + legendHTML(order)
+  }
+
+  if (V === "B") {
+    // B：分類扇形——目前頁在中央，同類型的條目排成一扇，每扇標出類型與數量
+    const groups = order.map((k) => ({ k, items: nodes.filter((n) => n.cat === k) })).filter((g) => g.items.length)
+    const total = nodes.length
+    let a0 = -Math.PI / 2
+    groups.forEach((g) => {
+      const span = (g.items.length / total) * Math.PI * 2
+      const mid = a0 + span / 2
+      g.items.forEach((n, i) => {
+        const a = a0 + span * ((i + 0.5) / g.items.length)
+        const r = 62 + (i % 3) * 14
+        const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a)
+        svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${CAT[g.k].color}" stroke-opacity="0.25"/>` + shape(g.k, x, y, 3.4)
+      })
+      const lx = Math.max(30, Math.min(W - 30, cx + 104 * Math.cos(mid))), ly = Math.max(10, Math.min(H - 4, cy + 104 * Math.sin(mid) + 4))
+      svg += `<text x="${lx}" y="${ly}" font-size="11.5" font-weight="700" text-anchor="middle" fill="${CAT[g.k].color}" paint-order="stroke" stroke="var(--panel)" stroke-width="3">${g.k === "其他" ? "其他" : g.k} ${g.items.length}</text>`
+      a0 += span
+    })
+    svg += `<circle cx="${cx}" cy="${cy}" r="9" fill="var(--accent)"/>` + label(cx, cy + 24, "出埃及記 12", true)
+    box.innerHTML = `<span class="expand">⤢ 放大</span><svg width="${W}" height="${H + 20}" viewBox="0 -10 ${W} ${H + 20}">${svg}</svg><div class="tag">滑過節點看名稱；點類型名稱只看那一類</div>`
+  }
+
+  if (V === "C") {
+    // C：小圖（只看形狀與顏色）＋下方依類型分組的「本章相關條目」清單（真的可以點）
+    const Hs = 130, cys = Hs / 2
+    let seed = 3; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+    nodes.forEach((n) => { const a = rnd() * Math.PI * 2, r = 26 + rnd() * 34; const x = cx + r * 1.7 * Math.cos(a), y = cys + r * Math.sin(a); svg += `<line x1="${cx}" y1="${cys}" x2="${x}" y2="${y}" stroke="var(--line)" stroke-opacity="0.3"/>` + shape(n.cat, x, y, 3) })
+    svg += `<circle cx="${cx}" cy="${cys}" r="7" fill="var(--accent)"/>`
+    const groups = ["人物", "地點", "歷史", "神學", "原文"].map((k) => ({ k, items: nodes.filter((n) => n.cat === k) })).filter((g) => g.items.length)
+    const list = groups.map((g) => `<div class="grp"><svg width="12" height="12">${shape(g.k, 6, 6, 4)}</svg>${CAT[g.k].label} <em>${g.items.length}</em></div><div>${g.items.slice(0, 4).map((n) => `<a href="#">${n.title}</a>`).join("")}${g.items.length > 4 ? `<a href="#">＋${g.items.length - 4}</a>` : ""}</div>`).join("")
+    box.innerHTML = `<span class="expand">⤢ 放大</span><svg width="${W}" height="${Hs}">${svg}</svg><div class="list">${list}</div>`
+  }
+})
+</script>
+</body>
+</html>

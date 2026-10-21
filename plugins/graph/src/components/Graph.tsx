@@ -94,6 +94,7 @@ export default ((userOpts?: Partial<GraphOptions>) => {
             </button>
           )}
         </div>
+        <div class="graph-category-list" aria-live="polite"></div>
         {enableGlobal && (
           <div class="global-graph-outer">
             <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>

@@ -1,5 +1,10 @@
 // @ts-nocheck
 import {
+  distributeSectorAngles,
+  getMoreCount,
+  groupNeighbors,
+} from "../graph-layout";
+import {
   removeAllChildren,
   getBasePath,
   getFullSlugFromUrl,
@@ -96,6 +101,294 @@ import {
       return resolved || fallback;
     }
 
+
+  function createSvgElement(tag, attributes) {
+    var element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var key in attributes) element.setAttribute(key, String(attributes[key]));
+    return element;
+  }
+
+  function drawCategoryShape(parent, category, x, y, radius, color, palette) {
+    var shape = palette[category].shape;
+    var element;
+    if (shape === "ring") {
+      element = createSvgElement("circle", { cx: x, cy: y, r: radius, fill: "none", stroke: color, "stroke-width": 1.8 });
+    } else if (shape === "square") {
+      element = createSvgElement("rect", { x: x - radius, y: y - radius, width: radius * 2, height: radius * 2, rx: 1.5, fill: color });
+    } else if (shape === "diamond") {
+      element = createSvgElement("path", { d: "M" + x + " " + (y - radius * 1.25) + "L" + (x + radius * 1.25) + " " + y + "L" + x + " " + (y + radius * 1.25) + "L" + (x - radius * 1.25) + " " + y + "Z", fill: color });
+    } else if (shape === "triangle") {
+      element = createSvgElement("path", { d: "M" + x + " " + (y - radius * 1.3) + "L" + (x + radius * 1.2) + " " + (y + radius * 0.9) + "L" + (x - radius * 1.2) + " " + (y + radius * 0.9) + "Z", fill: color });
+    } else if (shape === "hex") {
+      var points = [];
+      for (var i = 0; i < 6; i++) {
+        var angle = (Math.PI / 3) * i;
+        points.push((x + radius * 1.15 * Math.cos(angle)).toFixed(1) + "," + (y + radius * 1.15 * Math.sin(angle)).toFixed(1));
+      }
+      element = createSvgElement("polygon", { points: points.join(" "), fill: color });
+    } else {
+      element = createSvgElement("circle", { cx: x, cy: y, r: radius, fill: color });
+    }
+    parent.appendChild(element);
+    return element;
+  }
+
+  function renderCategorizedLocalGraph(graph, slug, nodes, width, height, styles) {
+    var wrapper = graph.closest(".graph");
+    var list = wrapper ? wrapper.querySelector(".graph-category-list") : null;
+    if (!list) return function () {};
+
+    var lightToken = resolveColor(styles.getPropertyValue("--light").trim(), "#f5f5f5");
+    var rgb = lightToken.match(/[\d.]+/g);
+    var isDarkTheme = !!rgb && rgb.length >= 3 && (Number(rgb[0]) * 0.2126 + Number(rgb[1]) * 0.7152 + Number(rgb[2]) * 0.0722) < 128;
+    var palette = {
+      "章節": { color: isDarkTheme ? "#e7e5e4" : "#44403c", shape: "ring" },
+      "人物": { color: isDarkTheme ? "#fbbf24" : "#b45309", shape: "circle" },
+      "地點": { color: isDarkTheme ? "#4ade80" : "#15803d", shape: "square" },
+      "歷史": { color: isDarkTheme ? "#f87171" : "#b91c1c", shape: "diamond" },
+      "神學": { color: isDarkTheme ? "#c4b5fd" : "#6d28d9", shape: "triangle" },
+      "原文": { color: isDarkTheme ? "#7dd3fc" : "#0369a1", shape: "hex" },
+      "其他": { color: isDarkTheme ? "#a8a29e" : "#78716c", shape: "circle" },
+    };
+    var centerNode = null;
+    var neighbors = [];
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].id === slug) centerNode = nodes[i];
+      else neighbors.push(nodes[i]);
+    }
+    var groups = groupNeighbors(neighbors);
+    var groupMap = new Map();
+    var counts = {};
+    for (var i = 0; i < groups.length; i++) {
+      groupMap.set(groups[i].category, groups[i].items);
+      counts[groups[i].category] = groups[i].items.length;
+    }
+
+    var svg = createSvgElement("svg", {
+      "class": "graph-sector-svg",
+      width: width,
+      height: height,
+      viewBox: "0 0 " + width + " " + height,
+      role: "img",
+      "aria-label": "依分類排列的相關條目圖譜",
+    });
+    graph.appendChild(svg);
+    var centerX = width / 2;
+    var centerY = height / 2;
+    var outerRadius = Math.max(24, Math.min(width, height) / 2 - 27);
+    var nodeRadius = Math.max(2.8, Math.min(4.2, Math.min(width, height) * 0.016));
+    var sectors = distributeSectorAngles(counts);
+    var nodeElements = new Map();
+
+    for (var si = 0; si < sectors.length; si++) {
+      var sector = sectors[si];
+      var items = groupMap.get(sector.category) || [];
+      var ringCount = items.length < 5 ? 2 : 3;
+      var radii = ringCount === 2 ? [outerRadius * 0.76, outerRadius] : [outerRadius * 0.7, outerRadius * 0.85, outerRadius];
+      for (var ni = 0; ni < items.length; ni++) {
+        var angle = sector.startAngle + sector.angle * ((ni + 0.5) / items.length);
+        var radius = radii[ni % ringCount];
+        var x = centerX + radius * Math.cos(angle);
+        var y = centerY + radius * Math.sin(angle);
+        svg.appendChild(createSvgElement("line", {
+          x1: centerX, y1: centerY, x2: x, y2: y,
+          stroke: palette[sector.category].color, "stroke-opacity": 0.24, "stroke-width": 1,
+          "pointer-events": "none",
+        }));
+      }
+    }
+
+    for (var si = 0; si < sectors.length; si++) {
+      var sector = sectors[si];
+      var items = groupMap.get(sector.category) || [];
+      var ringCount = items.length < 5 ? 2 : 3;
+      var radii = ringCount === 2 ? [outerRadius * 0.76, outerRadius] : [outerRadius * 0.7, outerRadius * 0.85, outerRadius];
+      for (var ni = 0; ni < items.length; ni++) {
+        var item = items[ni];
+        var angle = sector.startAngle + sector.angle * ((ni + 0.5) / items.length);
+        var radius = radii[ni % ringCount];
+        var x = centerX + radius * Math.cos(angle);
+        var y = centerY + radius * Math.sin(angle);
+        var color = palette[sector.category].color;
+        var group = createSvgElement("g", {
+          "class": "graph-sector-node",
+          "data-node-id": item.id,
+          role: "link",
+          tabindex: "0",
+          "aria-label": item.text,
+          "data-x": x,
+          "data-y": y,
+        });
+        group.appendChild(createSvgElement("title", {})).textContent = item.text;
+        drawCategoryShape(group, sector.category, x, y, nodeRadius, color, palette);
+        var labelText = createSvgElement("text", {
+          "class": "graph-sector-node-label",
+          x: Math.max(34, Math.min(width - 34, x)),
+          y: Math.max(12, Math.min(height - 6, y - 8)),
+          "text-anchor": "middle",
+        });
+        labelText.textContent = item.text;
+        group.appendChild(labelText);
+        group.addEventListener("pointerenter", function () {
+          this.classList.add("is-highlighted");
+        });
+        group.addEventListener("pointerleave", function () {
+          this.classList.remove("is-highlighted");
+        });
+        var navigate = function (targetId) {
+          var target = resolveBasePath(targetId);
+          var url = new URL(target, window.location.toString());
+          if (window.spaNavigate) window.spaNavigate(url);
+          else window.location.assign(url);
+        };
+        (function (nodeId, nodeGroup, navigateTo) {
+          nodeGroup.addEventListener("click", function () { navigateTo(nodeId); });
+          nodeGroup.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              navigateTo(nodeId);
+            }
+          });
+        })(item.id, group, navigate);
+        svg.appendChild(group);
+        try {
+          var nodeLabelBounds = labelText.getBBox();
+          var labelDx = nodeLabelBounds.x < 2 ? 2 - nodeLabelBounds.x : (nodeLabelBounds.x + nodeLabelBounds.width > width - 2 ? width - 2 - nodeLabelBounds.x - nodeLabelBounds.width : 0);
+          var labelDy = nodeLabelBounds.y < 10 ? 10 - nodeLabelBounds.y : (nodeLabelBounds.y + nodeLabelBounds.height > height - 2 ? height - 2 - nodeLabelBounds.y - nodeLabelBounds.height : 0);
+          if (labelDx) labelText.setAttribute("x", Number(labelText.getAttribute("x")) + labelDx);
+          if (labelDy) labelText.setAttribute("y", Number(labelText.getAttribute("y")) + labelDy);
+        } catch (e) {}
+        nodeElements.set(item.id, group);
+      }
+
+      var labelValue = sector.category + " " + items.length;
+      var labelAngle = sector.startAngle + sector.angle / 2;
+      var labelX = centerX + (outerRadius + 11) * Math.cos(labelAngle);
+      var labelY = centerY + (outerRadius + 11) * Math.sin(labelAngle);
+      var categoryLabel = createSvgElement("text", {
+        "class": "graph-sector-label",
+        x: labelX,
+        y: labelY,
+        fill: palette[sector.category].color,
+        "text-anchor": "middle",
+      });
+      categoryLabel.textContent = labelValue;
+      svg.appendChild(categoryLabel);
+      try {
+        var bounds = categoryLabel.getBBox();
+        var dx = bounds.x < 2 ? 2 - bounds.x : (bounds.x + bounds.width > width - 2 ? width - 2 - bounds.x - bounds.width : 0);
+        var dy = bounds.y < 11 ? 11 - bounds.y : (bounds.y + bounds.height > height - 3 ? height - 3 - bounds.y - bounds.height : 0);
+        if (dx || dy) categoryLabel.setAttribute("transform", "translate(" + dx + " " + dy + ")");
+      } catch (e) {
+        categoryLabel.setAttribute("x", Math.max(34, Math.min(width - 34, labelX)));
+        categoryLabel.setAttribute("y", Math.max(12, Math.min(height - 5, labelY)));
+      }
+    }
+
+    var centerColor = resolveColor(styles.getPropertyValue("--secondary").trim(), "#c792ea");
+    svg.appendChild(createSvgElement("circle", { cx: centerX, cy: centerY, r: 8, fill: centerColor, "class": "graph-sector-center" }));
+    var centerTitle = centerNode ? centerNode.text : (slug === "index" || slug === "/" ? "首頁" : slug.split("/").pop());
+    var centerLabel = createSvgElement("text", {
+      "class": "graph-sector-center-label",
+      x: centerX,
+      y: Math.min(height - 5, centerY + 23),
+      "text-anchor": "middle",
+    });
+    centerLabel.textContent = centerTitle.length > 12 ? centerTitle.slice(0, 11) + "…" : centerTitle;
+    svg.appendChild(centerLabel);
+
+    var expanded = new Set();
+    function focusNode(id, enabled) {
+      var node = nodeElements.get(id);
+      if (!node) return;
+      if (enabled) {
+        node.classList.add("is-highlighted");
+      } else {
+        node.classList.remove("is-highlighted");
+      }
+    }
+    function renderList() {
+      list.replaceChildren();
+      if (neighbors.length === 0) {
+        var empty = document.createElement("p");
+        empty.className = "graph-empty-message";
+        empty.textContent = "這一頁還沒有相關條目";
+        list.appendChild(empty);
+        return;
+      }
+      groups.forEach(function (group) {
+        var section = document.createElement("section");
+        section.className = "graph-category-group";
+        section.dataset.category = group.category;
+        var heading = document.createElement("div");
+        heading.className = "graph-category-heading";
+        var icon = createSvgElement("svg", { width: 14, height: 14, viewBox: "0 0 14 14", "aria-hidden": "true" });
+        drawCategoryShape(icon, group.category, 7, 7, 4.2, palette[group.category].color, palette);
+        heading.appendChild(icon);
+        var name = document.createElement("span");
+        name.textContent = group.category;
+        heading.appendChild(name);
+        var count = document.createElement("span");
+        count.className = "graph-category-count";
+        count.textContent = String(group.items.length);
+        heading.appendChild(count);
+        section.appendChild(heading);
+
+        var entries = document.createElement("div");
+        entries.className = "graph-category-items";
+        var isExpanded = expanded.has(group.category);
+        var shown = isExpanded ? group.items : group.items.slice(0, 4);
+        shown.forEach(function (item) {
+          var anchor = document.createElement("a");
+          anchor.className = "internal graph-category-link";
+          anchor.href = resolveBasePath(item.id);
+          anchor.dataset.nodeId = item.id;
+          anchor.textContent = item.text;
+          anchor.title = item.text;
+          entries.appendChild(anchor);
+        });
+        var remaining = getMoreCount(group.items.length);
+        if (remaining > 0) {
+          var toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "graph-category-toggle";
+          toggle.dataset.expandCategory = group.category;
+          toggle.setAttribute("aria-expanded", String(isExpanded));
+          toggle.textContent = isExpanded ? "收起" : "＋" + remaining;
+          entries.appendChild(toggle);
+        }
+        section.appendChild(entries);
+        list.appendChild(section);
+      });
+    }
+    var onListClick = function (event) {
+      var toggle = event.target.closest("button[data-expand-category]");
+      if (!toggle || !list.contains(toggle)) return;
+      var category = toggle.dataset.expandCategory;
+      if (expanded.has(category)) expanded.delete(category);
+      else expanded.add(category);
+      renderList();
+    };
+    var onListOver = function (event) {
+      var anchor = event.target.closest("a[data-node-id]");
+      if (anchor && list.contains(anchor)) focusNode(anchor.dataset.nodeId, true);
+    };
+    var onListOut = function (event) {
+      var anchor = event.target.closest("a[data-node-id]");
+      if (anchor && list.contains(anchor) && (!event.relatedTarget || !anchor.contains(event.relatedTarget))) focusNode(anchor.dataset.nodeId, false);
+    };
+    list.addEventListener("click", onListClick);
+    list.addEventListener("mouseover", onListOver);
+    list.addEventListener("mouseout", onListOut);
+    renderList();
+    return function () {
+      list.removeEventListener("click", onListClick);
+      list.removeEventListener("mouseover", onListOver);
+      list.removeEventListener("mouseout", onListOut);
+      list.replaceChildren();
+    };
+  }
+
     async function renderGraph(graph, fullSlug, renderGeneration) {
       var decodedFullSlug = fullSlug;
       try {
@@ -139,6 +432,10 @@ import {
         }
       } catch (err) {
         console.error("[Graph] Error loading data:", err);
+        return function () {};
+      }
+
+      if (renderGeneration !== undefined && renderGeneration !== currentRenderGeneration) {
         return function () {};
       }
 
@@ -222,8 +519,8 @@ import {
           id: url,
           text: text,
           tags: nodeTags,
-          x: Math.random() * width - width / 2,
-          y: Math.random() * height - height / 2,
+          x: isGlobal ? Math.random() * width - width / 2 : 0,
+          y: isGlobal ? Math.random() * height - height / 2 : 0,
           vx: 0,
           vy: 0,
         };
@@ -286,6 +583,10 @@ import {
       var dark = resolveColor(styles.getPropertyValue("--dark").trim(), "#1a1a1a");
       var light = resolveColor(styles.getPropertyValue("--light").trim(), "#f5f5f5");
       var bodyFont = styles.getPropertyValue("--bodyFont").trim() || "inherit";
+
+      if (!isGlobal) {
+        return renderCategorizedLocalGraph(graph, slug, nodes, width, height, styles);
+      }
 
       var app = new PIXI.Application();
       await app.init({

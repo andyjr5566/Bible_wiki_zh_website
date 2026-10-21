@@ -1135,6 +1135,16 @@ html:has(.global-graph-outer.active) {
       max-height: max(12rem, calc(100vh - 560px));
     }
 
+    /* 目錄收起時，Quartz 把區塊高度釘成 1.4rem 來藏起內容，但這比「目錄」標題本身矮，標題下半截被切掉；
+       改成剛好放得下標題的固定高度（內容仍靠高度被切掉而隱藏，所以不能用 auto） */
+    & > .toc:has(button.toc-header.collapsed) {
+      flex: 0 0 2rem;
+
+      & > button.toc-header > h3 {
+        margin: 0;
+      }
+    }
+
     & > .backlinks {
       max-height: 16rem;
       overflow: hidden;

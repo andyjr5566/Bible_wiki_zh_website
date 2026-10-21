@@ -697,11 +697,6 @@ html.bwz-touring .popover {
   }
 }
 
-// 「加入主畫面」細橫幅出現時，提示訊息（toast）往上讓開，不蓋住橫幅的按鈕
-html:has(.pwa-install-guide) .bwz-toast {
-  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
-}
-
 // 桌機：歡迎卡貼在內容欄底部（left、width 由 tour.inline.ts 的 placeWelcome 依 .center 設定），
 // 不蓋右欄目錄與反向連結。這裡的值是量不到 .center 時的備用（視窗置中）。
 @media (min-width: 801px) {

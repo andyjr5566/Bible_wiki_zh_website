@@ -218,7 +218,26 @@ export default (() => {
                 cursor: pointer;
               }
               /* 導覽進行中、說明中心開著時先收起來，等導覽結束再回來（見 wiki-tour 的 data-bwz-prompt） */
-              html[data-bwz-prompt="tour"] .pwa-install-guide { display: none; }
+              html[data-bwz-prompt="tour"] .pwa-install-guide,
+              html[data-bwz-prompt="launcher"] .pwa-install-guide { display: none; }
+              /* 橫幅（或展開的教學）在畫面上時，左下「筆記」與右下「?」兩顆浮動按鈕升到它上方；
+                 --bwz-pwa-h 是橫幅實際高度（由下方腳本量），提示訊息再往上讓開一層 */
+              .bwz-fab, .bwz-n-chip { transition: bottom 0.25s ease; }
+              html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-fab,
+              html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-n-chip {
+                bottom: calc(var(--bwz-pwa-h, 64px) + 12px);
+              }
+              html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-toast,
+              html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-n-toast {
+                bottom: calc(var(--bwz-pwa-h, 64px) + 76px);
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .bwz-fab, .bwz-n-chip { transition: none; }
+              }
+              .pwa-nobr { white-space: nowrap; }
+              /* 淺色模式的標題紫色對比只有 4.26，壓暗一點到 4.5 以上（深色模式原本是 6.19，不動） */
+              :root:not([saved-theme="dark"]) .pwa-guide-title { color: color-mix(in srgb, var(--secondary) 78%, black); }
+              .pwa-guide-visual-caption { text-wrap: balance; }
               .pwa-guide-header {
                 display: flex;
                 align-items: center;
@@ -357,6 +376,27 @@ export default (() => {
                     } catch (e) {}
                     var el = document.getElementById("pwa-install-guide");
                     if (el) el.remove();
+                    syncBannerLayout();
+                  }
+
+                  // 橫幅在畫面上時，在 <html> 標記並記下它的高度，讓浮動按鈕升到橫幅上方（CSS 在上面的 style）
+                  var bannerRO = null;
+                  function syncBannerLayout() {
+                    var root = document.documentElement;
+                    var el = document.getElementById("pwa-install-guide");
+                    if (!el) {
+                      root.removeAttribute("data-bwz-pwa-banner");
+                      root.style.removeProperty("--bwz-pwa-h");
+                      if (bannerRO) { bannerRO.disconnect(); bannerRO = null; }
+                      return;
+                    }
+                    root.setAttribute("data-bwz-pwa-banner", "");
+                    var h = el.offsetHeight;
+                    if (h > 0) root.style.setProperty("--bwz-pwa-h", h + "px");
+                    if (!bannerRO && window.ResizeObserver) {
+                      bannerRO = new ResizeObserver(syncBannerLayout);
+                      bannerRO.observe(el);
+                    }
                   }
 
                   var shareIcon =
@@ -412,6 +452,7 @@ export default (() => {
                     wrapper.classList.toggle("is-compact", !on);
                     var more = document.getElementById("pwa-guide-more");
                     if (more) more.setAttribute("aria-expanded", on ? "true" : "false");
+                    syncBannerLayout();
                   }
 
                   // expanded = false：底部細橫幅（自動出現用）；true：直接展開完整教學（說明中心的「查看教學」用）
@@ -444,7 +485,7 @@ export default (() => {
                         "</div>" +
                         '<div class="pwa-guide-visual">' +
                         phoneMockupIOS +
-                        '<span class="pwa-guide-visual-caption"><span class="pwa-guide-step-num">1</span>點下方工具列的「分享」圖示</span>' +
+                        '<span class="pwa-guide-visual-caption"><span class="pwa-guide-step-num">1</span>點下方工具列的「分享」<span class="pwa-nobr">圖示</span></span>' +
                         "</div>" +
                         '<ol class="pwa-guide-steps" start="2">' +
                         '<li><span class="pwa-guide-icon">' + plusIcon + '</span>往下滑動，點選「加入主畫面」</li>' +

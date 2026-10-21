@@ -1002,17 +1002,14 @@ function yieldWelcomeIfNeeded() {
 const PROMPT_ATTR = "data-bwz-prompt"
 let welcomeChains = 0 // 排程中、還沒決定要不要出現的歡迎卡數量
 
-const launcherInView = () => {
-  const l = $("[data-tour-launcher]")
-  if (!l) return false
-  const r = l.getBoundingClientRect()
-  return r.height > 0 && r.bottom > 0 && r.top < window.innerHeight
-}
+// 首頁有啟動卡、導覽狀態還是「new」（沒開始過、也沒按「不再提示」）時，加入主畫面橫幅整頁都不出現，
+// 不管捲到哪裡（捲回上面時才不會和啟動卡同時出現）。
+const launcherPending = () => !!$("[data-tour-launcher]")
 
 function promptState(): string {
   if (st.status === "active" || helpOpen() || finishOpen()) return "tour"
   if (!el(".bwz-welcome").hidden || welcomeChains > 0) return "welcome"
-  if (st.status === "new" && launcherInView()) return "launcher"
+  if (st.status === "new" && launcherPending()) return "launcher"
   return ""
 }
 

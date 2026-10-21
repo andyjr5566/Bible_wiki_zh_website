@@ -111,9 +111,8 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
   componentResources.beforeDOMLoaded.push(bookNavScript)
   componentResources.afterDOMLoaded.push(bookNavScript)
 
-  // Pure mode (素色黑白 / 古典紙質底色切換)
+  // Pure mode (素色黑白 / 古典紙質底色)：只在 <head> 套用已存的偏好；切換按鈕在 plugins/site-ux
   componentResources.beforeDOMLoaded.push(pureModeScript)
-  componentResources.afterDOMLoaded.push(pureModeScript)
 
   // Explorer tools (探索目錄「全部收合」)
   componentResources.afterDOMLoaded.push(explorerToolsScript)

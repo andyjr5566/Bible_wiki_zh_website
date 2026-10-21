@@ -442,9 +442,9 @@ const STEPS: Step[] = [
     page: "any",
     skill: "閱讀設定",
     gate: true,
-    targets: () => $$(".darkmode, .puremode").filter(visible),
+    targets: () => $$(".darkmode, .site-ux-btn").filter(visible),
     title: () => "調成你習慣的樣子",
-    text: () => "明暗模式、紙質／素色底色。點一個試試。",
+    text: () => "明暗模式，還有「Aa 外觀」：底色、字級、經文連結樣式。點一個試試。",
     done: () => toolTouched,
   },
   {
@@ -1313,7 +1313,7 @@ function onKeydown(e: KeyboardEvent) {
 
 function onClickCapture(e: MouseEvent) {
   const target = e.target as HTMLElement
-  if (target.closest(".darkmode, .puremode")) {
+  if (target.closest(".darkmode, .site-ux-btn")) {
     toolTouched = true
     setTimeout(check, 60)
   }

@@ -154,3 +154,17 @@ ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_r
 - 刪 worktree 前，先把裡面的 junction（`node_modules`）用 `[IO.Directory]::Delete` 拿掉；路徑太長刪不掉時，用 `Remove-Item -LiteralPath "\?\<路徑>"`。
 - Git Bash 把參數傳給 `node -e` 時會吃掉反斜線（`\|` 變成 `|`），而且 `sed -i` 會把 CRLF 改成 LF。需要精確處理時，把腳本寫成檔案再執行。
 - Antigravity 的 `gemini-4-argon-high` 額度用完時（429）改用 `gemini-3.8-flash-high`，它也能看圖審截圖。
+
+## 第六輪的經驗（2026-10-22，UX 第 4 批）
+
+- **Codex workspace-write 時好時壞**：同一天有一次成功、兩次部分寫入、兩次完全失敗（`node_repl.exe` 被佔用）。給 Codex 的任務，如果需要它自己建置或跑測試，失敗率很高。比較穩的做法：
+  1. 先試 workspace-write；
+  2. 交件後一定要用 `git status` 確認檔案真的改了（有一次它回報改了兩個檔，其實沒寫進去）；
+  3. 失敗就改用 stdin 模式（附上現有檔案全文，要它輸出完整檔案），由主導者貼上、跑測試。
+- **Codex 沙箱連不到 GitHub**：Quartz 建置要載入社群外掛時會失敗，所以建置與瀏覽器驗證一律由主導者做。
+- **手動建的 worktree 要先處理才能建置**：
+  - `.quartz/plugins/<本地外掛>` 換成 junction；
+  - 每個社群外掛的 `node_modules`、`dist`（被 `.gitignore` 忽略）也用 junction 連回主 repo。
+  - 少了 `node_modules`，建置會卡在安裝外掛；少了 `dist`，頁面型別外掛載入失敗，章節頁不會產生，但建置仍然回報成功。
+- worktree 裡 `.quartz/` 會出現大量換行雜訊（CRLF），讓 `git rebase` 拒絕執行。改用：在 worktree 提交，主 repo `git cherry-pick`，worktree 再用 `git reset --keep` 回到本批分支。
+- **交叉審查值得做**：Gemini flash high 在 B4-6 找到兩個真的高嚴重度問題（失敗的 Promise 被永久快取，重試失效；兩邊都失敗時提示自相矛盾）。文案審查也抓到「士師記還沒有內容」這種可能被讀成「聖經書卷沒有內容」的說法。

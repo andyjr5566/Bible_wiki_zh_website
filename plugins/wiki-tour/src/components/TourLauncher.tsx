@@ -31,6 +31,10 @@ const TourLauncher = ((() => {
           <button class="bwz-btn" type="button" data-tour-help="true" aria-label="打開說明中心（快捷鍵 ?）">
             說明中心 <kbd>?</kbd>
           </button>
+          {/* 序幕是獨立的一頁，不走 SPA 換頁（data-router-ignore）。序幕結尾的「翻開」「跳過序幕」會回到 ./index.html，並寫入 seen_opening，不會被首頁再轉回序幕。 */}
+          <a class="bwz-btn" href="./InTheBeginning.html" data-router-ignore="true" data-tour-opening="true">
+            觀看序幕
+          </a>
         </div>
       </div>
     );

@@ -563,6 +563,7 @@ let ticker: ReturnType<typeof setInterval> | undefined
 function save() {
   local.set(KEY, st)
   updateFab()
+  syncPrompt()
 }
 
 const visibleSteps = () => STEPS.filter((s) => !hiddenStep(s))
@@ -995,15 +996,50 @@ function yieldWelcomeIfNeeded() {
   if (welcomeVisible && welcomeShouldYield()) hideWelcome()
 }
 
+// 提示排隊（B2-2）：頁面上同一時間只該有一個提示。把「導覽卡／導覽進行中／首頁啟動卡正在畫面上」
+// 寫在 <html data-bwz-prompt="welcome|tour|launcher">，Head.tsx 的「加入主畫面」提示看到這個屬性就先等。
+// 沒有這個屬性（或這個外掛沒載入）時，加入主畫面提示照原本時機出現。
+const PROMPT_ATTR = "data-bwz-prompt"
+let welcomeChains = 0 // 排程中、還沒決定要不要出現的歡迎卡數量
+
+const launcherInView = () => {
+  const l = $("[data-tour-launcher]")
+  if (!l) return false
+  const r = l.getBoundingClientRect()
+  return r.height > 0 && r.bottom > 0 && r.top < window.innerHeight
+}
+
+function promptState(): string {
+  if (st.status === "active" || helpOpen() || finishOpen()) return "tour"
+  if (!el(".bwz-welcome").hidden || welcomeChains > 0) return "welcome"
+  if (st.status === "new" && launcherInView()) return "launcher"
+  return ""
+}
+
+function syncPrompt() {
+  const root = document.documentElement
+  const v = promptState()
+  if ((root.getAttribute(PROMPT_ATTR) ?? "") === v) return
+  if (v) root.setAttribute(PROMPT_ATTR, v)
+  else root.removeAttribute(PROMPT_ATTR)
+  window.dispatchEvent(new CustomEvent("bwz:prompt", { detail: v }))
+}
+
 function maybeShowWelcome(delay = 1200) {
   if (st.status !== "new" || session.get(LATER_KEY) || onHome()) return
+  welcomeChains++
+  syncPrompt()
+  const end = () => {
+    welcomeChains = Math.max(0, welcomeChains - 1)
+    syncPrompt()
+  }
   setTimeout(function tryShow() {
-    if (st.status !== "new" || session.get(LATER_KEY) || onHome()) return
+    if (st.status !== "new" || session.get(LATER_KEY) || onHome()) return end()
     if (welcomeShouldYield()) {
       setTimeout(tryShow, 1500)
       return
     }
-    // 手機的「加入主畫面」引導優先，等它關掉再出現
+    // 「加入主畫面」提示已經在畫面上時（例如先顯示、之後才換頁），歡迎卡等它關掉再出現，兩個不重疊
     if (document.getElementById("pwa-install-guide")) {
       setTimeout(tryShow, 1500)
       return
@@ -1014,12 +1050,32 @@ function maybeShowWelcome(delay = 1200) {
     }
     el(".bwz-welcome").hidden = false
     welcomeVisible = true
+    placeWelcome()
+    end()
   }, delay)
+}
+
+// 桌機（>800px）：歡迎卡貼在內容欄底部、水平置中，不蓋右欄的目錄與反向連結，也不蓋左欄的探索選單。
+// 內容欄位置由 .center 量出來；量不到或手機版就清掉內嵌樣式，改用 CSS 預設值（手機：貼底、左右留邊）。
+function placeWelcome() {
+  const w = el(".bwz-welcome")
+  const c = document.querySelector<HTMLElement>(".center")
+  if (window.innerWidth <= 800 || !c) {
+    for (const k of ["left", "right", "margin", "width"]) w.style.removeProperty(k)
+    return
+  }
+  const r = c.getBoundingClientRect()
+  const width = Math.min(520, r.width - 24)
+  w.style.left = `${Math.round(r.left + (r.width - width) / 2)}px`
+  w.style.right = "auto"
+  w.style.margin = "0"
+  w.style.width = `${Math.round(width)}px`
 }
 
 function hideWelcome() {
   el(".bwz-welcome").hidden = true
   welcomeVisible = false
+  syncPrompt()
 }
 
 function onWelcomeClick(e: Event) {
@@ -1114,11 +1170,13 @@ function openHelp() {
     <h4>教學文章</h4>
     <ul class="bwz-docs">${TUTORIALS.map((t) => `<li><a data-h="doc" data-slug="教學/${t}">${t}</a></li>`).join("")}</ul>`
   el('[data-modal="help"]').hidden = false
+  syncPrompt()
   setTimeout(() => $<HTMLButtonElement>("[data-h=resume], [data-h=restart]", card)?.focus(), 30)
 }
 
 function closeHelp() {
   el('[data-modal="help"]').hidden = true
+  syncPrompt()
 }
 
 function onHelpClick(e: Event) {
@@ -1306,8 +1364,11 @@ function onNav() {
   navSinceStep = true
   runAfterNav()
   mountHints()
-  if (welcomeVisible && !onHome()) el(".bwz-welcome").hidden = false
-  else if (st.status === "new" && !welcomeVisible) maybeShowWelcome()
+  if (welcomeVisible && !onHome()) {
+    // 加入主畫面提示已在畫面上時，歡迎卡這次先不補出來，兩個提示不重疊
+    el(".bwz-welcome").hidden = !!document.getElementById("pwa-install-guide")
+    placeWelcome()
+  } else if (st.status === "new" && !welcomeVisible) maybeShowWelcome()
   else el(".bwz-welcome").hidden = true
   if (st.status === "active") {
     startTicker()
@@ -1332,7 +1393,10 @@ function init() {
   document.addEventListener("mouseout", onMouseOut)
   window.addEventListener("scroll", reposition, { passive: true })
   document.addEventListener("scroll", reposition, { passive: true, capture: true })
-  window.addEventListener("resize", () => st.status === "active" && show())
+  window.addEventListener("resize", () => {
+    if (!el(".bwz-welcome").hidden) placeWelcome()
+    if (st.status === "active") show()
+  })
   document.addEventListener("nav", onNav)
 
   mountHints()
@@ -1342,6 +1406,9 @@ function init() {
   } else {
     maybeShowWelcome()
   }
+  // 首頁啟動卡捲進／捲出畫面、導覽完成視窗開關等不經過上面這些函式的變化，定期對一次
+  setInterval(syncPrompt, 500)
+  syncPrompt()
 }
 
 if (document.readyState === "loading") {

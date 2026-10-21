@@ -166,6 +166,59 @@ export default (() => {
                 from { transform: translateY(100%); opacity: 0; }
                 to { transform: translateY(0); opacity: 1; }
               }
+              /* B2-2：預設是底部一條細橫幅（is-compact）；「怎麼加入」展開成完整教學（is-expanded） */
+              .pwa-install-guide {
+                font-family: var(--bodyFont, inherit);
+                box-sizing: border-box;
+              }
+              .pwa-install-guide.is-compact {
+                padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom));
+                border-radius: 0.9rem 0.9rem 0 0;
+              }
+              .pwa-install-guide.is-compact .pwa-guide-full { display: none; }
+              .pwa-install-guide.is-expanded .pwa-guide-bar { display: none; }
+              .pwa-guide-bar {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+              }
+              .pwa-guide-bar-text {
+                flex: 1 1 auto;
+                min-width: 0;
+                padding-left: 0.4rem;
+                font-size: 0.82rem;
+                font-weight: 600;
+                line-height: 1.3;
+                color: var(--darkgray);
+              }
+              .pwa-guide-more {
+                flex-shrink: 0;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 0 0.75rem;
+                border: 1px solid var(--secondary);
+                border-radius: 0.6rem;
+                background: transparent;
+                color: var(--secondary);
+                font-family: inherit;
+                font-size: 0.85rem;
+                font-weight: 700;
+                white-space: nowrap;
+                cursor: pointer;
+              }
+              .pwa-guide-bar-close {
+                flex-shrink: 0;
+                width: 44px;
+                height: 44px;
+                border: none;
+                background: transparent;
+                color: var(--gray);
+                font-size: 1.1rem;
+                line-height: 1;
+                cursor: pointer;
+              }
+              /* 導覽進行中、說明中心開著時先收起來，等導覽結束再回來（見 wiki-tour 的 data-bwz-prompt） */
+              html[data-bwz-prompt="tour"] .pwa-install-guide { display: none; }
               .pwa-guide-header {
                 display: flex;
                 align-items: center;
@@ -180,6 +233,9 @@ export default (() => {
               }
               .pwa-guide-close {
                 flex-shrink: 0;
+                min-width: 44px;
+                min-height: 44px;
+                margin: -0.5rem -0.5rem -0.5rem 0;
                 border: none;
                 background: transparent;
                 color: var(--gray);
@@ -351,17 +407,37 @@ export default (() => {
                     '<rect x="12" y="79" width="44" height="5" rx="2.5" fill="var(--lightgray)"/>' +
                     "</svg>";
 
-                  function render() {
+                  function setExpanded(wrapper, on) {
+                    wrapper.classList.toggle("is-expanded", on);
+                    wrapper.classList.toggle("is-compact", !on);
+                    var more = document.getElementById("pwa-guide-more");
+                    if (more) more.setAttribute("aria-expanded", on ? "true" : "false");
+                  }
+
+                  // expanded = false：底部細橫幅（自動出現用）；true：直接展開完整教學（說明中心的「查看教學」用）
+                  function render(expanded) {
                     if (!isMobile) return;
                     if (isStandaloneApp()) return;
-                    if (document.getElementById("pwa-install-guide")) return;
+                    var existing = document.getElementById("pwa-install-guide");
+                    if (existing) {
+                      if (expanded) setExpanded(existing, true);
+                      return;
+                    }
 
                     var wrapper = document.createElement("div");
                     wrapper.id = "pwa-install-guide";
-                    wrapper.className = "pwa-install-guide";
+                    wrapper.className = "pwa-install-guide is-compact";
 
+                    var bar =
+                      '<div class="pwa-guide-bar">' +
+                      '<span class="pwa-guide-bar-text">📖 可以加入主畫面，像 App 一樣使用</span>' +
+                      '<button id="pwa-guide-more" class="pwa-guide-more" type="button" aria-expanded="false" aria-controls="pwa-guide-full">怎麼加入</button>' +
+                      '<button id="pwa-guide-bar-close" class="pwa-guide-bar-close" type="button" aria-label="關閉">✕</button>' +
+                      "</div>";
+
+                    var full;
                     if (isIOS) {
-                      wrapper.innerHTML =
+                      full =
                         '<div class="pwa-guide-header">' +
                         '<span class="pwa-guide-title">📖 加入主畫面，像 App 一樣使用</span>' +
                         '<button id="pwa-guide-close" class="pwa-guide-close" aria-label="關閉">✕</button>' +
@@ -376,7 +452,7 @@ export default (() => {
                         "</ol>" +
                         '<button id="pwa-guide-ok" class="pwa-guide-ok">知道了</button>';
                     } else {
-                      wrapper.innerHTML =
+                      full =
                         '<div class="pwa-guide-header">' +
                         '<span class="pwa-guide-title">📖 安裝成 App，體驗更順暢</span>' +
                         '<button id="pwa-guide-close" class="pwa-guide-close" aria-label="關閉">✕</button>' +
@@ -391,14 +467,23 @@ export default (() => {
                         "</ol>" +
                         '<button id="pwa-guide-ok" class="pwa-guide-ok">知道了</button>';
                     }
+                    wrapper.innerHTML = bar + '<div id="pwa-guide-full" class="pwa-guide-full">' + full + "</div>";
 
-                    document.body.appendChild(wrapper);
+                    // 放在 <html> 底下（和導覽的 #bwz-tour-root 一樣），SPA 換頁時不會被 body 比對移除
+                    document.documentElement.appendChild(wrapper);
+                    setExpanded(wrapper, !!expanded);
 
+                    document.getElementById("pwa-guide-more").addEventListener("click", function () {
+                      setExpanded(wrapper, true);
+                    });
+                    document.getElementById("pwa-guide-bar-close").addEventListener("click", dismiss);
                     document.getElementById("pwa-guide-close").addEventListener("click", dismiss);
                     document.getElementById("pwa-guide-ok").addEventListener("click", dismiss);
 
                     var nativeBtn = document.getElementById("pwa-guide-native-install");
                     if (nativeBtn) {
+                      // beforeinstallprompt 可能比畫面早到
+                      if (deferredPrompt) nativeBtn.hidden = false;
                       nativeBtn.addEventListener("click", function () {
                         if (!deferredPrompt) return;
                         deferredPrompt.prompt();
@@ -412,7 +497,7 @@ export default (() => {
 
                   // Re-openable any time (e.g. from the "?" help center) even after
                   // the user dismissed the auto-shown guide once.
-                  window.__pwaInstallGuide = { show: render, isMobile: isMobile };
+                  window.__pwaInstallGuide = { show: function () { render(true); }, isMobile: isMobile };
 
                   // 使用者正在輸入（例如寫個人筆記）時不要突然跳出來蓋住畫面，等打完再說
                   function isTyping() {
@@ -420,13 +505,25 @@ export default (() => {
                     return !!a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.isContentEditable);
                   }
 
+                  // 提示排隊（B2-2）：wiki-tour 的歡迎卡／導覽進行中／首頁啟動卡在畫面上時，
+                  // 會在 <html> 設 data-bwz-prompt。這時先等，等它沒了才出現（沒有這個外掛就不等）。
+                  function otherPromptShowing() {
+                    return document.documentElement.hasAttribute("data-bwz-prompt");
+                  }
+
+                  var autoPending = false;
                   function autoShowOnce() {
                     if (!isMobile) return;
                     if (isStandaloneApp()) return;
                     if (localStorage.getItem(DISMISS_KEY)) return;
+                    if (autoPending) return;
+                    autoPending = true;
                     setTimeout(function tryRender() {
+                      if (localStorage.getItem(DISMISS_KEY)) { autoPending = false; return; }
                       if (isTyping()) return setTimeout(tryRender, 3000);
-                      render();
+                      if (otherPromptShowing()) return setTimeout(tryRender, 1000);
+                      autoPending = false;
+                      render(false);
                     }, 1800);
                   }
 

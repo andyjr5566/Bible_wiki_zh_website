@@ -38,6 +38,15 @@ $tint: color-mix(in srgb, var(--secondary) 12%, transparent);
     flex-wrap: wrap;
     gap: 0.5rem;
   }
+
+  // 「觀看序幕」是連結（<a>），外觀和旁邊的按鈕一致
+  a.bwz-btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 400;
+    color: var(--darkgray);
+  }
 }
 
 /* ---------- 共用元件 ---------- */
@@ -183,6 +192,7 @@ $tint: color-mix(in srgb, var(--secondary) 12%, transparent);
   right: 20px;
   bottom: calc(84px + env(safe-area-inset-bottom, 0px));
   z-index: 900;
+  box-sizing: border-box; // 之前沒有，width 再加上 padding 會比螢幕寬，手機上左邊被切掉
   width: min(360px, calc(100vw - 32px));
   padding: 16px 18px 12px;
   border: 1px solid var(--lightgray);
@@ -687,10 +697,38 @@ html.bwz-touring .popover {
   }
 }
 
+// 「加入主畫面」細橫幅出現時，提示訊息（toast）往上讓開，不蓋住橫幅的按鈕
+html:has(.pwa-install-guide) .bwz-toast {
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+}
+
+// 桌機：歡迎卡貼在內容欄底部（left、width 由 tour.inline.ts 的 placeWelcome 依 .center 設定），
+// 不蓋右欄目錄與反向連結。這裡的值是量不到 .center 時的備用（視窗置中）。
+@media (min-width: 801px) {
+  .bwz-welcome {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    width: min(520px, calc(100vw - 32px));
+  }
+}
+
 @media #{$mobile} {
-  .bwz-welcome,
+  .bwz-welcome {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+
   .bwz-fab {
     right: 16px;
+  }
+
+  // 首頁啟動卡與歡迎卡的按鈕：手機要好點（≥44px）
+  .wiki-tour-launcher .bwz-btn,
+  .bwz-welcome .bwz-btn {
+    min-height: 44px;
   }
 
   .bwz-modal-card {

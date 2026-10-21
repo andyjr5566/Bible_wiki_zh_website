@@ -13,6 +13,16 @@ const CHAPTER_SLUG = /^\d+-[^/]+\/第\d+章$/
 const MOBILE_QUERY = "(max-width: 800px)"
 const BAR_CLASS = "bwz-cqb"
 const HEIGHT_VAR = "--bwz-cqb-h"
+const TOP_VAR = "--bwz-cqb-top"
+
+// 手機版左欄（工具列）是 position: sticky 貼在頂端；回傳它目前的下緣，沒有貼頂就回傳 0
+function stickyToolbarBottom(): number {
+  const toolbar = document.querySelector<HTMLElement>(".sidebar.left")
+  if (!toolbar) return 0
+  const pos = getComputedStyle(toolbar).position
+  if (pos !== "sticky" && pos !== "fixed") return 0
+  return Math.max(0, Math.round(toolbar.getBoundingClientRect().bottom))
+}
 
 function chapterTitle(slug: string): string {
   const [folder, file] = slug.split("/")
@@ -122,7 +132,7 @@ function setupBar() {
     if (!target) return
     const details = target.closest("details")
     if (details) details.open = true
-    const top = target.getBoundingClientRect().top + window.scrollY - bar.offsetHeight - 12
+    const top = target.getBoundingClientRect().top + window.scrollY - stickyToolbarBottom() - bar.offsetHeight - 12
     window.scrollTo({ top: Math.max(0, top), behavior: behavior() })
   })
   topBtn.addEventListener("click", () => {
@@ -135,9 +145,17 @@ function setupBar() {
     if (want === shown) return
     shown = want
     bar.classList.toggle("is-shown", want)
-    // 朗讀列貼頂時要讓到快捷列下面（custom.scss 用這個變數）
-    if (want) document.documentElement.style.setProperty(HEIGHT_VAR, `${bar.offsetHeight}px`)
-    else document.documentElement.style.removeProperty(HEIGHT_VAR)
+    // 手機的工具列（選單、搜尋、Aa、深色）是 sticky 貼頂的；快捷列要排在它下面，不能蓋住它。
+    // 朗讀列貼頂時再讓到兩者下面（custom.scss 用這兩個變數）
+    const root = document.documentElement.style
+    if (want) {
+      const top = stickyToolbarBottom()
+      root.setProperty(TOP_VAR, `${top}px`)
+      root.setProperty(HEIGHT_VAR, `${top + bar.offsetHeight}px`)
+    } else {
+      root.removeProperty(TOP_VAR)
+      root.removeProperty(HEIGHT_VAR)
+    }
   }
 
   let ticking = false

@@ -957,7 +957,7 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
     gap: 2px;
     box-sizing: border-box;
     position: fixed;
-    top: 0;
+    top: var(--bwz-cqb-top, 0px); // 排在 sticky 工具列下面（由腳本設定）
     left: 0;
     right: 0;
     z-index: 600; // 在搜尋（999）、導覽（900）、浮動按鈕（890）、筆記視窗之下
@@ -1129,3 +1129,13 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   max-height: calc(100vh - 560px);
 }
 /* B3 end */
+
+/* Mobile sticky toolbar blur:start */
+/* 手機版工具列 sticky 貼頂，底色是 90% 不透明；捲動時後面的內文會透出來和圖示疊在一起，加一點模糊讓圖示清楚 */
+@media all and (max-width: 800px) {
+  .page > #quartz-body > .sidebar.left {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+/* Mobile sticky toolbar blur:end */

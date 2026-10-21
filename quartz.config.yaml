@@ -186,9 +186,9 @@ plugins:
           const names = {
             appendix: "附錄",
             link_folder: "知識節點",
-            install_computer: "電腦版使用說明",
-            install_mobile: "手機版使用說明",
-            readme: "專案概述",
+            install_computer: "Obsidian 電腦版安裝說明",
+            install_mobile: "Obsidian 手機版安裝說明",
+            readme: "本站簡介",
           };
           // 檔案的 slug 會被轉成小寫（README -> readme），所以比對時一律用小寫
           const key = String(node.slugSegment || "").toLowerCase();
@@ -303,7 +303,7 @@ plugins:
     enabled: true
     options:
       links:
-        讀者反饋問卷: https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform
+        讀者意見回饋: https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform
         隱私權政策: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/隱私權政策
         快速入門: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/快速入門
   - source: github:quartz-community/recent-notes

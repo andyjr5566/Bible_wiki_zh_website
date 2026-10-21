@@ -1,5 +1,5 @@
 ---
-title: 電腦版使用說明
+title: Obsidian 電腦版安裝說明
 ---
 # 💻 電腦版 Obsidian 安裝與開啟 Vault
 

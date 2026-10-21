@@ -13,7 +13,7 @@ const NOTE_PROPERTY_LABELS: Record<string, string> = {
   alias: "別名",
   tags: "標籤",
   tag: "標籤",
-  description: "描述",
+  description: "簡介",
   title: "標題",
   created: "建立日期",
   modified: "修改日期",
@@ -46,7 +46,7 @@ function tidyNoteProperties() {
     }
     block.hidden = visible === 0
     const title = block.querySelector(".note-properties-title")
-    if (title) title.textContent = "屬性"
+    if (title) title.textContent = "條目資訊"
     block.setAttribute("data-zh", "1")
     const count = block.querySelector(".note-properties-count")
     if (count) count.textContent = String(visible)

@@ -160,9 +160,9 @@ function Add-WebsiteTitles {
     param([Parameter(Mandatory = $true)][string]$ContentRoot)
 
     $titled = @(
-        @{ Path = 'INSTALL_COMPUTER.md'; Title = '電腦版使用說明'; Create = $false },
-        @{ Path = 'INSTALL_MOBILE.md';   Title = '手機版使用說明'; Create = $false },
-        @{ Path = 'README.md';           Title = '專案概述';       Create = $false },
+        @{ Path = 'INSTALL_COMPUTER.md'; Title = 'Obsidian 電腦版安裝說明'; Create = $false },
+        @{ Path = 'INSTALL_MOBILE.md';   Title = 'Obsidian 手機版安裝說明'; Create = $false },
+        @{ Path = 'README.md';           Title = '本站簡介';       Create = $false },
         @{ Path = 'appendix\index.md';   Title = '附錄';           Create = $false },
         @{ Path = 'link_folder\index.md'; Title = '知識節點';      Create = $true }
     )

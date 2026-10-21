@@ -1,5 +1,5 @@
 ---
-title: 手機版使用說明
+title: Obsidian 手機版安裝說明
 ---
 # 📱 手機版 Obsidian 與 GitHub Sync
 

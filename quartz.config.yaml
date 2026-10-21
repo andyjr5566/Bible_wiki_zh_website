@@ -171,7 +171,7 @@ plugins:
       sortBy: chapter
   - source: github:quartz-community/tag-page
     enabled: true
-  - source: github:quartz-community/explorer
+  - source: ./plugins/explorer
     enabled: true
     options:
       title: 探索

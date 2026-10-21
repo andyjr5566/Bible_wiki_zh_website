@@ -71,7 +71,7 @@ jobs:
       - name: Setup local plugins
         run: |
           mkdir -p .quartz/plugins
-          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph .quartz/plugins/personal-notes .quartz/plugins/read-aloud
+          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph .quartz/plugins/personal-notes .quartz/plugins/read-aloud .quartz/plugins/explorer
           cp -r plugins/wiki-tour .quartz/plugins/wiki-tour
           cp -r plugins/semantic-search .quartz/plugins/semantic-search
           # 個人筆記（dist/ 已進版控，不需在 CI 建置）
@@ -80,6 +80,9 @@ jobs:
           # 經文朗讀（dist/ 已進版控，不需在 CI 建置）
           cp -r plugins/read-aloud .quartz/plugins/read-aloud
           rm -rf .quartz/plugins/read-aloud/node_modules
+          # Explorer 本地副本（移除本機依賴 junction，CI 使用根目錄安裝的依賴）
+          cp -r plugins/explorer .quartz/plugins/explorer
+          rm -rf .quartz/plugins/explorer/node_modules
 
       - name: Install Quartz plugins
         run: npx quartz plugin install --from-config

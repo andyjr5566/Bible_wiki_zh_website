@@ -1092,3 +1092,14 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 }
 /* Bottom space for floating buttons:end */
+
+/* Mobile graph block height:start */
+/* 手機版右欄的每個區塊被 Quartz 限制 max-height: 24rem（384px）；關係圖下面多了分類清單後會超出，
+   清單就跑到頁尾上面去。關係圖區塊改成依內容自然長高（清單本身仍有 280px 的捲動上限） */
+@media all and (max-width: 800px) {
+  .sidebar.right > .graph {
+    max-height: none;
+    height: auto;
+  }
+}
+/* Mobile graph block height:end */

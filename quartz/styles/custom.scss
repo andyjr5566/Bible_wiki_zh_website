@@ -1074,3 +1074,58 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   white-space: nowrap;
 }
 /* Strong numbers:end */
+
+/* ============================================================
+   B3 (ux-b3-36)：雙標題、Popover 精簡、右側目錄對比與高度
+   ============================================================ */
+
+/* B3-3.1 內容的第一個標題是 h1 時，隱藏 Quartz 的小字 .article-title（完整名稱保留在內容 h1）。
+   DOM：div.center > div.page-header > div.popover-hint > h1.article-title；
+        div.center > article > div.markdown-rendered > h1（首頁等沒有 h1 的頁面不受影響）。 */
+.center:has(article .markdown-rendered > h1:first-of-type) > .page-header .article-title {
+  display: none;
+}
+
+/* B3-3.2 Hover popover 只留內容：不顯示麵包屑、小標題、h1 底下的裝飾線；縮小 h1 上邊界讓「定義」進第一屏。 */
+.popover .breadcrumb-container,
+.popover .article-title {
+  display: none !important;
+}
+
+.popover .popover-inner h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.popover .popover-inner h1::after {
+  content: none;
+  display: none;
+}
+
+/* B3-6.1 右側目錄對比：Quartz 預設非當前項 opacity .35（約 2:1）。改用不透明的 --darkgray；當前項用 --secondary 加粗加底線。 */
+.toc-content.overflow > li > a {
+  color: var(--darkgray);
+  opacity: 1;
+}
+
+.toc-content.overflow > li > a.in-view {
+  color: var(--secondary);
+  opacity: 1;
+  font-weight: 700;
+  background-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+[saved-theme="dark"] .toc-content.overflow > li > a.in-view {
+  color: #fbbf24;
+}
+
+/* B3-6.2 目錄box高度：在 900px 高的螢幕上約與原來相同（局部關聯圖 309px 與反向連結佔掉大部分右欄）；
+   視窗更高時目錄會長高，最多到 100vh - 560px。目錄不會被壓縮（flex-shrink: 0），反向連結仍保留原高度。 */
+.sidebar.right > .toc:not(:has(button.toc-header.collapsed)) {
+  flex: 1 0 auto;
+  max-height: calc(100vh - 560px);
+}
+/* B3 end */

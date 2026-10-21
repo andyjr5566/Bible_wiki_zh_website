@@ -4,6 +4,7 @@ import { CSSResourceToStyleElement, JSResourceToScriptElement } from "../util/re
 import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
+import { cleanDescription, displayTitle, documentTitle } from "../util/pageMeta"
 
 export default (() => {
   const Head: QuartzComponent = ({
@@ -13,12 +14,22 @@ export default (() => {
     ctx,
   }: QuartzComponentProps) => {
     const titleSuffix = cfg.pageTitleSuffix ?? ""
-    const title =
-      (fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title) + titleSuffix
+    const title = documentTitle(
+      fileData.slug!,
+      fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title,
+      cfg.pageTitle,
+      titleSuffix,
+    )
+    const fileDescription =
+      fileData.description != null
+        ? cleanDescription(
+            unescapeHTML(fileData.description.trim()),
+            displayTitle(fileData.slug!, fileData.frontmatter?.title, cfg.pageTitle),
+            cfg.pageTitle,
+          )
+        : unescapeHTML(i18n(cfg.locale).propertyDefaults.description)
     const description =
-      fileData.frontmatter?.socialDescription ??
-      fileData.frontmatter?.description ??
-      unescapeHTML(fileData.description?.trim() ?? i18n(cfg.locale).propertyDefaults.description)
+      fileData.frontmatter?.socialDescription ?? fileData.frontmatter?.description ?? fileDescription
 
     const { css, js, additionalHead } = externalResources
 

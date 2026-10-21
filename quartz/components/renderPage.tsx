@@ -14,6 +14,7 @@ import { GlobalConfiguration } from "../cfg"
 import { i18n } from "../i18n"
 import { styleText } from "util"
 import { resolveFrame } from "./frames"
+import { htmlLang } from "../util/pageMeta"
 import type { TreeTransform } from "../plugins/types"
 import type { BuildCtx } from "../util/ctx"
 
@@ -335,7 +336,7 @@ export function renderPage(
   const Body = BodyConstructor()
   const frame = resolveFrame(frameName)
 
-  const lang = componentData.fileData.frontmatter?.lang ?? cfg.locale?.split("-")[0] ?? "en"
+  const lang = htmlLang(cfg.locale, componentData.fileData.frontmatter?.lang)
   const direction = i18n(cfg.locale).direction ?? "ltr"
   // During local dev (--serve), the dev server serves from root without the
   // baseUrl subpath, so basePath must be empty to avoid broken links.

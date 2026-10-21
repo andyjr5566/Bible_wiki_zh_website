@@ -1,9 +1,16 @@
 // @ts-nocheck
 import {
+  categorizeGraphSlug,
   distributeSectorAngles,
   getMoreCount,
   groupNeighbors,
 } from "../graph-layout";
+import {
+  estimateTextWidth,
+  layoutCategoryFan,
+  placeNodeLabels,
+  placeSectorLabels,
+} from "../graph-geometry";
 import {
   removeAllChildren,
   getBasePath,
@@ -46,10 +53,7 @@ import {
     });
   }
 
-  Promise.all([
-    loadScript("https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"),
-    loadScript("https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.js"),
-  ])
+  Promise.all([loadScript("https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js")])
     .then(function () {
       initGraph();
     })
@@ -68,9 +72,8 @@ import {
 
   function initGraph() {
     var d3 = window.d3;
-    var PIXI = window.PIXI;
 
-    if (!d3 || !PIXI) {
+    if (!d3) {
       console.error("[Graph] Libraries not loaded");
       return;
     }
@@ -101,6 +104,34 @@ import {
       return resolved || fallback;
     }
 
+
+  function isDarkPalette(styles) {
+    var lightToken = resolveColor(styles.getPropertyValue("--light").trim(), "#f5f5f5");
+    var rgb = lightToken.match(/[\d.]+/g);
+    return !!rgb && rgb.length >= 3 && (Number(rgb[0]) * 0.2126 + Number(rgb[1]) * 0.7152 + Number(rgb[2]) * 0.0722) < 128;
+  }
+
+  // One palette (color + shape per category) shared by the small fan, the list and the expanded graph.
+  function buildPalette(styles) {
+    var isDarkTheme = isDarkPalette(styles);
+    return {
+      "章節": { color: isDarkTheme ? "#e7e5e4" : "#44403c", shape: "ring" },
+      "人物": { color: isDarkTheme ? "#fbbf24" : "#b45309", shape: "circle" },
+      "地點": { color: isDarkTheme ? "#4ade80" : "#15803d", shape: "square" },
+      "歷史": { color: isDarkTheme ? "#f87171" : "#b91c1c", shape: "diamond" },
+      "神學": { color: isDarkTheme ? "#c4b5fd" : "#6d28d9", shape: "triangle" },
+      "原文": { color: isDarkTheme ? "#7dd3fc" : "#0369a1", shape: "hex" },
+      "其他": { color: isDarkTheme ? "#a8a29e" : "#78716c", shape: "circle" },
+    };
+  }
+
+  function measureText(textElement, fallbackText, fontSize, bold) {
+    try {
+      var box = textElement.getBBox();
+      if (box && box.width > 0) return box.width;
+    } catch (e) {}
+    return estimateTextWidth(fallbackText, fontSize, bold);
+  }
 
   function createSvgElement(tag, attributes) {
     var element = document.createElementNS("http://www.w3.org/2000/svg", tag);
@@ -138,18 +169,7 @@ import {
     var list = wrapper ? wrapper.querySelector(".graph-category-list") : null;
     if (!list) return function () {};
 
-    var lightToken = resolveColor(styles.getPropertyValue("--light").trim(), "#f5f5f5");
-    var rgb = lightToken.match(/[\d.]+/g);
-    var isDarkTheme = !!rgb && rgb.length >= 3 && (Number(rgb[0]) * 0.2126 + Number(rgb[1]) * 0.7152 + Number(rgb[2]) * 0.0722) < 128;
-    var palette = {
-      "章節": { color: isDarkTheme ? "#e7e5e4" : "#44403c", shape: "ring" },
-      "人物": { color: isDarkTheme ? "#fbbf24" : "#b45309", shape: "circle" },
-      "地點": { color: isDarkTheme ? "#4ade80" : "#15803d", shape: "square" },
-      "歷史": { color: isDarkTheme ? "#f87171" : "#b91c1c", shape: "diamond" },
-      "神學": { color: isDarkTheme ? "#c4b5fd" : "#6d28d9", shape: "triangle" },
-      "原文": { color: isDarkTheme ? "#7dd3fc" : "#0369a1", shape: "hex" },
-      "其他": { color: isDarkTheme ? "#a8a29e" : "#78716c", shape: "circle" },
-    };
+    var palette = buildPalette(styles);
     var centerNode = null;
     var neighbors = [];
     for (var i = 0; i < nodes.length; i++) {
@@ -179,6 +199,7 @@ import {
     var nodeRadius = Math.max(2.8, Math.min(4.2, Math.min(width, height) * 0.016));
     var sectors = distributeSectorAngles(counts);
     var nodeElements = new Map();
+    var nodeRects = [];
 
     for (var si = 0; si < sectors.length; si++) {
       var sector = sectors[si];
@@ -210,6 +231,7 @@ import {
         var x = centerX + radius * Math.cos(angle);
         var y = centerY + radius * Math.sin(angle);
         var color = palette[sector.category].color;
+        nodeRects.push({ x: x - 6, y: y - 6, width: 12, height: 12 });
         var group = createSvgElement("g", {
           "class": "graph-sector-node",
           "data-node-id": item.id,
@@ -261,28 +283,6 @@ import {
         nodeElements.set(item.id, group);
       }
 
-      var labelValue = sector.category + " " + items.length;
-      var labelAngle = sector.startAngle + sector.angle / 2;
-      var labelX = centerX + (outerRadius + 11) * Math.cos(labelAngle);
-      var labelY = centerY + (outerRadius + 11) * Math.sin(labelAngle);
-      var categoryLabel = createSvgElement("text", {
-        "class": "graph-sector-label",
-        x: labelX,
-        y: labelY,
-        fill: palette[sector.category].color,
-        "text-anchor": "middle",
-      });
-      categoryLabel.textContent = labelValue;
-      svg.appendChild(categoryLabel);
-      try {
-        var bounds = categoryLabel.getBBox();
-        var dx = bounds.x < 2 ? 2 - bounds.x : (bounds.x + bounds.width > width - 2 ? width - 2 - bounds.x - bounds.width : 0);
-        var dy = bounds.y < 11 ? 11 - bounds.y : (bounds.y + bounds.height > height - 3 ? height - 3 - bounds.y - bounds.height : 0);
-        if (dx || dy) categoryLabel.setAttribute("transform", "translate(" + dx + " " + dy + ")");
-      } catch (e) {
-        categoryLabel.setAttribute("x", Math.max(34, Math.min(width - 34, labelX)));
-        categoryLabel.setAttribute("y", Math.max(12, Math.min(height - 5, labelY)));
-      }
     }
 
     var centerColor = resolveColor(styles.getPropertyValue("--secondary").trim(), "#c792ea");
@@ -296,6 +296,84 @@ import {
     });
     centerLabel.textContent = centerTitle.length > 12 ? centerTitle.slice(0, 11) + "…" : centerTitle;
     svg.appendChild(centerLabel);
+    var centerLabelWidth = measureText(centerLabel, centerLabel.textContent, 10, true);
+    var centerLabelBox = { x: centerX - centerLabelWidth / 2 - 2, y: Math.min(height - 5, centerY + 23) - 11, width: centerLabelWidth + 4, height: 14 };
+
+    // Sector labels: measured, then pushed apart so that no two boxes overlap. If they still
+    // cannot fit, fall back to a legend row under the graph.
+    var sectorLabelInputs = [];
+    var sectorLabelElements = new Map();
+    for (var si = 0; si < sectors.length; si++) {
+      var labelSector = sectors[si];
+      var labelCount = (groupMap.get(labelSector.category) || []).length;
+      var sectorLabelValue = labelSector.category + " " + labelCount;
+      var categoryLabel = createSvgElement("text", {
+        "class": "graph-sector-label",
+        x: 0,
+        y: 0,
+        fill: palette[labelSector.category].color,
+        "text-anchor": "middle",
+        "dominant-baseline": "central",
+      });
+      categoryLabel.textContent = sectorLabelValue;
+      svg.appendChild(categoryLabel);
+      sectorLabelElements.set(labelSector.category, categoryLabel);
+      sectorLabelInputs.push({
+        key: labelSector.category,
+        angle: labelSector.startAngle + labelSector.angle / 2,
+        width: measureText(categoryLabel, sectorLabelValue, 12, true) + 4,
+        height: 16,
+        weight: labelCount,
+      });
+    }
+    var placement = placeSectorLabels(sectorLabelInputs, {
+      cx: centerX,
+      cy: centerY,
+      radius: outerRadius,
+      gap: 6,
+      bounds: { width: width, height: height, margin: 2 },
+      obstacles: nodeRects.concat([
+        { x: width - 34, y: 0, width: 34, height: 34 },
+        centerLabelBox,
+      ]),
+    });
+    var legendRow = null;
+    if (placement.fits) {
+      placement.labels.forEach(function (placed, labelIndex) {
+        var element = sectorLabelElements.get(placed.key);
+        element.setAttribute("x", placed.rect.x + placed.rect.width / 2);
+        element.setAttribute("y", placed.rect.y + placed.rect.height / 2);
+        if (placed.moved) {
+          var angleOfLabel = sectorLabelInputs[labelIndex].angle;
+          var leaderFromX = centerX + (outerRadius + 4) * Math.cos(angleOfLabel);
+          var leaderFromY = centerY + (outerRadius + 4) * Math.sin(angleOfLabel);
+          svg.insertBefore(createSvgElement("line", {
+            x1: leaderFromX,
+            y1: leaderFromY,
+            x2: Math.max(placed.rect.x, Math.min(placed.rect.x + placed.rect.width, leaderFromX)),
+            y2: Math.max(placed.rect.y, Math.min(placed.rect.y + placed.rect.height, leaderFromY)),
+            stroke: palette[placed.key].color,
+            "stroke-opacity": 0.5,
+            "stroke-width": 1,
+            "pointer-events": "none",
+          }), element);
+        }
+      });
+    } else {
+      sectorLabelElements.forEach(function (element) { element.remove(); });
+      legendRow = document.createElement("div");
+      legendRow.className = "graph-sector-legend";
+      sectors.forEach(function (legendSector) {
+        var entry = document.createElement("span");
+        var legendIcon = createSvgElement("svg", { width: 14, height: 14, viewBox: "0 0 14 14", "aria-hidden": "true" });
+        drawCategoryShape(legendIcon, legendSector.category, 7, 7, 4.2, palette[legendSector.category].color, palette);
+        entry.appendChild(legendIcon);
+        entry.appendChild(document.createTextNode(legendSector.category + " " + (groupMap.get(legendSector.category) || []).length));
+        legendRow.appendChild(entry);
+      });
+      var legendAnchor = graph.closest(".graph-outer") || graph;
+      legendAnchor.insertAdjacentElement("afterend", legendRow);
+    }
 
     var expanded = new Set();
     function focusNode(id, enabled) {
@@ -386,6 +464,393 @@ import {
       list.removeEventListener("mouseover", onListOver);
       list.removeEventListener("mouseout", onListOut);
       list.replaceChildren();
+      if (legendRow) legendRow.remove();
+    };
+  }
+
+  function truncateLabel(text, maxChars) {
+    var chars = Array.from(text);
+    return chars.length > maxChars ? chars.slice(0, maxChars - 1).join("") + "…" : text;
+  }
+
+  // Expanded graph: the same category shapes/colors as the small fan, laid out as a bigger fan.
+  // Positions come from a fixed number of deterministic passes (see layoutCategoryFan), so nothing
+  // keeps simulating; dragging simply moves a node. Node name labels are re-placed after every
+  // pan/zoom/drag with a greedy collision check, and the ones that do not fit appear on hover.
+  function renderCategorizedModalGraph(graph, slug, nodes, graphLinks, width, height, styles, env) {
+    var palette = buildPalette(styles);
+    var accent = resolveColor(styles.getPropertyValue("--secondary").trim(), "#c792ea");
+    var visitedColor = resolveColor(styles.getPropertyValue("--tertiary").trim(), "#82aaff");
+    var narrow = width < 560;
+    var labelFont = narrow ? 11 : 12;
+    var labelHeight = labelFont + 5;
+    var maxChars = narrow ? 8 : 13;
+
+    var centerNode = null;
+    var neighbors = [];
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].id === slug) centerNode = nodes[i];
+      else neighbors.push(nodes[i]);
+    }
+    var groups = groupNeighbors(neighbors);
+    var counts = {};
+    for (var gi = 0; gi < groups.length; gi++) counts[groups[gi].category] = groups[gi].items.length;
+
+    var svg = createSvgElement("svg", {
+      "class": "graph-modal-svg",
+      width: width,
+      height: height,
+      viewBox: "0 0 " + width + " " + height,
+      role: "img",
+      "aria-label": "依分類排列的相關條目圖譜（放大）",
+    });
+    graph.appendChild(svg);
+
+    var legend = document.createElement("div");
+    legend.className = "graph-modal-legend";
+    var centerEntry = document.createElement("span");
+    var centerIcon = createSvgElement("svg", { width: 14, height: 14, viewBox: "0 0 14 14", "aria-hidden": "true" });
+    centerIcon.appendChild(createSvgElement("circle", { cx: 7, cy: 7, r: 5, fill: accent }));
+    centerEntry.appendChild(centerIcon);
+    centerEntry.appendChild(document.createTextNode("目前頁面"));
+    legend.appendChild(centerEntry);
+    groups.forEach(function (group) {
+      var entry = document.createElement("span");
+      var icon = createSvgElement("svg", { width: 14, height: 14, viewBox: "0 0 14 14", "aria-hidden": "true" });
+      drawCategoryShape(icon, group.category, 7, 7, 4.4, palette[group.category].color, palette);
+      entry.appendChild(icon);
+      entry.appendChild(document.createTextNode(group.category));
+      legend.appendChild(entry);
+    });
+    graph.appendChild(legend);
+    var areaH = Math.max(160, height - legend.offsetHeight - 10);
+
+    var measurer = createSvgElement("text", { x: 0, y: 0, visibility: "hidden", "font-size": labelFont });
+    svg.appendChild(measurer);
+    var widthCache = new Map();
+    function textWidth(text, size, bold) {
+      var key = text + "|" + size + "|" + bold;
+      var cached = widthCache.get(key);
+      if (cached !== undefined) return cached;
+      measurer.setAttribute("font-size", size);
+      measurer.setAttribute("font-weight", bold ? 700 : 400);
+      measurer.textContent = text;
+      var value = measureText(measurer, text, size, bold);
+      widthCache.set(key, value);
+      return value;
+    }
+
+    var cx = width / 2;
+    var cy = areaH / 2;
+    var centerR = env.radiusOf(centerNode || { id: slug });
+    var centerTitle = centerNode ? centerNode.text : (slug === "index" || slug === "/" ? "首頁" : slug.split("/").pop());
+    var centerLabelText = truncateLabel(centerTitle, narrow ? 10 : 16);
+    var centerLabelWidth = textWidth(centerLabelText, labelFont + 1, true) + 2;
+    var centerHalfW = Math.max(centerR, centerLabelWidth / 2) + 4;
+    var centerBox = { x: cx - centerHalfW, y: cy - centerR - 4, width: centerHalfW * 2, height: centerR * 2 + labelHeight + 10 };
+
+    var layoutNodes = neighbors.map(function (node) {
+      return {
+        id: node.id,
+        category: categorizeGraphSlug(node.id),
+        r: env.radiusOf(node),
+        labelWidth: textWidth(truncateLabel(node.text, maxChars), labelFont, false) + 2,
+      };
+    });
+    var layout = layoutCategoryFan(layoutNodes, {
+      width: width,
+      height: areaH,
+      labelHeight: labelHeight,
+      obstacles: [centerBox],
+    });
+
+    // Cluster labels (「類型 數量」) sit just beyond the far end of each cluster, clear of every node box.
+    var sectors = layout.sectors;
+    var nodeBoxes = [centerBox];
+    var clusterReach = {};
+    layoutNodes.forEach(function (layoutNode) {
+      var position = layout.positions.get(layoutNode.id);
+      var boxWidth = Math.max(layoutNode.r * 2, layoutNode.labelWidth);
+      nodeBoxes.push({ x: position.x - boxWidth / 2, y: position.y - layoutNode.r, width: boxWidth, height: layoutNode.r * 2 + 2 + labelHeight });
+      var normalized = Math.sqrt(Math.pow((position.x - cx) / layout.radii.rx, 2) + Math.pow((position.y - cy) / layout.radii.ry, 2));
+      clusterReach[layoutNode.category] = Math.max(clusterReach[layoutNode.category] || 0, normalized);
+    });
+    var clusterInputs = sectors.map(function (sector) {
+      var text = sector.category + " " + counts[sector.category];
+      return {
+        key: sector.category,
+        text: text,
+        angle: sector.startAngle + sector.angle / 2,
+        width: textWidth(text, labelFont + 1, true) + 6,
+        height: labelHeight + 2,
+        weight: counts[sector.category],
+        scale: Math.max(0.5, clusterReach[sector.category] || 1),
+      };
+    });
+    var clusterPlacement = placeSectorLabels(clusterInputs, {
+      cx: cx,
+      cy: cy,
+      rx: layout.radii.rx,
+      ry: layout.radii.ry,
+      gap: labelHeight + 4,
+      bounds: { width: width, height: areaH, margin: 4 },
+      obstacles: nodeBoxes,
+    });
+    var categoryOf = new Map();
+    layoutNodes.forEach(function (layoutNode) { categoryOf.set(layoutNode.id, layoutNode.category); });
+    nodes.forEach(function (node) {
+      if (node === centerNode) {
+        node.x = cx;
+        node.y = cy;
+      } else {
+        var position = layout.positions.get(node.id);
+        node.x = position ? position.x : cx;
+        node.y = position ? position.y : cy;
+      }
+    });
+
+    var zoomLayer = createSvgElement("g", { "class": "graph-modal-zoom" });
+    svg.appendChild(zoomLayer);
+    var overlay = createSvgElement("g", { "class": "graph-modal-overlay" });
+    svg.appendChild(overlay);
+
+    var adjacency = new Map();
+    function connect(a, b) {
+      if (!adjacency.has(a)) adjacency.set(a, new Set());
+      adjacency.get(a).add(b);
+    }
+    var linkLayer = createSvgElement("g", { "class": "graph-modal-links" });
+    zoomLayer.appendChild(linkLayer);
+    var linkEls = [];
+    var seenLinks = new Set();
+    graphLinks.forEach(function (link) {
+      var a = link.source.id;
+      var b = link.target.id;
+      var key = a < b ? a + "\n" + b : b + "\n" + a;
+      if (a === b || seenLinks.has(key)) return;
+      seenLinks.add(key);
+      connect(a, b);
+      connect(b, a);
+      var touchesCenter = a === slug || b === slug;
+      var other = a === slug ? b : a;
+      var element = createSvgElement("line", {
+        "class": "graph-modal-link",
+        stroke: touchesCenter && categoryOf.has(other) ? palette[categoryOf.get(other)].color : "var(--gray)",
+        "stroke-opacity": touchesCenter ? 0.34 : 0.22,
+        "stroke-width": touchesCenter ? 1.2 : 1,
+        "pointer-events": "none",
+      });
+      linkLayer.appendChild(element);
+      linkEls.push({ el: element, a: link.source, b: link.target, base: touchesCenter ? 0.34 : 0.22 });
+    });
+
+    var nodeEls = new Map();
+    var labelEls = new Map();
+    var hoverId = null;
+    var transform = d3.zoomIdentity;
+    var frame = 0;
+
+    function navigateTo(targetId) {
+      env.closeModal();
+      var target = resolveBasePath(targetId);
+      var url = new URL(target, window.location.toString());
+      if (window.spaNavigate) window.spaNavigate(url);
+      else window.location.assign(url);
+    }
+
+    nodes.forEach(function (node) {
+      var isCenter = node.id === slug;
+      var category = isCenter ? null : categoryOf.get(node.id);
+      var r = env.radiusOf(node);
+      var group = createSvgElement("g", {
+        "class": "graph-modal-node" + (isCenter ? " is-current" : ""),
+        "data-node-id": node.id,
+        role: "link",
+        tabindex: "0",
+        "aria-label": node.text,
+        transform: "translate(" + node.x + " " + node.y + ")",
+      });
+      group.appendChild(createSvgElement("title", {})).textContent = node.text;
+      group.appendChild(createSvgElement("circle", { cx: 0, cy: 0, r: r + 7, fill: "transparent" }));
+      if (isCenter) {
+        group.appendChild(createSvgElement("circle", { cx: 0, cy: 0, r: r + 3, fill: "none", stroke: accent, "stroke-opacity": 0.45, "stroke-width": 2 }));
+        group.appendChild(createSvgElement("circle", { cx: 0, cy: 0, r: r, fill: accent }));
+      } else {
+        if (env.visited.has(node.id)) {
+          group.appendChild(createSvgElement("circle", { cx: 0, cy: 0, r: r + 4, fill: "none", stroke: visitedColor, "stroke-opacity": 0.85, "stroke-width": 1.4, "class": "graph-modal-visited" }));
+        }
+        drawCategoryShape(group, category, 0, 0, r, palette[category].color, palette);
+      }
+      zoomLayer.appendChild(group);
+      nodeEls.set(node.id, group);
+      group.addEventListener("pointerenter", function () { setHover(node.id); });
+      group.addEventListener("pointerleave", function () { setHover(null); });
+      group.addEventListener("focus", function () { setHover(node.id); });
+      group.addEventListener("blur", function () { setHover(null); });
+      group.addEventListener("click", function () { navigateTo(node.id); });
+      group.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          navigateTo(node.id);
+        }
+      });
+
+      var label = createSvgElement("text", {
+        "class": "graph-modal-node-label" + (isCenter ? " is-current" : ""),
+        x: 0,
+        y: 0,
+        "dominant-baseline": "central",
+        "font-size": isCenter ? labelFont + 1 : labelFont,
+        visibility: "hidden",
+      });
+      label.textContent = isCenter ? centerLabelText : truncateLabel(node.text, maxChars);
+      overlay.appendChild(label);
+      labelEls.set(node.id, label);
+    });
+
+    var clusterEls = clusterPlacement.labels.map(function (placed, index) {
+      var input = clusterInputs[index];
+      var element = createSvgElement("text", {
+        "class": "graph-modal-cluster-label",
+        "font-size": labelFont + 1,
+        fill: palette[input.key].color,
+        "text-anchor": "middle",
+        "dominant-baseline": "central",
+      });
+      element.textContent = input.text;
+      overlay.appendChild(element);
+      return { el: element, rect: placed.rect };
+    });
+
+    function screenX(x) { return transform.x + transform.k * x; }
+    function screenY(y) { return transform.y + transform.k * y; }
+
+    function updateLabels() {
+      frame = 0;
+      var obstacles = [];
+      clusterEls.forEach(function (cluster) {
+        var rect = {
+          x: screenX(cluster.rect.x + cluster.rect.width / 2) - cluster.rect.width / 2,
+          y: screenY(cluster.rect.y + cluster.rect.height / 2) - cluster.rect.height / 2,
+          width: cluster.rect.width,
+          height: cluster.rect.height,
+        };
+        obstacles.push(rect);
+        cluster.el.setAttribute("x", rect.x + rect.width / 2);
+        cluster.el.setAttribute("y", rect.y + rect.height / 2);
+      });
+
+      // Priority: current page, hovered node, then shorter names first (more labels fit).
+      var ordered = neighbors
+        .filter(function (node) { return node.id !== hoverId; })
+        .sort(function (a, b) { return Array.from(a.text).length - Array.from(b.text).length; });
+      var queue = [];
+      if (centerNode) queue.push(centerNode);
+      if (hoverId && hoverId !== slug) {
+        var hoveredNode = nodes.find(function (node) { return node.id === hoverId; });
+        if (hoveredNode) queue.push(hoveredNode);
+      }
+      queue = queue.concat(ordered);
+
+      var items = queue.map(function (node) {
+        var isCenter = node === centerNode;
+        var isHover = node.id === hoverId;
+        var value = isHover ? node.text : (isCenter ? centerLabelText : truncateLabel(node.text, maxChars));
+        var outward = node.x >= cx ? "right" : "left";
+        var inward = outward === "right" ? "left" : "right";
+        return {
+          id: node.id,
+          x: screenX(node.x),
+          y: screenY(node.y),
+          r: env.radiusOf(node) * transform.k * (isCenter ? 1.15 : 1.3),
+          width: textWidth(value, isCenter ? labelFont + 1 : labelFont, isCenter || isHover) + 2,
+          height: labelHeight,
+          sides: isCenter ? ["below", "above", "right", "left"] : ["below", outward, "above", inward],
+          force: isCenter || isHover,
+          text: value,
+        };
+      });
+      var placed = placeNodeLabels(items, { width: width, height: areaH, margin: 2, obstacles: obstacles });
+      labelEls.forEach(function (element, id) {
+        if (!placed.has(id)) element.setAttribute("visibility", "hidden");
+      });
+      items.forEach(function (item) {
+        var spot = placed.get(item.id);
+        if (!spot) return;
+        var element = labelEls.get(item.id);
+        if (element.textContent !== item.text) element.textContent = item.text;
+        element.setAttribute("x", spot.rect.x + 1);
+        element.setAttribute("y", spot.rect.y + spot.rect.height / 2);
+        element.setAttribute("visibility", "visible");
+        element.classList.toggle("is-hover", item.id === hoverId);
+      });
+    }
+
+    function scheduleLabels() {
+      if (!frame) frame = requestAnimationFrame(updateLabels);
+    }
+
+    function setHover(id) {
+      hoverId = id;
+      var near = id ? adjacency.get(id) : null;
+      nodeEls.forEach(function (element, nodeId) {
+        var dim = !!id && env.focusOnHover && nodeId !== id && !(near && near.has(nodeId));
+        element.classList.toggle("is-dim", dim);
+      });
+      linkEls.forEach(function (link) {
+        var active = !!id && (link.a.id === id || link.b.id === id);
+        link.el.setAttribute("stroke-opacity", active ? 0.9 : (id && env.focusOnHover ? 0.06 : link.base));
+        link.el.setAttribute("stroke-width", active ? 2 : 1);
+      });
+      updateLabels();
+    }
+
+    function positionLinks() {
+      linkEls.forEach(function (link) {
+        link.el.setAttribute("x1", link.a.x);
+        link.el.setAttribute("y1", link.a.y);
+        link.el.setAttribute("x2", link.b.x);
+        link.el.setAttribute("y2", link.b.y);
+      });
+    }
+    positionLinks();
+
+    if (env.enableDrag) {
+      var drag = d3
+        .drag()
+        .container(zoomLayer)
+        .subject(function (event, d) { return { x: d.x, y: d.y }; })
+        .on("drag", function (event, d) {
+          d.x = event.x;
+          d.y = event.y;
+          nodeEls.get(d.id).setAttribute("transform", "translate(" + d.x + " " + d.y + ")");
+          positionLinks();
+          scheduleLabels();
+        });
+      nodes.forEach(function (node) {
+        d3.select(nodeEls.get(node.id)).datum(node).call(drag);
+      });
+    }
+
+    if (env.enableZoom) {
+      var zoom = d3
+        .zoom()
+        .extent([[0, 0], [width, areaH]])
+        .scaleExtent([0.5, 4])
+        .on("zoom", function (event) {
+          transform = event.transform;
+          zoomLayer.setAttribute("transform", transform.toString());
+          scheduleLabels();
+        });
+      d3.select(svg).call(zoom);
+    }
+
+    updateLabels();
+
+    return function () {
+      if (frame) cancelAnimationFrame(frame);
+      svg.remove();
+      legend.remove();
     };
   }
 
@@ -519,8 +984,8 @@ import {
           id: url,
           text: text,
           tags: nodeTags,
-          x: isGlobal ? Math.random() * width - width / 2 : 0,
-          y: isGlobal ? Math.random() * height - height / 2 : 0,
+          x: 0,
+          y: 0,
           vx: 0,
           vy: 0,
         };
@@ -546,457 +1011,32 @@ import {
       var baseRadius = isGlobal
         ? Math.max(6.5, Math.min(13, minDim * 0.0125)) * countFactor
         : Math.max(2.8, Math.min(4.5, minDim * 0.014));
+      var linkCounts = new Map();
+      for (var i = 0; i < graphLinks.length; i++) {
+        linkCounts.set(graphLinks[i].source.id, (linkCounts.get(graphLinks[i].source.id) || 0) + 1);
+        linkCounts.set(graphLinks[i].target.id, (linkCounts.get(graphLinks[i].target.id) || 0) + 1);
+      }
 
       function nodeRadius(d) {
-        var isCurrent = d.id === slug;
-        if (isCurrent) {
-          return baseRadius * 1.55;
-        }
-        var numLinks = 0;
-        for (var i = 0; i < graphLinks.length; i++) {
-          if (graphLinks[i].source.id === d.id || graphLinks[i].target.id === d.id) {
-            numLinks++;
-          }
-        }
+        if (d.id === slug) return baseRadius * 1.55;
+        var numLinks = linkCounts.get(d.id) || 0;
         return baseRadius + Math.min(baseRadius * 0.55, Math.sqrt(numLinks) * (baseRadius * 0.22));
       }
 
-      var spreadRatio = nodeCount > 20 ? 0.35 : (nodeCount < 6 ? 0.24 : 0.29);
-      var dynamicLinkDistance = isGlobal
-        ? Math.max(90, Math.min(minDim * spreadRatio, 300))
-        : Math.max(25, Math.min(minDim * 0.16, 45));
-
-      var dynamicRepel = isGlobal
-        ? Math.max(160, dynamicLinkDistance * (nodeCount > 15 ? 1.8 : 1.4))
-        : (100 * repelForce);
-
-      var dynamicCenterForce = isGlobal ? 0.25 : centerForce;
-      var dynamicFontSize = isGlobal
-        ? Math.max(11, Math.min(14, minDim * 0.015))
-        : Math.max(8, fontSize * 15);
-
       var styles = getComputedStyle(document.documentElement);
-      var secondary = resolveColor(styles.getPropertyValue("--secondary").trim(), "#c792ea");
-      var tertiary = resolveColor(styles.getPropertyValue("--tertiary").trim(), "#82aaff");
-      var gray = resolveColor(styles.getPropertyValue("--gray").trim(), "#6c6c6c");
-      var lightgray = resolveColor(styles.getPropertyValue("--lightgray").trim(), "#d4d4d4");
-      var dark = resolveColor(styles.getPropertyValue("--dark").trim(), "#1a1a1a");
-      var light = resolveColor(styles.getPropertyValue("--light").trim(), "#f5f5f5");
-      var bodyFont = styles.getPropertyValue("--bodyFont").trim() || "inherit";
 
       if (!isGlobal) {
         return renderCategorizedLocalGraph(graph, slug, nodes, width, height, styles);
       }
 
-      var app = new PIXI.Application();
-      await app.init({
-        width: width,
-        height: height,
-        antialias: true,
-        backgroundAlpha: 0,
-        resolution: window.devicePixelRatio || 1,
-        autoDensity: true,
-        eventMode: "static",
+      return renderCategorizedModalGraph(graph, slug, nodes, graphLinks, width, height, styles, {
+        enableDrag: enableDrag,
+        enableZoom: enableZoom,
+        focusOnHover: focusOnHover,
+        visited: visited,
+        radiusOf: nodeRadius,
+        closeModal: hideGlobalGraph,
       });
-
-      graph.appendChild(app.canvas);
-
-      var stage = new PIXI.Container();
-      app.stage.addChild(stage);
-
-      var simulation = d3
-        .forceSimulation(nodes)
-        .force("charge", d3.forceManyBody().strength(-dynamicRepel))
-        .force("center", d3.forceCenter().strength(dynamicCenterForce))
-        .force("link", d3.forceLink(graphLinks).distance(dynamicLinkDistance))
-        .force(
-          "collide",
-          d3
-            .forceCollide()
-            .radius(function (d) {
-              return nodeRadius(d) + (isGlobal ? 12 : 3);
-            })
-            .iterations(3),
-        );
-
-      if (enableRadial) {
-        var radius = (Math.min(width, height) / 2) * 0.8;
-        simulation.force("radial", d3.forceRadial(radius).strength(0.2));
-      }
-
-      var linkContainer = new PIXI.Container();
-      var nodesContainer = new PIXI.Container();
-      var labelsContainer = new PIXI.Container();
-      stage.addChild(linkContainer);
-      stage.addChild(nodesContainer);
-      stage.addChild(labelsContainer);
-
-      var nodeRenderData = [];
-      var linkRenderData = [];
-      var hoveredNodeId = null;
-      var hoveredNeighbours = new Set();
-      var dragStartTime = 0;
-      var dragging = false;
-      var currentTransform = d3.zoomIdentity;
-
-      function nodeColor(d) {
-        var isCurrent = d.id === slug;
-        if (isCurrent) {
-          return secondary;
-        } else if (visited.has(d.id) || d.id.startsWith("tags/")) {
-          return tertiary;
-        } else {
-          return gray;
-        }
-      }
-
-      function updateHoverInfo(newHoveredId) {
-        hoveredNodeId = newHoveredId;
-
-        if (newHoveredId === null) {
-          hoveredNeighbours = new Set();
-          for (var i = 0; i < nodeRenderData.length; i++) {
-            nodeRenderData[i].active = false;
-          }
-          for (var i = 0; i < linkRenderData.length; i++) {
-            linkRenderData[i].active = false;
-          }
-        } else {
-          hoveredNeighbours = new Set();
-
-          for (var i = 0; i < linkRenderData.length; i++) {
-            var linkData = linkRenderData[i].simulationData;
-            if (linkData.source.id === newHoveredId || linkData.target.id === newHoveredId) {
-              hoveredNeighbours.add(linkData.source.id);
-              hoveredNeighbours.add(linkData.target.id);
-              linkRenderData[i].active = true;
-            } else {
-              linkRenderData[i].active = false;
-            }
-          }
-
-          hoveredNeighbours.add(newHoveredId);
-
-          for (var i = 0; i < nodeRenderData.length; i++) {
-            if (hoveredNeighbours.has(nodeRenderData[i].simulationData.id)) {
-              nodeRenderData[i].active = true;
-            } else {
-              nodeRenderData[i].active = false;
-            }
-          }
-        }
-      }
-
-      function renderLinks() {
-        for (var i = 0; i < linkRenderData.length; i++) {
-          var linkData = linkRenderData[i];
-          var alpha = 1;
-          if (hoveredNodeId !== null) {
-            alpha = linkData.active ? 1 : 0.2;
-          }
-          linkData.alpha = alpha;
-          linkData.color = linkData.active ? gray : lightgray;
-        }
-      }
-
-      function renderLabels() {
-        var defaultScale = 1 / scale;
-        var activeScale = defaultScale * 1.12;
-
-        for (var i = 0; i < nodeRenderData.length; i++) {
-          var nodeData = nodeRenderData[i];
-          var isCurrent = nodeData.simulationData.id === slug;
-
-          if (hoveredNodeId !== null) {
-            if (nodeData.active || hoveredNodeId === nodeData.simulationData.id) {
-              nodeData.label.alpha = 1;
-              nodeData.label.scale.set(activeScale);
-            } else {
-              nodeData.label.alpha = isGlobal ? 0.25 : 0;
-              nodeData.label.scale.set(defaultScale);
-            }
-          } else {
-            nodeData.label.alpha = isGlobal ? (isCurrent ? 1 : 0.88) : 0;
-            nodeData.label.scale.set(defaultScale);
-          }
-        }
-      }
-
-      function renderNodes() {
-        for (var i = 0; i < nodeRenderData.length; i++) {
-          var nodeData = nodeRenderData[i];
-          var alpha = 1;
-          if (hoveredNodeId !== null && focusOnHover) {
-            alpha = nodeData.active ? 1 : 0.2;
-          }
-          nodeData.gfx.alpha = alpha;
-        }
-      }
-
-      function renderPixiFromD3() {
-        renderNodes();
-        renderLinks();
-        renderLabels();
-      }
-
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        var nodeId = node.id;
-        var isTagNode = nodeId.startsWith("tags/");
-        var isCurrentNode = nodeId === slug;
-        var radius = nodeRadius(node);
-        var color = nodeColor(node);
-
-        var label = new PIXI.Text({
-          text: node.text,
-          style: {
-            fontSize: isCurrentNode ? dynamicFontSize * 1.15 : dynamicFontSize,
-            fontWeight: isCurrentNode ? "bold" : "normal",
-            fill: dark,
-            fontFamily: bodyFont,
-          },
-          resolution: (window.devicePixelRatio || 1) * 3,
-        });
-        label.anchor.set(0.5, 0);
-        label.alpha = isGlobal ? (isCurrentNode ? 1 : 0.88) : 0;
-        label.scale.set(1 / scale);
-        labelsContainer.addChild(label);
-
-        var gfx = new PIXI.Graphics();
-        gfx.circle(0, 0, radius);
-        gfx.fill({ color: isTagNode ? light : color });
-        if (isTagNode) {
-          gfx.stroke({ width: 2, color: tertiary });
-        } else if (isCurrentNode) {
-          gfx.stroke({ width: isGlobal ? 3 : 2, color: secondary, alpha: 0.6 });
-        }
-
-        gfx.eventMode = "static";
-        gfx.cursor = "pointer";
-        gfx.label = nodeId;
-
-        (function (n, g, labelRef) {
-          var oldLabelOpacity = 0;
-          g.on("pointerover", function (e) {
-            updateHoverInfo(n.id);
-            oldLabelOpacity = labelRef.alpha;
-            if (!dragging) {
-              renderPixiFromD3();
-            }
-          });
-
-          g.on("pointerleave", function () {
-            updateHoverInfo(null);
-            labelRef.alpha = oldLabelOpacity;
-            if (!dragging) {
-              renderPixiFromD3();
-            }
-          });
-        })(node, gfx, label);
-
-        nodesContainer.addChild(gfx);
-
-        nodeRenderData.push({
-          simulationData: node,
-          gfx: gfx,
-          label: label,
-          color: color,
-          alpha: 1,
-          active: false,
-        });
-      }
-
-      for (var i = 0; i < graphLinks.length; i++) {
-        var link = graphLinks[i];
-        var gfx = new PIXI.Graphics();
-        gfx.eventMode = "none";
-        linkContainer.addChild(gfx);
-
-        linkRenderData.push({
-          simulationData: link,
-          gfx: gfx,
-          color: lightgray,
-          alpha: 1,
-          active: false,
-        });
-      }
-
-      if (enableDrag) {
-        var dragSubject = function (event) {
-          var mouseX = (event.x - currentTransform.x) / currentTransform.k;
-          var mouseY = (event.y - currentTransform.y) / currentTransform.k;
-
-          for (var i = 0; i < nodes.length; i++) {
-            var n = nodes[i];
-            var dx = mouseX - n.x - width / 2;
-            var dy = mouseY - n.y - height / 2;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            var rad = nodeRadius(n);
-            if (dist < rad + 5) {
-              return n;
-            }
-          }
-          return null;
-        };
-
-        var dragStarted = function (event) {
-          if (!event.active) simulation.alphaTarget(1).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-          var mouseSimX = (event.x - currentTransform.x) / currentTransform.k - width / 2;
-          var mouseSimY = (event.y - currentTransform.y) / currentTransform.k - height / 2;
-          event.subject.__dragOffset = {
-            x: mouseSimX - event.subject.x,
-            y: mouseSimY - event.subject.y,
-          };
-          dragStartTime = Date.now();
-          dragging = true;
-          hoveredNodeId = event.subject.id;
-        };
-
-        var dragDragged = function (event) {
-          var mouseSimX = (event.x - currentTransform.x) / currentTransform.k - width / 2;
-          var mouseSimY = (event.y - currentTransform.y) / currentTransform.k - height / 2;
-          event.subject.fx = mouseSimX - event.subject.__dragOffset.x;
-          event.subject.fy = mouseSimY - event.subject.__dragOffset.y;
-        };
-
-        var dragEnded = function (event) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-          dragging = false;
-          updateHoverInfo(null);
-          renderPixiFromD3();
-
-          if (Date.now() - dragStartTime < 500) {
-            hideGlobalGraph();
-            var target = resolveBasePath(event.subject.id);
-            var url = new URL(target, window.location.toString());
-            if (window.spaNavigate) {
-              window.spaNavigate(url);
-            } else {
-              window.location.assign(url);
-            }
-          }
-        };
-
-        var drag = d3
-          .drag()
-          .container(app.canvas)
-          .subject(dragSubject)
-          .on("start", dragStarted)
-          .on("drag", dragDragged)
-          .on("end", dragEnded);
-
-        d3.select(app.canvas).call(drag);
-      } else {
-        for (var i = 0; i < nodeRenderData.length; i++) {
-          (function (nodeData) {
-            nodeData.gfx.on("click", function () {
-              hideGlobalGraph();
-              var target = resolveBasePath(nodeData.simulationData.id);
-              var url = new URL(target, window.location.toString());
-              if (window.spaNavigate) {
-                window.spaNavigate(url);
-              } else {
-                window.location.assign(url);
-              }
-            });
-          })(nodeRenderData[i]);
-        }
-      }
-
-      if (enableZoom) {
-        var zoomed = function (event) {
-          currentTransform = event.transform;
-          stage.scale.set(currentTransform.k, currentTransform.k);
-          stage.position.set(currentTransform.x, currentTransform.y);
-
-          if (!isGlobal) {
-            var newScale = currentTransform.k * opacityScale;
-            var scaleOpacity = Math.max((newScale - 1) / 3.75, 0);
-
-            var activeLabels = [];
-            for (var i = 0; i < nodeRenderData.length; i++) {
-              if (nodeRenderData[i].active) {
-                activeLabels.push(nodeRenderData[i].label);
-              }
-            }
-
-            for (var i = 0; i < labelsContainer.children.length; i++) {
-              var label = labelsContainer.children[i];
-              if (activeLabels.indexOf(label) === -1) {
-                label.alpha = scaleOpacity;
-              }
-            }
-          }
-        };
-
-        var zoom = d3
-          .zoom()
-          .extent([
-            [0, 0],
-            [width, height],
-          ])
-          .scaleExtent([0.25, 4])
-          .on("zoom", zoomed);
-
-        d3.select(app.canvas).call(zoom);
-      }
-
-      var stopAnimation = false;
-      function animate() {
-        if (stopAnimation) return;
-
-        for (var i = 0; i < nodeRenderData.length; i++) {
-          var n = nodeRenderData[i];
-          var x = n.simulationData.x;
-          var y = n.simulationData.y;
-          if (x != null && y != null) {
-            var posX = x + width / 2;
-            var posY = y + height / 2;
-            n.gfx.position.set(posX, posY);
-            if (n.label) {
-              var r = nodeRadius(n.simulationData);
-              n.label.position.set(posX, posY + r + (isGlobal ? 5 : 2));
-            }
-          }
-        }
-
-        for (var i = 0; i < linkRenderData.length; i++) {
-          var l = linkRenderData[i];
-          var linkData = l.simulationData;
-          var sx = linkData.source.x;
-          var sy = linkData.source.y;
-          var tx = linkData.target.x;
-          var ty = linkData.target.y;
-          if (sx != null && sy != null && tx != null && ty != null) {
-            l.gfx.clear();
-            l.gfx.moveTo(sx + width / 2, sy + height / 2);
-            l.gfx.lineTo(tx + width / 2, ty + height / 2);
-            var strokeWidth = isGlobal ? (l.active ? 2.5 : 1.5) : 1;
-            l.gfx.stroke({ alpha: l.alpha, width: strokeWidth, color: l.color });
-          }
-        }
-
-        requestAnimationFrame(animate);
-      }
-
-      simulation.on("tick", function () {});
-      simulation.restart();
-      renderPixiFromD3();
-      animate();
-
-      return function () {
-        stopAnimation = true;
-        simulation.stop();
-        try {
-          app.destroy(true);
-        } catch (_) {
-          // PixiJS may throw if WebGL context was already lost.
-        }
-      };
     }
 
     var localCleanups = [];

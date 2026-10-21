@@ -75,7 +75,12 @@ export function pageResources(
   })
 
   const contentIndexPath = joinSegments(baseDir, "static/contentIndex.json")
-  const contentIndexScript = `const fetchData = fetch("${contentIndexPath}").then(data => data.json())`
+  const slimContentIndexPath = joinSegments(baseDir, "static/contentIndex.slim.json")
+  const contentIndexScript = `let __bwzFullIndex
+const fetchFullContentIndex = () => (__bwzFullIndex || (__bwzFullIndex = fetch("${contentIndexPath}").then(r => r.json())))
+const fetchData = fetch("${slimContentIndexPath}")
+  .then(r => { if (!r.ok) throw new Error("slim index " + r.status); return r.json() })
+  .catch(() => fetchFullContentIndex())`
 
   const resources: StaticResources = {
     css: [

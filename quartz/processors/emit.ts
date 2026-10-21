@@ -7,6 +7,7 @@ import { trace } from "../util/trace"
 import { BuildCtx } from "../util/ctx"
 import { StaticResources } from "../util/resources"
 import { styleText } from "util"
+import { writeSlimContentIndex } from "../util/slimContentIndex"
 
 async function runEmitter(
   emitter: QuartzEmitterPluginInstance,
@@ -89,6 +90,13 @@ export async function emitContent(ctx: BuildCtx, content: ProcessedContent[]) {
     ),
   )
   emittedFiles += counts.reduce((sum, c) => sum + c, 0)
+
+  const indexSizes = await writeSlimContentIndex(argv.output)
+  if (indexSizes) {
+    console.log(
+      `[content-index] contentIndex.json: ${indexSizes.fullBytes} bytes; contentIndex.slim.json: ${indexSizes.slimBytes} bytes`,
+    )
+  }
 
   if (emitErrors > 0) {
     console.warn(

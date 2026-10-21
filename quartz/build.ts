@@ -20,6 +20,7 @@ import { options } from "./util/sourcemap"
 import { Mutex } from "async-mutex"
 import { getStaticResourcesFromPlugins } from "./plugins"
 import { randomIdNonSecure } from "./util/random"
+import { writeSlimContentIndex } from "./util/slimContentIndex"
 import { ChangeEvent } from "./plugins/types"
 import { minimatch } from "minimatch"
 
@@ -372,6 +373,13 @@ async function rebuild(changes: ChangeEvent[], clientRefresh: () => void, buildD
           }
         }
       }
+    }
+
+    const indexSizes = await writeSlimContentIndex(argv.output)
+    if (indexSizes) {
+      console.log(
+        `[content-index] contentIndex.json: ${indexSizes.fullBytes} bytes; contentIndex.slim.json: ${indexSizes.slimBytes} bytes`,
+      )
     }
 
     await copyOpeningIntro(ctx)

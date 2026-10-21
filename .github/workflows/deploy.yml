@@ -116,6 +116,9 @@ jobs:
           echo "QUARTZ_INCREMENTAL=$QUARTZ_INCREMENTAL"
           npx quartz build --concurrency=2
 
+      - name: Check slim content index
+        run: npx tsx quartz/util/checkContentIndex.ts public
+
       - name: Verse list check report
         # 經文清單檢查結果 → 警告、步驟摘要、Issue（失敗不擋部署）
         continue-on-error: true

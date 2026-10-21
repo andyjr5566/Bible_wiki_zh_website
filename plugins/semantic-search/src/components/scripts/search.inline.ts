@@ -792,7 +792,9 @@ async function fillDocument() {
 }
 
 async function fetchContentIndex(): Promise<Record<string, Item>> {
-  const data = await fetchData;
+  // fetchData 現在是只有標題與連結的小索引（U-18）；搜尋需要全文，改讀完整索引（舊版頁面沒有這個函式時退回 fetchData）
+  const data =
+    typeof fetchFullContentIndex === "function" ? await fetchFullContentIndex() : await fetchData;
   return data as unknown as Record<string, Item>;
 }
 

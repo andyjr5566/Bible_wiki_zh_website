@@ -1,6 +1,6 @@
 # 網站體驗改善（UX）
 
-狀態：2026-10-21 第 1 批已上線；第 2 批完成，在 `feature/ux-b2-onboarding` 分支（未 push）。結果見 progress.md。一次做一批，每批用 [goal-prompts.md](goal-prompts.md) 裡對應的 `/goal` 提示詞開工。
+狀態：2026-10-21 第 1、2 批已上線；第 3 批完成，在 `feature/ux-b3-reading` 分支（未 push）。結果見 progress.md。一次做一批，每批用 [goal-prompts.md](goal-prompts.md) 裡對應的 `/goal` 提示詞開工。
 
 ## 這個資料夾
 

@@ -1103,3 +1103,15 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 }
 /* Mobile graph block height:end */
+
+/* Expanded graph hides overlays:start */
+/* 關係圖放大時，首訪導覽卡、浮動按鈕、加入主畫面橫幅都先藏起來，不要蓋在放大的圖上（關掉後恢復） */
+html:has(.global-graph-outer.active) {
+  .bwz-welcome,
+  .bwz-fab,
+  .bwz-n-chip,
+  .pwa-install-guide {
+    visibility: hidden !important;
+  }
+}
+/* Expanded graph hides overlays:end */

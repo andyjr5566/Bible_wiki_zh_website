@@ -10,11 +10,14 @@ describe("graph category layout helpers", () => {
   it("categorizes folder slugs and chapter slugs", () => {
     expect(categorizeGraphSlug("link_folder/人物/摩西")).toBe("人物")
     expect(categorizeGraphSlug("link_folder/地點/埃及")).toBe("地點")
-    expect(categorizeGraphSlug("link_folder/事件/出埃及")).toBe("歷史")
+    expect(categorizeGraphSlug("link_folder/事件/出埃及")).toBe("事件")
     expect(categorizeGraphSlug("link_folder/歷史/逾越節")).toBe("歷史")
     expect(categorizeGraphSlug("link_folder/神學/救贖")).toBe("神學")
     expect(categorizeGraphSlug("link_folder/原文/逾越")).toBe("原文")
-    expect(categorizeGraphSlug("link_folder/互文/詩篇")).toBe("其他")
+    expect(categorizeGraphSlug("link_folder/互文/詩篇")).toBe("互文")
+    expect(categorizeGraphSlug("link_folder/解經爭議/某議題")).toBe("解經爭議")
+    expect(categorizeGraphSlug("link_folder/新資料夾/某條目")).toBe("新資料夾")
+    expect(categorizeGraphSlug("link_folder/index")).toBe("其他")
     expect(categorizeGraphSlug("02-出埃及記/第12章")).toBe("章節")
     expect(categorizeGraphSlug("appendix/maps/018")).toBe("其他")
     expect(categorizeGraphSlug("教學/註釋來源")).toBe("其他")
@@ -45,5 +48,19 @@ describe("graph category layout helpers", () => {
     expect(getMoreCount(9)).toBe(5)
     expect(getMoreCount(4)).toBe(0)
     expect(getMoreCount(2)).toBe(0)
+  })
+
+  it("orders folder categories by LINK_FOLDER_ORDER, unknown folders after them", () => {
+    const groups = groupNeighbors([
+      { id: "link_folder/新資料夾/甲" },
+      { id: "02-出埃及記/第11章" },
+      { id: "link_folder/解經爭議/乙" },
+      { id: "link_folder/人物/摩西" },
+      { id: "link_folder/事件/出埃及" },
+      { id: "appendix/x" },
+    ])
+    expect(groups.map((g) => g.category)).toEqual(["人物", "事件", "解經爭議", "新資料夾", "其他", "章節"])
+    const sectors = distributeSectorAngles({ 其他: 1, 主題: 1, 章節: 1, 人物: 1, 新資料夾: 1 })
+    expect(sectors.map((s) => s.category)).toEqual(["章節", "人物", "主題", "新資料夾", "其他"])
   })
 })

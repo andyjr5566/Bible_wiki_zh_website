@@ -112,17 +112,38 @@ import {
   }
 
   // One palette (color + shape per category) shared by the small fan, the list and the expanded graph.
+  // 分類就是 link_folder 的資料夾名稱；每類一個顏色＋形狀。新出現的資料夾從 FALLBACK 依序取一組。
   function buildPalette(styles) {
     var isDarkTheme = isDarkPalette(styles);
-    return {
-      "章節": { color: isDarkTheme ? "#e7e5e4" : "#44403c", shape: "ring" },
-      "人物": { color: isDarkTheme ? "#fbbf24" : "#b45309", shape: "circle" },
-      "地點": { color: isDarkTheme ? "#4ade80" : "#15803d", shape: "square" },
-      "歷史": { color: isDarkTheme ? "#f87171" : "#b91c1c", shape: "diamond" },
-      "神學": { color: isDarkTheme ? "#c4b5fd" : "#6d28d9", shape: "triangle" },
-      "原文": { color: isDarkTheme ? "#7dd3fc" : "#0369a1", shape: "hex" },
-      "其他": { color: isDarkTheme ? "#a8a29e" : "#78716c", shape: "circle" },
+    var pick = function (light, dark) { return isDarkTheme ? dark : light; };
+    var base = {
+      "章節": { color: pick("#44403c", "#e7e5e4"), shape: "ring" },
+      "人物": { color: pick("#b45309", "#fbbf24"), shape: "circle" },
+      "地點": { color: pick("#15803d", "#4ade80"), shape: "square" },
+      "事件": { color: pick("#c2410c", "#fb923c"), shape: "triangle-down" },
+      "歷史": { color: pick("#b91c1c", "#f87171"), shape: "diamond" },
+      "背景": { color: pick("#0f766e", "#5eead4"), shape: "square-ring" },
+      "文化": { color: pick("#be185d", "#f9a8d4"), shape: "star" },
+      "神學": { color: pick("#6d28d9", "#c4b5fd"), shape: "triangle" },
+      "主題": { color: pick("#4338ca", "#a5b4fc"), shape: "diamond-ring" },
+      "原文": { color: pick("#0369a1", "#7dd3fc"), shape: "hex" },
+      "互文": { color: pick("#0e7490", "#67e8f9"), shape: "cross" },
+      "解經爭議": { color: pick("#4d7c0f", "#bef264"), shape: "hex-ring" },
+      "其他": { color: pick("#78716c", "#a8a29e"), shape: "circle" },
     };
+    var fallback = [
+      { color: pick("#a16207", "#fde047"), shape: "star" },
+      { color: pick("#9333ea", "#d8b4fe"), shape: "cross" },
+      { color: pick("#0369a1", "#93c5fd"), shape: "triangle-down" },
+      { color: pick("#be123c", "#fda4af"), shape: "square-ring" },
+    ];
+    var used = 0;
+    return new Proxy(base, {
+      get: function (target, key) {
+        if (typeof key === "string" && !(key in target)) target[key] = fallback[used++ % fallback.length];
+        return target[key];
+      },
+    });
   }
 
   function measureText(textElement, fallbackText, fontSize, bold) {
@@ -150,13 +171,36 @@ import {
       element = createSvgElement("path", { d: "M" + x + " " + (y - radius * 1.25) + "L" + (x + radius * 1.25) + " " + y + "L" + x + " " + (y + radius * 1.25) + "L" + (x - radius * 1.25) + " " + y + "Z", fill: color });
     } else if (shape === "triangle") {
       element = createSvgElement("path", { d: "M" + x + " " + (y - radius * 1.3) + "L" + (x + radius * 1.2) + " " + (y + radius * 0.9) + "L" + (x - radius * 1.2) + " " + (y + radius * 0.9) + "Z", fill: color });
-    } else if (shape === "hex") {
+    } else if (shape === "triangle-down") {
+      element = createSvgElement("path", { d: "M" + x + " " + (y + radius * 1.3) + "L" + (x + radius * 1.2) + " " + (y - radius * 0.9) + "L" + (x - radius * 1.2) + " " + (y - radius * 0.9) + "Z", fill: color });
+    } else if (shape === "hex" || shape === "hex-ring") {
       var points = [];
       for (var i = 0; i < 6; i++) {
         var angle = (Math.PI / 3) * i;
         points.push((x + radius * 1.15 * Math.cos(angle)).toFixed(1) + "," + (y + radius * 1.15 * Math.sin(angle)).toFixed(1));
       }
-      element = createSvgElement("polygon", { points: points.join(" "), fill: color });
+      element = shape === "hex"
+        ? createSvgElement("polygon", { points: points.join(" "), fill: color })
+        : createSvgElement("polygon", { points: points.join(" "), fill: "none", stroke: color, "stroke-width": 1.8 });
+    } else if (shape === "square-ring") {
+      element = createSvgElement("rect", { x: x - radius * 0.9, y: y - radius * 0.9, width: radius * 1.8, height: radius * 1.8, rx: 1, fill: "none", stroke: color, "stroke-width": 1.8 });
+    } else if (shape === "diamond-ring") {
+      element = createSvgElement("path", { d: "M" + x + " " + (y - radius * 1.2) + "L" + (x + radius * 1.2) + " " + y + "L" + x + " " + (y + radius * 1.2) + "L" + (x - radius * 1.2) + " " + y + "Z", fill: "none", stroke: color, "stroke-width": 1.8 });
+    } else if (shape === "star") {
+      var star = [];
+      for (var s = 0; s < 10; s++) {
+        var starAngle = -Math.PI / 2 + (Math.PI / 5) * s;
+        var starR = s % 2 === 0 ? radius * 1.35 : radius * 0.6;
+        star.push((x + starR * Math.cos(starAngle)).toFixed(1) + "," + (y + starR * Math.sin(starAngle)).toFixed(1));
+      }
+      element = createSvgElement("polygon", { points: star.join(" "), fill: color });
+    } else if (shape === "cross") {
+      var arm = radius * 0.45;
+      var len = radius * 1.2;
+      element = createSvgElement("path", {
+        d: "M" + (x - arm) + " " + (y - len) + "H" + (x + arm) + "V" + (y - arm) + "H" + (x + len) + "V" + (y + arm) + "H" + (x + arm) + "V" + (y + len) + "H" + (x - arm) + "V" + (y + arm) + "H" + (x - len) + "V" + (y - arm) + "H" + (x - arm) + "Z",
+        fill: color,
+      });
     } else {
       element = createSvgElement("circle", { cx: x, cy: y, r: radius, fill: color });
     }

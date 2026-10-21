@@ -57,6 +57,8 @@ function nextTitle(children: Array<{ type: string }>, afterIndex: number): strin
   for (let index = afterIndex + 1; index < children.length; index++) {
     const sibling = children[index] as unknown as unknown as ElementContent
     if (sibling.type === "text" && !sibling.value.trim()) continue
+    // hard-line-breaks puts the caption line after a <br> in the same paragraph
+    if (sibling.type === "element" && sibling.tagName === "br") continue
     return shortText(sibling)
   }
   return undefined

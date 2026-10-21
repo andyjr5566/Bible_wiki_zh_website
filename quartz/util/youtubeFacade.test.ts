@@ -126,3 +126,29 @@ test("transforms multiple videos on the same page", () => {
     secondId,
   ])
 })
+test("uses the caption after a <br> in the same paragraph (hard line breaks)", () => {
+  const br: Element = { type: "element", tagName: "br", properties: {}, children: [] }
+  const input: Root = {
+    type: "root",
+    children: [
+      paragraph(iframe(`https://www.youtube.com/embed/${videoId}`), br, {
+        type: "text",
+        value: "大衛鮑森舊約縱覽 - 創世記(一) 聖經的基礎（40:03）",
+      }),
+    ],
+  }
+
+  const output = transformYoutubeEmbeds(input)
+  const p = output.children[0] as Element
+  const facade = p.children.find(
+    (child): child is Element =>
+      child.type === "element" &&
+      Array.isArray(child.properties.className) &&
+      child.properties.className.includes("yt-facade"),
+  )
+  assert.ok(facade)
+  assert.equal(
+    playButton(facade).properties["aria-label"],
+    "播放影片：大衛鮑森舊約縱覽 - 創世記(一) 聖經的基礎（40:03）",
+  )
+})

@@ -51,10 +51,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Configure GitHub Pages base URL
-        run: |
-          sed -i 's|baseUrl: bible-wiki-zh-website.vercel.app|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|' quartz.config.yaml
-
       - name: Detect changed paths
         id: changes
         run: |

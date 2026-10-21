@@ -2,7 +2,7 @@ import sourceMapSupport from "source-map-support"
 sourceMapSupport.install(options)
 import path from "path"
 import { PerfTimer } from "./util/perf"
-import { rm, copyFile, mkdir } from "fs/promises"
+import { rm, readFile, writeFile, mkdir } from "fs/promises"
 import { GlobbyFilterFunction, isGitIgnored } from "globby"
 import { styleText } from "util"
 import { parseMarkdown } from "./processors/parse"
@@ -34,7 +34,13 @@ async function copyOpeningIntro(ctx: BuildCtx) {
     const openingSource = joinSegments(ctx.argv.directory, "appendix/website/.opening/InTheBeginning.html")
     const openingTarget = joinSegments(ctx.argv.output, "InTheBeginning.html")
     await mkdir(ctx.argv.output, { recursive: true })
-    await copyFile(openingSource, openingTarget)
+    const html = await readFile(openingSource, "utf-8")
+    // The intro page has no favicon link; inject one so browsers stop requesting /favicon.ico (404).
+    const hasIconLink = /<link[^>]+rel=["'][^"']*icon/i.test(html)
+    const output = hasIconLink
+      ? html
+      : html.replace(/<head[^>]*>/i, (tag) => `${tag}<link rel="icon" href="./static/icon.png"/>`)
+    await writeFile(openingTarget, output, "utf-8")
     if (ctx.argv.verbose) {
       console.log(`[emit:openingIntro] Copied ${openingSource} -> ${openingTarget}`)
     }

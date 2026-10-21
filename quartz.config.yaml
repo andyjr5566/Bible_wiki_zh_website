@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: zh-TW
-  baseUrl: bible-wiki-zh-website.vercel.app
+  baseUrl: andyjr5566.github.io/Bible_wiki_zh_website
   ignorePatterns:
     - private
     - templates
@@ -282,8 +282,9 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
+        讀者反饋問卷: https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform
+        隱私權政策: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/隱私權政策
+        快速入門: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/快速入門
   - source: github:quartz-community/recent-notes
     enabled: false
   - source: github:quartz-community/spacer

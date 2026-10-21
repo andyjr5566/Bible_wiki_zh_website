@@ -9,7 +9,7 @@
   "scope": "../",
 
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
 
   "background_color": "#FAF7F0",
   "theme_color": "#7A1C1C",

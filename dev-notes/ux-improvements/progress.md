@@ -97,7 +97,22 @@
 
 ## 第 3 批：章節閱讀
 
-（尚未開始）
+分支 `feature/ux-b3-reading`。開工時問了 Q-2、Q-4、Q-5，使用者決定 U-14（explorer 複製成本地外掛）、U-15（不標示譯本，B3-8 不做）、U-16（圖譜＝B 的扇形圖加上 C 的分類清單）。使用者要求：動手之前先說要做什麼；問題要用白話解釋。
+
+### 委派紀錄
+- 2026-10-21｜B3-8 查證｜Claude haiku（Explore）｜查經文譯本｜和合本（神版），專案沒有寫版本和授權｜使用者決定不標示
+- 2026-10-21｜B3-1 選單捲動｜Codex gpt-6-luna xhigh（workspace-write 成功）｜主導者先把上游 explorer 複製到 `plugins/explorer`；Codex 把 `scrollIntoView` 改成只捲清單本身，並改了 config 和 deploy.yml｜採用。主導者修了兩處：上游 `.gitignore` 會忽略 `dist/`（拿掉）；`.quartz/plugins/explorer` 改成和 read-aloud 一樣的連結（120000 項目加本機 junction，加 `skip-worktree`，因為這台建 symlink 要系統管理員權限）
+- 2026-10-21｜B3-5 Strong 編號｜Codex gpt-6-luna xhigh｜workspace-write 又出現 `setup refresh had errors`，改用 stdin 模式；建置時把編號包成 `.strong-no`｜採用。出埃及記 12 章 33/33 個編號都包到；95 個單元測試全過
+- 2026-10-21｜B3-3、B3-6｜Claude haiku 子代理｜只改 CSS：內文以 h1 開頭時隱藏 article-title；預覽卡拿掉麵包屑和重複標題；右側目錄對比 2.1 → 15.2（淺色）、2.6 → 11.6（深色）｜採用。主導者拿掉「首頁例外」：首頁同步後也有同名 h1，不拿掉會出現兩個標題
+- 2026-10-21｜B3-4 手機導覽｜Claude sonnet 子代理｜`folderDefaultState: collapsed`（只展開目前這卷）；手機版的章節快捷列 `chapterQuickBar.inline.ts`（書卷章名、上一章、下一章、本章整理、回到頂端；朗讀列會排在它下方；桌機不顯示）｜採用。regress 15/15、expcheck 9/9、朗讀 42/42。子代理回報「桌機 scrollY = 383」：那是它的副本裡還沒有 B3-1 的修正，要在整合後驗證
+- 2026-10-21｜B3-7a 圖譜樣稿｜主導者用出埃及記 12 章的真實資料（68 個鄰居）做 A／B／C 三種樣稿；gemini-3.8-flash-high 審查推薦 C｜使用者選 B 的圖加上 C 的清單
+- 2026-10-21｜B3-7b 圖譜實作｜Codex gpt-6-luna xhigh（workspace-write 成功）｜本頁小圖改成固定扇區（不跑 force），下方加分類清單（每類 4 個，「＋N」展開，滑過名稱時高亮節點）；放大 modal 維持原樣｜8 個測試全過；瀏覽器驗證放在最後的完整建置
+- 2026-10-21｜B3-2 Aa 外觀面板｜Claude sonnet 子代理｜做到一半就碰到 Sonnet 用量上限（19:00 重置），外掛已經建好、config 也接好｜等 19:00 後用 SendMessage 讓同一個子代理接著做
+
+### 注意
+- 使用者反映電腦變慢：當時有 4 個幫手同時建置、跑無頭 Chrome。之後改成一次只跑一個重的工作。另外看到 4 個 vite preview（筆記庫的「亞當到耶穌」互動網站）和 9 個 vexp MCP server，都不是這個工作開的，沒有動。
+- 在 worktree 裡 `npx quartz build` 會解析到錯的套件而卡住，改用 `node quartz/bootstrap-cli.mjs build`。
+- `plugins/graph` 沒有 node_modules；這次在 worktree 裡執行 `npm ci` 才能建置。部署時只會把 `plugins/graph/dist` 複製過去，所以 dist 一定要提交。
 
 ## 第 4 批：搜尋與索引
 

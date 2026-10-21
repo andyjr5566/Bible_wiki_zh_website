@@ -342,8 +342,117 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
     }
 }
 
+# Home-page progress numbers (decision B2-3): the chapter table and the total line in
+# content/index.md are computed from the chapter files that were just synced, so nobody has
+# to edit them by hand. They sit between marker pairs in the vault's index.md:
+#   <!-- bwz:progress:start ... --> ... <!-- bwz:progress:end -->
+#   <!-- bwz:total:start ... -->    ... <!-- bwz:total:end -->
+# Only the lines strictly between a pair are replaced. A missing pair is skipped with a
+# warning; this function never throws, so it cannot break the rest of the sync.
+# Line endings and BOM state of the file are kept, and the last-write time is restored
+# (robocopy /XO compares times), like Set-FrontmatterTitle.
+function Update-HomeProgress {
+    param([Parameter(Mandatory = $true)][string]$ContentRoot)
+
+    try {
+        $indexPath = Join-Path $ContentRoot 'index.md'
+        if (-not (Test-Path -LiteralPath $indexPath)) { return }
+
+        # The 66 Protestant books (和合本) in canonical order: name + chapter total.
+        $bookSpec = '創世記50 出埃及記40 利未記27 民數記36 申命記34 約書亞記24 士師記21 路得記4 撒母耳記上31 撒母耳記下24 列王紀上22 列王紀下25 歷代志上29 歷代志下36 以斯拉記10 尼希米記13 以斯帖記10 約伯記42 詩篇150 箴言31 傳道書12 雅歌8 以賽亞書66 耶利米書52 耶利米哀歌5 以西結書48 但以理書12 何西阿書14 約珥書3 阿摩司書9 俄巴底亞書1 約拿書4 彌迦書7 那鴻書3 哈巴谷書3 西番雅書3 哈該書2 撒迦利亞書14 瑪拉基書4 馬太福音28 馬可福音16 路加福音24 約翰福音21 使徒行傳28 羅馬書16 哥林多前書16 哥林多後書13 加拉太書6 以弗所書6 腓立比書4 歌羅西書4 帖撒羅尼迦前書5 帖撒羅尼迦後書3 提摩太前書6 提摩太後書4 提多書3 腓利門書1 希伯來書13 雅各書5 彼得前書5 彼得後書3 約翰一書5 約翰二書1 約翰三書1 猶大書1 啟示錄22'
+        $books = @()
+        foreach ($item in ($bookSpec -split ' ')) {
+            $m = [regex]::Match($item, '^(\D+)(\d+)$')
+            $books += , @($m.Groups[1].Value, [int]$m.Groups[2].Value)
+        }
+
+        # Count chapter files per book folder, matched by the two-digit prefix.
+        $done = @{}
+        $folderOf = @{}
+        foreach ($dir in (Get-ChildItem -LiteralPath $ContentRoot -Directory)) {
+            if ($dir.Name -notmatch '^(\d{2}) .+') { continue }
+            $num = [int]$Matches[1]
+            if ($num -lt 1 -or $num -gt $books.Count -or $folderOf.ContainsKey($num)) { continue }
+            $count = @(Get-ChildItem -LiteralPath $dir.FullName -File | Where-Object { $_.Name -match '^第\d+章\.md$' }).Count
+            $folderOf[$num] = $dir.Name
+            $done[$num] = $count
+        }
+
+        $rows = @()
+        $totals = @()
+        $sum = 0
+        $last = 0
+        for ($i = 1; $i -le $books.Count; $i++) {
+            if (-not $done.ContainsKey($i) -or $done[$i] -lt 1) { continue }
+            $name = $books[$i - 1][0]
+            $total = $books[$i - 1][1]
+            $n = $done[$i]
+            $pct = [int][math]::Round([math]::Min($n / $total, 1) * 100, [System.MidpointRounding]::AwayFromZero)
+            $filled = [int][math]::Round($pct / 5, [System.MidpointRounding]::AwayFromZero)
+            $bar = ('█' * $filled) + ('░' * (20 - $filled))
+            $mark = if ($n -eq $total) { ' ✓' } else { '' }
+            $rows += '| [[' + $folderOf[$i] + '/全書目錄及綱要\|' + $name + ']] | ' + $total + ' | **' + $n + '**' + $mark + ' | ' + $bar + ' ' + $pct + '% |'
+            $totals += ($name + ' ' + $n + '/' + $total + ' 章')
+            $sum += $n
+            $last = $i
+        }
+        if ($last -eq 0) {
+            Write-Host 'Update-HomeProgress: no chapter files found; home-page progress left unchanged.'
+            return
+        }
+        if ($last -lt $books.Count) {
+            $label = $books[$last][0]
+            if ($last + 1 -lt $books.Count) { $label += ' — 啟示錄' }
+            $rows += '| ' + $label + ' | — | 建置中 | — |'
+        }
+        $tableLines = @('| 書卷 | 章數 | 完成 | 進度 |', '| --- | --- | --- | --- |') + $rows
+        $totalLines = @('*全庫已完成' + ($totals -join ' · ') + ' · 共 ' + $sum + ' 章*')
+
+        $file = Get-Item -LiteralPath $indexPath
+        $lastWrite = $file.LastWriteTime
+        $bytes = [System.IO.File]::ReadAllBytes($indexPath)
+        $hasBom = ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF)
+        $text = [System.Text.Encoding]::UTF8.GetString($bytes).TrimStart([char]0xFEFF)
+        $cr = if ($text.Contains("`r`n")) { "`r" } else { '' }
+        $lines = New-Object 'System.Collections.Generic.List[string]'
+        $lines.AddRange([string[]]($text -split "`n"))
+
+        $replaceBlock = {
+            param($key, $newLines)
+            $s = -1; $e = -1
+            for ($k = 0; $k -lt $lines.Count; $k++) {
+                $t = $lines[$k].Trim()
+                if ($s -lt 0) { if ($t.StartsWith("<!-- bwz:${key}:start")) { $s = $k } }
+                elseif ($t.StartsWith("<!-- bwz:${key}:end")) { $e = $k; break }
+            }
+            if ($s -lt 0 -or $e -lt 0) {
+                Write-Host "Update-HomeProgress: marker pair 'bwz:$key' not found in index.md; skipped."
+                return
+            }
+            $lines.RemoveRange($s + 1, $e - $s - 1)
+            $lines.InsertRange($s + 1, [string[]]@($newLines | ForEach-Object { $_ + $cr }))
+        }
+        & $replaceBlock 'progress' $tableLines
+        & $replaceBlock 'total' $totalLines
+
+        $updated = $lines -join "`n"
+        if ($updated -eq $text) { return }
+
+        $enc = New-Object System.Text.UTF8Encoding($hasBom)
+        [System.IO.File]::WriteAllText($indexPath, $updated, $enc)
+        $file.LastWriteTime = $lastWrite
+        Write-Host 'Home-page progress numbers updated in content/index.md.'
+    }
+    catch {
+        Write-Host "Update-HomeProgress: skipped ($($_.Exception.Message))."
+    }
+}
+
 # ── Chinese titles for README / INSTALL_* / appendix / link_folder ────────
 Add-WebsiteTitles -ContentRoot $target
+
+# ── Home-page progress table and total line, computed from the synced chapter files ──
+Update-HomeProgress -ContentRoot $target
 
 # ── Inject website guide navigation into content/index.md ────────
 # The vault's index.md has no guide section; it is owned by this script.

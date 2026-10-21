@@ -176,7 +176,7 @@ plugins:
     options:
       title: 探索
       folderClickBehavior: link
-      folderDefaultState: open
+      folderDefaultState: collapsed
       useSavedState: false
       # 顯示名稱改成中文，全部保留（U-7）。外掛會把這段字串原樣交給瀏覽器執行（new Function），
       # 所以 YAML 可以直接寫函式。同步腳本（sync_content.ps1）也會為這幾個項目加上 frontmatter title，

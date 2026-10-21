@@ -944,3 +944,123 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 }
 /* YouTube facade:end */
+
+/* Chapter quick bar:begin (B3-4，手機章節快捷列；腳本在 components/scripts/chapterQuickBar.inline.ts) */
+.bwz-cqb {
+  display: none;
+}
+
+@media all and (max-width: 800px) {
+  .bwz-cqb {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 600; // 在搜尋（999）、導覽（900）、浮動按鈕（890）、筆記視窗之下
+    padding: env(safe-area-inset-top, 0px) 8px 0;
+    background: var(--light);
+    color: var(--dark);
+    border-bottom: 1px solid var(--lightgray);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transform: translateY(-100%);
+    visibility: hidden;
+    transition:
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .bwz-cqb.is-shown {
+    transform: none;
+    visibility: visible;
+  }
+
+  // 探索抽屜打開時整條收起（抽屜蓋滿畫面，且 z-index 在快捷列之下）
+  html.mobile-no-scroll > body > .bwz-cqb,
+  body:has(.explorer:not(.collapsed) .mobile-explorer) > .bwz-cqb {
+    display: none;
+  }
+
+  .bwz-cqb-title {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .bwz-cqb-btn {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    box-sizing: border-box;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 0 6px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--secondary);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover,
+    &:active {
+      background: var(--highlight);
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: -2px;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+
+    span {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+  }
+
+  .bwz-cqb-top {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  // 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）
+  html .bwz-ra.is-playing {
+    top: var(--bwz-cqb-h, 0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-cqb {
+    transition: none;
+  }
+}
+
+@media print {
+  .bwz-cqb {
+    display: none;
+  }
+}
+/* Chapter quick bar:end */

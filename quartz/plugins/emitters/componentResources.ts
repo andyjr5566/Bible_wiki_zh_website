@@ -18,6 +18,8 @@ import explorerToolsScript from "../../components/scripts/explorerTools.inline"
 import notePropertiesZhScript from "../../components/scripts/notePropertiesZh.inline"
 // @ts-ignore
 import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
+// @ts-ignore
+import chapterQuickBarScript from "../../components/scripts/chapterQuickBar.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -119,6 +121,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
   // Note properties tidy-up (條目頁「屬性」區塊的欄位名中文化、隱藏空列)
   componentResources.afterDOMLoaded.push(notePropertiesZhScript)
   componentResources.afterDOMLoaded.push(youtubeFacadeScript)
+
+  // Chapter quick bar (手機章節快捷列＋探索抽屜捲到目前章節)
+  componentResources.afterDOMLoaded.push(chapterQuickBarScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

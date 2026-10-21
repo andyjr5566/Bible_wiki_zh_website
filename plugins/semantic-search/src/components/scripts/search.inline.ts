@@ -289,7 +289,10 @@ function setupSearch() {
             pendingNote.textContent = "搜尋中…";
             results.appendChild(pendingNote);
           }
-        } else if (!scriptureCard || scriptureCard.kind === "missing") {
+        } else if (
+          options.indexNote !== "search-unavailable" &&
+          (!scriptureCard || scriptureCard.kind === "missing")
+        ) {
           const noMatch = document.createElement("a");
           noMatch.className = "result-card no-match";
           const noMatchTitle = document.createElement("h3");
@@ -373,6 +376,7 @@ function setupSearch() {
           "index-loading": "搜尋資料載入中…",
           "exact-loading": "正在尋找完全相符的結果…",
           "index-unavailable": "完全相符的結果暫時無法載入，目前只顯示語意相關的結果。",
+          "search-unavailable": "搜尋暫時無法使用，請稍後再試。",
         };
         if (options.indexNote !== "semantic-unavailable") {
           indexNote.textContent = indexNoteMessages[options.indexNote];

@@ -77,7 +77,9 @@ export function pageResources(
   const contentIndexPath = joinSegments(baseDir, "static/contentIndex.json")
   const slimContentIndexPath = joinSegments(baseDir, "static/contentIndex.slim.json")
   const contentIndexScript = `let __bwzFullIndex
-const fetchFullContentIndex = () => (__bwzFullIndex || (__bwzFullIndex = fetch("${contentIndexPath}").then(r => r.json())))
+const fetchFullContentIndex = () => (__bwzFullIndex || (__bwzFullIndex = fetch("${contentIndexPath}")
+  .then(r => { if (!r.ok) throw new Error("full index " + r.status); return r.json() })
+  .catch(e => { __bwzFullIndex = undefined; throw e })))
 const fetchData = fetch("${slimContentIndexPath}")
   .then(r => { if (!r.ok) throw new Error("slim index " + r.status); return r.json() })
   .catch(() => fetchFullContentIndex())`

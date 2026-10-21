@@ -71,7 +71,8 @@ export type SearchViewNote =
   | "index-loading"
   | "exact-loading"
   | "index-unavailable"
-  | "semantic-unavailable";
+  | "semantic-unavailable"
+  | "search-unavailable";
 
 export interface SearchView<T extends SemanticSearchResultLike> {
   results: T[];
@@ -80,19 +81,17 @@ export interface SearchView<T extends SemanticSearchResultLike> {
 }
 
 /** Combine exact and semantic results while describing which asynchronous work is still pending. */
-export function composeSearchView<T extends SemanticSearchResultLike>(
-  {
-    exact,
-    semantic,
-    indexState,
-    semanticState,
-  }: {
-    exact: readonly T[];
-    semantic: readonly T[];
-    indexState: SearchIndexState;
-    semanticState: SemanticSearchState;
-  },
-): SearchView<T> {
+export function composeSearchView<T extends SemanticSearchResultLike>({
+  exact,
+  semantic,
+  indexState,
+  semanticState,
+}: {
+  exact: readonly T[];
+  semantic: readonly T[];
+  indexState: SearchIndexState;
+  semanticState: SemanticSearchState;
+}): SearchView<T> {
   const seen = new Set<string>();
   const results: T[] = [];
   for (const result of [...exact, ...semantic]) {
@@ -102,6 +101,10 @@ export function composeSearchView<T extends SemanticSearchResultLike>(
   }
 
   const notes: SearchViewNote[] = [];
+  // 兩邊都失敗時只給一句「搜尋暫時無法使用」，不要同時出現「只顯示語意相關的結果」和空清單（交叉審查指出的矛盾）
+  if (indexState === "error" && semanticState === "error") {
+    return { results, notes: ["search-unavailable"], pending: false };
+  }
   if (indexState === "loading") {
     notes.push(semanticState === "loading" ? "index-loading" : "exact-loading");
   } else if (indexState === "error") {

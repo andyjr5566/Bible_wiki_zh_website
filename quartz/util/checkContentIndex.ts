@@ -20,7 +20,11 @@ if (!outputDir) {
     const full = JSON.parse(fullText) as Record<string, unknown>
     const slim = JSON.parse(slimText) as Record<string, unknown>
     const differences: string[] = []
-    const fullKeys = Object.keys(full)
+    // 和 slimContentIndex 一樣略過不是物件的值（小索引本來就不收它們），避免規則不一致而誤擋部署
+    const fullKeys = Object.keys(full).filter((key) => {
+      const value = full[key]
+      return value !== null && typeof value === "object" && !Array.isArray(value)
+    })
     const slimKeys = Object.keys(slim)
     const slimKeySet = new Set(slimKeys)
     const fullKeySet = new Set(fullKeys)

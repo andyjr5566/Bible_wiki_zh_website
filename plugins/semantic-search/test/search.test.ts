@@ -319,7 +319,6 @@ describe("Semantic search flow", () => {
   });
 });
 
-
 describe("Search view composition", () => {
   const exact = [{ slug: "exact", type: "keyword" }];
   const semantic = [{ slug: "semantic", type: "semantic" }];
@@ -370,7 +369,7 @@ describe("Search view composition", () => {
     });
   });
 
-  it("returns no results after both searches fail", () => {
+  it("returns one 'search unavailable' note after both searches fail", () => {
     expect(
       composeSearchView({
         exact: [],
@@ -380,6 +379,21 @@ describe("Search view composition", () => {
       }),
     ).toEqual({
       results: [],
+      notes: ["search-unavailable"],
+      pending: false,
+    });
+  });
+
+  it("keeps the semantic-only note when only the index fails", () => {
+    expect(
+      composeSearchView({
+        exact: [],
+        semantic: [{ slug: "a" }],
+        indexState: "error",
+        semanticState: "ready",
+      }),
+    ).toEqual({
+      results: [{ slug: "a" }],
       notes: ["index-unavailable"],
       pending: false,
     });

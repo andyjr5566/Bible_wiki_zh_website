@@ -22,7 +22,8 @@ mkdirSync(shotDir, { recursive: true })
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp", ".ico": "image/x-icon", ".webmanifest": "application/manifest+json", ".woff2": "font/woff2", ".xml": "application/xml" }
 const tryFile = async (p) => { try { return (await stat(p)).isFile() ? p : null } catch { return null } }
 const server = createServer(async (req, res) => {
-  const p = decodeURIComponent(new URL(req.url, "http://x").pathname)
+  // baseUrl 帶子路徑（GitHub Pages 的 /Bible_wiki_zh_website），部分資源會用子路徑請求，這裡兩種都接受
+  const p = decodeURIComponent(new URL(req.url, "http://x").pathname).replace(/^\/Bible_wiki_zh_website(?=\/|$)/, "") || "/"
   const base = path.join(siteDir, p)
   const file = (await tryFile(base)) ?? (await tryFile(base + ".html")) ?? (await tryFile(path.join(base, "index.html")))
   if (!file) {

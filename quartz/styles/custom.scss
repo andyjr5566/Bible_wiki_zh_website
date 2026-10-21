@@ -1077,3 +1077,18 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 }
 /* Mobile sticky toolbar blur:end */
+
+/* Bottom space for floating buttons:start */
+/* 手機左下「筆記」、右下「?」是固定在畫面底部的浮動按鈕（高約 46px、離底 20px）；
+   頁面最底多留一段空白，讓最後的內容（關係圖清單、反向連結、頁尾）能捲到按鈕上方，不被蓋住。
+   「加入主畫面」橫幅出現時按鈕會上移（--bwz-pwa-h），空白也跟著加大 */
+@media all and (max-width: 800px) {
+  body {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  html[data-bwz-pwa-banner] body {
+    padding-bottom: calc(84px + var(--bwz-pwa-h, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+/* Bottom space for floating buttons:end */

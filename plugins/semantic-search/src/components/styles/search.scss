@@ -394,3 +394,11 @@
 .search-scroll-target.fade-out {
   background: transparent;
 }
+
+.search .search-semantic-note,
+.search .search-pending-note {
+  margin: 0;
+  padding: 0.8em 1em;
+  color: var(--gray);
+  font-size: 0.85em;
+}

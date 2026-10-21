@@ -11,7 +11,13 @@ import {
   getBookNameFromSlug,
   isSearchExcludedSlug,
   shouldRunExactSearch,
+  rankExactMatches,
 } from "../searchLogic";
+import {
+  appendSemanticResults,
+  fetchJsonWithTimeout,
+  SEMANTIC_SEARCH_TIMEOUT_MS,
+} from "../searchFlow";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -111,6 +117,19 @@ let contentData: Record<string, Item> | null = null;
 let idDataMap: string[] = [];
 const fetchContentCache = new Map<string, Element[]>();
 
+interface SemanticSearchResultData {
+  slug: string;
+  title?: unknown;
+  text?: unknown;
+}
+
+function isSemanticSearchPayload(data: unknown): data is { results: SemanticSearchResultData[] } {
+  if (typeof data !== "object" || data === null || !("results" in data)) return false;
+  const results = (data as { results?: unknown }).results;
+  // 個別格式不對的結果在下面逐筆略過（appendSemanticResults 會跳過沒有 slug 的），不要因為一筆壞資料就丟掉整包
+  return Array.isArray(results);
+}
+
 function parseSearchQuery(input: string): { query: string } {
   return { query: input.trim() };
 }
@@ -187,6 +206,8 @@ async function setupSearch() {
     let previewToken = 0;
     let previewDebounceTimer: ReturnType<typeof setTimeout> | null = null;
     let latestSearchRequest = 0;
+    let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
+    let semanticRequestController: AbortController | null = null;
 
     const hideSearch = () => {
       container.classList.remove("active");
@@ -197,6 +218,9 @@ async function setupSearch() {
       if (preview) removeAllChildren(preview);
       searchLayout.classList.remove("display-results");
       latestSearchRequest++;
+      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+      semanticRequestController?.abort();
+      semanticRequestController = null;
       currentHover = null;
       searchButton.focus();
     };
@@ -208,22 +232,32 @@ async function setupSearch() {
       searchBar.focus();
     };
 
-    const displayResults = async (finalResults: any[]) => {
+    const displayResults = (
+      finalResults: any[],
+      options: { pending?: boolean; semanticUnavailable?: boolean; preserveFocus?: boolean } = {},
+    ) => {
+      const previousFocus = options.preserveFocus ? currentHover : null;
+      const previousFocusSlug = previousFocus?.id;
       removeAllChildren(results);
 
       if (finalResults.length === 0) {
-        const noMatch = document.createElement("a");
-        noMatch.className = "result-card no-match";
-        const noMatchTitle = document.createElement("h3");
-        noMatchTitle.textContent = searchLayout.getAttribute("data-no-results") || "No results.";
-        const noMatchHint = document.createElement("p");
-        noMatchHint.textContent =
-          searchLayout.getAttribute("data-no-results-hint") || "Try another search term?";
-        noMatch.appendChild(noMatchTitle);
-        noMatch.appendChild(noMatchHint);
-        results.appendChild(noMatch);
-        currentHover = null;
-        if (preview) removeAllChildren(preview);
+        if (options.pending) {
+          const pendingNote = document.createElement("p");
+          pendingNote.className = "search-pending-note";
+          pendingNote.textContent = "搜尋中…";
+          results.appendChild(pendingNote);
+        } else {
+          const noMatch = document.createElement("a");
+          noMatch.className = "result-card no-match";
+          const noMatchTitle = document.createElement("h3");
+          noMatchTitle.textContent = "找不到相符的結果";
+          const noMatchHint = document.createElement("p");
+          noMatchHint.textContent =
+            searchLayout.getAttribute("data-no-results-hint") || "請嘗試其他搜尋關鍵字。";
+          noMatch.appendChild(noMatchTitle);
+          noMatch.appendChild(noMatchHint);
+          results.appendChild(noMatch);
+        }
       } else {
         for (const item of finalResults) {
           const itemTile = document.createElement("a");
@@ -243,8 +277,7 @@ async function setupSearch() {
             badge.style.borderRadius = "4px";
             badge.style.marginRight = "6px";
             badge.style.verticalAlign = "middle";
-            const scoreText = item.score !== undefined ? ` ${Math.round(item.score * 100)}%` : "";
-            badge.textContent = `AI 語意${scoreText}`;
+            badge.textContent = "語意相關";
             titleEl.appendChild(badge);
           } else if (item.type === "keyword") {
             const badge = document.createElement("span");
@@ -255,15 +288,15 @@ async function setupSearch() {
             badge.style.borderRadius = "4px";
             badge.style.marginRight = "6px";
             badge.style.verticalAlign = "middle";
-            badge.textContent = `精準比對`;
+            badge.textContent = "精準比對";
             titleEl.appendChild(badge);
           }
           const titleText = document.createElement("span");
           const bookName = getBookNameFromSlug(item.slug);
           const plainTitle = item.title.replace(/<[^>]*>/g, "");
           const bookPrefix =
-            bookName && !plainTitle.includes(bookName) ? `${escapeHTML(bookName)} ` : "";
-          titleText.innerHTML = `${bookPrefix}${item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "")}`;
+            bookName && !plainTitle.includes(bookName) ? escapeHTML(bookName) + " " : "";
+          titleText.innerHTML = bookPrefix + item.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
           titleEl.appendChild(titleText);
 
           itemTile.appendChild(titleEl);
@@ -283,8 +316,31 @@ async function setupSearch() {
           results.appendChild(itemTile);
         }
       }
-    };
 
+      if (options.semanticUnavailable) {
+        const semanticNote = document.createElement("p");
+        semanticNote.className = "search-semantic-note";
+        semanticNote.textContent = "語意搜尋暫時沒有回應，目前只顯示精準比對結果。";
+        results.appendChild(semanticNote);
+      }
+
+      const resultElements = getResultElements();
+      if (resultElements.length === 0) {
+        currentHover = null;
+        if (preview) removeAllChildren(preview);
+      } else if (previousFocus && previousFocusSlug) {
+        const nextFocus = resultElements.find((element) => element.id === previousFocusSlug);
+        if (nextFocus) {
+          previousFocus.classList.remove("focus");
+          currentHover = nextFocus;
+          currentHover.classList.add("focus");
+        } else {
+          setFocus(resultElements[0] ?? null);
+        }
+      } else {
+        setFocus(resultElements[0] ?? null);
+      }
+    };
     const getResultElements = (): HTMLElement[] => {
       return Array.from(results.querySelectorAll<HTMLElement>(".result-card:not(.no-match)"));
     };
@@ -365,96 +421,95 @@ async function setupSearch() {
       focusByIndex(currentIndex - 1);
     };
 
-    let searchDebounceTimer: ReturnType<typeof setTimeout>;
-
-    const onType = async (e: Event) => {
+    const onType = (e: Event) => {
       const inputValue = (e.target as HTMLInputElement).value;
       currentSearchTerm = inputValue;
       const requestId = ++latestSearchRequest;
+      semanticRequestController?.abort();
+      semanticRequestController = null;
+      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+
       const parsed = parseSearchQuery(inputValue);
       const hasContent = parsed.query !== "";
       searchLayout.classList.toggle("display-results", hasContent);
 
+      if (currentHover) currentHover.classList.remove("focus");
+      currentHover = null;
+
       if (!hasContent) {
         removeAllChildren(results);
         if (preview) removeAllChildren(preview);
-        currentHover = null;
         return;
       }
 
-      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-
       searchDebounceTimer = setTimeout(async () => {
-        let finalResults: any[] = [];
+        if (requestId !== latestSearchRequest) return;
         const displayTerm = parsed.query;
+        const exactSlugs = shouldRunExactSearch(parsed.query)
+          ? rankExactMatches(
+              contentData ?? {},
+              findExactMatchSlugs(contentData ?? {}, parsed.query),
+              parsed.query,
+            )
+          : [];
+        const exactResults = exactSlugs.flatMap((slug) => {
+          const doc = contentData?.[slug];
+          if (!doc) return [];
+          return [
+            {
+              id: slug,
+              slug,
+              title: highlight(displayTerm, doc.title || slug),
+              content: highlight(displayTerm, doc.content || "", true),
+              tags: doc.tags || [],
+              type: "keyword",
+            },
+          ];
+        });
 
-        if (parsed.query) {
-          // Perform both semantic search and exact keyword search concurrently
-          const semanticPromise = fetch(getSearchApiUrl(parsed.query))
-            .then((res) => (res.ok ? res.json() : null))
-            .catch((error) => {
-              console.error("Semantic search error:", error);
-              return null;
-            });
+        displayResults(exactResults, { pending: true });
+        if (requestId !== latestSearchRequest) return;
 
-          // Only perform keyword search if query length is >= 2
-          let exactPromise: Promise<any> | null = null;
-          if (shouldRunExactSearch(parsed.query)) {
-            exactPromise = Promise.resolve(findExactMatchSlugs(contentData ?? {}, parsed.query));
-          }
+        const controller = new AbortController();
+        semanticRequestController = controller;
+        const semanticResponse = await fetchJsonWithTimeout(getSearchApiUrl(parsed.query), {
+          timeoutMs: SEMANTIC_SEARCH_TIMEOUT_MS,
+          signal: controller.signal,
+        });
+        if (requestId !== latestSearchRequest) return;
+        if (semanticRequestController === controller) semanticRequestController = null;
 
-          const [semanticData, exactData] = await Promise.all([semanticPromise, exactPromise]);
-          if (requestId !== latestSearchRequest) return;
-
-          const resultMap = new Map<string, any>();
-
-          // 1. Process Semantic Matches First (High Priority)
-          if (semanticData && semanticData.results) {
-            semanticData.results.forEach((r: any) => {
-              if (isSearchExcludedSlug(r.slug)) return;
-              resultMap.set(r.slug, {
-                id: r.slug,
-                slug: r.slug,
-                score: r.score,
-                title: highlight(displayTerm, r.title || r.slug),
-                content: highlight(displayTerm, r.text || "", true),
-                tags: [],
-                type: "semantic",
-              });
-            });
-          }
-
-          // 2. Process Keyword Matches
-          if (exactData) {
-            exactData.forEach((slug: string) => {
-              if (!slug) return;
-              if (!resultMap.has(slug)) {
-                // Found only by keyword
-                const doc = contentData![slug];
-                if (!doc) return;
-                resultMap.set(slug, {
-                  id: slug,
-                  slug: slug,
-                  title: highlight(displayTerm, doc.title || slug),
-                  content: highlight(displayTerm, doc.content || "", true),
-                  tags: doc.tags || [],
-                  type: "keyword",
-                });
-              }
-            });
-          }
-
-          // Convert Map to array (preserves insertion order: semantic/both first, then pure keywords)
-          finalResults = Array.from(resultMap.values());
+        if (semanticResponse.status !== "ok" || !isSemanticSearchPayload(semanticResponse.data)) {
+          displayResults(exactResults, {
+            semanticUnavailable: true,
+            preserveFocus: true,
+          });
+          return;
         }
 
-        if (requestId !== latestSearchRequest) return;
-        await displayResults(finalResults);
-        const resultElements = getResultElements();
-        setFocus(resultElements[0] ?? null);
-      }, 500);
-    };
+        const semanticSlugs = appendSemanticResults(
+          exactSlugs,
+          semanticResponse.data.results.filter(
+            (result): result is SemanticSearchResultData =>
+              typeof result === "object" && result !== null && typeof result.slug === "string",
+          ),
+          isSearchExcludedSlug,
+        );
+        const semanticResults = semanticSlugs.map((result) => ({
+          id: result.slug,
+          slug: result.slug,
+          title: highlight(
+            displayTerm,
+            typeof result.title === "string" ? result.title : result.slug,
+          ),
+          content: highlight(displayTerm, typeof result.text === "string" ? result.text : "", true),
+          tags: [],
+          type: "semantic",
+        }));
 
+        displayResults([...exactResults, ...semanticResults], { preserveFocus: true });
+      }, 150);
+    };
     const onButtonClick = (e: Event) => {
       e.stopPropagation();
       showSearch();

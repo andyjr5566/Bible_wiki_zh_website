@@ -38,7 +38,8 @@ import { getNextVisibleIndex, getSearchAnnouncement, shouldAnnounce } from "../s
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
 const SEARCH_API_ORIGIN = "https://bible-wiki-zh-website.vercel.app";
-const RESULT_RENDER_LIMIT = 60;
+// 一次先畫幾張結果卡片：完整站第一次查詢在全新瀏覽器量到 60 張要 301 ms，改 30 張留出餘裕（B4-1：300 ms 內）
+const RESULT_RENDER_LIMIT = 30;
 
 function isGitHubPagesHost(): boolean {
   return window.location.hostname === GITHUB_PAGES_HOST;
@@ -391,7 +392,7 @@ function setupSearch() {
         // 它放在 listbox 裡，axe 要求 listbox 的子元素是 option；方向鍵只走 .result-card，所以不影響鍵盤選取
         moreButton.setAttribute("role", "option");
         moreButton.setAttribute("aria-selected", "false");
-        moreButton.textContent = "再顯示 60 筆";
+        moreButton.textContent = `再顯示 ${RESULT_RENDER_LIMIT} 筆`;
         results.appendChild(moreButton);
       }
 

@@ -21,6 +21,12 @@ import {
   fetchJsonWithTimeout,
   SEMANTIC_SEARCH_TIMEOUT_MS,
 } from "../searchFlow";
+import {
+  buildScriptureCard,
+  findVerseItems,
+  pickVerseItems,
+  type ScriptureCard,
+} from "../verseTarget";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -213,6 +219,8 @@ async function setupSearch() {
     let semanticRequestController: AbortController | null = null;
     // 目前選的類型篩選；null 代表「全部」。換新查詢時重設，語意結果晚到時保留。
     let activeCategory: string | null = null;
+    // 目前查詢若是經文參照（出12:3），結果清單最上面的「經文跳轉」卡片資料
+    let scriptureCard: ScriptureCard | null = null;
 
     const hideSearch = () => {
       container.classList.remove("active");
@@ -247,13 +255,15 @@ async function setupSearch() {
         results.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
       removeAllChildren(results);
 
+      if (scriptureCard) results.appendChild(createScriptureCardElement(scriptureCard));
+
       if (finalResults.length === 0) {
         if (options.pending) {
           const pendingNote = document.createElement("p");
           pendingNote.className = "search-pending-note";
           pendingNote.textContent = "搜尋中…";
           results.appendChild(pendingNote);
-        } else {
+        } else if (!scriptureCard || scriptureCard.kind === "missing") {
           const noMatch = document.createElement("a");
           noMatch.className = "result-card no-match";
           const noMatchTitle = document.createElement("h3");
@@ -352,9 +362,47 @@ async function setupSearch() {
         setFocus(resultElements[0] ?? null);
       }
     };
+    // 經文跳轉卡片不屬於任何類型：篩選時一直留在最上面。找不到內容的那一張（scripture-missing）不能被選到。
+    const createScriptureCardElement = (card: ScriptureCard): HTMLElement => {
+      const el = document.createElement(card.kind === "missing" ? "div" : "a");
+      el.className = "result-card scripture-jump";
+      el.id = "scripture-jump";
+      if (card.kind === "missing") {
+        el.classList.add("scripture-missing");
+      } else {
+        (el as HTMLAnchorElement).href = resolveSearchPath(card.slug);
+        el.dataset.previewSlug = card.slug;
+        if (card.kind === "chapter" && card.verse !== undefined) {
+          el.dataset.verse = String(card.verse);
+          if (card.verseEnd !== undefined) el.dataset.verseEnd = String(card.verseEnd);
+        }
+      }
+
+      const titleEl = document.createElement("h3");
+      titleEl.className = "card-title";
+      const tag = document.createElement("span");
+      tag.className = "result-category";
+      tag.dataset.category = "章節";
+      tag.textContent = "經文";
+      const titleText = document.createElement("span");
+      titleText.className = "result-title-text";
+      titleText.textContent = card.title;
+      titleEl.appendChild(tag);
+      titleEl.appendChild(titleText);
+      el.appendChild(titleEl);
+
+      const sub = document.createElement("p");
+      sub.className = "card-description";
+      sub.textContent = card.subtitle;
+      el.appendChild(sub);
+      return el;
+    };
+
     const getResultElements = (): HTMLElement[] => {
       return Array.from(
-        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match):not([hidden])"),
+        results.querySelectorAll<HTMLElement>(
+          ".result-card:not(.no-match):not(.scripture-missing):not([hidden])",
+        ),
       );
     };
 
@@ -398,7 +446,7 @@ async function setupSearch() {
     // 依 activeCategory 顯示／隱藏結果卡片，並同步篩選鈕的 aria-pressed
     const applyCategoryFilter = () => {
       for (const card of Array.from(
-        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match)"),
+        results.querySelectorAll<HTMLElement>(".result-card:not(.no-match):not(.scripture-jump)"),
       )) {
         card.hidden = activeCategory !== null && card.dataset.category !== activeCategory;
       }
@@ -416,7 +464,7 @@ async function setupSearch() {
       if (!preview) return;
       removeAllChildren(preview);
       if (!el) return;
-      const slug = el.id;
+      const slug = el.dataset.previewSlug || el.id;
       const token = ++previewToken;
       const contents = await fetchContent(slug);
       if (token !== previewToken) return;
@@ -489,6 +537,7 @@ async function setupSearch() {
       currentSearchTerm = inputValue;
       const requestId = ++latestSearchRequest;
       activeCategory = null;
+      scriptureCard = null;
       semanticRequestController?.abort();
       semanticRequestController = null;
       if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
@@ -530,6 +579,13 @@ async function setupSearch() {
             },
           ];
         });
+
+        // 經文參照（出12:3）：用小索引（fetchData）的 key 判斷這一章／這一卷有沒有內容，不等完整內文索引
+        const knownSlugs = await getKnownSlugs();
+        if (requestId !== latestSearchRequest) return;
+        scriptureCard = knownSlugs
+          ? buildScriptureCard(parsed.query, (slug) => knownSlugs.has(slug))
+          : null;
 
         displayResults(exactResults, { pending: true });
         if (requestId !== latestSearchRequest) return;
@@ -599,7 +655,7 @@ async function setupSearch() {
         const focused = currentHover;
         if (focused instanceof HTMLAnchorElement) {
           e.preventDefault();
-          storeSearchTerm();
+          storeNavigationHint(focused);
           hideSearch();
           focused.click();
         }
@@ -622,16 +678,41 @@ async function setupSearch() {
       if (term) sessionStorage.setItem("search-term", term);
     };
 
+    // 換頁後要捲到哪裡：經文跳轉卡片存 search-verse（章節 + 節數），其他結果存搜尋字
+    const storeNavigationHint = (card: HTMLElement) => {
+      try {
+        if (!card.classList.contains("scripture-jump")) {
+          storeSearchTerm();
+          return;
+        }
+        const verse = Number(card.dataset.verse);
+        if (!card.dataset.previewSlug || !Number.isInteger(verse) || verse < 1) return;
+        const verseEnd = Number(card.dataset.verseEnd);
+        sessionStorage.setItem(
+          "search-verse",
+          JSON.stringify({
+            slug: card.dataset.previewSlug,
+            verse,
+            verseEnd: Number.isInteger(verseEnd) && verseEnd >= verse ? verseEnd : verse,
+          }),
+        );
+      } catch {
+        // sessionStorage 不能用就算了，只是不會標示節數／捲到搜尋字
+      }
+    };
+
     const onResultsClick = (e: Event) => {
       const target = (e.target as HTMLElement).closest(".result-card") as HTMLAnchorElement | null;
       if (!target || target.classList.contains("no-match")) return;
+      if (target.classList.contains("scripture-missing")) return;
       if (e instanceof MouseEvent && (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) return;
-      storeSearchTerm();
+      storeNavigationHint(target);
       hideSearch();
     };
     const onResultsMouseover = (e: Event) => {
       const target = (e.target as HTMLElement).closest(".result-card") as HTMLElement | null;
       if (!target || target.classList.contains("no-match")) return;
+      if (target.classList.contains("scripture-missing")) return;
       setFocus(target);
     };
     const onFilterClick = (e: Event) => {
@@ -798,6 +879,19 @@ async function fetchContentIndex(): Promise<Record<string, Item>> {
   return data as unknown as Record<string, Item>;
 }
 
+/** 小索引（fetchData）的 key 就是所有頁面的 slug；一定會載入，不用等完整內文索引。載入失敗回傳 null。 */
+async function getKnownSlugs(): Promise<Set<string> | null> {
+  try {
+    const base = (await fetchData) as unknown as Record<string, unknown>;
+    if (!base || typeof base !== "object") return null;
+    const content = base.content;
+    const root = content && typeof content === "object" ? (content as object) : base;
+    return new Set(Object.keys(root));
+  } catch {
+    return null;
+  }
+}
+
 let indexInitialized = false;
 
 async function initIndex() {
@@ -929,11 +1023,60 @@ function scrollToSearchTerm() {
   });
 }
 
+/**
+ * 點經文跳轉卡片後換頁：如果目前頁面就是存的章節，捲到那幾節並短暫高亮。
+ * 回傳 true 代表有 search-verse（不論有沒有成功標示），此時不要再跑 scrollToSearchTerm。
+ */
+function scrollToSearchVerse(): boolean {
+  let raw: string | null = null;
+  try {
+    raw = sessionStorage.getItem("search-verse");
+    if (raw !== null) sessionStorage.removeItem("search-verse");
+  } catch {
+    return false;
+  }
+  if (raw === null) return false;
+
+  let stored: { slug?: unknown; verse?: unknown; verseEnd?: unknown } | null = null;
+  try {
+    stored = JSON.parse(raw);
+  } catch {
+    return true;
+  }
+  if (!stored || typeof stored.slug !== "string" || typeof stored.verse !== "number") return true;
+  if (stored.slug !== document.body.dataset.slug) return true;
+
+  const verse = stored.verse;
+  const verseEnd = typeof stored.verseEnd === "number" ? stored.verseEnd : undefined;
+  requestAnimationFrame(() => {
+    const article = document.querySelector("article");
+    if (!article) return;
+    const content = article.querySelector(":scope > .markdown-preview-view") ?? article;
+    const found = findVerseItems(content as HTMLElement);
+    const items = found ? pickVerseItems(found, verse, verseEnd) : null;
+    if (!items || items.length === 0) return; // 找不到經文清單或節數超出範圍：停在章首
+    for (const old of Array.from(document.querySelectorAll(".search-verse-target"))) {
+      old.classList.remove("search-verse-target", "fade-out");
+    }
+    for (const item of items) item.classList.add("search-verse-target");
+    items[0]!.scrollIntoView({ block: "center", behavior: "smooth" });
+    setTimeout(() => {
+      for (const item of items) item.classList.add("fade-out");
+      setTimeout(() => {
+        for (const item of items) item.classList.remove("search-verse-target", "fade-out");
+      }, 1000);
+    }, 2000);
+  });
+  return true;
+}
+
 async function handleNavOrRender() {
   runCleanups();
+  // 先處理經文跳轉（不用等完整內文索引）；有 search-verse 時不再跑搜尋字捲動，避免兩個捲動打架
+  const handledVerse = scrollToSearchVerse();
   await initIndex();
   await setupSearch();
-  scrollToSearchTerm();
+  if (!handledVerse) scrollToSearchTerm();
 }
 
 document.addEventListener("nav", handleNavOrRender);

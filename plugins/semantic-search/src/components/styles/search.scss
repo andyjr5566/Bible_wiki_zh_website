@@ -610,3 +610,43 @@
 :root[saved-theme="dark"] .search .result-category[data-category="解經爭議"] {
   --cat-color: #bef264;
 }
+
+/* ---- B4-4：經文跳轉卡片與跳轉後的節數高亮 ---- */
+
+/* 找不到內容的那張卡片不是連結，不能選 */
+.search .results-container .result-card.scripture-jump.scripture-missing {
+  cursor: default;
+}
+
+.search .results-container .result-card.scripture-jump.scripture-missing:hover {
+  background: transparent;
+}
+
+/* 跳轉後被標示的經文節（li）：淡底加外框，約 3 秒後淡出；li 的編號在外側，所以用 box-shadow 往兩側多撐一點 */
+.search-verse-target {
+  background: color-mix(in srgb, var(--tertiary) 35%, transparent);
+  box-shadow:
+    0 0 0 0.3rem color-mix(in srgb, var(--tertiary) 35%, transparent),
+    0 0 0 0.35rem var(--tertiary);
+  border-radius: 4px;
+  transition:
+    background 1s ease,
+    box-shadow 1s ease;
+}
+
+.search-verse-target.fade-out {
+  background: transparent;
+  box-shadow: 0 0 0 0.3rem transparent;
+}
+
+:root[saved-theme="dark"] .search-verse-target {
+  background: color-mix(in srgb, var(--tertiary) 45%, transparent);
+  box-shadow:
+    0 0 0 0.3rem color-mix(in srgb, var(--tertiary) 45%, transparent),
+    0 0 0 0.35rem var(--tertiary);
+}
+
+:root[saved-theme="dark"] .search-verse-target.fade-out {
+  background: transparent;
+  box-shadow: 0 0 0 0.3rem transparent;
+}

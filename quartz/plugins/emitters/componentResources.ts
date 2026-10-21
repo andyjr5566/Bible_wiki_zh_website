@@ -14,6 +14,8 @@ import bookNavScript from "../../components/scripts/bookNavigation.inline"
 import pureModeScript from "../../components/scripts/pureMode.inline"
 // @ts-ignore
 import explorerToolsScript from "../../components/scripts/explorerTools.inline"
+// @ts-ignore
+import notePropertiesZhScript from "../../components/scripts/notePropertiesZh.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -111,6 +113,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Explorer tools (探索目錄「全部收合」)
   componentResources.afterDOMLoaded.push(explorerToolsScript)
+
+  // Note properties tidy-up (條目頁「屬性」區塊的欄位名中文化、隱藏空列)
+  componentResources.afterDOMLoaded.push(notePropertiesZhScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

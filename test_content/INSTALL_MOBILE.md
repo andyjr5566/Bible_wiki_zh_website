@@ -1,3 +1,6 @@
+---
+title: 手機版使用說明
+---
 # 📱 手機版 Obsidian 與 GitHub Sync
 
 本指南適用於 iOS、iPadOS 與 Android，使用第三方 Obsidian 外掛 **GitHub Gitless Sync** 將 GitHub 儲存庫同步到手機，不需要在手機安裝 Git。

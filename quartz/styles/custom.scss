@@ -84,6 +84,51 @@ li.section-li > .section > .meta {
 }
 /* Bible Wiki custom cleanup:end */
 
+/* Note properties block (條目頁的「屬性」區塊, B1-6 / U-7):start */
+/*
+ * The note-properties plugin has no zh-TW locale and lives in .quartz/ (re-cloned on every CI build),
+ * so its English UI text is handled here and in components/scripts/notePropertiesZh.inline.ts.
+ * - Header "Properties" -> 屬性 (CSS until the script has replaced the text, so there is no flash of English;
+ *   the script then sets [data-zh] so screen readers do not read both).
+ * - Rows whose value is empty (e.g. `aliases: []`) are hidden; if every row is empty the whole block goes.
+ * - Hover popovers do not show the block at all (it is metadata, not preview content).
+ */
+.note-properties [hidden] {
+  display: none !important;
+}
+
+.note-properties:not([data-zh]) .note-properties-title {
+  font-size: 0;
+}
+
+.note-properties:not([data-zh]) .note-properties-title::after {
+  content: "屬性";
+  font-size: 0.9rem;
+}
+
+.note-properties-row:has(.note-properties-value > .note-properties-list:empty),
+.note-properties-row:has(.note-properties-value > .note-properties-empty) {
+  display: none;
+}
+
+.note-properties:not(
+    :has(
+      .note-properties-row:not(
+          :has(
+            .note-properties-value > .note-properties-list:empty,
+            .note-properties-value > .note-properties-empty
+          )
+        )
+    )
+  ) {
+  display: none;
+}
+
+.popover .note-properties {
+  display: none !important;
+}
+/* Note properties block:end */
+
 /* Mermaid diagram fix:start */
 /*
  * The quartz-themes plugin defines accent colors such as `--tertiary` as

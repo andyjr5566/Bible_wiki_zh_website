@@ -178,6 +178,25 @@ plugins:
       folderClickBehavior: link
       folderDefaultState: open
       useSavedState: false
+      # 顯示名稱改成中文，全部保留（U-7）。外掛會把這段字串原樣交給瀏覽器執行（new Function），
+      # 所以 YAML 可以直接寫函式。同步腳本（sync_content.ps1）也會為這幾個項目加上 frontmatter title，
+      # 兩邊並存：沒有 title 時由這裡補上，不需要改 content/。
+      mapFn: |
+        (node) => {
+          const names = {
+            appendix: "附錄",
+            link_folder: "知識節點",
+            install_computer: "電腦版使用說明",
+            install_mobile: "手機版使用說明",
+            readme: "專案概述",
+          };
+          // 檔案的 slug 會被轉成小寫（README -> readme），所以比對時一律用小寫
+          const key = String(node.slugSegment || "").toLowerCase();
+          const depth = (node.slugSegments || [node.slugSegment]).length;
+          if (depth === 1 && Object.prototype.hasOwnProperty.call(names, key)) {
+            node.displayName = names[key];
+          }
+        }
     layout:
       position: left
       priority: 50
@@ -266,6 +285,8 @@ plugins:
       group: toolbar
   - source: github:quartz-community/breadcrumbs
     enabled: true
+    options:
+      rootName: 首頁
     layout:
       position: beforeBody
       priority: 5
@@ -311,6 +332,8 @@ plugins:
       hidePropertiesView: false
       delimiters: ---
       language: yaml
+      # 預設收合「屬性」區塊（欄位名中文化與隱藏空列見 quartz/styles/custom.scss、notePropertiesZh.inline.ts）
+      collapsed: true
     order: 5
     layout:
       position: beforeBody

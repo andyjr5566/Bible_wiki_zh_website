@@ -1,3 +1,6 @@
+---
+title: 電腦版使用說明
+---
 # 💻 電腦版 Obsidian 安裝與開啟 Vault
 
 本指南適用於 Windows、macOS 與 Linux。完成後，即可在電腦上離線瀏覽與編輯本知識庫。

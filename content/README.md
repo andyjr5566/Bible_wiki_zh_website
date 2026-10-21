@@ -1,3 +1,6 @@
+---
+title: 專案概述
+---
 <video controls src="https://raw.githubusercontent.com/andyjr5566/Bible_wiki_zh/main/appendix/video/演示.mp4" style="max-width:100%;height:auto;"></video>
 # 📖 聖經研讀知識庫
 

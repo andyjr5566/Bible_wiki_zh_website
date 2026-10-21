@@ -25,7 +25,8 @@ export default ((userOpts?: Partial<SearchOptions>) => {
   const Search: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const opts = { ...defaultOptions, ...userOpts };
     const locale = cfg.locale ?? "en-US";
-    const searchPlaceholder = i18n(locale).components.search.searchBarPlaceholder;
+    const searchText = i18n(locale).components.search;
+    const searchPlaceholder = searchText.searchBarPlaceholder;
 
     return (
       <div class={classNames(displayClass, "search")}>
@@ -35,7 +36,7 @@ export default ((userOpts?: Partial<SearchOptions>) => {
           aria-expanded="false"
         >
           <svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7">
-            <title>Search</title>
+            <title>{searchText.title}</title>
             <g class="search-path" fill="none">
               <path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4" />
               <circle cx="8" cy="8" r="7" />
@@ -57,6 +58,9 @@ export default ((userOpts?: Partial<SearchOptions>) => {
               class="search-layout"
               data-preview={opts.enablePreview}
               data-field-priority={JSON.stringify(opts.fieldPriority)}
+              data-no-results={searchText.noResults}
+              data-no-results-hint={searchText.noResultsHint}
+              data-results-label={searchText.title}
             ></div>
           </div>
         </div>

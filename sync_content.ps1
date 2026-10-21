@@ -108,6 +108,71 @@ function Remove-IfExists {
     }
 }
 
+# Give a synced .md file a `title:` in its frontmatter so the site shows a Chinese name
+# (explorer, breadcrumbs, page title) instead of the file / folder name.
+# Idempotent: a file that already has a `title:` is left untouched, so a title written in the
+# vault always wins. -CreateIfMissing creates a title-only file (used for folders that have no
+# index.md; the folder-page plugin still lists the folder's contents under it).
+# The file's last-write time is restored, because robocopy /XO skips a destination that is
+# newer than its source and would otherwise stop later vault edits from being copied.
+function Set-FrontmatterTitle {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Title,
+        [switch]$CreateIfMissing
+    )
+
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        if (-not $CreateIfMissing) { return $false }
+        $dir = Split-Path -Parent $Path
+        if (-not (Test-Path -LiteralPath $dir)) { return $false }
+        [System.IO.File]::WriteAllText($Path, "---`ntitle: $Title`n---`n", $utf8NoBom)
+        return $true
+    }
+
+    $file = Get-Item -LiteralPath $Path
+    $lastWrite = $file.LastWriteTime
+    $text = [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
+    $text = $text.TrimStart([char]0xFEFF)
+    $nl = if ($text.Contains("`r`n")) { "`r`n" } else { "`n" }
+
+    $fmPattern = '(?s)\A---[ \t]*\r?\n(.*?)(?:\r?\n)---[ \t]*(?:\r?\n|\z)'
+    $fm = [regex]::Match($text, $fmPattern)
+    if ($fm.Success) {
+        if ($fm.Groups[1].Value -match '(?m)^title[ \t]*:') { return $false }
+        $headerEnd = $text.IndexOf("`n") + 1
+        $updated = $text.Substring(0, $headerEnd) + "title: $Title$nl" + $text.Substring($headerEnd)
+    }
+    else {
+        $updated = "---${nl}title: $Title${nl}---$nl" + $text
+    }
+
+    [System.IO.File]::WriteAllText($Path, $updated, $utf8NoBom)
+    $file.LastWriteTime = $lastWrite
+    return $true
+}
+
+# Chinese display names for the vault's English-named top-level items (decision U-7).
+# Nothing is hidden: the items stay in the explorer, only their names change.
+function Add-WebsiteTitles {
+    param([Parameter(Mandatory = $true)][string]$ContentRoot)
+
+    $titled = @(
+        @{ Path = 'INSTALL_COMPUTER.md'; Title = '電腦版使用說明'; Create = $false },
+        @{ Path = 'INSTALL_MOBILE.md';   Title = '手機版使用說明'; Create = $false },
+        @{ Path = 'README.md';           Title = '專案概述';       Create = $false },
+        @{ Path = 'appendix\index.md';   Title = '附錄';           Create = $false },
+        @{ Path = 'link_folder\index.md'; Title = '知識節點';      Create = $true }
+    )
+    foreach ($entry in $titled) {
+        $filePath = Join-Path $ContentRoot $entry.Path
+        $changed = Set-FrontmatterTitle -Path $filePath -Title $entry.Title -CreateIfMissing:$entry.Create
+        if ($changed) { Write-Host "Added title '$($entry.Title)' to $($entry.Path)." }
+    }
+}
+
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 
 $items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md','專案流程說明.md')
@@ -276,6 +341,9 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
         }
     }
 }
+
+# ── Chinese titles for README / INSTALL_* / appendix / link_folder ────────
+Add-WebsiteTitles -ContentRoot $target
 
 # ── Inject website guide navigation into content/index.md ────────
 # The vault's index.md has no guide section; it is owned by this script.

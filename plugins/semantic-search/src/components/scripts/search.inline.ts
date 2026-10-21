@@ -169,7 +169,10 @@ async function setupSearch() {
       results = document.createElement("div");
       results.className = "results-container";
       results.setAttribute("role", "listbox");
-      results.setAttribute("aria-label", "Search results");
+      results.setAttribute(
+        "aria-label",
+        searchLayout.getAttribute("data-results-label") || "Search results",
+      );
       searchLayout.appendChild(results);
     }
 
@@ -212,9 +215,10 @@ async function setupSearch() {
         const noMatch = document.createElement("a");
         noMatch.className = "result-card no-match";
         const noMatchTitle = document.createElement("h3");
-        noMatchTitle.textContent = "No results.";
+        noMatchTitle.textContent = searchLayout.getAttribute("data-no-results") || "No results.";
         const noMatchHint = document.createElement("p");
-        noMatchHint.textContent = "Try another search term?";
+        noMatchHint.textContent =
+          searchLayout.getAttribute("data-no-results-hint") || "Try another search term?";
         noMatch.appendChild(noMatchTitle);
         noMatch.appendChild(noMatchHint);
         results.appendChild(noMatch);

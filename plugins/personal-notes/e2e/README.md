@@ -34,7 +34,7 @@
    **要模擬線上的子路徑**，建置前暫時把 `quartz.config.yaml` 的 baseUrl 改成 `localhost:8090/Bible_wiki_zh_website`，建完立刻還原（網站的基底路徑來自 baseUrl；不改的話 `links.json`、`config.json` 等會用錯路徑）：
 
    ```bash
-   sed -i 's|baseUrl: bible-wiki-zh-website.vercel.app|baseUrl: localhost:8090/Bible_wiki_zh_website|' quartz.config.yaml
+   sed -i 's|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|baseUrl: localhost:8090/Bible_wiki_zh_website|' quartz.config.yaml
    npx quartz build -d test_content -o test_public
    git checkout quartz.config.yaml
    ```

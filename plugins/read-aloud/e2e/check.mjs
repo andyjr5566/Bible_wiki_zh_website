@@ -3,7 +3,7 @@
 //   siteDir  `npx quartz build -d test_content -o <siteDir>` 的輸出資料夾（含 01-創世記 第1、2章）
 //   profile  Chrome user-data-dir（放 scratchpad；每次執行請用新的資料夾，才能驗證「預設語速 1.0×」）
 //   shotDir  截圖資料夾（會自動建立）
-// 本腳本自己在隨機埠開一個靜態伺服器（站台根目錄 "/"，baseUrl 預設在 vercel 根路徑），不需要事先啟動伺服器。
+// 本腳本自己在隨機埠開一個靜態伺服器（站台根目錄 "/"），不需要事先啟動伺服器。
 // 重用 plugins/personal-notes/e2e/lib.mjs（不修改它）。
 import { createServer } from "node:http"
 import { readFile, stat } from "node:fs/promises"

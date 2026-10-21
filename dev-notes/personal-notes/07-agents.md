@@ -146,3 +146,11 @@ ode_repl.exe` 的權限時檔案正被使用（Codex 自己的 node_repl／cua_r
 
 - **Luna 不用 low**：`gpt-6-luna` low 第一次交件在第 4 個檔案中途停掉（dialog.ts 空白、後面 4 個檔沒輸出），要補交一次。使用者：「Luna efforts 太低了」→ 第 1 級改用 luna **medium**；使用者又說「Luna 最高層級用 xhigh」→ 第 2 級（Luna 的最高一級）用 luna **xhigh**（上面兩張表已更新）。
 - Python 在 Windows 用文字模式寫檔會把換行改成 CRLF；改檔用 `open(p, "w", encoding="utf-8", newline="")`，或寫完 `sed -i 's/\r$//'`。
+
+## 第五輪的經驗（2026-10-21，UX 第 1、2 批）
+
+- **Codex 不要同時跑兩個**：兩個 `codex exec -s workspace-write` 同時執行時，晚開的那個會出現 `setup refresh had errors`，而且之後在同一個 worktree 重跑也一樣失敗。單獨跑的時候 workspace-write 可以正常寫檔（B1-2、B2-4 都成功）。失敗時照舊改用 stdin 模式（`===FILE===` 輸出，由主導者貼上）。
+- **Agent 工具的 worktree 隔離**可能因為工作目錄的磁碟代號大小寫（`c:` 與 `C:`）被拒絕建立。遇到時就自己 `git worktree add C:\Obsidian\bwz-wt-<名稱>`，叫子代理只在那個路徑工作。
+- 刪 worktree 前，先把裡面的 junction（`node_modules`）用 `[IO.Directory]::Delete` 拿掉；路徑太長刪不掉時，用 `Remove-Item -LiteralPath "\?\<路徑>"`。
+- Git Bash 把參數傳給 `node -e` 時會吃掉反斜線（`\|` 變成 `|`），而且 `sed -i` 會把 CRLF 改成 LF。需要精確處理時，把腳本寫成檔案再執行。
+- Antigravity 的 `gemini-4-argon-high` 額度用完時（429）改用 `gemini-3.8-flash-high`，它也能看圖審截圖。

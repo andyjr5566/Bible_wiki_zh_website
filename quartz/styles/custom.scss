@@ -891,7 +891,7 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   .bwz-cqb {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
     box-sizing: border-box;
     position: fixed;
     top: var(--bwz-cqb-top, 0px); // 排在 sticky 工具列下面（由腳本設定）

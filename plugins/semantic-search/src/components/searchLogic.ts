@@ -49,18 +49,29 @@ export function containsExactSearchText(value: string, query: string): boolean {
   return normalizeExactSearchText(value).includes(normalizedQuery);
 }
 
+// 每筆內容正規化後的全文快取：完整站約 3,800 筆、20 MB，每次查詢都重新 normalize 會拖慢精準結果（B4-1 要求 300 ms 內出現）
+const normalizedTextCache = new WeakMap<ExactSearchItem, string>();
+
+function normalizedSearchableText(item: ExactSearchItem): string {
+  let text = normalizedTextCache.get(item);
+  if (text === undefined) {
+    text = normalizeExactSearchText(
+      [item.title ?? "", item.content ?? "", ...(item.tags ?? [])].join("\n"),
+    );
+    normalizedTextCache.set(item, text);
+  }
+  return text;
+}
+
 export function findExactMatchSlugs(
   items: Record<string, ExactSearchItem>,
   query: string,
 ): string[] {
+  const normalizedQuery = normalizeExactSearchText(query.trim());
+  if (normalizedQuery.length < MIN_EXACT_QUERY_LENGTH) return [];
   return Object.entries(items)
     .filter(([slug]) => !isSearchExcludedSlug(slug))
-    .filter(([, item]) => {
-      const searchableText = [item.title ?? "", item.content ?? "", ...(item.tags ?? [])].join(
-        "\n",
-      );
-      return containsExactSearchText(searchableText, query);
-    })
+    .filter(([, item]) => normalizedSearchableText(item).includes(normalizedQuery))
     .map(([slug]) => slug);
 }
 

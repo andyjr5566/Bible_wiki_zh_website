@@ -4,6 +4,7 @@ import { CSSResourceToStyleElement, JSResourceToScriptElement } from "../util/re
 import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
+import { shouldShowOpening } from "../util/openingGate"
 import { cleanDescription, displayTitle, documentTitle } from "../util/pageMeta"
 
 export default (() => {
@@ -444,26 +445,30 @@ export default (() => {
             dangerouslySetInnerHTML={{
               __html: `
                 (function() {
+                  var shouldShowOpening = ${shouldShowOpening.toString()};
                   try {
-                    var p = new URLSearchParams(window.location.search);
-                    if (p.get('opening') === '1' || p.get('intro') === '1') {
-                      sessionStorage.setItem('seen_opening', 'true');
-                      window.location.replace('./InTheBeginning.html' + window.location.search);
-                      return;
-                    }
-                    if (p.get('opening') === '0' || p.get('skip') === '1') {
-                      sessionStorage.setItem('seen_opening', 'true');
-                      return;
-                    }
-                    var seen = sessionStorage.getItem('seen_opening');
-                    var lastSeen = localStorage.getItem('opening_last_seen');
+                    var search = window.location.search;
                     var now = Date.now();
-                    var windowMs = 24 * 60 * 60 * 1000;
-                    var expired = (!lastSeen || (now - parseInt(lastSeen, 10)) > windowMs);
-                    if (!seen || expired) {
-                      sessionStorage.setItem('seen_opening', 'true');
-                      localStorage.setItem('opening_last_seen', now.toString());
-                      window.location.replace('./InTheBeginning.html');
+                    var standalone =
+                      (window.matchMedia &&
+                        window.matchMedia("(display-mode: standalone)").matches) ||
+                      navigator.standalone === true;
+                    var lastSeen = window.localStorage.getItem("opening_last_seen");
+                    var decision = shouldShowOpening({
+                      now: now,
+                      lastSeen: lastSeen,
+                      search: search,
+                      standalone: standalone
+                    });
+
+                    if (decision.markSeen) {
+                      window.localStorage.setItem("opening_last_seen", String(now));
+                    }
+
+                    if (decision.redirect) {
+                      window.location.replace(
+                        "./InTheBeginning.html" + (decision.forceIntro ? search : "")
+                      );
                     }
                   } catch (e) {}
                 })();

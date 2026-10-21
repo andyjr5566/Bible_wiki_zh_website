@@ -14,6 +14,7 @@ const MOBILE_QUERY = "(max-width: 800px)"
 const BAR_CLASS = "bwz-cqb"
 const HEIGHT_VAR = "--bwz-cqb-h"
 const TOP_VAR = "--bwz-cqb-top"
+const ON_CLASS = "bwz-cqb-on"
 
 // 手機版左欄（工具列）是 position: sticky 貼在頂端；回傳它目前的下緣，沒有貼頂就回傳 0
 function stickyToolbarBottom(): number {
@@ -63,6 +64,8 @@ function findSummaryTarget(article: Element): HTMLElement | null {
 function removeBar() {
   document.querySelectorAll(`.${BAR_CLASS}`).forEach((el) => el.remove())
   document.documentElement.style.removeProperty(HEIGHT_VAR)
+  document.documentElement.style.removeProperty(TOP_VAR)
+  document.documentElement.classList.remove(ON_CLASS)
 }
 
 function makeLink(cls: string, label: string, href: string, arrow: "‹" | "›"): HTMLAnchorElement {
@@ -142,17 +145,21 @@ function setupBar() {
   let shown = false
   const update = () => {
     const want = mql.matches && anchor.getBoundingClientRect().bottom < 0
-    if (want === shown) return
-    shown = want
-    bar.classList.toggle("is-shown", want)
     // 手機的工具列（選單、搜尋、Aa、深色）是 sticky 貼頂的；快捷列要排在它下面，不能蓋住它。
-    // 朗讀列貼頂時再讓到兩者下面（custom.scss 用這兩個變數）
+    // 朗讀列貼頂時再讓到兩者下面（custom.scss 用這兩個變數）。
+    // 顯示期間每次捲動都重新量：視窗大小改變或字型晚載入時，工具列高度會變
     const root = document.documentElement.style
     if (want) {
       const top = stickyToolbarBottom()
       root.setProperty(TOP_VAR, `${top}px`)
-      root.setProperty(HEIGHT_VAR, `${top + bar.offsetHeight}px`)
-    } else {
+      root.setProperty(HEIGHT_VAR, `${Math.ceil(top + bar.getBoundingClientRect().height)}px`)
+    }
+    if (want === shown) return
+    shown = want
+    bar.classList.toggle("is-shown", want)
+    // 朗讀外掛會用 inline style 把朗讀列的 top 設成工具列高度；快捷列顯示時要由 CSS（!important）改成排在快捷列下面
+    document.documentElement.classList.toggle(ON_CLASS, want)
+    if (!want) {
       root.removeProperty(TOP_VAR)
       root.removeProperty(HEIGHT_VAR)
     }

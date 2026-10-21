@@ -983,9 +983,10 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
     font-weight: 700;
   }
 
-  // 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）
-  html .bwz-ra.is-playing {
-    top: var(--bwz-cqb-h, 0px);
+  // 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）。
+  // 朗讀外掛平常用 inline style 把 top 設成工具列高度，所以只有快捷列顯示時（html.bwz-cqb-on）才用 !important 蓋過
+  html.bwz-cqb-on .bwz-ra.is-playing {
+    top: var(--bwz-cqb-h, 0px) !important;
   }
 }
 

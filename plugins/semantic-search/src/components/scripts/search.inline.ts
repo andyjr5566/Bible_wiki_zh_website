@@ -34,6 +34,7 @@ import {
   type ScriptureCard,
 } from "../verseTarget";
 import { getNextVisibleIndex, getSearchAnnouncement, shouldAnnounce } from "../searchA11y";
+import { buildSnippetHtml } from "../snippet";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -93,7 +94,6 @@ interface DisplayResultsOptions {
 }
 
 let currentSearchTerm: string = "";
-const contextWindowWords = 30;
 let resultOptionSequence = 0;
 let resultsContainerSequence = 0;
 
@@ -437,10 +437,7 @@ function setupSearch() {
             pendingNote.textContent = "搜尋中…";
             results.appendChild(pendingNote);
           }
-        } else if (
-          options.indexNote !== "search-unavailable" &&
-          (!scriptureCard || scriptureCard.kind === "missing")
-        ) {
+        } else if (options.indexNote !== "search-unavailable" && !scriptureCard) {
           const noMatch = document.createElement("a");
           noMatch.className = "result-card no-match";
           const noMatchTitle = document.createElement("h3");
@@ -566,6 +563,21 @@ function setupSearch() {
       toolbar.className = "result-filters";
       toolbar.setAttribute("role", "toolbar");
       toolbar.setAttribute("aria-label", "依類型篩選");
+      // 篩選列是一行橫向捲動：滑鼠滾輪（上下）在它上面時改成左右捲；已經捲到盡頭就不攔截
+      toolbar.addEventListener(
+        "wheel",
+        (event) => {
+          if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+          const maxScroll = toolbar.scrollWidth - toolbar.clientWidth;
+          if (maxScroll <= 0) return;
+          if (event.deltaY > 0 ? toolbar.scrollLeft >= maxScroll - 1 : toolbar.scrollLeft <= 0) {
+            return;
+          }
+          toolbar.scrollLeft += event.deltaY;
+          event.preventDefault();
+        },
+        { passive: false },
+      );
 
       const addButton = (label: string, count: number, value: string | null) => {
         const button = document.createElement("button");
@@ -733,7 +745,9 @@ function setupSearch() {
                   if (!view) {
                     view = {
                       title: highlight(displayTerm, doc.title || slug),
-                      content: highlight(displayTerm, doc.content || "", true),
+                      content: buildSnippetHtml(doc.content || "", displayTerm, {
+                        title: doc.title,
+                      }),
                     };
                   }
                   return view;
@@ -759,6 +773,15 @@ function setupSearch() {
           });
           if (indexState === "ready") {
             announce(getSearchAnnouncement("exact", exactResults.length));
+            // 精準與語意都沒有結果、也沒有經文卡片，才說找不到；語意還在路上時不能說
+            if (
+              exactResults.length === 0 &&
+              semanticState !== "loading" &&
+              semanticResults.length === 0 &&
+              !scriptureCard
+            ) {
+              announce(getSearchAnnouncement("none", 0));
+            }
           }
         };
 
@@ -775,6 +798,8 @@ function setupSearch() {
             announce(
               getSearchAnnouncement("scripture", scriptureCard.title.replace(/^跳到\s*/, "")),
             );
+          } else if (scriptureCard) {
+            announce(getSearchAnnouncement("scripture-missing", scriptureCard.title));
           }
           renderCurrentResults();
         });
@@ -825,7 +850,7 @@ function setupSearch() {
                 if (!view) {
                   view = {
                     title: highlight(displayTerm, title),
-                    content: highlight(displayTerm, text, true),
+                    content: buildSnippetHtml(text, displayTerm, { title }),
                   };
                 }
                 return view;
@@ -838,8 +863,8 @@ function setupSearch() {
           }
           renderCurrentResults();
         });
-        // 停止輸入 100 ms 後才搜尋：完整站第一次查詢含這段約 260 ms，達到 B4-1「300 ms 內」；舊的語意請求會被取消
-      }, 100);
+        // 停止輸入 60 ms 後才搜尋：正式站量到含這段約 240–290 ms，餘裕太薄，所以由 100 ms 降到 60 ms（B4-1：300 ms 內）；舊的語意請求會被取消
+      }, 60);
     };
     const onButtonClick = (e: Event) => {
       e.stopPropagation();
@@ -1068,38 +1093,12 @@ function highlightHTML(searchTerm: string, el: HTMLElement): string {
   return html.body.innerHTML;
 }
 
-function highlight(searchTerm: string, text: string, trim?: boolean): string {
+/** 標題用：把搜尋詞標示出來（內文摘要見 snippet.ts）。 */
+function highlight(searchTerm: string, text: string): string {
   const tokenizedTerms = tokenizeTerm(searchTerm);
-  let tokenizedText = escapeHTML(text)
+  return escapeHTML(text)
     .split(/\s+/)
-    .filter((t) => t !== "");
-
-  let startIndex = 0;
-  let endIndex = tokenizedText.length - 1;
-
-  if (trim) {
-    const includesCheck = (tok: string) => {
-      return tokenizedTerms.some((term) => tok.toLowerCase().startsWith(term.toLowerCase()));
-    };
-    const occurrencesIndices = tokenizedText.map(includesCheck);
-
-    let bestSum = 0;
-    let bestIndex = 0;
-    for (let i = 0; i < Math.max(tokenizedText.length - contextWindowWords, 0); i++) {
-      const window = occurrencesIndices.slice(i, i + contextWindowWords);
-      const windowSum = window.reduce((total, cur) => total + (cur ? 1 : 0), 0);
-      if (windowSum >= bestSum) {
-        bestSum = windowSum;
-        bestIndex = i;
-      }
-    }
-
-    startIndex = Math.max(bestIndex - contextWindowWords, 0);
-    endIndex = Math.min(startIndex + 2 * contextWindowWords, tokenizedText.length - 1);
-    tokenizedText = tokenizedText.slice(startIndex, endIndex);
-  }
-
-  const slice = tokenizedText
+    .filter((t) => t !== "")
     .map((tok) => {
       let result = tok;
       for (const searchTok of tokenizedTerms) {
@@ -1112,10 +1111,6 @@ function highlight(searchTerm: string, text: string, trim?: boolean): string {
       return result;
     })
     .join(" ");
-
-  return (
-    (startIndex === 0 ? "" : "...") + slice + (endIndex === tokenizedText.length - 1 ? "" : "...")
-  );
 }
 
 async function fetchContentIndex(): Promise<Record<string, Item>> {

@@ -23,12 +23,24 @@ describe("getNextVisibleIndex", () => {
 });
 
 describe("search announcements", () => {
-  it("announces exact counts, no matches, semantic additions, and scripture targets", () => {
+  it("announces exact counts, semantic additions, and scripture targets", () => {
     expect(getSearchAnnouncement("exact", 4)).toBe("找到 4 筆結果");
-    expect(getSearchAnnouncement("exact", 0)).toBe("找不到相符的結果");
     expect(getSearchAnnouncement("semantic", 2)).toBe("另外找到 2 筆語意相關結果");
     expect(getSearchAnnouncement("semantic", 0)).toBeNull();
     expect(getSearchAnnouncement("scripture", "出埃及記 12:3")).toBe("可以跳到 出埃及記 12:3");
+  });
+
+  it("does not say nothing was found while only the exact matches are empty", () => {
+    // 精準 0 筆時語意結果可能還在路上，只能說「沒有完全相符」
+    expect(getSearchAnnouncement("exact", 0)).toBe("沒有完全相符的結果");
+    // 全部都結束、也沒有卡片，才說找不到
+    expect(getSearchAnnouncement("none", 0)).toBe("找不到相符的結果");
+  });
+
+  it("reads out the card that says the scripture page is still being prepared", () => {
+    expect(getSearchAnnouncement("scripture-missing", "士師記的研讀頁還在整理中")).toBe(
+      "士師記的研讀頁還在整理中",
+    );
   });
 
   it("does not announce the same message twice for one query", () => {

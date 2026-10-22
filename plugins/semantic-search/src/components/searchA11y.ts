@@ -1,4 +1,9 @@
-export type SearchAnnouncementKind = "exact" | "semantic" | "scripture";
+export type SearchAnnouncementKind =
+  | "exact"
+  | "semantic"
+  | "scripture"
+  | "scripture-missing"
+  | "none";
 
 /** Return the next visible option index, stopping at either end of the list. */
 export function getNextVisibleIndex(
@@ -42,13 +47,18 @@ export function getSearchAnnouncement(
 ): string | null {
   if (kind === "exact") {
     const count = typeof value === "number" ? value : Number(value);
-    return count > 0 ? `找到 ${count} 筆結果` : "找不到相符的結果";
+    // 精準結果是 0 筆時，語意結果可能還在路上、畫面上也可能有經文卡片，所以不能說「找不到」
+    return count > 0 ? `找到 ${count} 筆結果` : "沒有完全相符的結果";
   }
 
   if (kind === "semantic") {
     const count = typeof value === "number" ? value : Number(value);
     return count > 0 ? `另外找到 ${count} 筆語意相關結果` : null;
   }
+
+  if (kind === "none") return "找不到相符的結果";
+
+  if (kind === "scripture-missing") return String(value);
 
   return `可以跳到 ${String(value)}`;
 }

@@ -545,7 +545,12 @@
   top: 0;
   z-index: 1;
   display: flex;
-  flex-wrap: wrap;
+  /* 一行、橫向捲動：桌機的結果欄很窄（約 230–280px），16 個類型折行會佔掉 180–210px 的高度 */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lightgray) transparent;
   gap: 0.25rem;
   padding: 0.4rem 0.6rem;
   box-sizing: border-box;
@@ -587,11 +592,8 @@
 }
 
 @media all and (max-width: 800px) {
-  /* 手機：篩選列水平捲動，不撐出頁面橫向捲軸 */
+  /* 手機：篩選列水平捲動，不撐出頁面橫向捲軸；手指滑動就好，不顯示捲軸 */
   .search .result-filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }

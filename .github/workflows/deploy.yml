@@ -68,32 +68,9 @@ jobs:
           restore-keys: |
             quartz-public-
 
-      - name: Setup local plugins
-        run: |
-          mkdir -p .quartz/plugins
-          rm -rf .quartz/plugins/wiki-tour .quartz/plugins/semantic-search .quartz/plugins/graph .quartz/plugins/personal-notes .quartz/plugins/read-aloud .quartz/plugins/explorer .quartz/plugins/site-ux
-          cp -r plugins/wiki-tour .quartz/plugins/wiki-tour
-          cp -r plugins/semantic-search .quartz/plugins/semantic-search
-          # 個人筆記（dist/ 已進版控，不需在 CI 建置）
-          cp -r plugins/personal-notes .quartz/plugins/personal-notes
-          rm -rf .quartz/plugins/personal-notes/node_modules
-          # 經文朗讀（dist/ 已進版控，不需在 CI 建置）
-          cp -r plugins/read-aloud .quartz/plugins/read-aloud
-          rm -rf .quartz/plugins/read-aloud/node_modules
-          # Explorer 本地副本（移除本機依賴 junction，CI 使用根目錄安裝的依賴）
-          cp -r plugins/explorer .quartz/plugins/explorer
-          rm -rf .quartz/plugins/explorer/node_modules
-          # 外觀設定（Aa 面板；dist/ 已進版控，不需在 CI 建置）
-          cp -r plugins/site-ux .quartz/plugins/site-ux
-          rm -rf .quartz/plugins/site-ux/node_modules
-
-      - name: Install Quartz plugins
-        run: npx quartz plugin install --from-config
-
-      - name: Apply patched plugins
-        run: |
-          mkdir -p .quartz/plugins/graph/dist
-          cp -r plugins/graph/dist/* .quartz/plugins/graph/dist/
+      - name: Prepare Quartz plugins
+        # 本地外掛清單與套用 dist 的外掛都在這支腳本裡（deploy.yml 與 smoke.yml 共用，新增外掛只改那裡）
+        run: bash .github/scripts/prepare-plugins.sh
 
       - name: Build interactive websites
         run: |

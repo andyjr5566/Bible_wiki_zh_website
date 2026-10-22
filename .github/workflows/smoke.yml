@@ -1,0 +1,185 @@
+name: Smoke test (test_content)
+
+# U-11：冒煙測試「只警告、不擋部署」。
+# 和部署流程（deploy.yml）分開：這個 workflow 只用 test_content/ 建一個小站（約 10 秒），
+# 用無頭 Chrome 跑 plugins/personal-notes/e2e/ 的 smoke.mjs、regress.mjs、swcheck.mjs。
+# 失敗只會變成警告（job 與每個測試步驟都是 continue-on-error），結果寫在「步驟摘要」(Summary) 頁。
+# 本機怎麼跑：見 plugins/personal-notes/e2e/README.md 的「冒煙測試（CI）」。
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - "content/**"
+      - "quartz/**"
+      - "plugins/**"
+      - "quartz.ts"
+      - "quartz.config.yaml"
+      - "quartz.lock.json"
+      - "test_content/**"
+      - ".github/workflows/deploy.yml"
+      - ".github/workflows/smoke.yml"
+  pull_request:
+    paths:
+      - "content/**"
+      - "quartz/**"
+      - "plugins/**"
+      - "quartz.ts"
+      - "quartz.config.yaml"
+      - "quartz.lock.json"
+      - "test_content/**"
+      - ".github/workflows/deploy.yml"
+      - ".github/workflows/smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # 同一個分支／PR 有新的推送時，取消還在跑的舊測試
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # 只警告、不擋部署：整個 job 失敗也不算紅燈
+    continue-on-error: true
+    env:
+      SITE_PORT: "8090"
+      SITE_ROOT: http://localhost:8090/Bible_wiki_zh_website
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 外掛的準備方式和正式部署一樣（共用腳本）；不建互動網站、不跑 build.py
+      - name: Prepare Quartz plugins
+        # 本地外掛清單與套用 dist 的外掛都在這支腳本裡（deploy.yml 與 smoke.yml 共用，新增外掛只改那裡）
+        run: bash .github/scripts/prepare-plugins.sh
+
+      - name: Build test site (test_content)
+        # 網站的基底路徑來自 baseUrl；要模擬線上的子路徑，建置前把它換成 localhost:8090/Bible_wiki_zh_website。
+        # 只改 runner 上的暫時副本，不會進版控，所以不用還原。
+        run: |
+          sed -i 's|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|baseUrl: localhost:8090/Bible_wiki_zh_website|' quartz.config.yaml
+          grep -n "baseUrl" quartz.config.yaml
+          npx quartz build -d test_content -o test_public
+
+      - name: Start test site server
+        run: |
+          # 背景啟動子路徑伺服器（模擬 GitHub Pages 專案站）；它沒有就緒訊號，所以用 curl 輪詢到 200
+          nohup node plugins/personal-notes/e2e/subpath-server.mjs test_public "$SITE_PORT" > "$RUNNER_TEMP/server.log" 2>&1 &
+          curl -fsS -o /dev/null --retry 30 --retry-delay 1 --retry-connrefused "$SITE_ROOT/index.html"
+          echo "server ready: $SITE_ROOT"
+
+      - name: Locate Chrome
+        id: chrome
+        # 根據：GitHub 的 ubuntu-latest（ubuntu-24.04）映像檔文件（actions/runner-images 的 Ubuntu2404-Readme）
+        # 列有預裝 Google Chrome，執行檔是 /usr/bin/google-chrome（google-chrome-stable 的別名）。
+        # 這個判斷沒有在 GitHub 上實際跑過；找不到時由下一步用 browser-actions/setup-chrome 補裝。
+        run: |
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          echo "path=$CHROME_BIN" >> "$GITHUB_OUTPUT"
+          if [ -n "$CHROME_BIN" ]; then
+            echo "found: $CHROME_BIN"
+            "$CHROME_BIN" --version
+          else
+            echo "preinstalled Chrome not found; will install with setup-chrome"
+          fi
+
+      - name: Install Chrome (only if not preinstalled)
+        if: steps.chrome.outputs.path == ''
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Configure Chrome for CI
+        run: |
+          CHROME_BIN="${{ steps.chrome.outputs.path || steps.setup-chrome.outputs.chrome-path }}"
+          echo "CHROME_PATH=$CHROME_BIN" >> "$GITHUB_ENV"
+          # runner 上的 Chrome 需要 --no-sandbox；/dev/shm 很小，所以加 --disable-dev-shm-usage
+          echo "CHROME_FLAGS=--no-sandbox --disable-dev-shm-usage" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/smoke-logs"
+
+      # 三支腳本各用一個新的 profile 資料夾；輸出用 tee 存檔，最後一步彙整。
+      # 每步都 continue-on-error，讓三支都跑完。
+      - name: Smoke test (smoke.mjs)
+        id: smoke
+        continue-on-error: true
+        run: node plugins/personal-notes/e2e/smoke.mjs "$SITE_ROOT" "$RUNNER_TEMP/prof-smoke" 2>&1 | tee "$RUNNER_TEMP/smoke-logs/smoke.log"
+
+      - name: Regression test (regress.mjs)
+        id: regress
+        continue-on-error: true
+        run: node plugins/personal-notes/e2e/regress.mjs "$SITE_ROOT" "$RUNNER_TEMP/prof-regress" 2>&1 | tee "$RUNNER_TEMP/smoke-logs/regress.log"
+
+      - name: Service Worker test (swcheck.mjs)
+        id: swcheck
+        continue-on-error: true
+        run: node plugins/personal-notes/e2e/swcheck.mjs "$SITE_ROOT" "$RUNNER_TEMP/prof-swcheck" 2>&1 | tee "$RUNNER_TEMP/smoke-logs/swcheck.log"
+
+      - name: Summary (warnings only)
+        if: always()
+        continue-on-error: true
+        run: |
+          {
+            echo "## 冒煙測試結果（只警告，不擋部署）"
+            echo
+            echo "| 腳本 | PASS | FAIL | 狀態 |"
+            echo "| --- | --- | --- | --- |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          BAD=0
+          FAILED_LINES=""
+          for name in smoke regress swcheck; do
+            log="$RUNNER_TEMP/smoke-logs/$name.log"
+            if [ -f "$log" ]; then
+              pass=$(grep -c '^PASS' "$log" || true)
+              fail=$(grep -c '^FAIL' "$log" || true)
+            else
+              pass=0; fail=0
+            fi
+            # 有「N/M 通過」那行才表示腳本跑到最後
+            if [ -f "$log" ] && grep -q '通過$' "$log"; then done_run=1; else done_run=0; fi
+            if [ "$fail" -gt 0 ]; then
+              status="有失敗"
+              echo "::warning title=冒煙測試 $name.mjs::$fail 項 FAIL（$pass 項 PASS）"
+              BAD=1
+            elif [ "$done_run" -eq 0 ]; then
+              status="沒有跑完"
+              echo "::warning title=冒煙測試 $name.mjs::腳本沒有跑完（可能前面的步驟失敗，或 Chrome 沒啟動）"
+              BAD=1
+            else
+              status="全部通過"
+            fi
+            echo "| $name.mjs | $pass | $fail | $status |" >> "$GITHUB_STEP_SUMMARY"
+            if [ -f "$log" ]; then
+              lines=$(grep '^FAIL' "$log" || true)
+              if [ -n "$lines" ]; then FAILED_LINES="$FAILED_LINES"$'\n'"### $name.mjs 的 FAIL"$'\n\n''```'$'\n'"$lines"$'\n''```'$'\n'; fi
+            fi
+          done
+          if [ -n "$FAILED_LINES" ]; then echo "$FAILED_LINES" >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ "$BAD" -eq 0 ]; then echo "全部通過。" >> "$GITHUB_STEP_SUMMARY"; fi
+          exit 0
+
+      - name: Upload logs
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-logs
+          path: ${{ runner.temp }}/smoke-logs
+          if-no-files-found: ignore
+          retention-days: 7

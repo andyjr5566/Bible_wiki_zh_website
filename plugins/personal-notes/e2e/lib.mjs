@@ -8,11 +8,14 @@
 //   finish()
 //
 // 環境變數 CHROME_PATH 可指定 chrome.exe（預設 C:/Program Files/Google/Chrome/Application/chrome.exe）。
+// 環境變數 CHROME_FLAGS（空白分隔）會附加到 Chrome 旗標後面，例如 CI 用 "--no-sandbox --disable-dev-shm-usage"。
 
 import { spawn } from "node:child_process"
 import { writeFileSync } from "node:fs"
 
 export const CHROME = process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe"
+// 額外的 Chrome 旗標（空白分隔；沒設定就是空陣列，不影響既有腳本）
+export const EXTRA_FLAGS = (process.env.CHROME_FLAGS || "").split(/\s+/).filter(Boolean)
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // 第 1 章的站內路徑（已 encodeURI；使用時接在 root 後面）
@@ -65,8 +68,13 @@ function connect(url, onEvent) {
 //   detailMax   check 的說明文字最多印幾個字（預設 220）
 export async function startBrowser({ root, profile, width = 1280, height = 900, mobile = false, incognito = true, shotDir = null, userAgent = null, detailMax = 220 } = {}) {
   const port = 9100 + Math.floor(Math.random() * 90)
-  const flags = ["--headless=new", ...(incognito ? ["--incognito"] : []), `--window-size=${width},${height}`, `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, "--no-first-run", "about:blank"]
+  const flags = ["--headless=new", ...(incognito ? ["--incognito"] : []), `--window-size=${width},${height}`, `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, "--no-first-run", ...EXTRA_FLAGS, "about:blank"]
   const proc = spawn(CHROME, flags, { stdio: "ignore" })
+  // 路徑錯誤或沒有執行權限時，spawn 會丟出 error 事件；不接的話只會看到一長串看不懂的堆疊
+  proc.on("error", (err) => {
+    console.error(`無法啟動 Chrome：${CHROME}（${err.code ?? err.message}）。請確認路徑，或用環境變數 CHROME_PATH 指定 Chrome 的執行檔。`)
+    process.exit(1)
+  })
 
   let pageWs
   for (let i = 0; i < 75 && !pageWs; i++) {

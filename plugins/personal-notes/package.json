@@ -30,7 +30,8 @@
     "e2e:exp": "node e2e/expcheck.mjs",
     "e2e:sw": "node e2e/swcheck.mjs",
     "e2e:tutorial": "node e2e/tutorialcheck.mjs",
-    "e2e:help": "node e2e/helpcheck.mjs"
+    "e2e:help": "node e2e/helpcheck.mjs",
+    "e2e:smoke": "node e2e/smoke.mjs"
   },
   "peerDependencies": {
     "preact": "^10.0.0"

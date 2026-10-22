@@ -84,8 +84,13 @@ await ev(`document.querySelector("#retry").click()`)
 await sleep(1200)
 check("離線：重試按鈕可用", await ev(`decodeURIComponent(location.pathname).endsWith(${JSON.stringify(unseenName)}) && document.body.innerText.includes("這一頁還沒存到這台裝置")`))
 await setOffline(false)
-await send("Page.reload"); await sleep(4000)
-check("恢復連線：重新整理後未讀頁正常載入", await ev(`decodeURIComponent(location.pathname).endsWith(${JSON.stringify(unseenName)}) && !!document.querySelector("article") && document.body.innerText.length > 200`), await ev(`JSON.stringify({ path: decodeURIComponent(location.pathname), title: document.title, article: !!document.querySelector("article"), len: document.body?.innerText.length })`))
+// 解除離線模擬後，Service Worker 那條要幾秒才真的恢復（實測偶爾第一次重新整理還拿到離線頁），所以最多重新整理 4 次、每次等 3 秒
+const recovered = `decodeURIComponent(location.pathname).endsWith(${JSON.stringify(unseenName)}) && !!document.querySelector("article") && document.body.innerText.length > 200`
+for (let k = 0; k < 4; k++) {
+  await send("Page.reload"); await sleep(3000)
+  if (await ev(recovered)) break
+}
+check("恢復連線：重新整理後未讀頁正常載入", await ev(recovered), await ev(`JSON.stringify({ path: decodeURIComponent(location.pathname), title: document.title, article: !!document.querySelector("article"), len: document.body?.innerText.length })`))
 const swErr = errors.filter((e) => /Service Worker|ServiceWorker/i.test(e))
 check("沒有 Service Worker 錯誤訊息", swErr.length === 0, swErr.slice(0, 2).join(" | "))
 finish()

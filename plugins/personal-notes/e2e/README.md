@@ -21,7 +21,7 @@
    npm run build
    ```
 
-2. 把外掛複製到 `.quartz/plugins/personal-notes`。這是 Quartz 實際載入的本機副本。CI 也會做同樣的事（見 `.github/workflows/deploy.yml` 的 "Setup local plugins" 步驟），所以改過外掛程式碼之後都要重新複製：
+2. 把外掛複製到 `.quartz/plugins/personal-notes`。這是 Quartz 實際載入的本機副本。CI 也會做同樣的事（見 `.github/scripts/prepare-plugins.sh`，deploy.yml 與 smoke.yml 共用），所以改過外掛程式碼之後都要重新複製：
 
    ```bash
    cd ../..   # 回到倉庫根目錄
@@ -101,9 +101,39 @@ npx tsx e2e/gen-backup.ts prof/heavy-backup.json
 | `tutorialcheck.mjs` | `e2e:tutorial` | 筆記教學（F7／F8）：電腦版——〈我的筆記〉有「▶ 筆記教學」、`?tutorial=1` 自動打開並拿掉參數、8 段播完出現「換你試試」、示範區不寫進真正的筆記、← Esc 與焦點、減少動態效果、深色、手機 44px。手機版（第 9 節，觸控模擬、不帶 `device`）——自動選手機版（`data-device="touch"`）、示範區寬度 ≥95%、手指不是箭頭、8 段播完無 JS 例外、第 1 段鍵盤升起再收起、第 2 段有把手＋系統選單＋工具列在選取下方、「電腦｜手機」切換（記住、`?device=` 蓋過、←→）、**手機換你試試**（網頁內建立真實選取蓋住虛線字 → 工具列出現在選取下方、選取不被取消、不畫假把手；用 `Input.dispatchTouchEvent` 點「🖍 畫重點」與備案點虛線字；選到無虛線的字不跳工具列）、真實筆記數量前後相同、按鈕 ≥44px 不左右捲、減少動態效果（最後畫面＋步驟、無鍵盤）、深色與淺色截圖；最後用 `Emulation.setTouchEmulationEnabled { enabled: false }` ＋ 電腦視窗換回電腦，清掉記住的選擇後自動是電腦版 | `<siteRoot> <profile> [shotDir]`（profile 用絕對路徑；截圖資料夾要事先存在；約 4 分鐘） |
 | `helpcheck.mjs` | `e2e:help` | 章節／條目筆記面板「?」的文字說明（F7b）：7 條、連到動畫教學、第一條依章節／條目換說法；電腦尺寸的 🖍 與 ❝ 兩行寫「滑鼠」，觸控模擬（手機）寫「長按」「拉動」，其他行兩邊相同；手機「?」按鈕 ≥44px | `<siteRoot> <profile> [shotDir]` |
 | `expcheck.mjs` | `e2e:exp` | 探索目錄：目前章節所在的資料夾展開時就有「全部收合」、按下後全部收起且按鈕消失、重新整理後收起的資料夾仍收著、再展開後按鈕回來、SPA 換頁後只有一個按鈕、收起時「探索」兩字完整、收起時看不到目錄、手機抽屜裡也能全部收合 | `<siteRoot> <profile> <shotFile>`（截圖檔路徑；手機版存成 `-mobile.png`） |
+| `smoke.mjs` | `e2e:smoke` | 冒煙測試（B5-2，CI 也跑它）：首頁載入、章節上一章／下一章（點頁首表格連結換到第 2 章再回第 1 章）、搜尋「亞伯拉罕」有結果、個人筆記可以開（新增筆記出現編輯卡片、不連 Google）、手機 390 寬的首頁／第 1 章／人物條目／我的筆記不左右捲、無 JS 例外。見下方「冒煙測試（CI）」 | `<siteRoot（結尾不加 /）> <profile>` |
 | `swcheck.mjs` | `e2e:sw` | Service Worker：註冊成功且管整個網站、頁面被接管、快取裡有看過的頁面與筆記 App、大圖（羊皮紙背景）沒進快取、其他網域沒進快取、`config.json` 沒進快取、離線時看過的頁面與筆記可用、沒看過的頁面顯示首頁、恢復連線後正常、沒有 Service Worker 相關錯誤 | `<siteRoot（結尾不加 /）> <profile>` |
 | `subpath-server.mjs` | （不是檢查，直接用 `node` 執行） | 模擬 GitHub Pages 專案站的靜態伺服器：`/foo` 對應 `foo.html`、`/dir/` 對應 `dir/index.html`、不送 `Service-Worker-Allowed` | `<publicDir> <port>` |
 | `gen-backup.ts` | （不是檢查，用 `npx tsx` 執行） | 產生重度使用者的備份 JSON（400 則筆記、80 張便條、120 個重點、25 個書籤、3 個知識庫條目書籤） | `<out.json>` |
+
+## 冒煙測試（CI）
+
+`smoke.mjs` 是「網站還活著嗎」的最小檢查，只花幾秒，共 19 項：首頁載入、章節上一章／下一章、搜尋有結果、個人筆記可以開（本機模式、不登入）、手機 390×844 四個頁面不左右捲、全程沒有 JavaScript 例外。所有等待都用輪詢（`waitFor`），不靠固定等待，CI 機器慢也不容易誤報。
+
+章節檢查需要頁首的「前一章／下一章」表格，所以要對 `test_content` 建出的小站跑（`test_content/01 創世記/` 的第 1、2 章開頭有這個區塊；測試資料沒有第 3 章，第 2 章的「下一章」指到第 6 章）。
+
+**本機跑**：照上面「建置測試站」建好 `test_public` 並啟動伺服器（8090），然後在外掛資料夾執行：
+
+```bash
+cd plugins/personal-notes
+npm run e2e:smoke -- http://localhost:8090/Bible_wiki_zh_website prof/smoke
+```
+
+profile 資料夾請用一般路徑、每次給新的（不要放在含短檔名 `ANDYJ_~1` 的路徑，Cache Storage 會壞掉）。全部通過結束碼 0，有一項失敗結束碼 1。
+
+**環境變數**（`lib.mjs`，所有 e2e 腳本都適用）：
+
+- `CHROME_PATH`：Chrome 執行檔路徑。
+- `CHROME_FLAGS`：額外的 Chrome 旗標，空白分隔，附加在固定旗標後面。CI 在 Linux 上用 `CHROME_FLAGS="--no-sandbox --disable-dev-shm-usage"`。沒設定就沒有影響。
+- Chrome 路徑錯誤時，腳本會印出「無法啟動 Chrome」並以結束碼 1 結束。
+
+**CI**：`.github/workflows/smoke.yml`，在 push 到 `main`、pull request（路徑和 `deploy.yml` 相同，另加 `test_content/**`）與手動執行（workflow_dispatch）時，用 `test_content/` 建小站，依序跑 `smoke.mjs`、`regress.mjs`、`swcheck.mjs`。它和部署流程分開，不拖慢上線；依 U-11 **只警告、不擋部署**（job 與每個測試步驟都是 `continue-on-error`）。結果在 GitHub 的 Actions 頁面：
+
+1. 進入該次執行（Smoke test），看 **Summary（步驟摘要）**：每支腳本的 PASS／FAIL 數與 FAIL 的那幾行。
+2. 有 FAIL 時，執行頁上方的 Annotations 會出現黃色警告。
+3. 完整輸出在 `Smoke test (smoke.mjs)` 等步驟的記錄，也上傳成 `smoke-logs` artifact（保留 7 天）。
+
+CI 上的 Chrome 用 ubuntu-latest 預裝的 `google-chrome`，找不到時由 `browser-actions/setup-chrome` 補裝。
 
 ## 共用程式：`lib.mjs`
 

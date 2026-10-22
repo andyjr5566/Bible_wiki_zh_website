@@ -86,7 +86,7 @@
    - `C:\Obsidian\Hermes`：只有 U-5 的 index.md 例外。
    - `.quartz/`：CI 會重新 clone 外掛，改了也會被蓋掉。
    - 能持久的修改位置：`quartz/`（含 `quartz/styles/custom.scss`、`quartz/components/`）、`plugins/<本地外掛>`、`quartz.config.yaml`、`.github/workflows/deploy.yml`。
-   - 新增本地外掛時，要同時在 `quartz.config.yaml` 加項目，並在 `deploy.yml` 加 rm 與 cp 兩行（照 read-aloud 的做法）。
+   - 新增本地外掛時，要同時在 `quartz.config.yaml` 加項目，並把名稱加進 `.github/scripts/prepare-plugins.sh` 的 `LOCAL_PLUGINS`（deploy.yml 與 smoke.yml 共用這支腳本；第 5 批以前是在 deploy.yml 加 rm 與 cp 兩行）。
 3. **委派**：主導者負責拆任務、寫任務包、審查 diff、整合、親自測試、和使用者溝通，**不要自己單幹**。分級照 [dev-notes/personal-notes/07-agents.md](../personal-notes/07-agents.md)：
    - Claude 子代理：`haiku` 做搜尋、機械性修改、檢查；`sonnet` 做跨檔實作，用 `isolation: "worktree"`，第一步先 `git merge --ff-only <本批分支>`。
    - Codex：`gpt-6-luna` **一律 xhigh**；`gpt-6-sol` high 只用在出錯會掉資料或有安全疑慮的工作，以及嚴格審查。

@@ -1,0 +1,508 @@
+{
+  "groups": [
+    {
+      "id": "torah",
+      "name": "摩西五經",
+      "testament": "ot"
+    },
+    {
+      "id": "history",
+      "name": "歷史書",
+      "testament": "ot"
+    },
+    {
+      "id": "wisdom",
+      "name": "詩歌智慧書",
+      "testament": "ot"
+    },
+    {
+      "id": "prophets",
+      "name": "先知書",
+      "testament": "ot"
+    },
+    {
+      "id": "gospels",
+      "name": "福音書",
+      "testament": "nt"
+    },
+    {
+      "id": "acts",
+      "name": "使徒行傳",
+      "testament": "nt"
+    },
+    {
+      "id": "epistles",
+      "name": "書信",
+      "testament": "nt"
+    },
+    {
+      "id": "revelation",
+      "name": "啟示錄",
+      "testament": "nt"
+    }
+  ],
+  "books": [
+    {
+      "num": 1,
+      "name": "創世記",
+      "chapters": 50,
+      "short": "創",
+      "group": "torah"
+    },
+    {
+      "num": 2,
+      "name": "出埃及記",
+      "chapters": 40,
+      "short": "出",
+      "group": "torah"
+    },
+    {
+      "num": 3,
+      "name": "利未記",
+      "chapters": 27,
+      "short": "利",
+      "group": "torah"
+    },
+    {
+      "num": 4,
+      "name": "民數記",
+      "chapters": 36,
+      "short": "民",
+      "group": "torah"
+    },
+    {
+      "num": 5,
+      "name": "申命記",
+      "chapters": 34,
+      "short": "申",
+      "group": "torah"
+    },
+    {
+      "num": 6,
+      "name": "約書亞記",
+      "chapters": 24,
+      "short": "書",
+      "group": "history"
+    },
+    {
+      "num": 7,
+      "name": "士師記",
+      "chapters": 21,
+      "short": "士",
+      "group": "history"
+    },
+    {
+      "num": 8,
+      "name": "路得記",
+      "chapters": 4,
+      "short": "得",
+      "group": "history"
+    },
+    {
+      "num": 9,
+      "name": "撒母耳記上",
+      "chapters": 31,
+      "short": "撒上",
+      "group": "history"
+    },
+    {
+      "num": 10,
+      "name": "撒母耳記下",
+      "chapters": 24,
+      "short": "撒下",
+      "group": "history"
+    },
+    {
+      "num": 11,
+      "name": "列王紀上",
+      "chapters": 22,
+      "short": "王上",
+      "group": "history"
+    },
+    {
+      "num": 12,
+      "name": "列王紀下",
+      "chapters": 25,
+      "short": "王下",
+      "group": "history"
+    },
+    {
+      "num": 13,
+      "name": "歷代志上",
+      "chapters": 29,
+      "short": "代上",
+      "group": "history"
+    },
+    {
+      "num": 14,
+      "name": "歷代志下",
+      "chapters": 36,
+      "short": "代下",
+      "group": "history"
+    },
+    {
+      "num": 15,
+      "name": "以斯拉記",
+      "chapters": 10,
+      "short": "拉",
+      "group": "history"
+    },
+    {
+      "num": 16,
+      "name": "尼希米記",
+      "chapters": 13,
+      "short": "尼",
+      "group": "history"
+    },
+    {
+      "num": 17,
+      "name": "以斯帖記",
+      "chapters": 10,
+      "short": "斯",
+      "group": "history"
+    },
+    {
+      "num": 18,
+      "name": "約伯記",
+      "chapters": 42,
+      "short": "伯",
+      "group": "wisdom"
+    },
+    {
+      "num": 19,
+      "name": "詩篇",
+      "chapters": 150,
+      "short": "詩",
+      "group": "wisdom"
+    },
+    {
+      "num": 20,
+      "name": "箴言",
+      "chapters": 31,
+      "short": "箴",
+      "group": "wisdom"
+    },
+    {
+      "num": 21,
+      "name": "傳道書",
+      "chapters": 12,
+      "short": "傳",
+      "group": "wisdom"
+    },
+    {
+      "num": 22,
+      "name": "雅歌",
+      "chapters": 8,
+      "short": "歌",
+      "group": "wisdom"
+    },
+    {
+      "num": 23,
+      "name": "以賽亞書",
+      "chapters": 66,
+      "short": "賽",
+      "group": "prophets"
+    },
+    {
+      "num": 24,
+      "name": "耶利米書",
+      "chapters": 52,
+      "short": "耶",
+      "group": "prophets"
+    },
+    {
+      "num": 25,
+      "name": "耶利米哀歌",
+      "chapters": 5,
+      "short": "哀",
+      "group": "prophets"
+    },
+    {
+      "num": 26,
+      "name": "以西結書",
+      "chapters": 48,
+      "short": "結",
+      "group": "prophets"
+    },
+    {
+      "num": 27,
+      "name": "但以理書",
+      "chapters": 12,
+      "short": "但",
+      "group": "prophets"
+    },
+    {
+      "num": 28,
+      "name": "何西阿書",
+      "chapters": 14,
+      "short": "何",
+      "group": "prophets"
+    },
+    {
+      "num": 29,
+      "name": "約珥書",
+      "chapters": 3,
+      "short": "珥",
+      "group": "prophets"
+    },
+    {
+      "num": 30,
+      "name": "阿摩司書",
+      "chapters": 9,
+      "short": "摩",
+      "group": "prophets"
+    },
+    {
+      "num": 31,
+      "name": "俄巴底亞書",
+      "chapters": 1,
+      "short": "俄",
+      "group": "prophets"
+    },
+    {
+      "num": 32,
+      "name": "約拿書",
+      "chapters": 4,
+      "short": "拿",
+      "group": "prophets"
+    },
+    {
+      "num": 33,
+      "name": "彌迦書",
+      "chapters": 7,
+      "short": "彌",
+      "group": "prophets"
+    },
+    {
+      "num": 34,
+      "name": "那鴻書",
+      "chapters": 3,
+      "short": "鴻",
+      "group": "prophets"
+    },
+    {
+      "num": 35,
+      "name": "哈巴谷書",
+      "chapters": 3,
+      "short": "哈",
+      "group": "prophets"
+    },
+    {
+      "num": 36,
+      "name": "西番雅書",
+      "chapters": 3,
+      "short": "番",
+      "group": "prophets"
+    },
+    {
+      "num": 37,
+      "name": "哈該書",
+      "chapters": 2,
+      "short": "該",
+      "group": "prophets"
+    },
+    {
+      "num": 38,
+      "name": "撒迦利亞書",
+      "chapters": 14,
+      "short": "亞",
+      "group": "prophets"
+    },
+    {
+      "num": 39,
+      "name": "瑪拉基書",
+      "chapters": 4,
+      "short": "瑪",
+      "group": "prophets"
+    },
+    {
+      "num": 40,
+      "name": "馬太福音",
+      "chapters": 28,
+      "short": "太",
+      "group": "gospels"
+    },
+    {
+      "num": 41,
+      "name": "馬可福音",
+      "chapters": 16,
+      "short": "可",
+      "group": "gospels"
+    },
+    {
+      "num": 42,
+      "name": "路加福音",
+      "chapters": 24,
+      "short": "路",
+      "group": "gospels"
+    },
+    {
+      "num": 43,
+      "name": "約翰福音",
+      "chapters": 21,
+      "short": "約",
+      "group": "gospels"
+    },
+    {
+      "num": 44,
+      "name": "使徒行傳",
+      "chapters": 28,
+      "short": "徒",
+      "group": "acts"
+    },
+    {
+      "num": 45,
+      "name": "羅馬書",
+      "chapters": 16,
+      "short": "羅",
+      "group": "epistles"
+    },
+    {
+      "num": 46,
+      "name": "哥林多前書",
+      "chapters": 16,
+      "short": "林前",
+      "group": "epistles"
+    },
+    {
+      "num": 47,
+      "name": "哥林多後書",
+      "chapters": 13,
+      "short": "林後",
+      "group": "epistles"
+    },
+    {
+      "num": 48,
+      "name": "加拉太書",
+      "chapters": 6,
+      "short": "加",
+      "group": "epistles"
+    },
+    {
+      "num": 49,
+      "name": "以弗所書",
+      "chapters": 6,
+      "short": "弗",
+      "group": "epistles"
+    },
+    {
+      "num": 50,
+      "name": "腓立比書",
+      "chapters": 4,
+      "short": "腓",
+      "group": "epistles"
+    },
+    {
+      "num": 51,
+      "name": "歌羅西書",
+      "chapters": 4,
+      "short": "西",
+      "group": "epistles"
+    },
+    {
+      "num": 52,
+      "name": "帖撒羅尼迦前書",
+      "chapters": 5,
+      "short": "帖前",
+      "group": "epistles"
+    },
+    {
+      "num": 53,
+      "name": "帖撒羅尼迦後書",
+      "chapters": 3,
+      "short": "帖後",
+      "group": "epistles"
+    },
+    {
+      "num": 54,
+      "name": "提摩太前書",
+      "chapters": 6,
+      "short": "提前",
+      "group": "epistles"
+    },
+    {
+      "num": 55,
+      "name": "提摩太後書",
+      "chapters": 4,
+      "short": "提後",
+      "group": "epistles"
+    },
+    {
+      "num": 56,
+      "name": "提多書",
+      "chapters": 3,
+      "short": "多",
+      "group": "epistles"
+    },
+    {
+      "num": 57,
+      "name": "腓利門書",
+      "chapters": 1,
+      "short": "門",
+      "group": "epistles"
+    },
+    {
+      "num": 58,
+      "name": "希伯來書",
+      "chapters": 13,
+      "short": "來",
+      "group": "epistles"
+    },
+    {
+      "num": 59,
+      "name": "雅各書",
+      "chapters": 5,
+      "short": "雅",
+      "group": "epistles"
+    },
+    {
+      "num": 60,
+      "name": "彼得前書",
+      "chapters": 5,
+      "short": "彼前",
+      "group": "epistles"
+    },
+    {
+      "num": 61,
+      "name": "彼得後書",
+      "chapters": 3,
+      "short": "彼後",
+      "group": "epistles"
+    },
+    {
+      "num": 62,
+      "name": "約翰一書",
+      "chapters": 5,
+      "short": "約一",
+      "group": "epistles"
+    },
+    {
+      "num": 63,
+      "name": "約翰二書",
+      "chapters": 1,
+      "short": "約二",
+      "group": "epistles"
+    },
+    {
+      "num": 64,
+      "name": "約翰三書",
+      "chapters": 1,
+      "short": "約三",
+      "group": "epistles"
+    },
+    {
+      "num": 65,
+      "name": "猶大書",
+      "chapters": 1,
+      "short": "猶",
+      "group": "epistles"
+    },
+    {
+      "num": 66,
+      "name": "啟示錄",
+      "chapters": 22,
+      "short": "啟",
+      "group": "revelation"
+    }
+  ]
+}

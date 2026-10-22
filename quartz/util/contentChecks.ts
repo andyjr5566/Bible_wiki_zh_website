@@ -1,78 +1,12 @@
-// 建置後的內容檢查（B5-3，U-11：只警告、不擋部署），CLI 在 checkContent.ts。
+// 建置後的內容檢查（B5-3，U-11：只警告、不擋部署；資料來自 config/bible-books.json），CLI 在 checkContent.ts。
 // 1. 首頁進度：content/index.md 裡 bwz:progress／bwz:total 標記之間的數字，要和實際的章節檔數一致
-//    （規則照 sync_content.ps1 的 Update-HomeProgress；BOOKS 照抄它的 $bookSpec）。
+//    （規則照 sync_content.ps1 的 Update-HomeProgress；BOOKS 資料來自 config/bible-books.json）。
 // 2. 壞掉的內部連結：建置輸出裡 class 同時有 internal 和 broken 的連結（Quartz 找不到目標時加的）。
 import { readdir, readFile, stat } from "node:fs/promises"
 import { join, relative } from "node:path"
+import { BIBLE_BOOKS } from "./bibleBooks"
 
-export const BOOKS = [
-  { name: "創世記", chapters: 50 },
-  { name: "出埃及記", chapters: 40 },
-  { name: "利未記", chapters: 27 },
-  { name: "民數記", chapters: 36 },
-  { name: "申命記", chapters: 34 },
-  { name: "約書亞記", chapters: 24 },
-  { name: "士師記", chapters: 21 },
-  { name: "路得記", chapters: 4 },
-  { name: "撒母耳記上", chapters: 31 },
-  { name: "撒母耳記下", chapters: 24 },
-  { name: "列王紀上", chapters: 22 },
-  { name: "列王紀下", chapters: 25 },
-  { name: "歷代志上", chapters: 29 },
-  { name: "歷代志下", chapters: 36 },
-  { name: "以斯拉記", chapters: 10 },
-  { name: "尼希米記", chapters: 13 },
-  { name: "以斯帖記", chapters: 10 },
-  { name: "約伯記", chapters: 42 },
-  { name: "詩篇", chapters: 150 },
-  { name: "箴言", chapters: 31 },
-  { name: "傳道書", chapters: 12 },
-  { name: "雅歌", chapters: 8 },
-  { name: "以賽亞書", chapters: 66 },
-  { name: "耶利米書", chapters: 52 },
-  { name: "耶利米哀歌", chapters: 5 },
-  { name: "以西結書", chapters: 48 },
-  { name: "但以理書", chapters: 12 },
-  { name: "何西阿書", chapters: 14 },
-  { name: "約珥書", chapters: 3 },
-  { name: "阿摩司書", chapters: 9 },
-  { name: "俄巴底亞書", chapters: 1 },
-  { name: "約拿書", chapters: 4 },
-  { name: "彌迦書", chapters: 7 },
-  { name: "那鴻書", chapters: 3 },
-  { name: "哈巴谷書", chapters: 3 },
-  { name: "西番雅書", chapters: 3 },
-  { name: "哈該書", chapters: 2 },
-  { name: "撒迦利亞書", chapters: 14 },
-  { name: "瑪拉基書", chapters: 4 },
-  { name: "馬太福音", chapters: 28 },
-  { name: "馬可福音", chapters: 16 },
-  { name: "路加福音", chapters: 24 },
-  { name: "約翰福音", chapters: 21 },
-  { name: "使徒行傳", chapters: 28 },
-  { name: "羅馬書", chapters: 16 },
-  { name: "哥林多前書", chapters: 16 },
-  { name: "哥林多後書", chapters: 13 },
-  { name: "加拉太書", chapters: 6 },
-  { name: "以弗所書", chapters: 6 },
-  { name: "腓立比書", chapters: 4 },
-  { name: "歌羅西書", chapters: 4 },
-  { name: "帖撒羅尼迦前書", chapters: 5 },
-  { name: "帖撒羅尼迦後書", chapters: 3 },
-  { name: "提摩太前書", chapters: 6 },
-  { name: "提摩太後書", chapters: 4 },
-  { name: "提多書", chapters: 3 },
-  { name: "腓利門書", chapters: 1 },
-  { name: "希伯來書", chapters: 13 },
-  { name: "雅各書", chapters: 5 },
-  { name: "彼得前書", chapters: 5 },
-  { name: "彼得後書", chapters: 3 },
-  { name: "約翰一書", chapters: 5 },
-  { name: "約翰二書", chapters: 1 },
-  { name: "約翰三書", chapters: 1 },
-  { name: "猶大書", chapters: 1 },
-  { name: "啟示錄", chapters: 22 },
-] as const
+export const BOOKS = BIBLE_BOOKS.map(({ name, chapters }) => ({ name, chapters }))
 
 export interface ProgressIssue {
   line: number

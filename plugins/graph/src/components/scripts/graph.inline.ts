@@ -608,38 +608,7 @@ import {
       obstacles: [centerBox],
     });
 
-    // Cluster labels (「類型 數量」) sit just beyond the far end of each cluster, clear of every node box.
-    var sectors = layout.sectors;
-    var nodeBoxes = [centerBox];
-    var clusterReach = {};
-    layoutNodes.forEach(function (layoutNode) {
-      var position = layout.positions.get(layoutNode.id);
-      var boxWidth = Math.max(layoutNode.r * 2, layoutNode.labelWidth);
-      nodeBoxes.push({ x: position.x - boxWidth / 2, y: position.y - layoutNode.r, width: boxWidth, height: layoutNode.r * 2 + 2 + labelHeight });
-      var normalized = Math.sqrt(Math.pow((position.x - cx) / layout.radii.rx, 2) + Math.pow((position.y - cy) / layout.radii.ry, 2));
-      clusterReach[layoutNode.category] = Math.max(clusterReach[layoutNode.category] || 0, normalized);
-    });
-    var clusterInputs = sectors.map(function (sector) {
-      var text = sector.category + " " + counts[sector.category];
-      return {
-        key: sector.category,
-        text: text,
-        angle: sector.startAngle + sector.angle / 2,
-        width: textWidth(text, labelFont + 1, true) + 6,
-        height: labelHeight + 2,
-        weight: counts[sector.category],
-        scale: Math.max(0.5, clusterReach[sector.category] || 1),
-      };
-    });
-    var clusterPlacement = placeSectorLabels(clusterInputs, {
-      cx: cx,
-      cy: cy,
-      rx: layout.radii.rx,
-      ry: layout.radii.ry,
-      gap: labelHeight + 4,
-      bounds: { width: width, height: areaH, margin: 4 },
-      obstacles: nodeBoxes,
-    });
+    // 大圖不畫「類型 數量」的分類文字（使用者要求）；類型只由底下的小圖示圖例說明。
     var categoryOf = new Map();
     layoutNodes.forEach(function (layoutNode) { categoryOf.set(layoutNode.id, layoutNode.category); });
     nodes.forEach(function (node) {
@@ -752,37 +721,12 @@ import {
       labelEls.set(node.id, label);
     });
 
-    var clusterEls = clusterPlacement.labels.map(function (placed, index) {
-      var input = clusterInputs[index];
-      var element = createSvgElement("text", {
-        "class": "graph-modal-cluster-label",
-        "font-size": labelFont + 1,
-        fill: palette[input.key].color,
-        "text-anchor": "middle",
-        "dominant-baseline": "central",
-      });
-      element.textContent = input.text;
-      overlay.appendChild(element);
-      return { el: element, rect: placed.rect };
-    });
-
     function screenX(x) { return transform.x + transform.k * x; }
     function screenY(y) { return transform.y + transform.k * y; }
 
     function updateLabels() {
       frame = 0;
       var obstacles = [];
-      clusterEls.forEach(function (cluster) {
-        var rect = {
-          x: screenX(cluster.rect.x + cluster.rect.width / 2) - cluster.rect.width / 2,
-          y: screenY(cluster.rect.y + cluster.rect.height / 2) - cluster.rect.height / 2,
-          width: cluster.rect.width,
-          height: cluster.rect.height,
-        };
-        obstacles.push(rect);
-        cluster.el.setAttribute("x", rect.x + rect.width / 2);
-        cluster.el.setAttribute("y", rect.y + rect.height / 2);
-      });
 
       // Priority: current page, hovered node, then shorter names first (more labels fit).
       var ordered = neighbors

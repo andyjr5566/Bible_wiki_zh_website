@@ -286,8 +286,7 @@
 }
 
 // Font sizes are set as SVG attributes by the script (they are measured for label placement).
-.graph-modal-node-label,
-.graph-modal-cluster-label {
+.graph-modal-node-label {
   fill: var(--dark);
   paint-order: stroke;
   pointer-events: none;
@@ -301,10 +300,6 @@
   &.is-hover {
     font-weight: 700;
   }
-}
-
-.graph-modal-cluster-label {
-  font-weight: 700;
 }
 
 .graph-modal-legend {

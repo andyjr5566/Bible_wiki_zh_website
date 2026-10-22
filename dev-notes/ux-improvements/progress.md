@@ -440,6 +440,27 @@
 | 設計方案 | Claude Plan 子代理（sonnet，第 2 級，唯讀） | 現況盤點＋3 個方案＋12 題待決 | A 彈出式選擇器（與探索並存）、B 左欄常駐取代探索的書卷、C 不彈出連回首頁；推薦 A。發現書卷表已有 4 份（同步腳本、contentChecks、personal-notes、scriptureRef） | 方案與題目拿來做樣稿、問使用者 | 核對書卷表與 collapse-rules 屬實 |
 | 樣稿 | 主導者 | 把樣稿 HTML 注入正式站後截圖（`b6/mock.mjs`、`gen.mjs`），20 張 | 首頁入口 × 淺深 × 1440／390、格子全名／簡稱／手機收合、A 的手機面板與桌機彈出方塊、章末章號格、B 左欄、C 連結 | | 深色實心按鈕白字太淡改深色字；桌機按鈕文字換行；手機搜尋提示縮短 |
 | 樣稿審查 | Antigravity gemini-4-argon-high → 429（額度用完，約 49 小時後重置），依規則改 gemini-3.8-flash-high（唯讀） | 附 20 張截圖審體驗 | 推薦 A，否決 B（左欄塞滿、要兩層捲動）與 C（換卷要離開閱讀頁）。高：新訪客第一屏看不到網站介紹與導覽卡；手機首頁建議格子收成按鈕；灰色書卷點了沒反應。中：簡稱對初學者像密碼；深色次要連結對比；入口的教學按鈕和導覽卡重複。低：375 px 手機工具列可能太擠；桌機彈出方塊點外面要能關；章末加「下一章」 | 待使用者決定 | 「前一章／下一章」表格與筆記提示條的深色配色是既有內容，不在本批範圍；章末「下一章」已有內容的導覽表格，不另加 |
+| 方案細節 | 主導者 | 使用者選了 B，補拍 B 的細節樣稿 8 張（左欄看頁面收合、全名／簡稱、首頁兩份格子、手機抽屜），分五輪問完（決定見 README U-22） | 使用者回「開工 做完push」 | | |
+| 文案審查 | Antigravity gemini-3.8-flash-high（唯讀） | 審本批新增文案 | 區塊名稱「快速開始」和「快速入門」太像 → 改「讀經入口」；灰色書卷的說明要避免讓人以為聖經缺卷；「繼續 ›」補螢幕閱讀器名稱 | 大部分採用；使用者確認定稿（scratchpad `b6/copy/copy-final.md`） | 「研讀頁」維持（首頁介紹用同一個詞）；「互動網站與附錄」維持（它建議的「網站導覽」不對，按鈕連的是互動網站） |
+| L1 資料層 | Codex gpt-6-luna xhigh（workspace-write 成功，worktree `bwz-wt-b6-data`） | `config/bible-books.json`、`bibleBooks.ts`、`bookCatalog.ts`、`readingPosition.ts`＋測試；contentChecks 改讀共用檔 | quartz/util 測試 131/131；改過的檔 tsc 0 錯（worktree 多出的 66 個錯是少了 .quartz 外掛與互動網站檔，和改動無關） | 採用（`6269f1e5`） | 三個檔開頭有 BOM → 拿掉；兩個檔各有一份網址解碼 → 合併成 `canonicalSlugPath`；`scrollFromRatio` 的 topOffset 拿掉（記錄和還原同一公式，扣工具列高度反而會偏）；補「為什麼」註解 |
+| S1a 選擇器 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b6-picker` | plugins/book-picker、探索濾掉書卷、手機抽屜、快捷列、手機章末 | 外掛 vitest 31/31、quartz/util 131/131；自寫 e2e 94/94（1440／390／375、淺深、axe 0 critical／serious、鍵盤、SPA、localStorage 被封鎖）；加料站（詩篇 150 章、只有目錄的士師記、馬太福音）13/13；smoke 23/23（＋4）、regress 15/15、site-ux 117/117、朗讀 42/42、expcheck 9/9（第一項改成「一開始沒有資料夾展開」，因為書卷已不在探索） | 採用（`28063acf`） | 審過：外掛 scss 的 `!important` 是外掛 CSS 在最低層的既有慣例（筆記 124、教學 135），檔頭有說明；`explorerTools` 的「全部收合」改放清單正上方（不在清單內但合理）；快捷列按鈕改 `--bwz-accent-strong`（原本 4.25:1）。`.quartz/plugins/book-picker` 在主 repo 換成 junction＋skip-worktree。已知取捨：條目頁打開手機抽屜時停在最上面的選擇器，不再把目前條目捲到中間 |
+| S1b 首頁入口 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b6-hub` | plugins/home-hub、繼續閱讀、順序、進度表收合、導覽第一站 | vitest 33/33；hubcheck 49/49（無紀錄時 75 幀取樣都是導覽卡在上、不跳動；繼續後回到 0.49～0.50；SPA、整頁、鍵盤、手機；儲存被封鎖照常）、hubaxe 18/18、smoke 23/23、regress 15/15、朗讀 42/42；完整站 hubcheck、hubaxe、tourcheck 20/20＋24/24 | 採用（`31f4e94a`，合併 `0957b23c`） | 記錄放在 home-hub 自己的腳本（腳本每頁載入，實測章節頁有記到），主導者同意；合併時 prepare-plugins 與 smoke 衝突，兩邊都留；收合規則的備援清單（collapsible.inline.ts）補「按書卷研讀」；home-hub 的 dist 打包了舊版格子樣式 → 合併後重建（`ae91bd7a`）。它中途用 `taskkill /IM chrome.exe` 清瀏覽器，會關掉使用者的 Chrome（已告知使用者）。退回全書目錄時的卡片文案（「上次讀過這一卷」）使用者確認 |
+| 同步腳本 | Claude haiku 子代理（第 1 級），worktree `bwz-wt-b6-ps1` | `Update-HomeProgress` 改讀 bible-books.json，新舊函式 5 個情境比對 | 9 個情境新舊輸出逐位元組相同（含 LF／CRLF／BOM、加士師記 2 章 → 213 章、沒有標記、JSON 不存在或損毀只警告）；自己抓到並修了「JSON 不存在時 try/catch 接不住」 | 採用（`b18303da`） | L1 的一致性測試原本從腳本讀 `$bookSpec` → 改成檢查腳本讀共用檔、沒有再寫死清單 |
+
+### 合併後驗收（主導者，`ae91bd7a`）
+
+- 單元測試：quartz/util 131/131、book-picker 31/31、home-hub 33/33。
+- test_content 小站（子路徑 /Bible_wiki_zh_website/）：smoke 27/27（原 19＋選擇器 4＋首頁入口 4）、regress 15/15、swcheck 13/13、nodecheck 10/10、expcheck 9/9、book-picker check 94/94（含 axe 淺深 8 個狀態 0 critical／serious）、hubcheck 49/49、hubaxe 18/18、朗讀 42/42。
+- 完整內容建置（3,756 頁、10,299 個檔、7 分鐘）：tourcheck 桌機 20/20、手機 24/24（第一站指向首頁格子）；首頁進度「一致：211 個章節檔」；壞連結 298（上一次部署 292；新元件裡 0 個，內容自 `096dd954` 沒變，推上後看部署的檢查確認）。
+- 截圖 22 張（首頁無紀錄／有紀錄／整頁、出埃及記 12 章、條目、手機抽屜 × 淺深 × 1440／390），scratchpad `b6/shots-final/`：都沒有橫向捲動、沒有 JS 例外；和使用者選定的樣稿一致。
+- 沒跑：site-ux `check.mjs`（要一個「沒有 site-ux」的基準站；本批沒動 site-ux，home-hub 子代理用同程式關掉 home-hub 的站比對，文章區截圖相同）。沒有實機與螢幕閱讀器測試。
+
+### 注意
+
+- 外掛 import `quartz/util`（共用資料層），建置外掛要保留相對位置：用 scratchpad `b6/build-plugin-mirror.ps1`（`-Name home-hub -Extra @("plugins\book-picker")`）。home-hub 的 dist 打包了 book-picker 的格子，**改 book-picker 的 BookGrid／樣式後要重建 home-hub**。
+- 新本地外掛的 `.quartz/plugins/<名稱>` 是 git 的 symlink 項目，這台電腦 checkout 會變成文字檔：換成 junction 再 `git update-index --skip-worktree`。
+- 子代理不要用 `taskkill /IM chrome.exe`（會關掉使用者的 Chrome），只殺自己的 PID。
+- 主導者寫檔時不要把含反引號的文字放進 bash 的雙引號（`node -e "..."`）：反引號會被當成指令執行（這次差點執行 taskkill，因參數被改壞而沒執行）。用 Edit 工具或單引號 heredoc。
 
 ## 第 7～9 批：大改版
 

@@ -384,11 +384,18 @@ function Update-HomeProgress {
         if (-not (Test-Path -LiteralPath $indexPath)) { return }
 
         # The 66 Protestant books (和合本) in canonical order: name + chapter total.
-        $bookSpec = '創世記50 出埃及記40 利未記27 民數記36 申命記34 約書亞記24 士師記21 路得記4 撒母耳記上31 撒母耳記下24 列王紀上22 列王紀下25 歷代志上29 歷代志下36 以斯拉記10 尼希米記13 以斯帖記10 約伯記42 詩篇150 箴言31 傳道書12 雅歌8 以賽亞書66 耶利米書52 耶利米哀歌5 以西結書48 但以理書12 何西阿書14 約珥書3 阿摩司書9 俄巴底亞書1 約拿書4 彌迦書7 那鴻書3 哈巴谷書3 西番雅書3 哈該書2 撒迦利亞書14 瑪拉基書4 馬太福音28 馬可福音16 路加福音24 約翰福音21 使徒行傳28 羅馬書16 哥林多前書16 哥林多後書13 加拉太書6 以弗所書6 腓立比書4 歌羅西書4 帖撒羅尼迦前書5 帖撒羅尼迦後書3 提摩太前書6 提摩太後書4 提多書3 腓利門書1 希伯來書13 雅各書5 彼得前書5 彼得後書3 約翰一書5 約翰二書1 約翰三書1 猶大書1 啟示錄22'
+        # 書卷資料改由 config/bible-books.json 提供（與網站的書卷選單、部署檢查共用）。
+        $bookData = $null
+        try {
+            $bookData = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'config\bible-books.json') -Raw -Encoding UTF8 -ErrorAction Stop | ConvertFrom-Json
+        }
+        catch {
+            Write-Host "Update-HomeProgress: config/bible-books.json missing or unreadable ($($_.Exception.Message)); home-page progress left unchanged."
+            return
+        }
         $books = @()
-        foreach ($item in ($bookSpec -split ' ')) {
-            $m = [regex]::Match($item, '^(\D+)(\d+)$')
-            $books += , @($m.Groups[1].Value, [int]$m.Groups[2].Value)
+        foreach ($b in $bookData.books) {
+            $books += , @([string]$b.name, [int]$b.chapters)
         }
 
         # Count chapter files per book folder, matched by the two-digit prefix.

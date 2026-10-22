@@ -63,21 +63,10 @@ test("folder helpers accept slug, spaced folder name, and encoded forms", () => 
 })
 
 test("the canonical list matches the sync script and existing plugin book tables", () => {
+  // 同步腳本直接讀 config/bible-books.json；確認它沒有又抄回一份寫死的書卷清單
   const syncText = readFileSync(new URL("../../sync_content.ps1", import.meta.url), "utf8")
-  const syncSpec = syncText.match(/\$bookSpec\s*=\s*'([^']+)'/)
-  assert.ok(syncSpec, "sync_content.ps1 defines $bookSpec")
-  const syncBooks = syncSpec[1]
-    .trim()
-    .split(/\s+/)
-    .map((entry) => {
-      const match = /^(\D+?)(\d+)$/.exec(entry)
-      assert.ok(match, "parse sync book item " + entry)
-      return { name: match[1], chapters: Number(match[2]) }
-    })
-  assert.deepEqual(
-    BIBLE_BOOKS.map(({ name, chapters }) => ({ name, chapters })),
-    syncBooks,
-  )
+  assert.match(syncText, /config\\bible-books\.json/)
+  assert.doesNotMatch(syncText, /\$bookSpec\s*=/)
 
   const personalNotes = readFileSync(
     new URL("../../plugins/personal-notes/src/client/model/books.ts", import.meta.url),

@@ -1,137 +1,52 @@
-/* 隱藏 FolderPage 的自動列表（此資料夾下有 XX 條筆記），由 index.md 全書目錄及綱要全面接管 */
-.page-listing {
-  display: none !important;
+/* ==========================================================================
+   聖經研讀知識庫的自訂樣式（沒有分層）
+
+   讀這個檔案前先知道的事：
+   - 主題與外掛的 CSS 都在 cascade layer 裡（quartz-base、obsidian-theme…），這個檔案不在任何 layer。
+     沒分層的一般宣告永遠贏過分層的一般宣告（不管選擇器權重），所以這裡幾乎不需要 !important，
+     也不需要照抄主題的高權重選擇器。
+   - 反過來，外掛（分層）的 !important 會贏過這裡沒分層的 !important。
+     外掛想蓋過這個檔案的值就用 !important（例如 site-ux 的字級），這裡不必為它多做什麼。
+   - 所以 !important 只留給「對手是行內 style」的情況（見檔內註解）。
+
+   分區（順序有意義：同權重的規則靠後面的贏，改順序前先確認）：
+     1. 共用變數、Mermaid 色彩修正
+     2. 隱藏不要的元素
+     3. 背景（羊皮紙）與半透明面板、素色模式
+     4. 閱讀排版、表格、連結顏色、Popover
+     5. 各個小元件（書卷網格、折疊區、探索、條目屬性、YouTube、章節快捷列、強數字）
+     6. 右欄（目錄、關係圖）與手機版細節
+     7. 搜尋視窗、圖譜連結、無障礙
+   ========================================================================== */
+
+/* ==========================================================================
+   1. 共用變數、Mermaid 色彩修正
+   ========================================================================== */
+
+:root {
+  /* 強調色的加深版：主題紫在淺色模式是 #8a5cf5，配白字或放在白底只有 4.25:1；同色相的 #7048e8 約 5.5:1。
+     深色模式的主題紫本身就夠（#a68af9 配深色字約 6:1）。要用「強調色當底色配白字」或「強調色文字放在白底」的地方都引用這個變數，
+     外掛裡寫成 var(--bwz-accent-strong, var(--secondary))。要調顏色只改這裡。（B5-4） */
+  --bwz-accent-strong: var(--secondary);
+
+  /* 站內連結顏色（RGB 三個數字，方便同一個顏色配不同透明度的底色）。要調連結的顏色只改這裡。 */
+  --bwz-link-dark-rgb: 251 191 36; /* 深色：亮琥珀色 #fbbf24 */
+  --bwz-link-dark-hover-rgb: 245 158 11; /* 深色，滑鼠移過去：#f59e0b */
+  --bwz-link-light-rgb: 122 28 28; /* 淺色：經典紅 #7A1C1C */
+  --bwz-link-light-hover-rgb: 180 83 9; /* 淺色，滑鼠移過去：棕橘色 #B45309 */
+
+  /* 半透明面板的底色不透明度：0 = 完全透明（看到 100% 羊皮紙），1 = 完全不透明。調透明度改這三個數字。 */
+  --bwz-center-alpha: 0.7; /* 中間閱讀區（淺、深色共用） */
+  --bwz-sidebar-alpha-light: 0.85; /* 左右側邊欄，淺色 */
+  --bwz-sidebar-alpha-dark: 0.9; /* 左右側邊欄，深色 */
+}
+:root:not([saved-theme="dark"]) {
+  --bwz-accent-strong: #7048e8;
 }
 
-/* 隱藏章節頁標題下方日期 / read time */
-.content-meta {
-  display: none !important;
-}
-
-/* å¦‚æžœæŸäº›è‡ªå‹•åˆ—è¡¨ä»ç„¶å‡ºç¾ï¼Œéš±è— FolderPage/PageList çš„æ—¥æœŸæ¬„ */
-.page-listing .meta,
-.section-li > .section > .meta,
-.section > .meta,
-ul.section-ul .meta {
-  display: none !important;
-}
-
-/* æ—¥æœŸæ¬„éš±è—å¾Œï¼Œä¸è¦ç•™ä¸‹ blog list çš„å¤§ç©ºç™½ */
-.page-listing .section,
-.section-li > .section,
-ul.section-ul .section {
-  display: block !important;
-}
-
-.page-listing .desc,
-.section-li .desc,
-ul.section-ul .desc {
-  margin-left: 0 !important;
-}
-
-.page-listing .desc h3,
-.section-li .desc h3,
-ul.section-ul .desc h3 {
-  margin: 0.25rem 0 !important;
-}
-
-/* æ‰‹å·¥ç”Ÿæˆçš„å·æ›¸ index.md ç« ç¯€è¡¨æ ¼ */
-article table {
-  width: 100%;
-}
-
-article table td {
-  white-space: normal;
-  overflow-wrap: anywhere;
-  text-align: center;
-}
-
-article table td:empty {
-  border: none;
-}
-
-/* Graph ä¸­æ–‡æ¨™ç±¤æ¯”è¼ƒé•·ï¼Œçµ¦å®¹å™¨å¤šä¸€é»žé«˜åº¦ */
-.graph #graph-container {
-  min-height: 260px;
-}
-
-/* Bible Wiki custom cleanup:start */
-/* Hide page date / reading time and folder-list dates if a component still emits them. */
-.content-meta,
-.section > .meta,
-.page-listing .meta,
-li.section-li > .section > .meta {
-  display: none !important;
-}
-
-/* Make generated book landing pages look like reference pages, not blog posts. */
-.bible-book-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
-  gap: 0.5rem 0.9rem;
-  margin-top: 1rem;
-}
-
-.bible-book-grid a {
-  display: block;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 0.35rem;
-  text-decoration: none;
-}
-
-.bible-book-grid a:hover {
-  background: var(--highlight);
-}
-/* Bible Wiki custom cleanup:end */
-
-/* Note properties block (條目頁的「屬性」區塊, B1-6 / U-7):start */
 /*
- * The note-properties plugin has no zh-TW locale and lives in .quartz/ (re-cloned on every CI build),
- * so its English UI text is handled here and in components/scripts/notePropertiesZh.inline.ts.
- * - Header "Properties" -> 屬性 (CSS until the script has replaced the text, so there is no flash of English;
- *   the script then sets [data-zh] so screen readers do not read both).
- * - Rows whose value is empty (e.g. `aliases: []`) are hidden; if every row is empty the whole block goes.
- * - Hover popovers do not show the block at all (it is metadata, not preview content).
- */
-.note-properties [hidden] {
-  display: none !important;
-}
-
-.note-properties:not([data-zh]) .note-properties-title {
-  font-size: 0;
-}
-
-.note-properties:not([data-zh]) .note-properties-title::after {
-  content: "條目資訊";
-  font-size: 0.9rem;
-}
-
-.note-properties-row:has(.note-properties-value > .note-properties-list:empty),
-.note-properties-row:has(.note-properties-value > .note-properties-empty) {
-  display: none;
-}
-
-.note-properties:not(
-    :has(
-      .note-properties-row:not(
-          :has(
-            .note-properties-value > .note-properties-list:empty,
-            .note-properties-value > .note-properties-empty
-          )
-        )
-    )
-  ) {
-  display: none;
-}
-
-.popover .note-properties {
-  display: none !important;
-}
-/* Note properties block:end */
-
-/* Mermaid diagram fix:start */
-/*
+ * Mermaid 圖表修正
+ *
  * The quartz-themes plugin defines accent colors such as `--tertiary` as
  * `hsl(calc(var(--accent-h) - 3), ...)`. Quartz's mermaid script reads these
  * CSS variables with getComputedStyle().getPropertyValue(). For UNREGISTERED
@@ -185,14 +100,168 @@ li.section-li > .section > .meta {
   inherits: true;
   initial-value: rgba(143, 159, 169, 0.15);
 }
-/* Mermaid diagram fix:end */
 
 /* ==========================================================================
-   Bible Reading Aesthetics & Micro-Typography (v5.0 Mobile & Dark Mode)
+   2. 隱藏不要的元素
    ========================================================================== */
 
-/* 1. 全局字體與舒適閱讀行距 */
+/* 隱藏 FolderPage 的自動列表（此資料夾下有 XX 條筆記），由 index.md 全書目錄及綱要全面接管 */
+.page-listing {
+  display: none;
+}
+
+/* 隱藏章節頁標題下方日期 / read time；如果某些自動列表仍然出現，也隱藏 FolderPage/PageList 的日期欄 */
+.content-meta,
+.page-listing .meta,
+.section-li > .section > .meta,
+.section > .meta,
+ul.section-ul .meta {
+  display: none;
+}
+
+/* 日期欄隱藏後，不要留下 blog list 的大空白 */
+.page-listing .section,
+.section-li > .section,
+ul.section-ul .section {
+  display: block;
+}
+
+.page-listing .desc,
+.section-li .desc,
+ul.section-ul .desc {
+  margin-left: 0;
+}
+
+.page-listing .desc h3,
+.section-li .desc h3,
+ul.section-ul .desc h3 {
+  margin: 0.25rem 0;
+}
+
+/* ==========================================================================
+   3. 背景（羊皮紙）與半透明面板、素色模式
+   ========================================================================== */
+
+/* 亮色模式：純粹使用羊皮紙圖片，移除所有干擾漸層
+   （先寫 jpg，再寫 webp＋jpg 的 image-set；不支援 image-set 的瀏覽器會忽略第二行，留下第一行） */
+[saved-theme="light"] body {
+  background: url("./static/parchment-fallback.jpg") center center / cover fixed;
+  background: image-set(url("./static/parchment.webp") type("image/webp"), url("./static/parchment-fallback.jpg") type("image/jpeg")) center center / cover fixed;
+}
+
+/* 暗色模式：支援暗色羊皮紙背景圖 */
+[saved-theme="dark"] body {
+  background: url("./static/dark_parchment-fallback.jpg") center center / cover fixed, var(--light);
+  background: image-set(url("./static/dark_parchment.webp") type("image/webp"), url("./static/dark_parchment-fallback.jpg") type("image/jpeg")) center center / cover fixed, var(--light);
+}
+
+/* 主題外掛給頁面容器不透明的底色，會把羊皮紙蓋住。
+   body 的底色要放最後蓋成透明（上面暗色的簡寫會帶一個 var(--light) 底色）；
+   footer 不在下面「基礎保底」的清單裡，另外處理。 */
+html[saved-theme="light"] body,
+html[saved-theme="dark"] body {
+  background-color: transparent;
+}
+
+html[saved-theme="light"] .page > div#quartz-body footer,
+html[saved-theme="dark"] .page > div#quartz-body footer {
+  background-color: transparent;
+}
+
+/* 基礎保底：所有可能的佈局容器 */
+#quartz-root, .page, .center, .sidebar, article,
+div#quartz-body, .page-header, .popover-hint,
+.markdown-preview-view, .markdown-rendered {
+  background-color: transparent;
+}
+
+/* 中間閱讀區與左右側邊欄的半透明底色（透明度在最上面 :root 的 --bwz-*-alpha） */
+html[saved-theme="light"] .page > div#quartz-body div.center {
+  background-color: rgb(250 248 248 / var(--bwz-center-alpha));
+  border-radius: 12px;
+  padding: 1rem;
+}
+html[saved-theme="dark"] .page > div#quartz-body div.center {
+  background-color: rgb(8 8 8 / var(--bwz-center-alpha));
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar,
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar.left,
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar.right {
+  background-color: rgb(250 248 248 / var(--bwz-sidebar-alpha-light));
+}
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar,
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.left,
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
+  background-color: rgb(8 8 8 / var(--bwz-sidebar-alpha-dark));
+}
+
+/* 素色黑白 / 古典紙質底色切換（Pure Mode：素白／極黑 OLED）。
+   放在羊皮紙與半透明面板之後：權重相同的規則靠後面的贏，這裡要能蓋過上面的底色 */
+
+/* 素白模式（微暖象牙米白，柔和不刺眼） */
+:root[data-bg="pure"] {
+  --light: #FAF6ED;
+  --lightgray: #EFECE3;
+  --background-primary: #FAF6ED;
+  --background-primary-alt: #FAF6ED;
+  --background-secondary: #EFECE3;
+  --background-modifier-border: #E5E0D5;
+
+  blockquote {
+    background: rgba(180, 140, 80, 0.08);
+  }
+}
+
+/* 極致純黑模式（OLED 像素全黑深邃底色） */
+:root[saved-theme="dark"][data-bg="pure"] {
+  --light: #000000;
+  --lightgray: #161618;
+  --gray: #71717a;
+  --darkgray: #d4d4d8;
+  --dark: #f4f4f5;
+  --background-primary: #000000;
+  --background-primary-alt: #000000;
+  --background-secondary: #161618;
+  --background-modifier-border: #262626;
+
+  blockquote {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  details.collapsible-subheading {
+    background-color: #0d0d0d;
+    border-color: #262626;
+
+    &:hover {
+      border-color: #404040;
+    }
+  }
+}
+
+/* 移除羊皮紙背景圖與磨砂層，切換為乾淨俐落的純實色 */
+html[data-bg="pure"] body,
+:root[data-bg="pure"] body {
+  background: var(--light);
+  background-image: none;
+}
+
+html[data-bg="pure"] .page > div#quartz-body div.center,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar.left,
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
+  background-color: var(--light);
+}
+
+/* ==========================================================================
+   4. 閱讀排版、表格、連結顏色、Popover
+   ========================================================================== */
+
+/* 聖經閱讀的字體與微排版（v5.0 手機與深色模式） */
 article {
+  /* 全局字體與舒適閱讀行距 */
   font-family: var(--bodyFont), "LXGW WenKai TC", "BiauKai", "PingFang TC", serif;
 
   p, li {
@@ -203,7 +272,7 @@ article {
     margin-bottom: 1.25rem;
   }
 
-  /* 2. 標題典雅風采 (古典墨紅與裝飾) */
+  /* 標題典雅風采 (古典墨紅與裝飾) */
   h1, h2, h3, h4 {
     font-family: var(--headerFont), "Noto Serif TC", "BiauKai", "PingFang TC", serif;
     font-weight: 700;
@@ -218,7 +287,7 @@ article {
     margin-bottom: 2rem;
     font-size: clamp(1.8rem, 4vw, 2.4rem); /* 提升 0.2rem */
     position: relative;
-    
+
     &::after {
       content: "── ✤ ──";
       display: block;
@@ -237,7 +306,7 @@ article {
     border-bottom: 1px dashed var(--lightgray);
   }
 
-  /* 3. 經節上標數字 (Verse Numbers) */
+  /* 經節上標數字 (Verse Numbers) */
   sup, .verse-num {
     font-size: 0.78em;
     font-weight: 700;
@@ -248,10 +317,10 @@ article {
     line-height: 0;
   }
 
-  /* 4. 詩篇 / 詩歌對稱縮排 (Poetic Indent) */
+  /* 詩篇 / 詩歌對稱縮排 (Poetic Indent) */
   blockquote {
     border-left: 3px solid var(--secondary);
-    background: rgba(230, 215, 170, 0.25) !important; /* 改為半透明，讓羊皮紙透出 */
+    background: rgba(230, 215, 170, 0.25); /* 改為半透明，讓羊皮紙透出 */
     padding: 0.9rem 1.3rem;
     border-radius: 0 0.5rem 0.5rem 0;
     margin: 1.4rem 0;
@@ -265,36 +334,122 @@ article {
       }
     }
   }
+}
 
-  /* 5. 表格古典卡片樣式 */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid var(--lightgray);
-    margin: 1.5rem 0;
+/* 手機端行動裝置適配（Mobile Responsive @ 800px）：內文放大、引文縮小內距 */
+@media (max-width: 800px) {
+  article p, article li {
+    font-size: 1.4rem; /* 提升 0.2rem */
+    line-height: 1.8;
+  }
 
-    th {
-      background-color: var(--lightgray);
-      color: var(--dark);
-      font-weight: 700;
-      padding: 0.6rem 0.8rem;
-    }
-
-    td {
-      padding: 0.55rem 0.8rem;
-      border-bottom: 1px solid var(--lightgray);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
+  article blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
   }
 }
 
-/* 6. 典雅 Popover 浮動卡片 (暗色/亮色自適應與毛玻璃) */
+/* 表格：古典卡片樣式，也套用在手工生成的卷書 index.md 章節表格 */
+article table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+  margin: 1.5rem 0;
+}
+
+article table th {
+  background-color: var(--lightgray);
+  color: var(--dark);
+  font-weight: 700;
+  padding: 0.6rem 0.8rem;
+}
+
+article table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--lightgray);
+}
+
+article table td:empty {
+  border: none;
+}
+
+article table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 由腳本標記的短欄維持單行，避免短文字被拆開。 */
+article table [data-short] { white-space: nowrap; }
+/* 由短詞組成的儲存格（書名、「申命記 — 啟示錄」，腳本標 data-short-cell）不從字中間拆，只在空白換行；長句照常換行，表格才縮得進手機 */
+article table td[data-short-cell] { word-break: keep-all; overflow-wrap: normal; }
+
+/* 首頁進度條（█░，腳本包成 .site-ux-bar）：桌機和原本一樣同一行；手機上方塊單獨一行縮成細條，百分比在下面。 */
+article table [data-bar] { white-space: nowrap; }
+
+/* 手機：主題給每個儲存格至少 75px，4 欄表格就超過 342px 的內容寬；拿掉下限並縮小內距，讓表格放得進畫面。 */
+@media all and (max-width: 800px) {
+  article .table-container > table th,
+  article .table-container > table td {
+    min-width: 0;
+    padding: 0.45rem 0.5rem;
+  }
+  article table [data-bar] .site-ux-bar {
+    display: block;
+    font-size: 7px;
+    line-height: 1.2;
+  }
+}
+
+/* 站內連結顏色調整（字體顏色與底部高光；顏色在最上面 :root 的 --bwz-link-*） */
+
+/* 暗色模式 (Dark Mode) */
+[saved-theme="dark"] article a.internal-link,
+[saved-theme="dark"] article a.external-link,
+[saved-theme="dark"] .sidebar a.internal-link {
+  color: rgb(var(--bwz-link-dark-rgb)); /* 字體顏色 */
+  background-color: rgb(var(--bwz-link-dark-rgb) / 0.1); /* 字體底部顏色/高光（微弱的背景） */
+  border-radius: 4px; /* 底部背景的圓角 */
+  padding: 0 4px; /* 讓底部背景稍微向外延展一點 */
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+[saved-theme="dark"] article a.internal-link:hover,
+[saved-theme="dark"] article a.external-link:hover,
+[saved-theme="dark"] .sidebar a.internal-link:hover {
+  color: rgb(var(--bwz-link-dark-hover-rgb)); /* 滑鼠移過去的字體顏色 */
+  background-color: rgb(var(--bwz-link-dark-rgb) / 0.25); /* 滑鼠移過去的底部顏色變深 */
+  text-decoration: none;
+}
+
+/* 亮色模式 (Light Mode) */
+[saved-theme="light"] article a.internal-link,
+[saved-theme="light"] article a.external-link,
+[saved-theme="light"] .sidebar a.internal-link {
+  color: rgb(var(--bwz-link-light-rgb));
+  background-color: rgb(var(--bwz-link-light-rgb) / 0.08);
+  border-radius: 4px;
+  padding: 0 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+[saved-theme="light"] article a.internal-link:hover,
+[saved-theme="light"] article a.external-link:hover,
+[saved-theme="light"] .sidebar a.internal-link:hover {
+  color: rgb(var(--bwz-link-light-hover-rgb));
+  background-color: rgb(var(--bwz-link-light-hover-rgb) / 0.15);
+  text-decoration: none;
+}
+
+/* 典雅 Popover 浮動卡片 (暗色/亮色自適應與毛玻璃) */
 .popover .popover-inner {
   border: 1px solid var(--tertiary);
   box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.4);
@@ -306,144 +461,41 @@ article {
   -webkit-backdrop-filter: blur(12px);
 }
 
+@media (max-width: 800px) {
+  .popover .popover-inner {
+    max-width: 90vw;
+    padding: 0.8rem;
+  }
+}
+
+/* Hover popover 只留內容：不顯示麵包屑、小標題、h1 底下的裝飾線；縮小 h1 上邊界讓「定義」進第一屏。（B3-3.2） */
+.popover .breadcrumb-container,
+.popover .article-title {
+  display: none;
+}
+
+.popover .popover-inner h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.popover .popover-inner h1::after {
+  content: none;
+  display: none;
+}
+
+/* 內容的第一個標題是 h1 時，隱藏 Quartz 的小字 .article-title（完整名稱保留在內容 h1）。（B3-3.1）
+   DOM：div.center > div.page-header > div.popover-hint > h1.article-title；
+        div.center > article > div.markdown-rendered > h1（首頁等沒有 h1 的頁面不受影響）。 */
+.center:has(article .markdown-rendered > h1:first-of-type) > .page-header .article-title {
+  display: none;
+}
+
 /* ==========================================================================
-   實體羊皮紙背景 (Light Mode) 與 Explorer 修正
+   5. 各個小元件
    ========================================================================== */
 
-/* 修正左側「探索」文字被裁切的問題 */
-.explorer .title {
-  line-height: 1.4 !important;
-  padding-bottom: 4px;
-  overflow: visible !important;
-}
-
-/* 探索收起時：外掛把高度固定成 1.2rem，但本站的「探索」標題約 25px，會被切掉下半部。
-   改成標題本身的高度，並把目錄內容藏起來（電腦版；手機版的收起是側邊抽屜，另有規則） */
-@media all and (min-width: 801px) {
-  .explorer.collapsed {
-    flex: 0 0 auto !important;
-  }
-  .explorer.collapsed > .explorer-content {
-    display: none;
-  }
-}
-
-/* 探索目錄最上方的「全部收合」（有資料夾展開時才出現） */
-.explorer-collapse-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  align-self: flex-end;
-  float: right;
-  margin: 0 0.2rem 0.3rem 0;
-  padding: 0.15rem 0.55rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 6px;
-  background: var(--light);
-  color: var(--darkgray);
-  font-size: 0.8rem;
-  cursor: pointer;
-  &:hover {
-    color: var(--secondary);
-    border-color: var(--secondary);
-  }
-  &[hidden] {
-    display: none !important;
-  }
-}
-
-/* 亮色模式：純粹使用羊皮紙圖片，移除所有干擾漸層 */
-[saved-theme="light"] body {
-  background: url('./static/parchment-fallback.jpg') center center / cover fixed !important;
-  background: image-set(url('./static/parchment.webp') type('image/webp'), url('./static/parchment-fallback.jpg') type('image/jpeg')) center center / cover fixed !important;
-}
-
-/* 暗色模式：支援暗色羊皮紙背景圖 */
-[saved-theme="dark"] body {
-  background: url('./static/dark_parchment-fallback.jpg') center center / cover fixed, var(--light) !important;
-  background: image-set(url('./static/dark_parchment.webp') type('image/webp'), url('./static/dark_parchment-fallback.jpg') type('image/jpeg')) center center / cover fixed, var(--light) !important;
-}
-
-/* ============================================================
-   強制覆蓋 Obsidian 主題 resource-style CSS 的不透明背景
-   使用與主題完全相同的高特異性選擇器 + !important
-   ============================================================ */
-
-/* 覆蓋: body { background-color: var(--background-primary) } */
-html[saved-theme="light"] body,
-html[saved-theme="dark"] body {
-  background-color: transparent !important;
-}
-
-/* 覆蓋: html[saved-theme] body body[data-slug] */
-html[saved-theme="light"] body body[data-slug],
-html[saved-theme="dark"] body body[data-slug] {
-  background-color: transparent !important;
-}
-
-/* 覆蓋: html[saved-theme] body[data-slug] .page > div#quartz-body */
-html[saved-theme="light"] body[data-slug] .page > div#quartz-body,
-html[saved-theme="dark"] body[data-slug] .page > div#quartz-body {
-  background-color: transparent !important;
-}
-
-/* 覆蓋: html[saved-theme] .page > div#quartz-body div.center */
-html[saved-theme="light"] .page > div#quartz-body div.center,
-html[saved-theme="dark"] .page > div#quartz-body div.center {
-  background-color: transparent !important;
-}
-
-/* 覆蓋: html[saved-theme] .page > div#quartz-body footer */
-html[saved-theme="light"] .page > div#quartz-body footer,
-html[saved-theme="dark"] .page > div#quartz-body footer {
-  background-color: transparent !important;
-}
-
-/* 覆蓋: html[saved-theme] body body[data-slug] div#quartz-root.page 及其子元素 (不包含 sidebar) */
-html[saved-theme="light"] body body[data-slug] div#quartz-root.page,
-html[saved-theme="dark"] body body[data-slug] div#quartz-root.page {
-  background-color: transparent !important;
-}
-
-/* 基礎保底：所有可能的佈局容器 */
-#quartz-root, .page, .center, .sidebar, article,
-div#quartz-body, .page-header, .popover-hint,
-.markdown-preview-view, .markdown-rendered {
-  background-color: transparent !important;
-}
-
-/* ============================================================
-   🎛️ 中間閱讀區半透明底色
-   調透明度：修改下方 0.3 這個數字
-   0   = 完全透明 (100% 羊皮紙)
-   0.3 = 70% 羊皮紙 ← 目前設定
-   0.5 = 50% 羊皮紙
-   1   = 完全不透明
-   ============================================================ */
-html[saved-theme="light"] .page > div#quartz-body div.center {
-  background-color: rgb(250 248 248 / 0.7) !important; /* ← 改這個 0.7 */
-  border-radius: 12px;
-  padding: 1rem;
-}
-html[saved-theme="dark"] .page > div#quartz-body div.center {
-  background-color: rgba(8, 8, 8, 0.7) !important; /* ← 改這個 0.7 */
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-/* 🎛️ 左右側邊欄半透明底色 — 同上，改 0.7 調透明度 */
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar,
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar.left,
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar.right {
-  background-color: rgb(250 248 248 / 0.85) !important; /* ← 改這個 0.7 */
-}
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar,
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.left,
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
-  background-color: rgba(8, 8, 8, 0.9) !important; /* ← 改這個 0.7 */
-}
-
-/* 7. 章節選單典雅按鈕網格 (Bible Book Grid - 響應式) */
+/* ---------- 章節選單典雅按鈕網格（Bible Book Grid，響應式；產生卷書 index 頁用） ---------- */
 .bible-book-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
@@ -473,18 +525,7 @@ html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 8. 手機端行動裝置適配 (Mobile Responsive @ 800px) */
 @media (max-width: 800px) {
-  article p, article li {
-    font-size: 1.4rem; /* 提升 0.2rem */
-    line-height: 1.8;
-  }
-
-  article blockquote {
-    padding: 0.75rem 1rem;
-    margin: 1rem 0;
-  }
-
   .bible-book-grid {
     grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
     gap: 0.45rem;
@@ -494,61 +535,9 @@ html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
     padding: 0.4rem 0.3rem;
     font-size: 0.92rem;
   }
-
-  .popover .popover-inner {
-    max-width: 90vw;
-    padding: 0.8rem;
-  }
-}
-/* ============================================================
-   🔗 連結顏色調整 (客製化字體顏色與底部高光)
-   ============================================================ */
-
-/* ----------------- 🌙 暗色模式 (Dark Mode) ----------------- */
-[saved-theme="dark"] article a.internal-link,
-[saved-theme="dark"] article a.external-link,
-[saved-theme="dark"] .sidebar a.internal-link {
-  color: #fbbf24 !important; /* 字體顏色 (目前: 亮琥珀色) */
-  background-color: rgba(251, 191, 36, 0.1) !important; /* 字體底部顏色/高光 (目前: 微弱的琥珀色背景) */
-  border-radius: 4px; /* 底部背景的圓角 */
-  padding: 0 4px; /* 讓底部背景稍微向外延展一點 */
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
 }
 
-[saved-theme="dark"] article a.internal-link:hover,
-[saved-theme="dark"] article a.external-link:hover,
-[saved-theme="dark"] .sidebar a.internal-link:hover {
-  color: #f59e0b !important; /* 滑鼠移過去的字體顏色 */
-  background-color: rgba(251, 191, 36, 0.25) !important; /* 滑鼠移過去的底部顏色變深 */
-  text-decoration: none;
-}
-
-/* ----------------- ☀️ 亮色模式 (Light Mode) ----------------- */
-[saved-theme="light"] article a.internal-link,
-[saved-theme="light"] article a.external-link,
-[saved-theme="light"] .sidebar a.internal-link {
-  color: #7A1C1C !important; /* 字體顏色 (目前: 經典紅) */
-  background-color: rgba(122, 28, 28, 0.08) !important; /* 字體底部顏色/高光 (目前: 微弱的紅色背景) */
-  border-radius: 4px;
-  padding: 0 4px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-[saved-theme="light"] article a.internal-link:hover,
-[saved-theme="light"] article a.external-link:hover,
-[saved-theme="light"] .sidebar a.internal-link:hover {
-  color: #B45309 !important; /* 滑鼠移過去的字體顏色 (目前: 棕橘色) */
-  background-color: rgba(180, 83, 9, 0.15) !important; /* 滑鼠移過去的底部顏色變深 */
-  text-decoration: none;
-}
-
-/* ==========================================================================
-   📖 聖經研讀知識庫：素雅段落折疊與雙層手風琴樣式 (Collapsible Sections)
-   ========================================================================== */
+/* ---------- 素雅段落折疊與雙層手風琴樣式（Collapsible Sections） ---------- */
 
 details.collapsible-section {
   margin: 1.4rem 0;
@@ -631,35 +620,35 @@ details.collapsible-section {
     /* 分類子標題（例如：神學／創造、人與婚姻、人物、地點）微調間距 */
     h3 {
       font-size: 1.05rem;
-      margin: 1.1rem 0 0.35rem 0 !important;
+      margin: 1.1rem 0 0.35rem 0;
       color: var(--secondary);
       border-bottom: none;
 
       &:first-child {
-        margin-top: 0.2rem !important;
+        margin-top: 0.2rem;
       }
     }
   }
 
   /* 針對知識節點等條目清單：採用素雅的橫向緊湊排列（符合用戶喜歡的排版 idea，無多餘裝飾） */
   &:not(.collapsible-nested) .collapsible-content ul {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 0.45rem 0.65rem !important;
-    padding-left: 0 !important;
-    margin: 0.3rem 0 1rem 0 !important;
-    list-style: none !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.65rem;
+    padding-left: 0;
+    margin: 0.3rem 0 1rem 0;
+    list-style: none;
 
     li {
-      display: inline-flex !important;
-      align-items: center !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      line-height: 1.4 !important;
-      font-size: 0.98rem !important;
+      display: inline-flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      line-height: 1.4;
+      font-size: 0.98rem;
 
       &::before {
-        display: none !important;
+        display: none;
       }
 
       a {
@@ -738,64 +727,96 @@ details.collapsible-subheading {
   }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   素色黑白 / 古典紙質底色切換 (Pure Mode: 純素白／極黑 OLED)
-   ══════════════════════════════════════════════════════════════ */
+/* ---------- 左側「探索」目錄 ---------- */
 
-/* 2. 素白模式（微暖象牙米白，柔和不刺眼） */
-:root[data-bg="pure"] {
-  --light: #FAF6ED;
-  --lightgray: #EFECE3;
-  --background-primary: #FAF6ED;
-  --background-primary-alt: #FAF6ED;
-  --background-secondary: #EFECE3;
-  --background-modifier-border: #E5E0D5;
+/* 修正左側「探索」文字被裁切的問題 */
+.explorer .title {
+  line-height: 1.4;
+  padding-bottom: 4px;
+  overflow: visible;
+}
 
-  blockquote {
-    background: rgba(180, 140, 80, 0.08) !important;
+/* 探索收起時：外掛把高度固定成 1.2rem，但本站的「探索」標題約 25px，會被切掉下半部。
+   改成標題本身的高度，並把目錄內容藏起來（電腦版；手機版的收起是側邊抽屜，另有規則） */
+@media all and (min-width: 801px) {
+  .explorer.collapsed {
+    flex: 0 0 auto;
+  }
+  .explorer.collapsed > .explorer-content {
+    display: none;
   }
 }
 
-/* 3. 極致純黑模式（OLED 像素全黑深邃底色） */
-:root[saved-theme="dark"][data-bg="pure"] {
-  --light: #000000;
-  --lightgray: #161618;
-  --gray: #71717a;
-  --darkgray: #d4d4d8;
-  --dark: #f4f4f5;
-  --background-primary: #000000;
-  --background-primary-alt: #000000;
-  --background-secondary: #161618;
-  --background-modifier-border: #262626;
-
-  blockquote {
-    background: rgba(255, 255, 255, 0.05) !important;
+/* 探索目錄最上方的「全部收合」（有資料夾展開時才出現） */
+.explorer-collapse-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-end;
+  float: right;
+  margin: 0 0.2rem 0.3rem 0;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  background: var(--light);
+  color: var(--darkgray);
+  font-size: 0.8rem;
+  cursor: pointer;
+  &:hover {
+    color: var(--secondary);
+    border-color: var(--secondary);
   }
-
-  details.collapsible-subheading {
-    background-color: #0d0d0d;
-    border-color: #262626;
-
-    &:hover {
-      border-color: #404040;
-    }
+  /* 上面的 display: inline-flex 會蓋過瀏覽器對 [hidden] 的預設隱藏，這條權重較高，把它藏回去 */
+  &[hidden] {
+    display: none;
   }
 }
 
-/* 4. 移除羊皮紙背景圖與磨砂層，切換為乾淨俐落的純實色 */
-html[data-bg="pure"] body,
-:root[data-bg="pure"] body {
-  background: var(--light) !important;
-  background-image: none !important;
+/* ---------- 條目頁的「屬性」區塊（B1-6 / U-7） ---------- */
+/*
+ * The note-properties plugin has no zh-TW locale and lives in .quartz/ (re-cloned on every CI build),
+ * so its English UI text is handled here and in components/scripts/notePropertiesZh.inline.ts.
+ * - Header "Properties" -> 屬性 (CSS until the script has replaced the text, so there is no flash of English;
+ *   the script then sets [data-zh] so screen readers do not read both).
+ * - Rows whose value is empty (e.g. `aliases: []`) are hidden; if every row is empty the whole block goes.
+ * - Hover popovers do not show the block at all (it is metadata, not preview content).
+ */
+.note-properties [hidden] {
+  display: none;
 }
 
-html[data-bg="pure"] .page > div#quartz-body div.center,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar.left,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
-  background-color: var(--light) !important;
+.note-properties:not([data-zh]) .note-properties-title {
+  font-size: 0;
 }
-/* YouTube facade:start */
+
+.note-properties:not([data-zh]) .note-properties-title::after {
+  content: "條目資訊";
+  font-size: 0.9rem;
+}
+
+.note-properties-row:has(.note-properties-value > .note-properties-list:empty),
+.note-properties-row:has(.note-properties-value > .note-properties-empty) {
+  display: none;
+}
+
+.note-properties:not(
+    :has(
+      .note-properties-row:not(
+          :has(
+            .note-properties-value > .note-properties-list:empty,
+            .note-properties-value > .note-properties-empty
+          )
+        )
+    )
+  ) {
+  display: none;
+}
+
+.popover .note-properties {
+  display: none;
+}
+
+/* ---------- YouTube facade ---------- */
 .yt-facade {
   width: min(100%, 600px);
   max-width: 600px;
@@ -881,9 +902,8 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
     transition: none;
   }
 }
-/* YouTube facade:end */
 
-/* Chapter quick bar:begin (B3-4，手機章節快捷列；腳本在 components/scripts/chapterQuickBar.inline.ts) */
+/* ---------- 手機章節快捷列（B3-4；腳本在 components/scripts/chapterQuickBar.inline.ts） ---------- */
 .bwz-cqb {
   display: none;
 }
@@ -985,7 +1005,8 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   }
 
   // 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）。
-  // 朗讀外掛平常用 inline style 把 top 設成工具列高度，所以只有快捷列顯示時（html.bwz-cqb-on）才用 !important 蓋過
+  // 朗讀外掛平常用 inline style 把 top 設成工具列高度，行內樣式只有 !important 蓋得過，
+  // 所以只有快捷列顯示時（html.bwz-cqb-on）才用 !important
   html.bwz-cqb-on .bwz-ra.is-playing {
     top: var(--bwz-cqb-h, 0px) !important;
   }
@@ -1002,9 +1023,8 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
     display: none;
   }
 }
-/* Chapter quick bar:end */
 
-/* Strong numbers:start */
+/* ---------- 強數字（Strong numbers） ---------- */
 .strong-no {
   font-size: 0.78em;
   color: var(--darkgray);
@@ -1012,36 +1032,17 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
-/* Strong numbers:end */
 
-/* ============================================================
-   B3 (ux-b3-36)：雙標題、Popover 精簡、右側目錄對比與高度
-   ============================================================ */
+/* ==========================================================================
+   6. 右欄（目錄、關係圖）與手機版細節
+   ========================================================================== */
 
-/* B3-3.1 內容的第一個標題是 h1 時，隱藏 Quartz 的小字 .article-title（完整名稱保留在內容 h1）。
-   DOM：div.center > div.page-header > div.popover-hint > h1.article-title；
-        div.center > article > div.markdown-rendered > h1（首頁等沒有 h1 的頁面不受影響）。 */
-.center:has(article .markdown-rendered > h1:first-of-type) > .page-header .article-title {
-  display: none;
+/* Graph 中文標籤比較長，給容器多一點高度 */
+.graph #graph-container {
+  min-height: 260px;
 }
 
-/* B3-3.2 Hover popover 只留內容：不顯示麵包屑、小標題、h1 底下的裝飾線；縮小 h1 上邊界讓「定義」進第一屏。 */
-.popover .breadcrumb-container,
-.popover .article-title {
-  display: none !important;
-}
-
-.popover .popover-inner h1 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-.popover .popover-inner h1::after {
-  content: none;
-  display: none;
-}
-
-/* B3-6.1 右側目錄對比：Quartz 預設非當前項 opacity .35（約 2:1）。改用不透明的 --darkgray；當前項用 --secondary 加粗加底線。 */
+/* 右側目錄對比：Quartz 預設非當前項 opacity .35（約 2:1）。改用不透明的 --darkgray；當前項用 --secondary 加粗加底線。（B3-6.1） */
 .toc-content.overflow > li > a {
   color: var(--darkgray);
   opacity: 1;
@@ -1058,68 +1059,18 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
 }
 
 [saved-theme="dark"] .toc-content.overflow > li > a.in-view {
-  color: #fbbf24;
+  color: rgb(var(--bwz-link-dark-rgb));
 }
 
-/* B3-6.2 目錄box高度：在 900px 高的螢幕上約與原來相同（局部關聯圖 309px 與當時的反向連結佔掉大部分右欄）；
+/* 目錄box高度：在 900px 高的螢幕上約與原來相同（局部關聯圖 309px 與當時的反向連結佔掉大部分右欄）；
    視窗更高時目錄會長高，最多到 100vh - 560px。目錄不會被壓縮（flex-shrink: 0）。
-   （反向連結已停用，U-21；右欄只剩關係圖與目錄，這條上限留著無妨。） */
+   （反向連結已停用，U-21；右欄只剩關係圖與目錄，這條上限留著無妨。）
+   寬度 1200px 以上被下面「電腦版右欄」的規則取代，這條現在實際管的是 1200px 以下。（B3-6.2） */
 .sidebar.right > .toc:not(:has(button.toc-header.collapsed)) {
   flex: 1 0 auto;
   max-height: calc(100vh - 560px);
 }
-/* B3 end */
 
-/* Mobile sticky toolbar blur:start */
-/* 手機版工具列 sticky 貼頂，底色是 90% 不透明；捲動時後面的內文會透出來和圖示疊在一起，加一點模糊讓圖示清楚 */
-@media all and (max-width: 800px) {
-  .page > #quartz-body > .sidebar.left {
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-  }
-}
-/* Mobile sticky toolbar blur:end */
-
-/* Bottom space for floating buttons:start */
-/* 手機左下「筆記」、右下「?」是固定在畫面底部的浮動按鈕（高約 46px、離底 20px）；
-   頁面最底多留一段空白，讓最後的內容（關係圖清單、反向連結、頁尾）能捲到按鈕上方，不被蓋住。
-   「加入主畫面」橫幅出現時按鈕會上移（--bwz-pwa-h），空白也跟著加大 */
-@media all and (max-width: 800px) {
-  body {
-    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
-  }
-
-  html[data-bwz-pwa-banner] body {
-    padding-bottom: calc(84px + var(--bwz-pwa-h, 0px) + env(safe-area-inset-bottom, 0px));
-  }
-}
-/* Bottom space for floating buttons:end */
-
-/* Mobile graph block height:start */
-/* 手機版右欄的每個區塊被 Quartz 限制 max-height: 24rem（384px）；關係圖下面多了分類清單後會超出，
-   清單就跑到頁尾上面去。關係圖區塊改成依內容自然長高（清單本身仍有 280px 的捲動上限） */
-@media all and (max-width: 800px) {
-  .sidebar.right > .graph {
-    max-height: none;
-    height: auto;
-  }
-}
-/* Mobile graph block height:end */
-
-/* Expanded graph hides overlays:start */
-/* 關係圖放大或搜尋視窗打開時，首訪導覽卡、浮動按鈕、加入主畫面橫幅都先藏起來，不要蓋在上面（關掉後恢復） */
-html:has(.global-graph-outer.active),
-html:has(.search > .search-container.active) {
-  .bwz-welcome,
-  .bwz-fab,
-  .bwz-n-chip,
-  .pwa-install-guide {
-    visibility: hidden !important;
-  }
-}
-/* Expanded graph hides overlays:end */
-
-/* Desktop right sidebar stacking:start */
 /* 電腦版右欄是一條 100vh 高的直欄（關係圖、目錄由上往下排；原本還有反向連結，U-21 停用）。關係圖下面多了分類清單後整塊變高，
    欄裝不下就把下面的區塊壓扁、目錄標題也被蓋住。
    改成：每個區塊都不被壓縮；目錄有高度上限（超過在區塊內捲動）；整欄放不下時由右欄自己往下捲。 */
@@ -1149,9 +1100,52 @@ html:has(.search > .search-container.active) {
     }
   }
 }
-/* Desktop right sidebar stacking:end */
 
-/* Search panel background:start */
+/* 手機版工具列 sticky 貼頂，底色是 90% 不透明；捲動時後面的內文會透出來和圖示疊在一起，加一點模糊讓圖示清楚 */
+@media all and (max-width: 800px) {
+  .page > #quartz-body > .sidebar.left {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* 手機左下「筆記」、右下「?」是固定在畫面底部的浮動按鈕（高約 46px、離底 20px）；
+   頁面最底多留一段空白，讓最後的內容（關係圖清單、反向連結、頁尾）能捲到按鈕上方，不被蓋住。
+   「加入主畫面」橫幅出現時按鈕會上移（--bwz-pwa-h），空白也跟著加大 */
+@media all and (max-width: 800px) {
+  body {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  html[data-bwz-pwa-banner] body {
+    padding-bottom: calc(84px + var(--bwz-pwa-h, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* 手機版右欄的每個區塊被 Quartz 限制 max-height: 24rem（384px）；關係圖下面多了分類清單後會超出，
+   清單就跑到頁尾上面去。關係圖區塊改成依內容自然長高（清單本身仍有 280px 的捲動上限） */
+@media all and (max-width: 800px) {
+  .sidebar.right > .graph {
+    max-height: none;
+    height: auto;
+  }
+}
+
+/* 關係圖放大或搜尋視窗打開時，首訪導覽卡、浮動按鈕、加入主畫面橫幅都先藏起來，不要蓋在上面（關掉後恢復） */
+html:has(.global-graph-outer.active),
+html:has(.search > .search-container.active) {
+  .bwz-welcome,
+  .bwz-fab,
+  .bwz-n-chip,
+  .pwa-install-guide {
+    visibility: hidden;
+  }
+}
+
+/* ==========================================================================
+   7. 搜尋視窗、圖譜連結、無障礙
+   ========================================================================== */
+
 /* 搜尋視窗的底色：主題外掛把 .search-space 底下的元素都設成透明（它預期外框自己有底色），這個網站的外框沒有底色，
    結果清單就和後面的頁面文字疊在一起看不清楚（手機特別明顯）。搜尋外掛的樣式在最低的 quartz-base 層，
    贏不了主題的層，所以寫在這裡（不在任何 layer 裡）。結果區給不透明底色；背後的頁面再壓暗一點，和關係圖放大時一致。 */
@@ -1167,59 +1161,6 @@ html:has(.search > .search-container.active) {
 html[saved-theme="dark"] .search .search-layout .highlight {
   color: #fff;
 }
-/* Search panel background:end */
-
-/* 無障礙（B5-4） */
-/* 強調色的加深版：主題紫在淺色模式是 #8a5cf5，配白字或放在白底只有 4.25:1；同色相的 #7048e8 約 5.5:1。
-   深色模式的主題紫本身就夠（#a68af9 配深色字約 6:1）。要用「強調色當底色配白字」或「強調色文字放在白底」的地方都引用這個變數，
-   外掛裡寫成 var(--bwz-accent-strong, var(--secondary))。要調顏色只改這裡。 */
-:root {
-  --bwz-accent-strong: var(--secondary);
-}
-:root:not([saved-theme="dark"]) {
-  --bwz-accent-strong: #7048e8;
-}
-
-/* 由腳本標記的短欄維持單行，避免短文字被拆開。 */
-article table [data-short] { white-space: nowrap; }
-/* 由短詞組成的儲存格（書名、「申命記 — 啟示錄」，腳本標 data-short-cell）不從字中間拆，只在空白換行；長句照常換行，表格才縮得進手機 */
-article table td[data-short-cell] { word-break: keep-all; overflow-wrap: normal; }
-
-/* 首頁進度條（█░，腳本包成 .site-ux-bar）：桌機和原本一樣同一行；手機上方塊單獨一行縮成細條，百分比在下面。 */
-article table [data-bar] { white-space: nowrap; }
-
-/* 手機：主題給每個儲存格至少 75px，4 欄表格就超過 342px 的內容寬；拿掉下限並縮小內距，讓表格放得進畫面。 */
-@media all and (max-width: 800px) {
-  article .table-container > table th,
-  article .table-container > table td {
-    min-width: 0;
-    padding: 0.45rem 0.5rem;
-  }
-  article table [data-bar] .site-ux-bar {
-    display: block;
-    font-size: 7px;
-    line-height: 1.2;
-  }
-}
-
-/* 淺色圖譜連結用加深的強調色（白底約 5.5:1），並移除主題黃底。 */
-html[saved-theme="light"] .graph-category-list a.graph-category-link.internal {
-  color: var(--bwz-accent-strong) !important;
-  background-color: transparent !important;
-}
-
-/* 深色圖譜連結保留主題紫色，並移除主題黃底。 */
-html[saved-theme="dark"] .graph-category-list a.graph-category-link.internal {
-  color: var(--secondary) !important;
-  background-color: transparent !important;
-}
-
-/* 滑鼠或鍵盤聚焦時才顯示淡紫底，避免遮住連結文字。 */
-/* 前面加 html[saved-theme]，優先權才會高過上面兩條（否則淡底永遠出不來）。 */
-html[saved-theme] .graph-category-list a.graph-category-link.internal:hover,
-html[saved-theme] .graph-category-list a.graph-category-link.internal:focus-visible {
-  background-color: color-mix(in srgb, currentColor 12%, transparent) !important;
-}
 
 /* 搜尋框：主題（obsidian-theme 層）把 .search-space 的子元素 outline 設成 none，外掛樣式層較低贏不了；
    鍵盤聚焦時要看得見（滑鼠點擊時瀏覽器對文字框也會套 :focus-visible，外框細一點不突兀）。 */
@@ -1228,9 +1169,28 @@ html[saved-theme] body .search > .search-container > .search-space > input:focus
   outline-offset: 2px;
 }
 
+/* 圖譜連結（B5-4）：淺色用加深的強調色（白底約 5.5:1），深色保留主題紫色；兩者都移除主題黃底。
+   選擇器權重比上面「站內連結顏色」高，所以會蓋過它。 */
+html[saved-theme="light"] .graph-category-list a.graph-category-link.internal {
+  color: var(--bwz-accent-strong);
+  background-color: transparent;
+}
+
+html[saved-theme="dark"] .graph-category-list a.graph-category-link.internal {
+  color: var(--secondary);
+  background-color: transparent;
+}
+
+/* 滑鼠或鍵盤聚焦時才顯示淡紫底，避免遮住連結文字。 */
+/* 前面加 html[saved-theme]，優先權才會高過上面兩條（否則淡底永遠出不來）。 */
+html[saved-theme] .graph-category-list a.graph-category-link.internal:hover,
+html[saved-theme] .graph-category-list a.graph-category-link.internal:focus-visible {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
 /* 減少動態偏好下停用主題的平滑捲動。 */
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto !important;
+    scroll-behavior: auto;
   }
 }

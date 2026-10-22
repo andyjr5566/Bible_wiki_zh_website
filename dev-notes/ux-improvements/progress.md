@@ -353,7 +353,53 @@
 
 ## 第 5 批：離線與品質
 
-（尚未開始）
+分支 `feature/ux-b5-quality`，從 main（`3e667893`，第 1～4 批與撤掉反向連結都已合併）建立。開工時使用者決定：冒煙測試另開 `smoke.yml`，用 test_content 建小站跑，和部署分開（不拖慢上線）。
+
+### 改動前基準（test_content 小站，`3e667893`）
+
+- axe（wcag2a/aa、wcag21a/aa、best-practice）首頁／章節／條目 × 淺深 × 1440／390：critical 2 種（`.toc-header` 的 `aria-controls` 指向不存在的 id；手機 `.explorer` 的 `aria-expanded`）、serious 4 種（導覽按鈕白字在 `#8a5cf5` 上 4.25:1；圖譜分類連結深色 2.1:1；圖譜 SVG `nested-interactive`；手機表格容器不能用鍵盤聚焦）。
+- 390 px 首頁兩個表格寬 645、504 px（容器 342 px），每格 nowrap。
+- 截圖 20 張（首頁、章節、條目、分類目錄、全書目錄 × 淺深 × 1440／390），scratchpad `b5/shots-base/`。
+
+### 委派紀錄
+
+| 任務 | 給誰（模型、等級） | 做什麼 | 結果 | 採用 | 主導者修了什麼 |
+|---|---|---|---|---|---|
+| B5-1 | Codex gpt-6-luna xhigh（第 3 級實作；workspace-write 成功） | 離線頁、SW v4、安裝說明、swcheck | 5 個檔，語法檢查通過 | 採用（`7cc1a95a`） | 修剪快取會刪掉最早存的項目，正好是預先存的離線頁與首頁 → 改成不刪；離線頁排序改數字順序（第2章在第10章前）、分類目錄頁顯示名稱 |
+| B5-1 測試 | 主導者 | 跑 swcheck | 發現**舊的 swcheck 從來沒有真的測到離線**：`Network.emulateNetworkConditions` 只管分頁，SW 是另一個目標，照樣連得到網路 | — | swcheck 接上每個 SW 目標一起設離線（同一目標沿用同一 session，否則離線狀態留著）；離線前確認挑的頁真的不在快取；羊皮紙那項改成「超過 3 MB 的檔不進快取」（第 1 批已把背景壓到 0.4 MB 以下）（`f0979bc2`） |
+| B5-1 審查 | Codex gpt-6-sol high（唯讀，stdin 模式） | 第 3 級審查 | 11 點：高 2、中 4、低 5 | 修 7 點（`df303b0b`） | 存檔交給 `event.waitUntil`；只讀本版快取；舊快取刪完才 `clients.claim`；整個網域超過 200 MB 先刪最舊 50 筆；緊急撤回範例只刪本站快取；離線頁直接打開時的根路徑、只列 HTML、恢復連線先確認連得到本站才重新整理。不改：升級清掉 v3（規格要求；代價是升級前讀過的頁面要重讀才能離線）、`ignoreSearch`（靜態站查詢字串不影響內容）、安裝全有或全無（Sol 也認為合理） |
+| B5-2 盤點 | Claude Explore 子代理（haiku，第 1 級） | 盤點 e2e 腳本能不能拿來當冒煙測試 | regress.mjs 涵蓋首頁、搜尋、筆記；缺上一章／下一章（test_content 沒有章節導覽表格）與手機整頁橫向捲動；lib.mjs 寫死 Windows Chrome 路徑、沒有 `--no-sandbox` | 採用 | |
+| B5-3 | Codex gpt-6-luna xhigh：workspace-write 失敗（`setup refresh had errors`），改 stdin 模式 | 首頁進度與壞連結檢查、單元測試、deploy.yml 一步 | 12 個測試 11 過（一個斷言字串是它自己留的佔位文字） | 採用（`77163b32`） | 修測試字串；書卷資料夾是連結（junction）時也要算；加檔頭說明 |
+| B5-4 清單 | Antigravity gemini-3.8-flash-high（唯讀） | 無障礙審查清單 | 23 項（高 6、中 13、低 4） | 大部分採用 | 任務包寫「維持紫色系」不精確：執行時主題把強調色換成紫色（#8a5cf5），文章連結則是 custom.scss 的紅／琥珀 → 改成「保留各元素原本的色相」；圖譜 SVG 不能用 `aria-hidden`（裡面有可聚焦節點）；landmark、h1 屬主題外掛的 moderate 項目，這次不修 |
+| B5-4 修正 | Codex gpt-6-luna xhigh：workspace-write 失敗，改 stdin 模式，拆兩次（A：選單、圖譜、修補腳本、表格；B：樣式、PWA 面板、筆記），輸出「搜尋／取代區塊」而不是整檔（避免刪註解） | 照篩過的清單修 | A 24 塊、B 17 塊，全部能精準套用 | 採用（`3944a703`） | 「全部收合」沒有同步新按鈕的 `aria-expanded`；hover 規則優先權太低淡底出不來；搜尋框焦點樣式被主題層蓋掉（移到 custom.scss）；筆記面板與筆記教學的紫色主按鈕也是 4.25:1；主題給表格每格 `min-width: 75px`，手機上要拿掉；「出埃及記」被拆兩行（改 `word-break: keep-all`）、進度條斷兩截（方塊包成 `aria-hidden` 的 span，手機縮成細條）。依使用者要求重構：無障礙修補從外觀面板腳本搬到 `site-ux/src/lib/a11yPatches.ts`（純函式＋8 個測試）；`#7048e8` 從 4 處改成 custom.scss 的 `--bwz-accent-strong` 一處定義 |
+| B5-2 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b5-smoke` | smoke.mjs、smoke.yml、lib.mjs 的 `CHROME_FLAGS`、test_content 加章節導覽表格 | smoke 19/19、regress 15/15、swcheck 13/13、朗讀 42/42；故意弄壞搜尋會 FAIL | 採用（`87a689c6`） | 手機橫向檢查它改成固定比 390（模擬手機時頁面太寬會把 innerWidth 一起撐寬），合理；swcheck 恢復連線改成最多重新整理 4 次（它量到約一半機率第一次還是離線頁）。「準備外掛」三步在 deploy.yml 與 smoke.yml 各抄一份 → 抽成 `.github/scripts/prepare-plugins.sh` 共用（假 npx 模擬跑過） |
+| B5-3 補強 | 主導者 | 完整建置上跑內容檢查 | 506 個壞連結裡 49 個是 `static/website/…/dist/` 的互動網站連結（建置後才複製進去，正式站是好的） | 採用（`17e5a0a5`） | 解析後落在 `static/` 的連結不算，另列「不計入」數量；補 2 個測試 |
+| B5-4 補強 | 主導者 | 完整建置抽樣 | 長文字表格在手機仍 454～698 px：`word-break: keep-all` 讓整句中文不能斷 | 採用（`eb770c56`） | keep-all 只套在「由短詞組成」的儲存格（腳本標 `data-short-cell`） |
+| B5-5 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b5-smoke` | 整理 custom.scss | `!important` 68 → 7、1,236 → 1,196 行、亂碼註解還原；做完改動後卡在驗證約 45 分鐘沒有進展 | 採用（`547136fe`） | 主導者停掉它、接手驗證：先用 HEAD 重拍「整理前」，和整理後比對 20 張整頁截圖＋14 張狀態截圖（搜尋結果、Aa 面板、純色底、手機選單）全部 0%（第一次有一張 0.24%，重拍為 0%，是繪製雜訊）；它的表格整理和 `eb770c56` 衝突，用它的檔案再手動補回那兩處 |
+| B5-5 審查 | Antigravity gemini-3.8-flash-high（唯讀） | 審 CSS 整理會不會改到截圖測不到的情境 | 第一次在 plan 模式只產出計畫、停在等批准；重跑要求直接出報告。結論：沒有功能或外觀風險，拿掉的 `!important` 都不會輸給主題（主題只有 2 個 `!important`，屬性不重疊）、合併順序正確；5 項低嚴重度整潔建議（面板底色 RGB 抽變數、`div.sidebar.left/right` 與 `.section-li` 重複選擇器、`//` 與 `/* */` 註解混用、`@media all and` 寫法不一） | 結論採用；5 項建議列為後續（改選擇器會動到優先權，要重新驗證，不在這批做） | | | |
+
+### 逐條驗收判定（最後一次完整建置 `547136fe`：3,756 頁、10,295 個檔、約 8 分鐘；外加 test_content 小站）
+
+- **B5-1 離線頁 ✔**：swcheck 13/13（SW 目標也設成離線）：離線開沒快取的頁面 → 離線頁、網址不變、清單有已讀頁、重試可用；有快取的頁照常；恢復連線正常載入。升級測試 4/4：同網址先放改動前的站（v3）寫筆記，換成新站後只剩 v4 快取、離線頁已預存、筆記還在。離線頁 axe 0、手機無橫向捲動。安裝說明（加入主畫面面板、說明中心）改成「讀過的頁面沒有網路也能打開」。Sol 的 11 點已處理或註明理由（見委派紀錄）。
+- **B5-2 冒煙測試 ✔（本機）**：smoke 19/19、regress 15/15、swcheck 13/13、朗讀 42/42；故意弄壞搜尋關鍵字 → FAIL、退出碼 1；`CHROME_FLAGS="--no-sandbox"` 有效；workflow YAML 解析通過。**還沒在 GitHub 上跑過**（要先問使用者）。
+- **B5-3 內容檢查 ✔**：完整內容首頁進度「一致：211 個章節檔」；故意把出埃及記改成 39 → 3 個 `::warning`（完成數、✓、百分比），`--strict` 退出碼 1、預設 0；壞連結 457 個、166 頁（另有 49 個 static/ 連結不計入）。單元測試 14/14。
+- **B5-4 無障礙 ✔**：axe（wcag2a/aa、wcag21a/aa、best-practice）小站首頁／章節／條目 × 淺深 × 1440／390、完整站首頁／出埃及記 12 章／書卷導論／逾越節羔羊：critical、serious 都是 0（改動前 critical 2 種、serious 4 種）。鍵盤 12/12（選單資料夾鈕、抽屜、目錄 aria-controls、圖譜節點焦點、搜尋框外框、減少動態）。手機表格：首頁 645 → 342 px（放得進畫面）；完整站抽樣 11 個表格 10 個放得進，1 個 378 px（4 欄長句，在可用鍵盤捲動的框裡）。桌機表格外觀不變。
+- **B5-5 CSS 整理 ✔**：`!important` 68 → 7、1,236 → 1,196 行；20 張整頁截圖＋14 張狀態截圖前後 0% 差異。
+
+### 測試
+
+- 單元測試：semantic-search 72/72、personal-notes 328/328、site-ux 27/27（暫存資料夾補裝 jsdom 才跑得到經文清單測試）、explorer 4/4、graph 17/17、`quartz/**` 的 tsx 測試全過（含 checkContent 14/14）；`tsc --noEmit` 錯誤數改動前後相同（171 個都是舊有的互動網站與型別問題）。
+- 無頭 Chrome（小站）：smoke 19/19、regress 15/15、nodecheck 10/10、swcheck 13/13、朗讀 42/42；自寫 `kb54.mjs` 12/12、`upgrade.mjs` 4/4。腳本在 scratchpad `b5/`。
+
+### 注意
+
+- **Chrome 的離線模擬只管分頁**：Service Worker 是另一個 CDP 目標，要另外接上設離線，而且同一目標要沿用同一個 session（新 session 設的條件會疊在舊的上面）。swcheck 已改。
+- **瀏覽器設定檔不要放在含短檔名（`ANDYJ_~1`）的路徑**：非無痕模式下 Cache Storage 會壞，SW 註冊後立刻消失，看起來像網站的問題。用 `C:\Obsidian\...` 這類一般路徑。
+- **截圖時主題偶爾被切換**：模擬的配色偏好在換頁後遺失，網站主題腳本就跟著系統（這台是深色）切換。`b5/shots.mjs` 每頁重設並確認，不對就修正重拍。同一個站拍兩次，章節頁 1440 仍有約 0.5～1.4% 的繪製雜訊（經文區），比對時要看差異圖。
+- **主題的 CSS 在 cascade layer 裡，外掛的 CSS 在更低的 quartz-base 層**：外掛裡寫的焦點樣式會被主題的 `outline: none` 蓋掉（搜尋框就是），要寫在 custom.scss。
+- **外掛的 node_modules 是 junction**（explorer、graph），而且 explorer 的依賴裡沒有 tsup：建置用 scratchpad `b5/build-plugin.ps1`（複製到 `C:\Obsidian\bwz-gb\<名稱>` 建置，再把 dist 複製回來），explorer 要再補 graph 的依賴。在暫存資料夾 `npm install` 會把其他套件清掉，裝完要補回。
+- Codex 沙箱這一輪三次失敗、一次成功；stdin 模式改成輸出「搜尋／取代區塊」很好用（不會刪註解），套用腳本 `b5/apply-edits.mjs`（同樣文字出現兩次時依序套用）。
+- **內容的壞連結（筆記庫的問題，不在這次範圍）**：附錄〈亞當到耶穌的家譜〉有 159 個連結指向 `appendix/website/全聖經/亞當到耶穌/dist/`，正式站上是 404（互動網站實際在 `static/website/…`）。其餘多數是連到還沒寫的章節。
 
 ## 第 6～9 批：大改版
 

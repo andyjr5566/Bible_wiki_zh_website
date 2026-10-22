@@ -4,6 +4,8 @@
 // 2. 表格：整欄文字都很短的欄標 data-short（CSS 讓它不換行），其他欄可以換行；短儲存格標 data-short-cell
 //    （不從字中間拆）；首頁進度條的方塊包成 span。
 // 3. 可以左右捲動的表格容器要能用鍵盤聚焦。
+// 4. 地標（landmark）：主題的版面全是沒有語意的 div，螢幕閱讀器的「地標」清單裡找不到主要內容，
+//    每頁都得先聽完搜尋、工具列、上百個章節的選單。這裡只加 role／aria-label，不新增任何元素，畫面不變。
 
 /** 一欄所有儲存格（含表頭）都不超過這麼多字，就算「短資料欄」。 */
 export const SHORT_COLUMN_MAX_CHARS = 6
@@ -113,8 +115,139 @@ export function applyScrollableRegions(root: ParentNode = document): void {
   }
 }
 
+// ---- 地標 ----
+
+/** 一個版面區塊的現況（由 DOM 蒐集，判斷本身不碰 DOM）。 */
+export interface RegionFacts {
+  /** 頁面上有這個區塊嗎 */
+  present: boolean
+  /** 區塊裡有可讀的文字嗎（空的側欄不要宣告成地標，螢幕閱讀器會念出一個空的「本頁相關」） */
+  hasContent: boolean
+  /** 區塊本來就有的 role（不含我們自己加的）；有就不去動它 */
+  existingRole: string
+}
+
+export interface PageFacts {
+  center: RegionFacts
+  left: RegionFacts
+  right: RegionFacts
+  /** 頁面上（不含我們標的）是否已經有 main 地標；同一頁只能有一個 */
+  otherMain: boolean
+  /** 頁面上既有的同種地標 aria-label，依 role 分組；同種地標標籤不能重複 */
+  takenLabels: Partial<Record<LandmarkRole, string[]>>
+}
+
+export type LandmarkRole = "main" | "navigation" | "complementary"
+export interface LandmarkAssignment {
+  role: LandmarkRole
+  label?: string
+}
+export type RegionName = "center" | "left" | "right"
+
+/** 左側欄、右側欄的標籤。 */
+export const LEFT_LABEL = "網站導覽"
+export const RIGHT_LABEL = "本頁相關"
+
+/** 標籤若已被同種地標用掉，就加序號（「網站導覽 2」），避免 axe 的 landmark-unique。 */
+export function uniqueLabel(label: string, taken: readonly string[]): string {
+  if (!taken.includes(label)) return label
+  let n = 2
+  while (taken.includes(`${label} ${n}`)) n++
+  return `${label} ${n}`
+}
+
+function claimable(region: RegionFacts): boolean {
+  return region.present && region.hasContent && region.existingRole === ""
+}
+
+/**
+ * 決定哪個區塊要補什麼地標。
+ * - 中間欄（頁面標題＋經文）當 main：跳到「主要內容」後先聽到標題，再聽到經文；筆記區、麵包屑都在裡面。
+ *   不選 article，因為標題在 article 外面，會變成地標外的內容。
+ * - 沒有中間欄就整頁都不動：版面不是預期的樣子時，寧可不補也不要補錯。
+ * - 頁首不補 banner：左側欄同時裝著網站名稱、工具列和選單，已經是 navigation，地標不能巢狀；頁尾本來就是 footer。
+ */
+export function planLandmarks(facts: PageFacts): Partial<Record<RegionName, LandmarkAssignment>> {
+  const plan: Partial<Record<RegionName, LandmarkAssignment>> = {}
+  if (!facts.center.present) return plan
+
+  if (!facts.otherMain && claimable(facts.center)) plan.center = { role: "main" }
+  if (claimable(facts.left)) {
+    plan.left = { role: "navigation", label: uniqueLabel(LEFT_LABEL, facts.takenLabels.navigation ?? []) }
+  }
+  if (claimable(facts.right)) {
+    plan.right = { role: "complementary", label: uniqueLabel(RIGHT_LABEL, facts.takenLabels.complementary ?? []) }
+  }
+  return plan
+}
+
+/** 我們自己標的地標會帶這個屬性：換頁重跑時才認得出哪些是自己加的，不會當成「本來就有」，也能在條件改變時收回。 */
+const LANDMARK_MARK = "data-site-ux-landmark"
+const REGION_SELECTORS: Record<RegionName, string> = {
+  center: "#quartz-body > .center",
+  left: "#quartz-body > .sidebar.left",
+  right: "#quartz-body > .sidebar.right",
+}
+const LANDMARK_SELECTORS: Record<LandmarkRole, string> = {
+  main: "main, [role=main]",
+  navigation: "nav, [role=navigation]",
+  complementary: "aside, [role=complementary]",
+}
+
+function regionFacts(el: HTMLElement | null): RegionFacts {
+  if (!el) return { present: false, hasContent: false, existingRole: "" }
+  const ours = el.hasAttribute(LANDMARK_MARK)
+  return {
+    present: true,
+    hasContent: (el.textContent ?? "").trim() !== "",
+    existingRole: ours ? "" : (el.getAttribute("role") ?? ""),
+  }
+}
+
+function collectFacts(root: ParentNode, regions: Record<RegionName, HTMLElement | null>): PageFacts {
+  const others = (role: LandmarkRole) =>
+    Array.from(root.querySelectorAll<HTMLElement>(LANDMARK_SELECTORS[role])).filter((el) => !el.hasAttribute(LANDMARK_MARK))
+  const labelsOf = (role: LandmarkRole) =>
+    others(role)
+      .map((el) => el.getAttribute("aria-label") ?? "")
+      .filter(Boolean)
+  return {
+    center: regionFacts(regions.center),
+    left: regionFacts(regions.left),
+    right: regionFacts(regions.right),
+    otherMain: others("main").length > 0,
+    takenLabels: { navigation: labelsOf("navigation"), complementary: labelsOf("complementary") },
+  }
+}
+
+/** 只加語意、不新增元素；每次換頁都可以安全重跑（冪等）。 */
+export function patchLandmarks(root: ParentNode = document): void {
+  const regions = Object.fromEntries(
+    (Object.keys(REGION_SELECTORS) as RegionName[]).map((name) => [name, root.querySelector<HTMLElement>(REGION_SELECTORS[name])]),
+  ) as Record<RegionName, HTMLElement | null>
+  const plan = planLandmarks(collectFacts(root, regions))
+
+  for (const name of Object.keys(regions) as RegionName[]) {
+    const el = regions[name]
+    if (!el) continue
+    const assignment = plan[name]
+    if (assignment) {
+      el.setAttribute("role", assignment.role)
+      if (assignment.label) el.setAttribute("aria-label", assignment.label)
+      else el.removeAttribute("aria-label")
+      el.setAttribute(LANDMARK_MARK, "")
+    } else if (el.hasAttribute(LANDMARK_MARK)) {
+      // 之前標過、現在條件不成立了（例如右側欄清空）：收回
+      el.removeAttribute("role")
+      el.removeAttribute("aria-label")
+      el.removeAttribute(LANDMARK_MARK)
+    }
+  }
+}
+
 /** 每次換頁後呼叫一次。 */
 export function applyA11yPatches(root: ParentNode = document): void {
+  patchLandmarks(root)
   patchTocControls(root)
   for (const table of Array.from(root.querySelectorAll<HTMLTableElement>("article table"))) patchTable(table)
   applyScrollableRegions(root)

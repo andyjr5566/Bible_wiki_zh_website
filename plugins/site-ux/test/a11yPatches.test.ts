@@ -1,6 +1,16 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest"
-import { applyA11yPatches, isShortWords, shortColumnIndexes, splitProgressBar } from "../src/lib/a11yPatches"
+import {
+  applyA11yPatches,
+  isShortWords,
+  patchLandmarks,
+  planLandmarks,
+  shortColumnIndexes,
+  splitProgressBar,
+  uniqueLabel,
+  type PageFacts,
+  type RegionFacts,
+} from "../src/lib/a11yPatches"
 
 describe("shortColumnIndexes", () => {
   it("整欄（含表頭）都不超過 6 個字才算短欄", () => {
@@ -82,5 +92,131 @@ describe("applyA11yPatches", () => {
     const [ok, orphan] = Array.from(document.querySelectorAll("button.toc-header"))
     expect(ok.getAttribute("aria-controls")).toBe("real")
     expect(orphan.getAttribute("aria-controls")).toBe("missing")
+  })
+})
+
+const region = (over: Partial<RegionFacts> = {}): RegionFacts => ({ present: true, hasContent: true, existingRole: "", ...over })
+const facts = (over: Partial<PageFacts> = {}): PageFacts => ({
+  center: region(),
+  left: region(),
+  right: region(),
+  otherMain: false,
+  takenLabels: {},
+  ...over,
+})
+
+describe("uniqueLabel", () => {
+  it("沒被用過就原樣，用過就加序號", () => {
+    expect(uniqueLabel("網站導覽", [])).toBe("網站導覽")
+    expect(uniqueLabel("網站導覽", ["breadcrumbs"])).toBe("網站導覽")
+    expect(uniqueLabel("網站導覽", ["網站導覽"])).toBe("網站導覽 2")
+    expect(uniqueLabel("網站導覽", ["網站導覽", "網站導覽 2"])).toBe("網站導覽 3")
+  })
+})
+
+describe("planLandmarks", () => {
+  it("中間欄 main、左側欄 navigation、右側欄 complementary；左右要有標籤，main 不用", () => {
+    expect(planLandmarks(facts())).toEqual({
+      center: { role: "main" },
+      left: { role: "navigation", label: "網站導覽" },
+      right: { role: "complementary", label: "本頁相關" },
+    })
+  })
+
+  it("頁面已經有 main 就不重複加（其他地標照加）", () => {
+    const plan = planLandmarks(facts({ otherMain: true }))
+    expect(plan.center).toBeUndefined()
+    expect(plan.left?.role).toBe("navigation")
+  })
+
+  it("沒有中間欄（版面不是預期的樣子）就整頁都不動", () => {
+    expect(planLandmarks(facts({ center: region({ present: false, hasContent: false }) }))).toEqual({})
+  })
+
+  it("空的側欄不宣告成地標", () => {
+    const plan = planLandmarks(facts({ right: region({ hasContent: false }) }))
+    expect(plan.right).toBeUndefined()
+    expect(plan.left).toBeDefined()
+  })
+
+  it("區塊本來就有 role 就不去動", () => {
+    const plan = planLandmarks(facts({ left: region({ existingRole: "group" }), center: region({ existingRole: "main" }) }))
+    expect(plan.left).toBeUndefined()
+    expect(plan.center).toBeUndefined()
+  })
+
+  it("同種地標的標籤已被用掉時加序號，不同種不受影響", () => {
+    const plan = planLandmarks(facts({ takenLabels: { navigation: ["網站導覽"], complementary: ["網站導覽"] } }))
+    expect(plan.left?.label).toBe("網站導覽 2")
+    expect(plan.right?.label).toBe("本頁相關")
+  })
+})
+
+describe("patchLandmarks", () => {
+  const page = (right = "<div class=\"graph\"><h3>關係圖</h3></div>") => `
+    <div id="quartz-root" class="page"><div id="quartz-body">
+      <div class="left sidebar"><h2 class="page-title">知識庫</h2><div class="explorer">章節</div></div>
+      <div class="center"><div class="page-header"><nav aria-label="breadcrumbs">首頁</nav><h1>第1章</h1></div><article>經文</article></div>
+      <div class="right sidebar">${right}</div>
+      <footer>© 本站</footer>
+    </div></div>
+    <nav class="bwz-cqb" aria-label="章節快捷列">上一章</nav>`
+  const roleOf = (selector: string) => document.querySelector(selector)?.getAttribute("role") ?? null
+
+  it("標在三個欄位上，不新增元素，也不動頁尾和既有的 nav", () => {
+    document.body.innerHTML = page()
+    const before = document.body.querySelectorAll("*").length
+    patchLandmarks()
+    expect(document.body.querySelectorAll("*").length).toBe(before)
+    expect(roleOf(".center")).toBe("main")
+    expect(document.querySelector(".center")?.hasAttribute("aria-label")).toBe(false)
+    expect(roleOf(".sidebar.left")).toBe("navigation")
+    expect(document.querySelector(".sidebar.left")?.getAttribute("aria-label")).toBe("網站導覽")
+    expect(roleOf(".sidebar.right")).toBe("complementary")
+    expect(document.querySelector(".sidebar.right")?.getAttribute("aria-label")).toBe("本頁相關")
+    expect(roleOf("footer")).toBeNull()
+    expect(document.querySelector(".bwz-cqb")?.getAttribute("aria-label")).toBe("章節快捷列")
+    // 整頁只有一個 main
+    expect(document.querySelectorAll("[role=main], main").length).toBe(1)
+  })
+
+  it("重跑不重複、不改變結果", () => {
+    document.body.innerHTML = page()
+    patchLandmarks()
+    const once = document.body.innerHTML
+    patchLandmarks()
+    applyA11yPatches()
+    expect(document.body.innerHTML).toBe(once)
+  })
+
+  it("右側欄清空後重跑會收回原本標的地標", () => {
+    document.body.innerHTML = page()
+    patchLandmarks()
+    document.querySelector(".sidebar.right")!.innerHTML = ""
+    patchLandmarks()
+    const right = document.querySelector(".sidebar.right")!
+    expect(right.hasAttribute("role")).toBe(false)
+    expect(right.hasAttribute("aria-label")).toBe(false)
+    expect(right.hasAttribute("data-site-ux-landmark")).toBe(false)
+  })
+
+  it("已有 <main> 時不再加；沒有預期結構時什麼都不做", () => {
+    document.body.innerHTML = page().replace("<article>", "<main><article>").replace("</article>", "</article></main>")
+    patchLandmarks()
+    expect(roleOf(".center")).toBeNull()
+    expect(roleOf(".sidebar.left")).toBe("navigation")
+
+    document.body.innerHTML = "<div class=\"left sidebar\">選單</div><p>別的版面</p>"
+    const before = document.body.innerHTML
+    patchLandmarks()
+    expect(document.body.innerHTML).toBe(before)
+  })
+
+  it("不碰互動面板的 role（搜尋視窗等 dialog 在側欄裡面）", () => {
+    document.body.innerHTML = page().replace("<h2", '<div class="search-container" role="dialog" aria-label="搜尋"></div><h2')
+    patchLandmarks()
+    const dialog = document.querySelector(".search-container")!
+    expect(dialog.getAttribute("role")).toBe("dialog")
+    expect(dialog.getAttribute("aria-label")).toBe("搜尋")
   })
 })

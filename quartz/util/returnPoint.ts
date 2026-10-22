@@ -78,9 +78,9 @@ export function returnLabel(point: ReturnPoint): string {
   const details = chapterDetails(point)
   if (!details) return ""
   if (point.kind === "verse") {
-    return "↩ 回 " + details.book.name + " " + details.chapter + ":" + point.verse
+    return "↩ 返回 " + details.book.name + " " + details.chapter + ":" + point.verse
   }
-  return "↩ 回 " + details.book.name + " " + details.chapter + " 章整理"
+  return "↩ 返回 " + details.book.name + " " + details.chapter + " 章整理"
 }
 
 export function returnAriaLabel(point: ReturnPoint): string {

@@ -1,3 +1,6 @@
+// 章節頁「純經文」模式要藏哪些區塊（U-23）。只吃文章第一層子節點的簡化描述、不碰 DOM，
+// 因為內容格式還會變：規則集中在這裡測試，畫面層（site-ux）只負責描述節點和加 class。
+// 認不出經文清單（第一條 hr 之前的第一個 ol）就整個退回，不藏任何東西。
 export interface ChapterNodeDescription {
   tag: string
   className?: string

@@ -68,9 +68,9 @@ test("returns null for invalid JSON, versions, slugs, and variant fields", () =>
 test("formats labels from the book catalog names and chapter numbers", () => {
   const genesis = makeVersePoint("01-創世記/第1章", 6, 1)!
   const joshua = makeStudyPoint("06-約書亞記/第24章", "heading-id", 2)!
-  assert.equal(returnLabel(genesis), "↩ 回 創世記 1:6")
+  assert.equal(returnLabel(genesis), "↩ 返回 創世記 1:6")
   assert.equal(returnAriaLabel(genesis), "回到創世記第 1 章第 6 節")
-  assert.equal(returnLabel(joshua), "↩ 回 約書亞記 24 章整理")
+  assert.equal(returnLabel(joshua), "↩ 返回 約書亞記 24 章整理")
   assert.equal(returnAriaLabel(joshua), "回到約書亞記第 24 章的本章整理")
 })
 

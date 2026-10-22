@@ -119,6 +119,11 @@ jobs:
       - name: Check slim content index
         run: npx tsx quartz/util/checkContentIndex.ts public
 
+      - name: Content check report
+        # 首頁進度數字與壞掉的內部連結 → 警告與步驟摘要（U-11：只警告，不擋部署）
+        continue-on-error: true
+        run: npx tsx quartz/util/checkContent.ts content public
+
       - name: Verse list check report
         # 經文清單檢查結果 → 警告、步驟摘要、Issue（失敗不擋部署）
         continue-on-error: true

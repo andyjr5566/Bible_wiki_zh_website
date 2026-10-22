@@ -981,16 +981,36 @@ details.collapsible-subheading {
     display: none;
   }
 
+  /* 書卷章名是按鈕（打開 ☰ 抽屜裡的書卷章節選擇器）：外觀維持文字，後面加小箭頭提示可以點 */
   .bwz-cqb-title {
     flex: 1 1 0;
     min-width: 0;
+    min-height: 44px;
+    margin: 0;
     padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 0.85rem;
     font-weight: 700;
     line-height: 1.2;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &::after {
+      content: " ▾";
+      color: var(--bwz-accent-strong);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: -2px;
+    }
   }
 
   .bwz-cqb-btn {
@@ -1007,7 +1027,7 @@ details.collapsible-subheading {
     border: 0;
     border-radius: 8px;
     background: transparent;
-    color: var(--secondary);
+    color: var(--bwz-accent-strong);
     font-family: inherit;
     font-size: 0.78rem;
     font-weight: 600;

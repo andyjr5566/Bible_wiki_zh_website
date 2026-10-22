@@ -16,9 +16,13 @@ await go(ch1 + "?skip=1", 5000)
 const E = `document.querySelector('.left.sidebar .explorer')`
 const state = `JSON.stringify((() => { const e = ${E}; const h = e.querySelector('.desktop-explorer h2'); const btn = e.querySelector('.explorer-collapse-all'); return { collapsed: e.classList.contains('collapsed'), eH: Math.round(e.getBoundingClientRect().height), h2Bottom: Math.round(h.getBoundingClientRect().bottom - e.getBoundingClientRect().top), open: e.querySelectorAll('.folder-outer.open').length, btn: !!btn && getComputedStyle(btn).display !== 'none' && btn.getBoundingClientRect().height > 0, btnText: btn?.textContent } })())`
 let cur = JSON.parse(await ev(state))
-check("一開始（目前章節所在的資料夾展開）就有「全部收合」", cur.open > 0 && cur.btn && cur.btnText === "全部收合", JSON.stringify(cur))
-// 再多展開一個資料夾
-const other = await ev(`(() => { const f = [...${E}.querySelectorAll('.folder-container')].find(f => !f.nextElementSibling.classList.contains('open') && f.getBoundingClientRect().height > 0); f.querySelector('.folder-icon').dispatchEvent(new MouseEvent('click', { bubbles: true })); return f.dataset.folderpath })()`)
+// 書卷資料夾已改由左欄的書卷選擇器進入（U-22），探索選單裡沒有書卷資料夾，所以章節頁一開始沒有任何資料夾展開、也沒有「全部收合」
+check("一開始（書卷不在探索選單，沒有資料夾展開）沒有「全部收合」按鈕", cur.open === 0 && !cur.btn, JSON.stringify(cur))
+// 展開兩個資料夾（書卷資料夾不在探索選單了，所以兩個都要自己展開）
+const expandOne = () => ev(`(() => { const f = [...${E}.querySelectorAll('.folder-container')].find(f => !f.nextElementSibling.classList.contains('open') && f.getBoundingClientRect().height > 0); f.querySelector('.folder-icon').dispatchEvent(new MouseEvent('click', { bubbles: true })); return f.dataset.folderpath })()`)
+const first = await expandOne()
+await sleep(400)
+const other = await expandOne()
 await sleep(500)
 const before = JSON.parse(await ev(state)).open
 await ev(`${E}.querySelector('.explorer-collapse-all').click()`)
@@ -29,7 +33,7 @@ await send("Page.reload")
 await sleep(5000)
 cur = JSON.parse(await ev(state))
 const otherOpen = await ev(`document.querySelector('.folder-container[data-folderpath="${other}"]').nextElementSibling.classList.contains('open')`)
-check("重新整理後剛才收起的資料夾仍收著（存進 fileTree；目前章節所在的資料夾照外掛原本的設計會再打開）", !otherOpen, `${other} open=${otherOpen} ${JSON.stringify(cur)}`)
+check("重新整理後剛才收起的資料夾仍收著（存進 fileTree；目前章節所在的資料夾現在探索選單沒有書卷資料夾，重新整理後不會有資料夾被自動打開）", !otherOpen, `${other} open=${otherOpen} ${JSON.stringify(cur)}`)
 await ev(`document.querySelector('.folder-container[data-folderpath="${other}"] .folder-icon').dispatchEvent(new MouseEvent('click', { bubbles: true }))`)
 await sleep(500)
 check("再展開一個資料夾，按鈕又出現", JSON.parse(await ev(state)).btn)

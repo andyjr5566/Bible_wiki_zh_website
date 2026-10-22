@@ -197,9 +197,24 @@ plugins:
             node.displayName = names[key];
           }
         }
+      # 書卷資料夾（第一層、名稱是「兩位數字-」開頭）改由左欄的書卷選擇器（book-picker）進入，探索不再列出（U-22）。
+      # 同時保留外掛預設的「不顯示 tags」。其他第一層（知識節點、附錄、教學、本站簡介…）照舊。
+      filterFn: |
+        (node) => {
+          if (node.slugSegment === "tags") return false;
+          const depth = (node.slugSegments || [node.slugSegment]).length;
+          return !(depth === 1 && /^\d{2}-/.test(String(node.slugSegment || "")));
+        }
     layout:
       position: left
       priority: 50
+  # 左欄書卷／章節選擇器（U-22）：章節頁放本卷章號，其他頁放書卷格子；手機搬進 ☰ 抽屜最上面。
+  # 在探索（priority 50）之前；同時提供共用元件 BookGrid／ChapterGrid 給首頁入口使用。
+  - source: ./plugins/book-picker
+    enabled: true
+    layout:
+      position: left
+      priority: 40
   # Graph component with Chinese slug decoding and expand modal view locked to depth 1
   - source: github:quartz-community/graph
     enabled: true

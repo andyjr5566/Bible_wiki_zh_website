@@ -6,8 +6,9 @@
 // 只在手機寬度（<= 800px）出現；桌機有左側目錄與右側目錄，不需要。
 // 其他頁面不做任何事；找不到表格或「本章整理」時，對應的按鈕就不顯示。
 //
-// 另外：手機的探索抽屜每次打開時，把目前章節捲到抽屜中間（explorer 外掛只在畫面建好時捲一次，
-// 抽屜那時還是隱藏的，之後換頁又會還原上一頁的捲動位置，所以停在別的地方）。
+// 書卷章名是可以點的按鈕：打開 ☰ 抽屜，最上面就是書卷章節選擇器（book-picker 外掛）。
+// 這裡只發 bwz:open-picker 事件，不知道選擇器長什麼樣；沒有人處理（外掛關掉）就退回直接點開抽屜。
+// （抽屜打開時捲到最上面、露出目前章，也是 book-picker 的事；書卷已不在探索選單裡。）
 
 const CHAPTER_SLUG = /^\d+-[^/]+\/第\d+章$/
 const MOBILE_QUERY = "(max-width: 800px)"
@@ -68,6 +69,17 @@ function removeBar() {
   document.documentElement.classList.remove(ON_CLASS)
 }
 
+/** 打開抽屜並顯示選擇器；事件沒人處理時（book-picker 沒載入）退回只打開抽屜。 */
+function openPicker() {
+  const detail: { handled?: boolean } = {}
+  document.dispatchEvent(new CustomEvent("bwz:open-picker", { detail }))
+  if (detail.handled) return
+  const explorer = document.querySelector(".explorer")
+  if (explorer?.classList.contains("collapsed")) {
+    explorer.querySelector<HTMLElement>(".explorer-toggle.mobile-explorer")?.click()
+  }
+}
+
 function makeLink(cls: string, label: string, href: string, arrow: "‹" | "›"): HTMLAnchorElement {
   const a = document.createElement("a")
   a.className = `${BAR_CLASS}-btn ${cls}`
@@ -105,9 +117,12 @@ function setupBar() {
   bar.className = BAR_CLASS
   bar.setAttribute("aria-label", "章節快捷列")
 
-  const title = document.createElement("span")
+  const title = document.createElement("button")
+  title.type = "button"
   title.className = `${BAR_CLASS}-title`
   title.textContent = chapterTitle(slug)
+  title.setAttribute("aria-label", `${chapterTitle(slug)}，開啟書卷章節選單`)
+  title.addEventListener("click", openPicker)
   bar.append(title)
 
   if (nav?.prev) bar.append(makeLink(`${BAR_CLASS}-prev`, "上一章", nav.prev, "‹"))
@@ -189,30 +204,3 @@ function setupBar() {
 }
 
 document.addEventListener("nav", setupBar)
-
-// ---- 手機探索抽屜：打開時把目前章節捲到中間 ----
-const drawerWindow = window as Window & { __bwzDrawerRevealBound?: boolean }
-if (!drawerWindow.__bwzDrawerRevealBound) {
-  drawerWindow.__bwzDrawerRevealBound = true
-
-  const reveal = (explorer: Element) => {
-    if (explorer.classList.contains("collapsed")) return
-    const list = explorer.querySelector<HTMLElement>(".explorer-ul")
-    const active = list?.querySelector<HTMLElement>("a.active")
-    if (!list || !active) return
-    const listRect = list.getBoundingClientRect()
-    const activeRect = active.getBoundingClientRect()
-    if (listRect.height === 0) return
-    // 只動清單自己的捲動位置，不用 scrollIntoView（它會連整個頁面一起捲）
-    list.scrollTop += activeRect.top - listRect.top - (listRect.height - activeRect.height) / 2
-  }
-
-  document.addEventListener("click", (event) => {
-    if (!(event.target instanceof Element)) return
-    const toggle = event.target.closest(".explorer-toggle.mobile-explorer")
-    const explorer = toggle?.closest(".explorer")
-    if (!explorer) return
-    // 外掛的點擊處理先切換 collapsed，下一個畫面再量位置
-    requestAnimationFrame(() => requestAnimationFrame(() => reveal(explorer)))
-  })
-}

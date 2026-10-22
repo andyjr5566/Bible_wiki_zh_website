@@ -6,7 +6,7 @@ set -euo pipefail
 
 # 整個資料夾複製進 .quartz/plugins 的本地外掛（dist/ 已進版控，CI 不用建置）。
 # node_modules 在本機是 junction，CI 用根目錄安裝的依賴，所以複製後拿掉。
-LOCAL_PLUGINS=(wiki-tour semantic-search personal-notes read-aloud explorer site-ux)
+LOCAL_PLUGINS=(wiki-tour semantic-search personal-notes read-aloud explorer site-ux book-picker)
 # 用社群版安裝、再把 plugins/<名稱>/dist 蓋上去的外掛（config 裡是 github: 來源）
 PATCHED_PLUGINS=(graph)
 

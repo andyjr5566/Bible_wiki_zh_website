@@ -58,7 +58,10 @@ function mountCollapseAll() {
         collapseAll(explorer)
         refresh(explorer)
       })
-      content.prepend(btn)
+      // 放在清單正上方（不是抽屜最上面）：手機抽屜最上面是書卷選擇器（book-picker），按鈕只管下面的探索清單
+      const list = content.querySelector(":scope > .explorer-ul")
+      if (list) list.before(btn)
+      else content.prepend(btn)
     }
     // 資料夾清單由 explorer 外掛非同步畫出、開關也由它處理：清單有變化就重新判斷要不要顯示按鈕
     if (!observed.has(content)) {

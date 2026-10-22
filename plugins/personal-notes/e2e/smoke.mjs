@@ -1,5 +1,6 @@
 // B5-2 冒煙測試（CI 用，也可在本機跑）：只確認「網站還活著」的最基本功能，不是完整回歸。
 //   (1) 首頁載入  (2) 章節上一章／下一章  (3) 搜尋有結果  (4) 個人筆記可以開（本機模式、不登入）
+//   (2b) 書卷選擇器：章節頁有章號格、點章號換頁、條目頁有書卷格子、灰色書卷有提示
 //   (5) 手機 390x844 四個頁面不左右捲  (6) 全程沒有 JavaScript 例外
 // 用法：node e2e/smoke.mjs <siteRoot，結尾不加 /> <profile>
 //   例：node e2e/smoke.mjs http://localhost:8090/Bible_wiki_zh_website prof/smoke
@@ -73,6 +74,15 @@ check("章節：第 2 章頁首表格有「前一章」連結", await waitFor(`!
 await ev(`${navLink("前一章")}?.click()`)
 const backCh1 = await waitFor(`decodeURIComponent(location.pathname).endsWith('第1章') && ${h1Text}.includes('第1章')`)
 check("章節：點「前一章」→ 回到第 1 章", !!backCh1, `${await curPath()}｜${await ev(h1Text)}`)
+
+// ---------- (2b) 書卷章節選擇器（左欄，U-22） ----------
+check("選擇器：章節頁左欄有本卷章號格", !!(await waitFor(`document.querySelectorAll('.bwz-picker .bwz-chgrid a.bwz-ch').length >= 2`, 8000)))
+await ev(`[...document.querySelectorAll('.bwz-picker a.bwz-ch')].find((a) => a.textContent === '2')?.click()`)
+check("選擇器：點章號會換到該章", !!(await waitFor(`decodeURIComponent(location.pathname).endsWith('第2章') && ${h1Text}.includes('第2章')`)), await curPath())
+await open(abraham + "?skip=1")
+check("選擇器：條目頁左欄直接有書卷格子（66 卷）", !!(await waitFor(`document.querySelectorAll('.bwz-picker .bwz-bg-book').length === 66`, 8000)))
+await ev(`document.querySelector('.bwz-picker .bwz-bg-book.is-locked')?.click()`)
+check("選擇器：點灰色書卷跳出提示", !!(await waitFor(`document.querySelector('.bwz-toast[role=status]')?.textContent.includes('研讀頁還在整理中')`, 5000)))
 
 // ---------- (3) 搜尋 ----------
 await ev(`document.querySelector('.search-button')?.click()`)

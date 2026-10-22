@@ -460,6 +460,15 @@
 - 部署成功；GitHub 上的冒煙測試（smoke、regress、swcheck）全部通過。部署的內容檢查：首頁進度一致、壞連結 292 個（和上一次部署相同，本機的 298 是環境差異）。
 - 正式站實測（1440、390）：首頁入口有 66 卷（6 卷可點）、沒有紀錄時導覽卡在上、進度表預設收合；出埃及記 12 章左欄 40 個章號、目前第 12 章、探索沒有書卷資料夾、手機章末有章號格；捲到一半回首頁，卡片「出埃及記 第 12 章／上次讀到這一章的中段 · 剛剛」、入口移到導覽卡上面；沒有 JS 例外。
 
+### 上線後修正：左欄要能捲動（分支 `fix/ux-b6-sidebar-scroll`）
+
+- 使用者提出左欄也要有上下滑桿。主導者實測正式站：條目頁（或章節頁按「換卷」後）66 卷格子排到 1022 px，「探索」被擠到 1054 px、只剩約 19 px 高，畫面 900 px 時看不到，左欄又不能捲（`overflow-y: visible`）→ 讀者到不了知識節點、附錄、教學。合併驗收只看了截圖上半部，沒量到左欄底部，是漏掉的地方。
+- 使用者選「整個左欄一起滑」（探索維持自己的捲動框，兩層）。
+
+| 任務 | 給誰 | 結果 | 採用 | 主導者修了什麼 |
+|---|---|---|---|---|
+| 左欄整欄捲動 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b6-sidebar` | 只改 custom.scss 27 行：桌機左欄 `overflow-y: auto`、欄內區塊不縮、只有探索可縮且最小 `max(16rem, 35vh)`；不加 `overscroll-behavior: contain`（加了左欄放得下時滾輪捲不動整頁）。test_content：1440×900／768、1280×720 × 淺深都能捲、捲到底探索完整；smoke 27/27、expcheck 9/9、book-picker 94/94、hubcheck 49/49、axe（scrollable-region-focusable 等）0 | 採用（`afe6fc04`） | 主導者把同一段 CSS 注入正式站（完整探索樹）實測：條目頁 900 高可捲 540 px、捲到底探索 553→868、清單 282 px 可捲；720 高清單 223 px；首頁放得下不出現捲動；主內容 scrollY 不受影響 |
+
 ### 注意
 
 - 外掛 import `quartz/util`（共用資料層），建置外掛要保留相對位置：用 scratchpad `b6/build-plugin-mirror.ps1`（`-Name home-hub -Extra @("plugins\book-picker")`）。home-hub 的 dist 打包了 book-picker 的格子，**改 book-picker 的 BookGrid／樣式後要重建 home-hub**。

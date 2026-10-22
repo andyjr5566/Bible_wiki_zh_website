@@ -416,6 +416,7 @@
 |---|---|---|---|---|
 | CSS 整潔＋手機寬表格 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b5f-css` | Gemini 5 項全做；手機上 4 欄以上的表格每欄至少 4em、能縮就縮（出埃及記 12 章 378 → 342 px）；還是放不下的（創世記 5 章家譜表 462 px、附錄家譜 536／666 px）在框裡左右滑，有內容的那一邊有淡陰影（純 CSS，只套在 a11yPatches 標成可捲動的框）；小站 20＋14 張截圖不變、完整站首頁不變、`!important` 仍 7 | 採用（`5c3c5fb7`） | 看過淺深兩張陰影截圖；沒有修改。已知限制：表頭那一列看不到陰影（表頭有實色底） |
 | 地標 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b5f-landmark` | `.center` → main、左側欄 → navigation「網站導覽」、右側欄 → complementary「本頁相關」；只加 role／aria-label；純函式 `planLandmarks`＋21 個測試；axe `landmark-one-main` 1 → 0、`region` 6～32 → 0、沒有新違規；SPA 換頁不重複、空側欄會收回；截圖 20 張 0% | 採用（`d892ba46`） | 沒有修改。沒補 banner（網站名稱和選單同在左側欄，地標不能巢狀）；麵包屑的 `aria-label="breadcrumbs"` 是主題的英文；**還沒有實機螢幕閱讀器測試** |
+| 麵包屑標籤 | Claude haiku 子代理（第 1 級，只改兩個檔） | 主題的 `aria-label="breadcrumbs"` 改成「目前位置」（使用者選的）；4 個測試 | 採用 | 主導者建置、跑測試 43/43、瀏覽器確認、smoke 19/19、regress 15/15 |
 | 合併後驗證 | 主導者 | 小站 axe 只剩 1 個 minor（測試資料第 1 章導覽表格故意留空的表頭）；鍵盤 12/12、smoke 19/19、regress 15/15、nodecheck 10/10、swcheck 13/13。完整內容（`d892ba46`，7 分鐘）：首頁、出埃及記 12 章、創世記 5 章、逾越節羔羊 × 淺深 × 1440／390，axe 沒有 moderate 以上（只剩出埃及記 12 章內容裡一格空表頭，minor，原本就有）；手機表格全部 342 px，只有創世記 5 章家譜表 462 px（7 欄，照設計在框裡左右滑＋陰影）；兩份索引一致 | | |
 
 ## 第 6～9 批：大改版

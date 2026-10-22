@@ -10,6 +10,7 @@ interface CollapseRule {
 const defaultRules: CollapseRule[] = [
   { title: "本章知識節點", subheadings: false },
   { title: "來源依據", subheadings: false },
+  { title: "按書卷研讀", subheadings: false },
   { title: "按書卷累積", subheadings: true },
 ]
 

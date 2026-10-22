@@ -232,6 +232,12 @@ plugins:
     layout:
       position: beforeBody
       priority: 5
+  # 首頁入口（搜尋、繼續閱讀、書卷格子）；腳本每頁載入，負責記錄章節閱讀位置。設計見 dev-notes/ux-improvements/（U-22）。
+  - source: ./plugins/home-hub
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 4
   # 章節頁的經文朗讀（瀏覽器內建語音，只朗讀經文）。設計見 dev-notes/read-aloud/。
   - source: ./plugins/read-aloud
     enabled: true

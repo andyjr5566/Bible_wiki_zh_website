@@ -1,0 +1,224 @@
+// 首頁入口：只用網站既有的顏色變數，淺色／深色自動跟著切換。
+// 設計見 dev-notes/ux-improvements/README.md 的 U-22；樣稿外觀是使用者選定的。
+$mobile: "(max-width: 800px)";
+
+// 順序：入口與導覽卡都在 beforeBody 的同一個容器裡，用 flex 的 order 排。
+// 有閱讀紀錄 → 入口在最上面；沒有（或讀不到）→ 導覽卡在最上面、入口在下面。
+// <html data-bwz-reading> 由 <head> 的早期腳本設定，所以第一次繪製就是對的順序。
+.popover-hint:has(> .bwz-hub) {
+  display: flex;
+  flex-direction: column;
+
+  > .bwz-hub {
+    order: 1;
+  }
+  > .wiki-tour-launcher {
+    order: 0;
+  }
+}
+html[data-bwz-reading="has"] .popover-hint:has(> .bwz-hub) {
+  > .bwz-hub {
+    order: 0;
+  }
+  > .wiki-tour-launcher {
+    order: 1;
+  }
+}
+
+.bwz-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.25rem 0 1.5rem;
+
+  // 只處理自己的連結；書卷格子的連結樣式由共用的 bookGrid.scss 負責
+  .bwz-resume-go,
+  .bwz-resume-link,
+  .bwz-hub-links a {
+    text-decoration: none;
+    background: none;
+  }
+}
+
+/* ---------- 搜尋 ---------- */
+.bwz-hub-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 12px;
+  background: var(--light);
+  color: var(--darkgray);
+  font: inherit;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+
+  .bwz-hub-search-text {
+    flex: 1;
+    min-width: 0;
+  }
+  kbd {
+    font: inherit;
+    font-size: 0.75rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 6px;
+    padding: 0.1rem 0.4rem;
+    color: var(--gray);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--bwz-accent-strong, var(--secondary));
+    outline-offset: 2px;
+  }
+  @media #{$mobile} {
+    .bwz-hub-wide,
+    kbd {
+      display: none;
+    }
+  }
+}
+
+/* ---------- 繼續閱讀 ---------- */
+// 紀錄是讀者本機的，卡片在瀏覽器裡才畫。有紀錄時先把位置留好（約一張卡的高度），畫出來時下面的內容不會被推開。
+.bwz-hub-resume {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  &[data-state="empty"] {
+    display: none;
+  }
+  &[data-state="pending"] {
+    min-height: 5.5rem;
+  }
+}
+html:not([data-bwz-reading="has"]) .bwz-hub-resume {
+  display: none;
+}
+
+.bwz-resume {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--lightgray);
+  border-left: 4px solid var(--bwz-accent-strong, var(--secondary));
+  border-radius: 12px;
+  background: var(--light);
+  color: var(--dark);
+
+  .bwz-resume-kicker,
+  .bwz-resume-title,
+  .bwz-resume-meta {
+    grid-column: 1;
+  }
+  .bwz-resume-kicker {
+    font-size: 0.8rem;
+    color: var(--darkgray);
+  }
+  .bwz-resume-title {
+    font-family: var(--headerFont);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .bwz-resume-meta {
+    font-size: 0.85rem;
+    color: var(--darkgray);
+  }
+  .bwz-resume-go {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--bwz-accent-strong, var(--secondary));
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    line-height: 1.3;
+
+    // 整張卡都可以點：連結的點擊範圍撐滿整張卡，但螢幕閱讀器只會讀到一個「繼續閱讀…」連結
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--dark);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.bwz-resume-more {
+  margin: 0;
+  padding: 0 0.25rem;
+  font-size: 0.9rem;
+  color: var(--darkgray);
+
+  .bwz-resume-link {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    margin-left: 0.5rem;
+    color: var(--bwz-accent-strong, var(--secondary));
+    font-weight: 600;
+  }
+}
+
+/* ---------- 按書卷讀經 ---------- */
+.bwz-hub-books {
+  padding: 0.75rem 0.9rem 0.5rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 12px;
+  background: var(--light);
+}
+// 標題用 role=heading 的 div（見 HomeHub.tsx），不會被主題外掛的 h2 樣式蓋掉
+.bwz-hub-h {
+  margin: 0 0 0.5rem;
+  font-family: var(--headerFont);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.bwz-hub-note {
+  margin: 0.6rem 0 0.2rem;
+  font-size: 0.8rem;
+  color: var(--darkgray);
+}
+
+/* ---------- 快速入門、互動網站與附錄 ---------- */
+.bwz-hub-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 999px;
+    background: var(--light);
+    color: var(--darkgray);
+    font-size: 0.92rem;
+  }
+}
+
+// 深色模式的強調色是淺紫，實心按鈕上要用深色字才有足夠對比
+html[saved-theme="dark"] .bwz-resume .bwz-resume-go {
+  color: #16121f;
+}

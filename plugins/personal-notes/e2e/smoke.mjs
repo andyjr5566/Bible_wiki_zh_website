@@ -2,6 +2,7 @@
 //   (1) 首頁載入  (2) 章節上一章／下一章  (3) 搜尋有結果  (4) 個人筆記可以開（本機模式、不登入）
 //   (2b) 書卷選擇器：章節頁有章號格、點章號換頁、條目頁有書卷格子、灰色書卷有提示
 //   (5) 手機 390x844 四個頁面不左右捲  (6) 全程沒有 JavaScript 例外
+//   另有首頁入口（home-hub）：沒有紀錄時導覽卡在上、沒有繼續閱讀卡；讀一章回首頁有卡片、按「繼續」回到位置
 // 用法：node e2e/smoke.mjs <siteRoot，結尾不加 /> <profile>
 //   例：node e2e/smoke.mjs http://localhost:8090/Bible_wiki_zh_website prof/smoke
 // 建議對 test_content 建出的小站跑（章節頁的上一章／下一章表格在 test_content 的第 1、2 章）。
@@ -61,6 +62,10 @@ const status = await ev(`(performance.getEntriesByType('navigation')[0]?.respons
 const title = await ev(`document.title`)
 check("首頁：載入成功（HTTP 200、有 article）", !!homeOk && status === 200, `status=${status}`)
 check("首頁：標題含「聖經研讀知識庫」", String(title).includes("聖經研讀知識庫"), title)
+// 首頁入口（home-hub）：沒有閱讀紀錄時導覽卡在最上面、入口在下面、沒有繼續閱讀卡
+const hubTopOrder = await ev(`(() => { const t = document.querySelector('.wiki-tour-launcher'), h = document.querySelector('.bwz-hub'); return t && h ? t.getBoundingClientRect().top < h.getBoundingClientRect().top : null })()`)
+check("首頁入口：有入口區塊（搜尋鈕＋書卷格子）", !!(await ev(`!!document.querySelector('.bwz-hub .bwz-hub-search') && !!document.querySelector('.bwz-hub .bwz-bookgrid')`)))
+check("首頁入口：沒有紀錄時導覽卡在上、沒有繼續閱讀卡", hubTopOrder === true && !(await ev(`!!document.querySelector('.bwz-resume')`)), `導覽卡在上=${hubTopOrder}`)
 
 // ---------- (2) 章節上一章／下一章 ----------
 const ch1Ok = await open(ch1 + "?skip=1", `${h1Text}.includes('第1章')`)
@@ -83,6 +88,20 @@ await open(abraham + "?skip=1")
 check("選擇器：條目頁左欄直接有書卷格子（66 卷）", !!(await waitFor(`document.querySelectorAll('.bwz-picker .bwz-bg-book').length === 66`, 8000)))
 await ev(`document.querySelector('.bwz-picker .bwz-bg-book.is-locked')?.click()`)
 check("選擇器：點灰色書卷跳出提示", !!(await waitFor(`document.querySelector('.bwz-toast[role=status]')?.textContent.includes('研讀頁還在整理中')`, 5000)))
+
+// ---------- (2c) 繼續閱讀：讀第 2 章捲到一半 → 回首頁有卡片 → 按「繼續」回到約同一位置 ----------
+await open(ch2 + "?skip=1", `${h1Text}.includes('第2章')`)
+const pageRange = `(document.documentElement.scrollHeight - window.innerHeight)`
+await ev(`window.scrollTo({ top: ${pageRange} * 0.5, behavior: 'instant' })`)
+await sleep(1500)
+await ev(`document.querySelector('.page-title a')?.click()`)
+const hasCard = await waitFor(`document.body.dataset.slug === 'index' && !!document.querySelector('.bwz-resume')`, 10000)
+check("首頁入口：讀過一章後回首頁有「繼續閱讀」卡（入口在導覽卡上面）", !!hasCard && (await ev(`document.querySelector('.bwz-hub').getBoundingClientRect().top < document.querySelector('.wiki-tour-launcher').getBoundingClientRect().top`)), await ev(`document.querySelector('.bwz-resume-title')?.textContent + ' ' + document.querySelector('.bwz-resume-meta')?.textContent`))
+await ev(`document.querySelector('.bwz-resume-go')?.click()`)
+await waitFor(`document.body.dataset.slug.endsWith('第2章')`, 10000)
+await sleep(2200)
+const resumedRatio = await ev(`${pageRange} > 0 ? window.scrollY / ${pageRange} : 0`)
+check("首頁入口：按「繼續」回到約同一位置（±10%）", Math.abs(resumedRatio - 0.5) <= 0.1, `比例 ${Number(resumedRatio).toFixed(2)}`)
 
 // ---------- (3) 搜尋 ----------
 await ev(`document.querySelector('.search-button')?.click()`)

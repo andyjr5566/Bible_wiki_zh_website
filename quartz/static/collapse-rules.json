@@ -9,6 +9,10 @@
                          "subheadings":  false
                      },
                      {
+                         "title":  "按書卷研讀",
+                         "subheadings":  false
+                     },
+                     {
                          "title":  "按書卷累積",
                          "subheadings":  true
                      }

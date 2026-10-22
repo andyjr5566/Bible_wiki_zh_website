@@ -203,10 +203,10 @@ const STEPS: Step[] = [
     id: "map",
     page: SLUG.home,
     skill: "書卷結構",
-    targets: () => $$("article .table-container").slice(0, 1),
+    // 首頁入口（home-hub）裡的書卷格子；限定在入口區塊內，才不會抓到左欄選擇器那一份
+    targets: () => $$(".bwz-hub .bwz-bookgrid").slice(0, 1),
     title: () => "從書卷開始",
-    text: () =>
-      "每卷書先進「全書目錄及綱要」，再選章。✓ 代表整卷已完成，進度條是正在建置的書卷。",
+    text: () => "先選書卷，再選章。灰色的書卷研讀頁還在整理中，會陸續開放。",
   },
   {
     id: "search",

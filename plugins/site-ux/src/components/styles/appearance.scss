@@ -121,6 +121,14 @@
     overflow: hidden;
   }
 
+  /* 選項下面的說明小字（閱讀模式） */
+  .site-ux-note {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--darkgray);
+  }
+
   .site-ux-opt {
     flex: 1 1 0;
     min-width: 44px;
@@ -264,6 +272,30 @@
 }
 :root[data-ux-links="hidden"] ol.bwz-ux-verses a .external-icon {
   display: none;
+}
+
+/* ---------- 5. 閱讀模式：純經文（<html data-ux-view="pure">，腳本在要藏的區塊上標 .bwz-ux-hide） ---------- */
+/* 外掛的 CSS 在 @layer quartz-base 裡，要蓋過 custom.scss 的 display 設定一律用 !important（理由見上面字級那一節） */
+:root[data-ux-view="pure"] .bwz-ux-hide:not(.bwz-ux-reveal) {
+  display: none !important;
+}
+
+/* 手機章節快捷列的「本章整理」鈕：整理被藏起來時按下去沒有地方可去 */
+:root[data-ux-view="pure"] .bwz-cqb-summary {
+  display: none !important;
+}
+
+/* 第一次繪製前腳本還沒標記，先把第一條分隔線之後的內容遮住（保留版面、只是看不見），
+   標好之後腳本設 data-ux-marked 就解除；腳本萬一沒跑，3 秒後也會自動解除，不會一直空白。
+   只針對章節頁（網址形如 …/第N章）；前後章表格不遮。 */
+:root[data-ux-view="pure"]:not([data-ux-marked]) body[data-slug*="/第"][data-slug$="章"] article .markdown-preview-view > hr ~ *:not(.table-container) {
+  visibility: hidden;
+  animation: site-ux-unhide 0s linear 3s forwards;
+}
+@keyframes site-ux-unhide {
+  to {
+    visibility: visible;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,12 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { ChapterNodeDescription, selectChapterRegions } from "./chapterRegions"
+import {
+  ChapterNodeDescription,
+  selectChapterRegions,
+  selectHiddenSections,
+  selectStudyRegion,
+  studyAnchorIndex,
+} from "./chapterRegions"
 
 const node = (tag: string, fields: Omit<ChapterNodeDescription, "tag"> = {}): ChapterNodeDescription => ({
   tag,
@@ -110,4 +116,59 @@ test("returns no hidden regions when the last node is only a navigation table", 
     node("table", { className: "table-container", text: "前一章 下一章" }),
   ])
   assert.deepEqual(result, { verseListIndex: 2, hide: [] })
+})
+
+test("reports each hidden section separately so one can be revealed alone", () => {
+  const nodes = [
+    node("ol"),
+    node("hr"),
+    node("h2", { headingText: "本章知識節點" }),
+    node("p"),
+    node("hr"),
+    node("h2", { headingText: "本章整理" }),
+    node("h3"),
+    node("table", { className: "table-container", text: "前一章 下一章" }),
+  ]
+  assert.deepEqual(selectHiddenSections(nodes), [
+    { start: 2, indices: [1, 2, 3, 4] },
+    { start: 5, indices: [4, 5, 6] },
+  ])
+})
+
+test("hidden sections are empty when the verse list is not recognised", () => {
+  assert.deepEqual(selectHiddenSections([node("h1"), node("h2", { headingText: "本章整理" })]), [])
+})
+
+test("finds the study section and the nearest h3 above a node", () => {
+  const nodes = [
+    node("ol"),
+    node("hr"),
+    node("h2", { headingText: "本章知識節點" }),
+    node("p"),
+    node("hr"),
+    node("h2", { headingText: "本章整理" }),
+    node("p"),
+    node("h3"),
+    node("p"),
+    node("p"),
+    node("hr"),
+    node("h2", { headingText: "附錄" }),
+    node("p"),
+  ]
+  const region = selectStudyRegion(nodes)
+  assert.deepEqual(region, { start: 5, end: 11 })
+  assert.equal(studyAnchorIndex(nodes, region!, 9), 7)
+  assert.equal(studyAnchorIndex(nodes, region!, 7), 7)
+  assert.equal(studyAnchorIndex(nodes, region!, 6), 5)
+  assert.equal(studyAnchorIndex(nodes, region!, 12), null)
+  assert.equal(studyAnchorIndex(nodes, region!, 3), null)
+})
+
+test("recognises a study section wrapped in details and ignores a missing one", () => {
+  const wrapped = [node("ol"), node("hr"), node("details", { headingText: "本章整理" }), node("p")]
+  assert.deepEqual(selectStudyRegion(wrapped), { start: 2, end: 4 })
+  const spaced = [node("ol"), node("hr"), node("h2", { headingText: "📝 本章　整理" }), node("p")]
+  assert.deepEqual(selectStudyRegion(spaced), { start: 2, end: 4 })
+  assert.equal(selectStudyRegion([node("ol"), node("hr"), node("h2", { headingText: "附錄" })]), null)
+  assert.equal(selectStudyRegion([node("h1"), node("h2", { headingText: "本章整理" })]), null)
 })

@@ -2,7 +2,7 @@
 // 所以不需要另外扣掉黏在頂端的工具列高度。這裡是薄薄的 DOM 層：規則與計算在 quartz/util/readingPosition.ts，
 // 「何時再捲一次」在 restorePlan.ts。
 import { scrollFromRatio } from "../../../../quartz/util/readingPosition"
-import { RESTORE_POLL_MS, restoreAction } from "./restorePlan"
+import { RESTORE_POLL_MS, restoreAction } from "../../../../quartz/util/restorePlan"
 
 // 讀者自己動手（滾輪、觸控、按鍵）就立刻放棄，不跟讀者搶捲動。
 const USER_INPUT_EVENTS = ["wheel", "touchstart", "keydown", "mousedown"] as const

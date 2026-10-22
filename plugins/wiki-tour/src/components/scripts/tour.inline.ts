@@ -287,15 +287,14 @@ const STEPS: Step[] = [
       "最上面是標題和屬性，接著是定義。往下的「按書卷累積」依書卷列出這個主題出現過的每一章。",
   },
   {
-    id: "backlinks",
+    // 反向連結清單已停用（U-21）：關係圖譜的相連條目包含所有提到這個條目的頁面，所以這一站改講關係圖譜
+    id: "related",
     page: SLUG.entry,
-    skill: "反向連結",
-    targets: () => $$(".backlinks").filter(visible),
-    title: () => "誰提到了它",
+    skill: "相關條目",
+    targets: () => $$(".graph").filter(visible),
+    title: () => "誰和它相連",
     text: () =>
-      $$(".graph").some(visible)
-        ? "反向連結列出所有提到這個條目的頁面；上方的關係圖顯示它連到哪些條目。想從出埃及記追到民數記、新約，就從這裡開始。"
-        : "反向連結列出所有提到這個條目的頁面。想從出埃及記追到民數記、新約，就從這裡開始。",
+      `${isMobile() ? "頁面下方" : "右邊"}的關係圖譜列出所有和這個條目互相連結的頁面，依類型（人物、地點、神學…）分組；每類先列幾個，按「＋數字」展開全部。想從出埃及記追到民數記、新約，就從這裡開始。`,
   },
   {
     id: "sources",
@@ -526,6 +525,9 @@ function toast(msg: string) {
 
 /* ---------------- 導覽引擎 ---------------- */
 
+// 技能名稱改過的對照（舊 → 新）。反向連結清單停用後，那一站改講關係圖譜（U-21）。
+const RENAMED_SKILLS: Record<string, string> = { 反向連結: "相關條目" }
+
 // 舊進度（沒有 v）的 step 是舊版 STEPS 的索引：落在 notes 之後的要 +2，才會對到同一站。
 // 資料壞掉（欄位型別不對）時退回安全值，不讓導覽卡在不存在的站。
 function migrateState(raw: unknown): TourState | null {
@@ -536,7 +538,11 @@ function migrateState(raw: unknown): TourState | null {
   let step = typeof r.step === "number" && Number.isInteger(r.step) && r.step >= 0 ? r.step : 0
   if (!r.v && step > OLD_NOTES_INDEX) step += INSERTED_AFTER_NOTES
   step = Math.min(step, STEPS.length)
-  const strs = (a: unknown) => (Array.isArray(a) ? a.filter((x): x is string => typeof x === "string") : [])
+  // 改過名的技能把舊名稱轉成新名稱，已掌握的進度才不會算成兩項
+  const strs = (a: unknown) =>
+    Array.isArray(a)
+      ? a.filter((x): x is string => typeof x === "string").map((x) => RENAMED_SKILLS[x] ?? x)
+      : []
   return { v: STATE_VERSION, status, step, skills: strs(r.skills), skipped: strs(r.skipped) }
 }
 
@@ -1052,7 +1058,7 @@ function maybeShowWelcome(delay = 1200) {
   }, delay)
 }
 
-// 桌機（>800px）：歡迎卡貼在內容欄底部、水平置中，不蓋右欄的目錄與反向連結，也不蓋左欄的探索選單。
+// 桌機（>800px）：歡迎卡貼在內容欄底部、水平置中，不蓋右欄的關係圖與目錄，也不蓋左欄的探索選單。
 // 內容欄位置由 .center 量出來；量不到或手機版就清掉內嵌樣式，改用 CSS 預設值（手機：貼底、左右留邊）。
 function placeWelcome() {
   const w = el(".bwz-welcome")
@@ -1144,7 +1150,7 @@ function openHelp() {
     <div class="bwz-route">
       <div class="bwz-route-body">
         <div class="bwz-route-title">逾越節之旅</div>
-        <div class="bwz-route-meta">搜尋、經文連結、預覽、條目頁、反向連結、來源查證、本章整理、參考資料、相關地圖、閱讀設定。${status}</div>
+        <div class="bwz-route-meta">搜尋、經文連結、預覽、條目頁、相關條目、來源查證、本章整理、參考資料、相關地圖、閱讀設定。${status}</div>
         ${st.status === "paused" || st.status === "done" ? `<div class="bwz-meter"><span class="bwz-meter-fill" style="width:${pct}%"></span></div>` : ""}
       </div>
       <div class="bwz-row">${actions}</div>

@@ -698,7 +698,7 @@ html.bwz-touring .popover {
 }
 
 // 桌機：歡迎卡貼在內容欄底部（left、width 由 tour.inline.ts 的 placeWelcome 依 .center 設定），
-// 不蓋右欄目錄與反向連結。這裡的值是量不到 .center 時的備用（視窗置中）。
+// 不蓋右欄的關係圖與目錄。這裡的值是量不到 .center 時的備用（視窗置中）。
 @media (min-width: 801px) {
   .bwz-welcome {
     left: 0;

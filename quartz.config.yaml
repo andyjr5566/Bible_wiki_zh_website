@@ -245,8 +245,10 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
+  # 反向連結清單停用（U-21，2026-10-22）：關係圖譜的相連條目已經包含所有反向連結（3,789 頁沒有例外），
+  # 而且依類型分組；拿掉後手機版的圖譜佔滿整行寬。要恢復就把 enabled 改回 true。
   - source: github:quartz-community/backlinks
-    enabled: true
+    enabled: false
     layout:
       position: right
       priority: 50

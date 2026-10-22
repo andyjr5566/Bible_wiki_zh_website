@@ -1060,8 +1060,9 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
   color: #fbbf24;
 }
 
-/* B3-6.2 目錄box高度：在 900px 高的螢幕上約與原來相同（局部關聯圖 309px 與反向連結佔掉大部分右欄）；
-   視窗更高時目錄會長高，最多到 100vh - 560px。目錄不會被壓縮（flex-shrink: 0），反向連結仍保留原高度。 */
+/* B3-6.2 目錄box高度：在 900px 高的螢幕上約與原來相同（局部關聯圖 309px 與當時的反向連結佔掉大部分右欄）；
+   視窗更高時目錄會長高，最多到 100vh - 560px。目錄不會被壓縮（flex-shrink: 0）。
+   （反向連結已停用，U-21；右欄只剩關係圖與目錄，這條上限留著無妨。） */
 .sidebar.right > .toc:not(:has(button.toc-header.collapsed)) {
   flex: 1 0 auto;
   max-height: calc(100vh - 560px);
@@ -1118,9 +1119,9 @@ html:has(.search > .search-container.active) {
 /* Expanded graph hides overlays:end */
 
 /* Desktop right sidebar stacking:start */
-/* 電腦版右欄是一條 100vh 高的直欄（關係圖、目錄、反向連結由上往下排）。關係圖下面多了分類清單後整塊變高，
-   欄裝不下就把最下面的反向連結壓扁、目錄標題也被蓋住。
-   改成：每個區塊都不被壓縮；目錄、反向連結各自有高度上限（超過在區塊內捲動）；整欄放不下時由右欄自己往下捲。 */
+/* 電腦版右欄是一條 100vh 高的直欄（關係圖、目錄由上往下排；原本還有反向連結，U-21 停用）。關係圖下面多了分類清單後整塊變高，
+   欄裝不下就把下面的區塊壓扁、目錄標題也被蓋住。
+   改成：每個區塊都不被壓縮；目錄有高度上限（超過在區塊內捲動）；整欄放不下時由右欄自己往下捲。 */
 @media all and (min-width: 1200px) {
   .page > #quartz-body > .sidebar.right {
     overflow-y: auto;
@@ -1143,19 +1144,6 @@ html:has(.search > .search-container.active) {
 
       & > button.toc-header > h3 {
         margin: 0;
-      }
-    }
-
-    & > .backlinks {
-      max-height: 16rem;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-
-      & > ul.overflow {
-        max-height: none;
-        overflow-y: auto;
-        min-height: 0;
       }
     }
   }

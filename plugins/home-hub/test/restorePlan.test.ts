@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { RESTORE_MAX_MS, RESTORE_STABLE_MS, restoreAction, type RestoreTick } from "../src/lib/restorePlan"
+import { RESTORE_MAX_MS, RESTORE_STABLE_MS, restoreAction, type RestoreTick } from "../../../quartz/util/restorePlan"
 
 const base: RestoreTick = { now: 1000, startedAt: 1000, height: 5000, lastHeight: undefined, lastChangeAt: 1000 }
 

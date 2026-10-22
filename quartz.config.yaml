@@ -238,6 +238,12 @@ plugins:
     layout:
       position: beforeBody
       priority: 4
+  # 回到剛才的經節：從經文或本章整理的連結離開後，在畫面底部出現「↩ 返回」。腳本每頁載入；元件不畫任何東西。設計見 dev-notes/ux-improvements/（U-23）。
+  - source: ./plugins/verse-return
+    enabled: true
+    layout:
+      position: afterBody
+      priority: 90
   # 章節頁的經文朗讀（瀏覽器內建語音，只朗讀經文）。設計見 dev-notes/read-aloud/。
   - source: ./plugins/read-aloud
     enabled: true

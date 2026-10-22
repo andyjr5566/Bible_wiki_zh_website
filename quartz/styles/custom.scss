@@ -35,6 +35,13 @@
   --bwz-link-light-rgb: 122 28 28; /* 淺色：經典紅 #7A1C1C */
   --bwz-link-light-hover-rgb: 180 83 9; /* 淺色，滑鼠移過去：棕橘色 #B45309 */
 
+  /* 手機上可左右捲動的表格，邊緣的陰影顏色（淺色用黑色淡影；深色底已經暗，要更濃才看得出來）。 */
+  --bwz-scroll-shadow: rgb(0 0 0 / 0.22);
+
+  /* 半透明面板（中間閱讀區、左右側邊欄）的底色，RGB 三個數字；透明度另外在下面。 */
+  --bwz-panel-light-rgb: 250 248 248; /* 淺色 */
+  --bwz-panel-dark-rgb: 8 8 8; /* 深色 */
+
   /* 半透明面板的底色不透明度：0 = 完全透明（看到 100% 羊皮紙），1 = 完全不透明。調透明度改這三個數字。 */
   --bwz-center-alpha: 0.7; /* 中間閱讀區（淺、深色共用） */
   --bwz-sidebar-alpha-light: 0.85; /* 左右側邊欄，淺色 */
@@ -42,6 +49,9 @@
 }
 :root:not([saved-theme="dark"]) {
   --bwz-accent-strong: #7048e8;
+}
+:root[saved-theme="dark"] {
+  --bwz-scroll-shadow: rgb(0 0 0 / 0.8);
 }
 
 /*
@@ -113,7 +123,6 @@
 /* 隱藏章節頁標題下方日期 / read time；如果某些自動列表仍然出現，也隱藏 FolderPage/PageList 的日期欄 */
 .content-meta,
 .page-listing .meta,
-.section-li > .section > .meta,
 .section > .meta,
 ul.section-ul .meta {
   display: none;
@@ -121,19 +130,16 @@ ul.section-ul .meta {
 
 /* 日期欄隱藏後，不要留下 blog list 的大空白 */
 .page-listing .section,
-.section-li > .section,
 ul.section-ul .section {
   display: block;
 }
 
 .page-listing .desc,
-.section-li .desc,
 ul.section-ul .desc {
   margin-left: 0;
 }
 
 .page-listing .desc h3,
-.section-li .desc h3,
 ul.section-ul .desc h3 {
   margin: 0.25rem 0;
 }
@@ -177,25 +183,21 @@ div#quartz-body, .page-header, .popover-hint,
 
 /* 中間閱讀區與左右側邊欄的半透明底色（透明度在最上面 :root 的 --bwz-*-alpha） */
 html[saved-theme="light"] .page > div#quartz-body div.center {
-  background-color: rgb(250 248 248 / var(--bwz-center-alpha));
+  background-color: rgb(var(--bwz-panel-light-rgb) / var(--bwz-center-alpha));
   border-radius: 12px;
   padding: 1rem;
 }
 html[saved-theme="dark"] .page > div#quartz-body div.center {
-  background-color: rgb(8 8 8 / var(--bwz-center-alpha));
+  background-color: rgb(var(--bwz-panel-dark-rgb) / var(--bwz-center-alpha));
   border-radius: 12px;
   padding: 1rem;
 }
 
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar,
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar.left,
-html[saved-theme="light"] body .page > div#quartz-body div.sidebar.right {
-  background-color: rgb(250 248 248 / var(--bwz-sidebar-alpha-light));
+html[saved-theme="light"] body .page > div#quartz-body div.sidebar {
+  background-color: rgb(var(--bwz-panel-light-rgb) / var(--bwz-sidebar-alpha-light));
 }
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar,
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.left,
-html[saved-theme="dark"] body .page > div#quartz-body div.sidebar.right {
-  background-color: rgb(8 8 8 / var(--bwz-sidebar-alpha-dark));
+html[saved-theme="dark"] body .page > div#quartz-body div.sidebar {
+  background-color: rgb(var(--bwz-panel-dark-rgb) / var(--bwz-sidebar-alpha-dark));
 }
 
 /* 素色黑白 / 古典紙質底色切換（Pure Mode：素白／極黑 OLED）。
@@ -249,9 +251,7 @@ html[data-bg="pure"] body,
 }
 
 html[data-bg="pure"] .page > div#quartz-body div.center,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar.left,
-html[data-bg="pure"] body .page > div#quartz-body div.sidebar.right {
+html[data-bg="pure"] body .page > div#quartz-body div.sidebar {
   background-color: var(--light);
 }
 
@@ -383,25 +383,61 @@ article table tr:last-child td {
   border-bottom: none;
 }
 
-/* 由腳本標記的短欄維持單行，避免短文字被拆開。 */
+/* 儲存格換行規則（data-* 由 plugins/site-ux 的 a11yPatches.ts 在瀏覽器端標記）：
+   - data-short：整欄都是短文字，維持單行，免得短詞被拆開。
+   - data-short-cell：由短詞組成的儲存格（書名、「申命記 — 啟示錄」），只在空白換行、不從字中間拆；
+     長句照常換行，表格才縮得進手機。
+   - data-bar：首頁進度條（█░，腳本包成 .site-ux-bar），桌機和原本一樣同一行。 */
 article table [data-short] { white-space: nowrap; }
-/* 由短詞組成的儲存格（書名、「申命記 — 啟示錄」，腳本標 data-short-cell）不從字中間拆，只在空白換行；長句照常換行，表格才縮得進手機 */
 article table td[data-short-cell] { word-break: keep-all; overflow-wrap: normal; }
-
-/* 首頁進度條（█░，腳本包成 .site-ux-bar）：桌機和原本一樣同一行；手機上方塊單獨一行縮成細條，百分比在下面。 */
 article table [data-bar] { white-space: nowrap; }
 
-/* 手機：主題給每個儲存格至少 75px，4 欄表格就超過 342px 的內容寬；拿掉下限並縮小內距，讓表格放得進畫面。 */
-@media all and (max-width: 800px) {
+/* 手機表格的兩段做法：
+   1. 擠得進就擠：主題給每個儲存格至少 75px，4 欄表格就超過 342px 的內容寬。
+      改成每欄內容區至少 4 個字寬，在這個限度內讓表格縮進畫面（短欄 data-short 不設下限，本來就是單行）。
+   2. 擠不進就滑動：縮到最窄還是放不下時，表格留在 .table-container 裡左右捲動，
+      並在還有內容的那一邊畫淡淡的陰影（scroll shadow）。 */
+@media (max-width: 800px) {
   article .table-container > table th,
   article .table-container > table td {
-    min-width: 0;
+    min-width: 0; /* 拿掉主題的 75px 下限 */
     padding: 0.45rem 0.5rem;
   }
+
+  /* 欄數多（4 欄以上）的表格才設每欄下限：欄少時每欄本來就分得到足夠寬度，
+     加下限只會改變原本放得進畫面的表格（例如首頁的表格）的欄寬分配。
+     儲存格是 content-box，4em = 內容區 4 個字寬，不含內距；短欄 data-short 單行不設下限。 */
+  article .table-container > table:has(tr > :nth-child(4)) :is(th, td):not([data-short]) {
+    min-width: 4em;
+  }
+
+  /* 短詞儲存格（data-short-cell）桌機上完全不拆字；手機上改成「放得下就不拆，空間真的不夠才拆」：
+     否則 5～6 個字的詞會把整欄撐寬，表格就縮不進畫面。 */
+  article .table-container > table td[data-short-cell] {
+    overflow-wrap: anywhere;
+  }
+
   article table [data-bar] .site-ux-bar {
     display: block;
     font-size: 7px;
     line-height: 1.2;
+  }
+
+  /* 捲動陰影：只有真的放不下、可以左右捲動的容器才有（a11yPatches.ts 的 applyScrollableRegions 會替它們加 role="region"，
+     放得下的表格不受影響）。經典的 background-attachment: local 做法，純 CSS、不需要捲動事件：
+     - 陰影（scroll）貼在容器的左右邊，不跟著內容動；
+     - 蓋板（local）是與底色同色的漸層，跟著內容動：捲到最左／最右時剛好蓋住該側的陰影，所以陰影消失。
+     蓋板必須和底色完全同色，所以這種容器自己鋪不透明的 var(--light)（只有會捲動的表格，不影響其他表格）。
+     陰影畫在背景層，文字與點擊都不受影響。 */
+  article .table-container[role="region"] {
+    --bwz-scroll-cover: var(--light);
+    background:
+      linear-gradient(to right, var(--bwz-scroll-cover) 30%, transparent) 0 0 / 2.5rem 100% local,
+      linear-gradient(to left, var(--bwz-scroll-cover) 30%, transparent) 100% 0 / 2.5rem 100% local,
+      radial-gradient(farthest-side at 0 50%, var(--bwz-scroll-shadow), transparent) 0 0 / 0.9rem 100% scroll,
+      radial-gradient(farthest-side at 100% 50%, var(--bwz-scroll-shadow), transparent) 100% 0 / 0.9rem 100% scroll;
+    background-repeat: no-repeat;
+    background-color: var(--bwz-scroll-cover);
   }
 }
 
@@ -908,17 +944,17 @@ details.collapsible-subheading {
   display: none;
 }
 
-@media all and (max-width: 800px) {
+@media (max-width: 800px) {
   .bwz-cqb {
     display: flex;
     align-items: center;
     gap: 6px;
     box-sizing: border-box;
     position: fixed;
-    top: var(--bwz-cqb-top, 0px); // 排在 sticky 工具列下面（由腳本設定）
+    top: var(--bwz-cqb-top, 0px); /* 排在 sticky 工具列下面（由腳本設定） */
     left: 0;
     right: 0;
-    z-index: 600; // 在搜尋（999）、導覽（900）、浮動按鈕（890）、筆記視窗之下
+    z-index: 600; /* 在搜尋（999）、導覽（900）、浮動按鈕（890）、筆記視窗之下 */
     padding: env(safe-area-inset-top, 0px) 8px 0;
     background: var(--light);
     color: var(--dark);
@@ -936,7 +972,7 @@ details.collapsible-subheading {
     visibility: visible;
   }
 
-  // 探索抽屜打開時整條收起（抽屜蓋滿畫面，且 z-index 在快捷列之下）
+  /* 探索抽屜打開時整條收起（抽屜蓋滿畫面，且 z-index 在快捷列之下） */
   html.mobile-no-scroll > body > .bwz-cqb,
   body:has(.explorer:not(.collapsed) .mobile-explorer) > .bwz-cqb {
     display: none;
@@ -1004,9 +1040,9 @@ details.collapsible-subheading {
     font-weight: 700;
   }
 
-  // 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）。
-  // 朗讀外掛平常用 inline style 把 top 設成工具列高度，行內樣式只有 !important 蓋得過，
-  // 所以只有快捷列顯示時（html.bwz-cqb-on）才用 !important
+  /* 朗讀列播放時貼在頂端：快捷列出現時讓到它下面（--bwz-cqb-h 由腳本在快捷列顯示時設定）。
+     朗讀外掛平常用 inline style 把 top 設成工具列高度，行內樣式只有 !important 蓋得過，
+     所以只有快捷列顯示時（html.bwz-cqb-on）才用 !important */
   html.bwz-cqb-on .bwz-ra.is-playing {
     top: var(--bwz-cqb-h, 0px) !important;
   }
@@ -1102,7 +1138,7 @@ details.collapsible-subheading {
 }
 
 /* 手機版工具列 sticky 貼頂，底色是 90% 不透明；捲動時後面的內文會透出來和圖示疊在一起，加一點模糊讓圖示清楚 */
-@media all and (max-width: 800px) {
+@media (max-width: 800px) {
   .page > #quartz-body > .sidebar.left {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -1112,7 +1148,7 @@ details.collapsible-subheading {
 /* 手機左下「筆記」、右下「?」是固定在畫面底部的浮動按鈕（高約 46px、離底 20px）；
    頁面最底多留一段空白，讓最後的內容（關係圖清單、反向連結、頁尾）能捲到按鈕上方，不被蓋住。
    「加入主畫面」橫幅出現時按鈕會上移（--bwz-pwa-h），空白也跟著加大 */
-@media all and (max-width: 800px) {
+@media (max-width: 800px) {
   body {
     padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
   }
@@ -1124,7 +1160,7 @@ details.collapsible-subheading {
 
 /* 手機版右欄的每個區塊被 Quartz 限制 max-height: 24rem（384px）；關係圖下面多了分類清單後會超出，
    清單就跑到頁尾上面去。關係圖區塊改成依內容自然長高（清單本身仍有 280px 的捲動上限） */
-@media all and (max-width: 800px) {
+@media (max-width: 800px) {
   .sidebar.right > .graph {
     max-height: none;
     height: auto;

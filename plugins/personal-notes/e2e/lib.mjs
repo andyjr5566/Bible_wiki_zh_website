@@ -48,7 +48,8 @@ function connect(url, onEvent) {
   }
   return {
     ready: new Promise((r) => (sock.onopen = r)),
-    send: (method, params = {}) => new Promise((res) => { const id = ++seq; pending.set(id, res); sock.send(JSON.stringify({ id, method, params })) }),
+    // sessionId（選填）：送給用 Target.attachToTarget（flatten）接上的其他目標，例如 Service Worker
+    send: (method, params = {}, sessionId) => new Promise((res) => { const id = ++seq; pending.set(id, res); sock.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) })) }),
     close: () => sock.close(),
   }
 }

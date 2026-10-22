@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest"
-import { applyA11yPatches, shortColumnIndexes, splitProgressBar } from "../src/lib/a11yPatches"
+import { applyA11yPatches, isShortWords, shortColumnIndexes, splitProgressBar } from "../src/lib/a11yPatches"
 
 describe("shortColumnIndexes", () => {
   it("整欄（含表頭）都不超過 6 個字才算短欄", () => {
@@ -23,6 +23,15 @@ describe("shortColumnIndexes", () => {
 
   it("空表格沒有短欄", () => {
     expect(shortColumnIndexes([])).toEqual([])
+  })
+})
+
+describe("isShortWords", () => {
+  it("每個以空白分開的片段都不超過 6 個字", () => {
+    expect(isShortWords("申命記 — 啟示錄")).toBe(true)
+    expect(isShortWords("出埃及記")).toBe(true)
+    expect(isShortWords("逐節詳解、文意註解、屬靈應用")).toBe(false)
+    expect(isShortWords("   ")).toBe(false)
   })
 })
 
@@ -54,6 +63,8 @@ describe("applyA11yPatches", () => {
     const cells = document.querySelectorAll("td")
     expect(cells[0].hasAttribute("data-short")).toBe(true)
     expect(cells[1].hasAttribute("data-short")).toBe(false)
+    expect(cells[0].hasAttribute("data-short-cell")).toBe(true)
+    expect(cells[1].hasAttribute("data-short-cell")).toBe(false)
     expect(cells[1].hasAttribute("data-bar")).toBe(true)
     expect(cells[1].querySelector(".site-ux-bar")?.getAttribute("aria-hidden")).toBe("true")
     expect(cells[1].textContent).toBe("████████████████████ 100%")

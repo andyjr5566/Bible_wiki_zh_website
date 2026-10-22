@@ -42,9 +42,7 @@ article table {
 
 article table td {
   white-space: normal;
-  /* 中文詞不從中間拆（只在空白、標點換行）；真的放不下的長字串才斷開 */
-  word-break: keep-all;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 
@@ -1184,6 +1182,8 @@ html[saved-theme="dark"] .search .search-layout .highlight {
 
 /* 由腳本標記的短欄維持單行，避免短文字被拆開。 */
 article table [data-short] { white-space: nowrap; }
+/* 由短詞組成的儲存格（書名、「申命記 — 啟示錄」，腳本標 data-short-cell）不從字中間拆，只在空白換行；長句照常換行，表格才縮得進手機 */
+article table td[data-short-cell] { word-break: keep-all; overflow-wrap: normal; }
 
 /* 首頁進度條（█░，腳本包成 .site-ux-bar）：桌機和原本一樣同一行；手機上方塊單獨一行縮成細條，百分比在下面。 */
 article table [data-bar] { white-space: nowrap; }

@@ -1,13 +1,25 @@
 // 無障礙修補（B5-4）：主題外掛產生的 HTML 有幾處不合規，外掛本身不能改（CI 會重新 clone），
 // 所以每次換頁後在瀏覽器端補上。判斷規則寫成不碰 DOM 的純函式，方便單元測試；DOM 操作集中在 applyA11yPatches。
 // 1. 目錄按鈕的 aria-controls 指向不存在的 id → 改指實際的清單。
-// 2. 表格：整欄文字都很短的欄標 data-short（CSS 讓它不換行），其他欄可以換行；首頁進度條的方塊包成 span。
+// 2. 表格：整欄文字都很短的欄標 data-short（CSS 讓它不換行），其他欄可以換行；短儲存格標 data-short-cell
+//    （不從字中間拆）；首頁進度條的方塊包成 span。
 // 3. 可以左右捲動的表格容器要能用鍵盤聚焦。
 
 /** 一欄所有儲存格（含表頭）都不超過這麼多字，就算「短資料欄」。 */
 export const SHORT_COLUMN_MAX_CHARS = 6
 /** 進度條：開頭至少這麼多個 █／░。 */
 const BAR_PATTERN = /^\s*([█░]{5,})/
+
+/** 文字是否算「短」（依字元計算，前後空白不算）。 */
+export function isShortText(text: string, maxChars = SHORT_COLUMN_MAX_CHARS): boolean {
+  return Array.from(text.trim()).length <= maxChars
+}
+
+/** 以空白分開的每個片段都是短文字（例如「申命記 — 啟示錄」）。 */
+export function isShortWords(text: string, maxChars = SHORT_COLUMN_MAX_CHARS): boolean {
+  const words = text.trim().split(/\s+/).filter(Boolean)
+  return words.length > 0 && words.every((word) => isShortText(word, maxChars))
+}
 
 /** 回傳短資料欄的欄號。rows 是每一列的儲存格文字；列的長度可以不同（少的欄當作沒有那格）。 */
 export function shortColumnIndexes(rows: string[][], maxChars = SHORT_COLUMN_MAX_CHARS): number[] {
@@ -16,7 +28,7 @@ export function shortColumnIndexes(rows: string[][], maxChars = SHORT_COLUMN_MAX
   for (let column = 0; column < columnCount; column++) {
     const cells = rows.map((cells) => cells[column]).filter((text): text is string => text !== undefined)
     // Array.from 依字元計算（全形字、emoji 都算一個）
-    if (cells.length > 0 && cells.every((text) => Array.from(text.trim()).length <= maxChars)) {
+    if (cells.length > 0 && cells.every((text) => isShortText(text, maxChars))) {
       result.push(column)
     }
   }
@@ -62,6 +74,12 @@ function patchTable(table: HTMLTableElement): void {
   for (const column of shortColumnIndexes(texts)) {
     for (const cells of cellsByRow) cells[column]?.setAttribute("data-short", "")
   }
+  // 長欄裡由短詞組成的儲存格（例如和「士師記 — 啟示錄」同一欄的「出埃及記」）：不從字中間拆，只在空白換行
+  cellsByRow.forEach((cells, row) =>
+    cells.forEach((cell, column) => {
+      if (isShortWords(texts[row][column])) cell.setAttribute("data-short-cell", "")
+    }),
+  )
 
   // 首頁的書卷進度條（████░░ 100%）：方塊包成 span（螢幕閱讀器不念 20 個方塊），手機上由 CSS 縮成細條
   for (const cell of Array.from(table.querySelectorAll<HTMLTableCellElement>("td"))) {

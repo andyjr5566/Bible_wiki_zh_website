@@ -55,6 +55,7 @@ function formatBrokenLinksMarkdown(stats: BrokenLinkStats, scanError?: string): 
     "",
     `- 壞連結總數：${stats.total}`,
     `- 有壞連結的頁數：${stats.pagesWithBrokenLinks}`,
+    `- 不計入：指到 static/ 的連結 ${stats.ignoredStatic} 個（互動網站在建置後才複製進去，正式站上是好的）`,
     "",
     "### 最常見的缺少目標（前 20 名）",
     "",
@@ -140,6 +141,7 @@ async function main(contentDir: string, publicDir: string, strict: boolean): Pro
   let brokenStats: BrokenLinkStats = {
     total: 0,
     pagesWithBrokenLinks: 0,
+    ignoredStatic: 0,
     byTarget: [],
     byPage: [],
   }

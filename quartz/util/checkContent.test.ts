@@ -3,7 +3,13 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test, { describe } from "node:test"
-import { BOOKS, analyzeBrokenLinks, checkHomeProgress, scanBrokenLinks } from "./contentChecks"
+import {
+  BOOKS,
+  analyzeBrokenLinks,
+  checkHomeProgress,
+  isStaticAssetLink,
+  scanBrokenLinks,
+} from "./contentChecks"
 
 function progressRow(bookName: string, completed: number): string {
   const book = BOOKS.find((candidate) => candidate.name === bookName)
@@ -207,5 +213,28 @@ describe("broken internal link reporting", () => {
     } finally {
       await rm(publicDir, { recursive: true, force: true })
     }
+  })
+})
+
+describe("static/ links", () => {
+  test("resolves the href against the page path", () => {
+    assert.ok(isStaticAssetLink("appendix/website/index.html", "../.././static/website/a/dist/"))
+    assert.ok(isStaticAssetLink("01-創世記/全書目錄及綱要.html", "../static/website/全聖經/dist/index.html"))
+    assert.ok(!isStaticAssetLink("appendix/家譜.html", "../appendix/website/a/dist/#x"))
+    assert.ok(!isStaticAssetLink("a.html", undefined))
+  })
+
+  test("are counted as ignored, not broken", () => {
+    const stats = analyzeBrokenLinks([
+      {
+        page: "appendix/website/index.html",
+        html:
+          '<a href="../../static/website/a/dist/" class="internal broken" data-slug="static/website/a/dist/index">' +
+          '<a href="../missing" class="internal broken" data-slug="missing">',
+      },
+    ])
+    assert.strictEqual(stats.total, 1)
+    assert.strictEqual(stats.ignoredStatic, 1)
+    assert.deepStrictEqual(stats.byTarget, [{ target: "missing", count: 1 }])
   })
 })

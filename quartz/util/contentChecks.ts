@@ -421,6 +421,8 @@ export interface BrokenPageCount {
 
 export interface BrokenLinkStats {
   total: number
+  /** 指到 static/ 底下的連結（互動網站的 dist 在建置後才複製進去，Quartz 會誤標成 broken），不算壞連結 */
+  ignoredStatic: number
   pagesWithBrokenLinks: number
   byTarget: BrokenLinkCount[]
   byPage: BrokenPageCount[]
@@ -428,6 +430,7 @@ export interface BrokenLinkStats {
 
 interface BrokenLinkAccumulator {
   total: number
+  ignoredStatic: number
   targets: Map<string, number>
   pages: Map<string, number>
 }
@@ -439,6 +442,17 @@ function getAttribute(tag: string, name: string): string | undefined {
   return match?.[1] ?? match?.[2] ?? match?.[3]
 }
 
+/** 連結從 page（建置輸出裡的相對路徑）解析後，是否落在網站的 static/ 底下。 */
+export function isStaticAssetLink(page: string, href: string | undefined): boolean {
+  if (!href) return false
+  try {
+    const path = decodeURIComponent(new URL(href, "https://site.invalid/" + page).pathname)
+    return path.startsWith("/static/")
+  } catch {
+    return false
+  }
+}
+
 function addBrokenLinks(accumulator: BrokenLinkAccumulator, page: string, html: string): void {
   const anchorPattern = /<a\b[^>]*>/gi
   let match: RegExpExecArray | null
@@ -448,6 +462,10 @@ function addBrokenLinks(accumulator: BrokenLinkAccumulator, page: string, html: 
     const tag = match[0]
     const classes = getAttribute(tag, "class")?.split(/\s+/) ?? []
     if (!classes.includes("internal") || !classes.includes("broken")) continue
+    if (isStaticAssetLink(page, getAttribute(tag, "href"))) {
+      accumulator.ignoredStatic++
+      continue
+    }
 
     const target =
       getAttribute(tag, "data-slug") ?? getAttribute(tag, "href") ?? "（無 href/data-slug）"
@@ -464,6 +482,7 @@ function finishBrokenLinks(accumulator: BrokenLinkAccumulator): BrokenLinkStats 
 
   return {
     total: accumulator.total,
+    ignoredStatic: accumulator.ignoredStatic,
     pagesWithBrokenLinks: accumulator.pages.size,
     byTarget: [...accumulator.targets.entries()]
       .map(([target, count]) => ({ target, count }))
@@ -479,7 +498,12 @@ function finishBrokenLinks(accumulator: BrokenLinkAccumulator): BrokenLinkStats 
 export function analyzeBrokenLinks(
   files: ReadonlyArray<{ page: string; html: string }>,
 ): BrokenLinkStats {
-  const accumulator: BrokenLinkAccumulator = { total: 0, targets: new Map(), pages: new Map() }
+  const accumulator: BrokenLinkAccumulator = {
+    total: 0,
+    ignoredStatic: 0,
+    targets: new Map(),
+    pages: new Map(),
+  }
   for (const file of files) addBrokenLinks(accumulator, file.page, file.html)
   return finishBrokenLinks(accumulator)
 }
@@ -500,7 +524,12 @@ export async function scanBrokenLinks(publicDir: string): Promise<BrokenLinkStat
   const paths: string[] = []
   await collectHtmlPaths(publicDir, publicDir, paths)
 
-  const accumulator: BrokenLinkAccumulator = { total: 0, targets: new Map(), pages: new Map() }
+  const accumulator: BrokenLinkAccumulator = {
+    total: 0,
+    ignoredStatic: 0,
+    targets: new Map(),
+    pages: new Map(),
+  }
   for (const page of paths) {
     const html = await readFile(join(publicDir, page), "utf8")
     addBrokenLinks(accumulator, page, html)

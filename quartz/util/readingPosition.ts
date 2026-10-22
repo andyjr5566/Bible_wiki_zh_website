@@ -3,6 +3,9 @@
 import { BibleBook, bookByFolderSlug, folderSlug } from "./bibleBooks"
 import { CatalogEntry, parseBookSlug, tocSlug } from "./bookCatalog"
 
+// localStorage 的鍵：寫入（home-hub）和讀取（book-picker 的預設分頁）共用這一個名稱。
+export const READING_STORAGE_KEY = "bwz-reading"
+
 export interface ReadingRecord {
   slug: string
   ratio: number

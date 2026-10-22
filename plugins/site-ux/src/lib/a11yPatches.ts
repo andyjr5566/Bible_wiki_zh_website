@@ -6,6 +6,7 @@
 // 3. 可以左右捲動的表格容器要能用鍵盤聚焦。
 // 4. 地標（landmark）：主題的版面全是沒有語意的 div，螢幕閱讀器的「地標」清單裡找不到主要內容，
 //    每頁都得先聽完搜尋、工具列、上百個章節的選單。這裡只加 role／aria-label，不新增任何元素，畫面不變。
+// 5. 麵包屑的 nav 標籤：主題寫的是英文 "breadcrumbs"，改成「目前位置」。
 
 /** 一欄所有儲存格（含表頭）都不超過這麼多字，就算「短資料欄」。 */
 export const SHORT_COLUMN_MAX_CHARS = 6
@@ -112,6 +113,16 @@ export function applyScrollableRegions(root: ParentNode = document): void {
       container.removeAttribute("role")
       container.removeAttribute("aria-label")
     }
+  }
+}
+
+export const BREADCRUMB_LABEL = "目前位置"
+
+// 主題的麵包屑標籤是英文 "breadcrumbs"，螢幕閱讀器會用英文唸出來，所以換成中文；已經是其他標籤就不動。
+export function patchBreadcrumbLabel(root: ParentNode = document): void {
+  for (const nav of Array.from(root.querySelectorAll<HTMLElement>("nav.breadcrumb-container"))) {
+    const label = (nav.getAttribute("aria-label") ?? "").trim()
+    if (label === "" || label.toLowerCase() === "breadcrumbs") nav.setAttribute("aria-label", BREADCRUMB_LABEL)
   }
 }
 
@@ -248,6 +259,7 @@ export function patchLandmarks(root: ParentNode = document): void {
 /** 每次換頁後呼叫一次。 */
 export function applyA11yPatches(root: ParentNode = document): void {
   patchLandmarks(root)
+  patchBreadcrumbLabel(root)
   patchTocControls(root)
   for (const table of Array.from(root.querySelectorAll<HTMLTableElement>("article table"))) patchTable(table)
   applyScrollableRegions(root)

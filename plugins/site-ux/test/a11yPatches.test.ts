@@ -2,7 +2,9 @@
 import { describe, expect, it } from "vitest"
 import {
   applyA11yPatches,
+  BREADCRUMB_LABEL,
   isShortWords,
+  patchBreadcrumbLabel,
   patchLandmarks,
   planLandmarks,
   shortColumnIndexes,
@@ -218,5 +220,42 @@ describe("patchLandmarks", () => {
     const dialog = document.querySelector(".search-container")!
     expect(dialog.getAttribute("role")).toBe("dialog")
     expect(dialog.getAttribute("aria-label")).toBe("搜尋")
+  })
+})
+
+describe("patchBreadcrumbLabel", () => {
+  const crumbLabel = () => document.querySelector("nav.breadcrumb-container")?.getAttribute("aria-label")
+
+  it("英文 breadcrumbs（不分大小寫）改成中文", () => {
+    document.body.innerHTML = `<nav class="breadcrumb-container" aria-label="breadcrumbs">首頁</nav>`
+    patchBreadcrumbLabel()
+    expect(crumbLabel()).toBe(BREADCRUMB_LABEL)
+
+    document.body.innerHTML = `<nav class="breadcrumb-container" aria-label="Breadcrumbs">首頁</nav>`
+    patchBreadcrumbLabel()
+    expect(crumbLabel()).toBe(BREADCRUMB_LABEL)
+  })
+
+  it("沒有 aria-label 就補上", () => {
+    document.body.innerHTML = `<nav class="breadcrumb-container">首頁</nav>`
+    patchBreadcrumbLabel()
+    expect(crumbLabel()).toBe(BREADCRUMB_LABEL)
+  })
+
+  it("其他標籤不動；不是麵包屑的 nav 也不動", () => {
+    document.body.innerHTML = `<nav class="breadcrumb-container" aria-label="麵包屑">首頁</nav><nav aria-label="breadcrumbs">別的導覽</nav>`
+    patchBreadcrumbLabel()
+    expect(crumbLabel()).toBe("麵包屑")
+    expect(document.querySelector("nav:not(.breadcrumb-container)")?.getAttribute("aria-label")).toBe("breadcrumbs")
+  })
+
+  it("重跑結果不變（也不影響 applyA11yPatches 的其他步驟）", () => {
+    document.body.innerHTML = `<div id="quartz-body"><div class="center"><nav class="breadcrumb-container" aria-label="breadcrumbs">首頁</nav><article>經文</article></div></div>`
+    applyA11yPatches()
+    const once = document.body.innerHTML
+    expect(crumbLabel()).toBe(BREADCRUMB_LABEL)
+    patchBreadcrumbLabel()
+    applyA11yPatches()
+    expect(document.body.innerHTML).toBe(once)
   })
 })

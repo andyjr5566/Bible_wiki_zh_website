@@ -786,6 +786,33 @@ details.collapsible-subheading {
   }
 }
 
+/* 電腦版（寬度 > 800px）左欄整欄可以上下捲動。
+   為什麼：左欄是 100vh 高、不能捲的直欄（欄內容放不下時，flex 把最下面的「探索」壓扁）。第 6 批在探索上方加了書卷選擇器，
+   在條目頁或按「換卷」展開 66 卷格子後，探索被擠到畫面外、只剩約 19px 高，讀者到不了知識節點、附錄、教學。
+   做法：整欄自己捲（和右欄同一套寫法）；欄內每個區塊都不被壓縮，只有探索可以縮、而且縮不過最小高度，
+   所以捲到底時探索一定有能用的清單高度。探索仍保留自己的捲動框（兩層捲動，使用者已知）。
+   不加 overscroll-behavior: contain：加了之後，左欄放得下（不必捲）時，滑鼠在左欄上滾輪也捲不動整頁（實測首頁就是如此）。
+   不加的話，一次連續的滾輪只會捲左欄，捲到底後再滾一次才會接著捲主內容（整頁）；主內容照舊由整頁捲動。
+   手機（≤ 800px）是頂端工具列加 ☰ 抽屜，不在這裡。 */
+@media all and (min-width: 801px) {
+  .page > #quartz-body > .sidebar.left {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray) transparent;
+
+    & > * {
+      flex-shrink: 0;
+    }
+
+    /* 探索的最小高度：能顯示標題加約 8～9 行（每行約 28px；720px 高時清單約 223px）；視窗高時隨高度長大（35vh）。
+       只對展開的探索；收起時維持上面「探索收起」那條的標題高度 */
+    & > .explorer:not(.collapsed) {
+      flex-shrink: 1;
+      min-height: max(16rem, 35vh);
+    }
+  }
+}
+
 /* 探索目錄最上方的「全部收合」（有資料夾展開時才出現） */
 .explorer-collapse-all {
   display: inline-flex;

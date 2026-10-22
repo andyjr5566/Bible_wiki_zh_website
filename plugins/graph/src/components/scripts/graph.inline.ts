@@ -233,8 +233,8 @@ import {
       width: width,
       height: height,
       viewBox: "0 0 " + width + " " + height,
-      role: "img",
-      "aria-label": "依分類排列的相關條目圖譜",
+      role: "group",
+      "aria-label": "關係圖譜：與本頁相連的條目，依類型分組",
     });
     graph.appendChild(svg);
     var centerX = width / 2;
@@ -476,6 +476,12 @@ import {
           toggle.className = "graph-category-toggle";
           toggle.dataset.expandCategory = group.category;
           toggle.setAttribute("aria-expanded", String(isExpanded));
+          toggle.setAttribute(
+            "aria-label",
+            isExpanded
+              ? "收起「" + group.category + "」"
+              : "展開其餘 " + remaining + " 個「" + group.category + "」條目",
+          );
           toggle.textContent = isExpanded ? "收起" : "＋" + remaining;
           entries.appendChild(toggle);
         }
@@ -545,8 +551,8 @@ import {
       width: width,
       height: height,
       viewBox: "0 0 " + width + " " + height,
-      role: "img",
-      "aria-label": "依分類排列的相關條目圖譜（放大）",
+      role: "group",
+      "aria-label": "關係圖譜：與本頁相連的條目，依類型分組（放大）",
     });
     graph.appendChild(svg);
 

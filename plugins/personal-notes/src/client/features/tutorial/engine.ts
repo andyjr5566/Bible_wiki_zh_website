@@ -458,7 +458,13 @@ export class Stage {
     const over = (tr.bottom - pr.bottom) / k + 12
     const room = (tr.top - pr.top) / k - 6
     const delta = Math.min(over, room)
-    if (delta > 0) this.page.scrollTo({ top: this.page.scrollTop + delta, behavior: "smooth" })
+    if (delta > 0) {
+      const behavior =
+        typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth"
+      this.page.scrollTo({ top: this.page.scrollTop + delta, behavior })
+    }
   }
 
   /** 假頁面內容換成另一個畫面（淡出淡入）。 */

@@ -8,6 +8,7 @@ import {
   type Settings,
 } from "../../lib/settings"
 import { markVerseList } from "../../lib/verses"
+import { applyA11yPatches, applyScrollableRegions } from "../../lib/a11yPatches"
 
 interface GroupSpec {
   name: SettingName
@@ -294,6 +295,8 @@ function openPanel(button: HTMLElement): void {
 function setup(): void {
   closePanel(false)
   applyAll(readSettings())
+  // 無障礙修補（B5-4）和外觀面板無關，只是借這個每頁都會載入的腳本執行；邏輯在 lib/a11yPatches.ts
+  applyA11yPatches()
 
   for (const button of Array.from(document.querySelectorAll<HTMLElement>(".site-ux-btn"))) {
     const onClick = () => {
@@ -307,3 +310,4 @@ function setup(): void {
 
 document.addEventListener("nav", setup)
 document.addEventListener("prenav", () => closePanel(false))
+window.addEventListener("resize", () => applyScrollableRegions())

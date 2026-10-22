@@ -16,7 +16,14 @@ function collapseAll(explorer: Element) {
   } catch {}
   for (const outer of openFolders(explorer)) {
     outer.classList.remove("open")
-    const path = (outer.previousElementSibling as HTMLElement | null)?.dataset.folderpath
+    const container = outer.previousElementSibling as HTMLElement | null
+    // 資料夾的展開鈕（B5-4）要跟著改成「收合」狀態，螢幕閱讀器才不會讀到舊狀態
+    const toggle = container?.querySelector(".folder-button-icon")
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", "false")
+      toggle.setAttribute("aria-label", `展開「${container?.dataset.foldername ?? ""}」`)
+    }
+    const path = container?.dataset.folderpath
     if (!path) continue
     const item = saved.find((s) => s.path === path)
     if (item) item.collapsed = true

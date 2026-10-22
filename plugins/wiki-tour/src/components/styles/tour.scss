@@ -117,8 +117,9 @@ $tint: color-mix(in srgb, var(--secondary) 12%, transparent);
   }
 
   &.primary {
-    background: var(--secondary);
-    border-color: var(--secondary);
+    // --bwz-accent-strong：網站在 custom.scss 定義的「配白字也夠對比」的強調色（B5-4）；單獨使用外掛時退回主題色
+    background: var(--bwz-accent-strong, var(--secondary));
+    border-color: var(--bwz-accent-strong, var(--secondary));
     color: var(--light);
 
     &:hover {
@@ -241,6 +242,11 @@ $tint: color-mix(in srgb, var(--secondary) 12%, transparent);
 
   &:hover {
     border-color: var(--secondary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 3px;
   }
 
   .bwz-fab-dot {

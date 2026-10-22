@@ -264,7 +264,17 @@ export class NotesPanel implements View {
       this.chip = h("button", {
         class: "bwz-n-chip",
         attrs: { type: "button", "aria-label": "跳到我的筆記" },
-        on: { click: () => this.mount.scrollIntoView({ behavior: "smooth", block: "start" }) },
+        on: {
+          click: () =>
+            this.mount.scrollIntoView({
+              behavior:
+                typeof matchMedia === "function" &&
+                matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+              block: "start",
+            }),
+        },
       })
       document.body.append(this.chip)
     }

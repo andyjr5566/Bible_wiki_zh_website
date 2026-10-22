@@ -212,7 +212,7 @@ export default (() => {
                 height: 44px;
                 border: none;
                 background: transparent;
-                color: var(--gray);
+                color: var(--darkgray);
                 font-size: 1.1rem;
                 line-height: 1;
                 cursor: pointer;
@@ -233,6 +233,7 @@ export default (() => {
               }
               @media (prefers-reduced-motion: reduce) {
                 .bwz-fab, .bwz-n-chip { transition: none; }
+                .pwa-install-guide { animation: none; }
               }
               .pwa-nobr { white-space: nowrap; }
               /* 淺色模式的標題紫色對比只有 4.26，壓暗一點到 4.5 以上（深色模式原本是 6.19，不動） */
@@ -413,8 +414,14 @@ export default (() => {
                   var checkIcon =
                     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
+                  var phoneMockupPulse =
+                    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                      ? ""
+                      : '<animate attributeName="r" values="12;20;12" dur="1.6s" repeatCount="indefinite"/>' +
+                        '<animate attributeName="opacity" values="0.6;0;0.6" dur="1.6s" repeatCount="indefinite"/>';
+
                   var phoneMockupIOS =
-                    '<svg width="96" height="166" viewBox="0 0 96 166" xmlns="http://www.w3.org/2000/svg">' +
+                    '<svg width="96" height="166" viewBox="0 0 96 166" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
                     '<rect x="2" y="2" width="92" height="162" rx="16" fill="var(--light)" stroke="var(--gray)" stroke-width="2"/>' +
                     '<rect x="12" y="16" width="72" height="5" rx="2.5" fill="var(--lightgray)"/>' +
                     '<rect x="12" y="27" width="52" height="5" rx="2.5" fill="var(--lightgray)"/>' +
@@ -426,8 +433,7 @@ export default (() => {
                     '<rect x="68" y="140" width="8" height="11" rx="1.5" stroke="var(--gray)" stroke-width="1.6" fill="none"/>' +
                     '<rect x="80" y="140" width="8" height="11" rx="1.5" stroke="var(--gray)" stroke-width="1.6" fill="none"/>' +
                     '<circle cx="48" cy="147" r="20" fill="none" stroke="var(--secondary)" stroke-width="1.5" opacity="0.55">' +
-                    '<animate attributeName="r" values="12;20;12" dur="1.6s" repeatCount="indefinite"/>' +
-                    '<animate attributeName="opacity" values="0.6;0;0.6" dur="1.6s" repeatCount="indefinite"/>' +
+                    phoneMockupPulse +
                     "</circle>" +
                     '<circle cx="48" cy="147" r="12" fill="none" stroke="var(--secondary)" stroke-width="2.2"/>' +
                     '<path d="M48 141v9M44 145l4-4 4 4" stroke="var(--secondary)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -435,12 +441,11 @@ export default (() => {
                     "</svg>";
 
                   var phoneMockupAndroid =
-                    '<svg width="96" height="166" viewBox="0 0 96 166" xmlns="http://www.w3.org/2000/svg">' +
+                    '<svg width="96" height="166" viewBox="0 0 96 166" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
                     '<rect x="2" y="2" width="92" height="162" rx="16" fill="var(--light)" stroke="var(--gray)" stroke-width="2"/>' +
                     '<rect x="12" y="14" width="52" height="13" rx="6.5" fill="var(--lightgray)"/>' +
                     '<circle cx="80" cy="20.5" r="20" fill="none" stroke="var(--secondary)" stroke-width="1.5" opacity="0.55">' +
-                    '<animate attributeName="r" values="12;20;12" dur="1.6s" repeatCount="indefinite"/>' +
-                    '<animate attributeName="opacity" values="0.6;0;0.6" dur="1.6s" repeatCount="indefinite"/>' +
+                    phoneMockupPulse +
                     "</circle>" +
                     '<circle cx="80" cy="20.5" r="12" fill="none" stroke="var(--secondary)" stroke-width="2.2"/>' +
                     '<circle cx="80" cy="16" r="1.7" fill="var(--secondary)"/>' +

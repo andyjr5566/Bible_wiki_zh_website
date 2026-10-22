@@ -97,6 +97,11 @@
   outline: none;
 }
 
+.search > .search-container > .search-space > input:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
 .search > .search-container > .search-space > .search-layout {
   display: none;
   grid-template-columns: minmax(0, 1fr);
@@ -298,6 +303,16 @@
   > .results-container
   .result-card.focus {
   background: var(--lightgray);
+}
+
+.search
+  > .search-container
+  > .search-space
+  > .search-layout
+  > .results-container
+  .result-card:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
 }
 
 .search

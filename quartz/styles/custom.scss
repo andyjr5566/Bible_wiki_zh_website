@@ -41,7 +41,10 @@ article table {
 }
 
 article table td {
-  white-space: nowrap;
+  white-space: normal;
+  /* 中文詞不從中間拆（只在空白、標點換行）；真的放不下的長字串才斷開 */
+  word-break: keep-all;
+  overflow-wrap: break-word;
   text-align: center;
 }
 
@@ -1167,3 +1170,67 @@ html[saved-theme="dark"] .search .search-layout .highlight {
   color: #fff;
 }
 /* Search panel background:end */
+
+/* 無障礙（B5-4） */
+/* 強調色的加深版：主題紫在淺色模式是 #8a5cf5，配白字或放在白底只有 4.25:1；同色相的 #7048e8 約 5.5:1。
+   深色模式的主題紫本身就夠（#a68af9 配深色字約 6:1）。要用「強調色當底色配白字」或「強調色文字放在白底」的地方都引用這個變數，
+   外掛裡寫成 var(--bwz-accent-strong, var(--secondary))。要調顏色只改這裡。 */
+:root {
+  --bwz-accent-strong: var(--secondary);
+}
+:root:not([saved-theme="dark"]) {
+  --bwz-accent-strong: #7048e8;
+}
+
+/* 由腳本標記的短欄維持單行，避免短文字被拆開。 */
+article table [data-short] { white-space: nowrap; }
+
+/* 首頁進度條（█░，腳本包成 .site-ux-bar）：桌機和原本一樣同一行；手機上方塊單獨一行縮成細條，百分比在下面。 */
+article table [data-bar] { white-space: nowrap; }
+
+/* 手機：主題給每個儲存格至少 75px，4 欄表格就超過 342px 的內容寬；拿掉下限並縮小內距，讓表格放得進畫面。 */
+@media all and (max-width: 800px) {
+  article .table-container > table th,
+  article .table-container > table td {
+    min-width: 0;
+    padding: 0.45rem 0.5rem;
+  }
+  article table [data-bar] .site-ux-bar {
+    display: block;
+    font-size: 7px;
+    line-height: 1.2;
+  }
+}
+
+/* 淺色圖譜連結用加深的強調色（白底約 5.5:1），並移除主題黃底。 */
+html[saved-theme="light"] .graph-category-list a.graph-category-link.internal {
+  color: var(--bwz-accent-strong) !important;
+  background-color: transparent !important;
+}
+
+/* 深色圖譜連結保留主題紫色，並移除主題黃底。 */
+html[saved-theme="dark"] .graph-category-list a.graph-category-link.internal {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
+}
+
+/* 滑鼠或鍵盤聚焦時才顯示淡紫底，避免遮住連結文字。 */
+/* 前面加 html[saved-theme]，優先權才會高過上面兩條（否則淡底永遠出不來）。 */
+html[saved-theme] .graph-category-list a.graph-category-link.internal:hover,
+html[saved-theme] .graph-category-list a.graph-category-link.internal:focus-visible {
+  background-color: color-mix(in srgb, currentColor 12%, transparent) !important;
+}
+
+/* 搜尋框：主題（obsidian-theme 層）把 .search-space 的子元素 outline 設成 none，外掛樣式層較低贏不了；
+   鍵盤聚焦時要看得見（滑鼠點擊時瀏覽器對文字框也會套 :focus-visible，外框細一點不突兀）。 */
+html[saved-theme] body .search > .search-container > .search-space > input:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+/* 減少動態偏好下停用主題的平滑捲動。 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+}

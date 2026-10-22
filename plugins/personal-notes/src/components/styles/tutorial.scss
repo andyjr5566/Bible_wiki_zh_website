@@ -426,8 +426,9 @@
     color: var(--secondary) !important;
   }
   &.primary {
-    border-color: var(--secondary) !important;
-    background: var(--secondary) !important;
+    // --bwz-accent-strong：網站在 custom.scss 定義的「配白字也夠對比」的強調色（B5-4）；單獨使用外掛時退回主題色
+    border-color: var(--bwz-accent-strong, var(--secondary)) !important;
+    background: var(--bwz-accent-strong, var(--secondary)) !important;
     color: #fff !important;
     &:hover:not(:disabled),
     &:focus-visible {

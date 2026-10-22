@@ -178,12 +178,16 @@ function renderTree(node, container, currentSlug, folderBehavior, savedState, pa
     const clone = folderTemplate.content.cloneNode(true);
     const folderContainer = clone.querySelector(".folder-container");
     let folderButton = clone.querySelector(".folder-button");
+    const folderIconButton = clone.querySelector(".folder-button-icon");
     const folderTitle = clone.querySelector(".folder-title");
     const folderOuter = clone.querySelector(".folder-outer");
     const contentUl = clone.querySelector(".content");
 
     if (folderTitle) folderTitle.textContent = node.displayName || node.slugSegment;
-    if (folderContainer) folderContainer.dataset.folderpath = node.slug;
+    if (folderContainer) {
+      folderContainer.dataset.folderpath = node.slug;
+      folderContainer.dataset.foldername = node.displayName || node.slugSegment;
+    }
 
     if (folderBehavior === "link" && folderButton) {
       const folderLink = document.createElement("a");
@@ -210,6 +214,16 @@ function renderTree(node, container, currentSlug, folderBehavior, savedState, pa
 
     if ((!isCollapsed || folderIsPrefixOfCurrentSlug) && folderOuter) {
       folderOuter.classList.add("open");
+    }
+
+    if (folderIconButton) {
+      const isExpanded = !!folderOuter?.classList.contains("open");
+      const folderName = node.displayName || node.slugSegment;
+      folderIconButton.setAttribute("aria-expanded", String(isExpanded));
+      folderIconButton.setAttribute(
+        "aria-label",
+        `${isExpanded ? "收合" : "展開"}「${folderName}」`,
+      );
     }
 
     // Render children
@@ -327,10 +341,10 @@ async function handleNavOrRender(e) {
         const clickHandler = function () {
           const nearestExplorer = this.closest(".explorer");
           if (!nearestExplorer) return;
-          const explorerCollapsed = nearestExplorer.classList.toggle("collapsed");
-          nearestExplorer.setAttribute("aria-expanded", explorerCollapsed ? "false" : "true");
+          const isExpanded = !nearestExplorer.classList.toggle("collapsed");
+          button.setAttribute("aria-expanded", String(isExpanded));
 
-          if (!explorerCollapsed) {
+          if (isExpanded) {
             document.documentElement.classList.add("mobile-no-scroll");
           } else {
             document.documentElement.classList.remove("mobile-no-scroll");
@@ -340,17 +354,23 @@ async function handleNavOrRender(e) {
         cleanupHandlers.push(() => button.removeEventListener("click", clickHandler));
       }
 
-      const folderIcons = explorer.getElementsByClassName("folder-icon");
-      for (const icon of folderIcons) {
+      const folderIconButtons = explorer.getElementsByClassName("folder-button-icon");
+      for (const button of folderIconButtons) {
         const iconClickHandler = function (evt) {
           evt.stopPropagation();
-          const folderContainer = this.parentElement;
+          const folderContainer = this.closest(".folder-container");
           if (!folderContainer) return;
           const childFolderContainer = folderContainer.nextElementSibling;
           if (!childFolderContainer) return;
 
           childFolderContainer.classList.toggle("open");
           const isCollapsed = !childFolderContainer.classList.contains("open");
+          const isExpanded = !isCollapsed;
+          button.setAttribute("aria-expanded", String(isExpanded));
+          button.setAttribute(
+            "aria-label",
+            `${isExpanded ? "收合" : "展開"}「${folderContainer.dataset.foldername || ""}」`,
+          );
 
           const folderPath = folderContainer.dataset.folderpath;
           const savedState = JSON.parse(localStorage.getItem("fileTree") || "[]");
@@ -363,8 +383,8 @@ async function handleNavOrRender(e) {
           }
           localStorage.setItem("fileTree", JSON.stringify(savedState));
         };
-        icon.addEventListener("click", iconClickHandler);
-        cleanupHandlers.push(() => icon.removeEventListener("click", iconClickHandler));
+        button.addEventListener("click", iconClickHandler);
+        cleanupHandlers.push(() => button.removeEventListener("click", iconClickHandler));
       }
 
       const folderButtons = explorer.getElementsByClassName("folder-button");
@@ -418,7 +438,7 @@ async function handleNavOrRender(e) {
 
       if (mobileExplorer.checkVisibility && mobileExplorer.checkVisibility()) {
         explorer.classList.add("collapsed");
-        explorer.setAttribute("aria-expanded", "false");
+        mobileExplorer.setAttribute("aria-expanded", "false");
         document.documentElement.classList.remove("mobile-no-scroll");
       }
     }

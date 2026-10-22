@@ -90,6 +90,7 @@ export default ((userOpts?: Partial<ExplorerOptions>) => {
           class="explorer-toggle mobile-explorer hide-until-loaded"
           data-mobile={true}
           aria-controls={id}
+          aria-expanded={false}
           aria-label={i18n(cfg?.locale ?? "en-US").components.explorer.title}
         >
           <svg
@@ -111,6 +112,7 @@ export default ((userOpts?: Partial<ExplorerOptions>) => {
           type="button"
           class="title-button explorer-toggle desktop-explorer"
           data-mobile={false}
+          aria-controls={id}
           aria-expanded={true}
         >
           <h2>{title}</h2>
@@ -129,7 +131,7 @@ export default ((userOpts?: Partial<ExplorerOptions>) => {
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </button>
-        <div id={id} class="explorer-content" aria-expanded={false} role="group">
+        <div id={id} class="explorer-content" role="group">
           <OverflowList class="explorer-ul" />
         </div>
         <template id="template-file">
@@ -140,20 +142,22 @@ export default ((userOpts?: Partial<ExplorerOptions>) => {
         <template id="template-folder">
           <li>
             <div class="folder-container nav-folder-title tree-item-self">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="5 8 14 8"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="folder-icon nav-folder-collapse-indicator collapse-icon"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+              <button type="button" class="folder-button-icon" aria-expanded="false">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="5 8 14 8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="folder-icon nav-folder-collapse-indicator collapse-icon"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
               <div>
                 <button class="folder-button">
                   <span class="folder-title"></span>

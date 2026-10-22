@@ -135,6 +135,23 @@ button.desktop-explorer h2 {
   align-items: center;
   user-select: none;
 }
+.folder-button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.folder-button-icon:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 .folder-container div > a {
   color: var(--secondary);
   font-family: var(--headerFont);
@@ -176,7 +193,7 @@ button.desktop-explorer h2 {
   backface-visibility: visible;
   flex-shrink: 0;
 }
-li:has(> .folder-outer:not(.open)) > .folder-container > svg {
+li:has(> .folder-outer:not(.open)) > .folder-container > .folder-button-icon > svg {
   transform: rotate(-90deg);
 }
 .folder-icon:hover {
@@ -234,5 +251,16 @@ li:has(> .folder-outer:not(.open)) > .folder-container > svg {
 @media all and (max-width: 800px) {
   .mobile-no-scroll .explorer-content > .explorer-ul {
     overscroll-behavior: contain;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page > #quartz-body > :not(.sidebar.left:has(.explorer)),
+  .page > #quartz-body.lock-scroll > :not(.sidebar.left:has(.explorer)),
+  .explorer .fold,
+  .explorer svg,
+  .explorer-content .folder-outer,
+  .explorer .explorer-content {
+    transition: none !important;
   }
 }

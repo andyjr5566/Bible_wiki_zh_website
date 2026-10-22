@@ -114,7 +114,9 @@
     background: var(--highlight);
   }
   &.primary {
-    background: var(--secondary);
+    // --bwz-accent-strong：網站在 custom.scss 定義的「配白字也夠對比」的強調色（B5-4）；單獨使用外掛時退回主題色
+    background: var(--bwz-accent-strong, var(--secondary));
+    border-color: var(--bwz-accent-strong, var(--secondary));
     color: var(--light);
   }
   &.danger {
@@ -443,6 +445,12 @@
   color: var(--dark);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 3px;
+  }
+
   @media (pointer: coarse) {
     min-height: 44px;
   }
@@ -860,6 +868,12 @@ button.bwz-sticky-color {
   background: var(--paper) !important;
   cursor: pointer;
   transition: box-shadow 150ms ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
   &[aria-pressed="true"] {
     box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--accent);
   }
@@ -901,6 +915,12 @@ button.bwz-sticky-color {
   filter: drop-shadow(0 1px 1px rgba(60, 40, 10, 0.25));
   cursor: pointer;
   transition: transform 160ms ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
   svg { width: 17px; height: 17px; }
   .bwz-paper-fill { fill: var(--paper); }
   &::after { content: ""; position: absolute; inset: -12px; } /* 點擊範圍放大，不撐高行距 */
@@ -1027,7 +1047,11 @@ button.bwz-sticky-color {
   .bwz-sticky-option { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bwz-sticky-motion, .bwz-sticky-pop { animation: none !important; }
+  .bwz-sticky-motion,
+  .bwz-sticky-pop,
+  .bwz-n-card.bwz-n-flash {
+    animation: none !important;
+  }
   .bwz-sticky, .bwz-sticky-icon { transition: none !important; }
 }
 

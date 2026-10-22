@@ -51,7 +51,14 @@
     (function () {
       var retry = document.getElementById("retry");
       retry.addEventListener("click", function () { location.reload(); });
-      window.addEventListener("online", function () { location.reload(); }, { once: true });
+      // online 事件只代表裝置連上網路，不代表連得到本站：先試著抓一次首頁，成功才重新整理
+      window.addEventListener("online", function () {
+        getSiteRoot().then(function (root) {
+          return fetch(root, { method: "HEAD", cache: "no-store" });
+        }).then(function (res) {
+          if (res.ok) location.reload();
+        }).catch(function () {});
+      });
 
       async function getSiteRoot() {
         try {
@@ -62,7 +69,9 @@
             if (registration && registration.scope) return registration.scope;
           }
         } catch (error) {}
-        return location.origin + "/";
+        // 直接打開 <網站根>/static/offline.html 時，從自己的位置推回網站根
+        var m = location.pathname.match(/^(.*\/)static\/offline\.html$/);
+        return location.origin + (m ? m[1] : "/");
       }
 
       function displayName(path) {
@@ -99,6 +108,9 @@
               if (relativePath === "sw.js" || relativePath.startsWith("static/") || resourceExt.test(relativePath)) continue;
               var canonicalPath = pageUrl.pathname.replace(/(?:\/index(?:\.html)?|\.html)$/i, "").replace(/\/+$/, "") || rootUrl.pathname;
               if (pages.has(canonicalPath)) continue;
+              // 只列 HTML 頁面（沒有副檔名的非 HTML 資源也排除）
+              var cached = await cache.match(requests[j]);
+              if (!cached || (cached.headers.get("content-type") || "").indexOf("text/html") === -1) continue;
               pageUrl.search = "";
               pageUrl.hash = "";
               var name = displayName(relativePath);

@@ -5,6 +5,7 @@ $mobile: "(max-width: 800px)";
 // 順序：入口與導覽卡都在 beforeBody 的同一個容器裡，用 flex 的 order 排。
 // 有閱讀紀錄 → 入口在最上面；沒有（或讀不到）→ 導覽卡在最上面、入口在下面。
 // <html data-bwz-reading> 由 <head> 的早期腳本設定，所以第一次繪製就是對的順序。
+// 刊頭（網站標題與介紹，masthead.scss）永遠是 order: -1，排在這兩個前面。
 .popover-hint:has(> .bwz-hub) {
   display: flex;
   flex-direction: column;

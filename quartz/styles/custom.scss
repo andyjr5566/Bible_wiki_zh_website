@@ -259,8 +259,11 @@ html[data-bg="pure"] body .page > div#quartz-body div.sidebar {
    4. 閱讀排版、表格、連結顏色、Popover
    ========================================================================== */
 
-/* 聖經閱讀的字體與微排版（v5.0 手機與深色模式） */
-article {
+/* 聖經閱讀的字體與微排版（v5.0 手機與深色模式）
+   .bwz-masthead 是首頁刊頭（plugins/home-hub）：把 index.md 開頭的標題與引言搬到入口上面，
+   要長得和原本一模一樣，所以和文章共用這一組樣式，不另外複製一份（外掛的 CSS 在最低的 cascade layer，也蓋不過主題）。
+   下面凡是 article 開頭的選擇器，只要會影響標題、引言、段落、連結的，都一併列上 .bwz-masthead。 */
+article, .bwz-masthead {
   /* 全局字體與舒適閱讀行距 */
   font-family: var(--bodyFont), "LXGW WenKai TC", "BiauKai", "PingFang TC", serif;
 
@@ -338,12 +341,14 @@ article {
 
 /* 手機端行動裝置適配（Mobile Responsive @ 800px）：內文放大、引文縮小內距 */
 @media (max-width: 800px) {
-  article p, article li {
+  article p, article li,
+  .bwz-masthead p, .bwz-masthead li {
     font-size: 1.4rem; /* 提升 0.2rem */
     line-height: 1.8;
   }
 
-  article blockquote {
+  article blockquote,
+  .bwz-masthead blockquote {
     padding: 0.75rem 1rem;
     margin: 1rem 0;
   }
@@ -446,6 +451,8 @@ article table [data-bar] { white-space: nowrap; }
 /* 暗色模式 (Dark Mode) */
 [saved-theme="dark"] article a.internal-link,
 [saved-theme="dark"] article a.external-link,
+[saved-theme="dark"] .bwz-masthead a.internal-link,
+[saved-theme="dark"] .bwz-masthead a.external-link,
 [saved-theme="dark"] .sidebar a.internal-link {
   color: rgb(var(--bwz-link-dark-rgb)); /* 字體顏色 */
   background-color: rgb(var(--bwz-link-dark-rgb) / 0.1); /* 字體底部顏色/高光（微弱的背景） */
@@ -458,6 +465,8 @@ article table [data-bar] { white-space: nowrap; }
 
 [saved-theme="dark"] article a.internal-link:hover,
 [saved-theme="dark"] article a.external-link:hover,
+[saved-theme="dark"] .bwz-masthead a.internal-link:hover,
+[saved-theme="dark"] .bwz-masthead a.external-link:hover,
 [saved-theme="dark"] .sidebar a.internal-link:hover {
   color: rgb(var(--bwz-link-dark-hover-rgb)); /* 滑鼠移過去的字體顏色 */
   background-color: rgb(var(--bwz-link-dark-rgb) / 0.25); /* 滑鼠移過去的底部顏色變深 */
@@ -467,6 +476,8 @@ article table [data-bar] { white-space: nowrap; }
 /* 亮色模式 (Light Mode) */
 [saved-theme="light"] article a.internal-link,
 [saved-theme="light"] article a.external-link,
+[saved-theme="light"] .bwz-masthead a.internal-link,
+[saved-theme="light"] .bwz-masthead a.external-link,
 [saved-theme="light"] .sidebar a.internal-link {
   color: rgb(var(--bwz-link-light-rgb));
   background-color: rgb(var(--bwz-link-light-rgb) / 0.08);
@@ -479,6 +490,8 @@ article table [data-bar] { white-space: nowrap; }
 
 [saved-theme="light"] article a.internal-link:hover,
 [saved-theme="light"] article a.external-link:hover,
+[saved-theme="light"] .bwz-masthead a.internal-link:hover,
+[saved-theme="light"] .bwz-masthead a.external-link:hover,
 [saved-theme="light"] .sidebar a.internal-link:hover {
   color: rgb(var(--bwz-link-light-hover-rgb));
   background-color: rgb(var(--bwz-link-light-hover-rgb) / 0.15);
@@ -525,7 +538,9 @@ a.bwz-site-link .external-icon { display: none; }
 
 /* 內容的第一個標題是 h1 時，隱藏 Quartz 的小字 .article-title（完整名稱保留在內容 h1）。（B3-3.1）
    DOM：div.center > div.page-header > div.popover-hint > h1.article-title；
-        div.center > article > div.markdown-rendered > h1（首頁等沒有 h1 的頁面不受影響）。 */
+        div.center > article > div.markdown-rendered > h1（首頁等沒有 h1 的頁面不受影響）。
+   首頁的 h1 被首頁刊頭（plugins/home-hub）搬到入口上面後，文章裡的原件只是 display:none、仍在 DOM 裡，所以這條照樣生效；
+   頁面上唯一可見的 h1 是刊頭的那一個。 */
 .center:has(article .markdown-rendered > h1:first-of-type) > .page-header .article-title {
   display: none;
 }

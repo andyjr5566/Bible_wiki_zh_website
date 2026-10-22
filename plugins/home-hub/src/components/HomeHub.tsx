@@ -7,6 +7,8 @@ import { buildCatalog } from "../../../../quartz/util/bookCatalog";
 // 書卷格子是 book-picker 外掛提供的共用元件（打包進這個外掛的 dist）；分頁、鍵盤、灰色書卷提示由 book-picker 的腳本統一處理
 import { BookGrid } from "../../../book-picker/src/components/BookGrid";
 import { compactCatalog } from "../lib/catalogData";
+import { extractMasthead } from "../lib/masthead";
+import { Masthead } from "./Masthead";
 // @ts-expect-error - inline script imported as string by esbuild loader
 import earlyScript from "./scripts/early.inline.ts";
 // @ts-expect-error - inline script imported as string by esbuild loader
@@ -15,21 +17,25 @@ import script from "./scripts/hub.inline.ts";
 import gridStyle from "../../../book-picker/src/components/styles/bookGrid.scss";
 // @ts-expect-error - css imported as string by esbuild loader
 import style from "./styles/hub.scss";
+// @ts-expect-error - css imported as string by esbuild loader
+import mastheadStyle from "./styles/masthead.scss";
 
 const APPENDIX_INDEX = "appendix/index";
 const QUICK_START = "教學/快速入門";
 
-// 首頁入口：搜尋 → 繼續閱讀 → 按書卷讀經 → 快速入門／互動網站與附錄。
+// 首頁入口：搜尋 → 繼續閱讀 → 按書卷讀經 → 快速入門／互動網站與附錄；最前面是刊頭（網站標題與介紹，來自 index.md）。
 // 繼續閱讀卡的內容是讀者本機的紀錄，只能在瀏覽器裡畫；這裡只嵌入「有哪些章」（章號而已）讓瀏覽器判斷章還在不在。
 // 腳本每頁都會載入（負責記錄閱讀位置），所以非首頁一律不畫任何東西。
-const HomeHub: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps) => {
+const HomeHub: QuartzComponent = ({ fileData, allFiles, tree }: QuartzComponentProps) => {
   const isIndex = fileData.slug === "index" || fileData.slug === "";
   if (!isIndex) return null;
 
   const catalog = buildCatalog(allFiles.map((file) => file.slug ?? ""));
   const link = (slug: string) => "./" + slug.split("/").map(encodeURIComponent).join("/");
+  // 內容不符合取出規則時是 null：不畫刊頭，文章也不會被隱藏任何東西（頁面維持原狀）
+  const masthead = extractMasthead(tree);
 
-  return (
+  const hub = (
     <section class="bwz-hub" aria-label="讀經入口" data-catalog={JSON.stringify(compactCatalog(catalog))}>
       <button type="button" class="bwz-hub-search" data-hub-search>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -61,12 +67,20 @@ const HomeHub: QuartzComponent = ({ fileData, allFiles }: QuartzComponentProps) 
       </div>
     </section>
   );
+
+  return (
+    <>
+      {masthead && <Masthead masthead={masthead} />}
+      {hub}
+    </>
+  );
 };
 
 HomeHub.beforeDOMLoaded = earlyScript;
 HomeHub.afterDOMLoaded = script;
 // 書卷格子的共用樣式（左欄選擇器也會載入同一份，重複無害）
 HomeHub.css = `${gridStyle}
-${style}`;
+${style}
+${mastheadStyle}`;
 
 export default (() => HomeHub) satisfies QuartzComponentConstructor;

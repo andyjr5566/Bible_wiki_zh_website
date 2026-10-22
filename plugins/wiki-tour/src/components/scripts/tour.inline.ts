@@ -1133,7 +1133,7 @@ function openHelp() {
     <div class="bwz-route">
       <div class="bwz-route-body">
         <div class="bwz-route-title">把網站變成手機 App</div>
-        <div class="bwz-route-meta">加入主畫面後，像一般 App 一樣從桌面直接打開，不用再透過瀏覽器。</div>
+        <div class="bwz-route-meta">加入主畫面後，像一般 App 一樣從桌面直接打開；讀過的頁面沒有網路也能打開。</div>
       </div>
       <div class="bwz-row"><button class="bwz-btn primary" type="button" data-h="install-guide">查看教學</button></div>
     </div>`

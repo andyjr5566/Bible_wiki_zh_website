@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf8f8">
+  <title>這一頁還沒存到這台裝置</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #faf8f8; color: #262222; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; padding: 2rem 1rem; background: #faf8f8; color: #262222; }
+    main { width: min(100%, 42rem); margin: 0 auto; }
+    h1 { margin: 0 0 0.9rem; font-size: clamp(1.6rem, 6vw, 2rem); line-height: 1.3; }
+    p { line-height: 1.7; }
+    .intro { margin: 0 0 1.25rem; }
+    button { min-height: 44px; padding: 0.65rem 1.2rem; border: 0; border-radius: 0.55rem; background: #7a1c1c; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    a { color: #741717; text-decoration: underline; text-underline-offset: 0.18em; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #145c9e; outline-offset: 3px; }
+    section { margin-top: 2rem; }
+    h2 { margin: 0 0 0.75rem; font-size: 1.2rem; }
+    ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid #c9c1c1; }
+    li { padding: 0.75rem 0; border-bottom: 1px solid #c9c1c1; overflow-wrap: anywhere; }
+    li a { display: inline-block; padding: 0.1rem 0; }
+    small { margin-left: 0.45rem; color: #514949; font-size: 0.85em; }
+    #empty { margin: 0; color: #514949; }
+    .home { margin-top: 1.5rem; }
+    @media (prefers-color-scheme: dark) {
+      :root, body { background: #191616; color: #f4eeee; }
+      button { background: #a84343; color: #fff; }
+      a { color: #ffc0c0; }
+      button:focus-visible, a:focus-visible { outline-color: #9dccff; }
+      ul { border-color: #625858; }
+      li { border-color: #625858; }
+      small, #empty { color: #d0c5c5; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>這一頁還沒存到這台裝置</h1>
+    <p class="intro">目前沒有網路。讀過的頁面會自動存在這台裝置上，可以離線開啟；這一頁還沒讀過，要等有網路才能打開。</p>
+    <button id="retry" type="button">重試</button>
+    <section id="saved-section" aria-labelledby="saved-heading">
+      <h2 id="saved-heading">已存的頁面</h2>
+      <p id="empty" hidden>這台裝置還沒有存任何頁面。</p>
+      <ul id="saved-pages"></ul>
+    </section>
+    <p class="home"><a id="home-link" href="/">回首頁</a></p>
+  </main>
+  <script>
+    (function () {
+      var retry = document.getElementById("retry");
+      retry.addEventListener("click", function () { location.reload(); });
+      window.addEventListener("online", function () { location.reload(); }, { once: true });
+
+      async function getSiteRoot() {
+        try {
+          if (navigator.serviceWorker) {
+            var controller = navigator.serviceWorker.controller;
+            if (controller && controller.scriptURL) return new URL("./", controller.scriptURL).href;
+            var registration = await navigator.serviceWorker.getRegistration();
+            if (registration && registration.scope) return registration.scope;
+          }
+        } catch (error) {}
+        return location.origin + "/";
+      }
+
+      function displayName(path) {
+        var decoded;
+        try { decoded = decodeURIComponent(path); } catch (error) { decoded = path; }
+        decoded = decoded.replace(/(?:\/index(?:\.html)?|\.html)$/i, "").replace(/\/+$/, "");
+        if (!decoded) return { title: "首頁", type: "" };
+        var parts = decoded.split("/").filter(Boolean);
+        if (parts[0] === "link_folder" && parts.length >= 3) {
+          return { title: parts[parts.length - 1], type: parts[1] };
+        }
+        // link_folder/人物/ 這類分類目錄頁
+        if (parts[0] === "link_folder" && parts.length === 2) return { title: parts[1], type: "分類" };
+        parts = parts.map(function (part) { return part.replace(/^\d+-/, ""); });
+        return { title: parts.join(" "), type: "" };
+      }
+
+      async function renderSavedPages(root) {
+        var section = document.getElementById("saved-section");
+        var list = document.getElementById("saved-pages");
+        var empty = document.getElementById("empty");
+        try {
+          var rootUrl = new URL(root);
+          var names = (await caches.keys()).filter(function (name) { return name.indexOf("bible-wiki-zh-") === 0; });
+          var pages = new Map();
+          var resourceExt = /\.(?:js|css|json|png|jpe?g|webp|svg|woff2?|ico|gif|avif|bmp|ttf|otf|eot|map|xml|txt|pdf|webmanifest|mp4|webm|mp3|wav|glb|gltf|zip|wasm)$/i;
+          for (var i = 0; i < names.length; i++) {
+            var cache = await caches.open(names[i]);
+            var requests = await cache.keys();
+            for (var j = 0; j < requests.length; j++) {
+              var pageUrl = new URL(requests[j].url);
+              if (pageUrl.origin !== rootUrl.origin || !pageUrl.pathname.startsWith(rootUrl.pathname)) continue;
+              var relativePath = pageUrl.pathname.slice(rootUrl.pathname.length);
+              if (relativePath === "sw.js" || relativePath.startsWith("static/") || resourceExt.test(relativePath)) continue;
+              var canonicalPath = pageUrl.pathname.replace(/(?:\/index(?:\.html)?|\.html)$/i, "").replace(/\/+$/, "") || rootUrl.pathname;
+              if (pages.has(canonicalPath)) continue;
+              pageUrl.search = "";
+              pageUrl.hash = "";
+              var name = displayName(relativePath);
+              pages.set(canonicalPath, { url: pageUrl.href, title: name.title, type: name.type });
+            }
+          }
+          var collator = new Intl.Collator("zh-Hant", { numeric: true });
+          var items = Array.from(pages.values()).sort(function (a, b) {
+            return collator.compare(a.title, b.title) || collator.compare(a.type, b.type);
+          });
+          if (!items.length) {
+            empty.hidden = false;
+            return;
+          }
+          items.forEach(function (item) {
+            var li = document.createElement("li");
+            var link = document.createElement("a");
+            link.href = item.url;
+            link.textContent = item.title;
+            li.appendChild(link);
+            if (item.type) {
+              var type = document.createElement("small");
+              type.textContent = item.type;
+              li.appendChild(type);
+            }
+            list.appendChild(li);
+          });
+        } catch (error) {
+          section.hidden = true;
+        }
+      }
+
+      getSiteRoot().then(function (root) {
+        document.getElementById("home-link").href = root;
+        return renderSavedPages(root);
+      });
+    })();
+  </script>
+</body>
+</html>

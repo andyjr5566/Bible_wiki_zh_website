@@ -1,11 +1,11 @@
 // 部署位置：網站根目錄的 sw.js（建置時由 quartz/plugins/emitters/static.ts 從 quartz/static/sw.js 複製）。
-// 策略：一律先抓網路（有網路時永遠是最新內容），失敗才用快取 → 看過的頁面可以離線開啟。
+// 策略：一律先抓網路（有網路時永遠是最新內容），失敗才用快取；看過的頁面可以離線開啟，沒看過的頁面顯示離線說明。
 // 只處理本站網址；Google 登入、雲端硬碟同步、搜尋 API 等其他網域的連線完全不經過這裡。
 //
 // 緊急撤回：把這個檔案的內容換成下面幾行再部署，所有訪客下次開網站時就會移除 Service Worker 與快取：
 //   self.addEventListener("install", () => self.skipWaiting())
 //   self.addEventListener("activate", (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.map((k) => caches.delete(k)))).then(() => self.registration.unregister())))
-const CACHE_NAME = "bible-wiki-zh-v3"
+const CACHE_NAME = "bible-wiki-zh-v4"
 // 快取筆數上限：快取無限增長時，瀏覽器在空間不足會「整個網域」一起清除，
 // 連 IndexedDB 裡尚未同步的個人筆記也會被清掉（dev-notes/personal-notes 03 §4.7）。
 const MAX_ENTRIES = 400
@@ -20,6 +20,7 @@ const ROOT_URL = new URL("./", self.location).href
 const APP_SHELL = [
   ROOT_URL,
   "./static/manifest.json",
+  "./static/offline.html",
   "./static/icons/icon-192.png",
   "./static/icons/icon-512.png",
   "./static/icons/apple-touch-icon.png",
@@ -34,16 +35,26 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((names) => Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))),
+      .then((names) =>
+        Promise.all(
+          names
+            .filter((n) => n.startsWith("bible-wiki-zh-") && n !== CACHE_NAME)
+            .map((n) => caches.delete(n)),
+        ),
+      ),
   )
   self.clients.claim()
 })
+
+// 安裝時預先存的項目（首頁、離線頁…）：最早寫入，修剪時不能刪，否則離線頁會在讀滿 400 頁後消失
+const APP_SHELL_URLS = new Set(APP_SHELL.map((p) => new URL(p, self.location).href))
 
 // 超過上限時刪除最早寫入的項目（Cache API 的 keys() 依插入順序）
 function trimCache(cache) {
   return cache.keys().then((keys) => {
     if (keys.length <= MAX_ENTRIES) return
-    return Promise.all(keys.slice(0, keys.length - MAX_ENTRIES).map((k) => cache.delete(k)))
+    const removable = keys.filter((k) => !APP_SHELL_URLS.has(k.url))
+    return Promise.all(removable.slice(0, keys.length - MAX_ENTRIES).map((k) => cache.delete(k)))
   })
 }
 
@@ -83,7 +94,19 @@ self.addEventListener("fetch", (event) => {
           if (cacheable(url, response)) maybeCache(request, response.clone())
           return response
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match(ROOT_URL))),
+        .catch(() =>
+          caches
+            .match(request)
+            .then((cached) => cached || caches.match(request, { ignoreSearch: true }))
+            .then((cached) => cached || caches.match(new URL("./static/offline.html", self.location).href))
+            .then((cached) => {
+              if (cached) return cached
+              return new Response("目前離線，這一頁還沒有存到這台裝置。", {
+                status: 503,
+                headers: { "Content-Type": "text/html; charset=utf-8" },
+              })
+            }),
+        ),
     )
     return
   }

@@ -133,7 +133,7 @@ export default (() => {
               if ("serviceWorker" in navigator) {
                 window.addEventListener("load", function () {
                   navigator.serviceWorker
-                    .register("${joinSegments(baseDir, "sw.js")}", { scope: "${baseDir}" })
+                    .register("${joinSegments(baseDir, "sw.js")}", { scope: "${baseDir}", updateViaCache: "none" })
                     .catch(function (error) {
                       console.error("Bible Wiki Service Worker registration failed:", error);
                     });
@@ -262,6 +262,11 @@ export default (() => {
                 line-height: 1;
                 cursor: pointer;
                 padding: 0.25rem;
+              }
+              .pwa-guide-offline-note {
+                margin: 0 0 0.9rem;
+                font-size: 0.9rem;
+                line-height: 1.5;
               }
               .pwa-guide-visual {
                 display: flex;
@@ -483,6 +488,7 @@ export default (() => {
                         '<span class="pwa-guide-title">📖 加入主畫面，像 App 一樣使用</span>' +
                         '<button id="pwa-guide-close" class="pwa-guide-close" aria-label="關閉">✕</button>' +
                         "</div>" +
+                        '<p class="pwa-guide-offline-note">加入後，讀過的頁面沒有網路也能打開。</p>' +
                         '<div class="pwa-guide-visual">' +
                         phoneMockupIOS +
                         '<span class="pwa-guide-visual-caption"><span class="pwa-guide-step-num">1</span>點下方工具列的「分享」<span class="pwa-nobr">圖示</span></span>' +
@@ -498,6 +504,7 @@ export default (() => {
                         '<span class="pwa-guide-title">📖 安裝成 App，體驗更順暢</span>' +
                         '<button id="pwa-guide-close" class="pwa-guide-close" aria-label="關閉">✕</button>' +
                         "</div>" +
+                        '<p class="pwa-guide-offline-note">加入後，讀過的頁面沒有網路也能打開。</p>' +
                         '<button id="pwa-guide-native-install" class="pwa-guide-install-btn" hidden>' + downloadIcon + ' 立即安裝</button>' +
                         '<div class="pwa-guide-visual">' +
                         phoneMockupAndroid +

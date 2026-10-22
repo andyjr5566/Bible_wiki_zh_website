@@ -1,0 +1,30 @@
+// 首頁刊頭：網站標題（h1）與兩行介紹（引言），內容來自筆記庫 index.md，取出規則見 src/lib/masthead.ts。
+// 任何情況都排在首頁區塊的第一個（比導覽卡、入口更前面）；原本在文章最上面的那一份用 CSS 藏起來。
+// 外觀不在這裡：刊頭的 h1、引言、段落、連結和文章共用 quartz/styles/custom.scss 的樣式（那邊的選擇器多列了 .bwz-masthead），
+// 因為外掛的 CSS 在最低的 cascade layer，主題的 `html[saved-theme] body h1` 等規則蓋得過這裡。
+
+// 排在第一：容器是 hub.scss 的 `.popover-hint:has(> .bwz-hub)`（flex、column），導覽卡與入口的 order 是 0／1
+.popover-hint:has(> .bwz-hub) > .bwz-masthead {
+  order: -1;
+}
+
+// 隱藏文章裡被搬走的原件（取出規則的 CSS 版本；規則本身只在 lib/masthead.ts 定義，兩邊要一起改，
+// test/mastheadCss.test.ts 會用 jsdom 對各種內容形狀驗證兩邊一致，並確認這裡的選擇器原文沒被改掉）：
+//   - 刊頭帶 data-bwz-masthead="…"，值是取出的元素（"h1"、"h1 hr"、"h1 blockquote"、"h1 blockquote hr"），
+//     沒畫刊頭時這些規則不啟動，頁面維持原狀。h1 一律隱藏；引言只有值裡有 blockquote 才藏（~= 是單字比對）；
+//     hr 只有值剛好是 "h1 hr"（接在 h1 後面）或 "h1 blockquote hr"（接在引言後面）才藏。
+//   - 用鄰接選擇器（h1:first-child + blockquote [+ hr]）：和取出規則一樣只認元素、略過空白與註解。
+//   - 範圍限在 .center 之內：懸浮預覽（.popover）裡的首頁自己有刊頭也有文章，不能影響目前這一頁。
+//   - display: none 而不是 visibility：螢幕閱讀器不會讀到第二個 h1。
+//   - !important：外掛的 CSS 在最低的 cascade layer，日後主題若對 blockquote 等設了 display，原件會冒出來變成重複的標題。
+.center:has(.bwz-masthead[data-bwz-masthead]) > article > .markdown-rendered > h1:first-child,
+.center:has(.bwz-masthead[data-bwz-masthead~="blockquote"]) > article > .markdown-rendered > h1:first-child + blockquote,
+.center:has(.bwz-masthead[data-bwz-masthead="h1 hr"]) > article > .markdown-rendered > h1:first-child + hr,
+.center:has(.bwz-masthead[data-bwz-masthead="h1 blockquote hr"]) > article > .markdown-rendered > h1:first-child + blockquote + hr {
+  display: none !important;
+}
+
+// 懸浮預覽：預覽整頁首頁時，文章自己就有標題與引言，刊頭只會讓標題出現兩次
+.popover .bwz-masthead {
+  display: none;
+}

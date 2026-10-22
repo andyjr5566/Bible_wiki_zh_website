@@ -49,10 +49,12 @@ export function mountButton(point: ReturnPoint, handlers: ButtonHandlers): () =>
   close.addEventListener("click", handlers.onClose)
 
   root.append(go, close)
-  document.body.append(root)
 
+  // 先擺好位置再放進頁面：樣式表對 bottom 有過渡動畫（給「加入主畫面」橫幅出現時用），
+  // 放進頁面後才改位置，按鈕會從手機的位置滑到桌機的位置，這段時間量到的位置不對。
   const place = () => placeOverCenterColumn(root)
   place()
+  document.body.append(root)
   window.addEventListener("resize", place)
   return () => {
     window.removeEventListener("resize", place)

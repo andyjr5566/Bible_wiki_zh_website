@@ -51,7 +51,14 @@ describe("applyMarks", () => {
     expect(hidden()).toHaveLength(first)
   })
 
-  it("標好之後 <html> 才有 data-ux-marked；換頁前先拿掉", () => {
+  it("研讀模式（預設）不在 <html> 留任何屬性", () => {
+    applyMarks()
+    expect(root.hasAttribute(MARKED_ATTR)).toBe(false)
+    expect(root.getAttributeNames().filter((n) => n.startsWith("data-ux"))).toEqual([])
+  })
+
+  it("純經文：標好之後 <html> 才有 data-ux-marked；換頁前先拿掉", () => {
+    root.setAttribute(VIEW_ATTR, "pure")
     applyMarks()
     expect(root.hasAttribute(MARKED_ATTR)).toBe(true)
     prepareForNav()
@@ -60,6 +67,7 @@ describe("applyMarks", () => {
 
   it("認不出經文清單（條目頁）時什麼都不標，也不提供純經文", () => {
     document.body.dataset.slug = "知識節點/安息"
+    root.setAttribute(VIEW_ATTR, "pure")
     applyMarks()
     expect(hidden()).toEqual([])
     expect(isPureAvailable()).toBe(false)

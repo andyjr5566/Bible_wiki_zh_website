@@ -46,7 +46,10 @@ export function applyMarks(): void {
     }
     for (const el of shown) el.classList.add(REVEAL_CLASS)
   }
-  document.documentElement.setAttribute(MARKED_ATTR, "")
+  // 「已標記」只在純經文時才有意義（防閃爍的 CSS 只針對純經文）；研讀模式不留屬性，<html> 才會和沒有這個功能時完全一樣
+  const html = document.documentElement
+  if (currentView() === "pure") html.setAttribute(MARKED_ATTR, "")
+  else html.removeAttribute(MARKED_ATTR)
 }
 
 /** 這一頁能不能用純經文（認得出經文清單的章節頁）。Aa 面板用它決定要不要顯示這一項。 */

@@ -149,7 +149,8 @@ function chapterReadyExpression() {
 
 async function waitChapter() {
   await waitFor(chapterReadyExpression(), 8000)
-  await waitFor(`document.documentElement.hasAttribute("data-ux-marked")`, 6000)
+  // 只有純經文才會有 data-ux-marked（研讀模式不在 <html> 留屬性）
+  await waitFor(`document.documentElement.getAttribute("data-ux-view") !== "pure" || document.documentElement.hasAttribute("data-ux-marked")`, 6000)
   await sleep(250)
 }
 
@@ -233,7 +234,8 @@ async function findNextChapterTarget(chapterNumber) {
     })
     if (!target) return null
     // 暫時顯示後頁面已捲到本章整理，連結可能在畫面外；用座標點擊前先捲進畫面
-    target.scrollIntoView({ block: "center" })
+    // 網站預設是平滑捲動：不指定 instant 的話，量到的座標是捲動途中的位置，點下去會點空
+    target.scrollIntoView({ block: "center", behavior: "instant" })
     const r = target.getBoundingClientRect()
     return JSON.stringify({ href: target.href, x: r.left + r.width / 2, y: r.top + r.height / 2, label: target.textContent.trim() })
   })()`)
@@ -541,7 +543,7 @@ async function testFreshTab() {
   let state
   for (let i = 0; i < 60; i++) {
     const raw = await evaluate(`(() => {
-      const ready = !!document.querySelector("article ol") && document.documentElement.hasAttribute("data-ux-marked")
+      const ready = !!document.querySelector("article ol") && (document.documentElement.getAttribute("data-ux-view") !== "pure" || document.documentElement.hasAttribute("data-ux-marked"))
       return ready ? JSON.stringify({
         attr: document.documentElement.getAttribute("data-ux-view"),
         storage: (() => { try { return sessionStorage.getItem("bwz-ux-view") } catch { return "ERR" } })(),

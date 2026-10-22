@@ -320,6 +320,25 @@ if (Test-Path $websiteSource) {
 }
 
 # ── Auto-transform appendix/website links in content .md files ──
+# 互動網站（家譜等）的連結若寫成相對路徑，Quartz 建置時會把 # 後面的部分當成頁內標題來 slug 化
+# （例如 #p=%E4%BF%9D%E7%BE%85 會變成 #p保羅），互動網站讀不到 #p=<人物代號>，點了不會跳到人物。
+# Quartz 不會改寫完整網址（https://...），所以含 # 的連結改用完整網址；baseUrl 從 quartz.config.yaml 讀。
+# 讀不到時退回相對寫法（同步不會失敗），只是該連結的 # 錨點可能失效。
+$siteBaseUrl = $null
+try {
+    $baseUrlLine = Get-Content -LiteralPath (Join-Path $repoPath 'quartz.config.yaml') -Encoding UTF8 -ErrorAction Stop |
+        Where-Object { $_ -match '^\s*baseUrl:' } | Select-Object -First 1
+    if ($baseUrlLine) {
+        $baseUrl = ($baseUrlLine -replace '^\s*baseUrl:\s*', '').Trim().Trim([char]'"', [char]"'").Trim().TrimEnd('/')
+        if ($baseUrl) { $siteBaseUrl = "https://$baseUrl" }
+    }
+} catch {
+    $siteBaseUrl = $null
+}
+if (-not $siteBaseUrl) {
+    Write-Host 'WARNING: baseUrl not found in quartz.config.yaml; links with # fall back to relative paths (the #p= anchor may break).'
+}
+
 Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
     $filePath = $_.FullName
     $fileContent = Get-Content -Path $filePath -Raw -Encoding UTF8
@@ -330,10 +349,16 @@ Get-ChildItem -Path $target -Recurse -Filter *.md | ForEach-Object {
         # 依層數累加 ".." 會在深度 2 以上（例如 appendix/website/index.md）多跳出站台根目錄而 404。
         $prefix = if ($depth -gt 0) { '..' } else { '.' }
 
-        $updated = [regex]::Replace($fileContent, '\[([^\]]+)\]\((?:\./)?(?:.*?/)?appendix/website/([^)]+)\)', {
+        # 同時支援一般形式 (path) 與角括號形式 (<path>)：Obsidian 對含中文或空白的路徑會寫成角括號，
+        # 不認得的話連結不會被轉換，網站上點了就是 404。路徑與前綴都不跨過 ")"、"<"、">"，避免同一行多個連結互相吞掉。
+        $updated = [regex]::Replace($fileContent, '\[([^\]]+)\]\(<?(?:\./)?(?:[^)<>\r\n]*?/)?appendix/website/([^)<>\r\n]+)>?\)', {
             param($match)
             $title = $match.Groups[1].Value
             $relPath = $match.Groups[2].Value
+            # 含 # 的連結用完整網址（見上方說明），並加 class 讓樣式藏掉 Quartz 加的外部連結箭頭。
+            if ($siteBaseUrl -and $relPath.Contains('#')) {
+                return "<a href=""$siteBaseUrl/static/website/$relPath"" class=""bwz-site-link"" target=""_blank"">$title</a>"
+            }
             return "<a href=""$prefix/static/website/$relPath"" target=""_blank"">$title</a>"
         })
         if ($updated -ne $fileContent) {

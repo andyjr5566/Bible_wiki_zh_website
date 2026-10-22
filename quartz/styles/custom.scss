@@ -485,6 +485,9 @@ article table [data-bar] { white-space: nowrap; }
   text-decoration: none;
 }
 
+/* 本站互動網站的完整網址連結（同步腳本加 class="bwz-site-link"，為了保留 #p= 人物指示）：Quartz 當成外部連結加了箭頭，其實是本站，藏起來 */
+a.bwz-site-link .external-icon { display: none; }
+
 /* 典雅 Popover 浮動卡片 (暗色/亮色自適應與毛玻璃) */
 .popover .popover-inner {
   border: 1px solid var(--tertiary);

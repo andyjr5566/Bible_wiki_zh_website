@@ -455,6 +455,11 @@
 - 截圖 22 張（首頁無紀錄／有紀錄／整頁、出埃及記 12 章、條目、手機抽屜 × 淺深 × 1440／390），scratchpad `b6/shots-final/`：都沒有橫向捲動、沒有 JS 例外；和使用者選定的樣稿一致。
 - 沒跑：site-ux `check.mjs`（要一個「沒有 site-ux」的基準站；本批沒動 site-ux，home-hub 子代理用同程式關掉 home-hub 的站比對，文章區截圖相同）。沒有實機與螢幕閱讀器測試。
 
+### 推上 main 之後（2026-10-23，`cbc2ebdc`）
+
+- 部署成功；GitHub 上的冒煙測試（smoke、regress、swcheck）全部通過。部署的內容檢查：首頁進度一致、壞連結 292 個（和上一次部署相同，本機的 298 是環境差異）。
+- 正式站實測（1440、390）：首頁入口有 66 卷（6 卷可點）、沒有紀錄時導覽卡在上、進度表預設收合；出埃及記 12 章左欄 40 個章號、目前第 12 章、探索沒有書卷資料夾、手機章末有章號格；捲到一半回首頁，卡片「出埃及記 第 12 章／上次讀到這一章的中段 · 剛剛」、入口移到導覽卡上面；沒有 JS 例外。
+
 ### 注意
 
 - 外掛 import `quartz/util`（共用資料層），建置外掛要保留相對位置：用 scratchpad `b6/build-plugin-mirror.ps1`（`-Name home-hub -Extra @("plugins\book-picker")`）。home-hub 的 dist 打包了 book-picker 的格子，**改 book-picker 的 BookGrid／樣式後要重建 home-hub**。

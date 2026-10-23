@@ -601,3 +601,9 @@
   - 本機沒有各網站的 `dist/`（CI 才建），部署檢查在本機會列出缺 dist，CI 上不會。
   - 新網站同步進來後會自動出現；封面要用 `node scripts/capture-covers.mjs <key>` 補拍（先在 `config/interactive-sites.json` 寫 crop），類型也寫在那裡。
 - 沒做：實機測試。
+
+### 推上 main 之後（2026-10-23，`f1df80ff`）
+
+- 部署、冒煙測試都成功；部署裡的「Interactive sites check」沒有任何警告（9 個網站的 dist、封面、類型都齊）。
+- 正式站實測：互動網站檢查 `--full` 124/124（手機、桌機、手機深色）。
+- 總入口的分頁標題與麵包屑要等下次同步才會變成「互動網站」。

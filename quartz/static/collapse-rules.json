@@ -2,19 +2,23 @@
     "sections":  [
                      {
                          "title":  "本章知識節點",
-                         "subheadings":  false
+                         "subheadings":  false,
+                         "books":  false
                      },
                      {
                          "title":  "來源依據",
-                         "subheadings":  false
+                         "subheadings":  false,
+                         "books":  false
                      },
                      {
                          "title":  "按書卷研讀",
-                         "subheadings":  false
+                         "subheadings":  false,
+                         "books":  false
                      },
                      {
                          "title":  "按書卷累積",
-                         "subheadings":  true
+                         "subheadings":  false,
+                         "books":  true
                      }
                  ]
 }

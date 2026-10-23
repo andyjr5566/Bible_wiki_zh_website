@@ -108,16 +108,20 @@ async function _navigate(url: URL, isBack: boolean = false) {
   html.body.appendChild(announcer)
 
   document.querySelector(".navigation-progress")?.remove()
+  // 換內容「之前」就瞬間回到頁首：新頁比較短時，換完內容瀏覽器會先把畫面夾到新頁最底；
+  // 原本換完才用平滑捲動回頂端（base.scss 的 scroll-behavior: smooth），動畫晚 0.3～3 秒才動，
+  // 期間任何按鍵或其他腳本的捲動都會打斷它，畫面就停在最底部。
+  if (!isBack && !url.hash) {
+    window.scrollTo({ top: 0, behavior: "instant" })
+  }
   micromorph(document.body, html.body)
 
   // scroll into place and add history
-  if (!isBack) {
-    if (url.hash) {
-      const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
-      el?.scrollIntoView()
-    } else {
-      window.scrollTo({ top: 0 })
-    }
+  if (!isBack && url.hash) {
+    // 同一個理由，換頁後對準錨點也用瞬間定位；找不到目標就留在頁首
+    const el = document.getElementById(decodeURIComponent(url.hash.substring(1)))
+    if (el) el.scrollIntoView({ behavior: "instant" })
+    else window.scrollTo({ top: 0, behavior: "instant" })
   }
 
   // now, patch head, re-executing scripts

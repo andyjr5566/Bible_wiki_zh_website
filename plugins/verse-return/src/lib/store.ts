@@ -7,6 +7,12 @@ import {
   serializeReturnPoint,
   type ReturnPoint,
 } from "../../../../quartz/util/returnPoint"
+import {
+  ENTRY_LANDING_KEY,
+  parseEntryLanding,
+  serializeEntryLanding,
+  type EntryLanding,
+} from "../../../../quartz/util/entryLanding"
 
 export interface StorageLike {
   getItem(key: string): string | null
@@ -45,5 +51,34 @@ export function clearReturnPoint(storage: StorageLike | null = sessionStore()): 
     storage?.removeItem(RETURN_POINT_KEY)
   } catch {
     // 清不掉就算了；下一次讀取仍會驗證格式
+  }
+}
+
+export function readEntryLanding(
+  storage: StorageLike | null = sessionStore(),
+  now = Date.now(),
+): EntryLanding | null {
+  try {
+    return parseEntryLanding(storage?.getItem(ENTRY_LANDING_KEY), now)
+  } catch {
+    return null
+  }
+}
+
+export function writeEntryLanding(landing: EntryLanding, storage: StorageLike | null = sessionStore()): boolean {
+  try {
+    if (!storage) return false
+    storage.setItem(ENTRY_LANDING_KEY, serializeEntryLanding(landing))
+    return true
+  } catch {
+    return false
+  }
+}
+
+export function clearEntryLanding(storage: StorageLike | null = sessionStore()): void {
+  try {
+    storage?.removeItem(ENTRY_LANDING_KEY)
+  } catch {
+    // 清不掉就算了；下次導覽仍會略過這筆記錄
   }
 }

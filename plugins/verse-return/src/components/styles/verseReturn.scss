@@ -134,3 +134,41 @@ html.bwz-touring .bwz-vr {
     box-shadow: 0 0 0 3px var(--secondary);
   }
 }
+
+/* 條目標題下的「↓ 某章的相關內容」：做成和左欄「換卷」一樣的外框膠囊（次要按鈕），不搶標題。
+   顏色用站台的強調色變數，淺色／深色主題跟著換，不必各寫一份。 */
+.bwz-vr-related {
+  display: inline-flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+  max-width: 100% !important;
+  margin: 0 0 1.25rem !important;
+  padding: 0.45rem 0.95rem !important;
+  border: 1px solid color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 50%, var(--lightgray)) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font: inherit !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+  white-space: normal !important;
+  cursor: pointer !important;
+
+  &:hover {
+    background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 8%, transparent) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-accent-strong, var(--secondary)) !important;
+    outline-offset: 3px !important;
+  }
+}
+
+@media print {
+  .bwz-vr-related {
+    display: none !important;
+  }
+}

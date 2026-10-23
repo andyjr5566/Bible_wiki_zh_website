@@ -21,7 +21,7 @@ export interface JumpHandle {
 const MOBILE_QUERY = "(max-width: 800px)"
 
 /** 手機黏在頂端的工具列與章節快捷列佔掉的高度（桌機沒有，回傳 0）。 */
-function topObstruction(): number {
+export function topObstruction(): number {
   if (!window.matchMedia(MOBILE_QUERY).matches) return 0
   let total = 0
   const toolbar = document.querySelector<HTMLElement>(".sidebar.left")

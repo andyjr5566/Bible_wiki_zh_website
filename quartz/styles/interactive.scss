@@ -623,3 +623,15 @@ a.bwz-ia-ch:focus-visible {
     transition: none;
   }
 }
+
+/* 點上方一行跳到小卡標題時，標題不要被手機的頂端列＋章節快捷列蓋住。
+   --bwz-cqb-h 由 chapterQuickBar.inline.ts 設定（兩條加起來的高度），但快捷列要捲過頁首才出現、才設變數，
+   從頁首點上方一行時還沒有，所以手機上的退回值用快捷列出現後的實際高度（約 7.75rem）。
+   手機的 html 已有 4rem 的 scroll-padding-top，這裡只補差額；桌機沒有快捷列，留一點間距就好。 */
+article h3[id="互動網站"] {
+  scroll-margin-top: 0.75rem;
+
+  @media (max-width: 800px) {
+    scroll-margin-top: calc(var(--bwz-cqb-h, 7.75rem) - 4rem + 0.75rem);
+  }
+}

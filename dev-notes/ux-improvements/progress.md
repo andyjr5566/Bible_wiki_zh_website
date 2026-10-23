@@ -478,7 +478,7 @@
 
 | 任務 | 給誰 | 結果 | 採用 | 主導者修了什麼 |
 |---|---|---|---|---|
-| 首頁刊頭 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b6-order` | 進行中 | | |
+| 首頁刊頭 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b6-order` | `plugins/home-hub/src/lib/masthead.ts`（純函式）＋`Masthead.tsx`＋`masthead.scss`；custom.scss 讓刊頭套用文章樣式。新訪客順序：刊頭 112 → 導覽卡 394 → 入口 536（舊版標題在 1029）。vitest 67/67、ordercheck 154/154（12 個狀態每幀順序正確、只有一個可見 h1、外觀與原件一致）、hubcheck 49/49、hubaxe 18/18、smoke 27/27、regress 15/15、tourcheck 20/20＋24/24（完整內容） | 採用（`bbd968e9`，併入第 7 批分支 `e65f86e4`，使用者選「等第 7 批一起 push」） | 主導者追加兩點（同一子代理續做）：刊頭 h1 帶原件 id，讓右欄目錄第一項能捲到刊頭（原件 display:none，沒有 aria 指向它）；放寬規則為「第一個是 h1 就搬，引言與 hr 可選」 |
 
 ### 注意
 
@@ -500,6 +500,25 @@
 | 樣稿 | 主導者 | 注入正式站出埃及記 12 章，16 張（`b7/mock.mjs`、`gen.mjs`） | 概要收合／展開、點段落標示經文、↑回經文、回到經節膠囊、純經文、快捷列「分段」與底部清單、方案 C 段落小標、經節面板 | | 純經文誤留本章整理裡的表格 → 只留導覽表格；段落小標和節號重疊 → 改成小標在上方；快捷列改名沒生效 → 重拍 |
 | 樣稿審查 | gemini-4-argon-high → 429（約 45 小時後重置），改 gemini-3.8-flash-high（唯讀） | 附 18 張截圖審體驗 | 高：範圍紫線蓋到節號（樣稿 CSS 錯，已修）、左下膠囊蓋內文與桌機左欄、深色段落小標太暗；中：概要預設收合、「整理↓」用詞、純經文弱化連結；推薦方案 C 一起做、經節面板暫緩 | 修了紫線；回到經節另拍頂端橫條與底部置中兩種位置給使用者選 | |
 | 問使用者 | 主導者 | 五輪 | 使用者看不懂「分段」的用途 → 主導者用示意圖重講後，使用者決定這批不做分段；其餘決定見 README U-23（純經文先選「記住」，後來改成「只在這個分頁有效」）。最後回「要做」 | | |
+| 文案審查 | gemini-3.8-flash-high（唯讀） | 按鈕、Aa 新項目文案 | 建議「回」→「返回」、「閱讀內容」→「閱讀模式」、× 改成清楚的名稱 | 採用這三點；使用者確認定稿 | 沒採用「本章整理」縮成「章整理」（網站用詞是本章整理）、說明小字太文言 → 主導者改寫 |
+| 純邏輯 | Codex gpt-6-luna xhigh（workspace-write 成功） | `returnPoint.ts`、`chapterRegions.ts`＋測試 | quartz/util 148/148；LF、無 BOM | 採用（`f5cddf15`） | 按鈕文字改成定稿「↩ 返回」；chapterRegions 補檔頭說明（`8b64cfa0`）。主導者第一次用編輯工具改 worktree 的檔失敗（沒先讀檔）但 commit 照樣送出，所以修正另成一個 commit |
+| 介面 | Claude sonnet 子代理（第 2 級），worktree `bwz-wt-b7-ui` | plugins/verse-return（回到經節）、site-ux 純經文 | 做到一半碰到 Sonnet 用量上限（03:2x，05:30 重置），05:21 由同一子代理續做。verse-return 外掛（36 個單元測試）、site-ux 純經文（63）、共用 `chapterDom.ts`／`revealEvent.ts`、restorePlan 搬到 quartz/util；e2e：verse-return check 92/92（要用 `e2e/make-content.mjs` 產生有條目的內容站）、axe 20/20 | 採用（`8b4aaa79`、`6d030175`） | 主導者審查時抓到 `selectStudyRegion` 的 `/s+/` 少了反斜線（會刪掉字母 s 而不是空白）→ 兩處共用 `normalizedHeading()`，補「📝 本章　整理」測試。按返回不捲動的根因：`jump.ts` 在桌機也把整條 sticky 左欄當成頂端遮擋，可見範圍算成 0 → 只在手機計入 |
+| 純經文 e2e | Codex gpt-6-luna xhigh：workspace-write 失敗（`setup refresh had errors`），改 stdin 模式 | `plugins/site-ux/e2e/purecheck.mjs` | 腳本產出；主導者跑起來 21/50 → 查出腳本的選擇器引號寫錯（雙引號包雙引號）、點下一章前沒捲進畫面 → 修好後 51/51；手動驗證純經文功能正常 | 採用 | 兩處腳本修正 |
+| 主導者驗證 | 主導者 | test_content 站（合併首頁刊頭修正後） | smoke 27/27、regress 15/15、hubcheck 49/49、book-picker 94/94、purecheck 51/51；verse-return e2e 83/91：修了三處腳本的測試資料假設（test_content 的條目沒有再連出去的連結 → 改用 SPA 換頁）與點不到元素就當掉；**剩下真的問題：按「返回」後沒有捲到那一節／那個標題、之後一般換頁 scrollY 1500**，另有懸停預覽、儲存封鎖時的例外要查 | 子代理修好（見上一列） | |
+| 合併後驗收第一輪 | 主導者 | 主 repo 建 test_content 站、make-content 站、關掉 site-ux 的真基準站 | 4 個重現的失敗交回同一子代理：① 研讀模式也在 `<html>` 設 `data-ux-marked`，和改動前不同（site-ux check 對真基準站 114/118；子代理之前拿同一站自己比自己，沒驗到）→ 只在純經文設；② 按鈕出現時從手機位置滑到桌機位置（`bottom` 有過渡動畫）→ 先擺好位置再放進頁面；③④ purecheck、ordercheck 在平滑捲動途中量座標 → 改 instant | 採用（`6d030175`） | |
+| 6 卷抽樣 | Codex gpt-6-luna xhigh（stdin 模式） | `plugins/verse-return/e2e/booksample.mjs`：6 卷 × 首中末章＋手機 2 章，研讀／純經文／回到經節／JS 例外 | 腳本產出，但 Codex 用猜的 API（啟動 Chrome、waitFor 吃函式、s.go 傳完整網址、網址編碼不一致、找不到 Aa 鈕） | 採用 | 主導者改成 helpers 的 `open()`、自己輪詢、相對路徑、解碼比對、`.site-ux-btn`；研讀模式沒有屬性要當 study；經文連結折成兩行時點第一行；點擊前把滑鼠移開 |
+| 手機導覽 23/24 | 同一子代理 | 完整內容站手機導覽「框起來的位置包含筆記面板標題」每次失敗（正式站 24/24） | 根因不在本批外掛：導覽每站只捲一次，但長章節在字型載入後重新換行、頁高長約 2,000 px，筆記面板下移，聚光圈落到畫面外；舊測試是碰巧通過（字型延遲 0／1200／2500 ms 三種結果不同），本批改變了腳本載入順序才露出來 | 採用（`5dd968c1`） | 導覽改成：目標在文件裡的位置變動超過 8 px 就重捲（每站最多 4 次；讀者自己捲不會改變文件位置，所以不搶捲動），規則在 `quartz/util/tourShift.ts`＋測試；主導者把 import 移到檔頭說明之後 |
+
+### 合併後驗收（主導者，`5dd968c1`）
+
+- 單元測試：quartz/util 156/156、verse-return 36/36、site-ux 63/63、home-hub 67/67。
+- test_content 站：smoke 27/27、regress 15/15、swcheck 13/13、nodecheck 10/10、stickycheck 21/21、expcheck 9/9、site-ux check 118/118（對關掉 site-ux 的真基準站）、purecheck 51/51、朗讀 42/42、hubcheck 49/49、hubaxe 18/18、ordercheck 142/142、book-picker 94/94。make-content 站：verse-return check 92/92、axe 20/20。
+- 完整內容建置（3,756 頁、10,301 個檔、7 分鐘；經文清單檢查 211 章通過）：tourcheck 桌機 20/20、手機 24/24；purecheck 51/51；hubcheck 49/49；axe 20/20；6 卷抽樣 280/280（每章研讀不藏、純經文藏對區塊且經文與前後章表格可見、沒有橫向捲動、經文連結到條目再按「↩ 返回」回到那一節在畫面中間）。
+- 截圖（出埃及記 12 章純經文章末、條目頁的按鈕、返回後 × 淺深 × 1440／390），scratchpad `b7/final/shots/`：沒有 JS 例外、沒有橫向捲動；返回後第 6 節在畫面中間。
+- 發現但不在本批範圍：
+  - 內容：創世記 50、民數記 36 的 Mermaid 時間軸語法錯誤（`Parse error on line 3`），圖畫不出來（content/ 不由網站程式改）。
+  - 既有問題（正式站也有）：SPA 換頁時滑鼠停著，新頁同位置的連結觸發的懸停預覽不會自己收起（Quartz popover 的 mouseleave 沒觸發）；預覽 z-index 999 高於按鈕的 880，卡住時可能蓋住「↩ 返回」。
+- 沒做：實機與螢幕閱讀器測試。
 
 ## 第 8～9 批：大改版
 

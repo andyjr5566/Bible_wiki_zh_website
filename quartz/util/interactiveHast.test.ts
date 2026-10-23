@@ -110,7 +110,7 @@ const overrides: Record<string, SiteOverride> = {
   "摩西五經/律法地圖": {
     type: "查詢工具",
     deepLink: "#/ref/{short}{chapter}",
-    deepLabel: "直接開到「{book} {chapter} 章」的律法",
+    deepLabel: "直接跳到「{book} {chapter} 章」的律法",
   },
   "摩西五經/耶和華的節期": { type: "年曆導覽" },
   "全聖經/亞當到耶穌": {
@@ -317,7 +317,7 @@ test("出埃及記 12：小卡接在相關地圖後，排序、deep link 與封�
   const lawFrame = byClass(card, "bwz-ia-frame")[1]
   const lawLinks = descendants(lawFrame).filter((node) => node.tagName === "a" && node.properties.target === "_blank")
   assert.ok(lawLinks.every((node) => String(node.properties.href).endsWith("#/ref/出12")))
-  assert.equal(nodeText(byClass(lawFrame, "bwz-ia-deep")[0]), "直接開到「出埃及記 12 章」的律法")
+  assert.equal(nodeText(byClass(lawFrame, "bwz-ia-deep")[0]), "直接跳到「出埃及記 12 章」的律法")
   assert.equal(
     (() => {
       const cover = byClass(lawFrame, "bwz-ia-art")[0].children[0]

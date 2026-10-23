@@ -191,7 +191,9 @@ async function mountWhenReady(verses: Verse[], generation: number): Promise<void
   player = currentPlayer
   activeBar = bar
   activeVerses = verses
-  list.before(bar)
+  // 互動網站的上方一行（建置時插在經文正前方，U-24）要在朗讀列下面、緊貼第 1 節，所以朗讀列放在它前面
+  const interactiveLine = list.previousElementSibling
+  ;(interactiveLine?.classList.contains("bwz-ia-line") ? interactiveLine : list).before(bar)
 
   button.addEventListener("click", () => {
     if (player !== currentPlayer) return

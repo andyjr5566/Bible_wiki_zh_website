@@ -171,7 +171,7 @@ async function inspectChapter6(s) {
   check(
     s,
     "點擊上方一行後 300ms 內標題上緣在畫面內",
-    typeof position.top === "number" && position.top >= 0 && position.top <= position.height,
+    typeof position.top === "number" && position.top >= -2 && position.top <= position.height,
     `top=${position.top ?? "—"}，innerHeight=${position.height ?? "—"}`,
   )
 

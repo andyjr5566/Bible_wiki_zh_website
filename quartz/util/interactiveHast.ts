@@ -33,7 +33,7 @@ const WORDS = {
   allSites: "全部互動網站 →",
   intro: "方舟有多大？十二支派怎麼圍著會幕紮營？這些網站把經文畫成場景和地圖，可以自己動手看。點了會開新分頁。",
   wideHeading: "貫穿好幾卷書",
-  axisHeading: "依經文的位置",
+  axisHeading: "依聖經順序",
   sourceHeading: "依章節的清單",
   coverageLabel: "涵蓋的書卷",
   legend: "數字是涵蓋的章數",

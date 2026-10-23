@@ -41,7 +41,7 @@ const overrides: Record<string, SiteOverride> = {
   "摩西五經/律法地圖": {
     type: "查詢工具",
     deepLink: "#/ref/{short}{chapter}",
-    deepLabel: "直接開到「{book} {chapter} 章」的律法",
+    deepLabel: "直接跳到「{book} {chapter} 章」的律法",
   },
   "摩西五經/耶和華的節期": { type: "年曆導覽" },
   "全聖經/亞當到耶穌": {
@@ -371,7 +371,7 @@ test("deepLinkFor substitutes book tokens and checkRegistry reports incomplete s
   assert.ok(ark)
   assert.deepEqual(deepLinkFor(lawMap, { book: 2, chapter: 25 }), {
     hash: "#/ref/出25",
-    label: "直接開到「出埃及記 25 章」的律法",
+    label: "直接跳到「出埃及記 25 章」的律法",
   })
   assert.equal(deepLinkFor(ark, { book: 1, chapter: 6 }), null)
 

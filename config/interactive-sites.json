@@ -3,7 +3,7 @@
     "摩西五經/律法地圖": {
       "type": "查詢工具",
       "deepLink": "#/ref/{short}{chapter}",
-      "deepLabel": "直接開到「{book} {chapter} 章」的律法",
+      "deepLabel": "直接跳到「{book} {chapter} 章」的律法",
       "cover": { "crop": [120, 90, 960, 600] }
     },
     "摩西五經/耶和華的節期": {

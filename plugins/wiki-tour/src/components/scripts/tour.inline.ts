@@ -1189,7 +1189,7 @@ function openHelp() {
     </div>
     <h4>延伸探索</h4>
     <dl class="bwz-keys">
-      <dt>互動網站</dt><dd>把經文的場景做成可以操作的網頁。首頁的「互動網站」可以看全部；讀到有互動網站的章節，經文上方會提示。各卷〈全書目錄及綱要〉最下方也有。<a data-h="doc" data-slug="${SLUG.websites}">看全部 →</a>　<a data-h="outline">看出埃及記的例子 →</a></dd>
+      <dt>互動網站</dt><dd>把經文畫成場景和地圖，可以自己動手看。讀到有互動網站的章節，經文上方會提示；各卷〈全書目錄及綱要〉最下方也有。<a data-h="doc" data-slug="${SLUG.websites}">看全部 →</a>　<a data-h="outline">看出埃及記的例子 →</a></dd>
       <dt>聖經地圖</dt><dd>章節頁最下方的「附錄 · 相關地圖」，或從 <a data-h="maps">地圖索引</a> 進入。</dd>
       <dt>導讀影片</dt><dd>大衛鮑森舊約縱覽，同樣放在各卷〈全書目錄及綱要〉。</dd>
       <dt>我的筆記</dt><dd>每一章最下方可以寫自己的研經筆記，登入 Google 後手機、電腦同步。<a data-h="doc" data-slug="my-notes">看我的筆記 →</a>　<a data-h="doc" data-slug="教學/個人筆記使用說明">怎麼用 →</a></dd>
@@ -1310,7 +1310,7 @@ function mountHints() {
     tip.className = "bwz-hint-tip"
     tip.innerHTML = `
       <span class="bwz-seal" aria-hidden="true">新</span>
-      <div><p><b>每卷書的互動網站都收在這裡。</b>把某一章的場景做成可以操作的網頁，例如方舟、會幕、曠野的路線。點了會在新分頁開啟。想一次看全部，到首頁按「互動網站」；讀到有互動網站的章節，經文上方也會提示。</p>
+      <div><p><b>每卷書的互動網站都收在這裡。</b>把經文畫成場景和地圖，可以自己動手看，例如方舟、會幕、曠野的路線。點了會在新分頁開啟。想一次看全部，到首頁按「互動網站」；讀到有互動網站的章節，經文上方也會提示。</p>
       <button class="bwz-btn" type="button">知道了</button></div>`
     h.after(tip)
     $("button", tip)!.addEventListener("click", () => {

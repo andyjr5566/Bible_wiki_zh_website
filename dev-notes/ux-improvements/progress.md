@@ -525,6 +525,22 @@
 - 部署成功；GitHub 上的冒煙測試通過。
 - 正式站實測：首頁有刊頭（`data-bwz-masthead`）；6 卷抽樣 280/280（純經文、回到經節都在真實章節上正常）；手機導覽 24/24。
 
+### 第 7 批後續（分支 `fix/mermaid-and-entry-landing`，2026-10-23）
+
+使用者回報兩件事：創世記 50、民數記 36 的 Mermaid 圖畫不出來；點知識節點（後來補充：地圖也是）有時落在新頁最底部。落點設計討論後使用者選「停在頂端＋標題下一顆『↓ 出埃及記 12 的相關內容』」、三種來源都一樣、按下展開＋捲到＋短暫標示，回「要做」。
+
+| 任務 | 給誰 | 結果 | 採用 | 主導者修了什麼 |
+|---|---|---|---|---|
+| Mermaid | Claude sonnet 子代理 | 照站上流程（mermaid 11.4.0、先 `innerHTML = innerText` 再解析）的檢查器 `scratchpad/mermaid/check-mermaid.mjs`：vault 282 個圖、9 個 timeline 壞（時期文字裡的半形 `:`；`&#58;` 會被站上的渲染還原成 `:`）→ 在 vault 改成全形 `：`（使用者同意先改 vault 再同步；先備份），`sync_content.ps1 -NoPush` 後只有這 9 檔有內容變更；完整建置 9 頁都是 SVG | 採用（`88fb5fe1`） | 3 個只差行尾的檔案還原、不提交 |
+| 落底根因 | Claude sonnet 子代理（只調查） | `spa.inline.ts` 先 micromorph（短頁被夾到底）再平滑 `scrollTo(0)`，動畫晚 0.3～3 秒才動，期間任何捲動都會打斷；地圖頁同因。自然操作 0/217 落底，換頁後送一個方向鍵 8/10 落底；條目結構：3,381 個條目都有「按書卷累積」，每章一個 `h4 > a[data-slug]` | 拿來設計與修 | |
+| 落底修正＋e2e | Codex gpt-6-luna xhigh（沙箱壞了，改成把檔案全文放進提示詞） | 換內容之前就 instant 回頁首；有錨點時換頁後 instant 定位。`landingcheck.mjs`：修正前完整站「換頁後閃到底」最高 scrollY 7,471，修正後 0 | 採用（`a4664495`） | 手動套用（diff 行號不符）、改寫註解 |
+| 相關內容按鈕 | Codex gpt-6-luna xhigh（同上） | `quartz/util/entryLanding.ts`（記錄格式、要不要顯示、按鈕文字）＋測試、verse-return 的 `relatedButton.ts`、recorder／store／inline | 採用（`a4664495`） | Codex 刪了既有的「為什麼」註解 → 補回；`jump.ts` 只留 `export topObstruction`；標示計時兩處各設一次 → 只留呼叫端；寫死的顏色 → 改用站台強調色變數（照左欄「換卷」膠囊） |
+| 按鈕 e2e | Codex gpt-6-luna xhigh | `relatedcheck.mjs`（經文／本章知識節點／本章整理、直接開、重新整理、條目跳條目、儲存封鎖、手機深色） | 採用 | 腳本挑到標題錨點（`#主題`）→ 排除 role=anchor 與同頁連結；「約書亞記 3 → 比利洗人」主導者原以為沒有該章段落（只數了 accumulation 註解），實際 h4 在 → 改成「沒有註解也要有按鈕」 |
+
+- 驗收（`a4664495`＋測試腳本）：quartz/util 161/161、verse-return 40/40；test_content 站 smoke 27/27、regress 15/15、swcheck 13/13、nodecheck 10/10、stickycheck 21/21、expcheck 9/9、site-ux 118/118、purecheck 51/51、朗讀 42/42、hubcheck 49/49、hubaxe 18/18、ordercheck 142/142、book-picker 94/94、verse-return 92/92、axe 20/20；完整內容站 tourcheck 20/20＋24/24、purecheck 51/51、hubcheck 49/49、axe 20/20、6 卷抽樣 280/280、relatedcheck 33/33＋4/4＋17/17、landingcheck 4/4（手機兩項因底部找不到連結略過）。
+- 截圖：scratchpad `el/btnshots/`（按鈕在標題下、淺深 × 1440／390）、`el/rel/`（按下後第12章在畫面上方並標示）。
+- 注意：Codex 這天的沙箱連唯讀指令都無法執行（`setup refresh had errors`）；改法是把需要的檔案全文放進 stdin、要它輸出完整檔案。
+
 ## 第 8～9 批：大改版
 
 （尚未開始）

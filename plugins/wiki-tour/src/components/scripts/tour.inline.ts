@@ -5,6 +5,7 @@
 //   3. `?` 說明中心、右下角問號按鈕，以及〈全書目錄及綱要〉的「互動網站」情境提示點
 //
 // 所有 UI 掛在 <html> 底下（不是 <body>），SPA 換頁時 body 被替換也不會被清掉。
+import { shouldRescrollAfterShift } from "../../../../../quartz/util/tourShift"
 
 type Status = "new" | "active" | "paused" | "done" | "dismissed"
 
@@ -563,6 +564,9 @@ let st: TourState = loadState()
 let lastStepId = ""
 // 這一站是否已把目標捲進畫面；目標晚一點才出現（例如筆記面板非同步載入）時，出現後補捲一次
 let scrolledStepId = ""
+// 導覽捲到目標時，目標在整份文件裡的位置；之後這個位置變了（字型載入、區塊延後加入）就要重新捲。規則在 quartz/util/tourShift.ts
+let scrolledDocTop = 0
+let rescrolls = 0
 let busy = false
 let ticker: ReturnType<typeof setInterval> | undefined
 
@@ -664,10 +668,35 @@ function check() {
     const t = s.targets().filter(visible)[0]
     if (t) {
       scrolledStepId = s.id
+      rescrolls = 0
+      scrolledDocTop = docTopOf(t)
       bringIntoView(t)
     }
+  } else if (scrolledStepId === s.id && onPage(s)) {
+    rescrollIfShifted(s)
   }
   place(s)
+}
+
+function docTopOf(target: Element): number {
+  return target.getBoundingClientRect().top + window.scrollY
+}
+
+/** 目標上方的內容在導覽捲動之後又長高或縮短了（例如網頁字型載入後文字重新換行），目標就跑到畫面外：重新捲一次。 */
+function rescrollIfShifted(s: Step) {
+  const t = s.targets().filter(visible)[0]
+  if (!t || t.closest(".sidebar, .search-container")) return
+  const position = getComputedStyle(t).position
+  const shift = {
+    scrolledDocTop,
+    nowDocTop: docTopOf(t),
+    rescrolls,
+    followsViewport: position === "fixed" || position === "sticky",
+  }
+  if (!shouldRescrollAfterShift(shift)) return
+  rescrolls += 1
+  bringIntoView(t)
+  scrolledDocTop = shift.nowDocTop
 }
 
 function resetStepFlags(s: Step) {
@@ -704,6 +733,8 @@ function show() {
   s.ensure?.()
   const target = s.targets()[0]
   scrolledStepId = target ? s.id : ""
+  rescrolls = 0
+  scrolledDocTop = target ? docTopOf(target) : 0
   bringIntoView(target)
   place(s)
 }

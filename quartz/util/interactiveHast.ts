@@ -128,8 +128,9 @@ export function describeChapterNodes(root: Root): DescribedNodes {
   return { descriptions, rootIndices }
 }
 
+// 建置時（renderPage）表格還是裸的 <table>，div.table-container 是之後轉 JSX 才包上的，所以兩種都要認
 function isNavigationTable(node: Element): boolean {
-  if (!hasClass(node, "table-container")) return false
+  if (node.tagName !== "table" && !hasClass(node, "table-container")) return false
   const text = nodeText(node)
   return text.includes(WORDS.previous) || text.includes(WORDS.next)
 }

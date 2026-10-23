@@ -81,8 +81,9 @@ const toc = "/" + encodeURI("01-創世記/全書目錄及綱要")
 const waitFor = async (expr, timeout = 6000) => { for (let t = 0; t < timeout; t += 100) { if (await ev(expr)) return true; await sleep(100) } return false }
 const j = async (expr) => JSON.parse(await ev(`JSON.stringify(${expr})`))
 // 經文清單（朗讀列正下方的 ol）每節的朗讀文字（略過 .bwz-v-ui / [hidden]，空白整理）
-const EXPECTED = `(() => { const ol = document.querySelector('.bwz-ra')?.nextElementSibling; if (!ol) return []; return [...ol.children].filter(c => c.tagName === 'LI').map(li => { const c = li.cloneNode(true); c.querySelectorAll('.bwz-v-ui,[hidden],script,style').forEach(e => e.remove()); return c.textContent.replace(/\\s+/g, ' ').trim() }) })()`
-const lis = `[...document.querySelector('.bwz-ra').nextElementSibling.children].filter(c => c.tagName === 'LI')`
+// 朗讀列和經文之間可能夾著互動網站的上方一行（U-24：一行在朗讀列下面、緊貼第 1 節），找經文時跳過它
+const EXPECTED = `(() => { const ol = (b => { let n = b?.nextElementSibling; if (n?.classList.contains('bwz-ia-line')) n = n.nextElementSibling; return n })(document.querySelector('.bwz-ra')); if (!ol) return []; return [...ol.children].filter(c => c.tagName === 'LI').map(li => { const c = li.cloneNode(true); c.querySelectorAll('.bwz-v-ui,[hidden],script,style').forEach(e => e.remove()); return c.textContent.replace(/\\s+/g, ' ').trim() }) })()`
+const lis = `[...(b => { let n = b?.nextElementSibling; if (n?.classList.contains('bwz-ia-line')) n = n.nextElementSibling; return n })(document.querySelector('.bwz-ra')).children].filter(c => c.tagName === 'LI')`
 const barReady = `document.querySelectorAll('.bwz-ra').length === 1`
 const playBtn = `document.querySelector('.bwz-ra button')`
 const btnText = `${playBtn}?.textContent.trim()`
@@ -129,7 +130,7 @@ const loaded = await openChapter(ch1)
 check("1a 章節頁載入並出現 .bwz-ra", loaded)
 const c1 = await j(`(() => {
   const bars = document.querySelectorAll('.bwz-ra')
-  const bar = bars[0]; const ol = bar?.nextElementSibling
+  const bar = bars[0]; const ol = (b => { let n = b?.nextElementSibling; if (n?.classList.contains('bwz-ia-line')) n = n.nextElementSibling; return n })(bar)
   const article = document.querySelector('article'); const content = article.querySelector(':scope > .markdown-preview-view') ?? article
   let firstOl = null; for (const c of content.children) { if (c.tagName === 'HR') break; if (c.tagName === 'OL') { firstOl = c; break } }
   const liCount = ol ? [...ol.children].filter(c => c.tagName === 'LI').length : -1
@@ -275,7 +276,7 @@ const clickLink = (target) => ev(`(() => {
   a.click(); return injected ? 'injected' : 'existing'
 })()`)
 const h1Has = (t) => `(document.querySelector('article h1')?.textContent || '').includes(${JSON.stringify(t)})`
-const barState = `({ bars: document.querySelectorAll('.bwz-ra').length, h1: document.querySelector('article h1')?.textContent.trim(), now: document.querySelectorAll('.bwz-ra-now').length, opts: document.querySelector('.bwz-ra select')?.options.length, lis: (() => { const ol = document.querySelector('.bwz-ra')?.nextElementSibling; return ol ? [...ol.children].filter(c => c.tagName === 'LI').length : -1 })(), spa: window.__spaMarker })`
+const barState = `({ bars: document.querySelectorAll('.bwz-ra').length, h1: document.querySelector('article h1')?.textContent.trim(), now: document.querySelectorAll('.bwz-ra-now').length, opts: document.querySelector('.bwz-ra select')?.options.length, lis: (() => { const ol = (b => { let n = b?.nextElementSibling; if (n?.classList.contains('bwz-ia-line')) n = n.nextElementSibling; return n })(document.querySelector('.bwz-ra')); return ol ? [...ol.children].filter(c => c.tagName === 'LI').length : -1 })(), spa: window.__spaMarker })`
 
 await ev(`${playBtn}.click()`)
 await waitFor(`${btnText} === '■ 停止'`)

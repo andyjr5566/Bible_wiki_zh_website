@@ -485,6 +485,20 @@ test("舊格式：附錄外的「相關資源 › 互動網站」也拿掉，小
   assert.ok(top.indexOf(interactiveHeadings[0]) > appendixIndex)
 })
 
+test("建置時的導覽表格是裸 table（還沒包 table-container）也認得，小卡在它之前", () => {
+  const bare = (): Element => el("table", {}, [el("tr", {}, [el("th", {}, ["前一章"]), el("th", {}, ["下一章"])])])
+  const root = chapterPage("出埃及記", 12, { bottomNav: false })
+  root.children.splice(2, 1, bare())
+  root.children.push(text("\n"), bare())
+
+  assert.equal(applyInteractiveSites(root, { slug: "02-出埃及記/第12章", registry, existingSlugs }), true)
+  const top = elements(root)
+  const card = top.findIndex((node) => firstClass(node) === "bwz-ia-chapter")
+  assert.ok(card > 0)
+  assert.equal(top.at(-1)?.tagName, "table")
+  assert.ok(card < top.length - 1)
+})
+
 test("描述陣列的 element 索引能對回含換行文字節點的 root", () => {
   const root = chapterPage("出埃及記", 12)
   const described = describeChapterNodes(root)

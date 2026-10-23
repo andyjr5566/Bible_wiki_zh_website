@@ -463,7 +463,7 @@ async function inspectHub(s) {
         sourceExists: Boolean(source),
         sourceClosed: Boolean(source && source.open === false),
         sourceHasList: Boolean(source?.querySelector("ul") && source.querySelector("ul a[href]")),
-        h1Count: document.querySelectorAll("h1").length,
+        h1Count: [...document.querySelectorAll("h1")].filter((h) => h.offsetParent !== null).length,
       })
     })()`),
   )
@@ -495,7 +495,7 @@ async function inspectHub(s) {
     "原依章節清單收在預設收起的 details 裡",
     state.sourceExists && state.sourceClosed && state.sourceHasList,
   )
-  check(s, "總入口只有一個 h1", state.h1Count === 1, `數量=${state.h1Count}`)
+  check(s, "總入口只有一個看得到的 h1（頁面標題 h1 本來就隱藏，第 3 批 B3-3）", state.h1Count === 1, `數量=${state.h1Count}`)
 }
 
 async function inspectSpa(s) {

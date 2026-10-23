@@ -52,6 +52,7 @@ const SLUG = {
   outline: "02-出埃及記/全書目錄及綱要",
   myNotes: "my-notes",
   maps: "appendix/fhl_maps/地圖索引",
+  websites: "appendix/website/index", // 互動網站總入口（第 8 批）
   map: "appendix/fhl_maps/maps/018",
 }
 
@@ -457,7 +458,7 @@ const STEPS: Step[] = [
     },
     title: () => "還有更多可以探索",
     text: () =>
-      "每卷書〈全書目錄及綱要〉的最下方有<b>互動網站</b>和導讀影片，例如出埃及記的「照山上的樣式」。" +
+      "首頁的<b>互動網站</b>可以看全部，例如出埃及記的「照山上的樣式」；讀到有互動網站的章節，經文上方會提示。各卷〈全書目錄及綱要〉最下方有導讀影片。" +
       `${isMobile() ? "選單裡" : "左邊"}的 appendix（附錄）除了剛剛看到的地圖，之後還會放進其他延伸資料，目前還在整理中。`,
   },
 ]
@@ -1188,7 +1189,7 @@ function openHelp() {
     </div>
     <h4>延伸探索</h4>
     <dl class="bwz-keys">
-      <dt>互動網站</dt><dd>在各卷〈全書目錄及綱要〉最下方，把某一章的場景做成可以操作的網頁。<a data-h="outline">看出埃及記的例子 →</a></dd>
+      <dt>互動網站</dt><dd>把經文的場景做成可以操作的網頁。首頁的「互動網站」可以看全部；讀到有互動網站的章節，經文上方會提示。各卷〈全書目錄及綱要〉最下方也有。<a data-h="doc" data-slug="${SLUG.websites}">看全部 →</a>　<a data-h="outline">看出埃及記的例子 →</a></dd>
       <dt>聖經地圖</dt><dd>章節頁最下方的「附錄 · 相關地圖」，或從 <a data-h="maps">地圖索引</a> 進入。</dd>
       <dt>導讀影片</dt><dd>大衛鮑森舊約縱覽，同樣放在各卷〈全書目錄及綱要〉。</dd>
       <dt>我的筆記</dt><dd>每一章最下方可以寫自己的研經筆記，登入 Google 後手機、電腦同步。<a data-h="doc" data-slug="my-notes">看我的筆記 →</a>　<a data-h="doc" data-slug="教學/個人筆記使用說明">怎麼用 →</a></dd>
@@ -1265,7 +1266,7 @@ function showFinish() {
     <p>你已掌握 <b>${got.length} / ${all.length}</b> 項研讀技能</p>
     <ul class="bwz-skills">${all.map((k) => `<li class="${got.includes(k) ? "" : "miss"}">${k}</li>`).join("")}</ul>
     ${got.length < all.length ? `<p class="bwz-note">跳過的項目，之後可以在說明中心重新走一次。</p>` : ""}
-    <div class="bwz-more"><b>還想多看一點？</b>各卷〈全書目錄及綱要〉最下方有互動網站和導讀影片，附錄裡也有聖經地圖（整理中）。讀經時的心得，可以寫在每一章最下方的「我的筆記」。</div>
+    <div class="bwz-more"><b>還想多看一點？</b>首頁的「互動網站」可以看全部，讀到有互動網站的章節，經文上方會提示。各卷〈全書目錄及綱要〉最下方有導讀影片，附錄裡也有聖經地圖（整理中）。讀經時的心得，可以寫在每一章最下方的「我的筆記」。</div>
     <blockquote class="bwz-verse">你的話是我腳前的燈，是我路上的光。<cite>詩篇 119:105</cite></blockquote>
     <div class="bwz-row">
       <button class="bwz-btn primary" type="button" data-f="close">開始讀經</button>
@@ -1309,7 +1310,7 @@ function mountHints() {
     tip.className = "bwz-hint-tip"
     tip.innerHTML = `
       <span class="bwz-seal" aria-hidden="true">新</span>
-      <div><p><b>每卷書的互動網站都收在這裡。</b>把某一章的場景做成可以操作的網頁，例如方舟、會幕、曠野的路線。點了會在新分頁開啟。</p>
+      <div><p><b>每卷書的互動網站都收在這裡。</b>把某一章的場景做成可以操作的網頁，例如方舟、會幕、曠野的路線。點了會在新分頁開啟。想一次看全部，到首頁按「互動網站」；讀到有互動網站的章節，經文上方也會提示。</p>
       <button class="bwz-btn" type="button">知道了</button></div>`
     h.after(tip)
     $("button", tip)!.addEventListener("click", () => {

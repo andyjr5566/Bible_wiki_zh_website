@@ -189,7 +189,7 @@ function coverageCells(site: InteractiveSite): Element[] {
       role: "list",
       "aria-label": WORDS.coverageLabel,
     }, cells),
-    el("p", { className: ["bwz-ia-legend"] }, [WORDS.legend]),
+    el("div", { className: ["bwz-ia-legend"] }, [WORDS.legend]),
   ]
 }
 
@@ -212,12 +212,14 @@ export function buildFrame(
     newTabText(),
   ])
   const titleTag = options.chapter ? "h4" : "h3"
+  // 說明類文字用 div 不用 p：Aa 面板的字級用 !important 放大 article 裡的 p，卡片說明會比卡片標題還大
+
   const plaqueChildren: ElementContent[] = [
     el(titleTag, { className: ["bwz-ia-title"] }, [titleLink]),
-    el("p", { className: ["bwz-ia-desc"] }, [site.description]),
+    el("div", { className: ["bwz-ia-desc"] }, [site.description]),
   ]
   if (deep) {
-    plaqueChildren.push(el("p", { className: ["bwz-ia-deep"] }, [deep.label]))
+    plaqueChildren.push(el("div", { className: ["bwz-ia-deep"] }, [deep.label]))
   }
   if (options.wide) {
     plaqueChildren.push(...coverageCells(site))

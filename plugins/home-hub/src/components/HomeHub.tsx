@@ -20,10 +20,12 @@ import style from "./styles/hub.scss";
 // @ts-expect-error - css imported as string by esbuild loader
 import mastheadStyle from "./styles/masthead.scss";
 
+// 入口按鈕連到的頁面（只在這裡定義一次）。互動網站的總入口就是「附錄 › 互動網站」那一頁（網址不變，版面由 quartz/util/interactiveHast.ts 產生）。
 const APPENDIX_INDEX = "appendix/index";
+const WEBSITE_HUB = "appendix/website/index";
 const QUICK_START = "教學/快速入門";
 
-// 首頁入口：搜尋 → 繼續閱讀 → 按書卷讀經 → 快速入門／互動網站與附錄；最前面是刊頭（網站標題與介紹，來自 index.md）。
+// 首頁入口：搜尋 → 繼續閱讀 → 按書卷讀經 → 快速入門／互動網站／附錄；最前面是刊頭（網站標題與介紹，來自 index.md）。
 // 繼續閱讀卡的內容是讀者本機的紀錄，只能在瀏覽器裡畫；這裡只嵌入「有哪些章」（章號而已）讓瀏覽器判斷章還在不在。
 // 腳本每頁都會載入（負責記錄閱讀位置），所以非首頁一律不畫任何東西。
 const HomeHub: QuartzComponent = ({ fileData, allFiles, tree }: QuartzComponentProps) => {
@@ -63,7 +65,8 @@ const HomeHub: QuartzComponent = ({ fileData, allFiles, tree }: QuartzComponentP
 
       <div class="bwz-hub-links">
         <a href={link(QUICK_START)}>快速入門</a>
-        <a href={link(APPENDIX_INDEX)}>互動網站與附錄</a>
+        <a href={link(WEBSITE_HUB)}>互動網站</a>
+        <a href={link(APPENDIX_INDEX)}>附錄</a>
       </div>
     </section>
   );

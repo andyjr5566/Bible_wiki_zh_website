@@ -164,6 +164,7 @@ function Add-WebsiteTitles {
         @{ Path = 'INSTALL_MOBILE.md';   Title = 'Obsidian 手機版安裝說明'; Create = $false },
         @{ Path = 'README.md';           Title = '本站簡介';       Create = $false },
         @{ Path = 'appendix\index.md';   Title = '附錄';           Create = $false },
+        @{ Path = 'appendix\website\index.md'; Title = '互動網站'; Create = $false },
         @{ Path = 'link_folder\index.md'; Title = '知識節點';      Create = $true }
     )
     foreach ($entry in $titled) {

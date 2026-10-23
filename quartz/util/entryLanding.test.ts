@@ -11,10 +11,10 @@ import {
 
 const landing = makeEntryLanding("02-出埃及記/第12章", "link_folder/原文/在黃昏的時候", 1000)!
 
-test("formats the button from the chapter book name and number", () => {
+test("formats the card from the chapter book name and number", () => {
   assert.deepEqual(entryLandingLabels("02-出埃及記/第12章"), {
-    buttonText: "↓ 出埃及記 12 的相關內容",
-    ariaLabel: "跳到本條目中出埃及記第 12 章的相關內容",
+    cardTitle: "出埃及記 12 章 · 與本條目",
+    ariaLabel: "本條目在出埃及記第 12 章的重點",
   })
   assert.equal(entryLandingLabels("link_folder/原文/在黃昏的時候"), null)
 })

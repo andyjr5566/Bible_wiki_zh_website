@@ -135,31 +135,63 @@ html.bwz-touring .bwz-vr {
   }
 }
 
-/* 條目標題下的「↓ 某章的相關內容」：做成和左欄「換卷」一樣的外框膠囊（次要按鈕），不搶標題。
-   顏色用站台的強調色變數，淺色／深色主題跟著換，不必各寫一份。 */
-.bwz-vr-related {
-  display: inline-flex !important;
+/* 本章摘要卡放在「定義」之後；外掛 CSS 層級較低，所以覆蓋站台樣式要用 !important。 */
+.bwz-vr-card {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  margin: 1.25rem 0 !important;
+  padding: 0.9rem 1rem !important;
+  border: 0 !important;
+  border-left: 3px solid var(--bwz-accent-strong, var(--secondary)) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--lightgray) 30%, transparent) !important;
+  color: inherit !important;
+}
+
+.bwz-vr-card-title {
+  margin: 0 0 0.5rem !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+}
+
+.bwz-vr-card-list {
+  margin: 0 0 0.25rem !important;
+  padding-left: 1.1rem !important;
+}
+
+.bwz-vr-card-list > li {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 4 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  font-size: inherit !important;
+}
+
+.bwz-vr-card-expanded .bwz-vr-card-list > li {
+  display: list-item !important;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+}
+
+/* 文字連結保留足夠的觸控高度，鍵盤操作時也看得見焦點。 */
+.bwz-vr-card-action {
+  display: flex !important;
   align-items: center !important;
   box-sizing: border-box !important;
   min-height: 44px !important;
   max-width: 100% !important;
-  margin: 0 0 1.25rem !important;
-  padding: 0.45rem 0.95rem !important;
-  border: 1px solid color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 50%, var(--lightgray)) !important;
-  border-radius: 999px !important;
+  margin: 0 !important;
+  padding: 0.25rem 0 !important;
+  border: 0 !important;
   background: transparent !important;
   color: var(--bwz-accent-strong, var(--secondary)) !important;
   font: inherit !important;
-  font-size: 0.9rem !important;
   font-weight: 700 !important;
-  line-height: 1.25 !important;
   text-align: left !important;
+  text-decoration: underline !important;
   white-space: normal !important;
   cursor: pointer !important;
-
-  &:hover {
-    background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 8%, transparent) !important;
-  }
 
   &:focus-visible {
     outline: 2px solid var(--bwz-accent-strong, var(--secondary)) !important;
@@ -167,8 +199,12 @@ html.bwz-touring .bwz-vr {
   }
 }
 
+.bwz-vr-card-action[hidden] {
+  display: none !important;
+}
+
 @media print {
-  .bwz-vr-related {
+  .bwz-vr-card {
     display: none !important;
   }
 }

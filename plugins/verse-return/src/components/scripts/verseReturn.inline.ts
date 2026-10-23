@@ -1,13 +1,13 @@
 // 「回到剛才的經節」：每次換頁（nav）時決定要不要顯示「↩ 返回」按鈕、要不要記錄、要不要捲動；
-// 從章節頁進到條目頁時，另外在條目標題下放「↓ 某章的相關內容」。
-// 各件事的規則在 ../../lib（linkRules、pointForLink、store、scrollPlan、relatedButton）與 quartz/util/entryLanding.ts，這個檔案只負責接起來。
+// 從章節頁進到條目頁時，另外在「定義」後放本章摘要卡。
+// 各件事的規則在 ../../lib（linkRules、pointForLink、store、scrollPlan、relatedCard）與 quartz/util/entryLanding.ts，這個檔案只負責接起來。
 import { canonicalSlugPath } from "../../../../../quartz/util/bibleBooks"
 import { returnHref, shouldClearOnPage, type ReturnPoint } from "../../../../../quartz/util/returnPoint"
 import { shouldShowEntryLanding } from "../../../../../quartz/util/entryLanding"
 import { mountButton, removeButton } from "../../lib/button"
 import { startJump, type JumpHandle } from "../../lib/jump"
 import { startRecording } from "../../lib/recorder"
-import { startRelatedButton } from "../../lib/relatedButton"
+import { startRelatedCard } from "../../lib/relatedCard"
 import {
   clearEntryLanding,
   clearReturnPoint,
@@ -56,11 +56,11 @@ function onNav(): void {
     if (canonicalSlugPath(target.slug) === canonicalSlugPath(slug)) jump = startJump(target)
   }
 
-  // 條目落點只用一次：讀到就清掉，所以重新整理、從條目再跳別的條目都不會再出現按鈕
+  // 條目落點只用一次：讀到就清掉，所以重新整理、從條目再跳別的條目都不會再出現卡片
   const landing = readEntryLanding()
   clearEntryLanding()
   if (landing && shouldShowEntryLanding(landing, slug)) {
-    const stopRelated = startRelatedButton(landing)
+    const stopRelated = startRelatedCard(landing)
     relatedCleanup = stopRelated
     win.addCleanup?.(() => {
       stopRelated()

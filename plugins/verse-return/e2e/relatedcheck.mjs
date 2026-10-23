@@ -29,7 +29,7 @@ const desktop = await open({
 })
 
 const stateExpr = `(() => {
-  const button = document.querySelector("button.bwz-vr-related")
+  const card = document.querySelector("aside.bwz-vr-card")
   const anchor = ${targetAnchorExpr}
   const heading = anchor?.closest("h4")
   const rect = heading?.getBoundingClientRect()
@@ -45,7 +45,11 @@ const stateExpr = `(() => {
     details.push(d.open)
   }
   return JSON.stringify({
-    button: button ? { text: button.textContent.trim(), aria: button.getAttribute("aria-label") } : null,
+    card: card ? {
+      title: card.querySelector(".bwz-vr-card-title")?.textContent.trim(),
+      aria: card.getAttribute("aria-label"),
+      items: card.querySelectorAll(".bwz-vr-card-list > li").length,
+    } : null,
     heading: heading ? { top: rect.top, flash: heading.classList.contains("bwz-vr-flash") } : null,
     details,
     overlapsSidebar,
@@ -117,44 +121,89 @@ function relativePathFromRoot(rawUrl) {
   return path + current.search + current.hash
 }
 
-async function checkRelatedButton(s, scenario, device, { detailed = false, screenshot = "" } = {}) {
-  const buttonAppeared = Boolean(await waitFor(s, `!!document.querySelector("button.bwz-vr-related")`, 6000))
-  await report(s, `${scenario} ${device}：相關內容按鈕出現`, buttonAppeared)
+async function checkRelatedCard(s, scenario, device, { detailed = false, screenshot = "" } = {}) {
+  const cardAppeared = Boolean(await waitFor(s, `!!document.querySelector("aside.bwz-vr-card")`, 6000))
+  await report(s, `${scenario} ${device}：本章摘要卡出現`, cardAppeared)
 
   const labels = await s.ev(`(() => {
-    const b = document.querySelector("button.bwz-vr-related")
-    return b ? JSON.stringify({ text: b.textContent.trim(), aria: b.getAttribute("aria-label") }) : "null"
+    const card = document.querySelector("aside.bwz-vr-card")
+    return card ? JSON.stringify({
+      title: card.querySelector(".bwz-vr-card-title")?.textContent.trim(),
+      aria: card.getAttribute("aria-label"),
+    }) : "null"
   })()`)
   let parsedLabels = null
   try { parsedLabels = JSON.parse(labels) } catch {}
   await report(
     s,
-    `${scenario} ${device}：按鈕文字正確`,
-    parsedLabels?.text === "↓ 出埃及記 12 的相關內容",
+    `${scenario} ${device}：卡片標頭正確`,
+    parsedLabels?.title === "出埃及記 12 章 · 與本條目",
   )
   if (detailed) {
     await report(
       s,
-      `${scenario} ${device}：按鈕 aria-label 正確`,
-      parsedLabels?.aria === "跳到本條目中出埃及記第 12 章的相關內容",
+      `${scenario} ${device}：卡片 aria-label 正確`,
+      parsedLabels?.aria === "本條目在出埃及記第 12 章的重點",
     )
     const placement = await s.ev(`(() => {
-      const h1 = document.querySelector("article .markdown-rendered > h1:first-of-type")
-      const button = document.querySelector("button.bwz-vr-related")
-      const h2 = document.querySelector("article .markdown-rendered h2")
-      if (!h1 || !button) return false
-      const followsTitle = !!(h1.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING)
-      const beforeFirstH2 = !h2 ||
-        !!(button.compareDocumentPosition(h2) & Node.DOCUMENT_POSITION_FOLLOWING)
-      return h1.nextElementSibling === button || (followsTitle && beforeFirstH2)
+      const content = document.querySelector("article .markdown-rendered")
+      const card = content?.querySelector(":scope > aside.bwz-vr-card")
+      const definition = [...(content?.children || [])].find((el) =>
+        el.tagName === "H2" && el.textContent.replace(/\\s/g, "") === "定義"
+      )
+      const accumulation = [...(content?.children || [])].find((el) =>
+        (el.tagName === "H2" && el.textContent.replace(/\\s/g, "").startsWith("按書卷累積")) ||
+        (el.tagName === "DETAILS" && el.className.includes("collapsible") &&
+          el.querySelector("summary")?.textContent.includes("按書卷累積"))
+      )
+      return !!definition && !!card && !!accumulation &&
+        !!(definition.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING) &&
+        !!(card.compareDocumentPosition(accumulation) & Node.DOCUMENT_POSITION_FOLLOWING)
     })()`)
-    await report(s, `${scenario} ${device}：按鈕位於標題下方`, placement)
-    await report(s, `${scenario} ${device}：按鈕出現時位於頁首`, (await scrollY(s)) < 120)
+    await report(s, `${scenario} ${device}：卡片位於定義之後、按書卷累積之前`, placement)
+    const itemCounts = await s.ev(`(() => {
+      const card = document.querySelector("aside.bwz-vr-card")
+      const heading = ${targetAnchorExpr}?.closest("h4")
+      const source = heading?.nextElementSibling
+      return JSON.stringify({
+        card: card?.querySelectorAll(".bwz-vr-card-list > li").length ?? -1,
+        source: source?.tagName === "UL" ? [...source.children].filter((el) => el.tagName === "LI").length : -1,
+      })
+    })()`)
+    let counts = null
+    try { counts = JSON.parse(itemCounts) } catch {}
+    await report(
+      s,
+      `${scenario} ${device}：卡片 li 數量與本章摘要相同`,
+      counts?.source >= 0 && counts.card === counts.source,
+    )
+    await report(s, `${scenario} ${device}：卡片出現時位於頁首`, (await scrollY(s)) < 120)
+
+    const hasExpand = await s.ev(`(() => {
+      const button = document.querySelector("aside.bwz-vr-card .bwz-vr-card-toggle")
+      return !!button && !button.hidden
+    })()`)
+    if (hasExpand) {
+      const expanded = await clickElement(s, `document.querySelector("aside.bwz-vr-card .bwz-vr-card-toggle")`)
+      await report(s, `${scenario} ${device}：按下展開全文`, expanded)
+      const expandedState = await s.ev(`(() => {
+        const card = document.querySelector("aside.bwz-vr-card")
+        const button = card?.querySelector(".bwz-vr-card-toggle")
+        const items = [...(card?.querySelectorAll(".bwz-vr-card-list > li") || [])]
+        return !!button && button.getAttribute("aria-expanded") === "true" &&
+          button.textContent.trim() === "收起" &&
+          items.every((li) => {
+            const style = getComputedStyle(li)
+            return style.webkitLineClamp !== "4" && style.overflow !== "hidden"
+          })
+      })()`)
+      await report(s, `${scenario} ${device}：展開後 li 不再截斷`, expandedState)
+    }
   }
 
   if (!detailed) return
-  const clicked = buttonAppeared && await clickElement(s, `document.querySelector("button.bwz-vr-related")`)
-  await report(s, `${scenario} ${device}：按下相關內容按鈕`, clicked)
+  const clicked = cardAppeared && await clickElement(s, `document.querySelector("aside.bwz-vr-card .bwz-vr-card-jump")`)
+  await report(s, `${scenario} ${device}：按下查看其他章節`, clicked)
 
   const headingState = await s.ev(`(() => {
     const anchor = ${targetAnchorExpr}
@@ -256,7 +305,7 @@ const summaryLinkElementExpr = `(() => {
 
 async function scenario1(s, device, screenshot) {
   const entryUrl = await reachVerseEntry(s, "1", device)
-  await checkRelatedButton(s, "1", device, { detailed: true, screenshot })
+  await checkRelatedCard(s, "1", device, { detailed: true, screenshot })
   return entryUrl ? relativePathFromRoot(entryUrl) : null
 }
 
@@ -269,7 +318,7 @@ const knowledgeClicked = await findKnowledgeLink(desktop)
 await report(desktop, "2 桌機：點擊本章知識節點連結", knowledgeClicked)
 const knowledgeReached = knowledgeClicked && Boolean(await waitFor(desktop, `location.pathname.includes("/link_folder/")`, 8000))
 await report(desktop, "2 桌機：到達條目頁", knowledgeReached)
-await checkRelatedButton(desktop, "2", "桌機")
+await checkRelatedCard(desktop, "2", "桌機")
 
 // 情境 3：只找本章整理區塊到下一個標題／details 之間的連結。
 await goChapter(desktop)
@@ -281,15 +330,15 @@ if (!summaryHasLink) {
   await report(desktop, "3 桌機：點擊本章整理連結", summaryClicked)
   const summaryReached = summaryClicked && Boolean(await waitFor(desktop, `location.pathname.includes("/link_folder/")`, 8000))
   await report(desktop, "3 桌機：到達條目頁", summaryReached)
-  await checkRelatedButton(desktop, "3", "桌機")
+  await checkRelatedCard(desktop, "3", "桌機")
 }
 
 // 情境 4：直接開條目，不應帶有一次性落點。
 if (entryPath) {
   await desktop.go(entryPath, 4000)
-  await report(desktop, "4 桌機：直接開條目沒有相關內容按鈕", !(await desktop.ev(`!!document.querySelector("button.bwz-vr-related")`)))
+  await report(desktop, "4 桌機：直接開條目沒有本章摘要卡", !(await desktop.ev(`!!document.querySelector("aside.bwz-vr-card")`)))
 } else {
-  await report(desktop, "4 桌機：直接開條目沒有相關內容按鈕", false, "情境 1 未取得條目網址")
+  await report(desktop, "4 桌機：直接開條目沒有本章摘要卡", false, "情境 1 未取得條目網址")
 }
 
 // 情境 5：重新整理會清掉一次性落點。
@@ -298,12 +347,12 @@ if (entryPath) {
   if (reached) {
     await desktop.send("Page.reload")
     await sleep(4000)
-    await report(desktop, "5 桌機：重新整理後沒有相關內容按鈕", !(await desktop.ev(`!!document.querySelector("button.bwz-vr-related")`)))
+    await report(desktop, "5 桌機：重新整理後沒有本章摘要卡", !(await desktop.ev(`!!document.querySelector("aside.bwz-vr-card")`)))
   } else {
-    await report(desktop, "5 桌機：重新整理後沒有相關內容按鈕", false, "無法再次由經文進入條目")
+    await report(desktop, "5 桌機：重新整理後沒有本章摘要卡", false, "無法再次由經文進入條目")
   }
 } else {
-  await report(desktop, "5 桌機：重新整理後沒有相關內容按鈕", false, "情境 1 未取得條目網址")
+  await report(desktop, "5 桌機：重新整理後沒有本章摘要卡", false, "情境 1 未取得條目網址")
 }
 
 // 情境 6：從條目跳到另一個條目時，不沿用舊落點。
@@ -327,16 +376,16 @@ if (entryPath) {
     ))
     await report(desktop, "6 桌機：到達另一個條目頁", navigated)
     await sleep(4000)
-    await report(desktop, "6 桌機：新條目沒有相關內容按鈕", !(await desktop.ev(`!!document.querySelector("button.bwz-vr-related")`)))
+    await report(desktop, "6 桌機：新條目沒有本章摘要卡", !(await desktop.ev(`!!document.querySelector("aside.bwz-vr-card")`)))
   } else {
-    await report(desktop, "6 桌機：新條目沒有相關內容按鈕", false, "無法再次由經文進入條目")
+    await report(desktop, "6 桌機：新條目沒有本章摘要卡", false, "無法再次由經文進入條目")
   }
 } else {
-  await report(desktop, "6 桌機：新條目沒有相關內容按鈕", false, "情境 1 未取得條目網址")
+  await report(desktop, "6 桌機：新條目沒有本章摘要卡", false, "情境 1 未取得條目網址")
 }
 
-// 情境 7：比利洗人條目裡約書亞記 3 章那一段沒有 accumulation 註解標記，但 h4 在，所以按鈕要出現
-// （按鈕只看 h4 > a[data-slug]，不靠註解）。找不到連結就略過。
+// 情境 7：比利洗人條目裡約書亞記 3 章那一段沒有 accumulation 註解標記，但 h4 在，所以卡片要出現
+// （卡片只看 h4 > a[data-slug]，不靠註解）。找不到連結就略過。
 await goChapter(desktop, chapterJoshua3)
 const peopleLinkExpr = `(() => [...document.querySelectorAll("article a.internal[href]")].find((a) => {
   let href = a.getAttribute("href") || ""
@@ -352,7 +401,7 @@ if (!peopleLinkExists) {
   const navigated = clicked && Boolean(await waitFor(desktop, `location.pathname !== ${JSON.stringify(chapterJoshua3)} || location.pathname.includes("/link_folder/")`, 8000))
   await report(desktop, "7 桌機：離開 Joshua 3 頁面", navigated)
   await sleep(4000)
-  await report(desktop, "7 桌機：沒有註解標記的章節段落也有相關內容按鈕", await desktop.ev(`document.querySelector("button.bwz-vr-related")?.textContent === "↓ 約書亞記 3 的相關內容"`))
+  await report(desktop, "7 桌機：沒有註解標記的章節段落也有本章摘要卡", await desktop.ev(`document.querySelector("aside.bwz-vr-card .bwz-vr-card-title")?.textContent === "約書亞記 3 章 · 與本條目"`))
 }
 
 // 情境 8：只封鎖 sessionStorage；其他外掛可能因此回報自己的 SecurityError。
@@ -387,11 +436,11 @@ const blockedEntryUrl = await reachVerseEntry(blocked, "8", "桌機")
 await sleep(4000)
 await report(
   blocked,
-  "8 桌機：封鎖儲存時沒有相關內容按鈕",
-  !(await blocked.ev(`!!document.querySelector("button.bwz-vr-related")`)),
+  "8 桌機：封鎖儲存時沒有本章摘要卡",
+  !(await blocked.ev(`!!document.querySelector("aside.bwz-vr-card")`)),
 )
 const relatedErrors = blocked.errors.slice(blockedErrorsStart).filter((error) =>
-  /bwz-entry-landing|relatedButton/i.test(error),
+  /bwz-entry-landing|relatedCard/i.test(error),
 )
 await report(
   blocked,
@@ -430,7 +479,7 @@ await report(mobile, "2 手機：點擊本章知識節點連結", mobileKnowledg
 const mobileKnowledgeReached = mobileKnowledgeClicked &&
   Boolean(await waitFor(mobile, `location.pathname.includes("/link_folder/")`, 8000))
 await report(mobile, "2 手機：到達條目頁", mobileKnowledgeReached)
-await checkRelatedButton(mobile, "2", "手機")
+await checkRelatedCard(mobile, "2", "手機")
 
 const mobileErrors = mobile.errors.slice(mobileErrorsStart).filter((error) =>
   !String(error).includes("Parse error on line"),

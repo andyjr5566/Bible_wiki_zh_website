@@ -1,5 +1,5 @@
-// 「條目落點」：從章節頁點連結進到條目頁時，條目標題下放「↓ 出埃及記 12 的相關內容」（U-23 後續，2026-10-23）。
-// 這裡是純規則：記錄格式、要不要顯示、按鈕文字；記錄與畫按鈕在 plugins/verse-return（recorder.ts、relatedButton.ts）。
+// 「條目落點」：從章節頁點連結進到條目頁時，在「定義」後顯示本章摘要卡（U-23 後續，2026-10-23）。
+// 這裡是純規則：記錄格式、要不要顯示、卡片文字；記錄與畫卡片在 plugins/verse-return（recorder.ts、relatedCard.ts）。
 // 記錄只用一次、45 秒過期，所以直接開條目、重新整理、從別的條目跳過來都不會顯示。
 import { canonicalSlugPath } from "./bibleBooks"
 import { parseBookSlug } from "./bookCatalog"
@@ -63,12 +63,12 @@ export function shouldShowEntryLanding(landing: EntryLanding | null | undefined,
   return canonicalSlugPath(landing.toSlug) === canonicalSlugPath(currentSlug)
 }
 
-export function entryLandingLabels(fromSlug: string): { buttonText: string; ariaLabel: string } | null {
+export function entryLandingLabels(fromSlug: string): { cardTitle: string; ariaLabel: string } | null {
   const parsed = parseBookSlug(fromSlug)
   if (!parsed || parsed.kind !== "chapter" || parsed.chapter === undefined) return null
 
   return {
-    buttonText: "↓ " + parsed.book.name + " " + parsed.chapter + " 的相關內容",
-    ariaLabel: "跳到本條目中" + parsed.book.name + "第 " + parsed.chapter + " 章的相關內容",
+    cardTitle: parsed.book.name + " " + parsed.chapter + " 章 · 與本條目",
+    ariaLabel: "本條目在" + parsed.book.name + "第 " + parsed.chapter + " 章的重點",
   }
 }

@@ -6,7 +6,11 @@
 
 html {
   scroll-behavior: smooth;
-  text-size-adjust: none;
+  /* iOS Safari 只認 -webkit- 前綴：原本只寫 text-size-adjust: none 對 iPhone 無效，
+     Safari 仍會依「文字塊大小」自動放大，同一節的 li 會出現大小不一。
+     用 100%（而非 none）＝不做自動放大，同時保留使用者在系統設定調整的字級。 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   overflow-x: hidden;
   width: 100vw;
 

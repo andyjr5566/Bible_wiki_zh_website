@@ -258,11 +258,14 @@ if (Test-Path $rulesTxtPath) {
             continue
         }
         $hasSub = $trimmed -match '->\s*subheadings'
-        $title = ($trimmed -replace '->\s*subheadings', '').Trim()
+        $hasBooks = $trimmed -match '->\s*books'
+        $title = ($trimmed -replace '->\s*(subheadings|books)', '').Trim()
         if ($title.Length -gt 0) {
+            # books：按書卷分組、單層呈現（徽章顯示「N 卷書」）；subheadings：各卷書 H3 再各自收合一層。兩者互相獨立
             $sections += [PSCustomObject]@{
                 title = $title
                 subheadings = $hasSub
+                books = $hasBooks
             }
         }
     }

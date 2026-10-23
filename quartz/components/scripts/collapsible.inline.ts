@@ -1,9 +1,12 @@
 // collapsible.inline.ts
-// 聖經研讀知識庫 - 素雅段落折疊與雙層手風琴模組
+// 聖經研讀知識庫 - 素雅段落折疊模組（支援選用的第二層手風琴）
 
 interface CollapseRule {
   title: string
+  // 旗下各卷書 H3 再各自收合一層（第二層手風琴）。目前沒有段落使用，保留給日後需要時開
   subheadings: boolean
+  // 內容是「各卷書 H3 ＋各章 H4 ＋清單」的分組結構：徽章顯示「N 卷書」，樣式走單層版面（見 custom.scss 的 collapsible-books）
+  books?: boolean
 }
 
 // 內建預設規則（雙重保障，防網絡請求異常）
@@ -11,7 +14,7 @@ const defaultRules: CollapseRule[] = [
   { title: "本章知識節點", subheadings: false },
   { title: "來源依據", subheadings: false },
   { title: "按書卷研讀", subheadings: false },
-  { title: "按書卷累積", subheadings: true },
+  { title: "按書卷累積", subheadings: false, books: true },
 ]
 
 let activeRules: CollapseRule[] = [...defaultRules]
@@ -73,6 +76,9 @@ function processCollapsibleSections() {
     if (matchedRule.subheadings) {
       details.classList.add("collapsible-nested")
     }
+    if (matchedRule.books) {
+      details.classList.add("collapsible-books")
+    }
 
     // 建立 <summary>
     const summary = document.createElement("summary")
@@ -87,7 +93,7 @@ function processCollapsibleSections() {
     const badge = document.createElement("span")
     badge.className = "collapsible-badge"
 
-    if (matchedRule.subheadings) {
+    if (matchedRule.subheadings || matchedRule.books) {
       const h3Count = siblingsToWrap.filter((el) => el.tagName.toLowerCase() === "h3").length
       if (h3Count > 0) {
         badge.textContent = `${h3Count} 卷書`

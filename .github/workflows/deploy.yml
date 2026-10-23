@@ -127,6 +127,11 @@ jobs:
             cp -r "$dist_dir" "$(dirname "$dest_dir")/"
           done
 
+      - name: Interactive sites check
+        # 互動網站（U-24）：列出缺封面、缺類型、缺 dist 的網站，寫進步驟摘要。只警告不擋部署（U-11）
+        continue-on-error: true
+        run: npx tsx quartz/util/checkInteractiveSites.ts
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

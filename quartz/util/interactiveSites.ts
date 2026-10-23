@@ -38,6 +38,8 @@ export interface InteractiveSite {
   coverPath: string
   hasCover: boolean
   hasDist: boolean
+  /** index.html 有沒有 <title>；不能拿 title 和資料夾名稱比，網站標題可能剛好同名 */
+  hasTitle: boolean
   deepLink?: string
   deepLabel?: string
 }
@@ -144,12 +146,13 @@ function parseChapterExpression(
     return { error: `無法辨識章節「${value}」` }
   }
 
-  const match = /^第(\d+)(?:[-–](\d+))?章$/.exec(chapterText)
+  // 人工輸入常夾空白（「第 1-5 章」），所以數字前後容許空白
+  const match = /^第\s*(\d+)\s*(?:[-–]\s*(\d+)\s*)?章$/.exec(chapterText)
   if (!match) return { error: `無法辨識章節「${value}」` }
 
   const start = Number(match[1])
   const end = Number(match[2] ?? match[1])
-  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end) {
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 1 || start > end) {
     return { error: `無法辨識章節「${value}」` }
   }
 
@@ -269,17 +272,6 @@ export function deriveSite(
   let primary: ChapterRef | undefined
   const pageMatch = contextBook ? /^第(\d+)章$/.exec(name) : null
   if (pageMatch) {
-    const primaryRefs: ChapterRef[] = []
-    addResolvedRef(
-      `${folder}/${name}`,
-      undefined,
-      files.key,
-      "主章",
-      new Map(
-        primaryRefs.map((ref) => [`${ref.book}:${ref.chapter}`, ref] as const),
-      ),
-      warnings,
-    )
     const expression = parseChapterExpression(`${folder}/${name}`)
     if ("error" in expression) {
       warnings.push(`網站「${files.key}」的主章：${expression.error}。`)
@@ -326,6 +318,7 @@ export function deriveSite(
     coverPath: `static/interactive-covers/${coverFileName(files.key)}`,
     hasCover: files.hasCover,
     hasDist: files.hasDist,
+    hasTitle: Boolean(title),
     ...(typeof override?.deepLink === "string" ? { deepLink: override.deepLink } : {}),
     ...(typeof override?.deepLabel === "string" ? { deepLabel: override.deepLabel } : {}),
   }
@@ -491,7 +484,10 @@ export function checkRegistry(registry: InteractiveRegistry): string[] {
     if (!site.description.trim()) add(`網站「${site.key}」沒有 description。`)
     if (!site.hasCover) add(`網站「${site.key}」沒有封面。`)
     if (!site.type) add(`網站「${site.key}」沒有 type 類型標籤。`)
-    if (site.title === fallbackTitle(site.key)) {
+    if (site.chapters.length === 0) {
+      add(`網站「${site.key}」沒有涵蓋任何章節，總入口與章節頁都不會出現。`)
+    }
+    if (!site.hasTitle) {
       add(`網站「${site.key}」沒有 <title>，使用網站資料夾名稱「${site.title}」。`)
     }
   }

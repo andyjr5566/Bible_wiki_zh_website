@@ -1,9 +1,17 @@
+// 互動網站描述資料的讀檔外層：掃 quartz/static/website、讀 config/interactive-sites.json，
+// 規則全部交給 interactiveSites.ts 的純函式。建置時每一頁都會用到，所以同一個 repo 只讀一次；
+// 讀不到任何東西都只記警告、回傳空清單，不讓建置失敗。
 import * as fs from "node:fs"
 import * as path from "node:path"
 import { buildRegistry, coverFileName } from "./interactiveSites"
 import type { InteractiveRegistry, SiteFiles, SiteOverride } from "./interactiveSites"
 
 const registryCache = new Map<string, InteractiveRegistry>()
+
+// Windows 的編輯器常在 UTF-8 檔頭加 BOM，JSON.parse 遇到會丟例外
+function readJson(file: string): unknown {
+  return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "")) as unknown
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -34,7 +42,7 @@ export function loadInteractiveRegistry(repoRoot = process.cwd()): InteractiveRe
   const coversRoot = path.join(resolvedRoot, "quartz", "static", "interactive-covers")
 
   try {
-    const config = JSON.parse(fs.readFileSync(configPath, "utf8")) as unknown
+    const config = readJson(configPath)
     if (!isRecord(config) || !isRecord(config.sites)) {
       warnings.push("互動網站補充檔的 sites 欄位不是物件。")
     } else {
@@ -84,7 +92,7 @@ export function loadInteractiveRegistry(repoRoot = process.cwd()): InteractiveRe
         const appendixPath = path.join(sitePath, "appendix-chapters.json")
         if (fs.existsSync(appendixPath)) {
           try {
-            appendixChapters = JSON.parse(fs.readFileSync(appendixPath, "utf8")) as unknown
+            appendixChapters = readJson(appendixPath)
           } catch (error) {
             warnings.push(`讀取網站「${key}」的 appendix-chapters.json 失敗：${errorMessage(error)}`)
           }

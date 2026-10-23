@@ -19,6 +19,8 @@ import type { TreeTransform } from "../plugins/types"
 import type { BuildCtx } from "../util/ctx"
 import { transformYoutubeEmbeds } from "../util/youtubeFacade"
 import { wrapStrongNumbers } from "../util/strongNumbers"
+import { applyInteractiveSites, HUB_SLUG as INTERACTIVE_HUB_SLUG } from "../util/interactiveHast"
+import { loadInteractiveRegistry } from "../util/interactiveSitesLoader"
 
 interface RenderComponents {
   head: QuartzComponent
@@ -329,6 +331,16 @@ export function renderPage(
   }
 
   root.children = transformYoutubeEmbeds(root).children
+  // 互動網站（U-24）：章節頁插入上方一行與最下面的小卡，總入口頁換成經卷長軸。
+  // 「哪些章節頁存在」只有總入口用得到，所以只在那一頁建這個集合（每頁都建太浪費）。
+  applyInteractiveSites(root, {
+    slug,
+    registry: loadInteractiveRegistry(),
+    existingSlugs:
+      slug === INTERACTIVE_HUB_SLUG
+        ? new Set(componentData.allFiles.map((file) => file.slug ?? ""))
+        : new Set<string>(),
+  })
   root.children = wrapStrongNumbers(root).children
 
   // set componentData.tree to the edited html that has transclusions rendered

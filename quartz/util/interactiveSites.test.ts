@@ -326,6 +326,7 @@ test("chapter selection uses scope, coverage size, and stable title and key tie-
     key: `site-${String(index).padStart(2, "0")}`,
     title: ["乙站", "甲站", "丙站", "甲站"][index % 4],
     description: "",
+    hasTitle: true,
     scope: "narrow",
     chapters: [{ book: 1, chapter: 1 }],
     entryPath: "",

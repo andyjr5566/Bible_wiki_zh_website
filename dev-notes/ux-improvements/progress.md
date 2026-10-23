@@ -542,6 +542,22 @@
 - 推上 main（`a2ce8565`）：部署、冒煙測試、Pinecone 同步都成功；正式站 relatedcheck 33/33＋4/4＋17/17、landingcheck 4/4，創世記 50 已是 `創50：25`。
 - 注意：Codex 這天的沙箱連唯讀指令都無法執行（`setup refresh had errors`）；改法是把需要的檔案全文放進 stdin、要它輸出完整檔案。
 
+### 條目頁「按書卷累積」重新設計（分支 `fix/entry-accumulation`，2026-10-23）
+
+使用者用 iPhone 看條目頁回報：字級大小不一、按書卷累積顏色看不清（深色模式紫字壓土黃底）、從章節進來後頁面很長、兩層收合讓文字框很窄，要求先發想再討論。主導者量測後做 5 組樣稿（M0 現況、M1 只改色、M2 扁平一層、M3 扁平＋章號膠囊、M4/M4b 到訪摘要卡），使用者選：摘要卡（放在「定義」後面）、扁平一層、M1 配色全站套用、章標維持全站連結樣式，回「要做」。
+
+| 任務 | 給誰 | 結果 | 採用 | 主導者修了什麼 |
+|---|---|---|---|---|
+| 樣稿 | Claude sonnet 子代理 | 注入正式站的 CSS／JS，scratchpad `acc-mock/`；量到手機文字欄 226→303 px、深色展開標題對比 1.11 | 拿來問使用者 | |
+| 字級、配色、扁平化 | Claude sonnet 子代理，worktree `bwz-wt-acc` | iOS 字級：`-webkit-text-size-adjust: 100%`（原本只有不帶前綴的 none，iPhone 不認，同一段會被自動放大成大小不一）；全站可收合區塊改用顏色變數（收合標題對比 5.2～6.2、展開 5.3～6.6）；新增 `-> books` 規則（`config/collapse-rules.txt`→`sync_content.ps1`→`collapse-rules.json`，備援在 `collapsible.inline.ts`），按書卷累積保留「N 卷書」徽章但不再每卷書包一層 details | 採用（`4b9c703f`） | |
+| 本章摘要卡 | Codex gpt-6-sol high（沙箱壞了，檔案全文放進提示詞） | `relatedCard.ts` 取代 `relatedButton.ts`：「定義」整段之後放卡片，每段最多 4 行、真的被截斷才顯示「展開全文」、「看本條目在其他章節的記載 ↓」打開按書卷累積並捲到該章；單元測試、`relatedcheck.mjs` 一起改 | 採用（`0f1a8f8b`） | 截圖發現卡片內文比正文小一號（`font-size: inherit` 蓋掉站台 `article li` 的 1.4rem）→ 拿掉；截斷會讓項目符號消失 → 不用符號也不縮排、展開後也不冒出圓點 |
+
+- 驗收（`66739be0` 合併後；外加卡片字級修正）：quartz/util 161/161、verse-return 45/45；test_content 站 smoke 27/27、regress 15/15、stickycheck 21/21、expcheck 9/9、site-ux 118/118（對重建的無 site-ux 基準站）、purecheck 51/51、verse-return 92/92、axe 20/20；完整內容站 tourcheck 20/20＋24/24、purecheck 51/51、axe 20/20、6 卷抽樣 280/280、relatedcheck 34/34＋4/4＋20/20、landingcheck 4/4。這次只改條目頁與可收合區塊，所以沒跑朗讀、書卷選擇器、首頁入口、首頁順序、離線、知識節點頁（上一輪都通過）。
+- 截圖：scratchpad `el/cardshots/`（卡片、按下後的按書卷累積 × 手機淺深、桌機）、`acc-impl/shots/`（扁平化與配色，含章節頁的本章知識節點）。
+- 注意：
+  - 這天 Windows 的應用程式控制原則開始擋 `C:\Obsidian\bwz-gb\site-ux\node_modules` 裡的 esbuild 0.27.7（連複製一份都擋）；改成用主 repo 的 esbuild 0.27.3 換進去（原檔改名 `esbuild.0277.bak`、`@esbuild.0277.bak`），dist 只差預期的樣式。沒有動安全設定。
+  - 主 repo 工作區另有不是這批改的 `api/search.js`、`scripts/generate_embeddings.js`、test_content 兩篇教學（15:01 修改、換 NVIDIA 嵌入模型），沒有一起提交。
+
 ## 第 8～9 批：大改版
 
 （尚未開始）

@@ -155,9 +155,12 @@ html.bwz-touring .bwz-vr {
   font-weight: 700 !important;
 }
 
+/* 截斷要用 -webkit-box，項目符號會因此消失；乾脆不用符號也不縮排，讓文字和標頭對齊（展開後也一樣，不會突然冒出圓點）。
+   字級不在這裡設：沿用站台 article li 的字級（手機 1.4rem），卡片和正文才不會大小不一。 */
 .bwz-vr-card-list {
   margin: 0 0 0.25rem !important;
-  padding-left: 1.1rem !important;
+  padding-left: 0 !important;
+  list-style: none !important;
 }
 
 .bwz-vr-card-list > li {
@@ -165,11 +168,11 @@ html.bwz-touring .bwz-vr {
   -webkit-line-clamp: 4 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
-  font-size: inherit !important;
+  margin: 0 0 0.6rem !important;
 }
 
 .bwz-vr-card-expanded .bwz-vr-card-list > li {
-  display: list-item !important;
+  display: block !important;
   -webkit-line-clamp: unset !important;
   overflow: visible !important;
 }

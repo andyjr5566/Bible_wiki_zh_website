@@ -302,6 +302,21 @@ function oldInteractiveListEnd(root: Root, headingIndex: number, limit: number):
   return headingIndex + 1
 }
 
+/**
+ * 舊格式（例如 test_content）把「互動網站」放在附錄以外的段落（「相關資源」底下）。
+ * 決策是小卡取代筆記庫的清單、兩者不同時出現，所以附錄外的那一份也拿掉；小卡仍放在附錄。
+ */
+function removeStrayInteractiveList(root: Root): void {
+  const appendix = appendixBounds(root)
+  for (let index = 0; index < root.children.length; index += 1) {
+    if (appendix && index > appendix.start && index < appendix.end) continue
+    const node = elementAt(root, index)
+    if (node?.tagName !== "h3" || normalizedHeading(node) !== WORDS.interactive) continue
+    root.children.splice(index, oldInteractiveListEnd(root, index, root.children.length) - index)
+    return
+  }
+}
+
 function bottomNavigationIndex(root: Root, verseIndex: number | null): number | null {
   for (let index = root.children.length - 1; index >= 0; index -= 1) {
     if (verseIndex !== null && index <= verseIndex) break
@@ -472,6 +487,7 @@ function applyChapter(
     return false
   }
 
+  removeStrayInteractiveList(root)
   const verseIndex = verseListRootIndex(root)
   const placement = findCardPlacement(root, verseIndex)
   insertChapterCard(root, placement, buildChapterCard(sites, ctx.slug, ref))

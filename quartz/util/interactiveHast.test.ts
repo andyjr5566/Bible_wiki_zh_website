@@ -461,6 +461,30 @@ test("互動網站標題的空白經正規化後仍替換舊清單", () => {
   }
 })
 
+test("舊格式：附錄外的「相關資源 › 互動網站」也拿掉，小卡只出現在附錄", () => {
+  const root = chapterPage("創世記", 6, { appendix: false })
+  const verseIndex = root.children.findIndex((node) => node.type === "element" && node.tagName === "ol")
+  root.children.splice(
+    verseIndex + 1,
+    0,
+    text("\n"),
+    heading("h2", "相關資源"),
+    text("\n"),
+    heading("h3", "互動網站"),
+    text("\n"),
+    mapList("舊清單：方舟"),
+  )
+
+  assert.equal(applyInteractiveSites(root, { slug: "01-創世記/第6章", registry, existingSlugs }), true)
+  const interactiveHeadings = descendants(root).filter((node) => node.tagName === "h3" && node.properties.id === "互動網站")
+  assert.equal(interactiveHeadings.length, 1)
+  assert.ok(!nodeText(root).includes("舊清單：方舟"))
+  const top = elements(root)
+  const appendixIndex = top.findIndex((node) => node.tagName === "h2" && node.properties.id === "附錄")
+  assert.ok(appendixIndex > 0)
+  assert.ok(top.indexOf(interactiveHeadings[0]) > appendixIndex)
+})
+
 test("描述陣列的 element 索引能對回含換行文字節點的 root", () => {
   const root = chapterPage("出埃及記", 12)
   const described = describeChapterNodes(root)

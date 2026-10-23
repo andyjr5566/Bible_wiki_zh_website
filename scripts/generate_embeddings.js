@@ -220,26 +220,11 @@ function requireCredentials() {
 async function embedAndUpsert(index, openai, records) {
   for (let offset = 0; offset < records.length; offset += EMBED_BATCH_SIZE) {
     const batch = records.slice(offset, offset + EMBED_BATCH_SIZE)
-    let attempt = 0
-    let response
-
-    while (true) {
-      try {
-        response = await openai.embeddings.create({
-          model: "nvidia/nemotron-3.5-embed-1b",
-          input: batch.map((record) => record.embeddingInput),
-          input_type: "passage",
-        })
-        break
-      } catch (error) {
-        if (!isRateLimitError(error) || attempt >= DELETE_RETRY_ATTEMPTS) throw error
-
-        const delay = Math.min(30_000, 1_000 * 2 ** attempt)
-        console.log(`NVIDIA embedding rate limit reached; retrying in ${delay}ms...`)
-        await sleep(delay)
-        attempt++
-      }
-    }
+    const response = await openai.embeddings.create({
+      model: "nvidia/nemotron-3-embed-1b",
+      input: batch.map((record) => record.embeddingInput),
+      input_type: "passage",
+    })
 
     const embeddings = [...response.data].sort((a, b) => a.index - b.index)
     await index.upsert({
@@ -350,7 +335,7 @@ async function main() {
   requireCredentials()
   const openai = new OpenAI({
     apiKey: process.env.NVIDIA_API_KEY,
-    baseURL: process.env.NVIDIA_BASE_URL || "https://integrate.api.nvidia.com/v1",
+    baseURL: "https://integrate.api.nvidia.com/v1",
   })
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
   const index = pinecone.index(process.env.PINECONE_INDEX_NAME)

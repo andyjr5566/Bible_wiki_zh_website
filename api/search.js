@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     // 1. Initialize OpenAI client pointing to NVIDIA
     const openai = new OpenAI({
       apiKey: process.env.NVIDIA_API_KEY,
-      baseURL: process.env.NVIDIA_BASE_URL || "https://integrate.api.nvidia.com/v1",
+      baseURL: "https://integrate.api.nvidia.com/v1",
     })
 
     // 2. Initialize Pinecone client
@@ -69,9 +69,9 @@ export default async function handler(req, res) {
     })
     const index = pc.index(process.env.PINECONE_INDEX_NAME)
 
-    // 3. Generate embedding for the search query using nemotron-3.5-embed-1b
+    // 3. Generate embedding for the search query using nemotron
     const embeddingResponse = await openai.embeddings.create({
-      model: "nvidia/nemotron-3.5-embed-1b",
+      model: "nvidia/nemotron-3-embed-1b",
       input: query.trim(),
       input_type: "query", // Specify this is a query, not a passage
     })

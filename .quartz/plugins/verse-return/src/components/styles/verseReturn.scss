@@ -1,0 +1,213 @@
+/* ══════════════════════════════════════════════════════════════
+   「↩ 返回」浮動按鈕（回到剛才的經節／本章整理）與回到之後的短暫標示。
+   位置規則：
+   - 桌機（≥1201px）：在中欄底部置中。腳本把中欄的 left／width 寫進 --bwz-vr-left、--bwz-vr-width，
+     所以不會蓋到左欄、右欄與右下角的「?」。
+   - 其他寬度：整排置中，放在左下「筆記」與右下「?」那一排（高 46px、離底 20px）的上面，不重疊；
+     「加入主畫面」橫幅出現時那一排會上移（--bwz-pwa-h），按鈕也跟著上移（規則同 quartz/components/Head.tsx）。
+   ══════════════════════════════════════════════════════════════ */
+
+.bwz-vr {
+  /* 浮動按鈕那一排的上緣＋間隔；只在這裡定義一次 */
+  --bwz-vr-row-top: calc(20px + 46px + 10px);
+  position: fixed;
+  z-index: 880;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bwz-vr-row-top) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  justify-content: center;
+  /* 外框不擋住後面的內容，只有按鈕本身可以點 */
+  pointer-events: none;
+  padding: 0 16px;
+  box-sizing: border-box;
+  transition: bottom 0.25s ease;
+
+  & > * {
+    pointer-events: auto;
+  }
+}
+
+html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-vr {
+  bottom: calc(var(--bwz-pwa-h, 64px) + 12px + 46px + 10px);
+}
+
+@media (min-width: 1201px) {
+  .bwz-vr[style*="--bwz-vr-left"] {
+    left: var(--bwz-vr-left);
+    right: auto;
+    width: var(--bwz-vr-width);
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.bwz-vr-go,
+.bwz-vr-x {
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0;
+  border: none;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  /* 淺色：加深的強調色當底（白字約 6:1） */
+  background: var(--bwz-accent-strong, var(--secondary));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+
+  &:focus-visible {
+    outline: 3px solid var(--dark);
+    outline-offset: 2px;
+  }
+}
+
+.bwz-vr-go {
+  max-width: calc(100vw - 32px - 44px);
+  padding: 0 0.9rem 0 1.1rem;
+  border-radius: 999px 0 0 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bwz-vr-x {
+  width: 44px;
+  padding: 0;
+  border-radius: 0 999px 999px 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 1.3rem;
+}
+
+/* 深色：實心按鈕改用深色字（底色是亮紫，白字對比不夠） */
+:root[saved-theme="dark"] .bwz-vr-go,
+:root[saved-theme="dark"] .bwz-vr-x {
+  background: var(--secondary);
+  color: #14111f;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+:root[saved-theme="dark"] .bwz-vr-x {
+  border-left-color: rgba(20, 17, 31, 0.35);
+}
+
+/* 關係圖放大或搜尋視窗打開、導覽進行中時先藏起來，關掉後恢復（和其他浮動按鈕一致） */
+html:has(.global-graph-outer.active) .bwz-vr,
+html:has(.search > .search-container.active) .bwz-vr,
+html.bwz-touring .bwz-vr {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-vr {
+    transition: none;
+  }
+}
+
+@media print {
+  .bwz-vr {
+    display: none;
+  }
+}
+
+/* ---------- 回到之後的短暫標示（經節或整理標題；不依賴個人筆記外掛的樣式） ---------- */
+.bwz-vr-flash {
+  animation: bwz-vr-flash 2.4s ease-out;
+  border-radius: 4px;
+}
+
+@keyframes bwz-vr-flash {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--secondary);
+    background-color: color-mix(in srgb, var(--secondary) 14%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-vr-flash {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--secondary);
+  }
+}
+
+/* 本章摘要卡放在「定義」之後；外掛 CSS 層級較低，所以覆蓋站台樣式要用 !important。 */
+.bwz-vr-card {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  margin: 1.25rem 0 !important;
+  padding: 0.9rem 1rem !important;
+  border: 0 !important;
+  border-left: 3px solid var(--bwz-accent-strong, var(--secondary)) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--lightgray) 30%, transparent) !important;
+  color: inherit !important;
+}
+
+.bwz-vr-card-title {
+  margin: 0 0 0.5rem !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+}
+
+/* 截斷要用 -webkit-box，項目符號會因此消失；乾脆不用符號也不縮排，讓文字和標頭對齊（展開後也一樣，不會突然冒出圓點）。
+   字級不在這裡設：沿用站台 article li 的字級（手機 1.4rem），卡片和正文才不會大小不一。 */
+.bwz-vr-card-list {
+  margin: 0 0 0.25rem !important;
+  padding-left: 0 !important;
+  list-style: none !important;
+}
+
+.bwz-vr-card-list > li {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 4 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 0 0.6rem !important;
+}
+
+.bwz-vr-card-expanded .bwz-vr-card-list > li {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  overflow: visible !important;
+}
+
+/* 文字連結保留足夠的觸控高度，鍵盤操作時也看得見焦點。 */
+.bwz-vr-card-action {
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0.25rem 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font: inherit !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  text-decoration: underline !important;
+  white-space: normal !important;
+  cursor: pointer !important;
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-accent-strong, var(--secondary)) !important;
+    outline-offset: 3px !important;
+  }
+}
+
+.bwz-vr-card-action[hidden] {
+  display: none !important;
+}
+
+@media print {
+  .bwz-vr-card {
+    display: none !important;
+  }
+}

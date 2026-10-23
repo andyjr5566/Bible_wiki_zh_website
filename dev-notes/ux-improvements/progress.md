@@ -539,6 +539,7 @@
 
 - 驗收（`a4664495`＋測試腳本）：quartz/util 161/161、verse-return 40/40；test_content 站 smoke 27/27、regress 15/15、swcheck 13/13、nodecheck 10/10、stickycheck 21/21、expcheck 9/9、site-ux 118/118、purecheck 51/51、朗讀 42/42、hubcheck 49/49、hubaxe 18/18、ordercheck 142/142、book-picker 94/94、verse-return 92/92、axe 20/20；完整內容站 tourcheck 20/20＋24/24、purecheck 51/51、hubcheck 49/49、axe 20/20、6 卷抽樣 280/280、relatedcheck 33/33＋4/4＋17/17、landingcheck 4/4（手機兩項因底部找不到連結略過）。
 - 截圖：scratchpad `el/btnshots/`（按鈕在標題下、淺深 × 1440／390）、`el/rel/`（按下後第12章在畫面上方並標示）。
+- 推上 main（`a2ce8565`）：部署、冒煙測試、Pinecone 同步都成功；正式站 relatedcheck 33/33＋4/4＋17/17、landingcheck 4/4，創世記 50 已是 `創50：25`。
 - 注意：Codex 這天的沙箱連唯讀指令都無法執行（`setup refresh had errors`）；改法是把需要的檔案全文放進 stdin、要它輸出完整檔案。
 
 ## 第 8～9 批：大改版

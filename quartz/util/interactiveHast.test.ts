@@ -420,6 +420,7 @@ test("總入口保留 h1，收起原清單，並建立 wide 牆與交錯長軸",
   const external = descendants(hub).filter((node) => node.tagName === "a" && node.properties.target === "_blank")
   assert.ok(external.length > 0)
   assert.ok(external.every((node) => Array.isArray(node.properties.rel) && node.properties.rel.includes("noopener")))
+  assert.ok(external.every((node) => node.properties.dataRouterIgnore === ""))
   // 封面連結是 aria-hidden（標題連結才是給螢幕閱讀器的那一個），所以只要求看得到的連結說明「在新分頁開啟」
   const announced = external.filter((node) => node.properties["aria-hidden"] !== "true")
   assert.ok(announced.length > 0)

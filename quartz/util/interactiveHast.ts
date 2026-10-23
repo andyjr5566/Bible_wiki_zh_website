@@ -144,7 +144,9 @@ function relativePath(slug: string, path: string): string {
 }
 
 function externalProps(href: string): Element["properties"] {
-  return { href, target: "_blank", rel: ["noopener"] }
+  // data-router-ignore：SPA 路由只看「被點到的元素」有沒有 target=_blank，點到封面圖（<img>）時看不到 <a> 的 target，
+  // 會把互動網站當成站內頁面用 SPA 載入。標上這個屬性，路由就會放手，交給瀏覽器開新分頁。
+  return { href, target: "_blank", rel: ["noopener"], dataRouterIgnore: "" }
 }
 
 function newTabText(): Element {

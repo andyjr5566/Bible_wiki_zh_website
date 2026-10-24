@@ -20,6 +20,8 @@ import notePropertiesZhScript from "../../components/scripts/notePropertiesZh.in
 import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
 // @ts-ignore
 import chapterQuickBarScript from "../../components/scripts/chapterQuickBar.inline"
+// @ts-ignore
+import knowledgeHubScript from "../../components/scripts/knowledgeHub.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -123,6 +125,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Chapter quick bar (手機章節快捷列＋探索抽屜捲到目前章節)
   componentResources.afterDOMLoaded.push(chapterQuickBarScript)
+
+  // Knowledge hub filters (知識節點類別頁的書卷／關鍵字篩選、總入口的搜尋鈕)
+  componentResources.afterDOMLoaded.push(knowledgeHubScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

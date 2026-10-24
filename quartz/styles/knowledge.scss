@@ -1,0 +1,1029 @@
+/* ==========================================================================
+   知識節點（link_folder）總入口與類別頁面的樣式
+
+   用在兩種頁面：
+   1. 總入口（link_folder/index）：十一類條目依用途分組，每類一張「名牌」卡片。
+   2. 類別頁（link_folder/<分類>/）：類別簡介、同層分類、搜尋與書卷篩選、最常讀到、依書卷分組的條目索引。
+   HTML 是建置時由 quartz/util/knowledgeHast.ts 插進去的，篩選互動在 quartz/components/scripts/knowledgeHub.inline.ts
+   （它會切換 hidden、aria-pressed、aria-expanded、data-active）；class 一律 bwz-kn- 開頭，改 class 名稱要三邊一起改。
+   外觀和互動網站探索中心（interactive.scss）是兄弟：羊皮紙色的半透明面板、一個紫色強調色、襯線標題、
+   1px 細框線、柔和陰影，段落標題直接用它的 .bwz-ia-hall（兩側花飾），這裡不重複定義。
+
+   幾個「為什麼」：
+   - 分類顏色只用在三個小地方：印章、導航膠囊裡的小符號、條目的 hover／底線。
+     邊框、數字、啟用中的按鈕一律用站台的中性色與紫色，頁面才是「羊皮紙加紫色」而不是一片彩虹。
+     所以沒有左側色條，也沒有有顏色的數量徽章。
+   - 條目是沒有框線的字典式索引（多欄、點狀底線），不是一顆顆按鈕：幾百條時，框線會比文字還吵，
+     索引一眼掃過去才讀得快。只有「最常讀到」那一小排保留成小框，因為它只有十個，而且要有點擊的感覺。
+   - 書卷篩選的面板預設收合（三十幾顆按鈕會把條目推到畫面下面），按「依書卷篩選」才展開；
+     選了書卷後按鈕上會顯示目前的書卷名（data-active），面板自己收起來。
+   - 同層分類導航是一行可橫向捲動的膠囊，進頁面時由腳本把目前的分類捲到中間（用 offsetLeft，
+     所以 nav 必須是 position: relative，才會是膠囊的 offsetParent）。
+
+   寫法上的幾個「為什麼」（和 interactive.scss 相同）：
+   - 這個檔案由 custom.scss 最上面 @use 進來，和 custom.scss 一樣不在 cascade layer 裡。
+     沒分層的一般宣告贏過主題與外掛（分層）的 article a／h2／li 規則，所以一個 class 選擇器就夠。
+     !important 只用在兩處：[hidden] 的 display:none（元件自己設了 display，會蓋掉瀏覽器預設的 hidden），
+     和列印時藏起互動區。
+   - 主題的連結（base.scss 的 a.internal）會加底色、內距、圓角、粗體和 1.4rem 的行高。
+     本檔產生的連結（卡片、膠囊、條目、說明裡的連結）都用 a.bwz-kn-… 的寫法並明確設回這些屬性。
+   - 主題對 ul／li／h2 也有自己的邊距與裝飾（article li 的底邊距、article h2 的虛線底線）；
+     用到的地方都在這裡明確重設。
+   - 分類顏色 --cat-color 要設在 .bwz-kn 本身，因為類別頁的容器自己就帶 data-cat；
+     只寫「.bwz-kn [data-cat]」（後代）會漏掉容器，印章與列表就會退回紫色。
+   - 只用站台的顏色變數與 color-mix()，深淺色自動跟著換。強調色用 var(--bwz-accent-strong, var(--secondary))：
+     淺色模式的主題紫配淺色底對比不夠，加深版在 custom.scss 最上面定義。
+   - 次要文字（數量、說明）不直接用 --gray：它在羊皮紙底上約 2.4:1，12px 的小字讀不清楚；改用 --darkgray 加一點 --gray（深淺色都自動跟著換），要調整只改下面的 $kn-muted 一處。
+   - 站台的 Aa「字級」設定是分層的 !important，設在 article 的 p／li 上，這裡蓋不過；
+     所以條目的 li 會跟著字級走，但連結本身用 rem 自己設字級，版面不會因此亂掉。
+   ========================================================================== */
+
+$mobile: "(max-width: 800px)";
+
+// 動態效果的條件：卡片上浮只給有滑鼠、且沒有要求減少動態效果的裝置；顏色與箭頭的轉場只看是否要求減少動態效果
+$kn-motion: "(hover: hover) and (prefers-reduced-motion: no-preference)";
+$kn-anim: "(prefers-reduced-motion: no-preference)";
+
+$kn-accent: var(--bwz-accent-strong, var(--secondary));
+$kn-cat: var(--cat-color, var(--secondary));
+$kn-serif: var(--headerFont), "Noto Serif TC", "BiauKai", "PingFang TC", serif;
+// 羊皮紙面板：半透明，底下的紙紋透得出來
+$kn-paper: color-mix(in srgb, var(--light) 80%, transparent);
+$kn-line: var(--lightgray);
+// 可以按、可以輸入的元件（輸入框、篩選按鈕、最常讀到的小框）的框線：比 lightgray 深一點，淺色模式才看得出是一個按鈕
+$kn-ctl-line: color-mix(in srgb, var(--gray) 40%, var(--lightgray));
+$kn-muted: color-mix(in srgb, var(--darkgray) 75%, var(--gray));
+$kn-shadow: 0 10px 24px -14px rgb(60 40 10 / 0.45);
+$kn-shadow-hover: 0 14px 28px -14px rgb(60 40 10 / 0.55);
+
+@mixin kn-focus($offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid $kn-accent;
+    outline-offset: $offset;
+  }
+}
+
+/* ---------- 分類色彩映射（與關係圖譜及語意搜尋一致） ---------- */
+
+@mixin kn-cat($name, $light, $dark) {
+  // 兩種寫法都要：類別頁的容器自己是 .bwz-kn 並帶 data-cat；總入口的卡片與膠囊則是 .bwz-kn 裡面的後代
+  .bwz-kn[data-cat="#{$name}"],
+  .bwz-kn [data-cat="#{$name}"] {
+    --cat-color: #{$light};
+  }
+
+  :root[saved-theme="dark"] .bwz-kn[data-cat="#{$name}"],
+  :root[saved-theme="dark"] .bwz-kn [data-cat="#{$name}"] {
+    --cat-color: #{$dark};
+  }
+}
+
+@include kn-cat("人物", #b45309, #fbbf24);
+@include kn-cat("地點", #15803d, #4ade80);
+@include kn-cat("事件", #c2410c, #fb923c);
+@include kn-cat("歷史", #b91c1c, #f87171);
+@include kn-cat("背景", #0f766e, #5eead4);
+@include kn-cat("文化", #be185d, #f9a8d4);
+@include kn-cat("神學", #6d28d9, #c4b5fd);
+@include kn-cat("主題", #4338ca, #a5b4fc);
+@include kn-cat("原文", #0369a1, #7dd3fc);
+@include kn-cat("互文", #0e7490, #67e8f9);
+@include kn-cat("解經爭議", #4d7c0f, #bef264);
+
+/* ---------- 共用 ---------- */
+
+.bwz-kn {
+  margin-top: 0.5rem;
+}
+
+/* 腳本用 hidden 屬性控制顯示。下面這些元件自己設了 display，會蓋掉瀏覽器對 [hidden] 的預設，所以這裡統一補回去
+   （!important：要贏過元件自己的 display，也不讓之後新增的規則不小心蓋掉） */
+.bwz-kn-search,
+.bwz-kn-tools,
+.bwz-kn-books,
+.bwz-kn-clear,
+.bwz-kn-top,
+.bwz-kn-sec,
+.bwz-kn-empty,
+.bwz-kn-chips li {
+  &[hidden] {
+    display: none !important;
+  }
+}
+
+.bwz-kn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bwz-kn-glyph {
+  display: inline-block;
+  margin-right: 0.4rem;
+  color: $kn-cat;
+  font-size: 0.9em;
+}
+
+/* 印章：紅印章那樣的方章，邊框＋內側細線，微微歪一點。顏色是分類色，是頁面上少數用到分類色的地方 */
+.bwz-kn-seal {
+  --kn-seal-size: 2.1rem;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--kn-seal-size);
+  height: var(--kn-seal-size);
+  border: 2px solid $kn-cat;
+  border-radius: 4px;
+  background: color-mix(in srgb, #{$kn-cat} 8%, var(--light));
+  box-shadow:
+    inset 0 0 0 2px var(--light),
+    inset 0 0 0 3px color-mix(in srgb, #{$kn-cat} 45%, transparent);
+  color: $kn-cat;
+  font-family: $kn-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+  transform: rotate(-3deg);
+  user-select: none;
+}
+
+.bwz-kn-seal-lg {
+  --kn-seal-size: 3.4rem;
+
+  font-size: 1.9rem;
+}
+
+/* ==========================================================================
+   總入口（link_folder/index）
+   段落標題（h2.bwz-ia-hall）的樣式在 interactive.scss
+   ========================================================================== */
+
+.bwz-kn-lead {
+  margin: 0 0 0.5rem;
+  color: var(--darkgray);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.bwz-kn-stats {
+  margin: 0 0 1.25rem;
+  color: $kn-muted;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* 搜尋按鈕（外觀呼應首頁入口；實際是去按網站原本的搜尋鈕） */
+.bwz-kn-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem;
+  border: 1px solid $kn-line;
+  border-radius: 12px;
+  background: $kn-paper;
+  color: var(--darkgray);
+  font: inherit;
+  font-size: 0.98rem;
+  text-align: left;
+  cursor: pointer;
+
+  .bwz-kn-search-text {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .bwz-kn-search-hint {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: $kn-muted;
+  }
+
+  kbd {
+    flex-shrink: 0;
+    font: inherit;
+    font-size: 0.75rem;
+    border: 1px solid $kn-line;
+    border-radius: 6px;
+    padding: 0.15rem 0.45rem;
+    color: $kn-muted;
+    background: var(--lightgray);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: $kn-accent;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
+    }
+  }
+
+  @media #{$kn-anim} {
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  @media #{$mobile} {
+    .bwz-kn-search-hint,
+    kbd {
+      display: none;
+    }
+  }
+
+  @include kn-focus(2px);
+}
+
+/* 卡片牆：桌機兩欄（閱讀欄約 520px 剛好放兩張），手機一欄 */
+.bwz-kn-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+  gap: 1rem;
+  margin: 0 0 1.75rem;
+}
+
+/* 名牌：整張卡就是連結。上排：印章｜名稱｜條目數；下面兩排：一句說明、「常讀到」的例子。
+   說明那排吃掉多出來的高度，例子永遠貼在卡片底部，同一排的卡片底線才會對齊 */
+a.bwz-kn-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  column-gap: 0.7rem;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid $kn-line;
+  border-radius: 8px;
+  background: var(--light);
+  box-shadow: $kn-shadow;
+  color: var(--dark);
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+
+  .bwz-kn-seal {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .bwz-kn-name {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    min-width: 0;
+    color: var(--dark);
+    font-family: $kn-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .bwz-kn-count {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+    color: $kn-muted;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .bwz-kn-blurb {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: start;
+    margin-top: 0.65rem;
+    color: var(--darkgray);
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .bwz-kn-eg {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 0.6rem;
+    padding-top: 0.45rem;
+    border-top: 1px dashed $kn-line;
+    color: $kn-muted;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  @include kn-focus(2px);
+}
+
+@media (hover: hover) {
+  a.bwz-kn-card:hover {
+    border-color: color-mix(in srgb, #{$kn-cat} 55%, var(--lightgray));
+  }
+}
+
+@media #{$kn-motion} {
+  a.bwz-kn-card {
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  a.bwz-kn-card:hover {
+    box-shadow: $kn-shadow-hover;
+    transform: translateY(-2px);
+  }
+}
+
+/* 說明：安靜的一小塊，連結用強調色 */
+.bwz-kn-help {
+  margin: 2rem 0 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid $kn-line;
+  border-radius: 8px;
+  background: $kn-paper;
+  color: var(--darkgray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+
+  a {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: $kn-accent;
+    font-weight: 600;
+    line-height: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+
+    @include kn-focus(2px);
+  }
+}
+
+/* ==========================================================================
+   類別頁面（link_folder/<分類>/）
+   ========================================================================== */
+
+/* 頁首：印章＋簡介＋統計 */
+.bwz-kn-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid $kn-line;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--light) 70%, transparent);
+
+  .bwz-kn-head-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bwz-kn-blurb {
+    margin: 0 0 0.25rem;
+    color: var(--dark);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .bwz-kn-meta {
+    margin: 0;
+    color: $kn-muted;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+}
+
+/* 同層分類導航：一行，橫向捲動。
+   捲動邊緣的陰影用 custom.scss 手機表格的做法（local／scroll 背景）：蓋板和底色必須完全同色，
+   所以這一列自己鋪不透明的底色（--bwz-scroll-cover）；深淺色的陰影顏色用 --bwz-scroll-shadow */
+nav.bwz-kn-pills {
+  --bwz-scroll-cover: color-mix(in srgb, var(--lightgray) 55%, var(--light));
+
+  position: relative; // 腳本用 offsetLeft 把目前的膠囊捲到中間，nav 必須是 offsetParent
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 0.3rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid $kn-line;
+  border-radius: 12px;
+  background:
+    linear-gradient(to right, var(--bwz-scroll-cover) 30%, transparent) 0 0 / 2.5rem 100% local,
+    linear-gradient(to left, var(--bwz-scroll-cover) 30%, transparent) 100% 0 / 2.5rem 100% local,
+    radial-gradient(farthest-side at 0 50%, var(--bwz-scroll-shadow), transparent) 0 0 / 0.9rem 100% scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--bwz-scroll-shadow), transparent) 100% 0 / 0.9rem 100% scroll;
+  background-color: var(--bwz-scroll-cover);
+  background-repeat: no-repeat;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--gray) 45%, transparent) transparent;
+  -webkit-overflow-scrolling: touch;
+
+  a.bwz-kn-pill {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.3rem;
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 0 0.8rem;
+    border: 1px solid $kn-line;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--darkgray);
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.3;
+    text-decoration: none;
+    white-space: nowrap;
+    scroll-snap-align: center;
+
+    .bwz-kn-glyph {
+      margin-right: 0;
+    }
+
+    .bwz-kn-pill-n {
+      color: $kn-muted;
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 目前這一類：淡淡的分類色底＋分類色框線，不是整顆實心 */
+    &[aria-current="page"] {
+      border-color: $kn-cat;
+      background: color-mix(in srgb, #{$kn-cat} 14%, var(--light));
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    @media #{$kn-anim} {
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+    }
+
+    @media (hover: hover) {
+      &:hover:not([aria-current="page"]) {
+        border-color: color-mix(in srgb, var(--gray) 50%, var(--lightgray));
+        background: var(--light);
+        color: var(--dark);
+      }
+    }
+
+    @include kn-focus(1px);
+  }
+
+  a.bwz-kn-pill-all {
+    margin-right: 0.25rem;
+    font-weight: 700;
+  }
+}
+
+/* 工具區：搜尋框＋書卷篩選。沒有自己的框，只是頁面上的一條帶子 */
+.bwz-kn-tools {
+  margin: 0 0 1.25rem;
+}
+
+.bwz-kn-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+label.bwz-kn-find {
+  position: relative; // 給只有螢幕閱讀器看得到的 .bwz-kn-sr 當定位基準，免得它跑到頁面別處
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+input.bwz-kn-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid $kn-ctl-line;
+  border-radius: 10px;
+  background: $kn-paper;
+  color: var(--dark);
+  font: inherit;
+  font-size: 16px; // 小於 16px，iOS 會在對焦時把整頁放大
+  line-height: 1.4;
+  appearance: none;
+
+  &:focus {
+    outline: 2px solid $kn-accent;
+    outline-offset: 1px;
+  }
+}
+
+button.bwz-kn-books-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.4rem;
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 0.9rem;
+  border: 1px solid $kn-ctl-line;
+  border-radius: 10px;
+  background: $kn-paper;
+  color: var(--darkgray);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .bwz-kn-chev {
+    display: inline-block;
+    font-size: 0.85em; // 0.9rem 的 0.85 倍，仍不小於 0.75rem
+    line-height: 1;
+
+    @media #{$kn-anim} {
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &[aria-expanded="true"] .bwz-kn-chev {
+    transform: rotate(180deg);
+  }
+
+  /* 已經選了書卷：標籤會變成「書卷：創世記」，按鈕用強調色提醒現在有篩選 */
+  &[data-active="1"] {
+    border-color: $kn-accent;
+    color: $kn-accent;
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    &:hover:not([data-active="1"]) {
+      border-color: color-mix(in srgb, var(--gray) 60%, var(--lightgray));
+      color: var(--dark);
+    }
+  }
+
+  /* 很窄的手機：書卷名太長就用省略號，不要把搜尋框擠扁 */
+  @media (max-width: 420px) {
+    .bwz-kn-books-label {
+      max-width: 11rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  @include kn-focus(2px);
+}
+
+/* 書卷面板：預設收合，按上面的按鈕才展開 */
+.bwz-kn-books {
+  margin-top: 0.6rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid $kn-line;
+  border-radius: 10px;
+  background: $kn-paper;
+}
+
+.bwz-kn-bgroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.bwz-kn-bgroup-h {
+  min-width: 5.5em; // 各排的標籤一樣寬，後面的書卷按鈕才排得整齊
+  color: $kn-muted;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+button.bwz-kn-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-sizing: border-box;
+  min-height: 32px;
+  margin: 0;
+  padding: 0 0.6rem;
+  border: 1px solid $kn-ctl-line;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--darkgray);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  cursor: pointer;
+
+  .bwz-kn-book-n {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 40px;
+  }
+
+  @media #{$kn-anim} {
+    transition:
+      background-color 0.12s ease,
+      border-color 0.12s ease,
+      color 0.12s ease;
+  }
+
+  @media (hover: hover) {
+    &:hover:not([aria-pressed="true"]) {
+      background: var(--lightgray);
+      color: var(--dark);
+    }
+  }
+
+  /* 選中：實心強調色。淺色模式的強調色是深紫，配白字（5.5:1）；深色模式的強調色是淺紫 #a68af9，白字只有 2.75:1，要換深色字 */
+  &[aria-pressed="true"] {
+    border-color: $kn-accent;
+    background: $kn-accent;
+    color: #fff;
+    font-weight: 700;
+
+    .bwz-kn-book-n {
+      color: rgb(255 255 255 / 0.85);
+      opacity: 1;
+    }
+
+    :root[saved-theme="dark"] & {
+      color: #16121f;
+
+      .bwz-kn-book-n {
+        color: rgb(22 18 31 / 0.85);
+      }
+    }
+  }
+
+  @include kn-focus(2px);
+}
+
+/* 狀態列：「共 N 個條目」＋清除篩選。min-height 留到清除按鈕的高度，按鈕出現時下面的內容才不會跳動 */
+.bwz-kn-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  margin-top: 0.25rem;
+}
+
+.bwz-kn-status {
+  color: var(--darkgray);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+button.bwz-kn-clear {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: $kn-accent;
+  font: inherit;
+  font-size: 0.85rem;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @include kn-focus(2px);
+}
+
+/* ---------- 條目連結：共用的重設，外觀由下面「最常讀到」和「條目索引」各自決定 ---------- */
+
+.bwz-kn-chips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+a.bwz-kn-chip {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--dark);
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+
+  .bwz-kn-chip-t {
+    font-weight: inherit;
+  }
+}
+
+/* ---------- 最常讀到：一小排小框 ---------- */
+
+.bwz-kn-top {
+  margin: 0 0 1.75rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid $kn-line;
+  border-radius: 10px;
+  background: var(--light);
+
+  .bwz-kn-top-h {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .bwz-kn-top-t {
+    color: var(--dark);
+    font-family: $kn-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    // 小花飾（純裝飾，螢幕閱讀器不讀）
+    &::before {
+      content: "✤";
+      content: "✤" #{"/"} "";
+      margin-right: 0.45em;
+      color: $kn-accent;
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+  }
+
+  .bwz-kn-top-note {
+    color: $kn-muted;
+    font-size: 0.8rem;
+  }
+
+  .bwz-kn-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .bwz-kn-chips li {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  a.bwz-kn-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 40px;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid $kn-ctl-line;
+    border-radius: 8px;
+    background: var(--light);
+    font-size: 0.95rem;
+
+    .bwz-kn-chip-t {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* 章數（「8 章」）不要拆成兩行，空間不夠時換行的是名稱 */
+    .bwz-kn-chip-n {
+      flex-shrink: 0;
+      color: $kn-accent;
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    @media #{$kn-anim} {
+      transition:
+        border-color 0.12s ease,
+        color 0.12s ease;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: color-mix(in srgb, #{$kn-cat} 60%, var(--lightgray));
+        color: $kn-cat;
+      }
+    }
+
+    @include kn-focus(2px);
+  }
+}
+
+/* ---------- 條目清單與書卷區塊 ---------- */
+
+.bwz-kn-list {
+  .bwz-kn-note {
+    margin: 0 0 1rem;
+    color: $kn-muted;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+}
+
+/* 書卷標題：書名（強調色、襯線）＋一條細線＋數量。細線用 ::after，所以用 order 排成「名稱、線、數量」 */
+h2.bwz-kn-sec-h {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.75rem 0 0.6rem;
+  padding: 0;
+  border: 0;
+  color: $kn-accent;
+  font-family: $kn-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+
+  // 主題的標題裝飾（如果有）不要
+  &::before {
+    content: none;
+  }
+
+  &::after {
+    content: "";
+    order: 1;
+    flex: 1;
+    border-top: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent);
+  }
+
+  .bwz-kn-sec-n {
+    order: 2;
+    color: $kn-muted;
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* 條目索引：沒有框線的字典式索引，文字之間只有一條點狀底線。
+   欄寬 8.5rem：閱讀欄約 480–520px 時三欄（一個條目幾千條，欄數太少清單會長到捲不完）；每一條不跨欄拆開 */
+.bwz-kn-list .bwz-kn-chips {
+  display: block;
+  column-width: 8.5rem;
+  column-gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: block; // 預設的 list-item 在 WebKit 動態隱藏條目時，欄的高度偶爾會算出空隙
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.bwz-kn-list a.bwz-kn-chip {
+  display: block;
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 0.38rem 0.1rem;
+  border-bottom: 1px dotted color-mix(in srgb, var(--gray) 45%, transparent);
+  color: var(--dark);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+
+  &:focus-visible {
+    border-bottom-color: $kn-cat;
+    border-bottom-style: solid;
+    color: $kn-cat;
+    outline: 2px solid $kn-accent;
+    outline-offset: 1px;
+  }
+}
+
+@media (hover: hover) {
+  .bwz-kn-list a.bwz-kn-chip:hover {
+    border-bottom-color: $kn-cat;
+    border-bottom-style: solid;
+    color: $kn-cat;
+  }
+}
+
+/* 名稱很長的類別（互文、解經爭議：每條是一整句）：欄寬放大，手機上就是一欄，條目可以折成兩三行 */
+.bwz-kn[data-wide="1"] {
+  .bwz-kn-list .bwz-kn-chips {
+    column-width: 22rem;
+  }
+
+  .bwz-kn-list a.bwz-kn-chip {
+    white-space: normal;
+  }
+}
+
+/* 名稱偏長（八個字以上，例如事件、歷史）：兩欄；手機上一欄 */
+.bwz-kn[data-wide="2"] {
+  .bwz-kn-list .bwz-kn-chips {
+    column-width: 13rem;
+  }
+
+  .bwz-kn-list a.bwz-kn-chip {
+    white-space: normal;
+  }
+}
+
+/* 篩選後沒有任何符合的條目 */
+.bwz-kn-empty {
+  margin: 2rem 0;
+  padding: 2rem;
+  border: 1px dashed $kn-line;
+  border-radius: 10px;
+  color: var(--darkgray);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ---------- 手機（含平板直立） ---------- */
+
+@media #{$mobile} {
+  .bwz-kn-head {
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .bwz-kn-seal-lg {
+    --kn-seal-size: 2.8rem;
+
+    font-size: 1.6rem;
+  }
+
+  // 手機上兩欄；書卷很多時面板自己捲動，不要把條目推到畫面外
+  .bwz-kn-list .bwz-kn-chips {
+    column-width: 9.5rem;
+    column-gap: 1rem;
+  }
+
+  .bwz-kn-books {
+    max-height: 16rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* ---------- 列印：只留內容，篩選與導航藏起來 ---------- */
+
+@media print {
+  .bwz-kn-tools,
+  .bwz-kn-pills,
+  .bwz-kn-search {
+    display: none !important;
+  }
+}

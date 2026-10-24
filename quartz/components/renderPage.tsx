@@ -20,6 +20,7 @@ import type { BuildCtx } from "../util/ctx"
 import { transformYoutubeEmbeds } from "../util/youtubeFacade"
 import { wrapStrongNumbers } from "../util/strongNumbers"
 import { applyInteractiveSites, HUB_SLUG as INTERACTIVE_HUB_SLUG } from "../util/interactiveHast"
+import { applyKnowledgeHub } from "../util/knowledgeHast"
 import { loadInteractiveRegistry } from "../util/interactiveSitesLoader"
 
 interface RenderComponents {
@@ -341,6 +342,8 @@ export function renderPage(
         ? new Set(componentData.allFiles.map((file) => file.slug ?? ""))
         : new Set<string>(),
   })
+  // 知識節點（link_folder）：總入口與各類別頁在建置時產生分類卡、篩選工具與條目清單。其他頁面不動。
+  applyKnowledgeHub(root, { slug, files: componentData.allFiles })
   root.children = wrapStrongNumbers(root).children
 
   // set componentData.tree to the edited html that has transclusions rendered

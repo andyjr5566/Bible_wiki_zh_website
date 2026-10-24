@@ -1,4 +1,4 @@
-﻿# -NoPush: only sync into the local working tree; do not commit or push.
+# -NoPush: only sync into the local working tree; do not commit or push.
 # Use it to review what would be published before pushing for real.
 param([switch]$NoPush)
 
@@ -165,7 +165,8 @@ function Add-WebsiteTitles {
         @{ Path = 'README.md';           Title = '本站簡介';       Create = $false },
         @{ Path = 'appendix\index.md';   Title = '附錄';           Create = $false },
         @{ Path = 'appendix\website\index.md'; Title = '互動網站'; Create = $false },
-        @{ Path = 'link_folder\index.md'; Title = '知識節點';      Create = $true }
+        @{ Path = 'link_folder\index.md'; Title = '知識節點';      Create = $true },
+        @{ Path = '教學\index.md';        Title = '教學';          Create = $true }
     )
     foreach ($entry in $titled) {
         $filePath = Join-Path $ContentRoot $entry.Path
@@ -502,6 +503,7 @@ if (Test-Path $contentIndexPath) {
 
 > 第一次來？點頁面最上方的「開始互動導覽」，或在任何一頁按 ``?`` 打開說明中心。
 
+- [[教學/index|📖 教學總覽（所有教學文章與功能說明索引）]]
 - [[教學/快速入門|🚀 快速入門（核心功能、延伸探索與常見問題）]]
 - [[教學/如何查一個主題|🔍 如何查一個主題（搜尋、分類資料夾、按書卷累積、關係圖譜）]]
 - [[教學/如何跨書卷找相關條目|🔗 如何跨書卷找相關條目（互文與關係圖譜）]]

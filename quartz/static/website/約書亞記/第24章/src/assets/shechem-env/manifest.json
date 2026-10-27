@@ -1,0 +1,96 @@
+{
+  "total_bytes": 2350116,
+  "budget_bytes": 5000000,
+  "assets": {
+    "dawn.webp": {
+      "source": "lab/renders/shechem/composite-dawn.png",
+      "size": [
+        4096,
+        2048
+      ],
+      "bytes": 58196,
+      "layers": "sky+hills composite"
+    },
+    "morning.webp": {
+      "source": "lab/renders/shechem/composite-morning.png",
+      "size": [
+        4096,
+        2048
+      ],
+      "bytes": 59958,
+      "layers": "sky+hills composite"
+    },
+    "afternoon.webp": {
+      "source": "lab/renders/shechem/composite-afternoon.png",
+      "size": [
+        4096,
+        2048
+      ],
+      "bytes": 64428,
+      "layers": "sky+hills composite"
+    },
+    "dusk.webp": {
+      "source": "lab/renders/shechem/composite-dusk.png",
+      "size": [
+        4096,
+        2048
+      ],
+      "bytes": 59466,
+      "layers": "sky+hills composite"
+    },
+    "night.webp": {
+      "source": "lab/renders/shechem/composite-night.png",
+      "size": [
+        4096,
+        2048
+      ],
+      "bytes": 95112,
+      "layers": "sky+hills composite"
+    },
+    "oak.webp": {
+      "source": "lab/assets-codex/shechem-env/oak.png",
+      "size": [
+        1006,
+        1024
+      ],
+      "bytes": 638846,
+      "key": "white"
+    },
+    "oak-night.webp": {
+      "source": "lab/assets-codex/shechem-env/oak-night.png",
+      "size": [
+        1006,
+        1024
+      ],
+      "bytes": 538562,
+      "key": "white"
+    },
+    "stone-lying.webp": {
+      "source": "lab/assets-codex/shechem-env/stone-lying.png",
+      "size": [
+        960,
+        508
+      ],
+      "bytes": 325234,
+      "key": "white"
+    },
+    "stone-standing.webp": {
+      "source": "lab/assets-codex/shechem-env/stone-standing.png",
+      "size": [
+        476,
+        960
+      ],
+      "bytes": 301228,
+      "key": "white"
+    },
+    "stone-texture.webp": {
+      "source": "lab/assets-codex/shechem-env/stone-texture.png",
+      "size": [
+        768,
+        768
+      ],
+      "bytes": 209086,
+      "tileable": true
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "as-for-me-and-my-house",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "至於我和我家：約書亞記 24 章・示劍立約互動網站（非商業教育用途）",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 3024",
+    "preview": "vite preview --host 127.0.0.1 --port 4224",
+    "data": "node scripts/build-verses.mjs && node scripts/build-step.mjs && node scripts/build-geodata.mjs && node scripts/build-site.mjs",
+    "data:check": "node scripts/build-site.mjs --check",
+    "figures": "node scripts/build-figures.mjs",
+    "stations": "python -I scripts/build-stations.py",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "alpha:check": "python -I scripts/check-station-alpha.py",
+    "font:check": "python -I scripts/build-story-font.py --check",
+    "verify": "npm run data:check && npm run font:check && npm run typecheck && npm run test && npm run alpha:check",
+    "build": "npm run verify && vite build"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8",
+    "yaml": "^2.6.1"
+  },
+  "overrides": {
+    "rollup": "4.62.4"
+  }
+}

@@ -1,4 +1,4 @@
-# -NoPush: only sync into the local working tree; do not commit or push.
+﻿# -NoPush: only sync into the local working tree; do not commit or push.
 # Use it to review what would be published before pushing for real.
 param([switch]$NoPush)
 
@@ -287,9 +287,10 @@ if (Test-Path $websiteSource) {
     # (npm ci + vite build, then only each app's dist/ is copied into public/).
     # It needs the Vite project, never the working material around it:
     #   tools/ lab/ review/ .vite/   dev scripts, scene lab, screenshots, cache
+    #   collect/ scripts/blender/     source material and Blender scene scripts (large; not needed to build)
     #   GOAL*/HANDOFF/SPEC/README/位置考證 .md   notes for whoever builds the app
     #   .opening/ (served from content/) and the top-level index.md (served from content/)
-    $devDirNames = @('tools', 'lab', 'review', '.vite')
+    $devDirNames = @('tools', 'lab', 'review', '.vite', 'collect', 'scripts\blender')
     $devFilePatterns = @('GOAL*.md', 'HANDOFF.md', 'SPEC.md', 'README.md', '位置考證.md')
     $skipDirs = @((Join-Path $websiteSource '.opening'))
     $skipFiles = @((Join-Path $websiteSource 'index.md'))

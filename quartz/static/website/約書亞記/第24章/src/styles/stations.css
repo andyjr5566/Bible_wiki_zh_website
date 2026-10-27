@@ -1,0 +1,106 @@
+.jos-station-player {
+  position: fixed;
+  inset: var(--jos-station-top, 56px) 0 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+}
+.jos-station-player[hidden] { display: none; }
+.jos-station-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.jos-station-composition {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, calc((100dvh - var(--jos-station-top, 56px)) * 16 / 9));
+  height: max(100%, calc(100vw * 9 / 16));
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+.jos-station-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.jos-station-composition[data-ready="false"] { background: #302a29; }
+.jos-station-artwork { position: absolute; inset: 0; opacity: 0; transition: opacity 450ms ease-out; }
+.jos-station-composition[data-ready="true"] .jos-station-artwork { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .jos-station-artwork { transition: none; }
+}
+.jos-station-coffin {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: help;
+}
+.jos-station-coffin:focus-visible { outline: 2px solid #f5cc80; outline-offset: 4px; }
+.jos-station-coffin::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 6px 10px;
+  color: #fff1d3;
+  background: rgb(33 26 32 / .82);
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+}
+.jos-in-stations .jos-stage-tags { visibility: hidden; }
+.jos-in-stations .jos-webgl-fallback { visibility: hidden; }
+.jos-station-orbit { position: absolute; inset: 12% 25% 12%; pointer-events: none; }
+.jos-station-sun, .jos-station-moon { position: absolute; top: 0; left: 50%; width: 3%; aspect-ratio: 1; border-radius: 50%; background: #ffda88; box-shadow: 0 0 28px #ffc57980; }
+.jos-station-moon { top: auto; bottom: 0; background: #f7eee1; box-shadow: 0 0 16px #d1d9e880; }
+.jos-station-marks { position: absolute; inset: 0; }
+.jos-station-marks i { position: absolute; width: 2%; aspect-ratio: 1; border-radius: 50%; background: #d99b55; box-shadow: 0 0 25px 14px #d99b553a; }
+.jos-station-marks-canaan i { width: .7%; background: #ffe2a1; box-shadow: 0 0 28px 12px #ffe2a153; }
+
+/* 靜止閱讀時讓記憶場景保留緩慢掠過的暖光；關閉動態後保持原畫。 */
+.jos-station-memory-light {
+  position: absolute;
+  inset: -4%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 30% 28% at 70% 46%, rgba(255, 218, 151, .32), transparent 76%);
+  mix-blend-mode: screen;
+}
+
+body.jos-in-stations:not(.jos-motion-off) .jos-station-memory-light {
+  animation: jos-station-memory-light 2.6s ease-in-out infinite alternate;
+}
+
+body.jos-motion-off .jos-station-memory-light {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes jos-station-memory-light {
+  from { opacity: .08; transform: translateX(-2%); }
+  to { opacity: .58; transform: translateX(2%); }
+}
+
+.jos-in-stations .jos-panel-on .jos-wslot { max-width: 38vw; }
+.jos-in-stations .jos-panel-on .jos-balak-grid { grid-template-columns: minmax(0, 1fr); }
+.jos-balak-card[hidden] { display: none; }
+/* 翻牌時外框不再出現捲軸 */
+.jos-in-stations .jos-panel-on .jos-wslot:has(.jos-balak-grid) { overflow: visible; max-height: none; }
+@media (max-height: 520px) and (orientation: landscape) {
+  .jos-station-composition { top: 34%; }
+  .jos-station-person { left: 26%; }
+  .jos-station-layer[data-layer-id='battle'] { left: 10%; }
+  .jos-station-layer[data-layer-id='far-crowd'] { left: 0; }
+  .jos-station-layer[data-layer-id='near-family'] { left: 36%; }
+  .jos-in-stations .jos-panel-on .jos-wslot { max-width: 39vw; max-height: 42vh; overflow-y: auto; }
+}
+@media (orientation: portrait) {
+  .jos-station-player { align-items: start; padding-top: 12vh; }
+}

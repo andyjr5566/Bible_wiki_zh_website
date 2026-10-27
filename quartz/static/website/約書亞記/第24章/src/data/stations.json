@@ -1,0 +1,1029 @@
+[
+  {
+    "id": "beyond-river",
+    "beat": "beat-06-beyond-river",
+    "verses": [
+      2
+    ],
+    "weight": 1.3,
+    "place": "haran",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "beyond-river-sky",
+        "asset": "beyond-river-sky.webp",
+        "source": "lab/renders/layers/beyond-river/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "beyond-river-far",
+        "asset": "beyond-river-far.webp",
+        "source": "lab/renders/layers/beyond-river/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "beyond-river-mid",
+        "asset": "beyond-river-mid.webp",
+        "source": "lab/renders/layers/beyond-river/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "town-far",
+        "asset": "town-far.webp",
+        "source": "lab/assets-codex/beyond-river/town-far.png",
+        "scale": 0.65,
+        "x": 15,
+        "y": -18,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "beyond-river-near",
+        "asset": "beyond-river-near.webp",
+        "source": "lab/renders/layers/beyond-river/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "terah-tent",
+        "asset": "terah-tent.webp",
+        "source": "lab/assets-codex/beyond-river/terah-tent.png",
+        "scale": 0.46,
+        "x": -8,
+        "y": 20,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "ford",
+    "beat": "beat-07-abraham",
+    "verses": [
+      3
+    ],
+    "weight": 1.8,
+    "place": "euphrates",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "ford-sky",
+        "asset": "ford-sky.webp",
+        "source": "lab/renders/layers/ford/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "ford-far",
+        "asset": "ford-far.webp",
+        "source": "lab/renders/layers/ford/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "ford-sea",
+        "asset": "ford-sea.webp",
+        "source": "lab/renders/layers/ford/sea.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "flock-bank",
+        "asset": "flock-bank.webp",
+        "source": "lab/assets-gemini/ford/keyed/flock_bank.png",
+        "scale": 0.9,
+        "x": 0,
+        "y": 4,
+        "parallax": 6,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "reeds-palms",
+        "asset": "reeds-palms.webp",
+        "source": "lab/assets-gemini/ford/keyed/reeds_palms.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 9,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "ford-near",
+        "asset": "ford-near.webp",
+        "source": "lab/renders/layers/ford/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "abraham-wading",
+        "asset": "abraham-wading.webp",
+        "source": "lab/assets-codex/test/abraham-wading.png",
+        "scale": 0.48,
+        "x": -6,
+        "y": 17,
+        "parallax": 7,
+        "role": "person",
+        "actions": [
+          {
+            "property": "x",
+            "start": 0,
+            "end": 1,
+            "from": -12,
+            "to": 3
+          }
+        ],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "isaac",
+    "beat": "beat-07-abraham",
+    "verses": [
+      3
+    ],
+    "weight": 1.4,
+    "place": "hebron",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "isaac-sky",
+        "asset": "isaac-sky.webp",
+        "source": "lab/renders/layers/isaac/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "isaac-far",
+        "asset": "isaac-far.webp",
+        "source": "lab/renders/layers/isaac/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "isaac-mid",
+        "asset": "isaac-mid.webp",
+        "source": "lab/renders/layers/isaac/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "isaac-near",
+        "asset": "isaac-near.webp",
+        "source": "lab/renders/layers/isaac/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "tent-baby",
+        "asset": "tent-baby.webp",
+        "source": "lab/assets-codex/isaac/tent-baby.png",
+        "scale": 0.43,
+        "x": -7,
+        "y": 17,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "esau-jacob",
+    "beat": "beat-07-abraham",
+    "verses": [
+      4
+    ],
+    "weight": 1.8,
+    "place": "egypt",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "esau-jacob-sky",
+        "asset": "esau-jacob-sky.webp",
+        "source": "lab/renders/layers/esau-jacob/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "esau-jacob-far",
+        "asset": "esau-jacob-far.webp",
+        "source": "lab/renders/layers/esau-jacob/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "esau-jacob-mid",
+        "asset": "esau-jacob-mid.webp",
+        "source": "lab/renders/layers/esau-jacob/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "esau-jacob-near",
+        "asset": "esau-jacob-near.webp",
+        "source": "lab/renders/layers/esau-jacob/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "esau-seir",
+        "asset": "esau-seir.webp",
+        "source": "lab/assets-codex/esau-jacob/esau-seir.png",
+        "scale": 0.4,
+        "x": 14,
+        "y": 0,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "jacob-caravan",
+        "asset": "jacob-caravan.webp",
+        "source": "lab/assets-codex/test/jacob-caravan.png",
+        "scale": 0.44,
+        "x": -9,
+        "y": 15,
+        "parallax": 7,
+        "role": "person",
+        "actions": [
+          {
+            "property": "x",
+            "start": 0,
+            "end": 1,
+            "from": -15,
+            "to": 1
+          }
+        ],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "egypt",
+    "beat": "beat-08-egypt",
+    "verses": [
+      5
+    ],
+    "weight": 1.6,
+    "place": "rameses",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "egypt-sky",
+        "asset": "egypt-sky.webp",
+        "source": "lab/renders/layers/egypt/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "egypt-far",
+        "asset": "egypt-far.webp",
+        "source": "lab/renders/layers/egypt/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "egypt-mid",
+        "asset": "egypt-mid.webp",
+        "source": "lab/renders/layers/egypt/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "pylon",
+        "asset": "pylon.webp",
+        "source": "lab/assets-codex/egypt/pylon.png",
+        "scale": 0.66,
+        "x": 8,
+        "y": 3,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "egypt-near",
+        "asset": "egypt-near.webp",
+        "source": "lab/renders/layers/egypt/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "moses-aaron",
+        "asset": "moses-aaron.webp",
+        "source": "lab/assets-codex/egypt/moses-aaron.png",
+        "scale": 0.36,
+        "x": -13,
+        "y": 18,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "coffin-bearers",
+        "asset": "coffin-bearers.webp",
+        "source": "lab/assets-codex/shared/coffin-bearers.png",
+        "scale": 0.095,
+        "x": 7,
+        "y": 27,
+        "parallax": 5,
+        "role": "coffin",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "redsea",
+    "beat": "beat-08-egypt",
+    "verses": [
+      6,
+      7
+    ],
+    "weight": 4.6,
+    "place": "redsea",
+    "still": 0.72,
+    "layers": [
+      {
+        "id": "redsea-sky",
+        "asset": "redsea-sky.webp",
+        "source": "lab/renders/layers/redsea-west/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": [
+          {
+            "property": "brightness",
+            "start": 0.55,
+            "end": 1,
+            "from": 0.72,
+            "to": 1.15
+          }
+        ]
+      },
+      {
+        "id": "redsea-far",
+        "asset": "redsea-far.webp",
+        "source": "lab/renders/layers/redsea-west/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "redsea-sea",
+        "asset": "redsea-sea.webp",
+        "source": "lab/renders/layers/redsea-west/sea.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "water-left",
+        "asset": "water-left.webp",
+        "source": "lab/assets-gemini/redsea/keyed/water-walls.png",
+        "scale": 1.12,
+        "x": 0,
+        "y": 10,
+        "parallax": 4,
+        "role": "scenery",
+        "actions": [
+          {
+            "property": "x",
+            "start": 0.38,
+            "end": 0.72,
+            "from": -34,
+            "to": 0
+          },
+          {
+            "property": "y",
+            "start": 0.38,
+            "end": 0.72,
+            "from": 10,
+            "to": 2
+          }
+        ],
+        "clip": "inset(0 50% 0 0)"
+      },
+      {
+        "id": "water-right",
+        "asset": "water-right.webp",
+        "source": "lab/assets-gemini/redsea/keyed/water-walls.png",
+        "scale": 1.12,
+        "x": 0,
+        "y": 10,
+        "parallax": 4,
+        "role": "scenery",
+        "actions": [
+          {
+            "property": "x",
+            "start": 0.38,
+            "end": 0.72,
+            "from": 34,
+            "to": 0
+          },
+          {
+            "property": "y",
+            "start": 0.38,
+            "end": 0.72,
+            "from": 10,
+            "to": 2
+          }
+        ],
+        "clip": "inset(0 0 0 50%)"
+      },
+      {
+        "id": "chariots",
+        "asset": "chariots.webp",
+        "source": "lab/assets-gemini/redsea/keyed/chariots.png",
+        "scale": 0.72,
+        "x": 0,
+        "y": 6,
+        "parallax": 5,
+        "role": "scenery",
+        "actions": [
+          {
+            "property": "y",
+            "start": 0.45,
+            "end": 0.85,
+            "from": 6,
+            "to": 32
+          },
+          {
+            "property": "opacity",
+            "start": 0.78,
+            "end": 0.97,
+            "from": 1,
+            "to": 0
+          }
+        ]
+      },
+      {
+        "id": "darkness",
+        "asset": "darkness.webp",
+        "source": "lab/assets-gemini/redsea/keyed/darkness.png",
+        "scale": 1.25,
+        "x": 0,
+        "y": -6,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": [
+          {
+            "property": "x",
+            "start": 0.55,
+            "end": 1,
+            "from": 0,
+            "to": -25
+          },
+          {
+            "property": "opacity",
+            "start": 0.55,
+            "end": 1,
+            "from": 0.95,
+            "to": 0.35
+          }
+        ]
+      },
+      {
+        "id": "redsea-near",
+        "asset": "redsea-near.webp",
+        "source": "lab/renders/layers/redsea-west/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "far-crowd",
+        "asset": "far-crowd.webp",
+        "source": "lab/assets-gemini/redsea/keyed/far-crowd.png",
+        "scale": 1.5,
+        "x": 0,
+        "y": 30,
+        "parallax": 7,
+        "role": "person",
+        "actions": []
+      },
+      {
+        "id": "near-family",
+        "asset": "near-family.webp",
+        "source": "lab/assets-gemini/redsea/keyed/near-family.png",
+        "scale": 0.5,
+        "x": -20,
+        "y": 25,
+        "parallax": 10,
+        "role": "person",
+        "actions": []
+      }
+    ]
+  },
+  {
+    "id": "wilderness",
+    "beat": "beat-08-egypt",
+    "verses": [
+      7
+    ],
+    "weight": 1.6,
+    "place": "kadesh",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "wilderness-sky",
+        "asset": "wilderness-sky.webp",
+        "source": "lab/renders/layers/wilderness/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "wilderness-far",
+        "asset": "wilderness-far.webp",
+        "source": "lab/renders/layers/wilderness/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "wilderness-mid",
+        "asset": "wilderness-mid.webp",
+        "source": "lab/renders/layers/wilderness/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "camp",
+        "asset": "camp.webp",
+        "source": "lab/assets-codex/wilderness/camp.png",
+        "scale": 0.78,
+        "x": 0,
+        "y": 15,
+        "parallax": 4,
+        "role": "scenery",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "wilderness-near",
+        "asset": "wilderness-near.webp",
+        "source": "lab/renders/layers/wilderness/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "walkers",
+        "asset": "walkers.webp",
+        "source": "lab/assets-codex/wilderness/walkers.png",
+        "scale": 0.46,
+        "x": -9,
+        "y": 18,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "east",
+    "beat": "beat-09-east",
+    "verses": [
+      8
+    ],
+    "weight": 1.7,
+    "place": "heshbon",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "east-sky",
+        "asset": "east-sky.webp",
+        "source": "lab/renders/layers/east/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "east-far",
+        "asset": "east-far.webp",
+        "source": "lab/renders/layers/east/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "east-mid",
+        "asset": "east-mid.webp",
+        "source": "lab/renders/layers/east/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "east-near",
+        "asset": "east-near.webp",
+        "source": "lab/renders/layers/east/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "battle",
+        "asset": "battle.webp",
+        "source": "lab/assets-codex/east/battle.png",
+        "scale": 0.72,
+        "x": 0,
+        "y": 8,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "moab",
+    "beat": "beat-09-east",
+    "verses": [
+      9,
+      10
+    ],
+    "weight": 2,
+    "place": "moab",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "moab-sky",
+        "asset": "moab-sky.webp",
+        "source": "lab/renders/layers/moab/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "moab-far",
+        "asset": "moab-far.webp",
+        "source": "lab/renders/layers/moab/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "moab-mid",
+        "asset": "moab-mid.webp",
+        "source": "lab/renders/layers/moab/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "moab-near",
+        "asset": "moab-near.webp",
+        "source": "lab/renders/layers/moab/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "balak-balaam",
+        "asset": "balak-balaam.webp",
+        "source": "lab/assets-codex/moab/balak-balaam.png",
+        "scale": 0.4,
+        "x": -9,
+        "y": 13,
+        "parallax": 7,
+        "role": "person",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "jordan",
+    "beat": "beat-10-jericho",
+    "verses": [
+      11,
+      12
+    ],
+    "weight": 2.4,
+    "place": "jericho",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "jordan-sky",
+        "asset": "jordan-sky.webp",
+        "source": "lab/renders/layers/jordan/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "jordan-far",
+        "asset": "jordan-far.webp",
+        "source": "lab/renders/layers/jordan/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "jordan-mid",
+        "asset": "jordan-mid.webp",
+        "source": "lab/renders/layers/jordan/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "jericho-magenta",
+        "asset": "jericho-magenta.webp",
+        "source": "lab/assets-codex/jordan/jericho-magenta.png",
+        "scale": 0.57,
+        "x": 15,
+        "y": -2,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": [],
+        "key": "magenta"
+      },
+      {
+        "id": "jordan-near",
+        "asset": "jordan-near.webp",
+        "source": "lab/renders/layers/jordan/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "crossing",
+        "asset": "crossing.webp",
+        "source": "lab/assets-codex/jordan/crossing.png",
+        "scale": 0.48,
+        "x": -12,
+        "y": 15,
+        "parallax": 7,
+        "role": "person",
+        "actions": [
+          {
+            "property": "opacity",
+            "start": 0.5,
+            "end": 0.5,
+            "from": 1,
+            "to": 0,
+            "step": true
+          }
+        ],
+        "key": "white"
+      },
+      {
+        "id": "swords-down",
+        "asset": "swords-down.webp",
+        "source": "lab/assets-codex/jordan/swords-down.png",
+        "scale": 0.45,
+        "x": -10,
+        "y": 15,
+        "parallax": 7,
+        "role": "person",
+        "actions": [
+          {
+            "property": "opacity",
+            "start": 0.5,
+            "end": 0.5,
+            "from": 0,
+            "to": 1,
+            "step": true
+          }
+        ],
+        "key": "white"
+      }
+    ]
+  },
+  {
+    "id": "canaan",
+    "beat": "beat-11-gifts",
+    "verses": [
+      13
+    ],
+    "weight": 2,
+    "place": "shechem",
+    "still": 0.5,
+    "layers": [
+      {
+        "id": "canaan-sky",
+        "asset": "canaan-sky.webp",
+        "source": "lab/renders/layers/canaan/sky.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 1,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "canaan-far",
+        "asset": "canaan-far.webp",
+        "source": "lab/renders/layers/canaan/far.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 2,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "canaan-mid",
+        "asset": "canaan-mid.webp",
+        "source": "lab/renders/layers/canaan/mid.png",
+        "scale": 1.06,
+        "x": 0,
+        "y": 0,
+        "parallax": 3,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "towns-vines",
+        "asset": "towns-vines.webp",
+        "source": "lab/assets-codex/canaan/towns-vines.png",
+        "scale": 1,
+        "x": 0,
+        "y": 2,
+        "parallax": 4,
+        "role": "scenery",
+        "actions": [],
+        "key": "white"
+      },
+      {
+        "id": "canaan-near",
+        "asset": "canaan-near.webp",
+        "source": "lab/renders/layers/canaan/near.png",
+        "scale": 1.1,
+        "x": 0,
+        "y": 0,
+        "parallax": 8,
+        "role": "scenery",
+        "actions": []
+      },
+      {
+        "id": "coffin-bearers",
+        "asset": "coffin-bearers.webp",
+        "source": "lab/assets-codex/shared/coffin-bearers.png",
+        "scale": 0.095,
+        "x": 7,
+        "y": 27,
+        "parallax": 5,
+        "role": "coffin",
+        "actions": [],
+        "key": "white"
+      }
+    ]
+  }
+]

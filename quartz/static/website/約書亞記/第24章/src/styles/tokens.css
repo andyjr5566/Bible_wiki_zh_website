@@ -1,0 +1,85 @@
+:root {
+  /* Claude.md 第五節定案色彩 token（石灰岩、橡樹、羊皮紙） */
+  --jos-stone: #e8e0cf;
+  --jos-ink: #1e1b16;
+  --jos-oak: #3d4a30;
+  --jos-rust: #9a4a2a;
+  --jos-lamp: #b5832a;
+  --jos-past: #a88b6a;
+  --jos-later: #d6cbb0;
+  /* 短註框：羊皮紙色 */
+  --jos-parchment: #efe2bd;
+  --jos-parchment-edge: #c4aa6d;
+  --jos-parchment-ink: #3a2f1c;
+
+  /* 衍生介面語意變數 */
+  --jos-bg: var(--jos-stone);
+  --jos-bg-elev: #f6f1e6;
+  --jos-bg-soft: #dfd5c0;
+  --jos-bg-card: rgba(246, 241, 230, 0.91);
+  --jos-bg-header: rgba(238, 230, 214, 0.88);
+  --jos-ink-muted: #574e42;
+  --jos-ink-faint: #7d7263;
+  --jos-accent: var(--jos-rust);
+  --jos-accent-soft: rgba(154, 74, 42, 0.14);
+  --jos-oak-soft: rgba(61, 74, 48, 0.15);
+  --jos-bronze: var(--jos-lamp);
+  --jos-bronze-soft: rgba(181, 131, 42, 0.16);
+  --jos-slate: #4a5c46;
+  --jos-slate-soft: rgba(74, 92, 70, 0.14);
+  --jos-border: rgba(30, 27, 22, 0.15);
+  --jos-border-strong: rgba(30, 27, 22, 0.3);
+  --jos-mark-bg: rgba(181, 131, 42, 0.25);
+  --jos-shadow: 0 12px 32px rgba(24, 20, 14, 0.14);
+
+  --jos-font-serif: 'Noto Serif TC', 'Songti TC', 'PMingLiU', serif;
+  --jos-font-sans: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --jos-font-hand: 'Iansui', 'Noto Serif TC', serif;
+  --jos-font-hebrew: 'Noto Serif Hebrew', 'SBL Hebrew', 'Times New Roman', serif;
+
+  --jos-header-h: 52px;
+  --jos-max-w: 1180px;
+  --jos-radius: 12px;
+  --jos-radius-sm: 8px;
+}
+
+.jos-dark {
+  --jos-stone: #17150f;
+  --jos-ink: #ebe3d2;
+  --jos-oak: #7f9468;
+  --jos-rust: #cf6d48;
+  --jos-lamp: #e0aa4c;
+  --jos-past: #8a7358;
+  --jos-later: #2a261d;
+  --jos-parchment: #3b3320;
+  --jos-parchment-edge: #7a6a45;
+  --jos-parchment-ink: #eadfc2;
+
+  --jos-bg: var(--jos-stone);
+  --jos-bg-elev: #232018;
+  --jos-bg-soft: #2c281e;
+  --jos-bg-card: rgba(33, 30, 23, 0.9);
+  --jos-bg-header: rgba(23, 21, 15, 0.88);
+  --jos-ink-muted: #b9af9d;
+  --jos-ink-faint: #8c8272;
+  --jos-accent: var(--jos-rust);
+  --jos-accent-soft: rgba(207, 109, 72, 0.2);
+  --jos-oak-soft: rgba(127, 148, 104, 0.2);
+  --jos-bronze: var(--jos-lamp);
+  --jos-bronze-soft: rgba(224, 170, 76, 0.2);
+  --jos-slate: #93a884;
+  --jos-slate-soft: rgba(147, 168, 132, 0.18);
+  --jos-border: rgba(235, 227, 210, 0.15);
+  --jos-border-strong: rgba(235, 227, 210, 0.32);
+  --jos-mark-bg: rgba(224, 170, 76, 0.26);
+  --jos-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+}
+
+.jos-later:not(.jos-dark) {
+  --jos-bg: var(--jos-later);
+  --jos-bg-soft: #cbc0a4;
+}
+
+.jos-later.jos-dark {
+  --jos-bg: var(--jos-later);
+}

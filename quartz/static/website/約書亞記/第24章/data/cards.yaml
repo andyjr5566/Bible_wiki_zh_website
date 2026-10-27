@@ -1,0 +1,580 @@
+# 06 各家怎麼讀 — 15 道研經問題並列資料
+# 每一筆註釋皆附原檔 line 與逐字 evidence（≥ 8 字，只取自 raw_data/*_joshua_24.txt），由閘門 2 機械驗證。
+
+questions:
+  - id: why-shechem
+    number: 1
+    question: 為什麼在示劍？
+    verses:
+      - 書24:1
+    entryLinks:
+      - 地點/示劍（城）
+      - 事件/示劍更新盟約
+    views:
+      - id: card-1-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:1
+        paraphrase: 示劍位於迦南地中部南北與東西大道交口；亞伯拉罕進迦南首先在此築壇（創12:6-7），雅各全家回迦南首先在此築壇、清除偶像（創33:18-20；35:4），以色列人進迦南也首先在示劍築壇，並在基利心山和以巴路山上宣告祝福和咒詛（書8:30-35）。
+        line: 20
+        evidence: 亞伯拉罕進入迦南地之後，首先在示劍為神築壇，神在這裡第一次與亞伯拉罕立約
+      - id: card-1-gt-study-events
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:1
+        paraphrase: 示劍對以色列人極具紀念意義，曾發生三件歷史大事：亞伯拉罕進迦南最先在此向耶和華築壇（創12:6-7）、雅各全家回迦南在此清除偶像（創33:18；35:4）、以色列人進迦南在示劍的基利心山與以巴路山宣講律法（書8:30-35）。
+        line: 23
+        evidence: 有關「示劍」發生過的歷史事件：a.亞伯拉罕進入迦南地之後，最先在示劍向耶和華築壇
+      - id: card-1-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:1
+        quote: This is to consider a sanctuary, for there the LORD appeared to Abraham, and there Abraham built an altar to the LORD (Gen 12:6-7). There Jacob also built an altar (Gen 33:18-20) and there he buried all his idols (Gen 35:4).
+        quoteZh: 這裡可視為一處聖所，因為耶和華曾在那裡向亞伯拉罕顯現，亞伯拉罕也在那裡為耶和華築壇（創12:6-7）；雅各同樣在那裡築壇（創33:18-20），並把一切偶像埋在那裡（創35:4）。
+        line: 15
+        evidence: This is to consider a sanctuary, for there the LORD appeared to Abraham
+      - id: card-1-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:1
+        quote: Shechem stood between Mount Ebal and Mount Gerizim, where Israel had previously heard the blessings and curses of the law (Joshua 8:30–35). The location also recalled God’s first promise of the land to Abraham (Genesis 12:6–7) and Jacob’s return to the land under God’s protection (Genesis 33:18–20).
+        quoteZh: 示劍位於以巴路山與基利心山之間，以色列人先前曾在那裡聽見律法的祝福與咒詛（書8:30-35）；這地點也喚起神對亞伯拉罕最初賜地的應許（創12:6-7），以及雅各蒙神保守歸回這地的事（創33:18-20）。
+        line: 6
+        evidence: Shechem stood between Mount Ebal and Mount Gerizim, where Israel had previously heard
+      - id: card-1-gt-study-odd
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:1
+        quote: 通常約書亞記中以色列人都在吉甲、示羅集會，此處奇怪的是在示劍集會。
+        line: 21
+        evidence: 通常約書亞記中以色列人都在吉甲、示羅集會，此處奇怪的是在示劍集會。
+      - id: card-1-gt-walton
+        source: GT
+        work: GT 華爾頓《約書亞記背景注釋》
+        verse: 書24:1
+        quote: 遺址的鐵器時代並沒有毀滅層，因此以色列人可能沒有經歷過什麼重大的爭戰，便獲取了這城的控制權(約書亞攻取城市的名單並沒有包括示劍；十二7~23)。
+        line: 26
+        evidence: 遺址的鐵器時代並沒有毀滅層，因此以色列人可能沒有經歷過什麼重大的爭戰
+
+  - id: ark-present
+    number: 2
+    question: 『站在神面前』：約櫃在不在？
+    verses:
+      - 書24:1
+      - 書24:26
+    entryLinks:
+      - 事件/示劍更新盟約
+      - 地點/示羅
+    views:
+      - id: card-2-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:1
+        quote: 『站在神面前』指站在約櫃面前。約櫃已經被從示羅運到這裡，見證百姓與神立約。
+        line: 22
+        evidence: 『站在神面前』指站在約櫃面前。約櫃已經被從示羅運到這裡
+      - id: card-2-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:1
+        quote: 約櫃已經被從示羅運到這裡，見證百姓與神立約。
+        line: 17
+        evidence: 約櫃已經被從示羅運到這裡，見證百姓與神立約。
+      - id: card-2-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:26
+        quote: This expression seems to indicate that Joshua brought the ark of the covenant from Shiloh to Shechem for this occasion.
+        quoteZh: 這個說法似乎顯示，約書亞為了這次聚會把約櫃從示羅帶到了示劍。
+        line: 73
+        evidence: This expression seems to indicate that Joshua brought the ark of the covenant
+      - id: card-2-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:26
+        paraphrase: 認為當時摩西在曠野所設的會幕立在示羅（書18:1），不可能為特別儀式隨處移動；第26節的聖所可以說是指築在以巴路山附近的壇（書8:30）；也提到有人認為是指示劍橡樹下的聖地，因為亞伯拉罕與雅各曾在那裡築壇敬拜耶和華。
+        line: 348
+        evidence: 因為當時會幕設立在示羅(18：1)，並不可能為了特別的儀式，隨處移動。
+      - id: card-2-gt-qidao
+        source: GT
+        work: GT《啟導本聖經約書亞記註釋》
+        verse: 書24:26
+        paraphrase: 指出第26節耶和華的聖所並非示羅的會幕，因當時以色列人聚集在示劍；這聖所也許指古人在那裡敬拜神的地方（創12:6-7；35:2-4）。
+        line: 344
+        evidence: 不是指示羅的會幕，因為以色列人當時聚集在示劍。
+
+  - id: gods-beyond-river
+    number: 3
+    question: 大河那邊的別神是什麼？
+    verses:
+      - 書24:2
+      - 書24:14-15
+    entryLinks:
+      - 人物/他拉
+      - 人物/亞伯拉罕
+    views:
+      - id: card-3-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:2
+        quote: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥(參創十一28)；『別神』即偶像假神。
+        line: 31
+        evidence: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥
+      - id: card-3-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:2
+        paraphrase: 指出他拉家人所事奉的別神，就是當時米所波大米人普遍崇拜的月神；亞伯拉罕當初同樣身處偶像崇拜中，因神主權的恩典蒙揀選與引領。
+        line: 49
+        evidence: 他拉的家人所事奉的“別神”就是當時的米所波大米人普遍崇拜的月神。
+      - id: card-3-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:2
+        quote: 吾珥和哈蘭都是敬拜月神的中心，亞伯拉罕的家族和現在被神滅絕的迦南人一樣，都是拜偶像的。
+        line: 51
+        evidence: 吾珥和哈蘭都是敬拜月神的中心，亞伯拉罕的家族和現在被神滅絕的迦南人一樣
+      - id: card-3-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:2
+        paraphrase: 指出原文裡『別的』和『神』都是複數型態，顯示列祖原本是多神信仰。
+        line: 60
+        evidence: 「別的」和「神」都是複數型態，表示列祖本來是多神信仰。
+      - id: card-3-gt-walton
+        source: GT
+        work: GT 華爾頓《約書亞記背景注釋》
+        verse: 書24:2
+        quote: 這是重要的證據，證明亞伯拉罕並沒有承襲某個不絕如縷的古代一神信仰傳統。
+        paraphrase: 並列舉美索不達米亞的多神傳統包含本城守護神、祖先神明，以及醫治疾病或帶來豐饒的神祇。
+        line: 67
+        evidence: 這是重要的證據，證明亞伯拉罕並沒有承襲某個不絕如縷的古代一神信仰傳統。
+
+  - id: balak-fight
+    number: 4
+    question: 巴勒有沒有『攻擊』以色列？
+    verses:
+      - 書24:9
+      - 士11:25
+    entryLinks:
+      - 人物/巴勒
+      - 人物/巴蘭（比珥的兒子）
+    views:
+      - id: card-4-gt-tyndale
+        source: GT
+        work: GT《丁道爾聖經注釋》
+        verse: 書24:9
+        paraphrase: 指出耶弗他在士師記11:25否認巴勒曾與以色列人爭戰，表面看與書24:9相反；這或許是一種反諷的說法，意指巴勒雇用巴蘭來咒詛，就等於已經耗盡了他作戰的力量。
+        line: 136
+        evidence: 耶弗他在士師記十一25也提到，在那裡他否認巴勒曾攻擊以色列人
+
+  - id: what-is-hornet
+    number: 5
+    question: 黃蜂是什麼？
+    verses:
+      - 書24:12
+    entryLinks:
+      - 原文/黃蜂
+    views:
+      - id: card-5-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:12
+        quote: 『黃蜂』乃寓意，表明從神來的驚恐，使敵人不戰而敗。
+        line: 117
+        evidence: 『黃蜂』乃寓意，表明從神來的驚恐，使敵人不戰而敗。
+      - id: card-5-gt-chuanzhu
+        source: GT
+        work: GT《串珠聖經注釋》
+        verse: 書24:12
+        paraphrase: 解為寓意，用來表明神的幫助。
+        line: 176
+        evidence: 「黃蜂」：乃寓意，表明神的幫助。
+      - id: card-5-gt-tyndale
+        source: GT
+        work: GT《丁道爾聖經注釋》
+        verse: 書24:12
+        paraphrase: 討論埃及、戰爭中的昆蟲、驚駭三種讀法。認為譯為驚駭，或把黃蜂當作驚恐的圖喻，似乎可以充分解釋出15:14-16及書2:9-11、24，5:1，6:27 對仇敵的描述。
+        line: 172
+        evidence: 這個字的另一個翻譯是「驚駭」，或是以黃蜂為圖喻，象徵這種驚恐
+      - id: card-5-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:12
+        paraphrase: 整理四種可能解釋：埃及、某種昆蟲、象徵驚恐的圖喻、以及較新的『以色列的盟友』說，並指出較多人接受象徵驚恐的觀點。
+        line: 186
+        evidence: 24：12 的「黃蜂」究竟是指什麼，由於此字的意義不詳，引起不少辯論。
+      - id: card-5-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:12
+        quote: 更加穩妥的解釋是按照字面意思進行理解，認為神使用繁殖在巴勒斯坦全城的黃蜂來審判迦南人。
+        line: 178
+        evidence: 更加穩妥的解釋是按照字面意思進行理解，認為神使用繁殖在巴勒斯坦全城的黃蜂
+      - id: card-5-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:12
+        paraphrase: 指出黃蜂（Zirah）原文與埃及（Mizraim）發音相近，可能是雙關語，指劫掠迦南地的埃及軍隊；並說埃及法老的王座名，正是用代表上埃及的樹和代表下埃及的蜜蜂作頭銜。
+        line: 182
+        evidence: 發音相近，可能是雙關語，指劫掠迦南地的埃及軍隊。
+      - id: card-5-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:12
+        quote: The hornet denotes God’s effective judgment against the nations of Canaan, whether through actual affliction, terror, or providentially stirred panic.
+        quoteZh: 黃蜂代表神對迦南列國施行的有效審判，無論是透過實際的災害、驚駭，或是神掌管下掀起的恐慌。
+        line: 385
+        evidence: The hornet denotes God’s effective judgment against the nations of Canaan
+
+  - id: two-amorite-kings
+    number: 6
+    question: 『亞摩利人的二王』是誰？
+    verses:
+      - 書24:12
+    views:
+      - id: card-6-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:12
+        paraphrase: 指出可能是指西宏和噩，但第12節應該已經講到約但河西的戰役；七十士譯本在這裡作『十二王』，可能就是這個緣故。不過不知道為什麼有十二王的說法，這和聖經記載的亞摩利城市數目也不符。
+        line: 190
+        evidence: 可能是指「西宏」和「噩」，但此處應該已經講到約旦河西的戰役了。
+
+  - id: three-kinds-of-gods
+    number: 7
+    question: 三種神各代表什麼？
+    verses:
+      - 書24:14-15
+    views:
+      - id: card-7-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:14-15
+        paraphrase: 將第14至15節提到的三類神明分別理解為：列祖在大河那邊事奉的，代表祖先傳統的偶像；在埃及所事奉的，代表先進文明的偶像；所住這地亞摩利人的神，代表現實利益的偶像。
+        line: 223
+        evidence: 是代表祖先傳統的偶像；「在埃及所事奉的」(14節)的，是代表先進文明的偶像
+
+  - id: cannot-serve-yhwh
+    number: 8
+    question: 『你們不能事奉耶和華』是什麼意思？
+    verses:
+      - 書24:19-20
+    entryLinks:
+      - 解經爭議/你們不能事奉耶和華
+    views:
+      - id: card-8-ct-sin
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:19
+        quote: 要做到這個地步，就必須對付罪惡，特別是在神之外另有所愛慕和追求的罪，分別出來歸神為聖。
+        line: 186
+        evidence: 要做到這個地步，就必須對付罪惡，特別是在神之外另有所愛慕和追求的罪
+      - id: card-8-ct-faith
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:19
+        paraphrase: 在另一段指出，這句話也可能是指人意志薄弱，無法靠自己順從神的命令；並從中讀出因信稱義、需要神與人配合的原則。
+        line: 190
+        evidence: 可能是指人意志薄弱，無法依靠自己順從神的命令。
+      - id: card-8-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:19-20
+        paraphrase: 認為約書亞在19至20節的斥訓是明顯的激將法，逼百姓面對自身軟弱，同時表明罪人想單靠自己的決心與努力完全遵守神律法這條路行不通。
+        line: 290
+        evidence: 約書亞在 24：19~20 的斥訓雖是明顯的激將法
+      - id: card-8-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:19
+        quote: Joshua does not mean to say that God is not a God of forgiveness. He wants to make it clear that God cannot be served with a halfhearted heart and that leaving Him to serve other gods is a serious sin.
+        quoteZh: 約書亞的意思並不是說神是不赦免人的神；他是要講明，人不能懷著三心二意的心事奉神，離棄祂去事奉別神是嚴重的罪。
+        line: 65
+        evidence: Joshua does not mean to say that God is not a God of forgiveness.
+      - id: card-8-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:19
+        quote: Joshua exposed the insufficiency of a divided heart and called them to dependence upon the God they claimed to serve.
+        quoteZh: 約書亞揭露了分裂之心不足以事奉神，呼籲他們倚靠自己所宣稱要事奉的這一位神。
+        line: 645
+        evidence: Joshua exposed the insufficiency of a divided heart and called them
+
+  - id: put-away-foreign-gods
+    number: 9
+    question: 百姓真的除掉外邦神了嗎？
+    verses:
+      - 書24:23-24
+      - 創35:2-4
+    entryLinks:
+      - 神學/除掉外邦神
+    views:
+      - id: card-9-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:23-24
+        paraphrase: 對照創35:2-4雅各在示劍要求除掉外邦神時家人立刻交出神像與耳環藏在橡樹下，指出此處百姓只用口頭回應必事奉耶和華，可能暗示有些人沒有徹底清除偶像，給後代留下破口（士2:12）。
+        line: 316
+        evidence: 這可能暗示有些人沒有徹底清除偶像，結果留下了破口
+      - id: card-9-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:16-18
+        quote: Have they removed the gods, as has been said several times in this chapter that they will do? Later it turns out that they did not do that.
+        quoteZh: 他們真的像本章幾次說過的那樣除掉那些神了嗎？後來事實證明他們並沒有那樣做。
+        line: 61
+        evidence: Have they removed the gods, as has been said several times in this chapter
+      - id: card-9-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:24
+        quote: 以色列民也在這三度作了信仰告白，百姓以自己和自己的證言為見證，表明他們要事奉耶和華的應許是真實的。但在約書亞死後下一代的百姓卻很快地又去敬拜了亞摩利人的神( 士 2：11~13 6：10 )，實在是相當諷刺。
+        line: 323
+        evidence: 但在約書亞死後下一代的百姓卻很快地又去敬拜了亞摩利人的神
+
+  - id: statute-and-ordinance
+    number: 10
+    question: 『律例典章』是新的律法嗎？
+    verses:
+      - 書24:25
+    entryLinks:
+      - 事件/示劍更新盟約
+      - 背景/宗主條約
+    views:
+      - id: card-10-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:25
+        paraphrase: 解釋約書亞代表神和以色列人立約，雙方誓願受約的約束；『律例』指神向人要求的律法，『典章』指神對人是否遵行律法的審判判定。
+        line: 234
+        evidence: 約書亞代表神和以色列人立約，表示雙方誓願受「約」的約束
+      - id: card-10-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:25
+        paraphrase: 指出律例指一般規條或義務，典章指具法律意義的律法；約書亞在此並未提出新的律法條款，只是重申並更新從前摩西的律法。
+        line: 327
+        evidence: 在這裡約書亞並不是提出了新的律法條款，乃是重申了摩西的律法。
+
+  - id: oak-and-sanctuary
+    number: 11
+    question: 那棵橡樹是亞伯拉罕那棵嗎？『耶和華的聖所』是什麼？
+    verses:
+      - 書24:26
+      - 創12:6-7
+    entryLinks:
+      - 背景/摩利橡樹
+      - 地點/示劍（城）
+    views:
+      - id: card-11-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:26
+        quote: 『橡樹下』亞伯拉罕曾在示劍的橡樹下築壇敬拜神(參創十二6~7)，極可能指的是同一棵樹；『耶和華的聖所』大概指的是亞伯拉罕所築的祭壇。
+        line: 243
+        evidence: 亞伯拉罕曾在示劍的橡樹下築壇敬拜神(參創十二6~7)，極可能指的是同一棵樹
+      - id: card-11-gt-ryrie
+        source: GT
+        work: GT《約書亞記雷氏研讀本》
+        verse: 書24:26
+        paraphrase: 認為耶和華的聖所旁邊，或指仍然存在的舊祭壇，或指約書亞在附近以巴路山所築的祭壇（書8:30），或譯作在耶和華看為聖的橡樹下面（比較創12:6）。
+        line: 342
+        evidence: 或指那仍然存在的舊祭壇，或指約書亞在附近以巴路山所築的祭壇
+      - id: card-11-gt-qidao
+        source: GT
+        work: GT《啟導本聖經約書亞記註釋》
+        verse: 書24:26
+        paraphrase: 認為這聖所並非示羅的會幕，也許指古人在那裡敬拜神的地方（創12:6-7；35:2-4）。
+        line: 344
+        evidence: 這“聖所”也許指古人在那裡敬拜神的地方(創十二6~7；三十五2~4)。
+      - id: card-11-gt-chuanzhu
+        source: GT
+        work: GT《串珠聖經注釋》
+        verse: 書24:26
+        paraphrase: 解釋橡樹與聖所，是指示劍旁神特別啟示自己的一塊地方（見創12:6-7）。
+        line: 346
+        evidence: 指示劍旁、神特別啟示自己的一塊地方，見創12：6，7。
+      - id: card-11-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:26
+        paraphrase: 指出當時會幕在示羅（書18:1），本節的聖所可指築在以巴路山附近的壇（書8:30），也有人認為是指示劍橡樹下亞伯拉罕與雅各曾築壇敬拜的聖地。
+        line: 348
+        evidence: 本節的“聖所”可以說是指築在以巴路山附近的壇(8：30)。
+      - id: card-11-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:26
+        paraphrase: 解釋耶和華的聖所為神特別指定的一個地方。
+        line: 350
+        evidence: 「耶和華的聖所」(26節)，指神特別指定的一個地方。
+      - id: card-11-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:26
+        paraphrase: 指出這表示當時在示劍也有神的聖所，並非只有示羅是神選擇的聖地；也可能指列祖曾經在示劍橡樹旁敬拜神的地方（創12:6-7；35:2-4）。
+        line: 352
+        evidence: 表示當時在示劍也有神的聖所，並非只有示羅是神選擇的聖地。
+      - id: card-11-gt-walton
+        source: GT
+        work: GT 華爾頓《約書亞記背景注釋》
+        verse: 書24:26
+        quote: 此外，這石和木也有使更新盟約的典禮，有別於示劍之巴力廟宇的作用。
+        paraphrase: 並說明立石與稱聖的樹木是古代近東與早期以色列人祭儀場所的一部分，可用來紀念重要事件。
+        line: 357
+        evidence: 此外，這石和木也有使更新盟約的典禮，有別於示劍之巴力廟宇的作用。
+
+  - id: writing-on-stone
+    number: 12
+    question: 石頭上有字嗎？
+    verses:
+      - 書24:26
+    entryLinks:
+      - 主題/立石為證
+    views:
+      - id: card-12-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:26
+        paraphrase: 說明這些話指立約的話和律例典章，寫在摩西所寫、放在約櫃旁的律法書上（參申31:26）；接著另外解釋大石頭是立石為證，留供後世作永遠的紀念。
+        line: 241
+        evidence: 『神的律法書』指摩西所寫、放在約櫃旁的律法書(參申三十一26)。
+      - id: card-12-gt-ryrie
+        source: GT
+        work: GT《約書亞記雷氏研讀本》
+        verse: 書24:26
+        quote: 重要的是，所有人都可以看到那寫在石頭上的約(27節)。
+        line: 342
+        evidence: 重要的是，所有人都可以看到那寫在石頭上的約(27節)。
+
+  - id: stone-hears
+    number: 13
+    question: 石頭會聽嗎？
+    verses:
+      - 書24:27
+    entryLinks:
+      - 主題/立石為證
+    views:
+      - id: card-13-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:27
+        quote: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+        line: 252
+        evidence: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+      - id: card-13-gt-lidaosheng
+        source: GT
+        work: GT 李道生《舊約聖經問題總解(上)》
+        verse: 書24:27
+        quote: 由此可知石頭本身並非能聽見神的話，向人作見證。
+        paraphrase: 說明這是以石頭為記，作人與神立約堅定不移的證據，警戒人免得離棄神。
+        line: 333
+        evidence: 由此可知石頭本身並非能聽見神的話，向人作見證。
+      - id: card-13-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:25-28
+        paraphrase: 指出倘若日後百姓違背誓約，約書亞雖已不在，石頭還在，就像不會說話的審判官向他們發出無聲的審判。
+        line: 337
+        evidence: 就像「不會說話的審判官」會向他們發出無聲的審判。
+      - id: card-13-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:26-27
+        quote: When Joshua has passed away, the stone remains as a lasting reminder that God has heard everything.
+        quoteZh: 當約書亞離世之後，這塊石頭仍長久留存，提醒人神已經聽見了一切。
+        line: 71
+        evidence: When Joshua has passed away, the stone remains as a lasting reminder
+      - id: card-13-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:27
+        quote: Though inanimate, it represented the permanence of God’s words and the seriousness of Israel’s oath.
+        quoteZh: 石頭雖然沒有生命，卻代表神話語的恆久與以色列人誓言的嚴肅。
+        line: 936
+        evidence: Though inanimate, it represented the permanence of God’s words
+
+  - id: people-or-representatives
+    number: 14
+    question: 第28節的『百姓』是全體還是代表？
+    verses:
+      - 書24:1
+      - 書24:28
+    views:
+      - id: card-14-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:28
+        quote: 『百姓』指代表眾支派的長老、族長、審判官，並官長(參1節)。
+        line: 259
+        evidence: 『百姓』指代表眾支派的長老、族長、審判官，並官長(參1節)。
+      - id: card-14-gt-jingdu
+        source: GT
+        work: GT《聖經精讀本──約書亞記註解》
+        verse: 書24:1-33
+        paraphrase: 說約書亞在前一章作了告別的囑託，仍沒有就此放心；本章把整個百姓召集在示劍，全體百姓反覆表明決志，再重新立約。
+        line: 30
+        evidence: 仍利用所剩無幾的時間，將整個百姓召集在示劍。
+      - id: card-14-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:1
+        quote: After Joshua addressed the elders in the previous chapter, he wants to address the whole people.
+        quoteZh: 約書亞在前一章對長老說話之後，如今要向全體百姓說話。
+        line: 15
+        evidence: After Joshua addressed the elders in the previous chapter, he wants to address
+
+  - id: gaash-and-gibeah
+    number: 15
+    question: 迦實山、小山在哪裡？
+    verses:
+      - 書24:30
+      - 書24:33
+    entryLinks:
+      - 地點/亭拿西拉
+      - 地點/迦實山
+      - 地點/基比亞（以法蓮）
+    views:
+      - id: card-15-ct-gaash
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:30
+        quote: 『亭拿西拉』位於伯特利西北方約15公里，示羅西南方約19公里，約書亞分配完各支派的地業之後，以色列人分給他的地業(參書十九49~50)；『迦實山』確實地點不詳，大概在亭拿西拉境內的南邊。
+        line: 275
+        evidence: 『迦實山』確實地點不詳，大概在亭拿西拉境內的南邊。
+      - id: card-15-ct-gibeah
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:33
+        paraphrase: 說明第33節的小山原文作基比亞，在以法蓮山地，可能是哥轄其餘子孫自願從分得之地再分一小塊給候任大祭司非尼哈居住，確實地點不詳。
+        line: 298
+        evidence: 再分一小塊給候任大祭司非尼哈居住(同是哥轄的子孫)，確實地點不詳。
+      - id: card-15-gt-study-gaash
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:30
+        quote: 這山的位置雖然不明，但很有可能是在以法蓮山地之亭拿西拉(蒂布納廢墟)以南的地方。有學者認為它應當在示劍西南32公里左右之處。
+        line: 407
+        evidence: 這山的位置雖然不明，但很有可能是在以法蓮山地之亭拿西拉
+      - id: card-15-gt-walton-gaash
+        source: GT
+        work: GT 華爾頓《約書亞記背景注釋》
+        verse: 書24:30
+        quote: 這山的位置雖然不明，卻應該是在以法蓮山地，亭拿西拉(蒂布納廢墟)以南的地方。如此它當在示劍西南二十哩左右之處。
+        line: 409
+        evidence: 這山的位置雖然不明，卻應該是在以法蓮山地，亭拿西拉
+      - id: card-15-gt-study-gibeah
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:33
+        paraphrase: 指出小山就是基比亞，明確地點已無法考察。
+        line: 453
+        evidence: 就是「基比亞」，不過明確的地點無法考察了。
+      - id: card-15-gt-walton-gibeah
+        source: GT
+        work: GT 華爾頓《舊約聖經背景注釋》
+        verse: 書24:33
+        paraphrase: 提到優西比烏記載以利亞撒墳墓在戈夫納以北五哩，但名叫基比亞的地點有好幾個，經文可能只是稱之為非尼哈的小山，這種地方性地名暫時無法辨識。
+        line: 455
+        evidence: 然而名叫基比亞的地點有好幾個，經文可能只是稱之為「非尼哈的小山」而已。

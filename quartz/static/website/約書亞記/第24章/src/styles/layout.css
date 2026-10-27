@@ -1,0 +1,555 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  background: var(--jos-bg);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+.jos-body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--jos-bg);
+  color: var(--jos-ink);
+  transition: background-color 0.35s ease, color 0.25s ease;
+}
+
+.jos-motion-off,
+.jos-motion-off * {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+}
+
+/* 常駐全螢幕 3D 舞台與無 WebGL 靜態插圖備援 */
+.jos-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+}
+
+.jos-webgl-fallback {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  display: none;
+}
+
+.jos-webgl-fallback-on {
+  display: block;
+}
+
+.jos-fallback-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 3D 場景投影名牌層（不重疊、不擋互動、說話時自動收起） */
+.jos-stage-tags {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.jos-stage-tags-hidden {
+  opacity: 0;
+}
+
+.jos-stage-tag {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: var(--jos-bg-card);
+  color: var(--jos-ink);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-family: var(--jos-font-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+}
+
+.jos-app {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+}
+
+/* 頂列（沉浸段落不藏頂列） */
+.jos-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--jos-header-h);
+  background: var(--jos-bg-header);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--jos-border);
+  padding: 6px 14px;
+}
+
+.jos-header-inner {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+}
+
+.jos-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.jos-brand-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--jos-ink);
+  font-family: var(--jos-font-serif);
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 3px 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jos-toc-wrap {
+  position: relative;
+}
+
+.jos-toc-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(360px, calc(100vw - 24px));
+  max-height: calc(100vh - var(--jos-header-h) - 24px);
+  overflow-y: auto;
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: var(--jos-radius);
+  padding: 12px;
+  box-shadow: var(--jos-shadow);
+  z-index: 55;
+}
+
+.jos-toc-hidden {
+  display: none;
+}
+
+.jos-toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jos-toc-item {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--jos-ink);
+  border-radius: var(--jos-radius-sm);
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.jos-toc-item:hover {
+  background: var(--jos-bg-soft);
+  border-color: var(--jos-border);
+}
+
+.jos-toc-item-active {
+  background: var(--jos-accent-soft);
+  border-color: var(--jos-accent);
+}
+
+.jos-toc-kicker {
+  font-size: 0.72rem;
+  color: var(--jos-bronze);
+  font-weight: 700;
+}
+
+.jos-toc-name {
+  font-family: var(--jos-font-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.jos-toc-treaty {
+  margin: 10px 0 8px;
+  padding: 8px 10px;
+  background: var(--jos-bg-soft);
+  border-radius: var(--jos-radius-sm);
+  font-size: 0.74rem;
+  color: var(--jos-ink-muted);
+  line-height: 1.55;
+}
+
+.jos-seg-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.jos-seg-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--jos-ink-muted);
+  font-family: var(--jos-font-serif);
+  font-size: 0.82rem;
+  padding: 3px 7px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.jos-seg-btn:hover {
+  color: var(--jos-ink);
+  background: var(--jos-bg-soft);
+}
+
+.jos-seg-btn-active {
+  color: var(--jos-accent);
+  background: var(--jos-accent-soft);
+  border-color: var(--jos-accent);
+  font-weight: 700;
+}
+
+.jos-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.jos-tool-btn {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  font-size: 0.76rem;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jos-tool-btn:hover {
+  border-color: var(--jos-border-strong);
+}
+
+.jos-tool-btn-on {
+  border-color: var(--jos-accent);
+  color: var(--jos-accent);
+  background: var(--jos-accent-soft);
+}
+
+.jos-coach-trigger {
+  appearance: none;
+  border: 1px solid var(--jos-oak);
+  background: var(--jos-oak);
+  color: #f9f5eb;
+  font-family: var(--jos-font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jos-dark .jos-coach-trigger {
+  color: #17150f;
+}
+
+/* 新手教學底部非遮擋面板 */
+.jos-coach-bar {
+  position: fixed;
+  left: 22px;
+  bottom: 14px;
+  z-index: 48;
+  width: min(34rem, calc(100vw - min(25rem, 40vw) - 72px));
+  background: var(--jos-bg-elev);
+  border: 2px solid var(--jos-oak);
+  border-radius: var(--jos-radius);
+  padding: 10px 14px;
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-coach-hidden {
+  display: none;
+}
+
+.jos-coach-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.jos-coach-stage {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--jos-oak);
+}
+
+.jos-coach-prompt {
+  margin: 0 0 6px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.jos-coach-note {
+  margin: 0 0 8px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: var(--jos-oak-soft);
+  font-size: 0.82rem;
+}
+
+.jos-coach-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.jos-coach-pulse {
+  outline: 2px solid var(--jos-lamp) !important;
+  outline-offset: 2px;
+}
+
+/* 返回剛才讀的地方浮動膠囊 */
+.jos-return-bar {
+  position: fixed;
+  top: calc(var(--jos-header-h) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-accent);
+  box-shadow: var(--jos-shadow);
+  border-radius: 999px;
+  padding: 6px 12px;
+  max-width: calc(100vw - 32px);
+}
+
+.jos-return-bar-hidden {
+  display: none;
+}
+
+.jos-return-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--jos-accent);
+  font-family: var(--jos-font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jos-return-close {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--jos-ink-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.jos-primary-btn {
+  appearance: none;
+  border: 1px solid var(--jos-accent);
+  background: var(--jos-accent);
+  color: #fffaf3;
+  font-family: var(--jos-font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.jos-secondary-btn {
+  appearance: none;
+  border: 1px solid var(--jos-border-strong);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  font-size: 0.86rem;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* 故事疊層外殼（pointer-events: none 讓 3D 舞台透出） */
+.jos-story-shell {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Peek 小卡抽屜 */
+.jos-peek-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(20, 17, 14, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+}
+
+@media (min-width: 720px) {
+  .jos-peek-backdrop {
+    align-items: center;
+  }
+}
+
+.jos-peek-hidden {
+  display: none;
+}
+
+.jos-peek-panel {
+  width: min(560px, 100%);
+  max-height: 84vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: var(--jos-radius);
+  padding: 20px 20px 22px;
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-peek-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.jos-peek-kicker {
+  font-size: 0.78rem;
+  color: var(--jos-bronze);
+  font-weight: 600;
+}
+
+.jos-peek-title {
+  margin: 2px 0 0;
+  font-family: var(--jos-font-serif);
+  font-size: 1.2rem;
+}
+
+.jos-peek-close {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-soft);
+  color: var(--jos-ink);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.jos-peek-body {
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.jos-peek-links {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jos-ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--jos-accent);
+  text-decoration: none;
+  border: 1px solid var(--jos-accent);
+  background: var(--jos-accent-soft);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.jos-ext-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 920px) {
+  .jos-seg-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .jos-header {
+    padding: 5px 8px;
+  }
+
+  .jos-brand-btn {
+    font-size: 0.94rem;
+  }
+
+  .jos-tool-btn,
+  .jos-coach-trigger {
+    font-size: 0.72rem;
+    padding: 3px 7px;
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "sheets": {
+    "family": {"path": "lab/assets-gemini/redsea/keyed/near-family.png", "key": "alpha"},
+    "walkers": {"path": "lab/assets-gemini/test/test_crowd_1792981907743.jpg", "key": "white"},
+    "joshua-sheet": {"path": "lab/assets-gemini/shechem/raw/joshua_character_sheet_v3_1793000064241.jpg", "regions": [[10,90,315,710],[320,90,585,710],[585,140,885,710],[885,90,1125,710],[1125,90,1365,710]]},
+    "grandfather-sheet": {"path": "lab/assets-gemini/shechem/raw/grandfather_character_sheet_1793000005966.jpg", "regions": [[35,100,285,720],[290,100,550,720],[550,100,830,720],[830,100,1085,720],[1085,100,1360,720]]},
+    "father-sheet": {"path": "lab/assets-gemini/shechem/raw/father_character_sheet_1793000004033.jpg"},
+    "daughter-child-sheet": {"path": "lab/assets-gemini/shechem/raw/daughter_character_sheet_v2_1793000144691.jpg"},
+    "daughter-woman-sheet": {"path": "lab/assets-gemini/shechem/raw/daughter_woman_poses_1793000294015.jpg"},
+    "elders-sheet": {"path": "lab/assets-gemini/shechem/raw/elders_silhouettes_row_1793000338864.jpg", "regions": [[35,240,350,540],[380,240,690,540],[710,240,1020,540],[1040,240,1355,540]]},
+    "crowd-back-sheet": {"path": "lab/assets-gemini/shechem/raw/crowd_back_1793000292541.jpg", "regions": [[25,60,440,340],[480,60,900,340],[940,60,1350,340],[25,430,440,710],[480,430,900,710],[940,430,1350,710]]}
+  },
+  "cuts": {
+    "old": {"sheet": "family", "box": [142, 235, 373, 738]},
+    "girl": {"sheet": "family", "box": [367, 420, 494, 738]},
+    "man": {"sheet": "family", "box": [674, 174, 865, 738]},
+    "woman": {"sheet": "family", "box": [492, 217, 674, 738]},
+    "staff": {"sheet": "walkers", "box": [58, 320, 144, 468]},
+    "walker1": {"sheet": "walkers", "box": [58, 132, 144, 468]},
+    "walker2": {"sheet": "walkers", "box": [163, 132, 228, 468]},
+    "walker3": {"sheet": "walkers", "box": [233, 142, 295, 468]},
+    "walker4": {"sheet": "walkers", "box": [300, 132, 357, 468]}
+  },
+  "roles": {
+    "joshua": {"stand": {"sheet":"joshua-sheet","index":0}, "speak": {"sheet":"joshua-sheet","index":0}, "point": {"sheet":"joshua-sheet","index":1}, "write": {"sheet":"joshua-sheet","index":2}, "walk-1": {"sheet":"joshua-sheet","index":3}, "walk-2": {"sheet":"joshua-sheet","index":4}},
+    "grandfather": {"stand": {"sheet":"grandfather-sheet","index":1}, "front": {"sheet":"grandfather-sheet","index":1}, "speak": {"sheet":"grandfather-sheet","index":2}, "point": {"sheet":"grandfather-sheet","index":0}, "walk-1": {"sheet":"grandfather-sheet","index":3}, "walk-2": {"sheet":"grandfather-sheet","index":4}},
+    "father": {"stand": {"sheet":"father-sheet","index":0}, "front": {"sheet":"father-sheet","index":1}, "speak": {"sheet":"father-sheet","index":2}, "point": {"sheet":"father-sheet","index":2}, "push-stone": {"sheet":"father-sheet","index":1}, "carry-pole": {"sheet":"father-sheet","index":0}, "walk-1": {"sheet":"father-sheet","index":3}, "walk-2": {"sheet":"father-sheet","index":3}},
+    "mother": {"stand": "woman", "walk-1": "walker3", "walk-2": "walker3"},
+    "daughter-child": {"stand": {"sheet":"daughter-child-sheet","index":0}, "speak": {"sheet":"daughter-child-sheet","index":1}, "pull-sleeve": {"sheet":"daughter-child-sheet","index":2}, "look-back": {"sheet":"daughter-child-sheet","index":5}, "walk-1": {"sheet":"daughter-child-sheet","index":3}, "walk-2": {"sheet":"daughter-child-sheet","index":4}},
+    "daughter-teen": {"stand": {"sheet":"daughter-child-sheet","index":0}, "speak": {"sheet":"daughter-child-sheet","index":1}, "pull-sleeve": {"sheet":"daughter-child-sheet","index":2}, "walk-1": {"sheet":"daughter-child-sheet","index":3}, "walk-2": {"sheet":"daughter-child-sheet","index":4}},
+    "daughter-woman": {"stand": {"sheet":"daughter-woman-sheet","index":0}, "speak": {"sheet":"daughter-woman-sheet","index":1}, "pull-sleeve": {"sheet":"daughter-woman-sheet","index":0}, "walk-1": {"sheet":"daughter-woman-sheet","index":2}, "walk-2": {"sheet":"daughter-woman-sheet","index":2}},
+    "joshua-household": {"stand": "man", "walk-1": "walker2", "walk-2": "walker4"},
+    "elders": {"stand": {"sheet":"elders-sheet","index":0}, "stand-1": {"sheet":"elders-sheet","index":0}, "stand-2": {"sheet":"elders-sheet","index":1}, "stand-3": {"sheet":"elders-sheet","index":2}, "stand-4": {"sheet":"elders-sheet","index":3}, "walk-1": "walker1", "walk-2": "walker4"},
+    "crowd-back": {"stand-1": {"sheet":"crowd-back-sheet","index":0}, "stand-2": {"sheet":"crowd-back-sheet","index":1}, "stand-3": {"sheet":"crowd-back-sheet","index":2}, "stand-4": {"sheet":"crowd-back-sheet","index":3}, "stand-5": {"sheet":"crowd-back-sheet","index":4}, "stand-6": {"sheet":"crowd-back-sheet","index":5}},
+    "crowd-walk": {"walk-1": "walker1", "walk-2": "walker2", "walk-3": "walker3", "walk-4": "walker4"},
+    "hillside-group": {"stand": "old"},
+    "bones-burial": {"stand": "staff"},
+    "jacob-oak": {"stand": "old", "hand-over": "old", "receive-bury": "old"}
+  },
+  "actors": {
+    "joshua": "joshua", "grandfather": "grandfather", "father": "father", "mother": "mother",
+    "daughter": "daughter-child", "daughter_grown": "daughter-teen", "jacob": "jacob-oak", "jacob_kin": "mother",
+    "elder_1": "elders", "elder_2": "elders", "helper_1": "joshua-household", "helper_2": "father",
+    "joshua_house_1": "joshua-household", "joshua_house_2": "mother"
+  },
+  "temporary": true,
+  "notes": "正式角色表已替換約書亞、爺爺、父親、女兒、長老群與背面群眾；daughter-teen、crowd-walk、hillside-group、bones-burial、jacob-oak 仍為暫代。其餘未列角色沿用既有來源。",
+  "worldHeight": {"crowd-back": 1.7, "crowd-walk": 1.7, "elders": 1.7, "hillside-group": 1.7}
+}

@@ -1,0 +1,1106 @@
+{
+  "beyond-river-sky.webp": {
+    "source": "lab/renders/layers/beyond-river/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 23376,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "beyond-river-far.webp": {
+    "source": "lab/renders/layers/beyond-river/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 13554,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      431,
+      1440,
+      810
+    ]
+  },
+  "beyond-river-mid.webp": {
+    "source": "lab/renders/layers/beyond-river/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 11978,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      437,
+      1440,
+      810
+    ]
+  },
+  "town-far.webp": {
+    "source": "lab/assets-codex/beyond-river/town-far.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 29950,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      5,
+      699,
+      1434,
+      755
+    ]
+  },
+  "beyond-river-near.webp": {
+    "source": "lab/renders/layers/beyond-river/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 27336,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      577,
+      1440,
+      810
+    ]
+  },
+  "terah-tent.webp": {
+    "source": "lab/assets-codex/beyond-river/terah-tent.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 89182,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      29,
+      30,
+      1414,
+      695
+    ]
+  },
+  "ford-sky.webp": {
+    "source": "lab/renders/layers/ford/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 22088,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "ford-far.webp": {
+    "source": "lab/renders/layers/ford/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 22906,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      376,
+      1440,
+      449
+    ]
+  },
+  "ford-sea.webp": {
+    "source": "lab/renders/layers/ford/sea.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 22192,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      439,
+      1440,
+      810
+    ]
+  },
+  "flock-bank.webp": {
+    "source": "lab/assets-gemini/ford/keyed/flock_bank.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 98774,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      394,
+      1376,
+      768
+    ]
+  },
+  "reeds-palms.webp": {
+    "source": "lab/assets-gemini/ford/keyed/reeds_palms.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 591106,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      47,
+      1376,
+      768
+    ]
+  },
+  "ford-near.webp": {
+    "source": "lab/renders/layers/ford/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 47798,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      409,
+      1440,
+      810
+    ]
+  },
+  "abraham-wading.webp": {
+    "source": "lab/assets-codex/test/abraham-wading.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 207626,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      18,
+      178,
+      1425,
+      774
+    ]
+  },
+  "isaac-sky.webp": {
+    "source": "lab/renders/layers/isaac/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 21482,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "isaac-far.webp": {
+    "source": "lab/renders/layers/isaac/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 13790,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      320,
+      1440,
+      439
+    ]
+  },
+  "isaac-mid.webp": {
+    "source": "lab/renders/layers/isaac/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 13440,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      388,
+      1440,
+      810
+    ]
+  },
+  "isaac-near.webp": {
+    "source": "lab/renders/layers/isaac/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 10734,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      619,
+      1440,
+      810
+    ]
+  },
+  "tent-baby.webp": {
+    "source": "lab/assets-codex/isaac/tent-baby.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 119658,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      42,
+      19,
+      1371,
+      762
+    ]
+  },
+  "esau-jacob-sky.webp": {
+    "source": "lab/renders/layers/esau-jacob/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 16144,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "esau-jacob-far.webp": {
+    "source": "lab/renders/layers/esau-jacob/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 30228,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      120,
+      1440,
+      810
+    ]
+  },
+  "esau-jacob-mid.webp": {
+    "source": "lab/renders/layers/esau-jacob/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 38544,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      120,
+      1440,
+      810
+    ]
+  },
+  "esau-jacob-near.webp": {
+    "source": "lab/renders/layers/esau-jacob/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 18266,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      591,
+      1440,
+      810
+    ]
+  },
+  "esau-seir.webp": {
+    "source": "lab/assets-codex/esau-jacob/esau-seir.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 32832,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      76,
+      152,
+      613,
+      401
+    ]
+  },
+  "jacob-caravan.webp": {
+    "source": "lab/assets-codex/test/jacob-caravan.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 140292,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      466,
+      167,
+      1432,
+      756
+    ]
+  },
+  "coffin-bearers.webp": {
+    "source": "lab/assets-codex/shared/coffin-bearers.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 168832,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      37,
+      73,
+      1407,
+      700
+    ]
+  },
+  "egypt-sky.webp": {
+    "source": "lab/renders/layers/egypt/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 20720,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "egypt-far.webp": {
+    "source": "lab/renders/layers/egypt/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 8804,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      407,
+      1440,
+      447
+    ]
+  },
+  "egypt-mid.webp": {
+    "source": "lab/renders/layers/egypt/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 10606,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      435,
+      1440,
+      810
+    ]
+  },
+  "pylon.webp": {
+    "source": "lab/assets-codex/egypt/pylon.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 100764,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      699,
+      24,
+      1439,
+      729
+    ]
+  },
+  "egypt-near.webp": {
+    "source": "lab/renders/layers/egypt/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 5288,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      636,
+      1440,
+      810
+    ]
+  },
+  "moses-aaron.webp": {
+    "source": "lab/assets-codex/egypt/moses-aaron.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 156636,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      25,
+      87,
+      1412,
+      724
+    ]
+  },
+  "redsea-sky.webp": {
+    "source": "lab/renders/layers/redsea-west/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 18990,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "redsea-far.webp": {
+    "source": "lab/renders/layers/redsea-west/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 10046,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      405,
+      1440,
+      439
+    ]
+  },
+  "redsea-sea.webp": {
+    "source": "lab/renders/layers/redsea-west/sea.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 14992,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      434,
+      1440,
+      810
+    ]
+  },
+  "water-left.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/water-walls.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 179234,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      0,
+      1376,
+      768
+    ]
+  },
+  "water-right.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/water-walls.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 179234,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      0,
+      1376,
+      768
+    ]
+  },
+  "chariots.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/chariots.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 135380,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      197,
+      1376,
+      768
+    ]
+  },
+  "darkness.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/darkness.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 452474,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      0,
+      735,
+      768
+    ]
+  },
+  "redsea-near.webp": {
+    "source": "lab/renders/layers/redsea-west/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 32112,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      514,
+      1440,
+      810
+    ]
+  },
+  "far-crowd.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/far-crowd.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 92680,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      0,
+      368,
+      1376,
+      451
+    ]
+  },
+  "near-family.webp": {
+    "source": "lab/assets-gemini/redsea/keyed/near-family.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 163810,
+    "size": [
+      1376,
+      768
+    ],
+    "bounds": [
+      151,
+      180,
+      1311,
+      733
+    ]
+  },
+  "wilderness-sky.webp": {
+    "source": "lab/renders/layers/wilderness/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 14626,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "wilderness-far.webp": {
+    "source": "lab/renders/layers/wilderness/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 18544,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      289,
+      1440,
+      439
+    ]
+  },
+  "wilderness-mid.webp": {
+    "source": "lab/renders/layers/wilderness/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 18404,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      290,
+      1440,
+      810
+    ]
+  },
+  "camp.webp": {
+    "source": "lab/assets-codex/wilderness/camp.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 183438,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      0,
+      426,
+      1439,
+      800
+    ]
+  },
+  "wilderness-near.webp": {
+    "source": "lab/renders/layers/wilderness/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 6158,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      624,
+      1440,
+      810
+    ]
+  },
+  "walkers.webp": {
+    "source": "lab/assets-codex/wilderness/walkers.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 75602,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      23,
+      147,
+      1407,
+      748
+    ]
+  },
+  "east-sky.webp": {
+    "source": "lab/renders/layers/east/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 13810,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "east-far.webp": {
+    "source": "lab/renders/layers/east/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 34312,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      135,
+      1440,
+      810
+    ]
+  },
+  "east-mid.webp": {
+    "source": "lab/renders/layers/east/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 30068,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      135,
+      1440,
+      810
+    ]
+  },
+  "east-near.webp": {
+    "source": "lab/renders/layers/east/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 19202,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      604,
+      1440,
+      810
+    ]
+  },
+  "battle.webp": {
+    "source": "lab/assets-codex/east/battle.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 122642,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      0,
+      268,
+      1439,
+      554
+    ]
+  },
+  "moab-sky.webp": {
+    "source": "lab/renders/layers/moab/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 19566,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "moab-far.webp": {
+    "source": "lab/renders/layers/moab/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 30166,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      229,
+      1440,
+      810
+    ]
+  },
+  "moab-mid.webp": {
+    "source": "lab/renders/layers/moab/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 34890,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      417,
+      1440,
+      810
+    ]
+  },
+  "moab-near.webp": {
+    "source": "lab/renders/layers/moab/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 14162,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      587,
+      1440,
+      810
+    ]
+  },
+  "balak-balaam.webp": {
+    "source": "lab/assets-codex/moab/balak-balaam.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 87922,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      0,
+      165,
+      873,
+      810
+    ]
+  },
+  "jordan-sky.webp": {
+    "source": "lab/renders/layers/jordan/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 18718,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "jordan-far.webp": {
+    "source": "lab/renders/layers/jordan/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 20374,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      329,
+      1440,
+      541
+    ]
+  },
+  "jordan-mid.webp": {
+    "source": "lab/renders/layers/jordan/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 22782,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      436,
+      1440,
+      810
+    ]
+  },
+  "jericho-magenta.webp": {
+    "source": "lab/assets-codex/jordan/jericho-magenta.png",
+    "key": "magenta",
+    "flatten": true,
+    "bytes": 36966,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      0,
+      335,
+      1439,
+      691
+    ]
+  },
+  "jordan-near.webp": {
+    "source": "lab/renders/layers/jordan/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 31266,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      569,
+      1440,
+      810
+    ]
+  },
+  "crossing.webp": {
+    "source": "lab/assets-codex/jordan/crossing.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 188570,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      0,
+      199,
+      1439,
+      685
+    ]
+  },
+  "swords-down.webp": {
+    "source": "lab/assets-codex/jordan/swords-down.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 159426,
+    "size": [
+      1439,
+      810
+    ],
+    "bounds": [
+      4,
+      109,
+      1438,
+      710
+    ]
+  },
+  "canaan-sky.webp": {
+    "source": "lab/renders/layers/canaan/sky.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 20214,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      0,
+      1440,
+      810
+    ]
+  },
+  "canaan-far.webp": {
+    "source": "lab/renders/layers/canaan/far.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 23848,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      145,
+      1440,
+      364
+    ]
+  },
+  "canaan-mid.webp": {
+    "source": "lab/renders/layers/canaan/mid.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 24404,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      247,
+      1440,
+      810
+    ]
+  },
+  "towns-vines.webp": {
+    "source": "lab/assets-codex/canaan/towns-vines.png",
+    "key": "white",
+    "flatten": true,
+    "bytes": 192528,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      344,
+      1440,
+      810
+    ]
+  },
+  "canaan-near.webp": {
+    "source": "lab/renders/layers/canaan/near.png",
+    "key": null,
+    "flatten": false,
+    "bytes": 17854,
+    "size": [
+      1440,
+      810
+    ],
+    "bounds": [
+      0,
+      580,
+      1440,
+      810
+    ]
+  }
+}

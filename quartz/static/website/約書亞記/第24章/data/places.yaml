@@ -1,0 +1,279 @@
+places:
+  - id: ur
+    nameZh: 吾珥
+    openBibleFriendly: Ur 1
+    uncertain: false
+    modernLabel: 美索不達米亞南部（今伊拉克穆卡亞爾遺址一帶）
+    summary: 亞伯拉罕與父親他拉早年居住的大河那邊城邑（創11:28, 31；書24:2）。
+    verses: [創11:28, 創11:31, 書24:2]
+  - id: haran
+    nameZh: 哈蘭
+    openBibleFriendly: Haran
+    uncertain: false
+    modernLabel: 幼發拉底河上游支流一帶
+    summary: 他拉帶家人出吾珥後住下的地方。亞伯蘭後來從哈蘭出發往迦南去（創11:31；12:4）。
+    verses: [創11:31, 創12:4, 書24:2]
+  - id: euphrates
+    nameZh: 大河（幼發拉底河）
+    openBibleFriendly: Euphrates
+    overrideLon: 40.4177
+    overrideLat: 35.2116
+    uncertain: false
+    modernLabel: 幼發拉底河中游河道代表點（列祖實際渡口不詳）
+    summary: 經文所稱的『大河』，列祖蒙召前住在大河那邊（書24:2-3, 14-15）。
+    verses: [書24:2, 書24:3, 書24:14, 書24:15]
+  - id: shechem
+    nameZh: 示劍
+    openBibleFriendly: Shechem
+    uncertain: false
+    modernLabel: 巴拉塔遺址（Tell Balata），基利心山與以巴路山之間谷口
+    summary: 迦南中部南北與東西要道交會的山谷城邑；亞伯拉罕築壇、雅各買地並把神像藏在橡樹底下、約書亞立約立石、約瑟骸骨安葬都在這裡（書24:1, 25, 32）。
+    verses: [創12:6, 創33:18, 創35:4, 書24:1, 書24:25, 書24:32]
+    entryKey: 地點/示劍（城）
+  - id: ebal
+    nameZh: 以巴路山
+    openBibleFriendly: Mount Ebal
+    uncertain: false
+    modernLabel: 示劍山谷北側山峰
+    summary: 示劍谷北側高山，約書亞曾在此築壇並將律法寫在石頭上（書8:30-32）。
+    verses: [申27:4, 書8:30, 書8:32]
+    entryKey: 地點/基利心山與以巴路山
+  - id: gerizim
+    nameZh: 基利心山
+    openBibleFriendly: Mount Gerizim
+    uncertain: false
+    modernLabel: 示劍山谷南側山峰
+    summary: 示劍谷南側的山，北側是以巴路山，示劍就在兩山中間（書8:33）。
+    verses: [申27:12, 書8:33]
+    entryKey: 地點/基利心山與以巴路山
+  - id: canaan-walk
+    nameZh: 迦南全地（伯特利一帶）
+    openBibleFriendly: Bethel 1
+    uncertain: false
+    modernLabel: 中央山地脊線代表點（伯特利一帶）
+    summary: 神領亞伯拉罕縱橫走遍的應許之地（創12:8；13:17；書24:3）。
+    verses: [創12:8, 創28:18, 書24:3]
+  - id: hebron
+    nameZh: 希伯崙
+    openBibleFriendly: Hebron
+    uncertain: false
+    modernLabel: 猶大山地南部希伯崙
+    summary: 列祖在迦南南部寄居並購得麥比拉洞安葬之地（創13:18；23:19）。
+    verses: [創23:19, 書24:3]
+  - id: bethel
+    nameZh: 伯特利
+    openBibleFriendly: Bethel 1
+    uncertain: false
+    modernLabel: 耶路撒冷以北山地（Beitin）
+    summary: 雅各曾在此立石作柱並澆油許願（創28:18-22）。
+    verses: [創28:18, 創35:1]
+  - id: seir
+    nameZh: 西珥山
+    openBibleFriendly: Mount Seir 1
+    uncertain: false
+    modernLabel: 死海南方與東南山區代表點
+    summary: 神賜給以掃為業的山地（申2:5；書24:4）。
+    verses: [申2:5, 書24:4]
+    entryKey: 地點/西珥山
+  - id: egypt
+    nameZh: 埃及
+    openBibleFriendly: Egypt
+    overrideLon: 31.8342
+    overrideLat: 30.7994
+    uncertain: false
+    modernLabel: 尼羅河三角洲東側歌珊地區代表點（與蘭塞一帶相連）
+    summary: 雅各和子孫下到那裡寄居、後來成為為奴之家的地方；神差摩西、亞倫從那裡領百姓出來（書24:4-7, 14, 17, 32）。
+    verses: [書24:4, 書24:5, 書24:6, 書24:14, 書24:17, 書24:32]
+  - id: rameses
+    nameZh: 蘭塞
+    openBibleFriendly: Rameses
+    uncertain: false
+    modernLabel: 尼羅河三角洲東部坎提爾與達巴遺址群（Qantir／Tell el-Dab'a）
+    summary: 以色列人出埃及起行的第一站（出12:37；出13:19）。
+    verses: [出12:37, 出13:19]
+  - id: redsea
+    nameZh: 紅海
+    openBibleFriendly: Red Sea 1
+    overrideLon: 32.56
+    overrideLat: 29.95
+    uncertain: true
+    rKm: 28
+    modernLabel: 蘇伊士灣北端一帶示意（確實渡口未詳，只是可能在這一帶）
+    summary: 埃及車輛馬兵追趕列祖到此，神使兩營中間黑暗並使海水淹沒追兵（書24:6-7）。
+    controversy: 渡海地點自古有多種說法，包含蘇伊士灣北端、苦湖、提姆薩湖、巴拉湖與孟沙拉湖南側湖汊等，確實渡口尚無定論。
+    verses: [出14:19, 出14:28, 書24:6, 書24:7]
+  - id: sinai
+    nameZh: 西乃曠野
+    openBibleFriendly: Mount Sinai
+    uncertain: true
+    rKm: 25
+    modernLabel: 西乃半島南部傳統摩西山一帶（只是可能在這一帶）
+    summary: 出埃及後領受律法並進入長久曠野行程之地（出19:1-2；書24:7）。
+    controversy: 傳統多以西乃半島南部的摩西山（Jebel Musa）一帶為代表，另有半島中北部與東側等不同山峰提案，具體安營地點未定。
+    verses: [出19:1, 書24:7]
+  - id: kadesh
+    nameZh: 加低斯巴尼亞
+    openBibleFriendly: Kadesh-barnea
+    uncertain: false
+    modernLabel: 尋的曠野南緣（Tell el-Qudeirat）
+    summary: 以色列人在曠野住了許多年日的重要營地（民14:33-34；書24:7）。
+    verses: [民14:33, 書24:7]
+  - id: heshbon
+    nameZh: 希實本（約但河東亞摩利地）
+    openBibleFriendly: Heshbon
+    uncertain: true
+    rKm: 10
+    modernLabel: 約但河東高原（常比定為黑什班遺址 Tell Hesban，只是可能在這一帶）
+    summary: 約但河東亞摩利王西宏的都城，神將河東亞摩利人交在以色列人手中（民21:25；書24:8）。
+    controversy: 多數地圖採黑什班遺址（Tell Hesban），但早期居住層的考古證據仍有討論，學者亦提出鄰近的賈盧勒（Tall Jalul）與烏邁里（Tall al-Umayri）等替代候選。
+    verses: [民21:25, 書24:8]
+  - id: bashan
+    nameZh: 巴珊
+    openBibleFriendly: Bashan
+    uncertain: false
+    modernLabel: 雅穆河以北河東高原區域代表點
+    summary: 約但河東亞摩利王噩的領地，與希實本王西宏並稱亞摩利人的二王（民21:33；書24:8, 12）。
+    verses: [民21:33, 書24:8, 書24:12]
+  - id: moab
+    nameZh: 摩押平原
+    openBibleFriendly: Moab 2
+    uncertain: false
+    modernLabel: 死海東北、耶利哥對岸約但河東平原（亞伯什亭至伯耶施末一帶）
+    summary: 以色列人在這裡安營時，摩押王巴勒召巴蘭來咒詛他們，巴蘭倒為他們連連祝福（民22:1；書24:9-10）。
+    verses: [民22:1, 書24:9, 書24:10]
+  - id: jordan-witness
+    nameZh: 約但河邊（證壇）
+    openBibleFriendly: Geliloth
+    overrideLon: 35.53
+    overrideLat: 31.86
+    unlocated: true
+    uncertain: true
+    rKm: 12
+    modernLabel: 位置不詳（約但河邊一帶示意，只是可能在這一帶）
+    summary: 河東二支派半在約但河邊所築高大顯著的『證』壇，見證耶和華是神（書22:10, 27, 34）。
+    controversy: 經文只記河東支派在約但河邊築了一座高大顯著的壇，確實遺址今日已不可考；地圖僅標示河岸一帶作示意。
+    verses: [書22:10, 書22:27, 書22:34]
+    entryKey: 地點/約但河
+  - id: gilgal
+    nameZh: 吉甲
+    openBibleFriendly: Gilgal 1
+    uncertain: true
+    rKm: 8
+    modernLabel: 耶利哥東側平原一帶（只是可能在這一帶）
+    summary: 過約但河後安營立起十二塊石頭之處，作為向後代述說神大能的記號（書4:20-24）。
+    controversy: 地圖採耶利哥東北的邁夫吉爾遺址（Khirbet el-Mefjir）為優先候選；須與申命記提及、靠近示劍一帶的同名吉甲區分，確切營址尚無定論。
+    verses: [書4:6, 書4:20]
+    entryKey: 地點/吉甲
+  - id: jericho
+    nameZh: 耶利哥
+    openBibleFriendly: Jericho 1
+    uncertain: false
+    modernLabel: 約但河谷西側蘇丹遺址（Tell es-Sultan）
+    summary: 以色列人過約但河以後，首先攻打的城（書6:1；書24:11）。
+    verses: [書6:1, 書24:11]
+    entryKey: 地點/耶利哥
+  - id: achor
+    nameZh: 亞割谷
+    openBibleFriendly: Valley of Achor
+    uncertain: true
+    rKm: 10
+    modernLabel: 耶利哥西南山地河谷一帶（只是可能在這一帶）
+    summary: 審判違背當滅之物禁令的亞干後，眾人在他身上堆起一大堆石頭直存到今日的地方（書7:26）。
+    controversy: 地圖採支持度較高的布基亞盆地（el-Buqei'a），另有耶利哥南側凱爾特溪谷（Wadi Qelt）或努艾瑪溪谷（Wadi Nu'eima）等不同說法，位置尚無定論。
+    verses: [書7:26]
+    entryKey: 地點/亞割谷
+  - id: ai
+    nameZh: 艾城門口
+    openBibleFriendly: Ai 1
+    uncertain: true
+    rKm: 6
+    modernLabel: 伯特利東側山地城址候選（只是可能在這一帶）
+    summary: 攻取艾城後，在城門口艾城王屍首上堆起一大堆石頭直存到今日之處（書8:29）。
+    controversy: 地圖採傳統比定的艾特爾遺址（et-Tell），另有馬卡提爾廢墟（Khirbet el-Maqatir）與尼西亞廢墟（Khirbet Nisya）等提案；標示僅代表城址一帶，無法指定城門與石堆的確切點位。
+    verses: [書8:29]
+  - id: makkedah
+    nameZh: 瑪基大洞口
+    openBibleFriendly: Makkedah
+    uncertain: true
+    rKm: 9
+    modernLabel: 猶大低地城址候選（只是可能在這一帶）
+    summary: 南方爭戰後把五王封在洞裡，把大石頭滾到洞口直存到今日之處（書10:27）。
+    controversy: 地圖採較多學者支持的庫姆廢墟（Khirbet el-Qom），另有貝特馬克杜姆（Khirbet Beit Maqdum）與歌德遺址（Tel Goded）等說；洞口本身無確切定位。
+    verses: [書10:27]
+    entryKey: 地點/瑪基大
+  - id: shiloh
+    nameZh: 示羅
+    openBibleFriendly: Shiloh
+    uncertain: false
+    modernLabel: 以法蓮山地塞倫遺址（Khirbet Seilun）
+    summary: 分地時期設立會幕之處（書18:1）。
+    verses: [書18:1]
+    entryKey: 地點/示羅
+  - id: ephraim-hill
+    nameZh: 以法蓮山地
+    openBibleFriendly: Mount Ephraim
+    uncertain: false
+    modernLabel: 迦南中央山地中段區域代表點
+    summary: 約書亞與大祭司以利亞撒安葬所在的中央山地區域（書24:30, 33）。
+    verses: [書24:30, 書24:33]
+    entryKey: 地點/以法蓮山地
+  - id: timnath-serah
+    nameZh: 亭拿西拉（亭拿希烈）
+    openBibleFriendly: Timnath-heres
+    uncertain: true
+    rKm: 10
+    modernLabel: 以法蓮山地（常比定為蒂布納遺址 Khirbet Tibnah，只是可能在這一帶）
+    summary: 各支派分完地業後分給約書亞的城邑，約書亞死後葬在此處迦實山北邊；士師記 2:9 作亭拿希烈（書19:50；24:30；士2:9）。
+    controversy: 地圖採發掘與多數考證支持的蒂布納遺址（Tel Tibna／Khirbet Tibnah），另有毗勒貝他那等不同方位提案。
+    verses: [書19:50, 書24:30, 士2:9]
+    entryKey: 地點/亭拿西拉
+  - id: gaash
+    nameZh: 迦實山
+    openBibleFriendly: Gaash
+    overrideLon: 35.11
+    overrideLat: 31.99
+    unlocated: true
+    uncertain: true
+    rKm: 12
+    modernLabel: 位置不詳（亭拿西拉南側山地，只是可能在這一帶）
+    summary: 約書亞葬在迦實山北邊。CT、GT 與 BH 都說這座山的確實位置不詳（書24:30；士2:9）。
+    controversy: CT 與 GT 說迦實山大概在亭拿西拉南邊，確實地點不詳，無法指認是哪一座山。
+    verses: [書24:30, 士2:9]
+    entryKey: 地點/迦實山
+  - id: gibeah-phinehas
+    nameZh: 非尼哈所得的小山（基比亞）
+    openBibleFriendly: Gibeah 3
+    unlocated: true
+    uncertain: true
+    rKm: 12
+    modernLabel: 位置不詳（以法蓮山地內同名地點甚多，只是可能在這一帶）
+    summary: 亞倫的兒子以利亞撒葬在這裡。小山的原文是基比亞，CT 說意思是山丘；CT 與 GT 都說確實地點不詳（書24:33）。
+    controversy: GT 所引華爾頓說，名叫基比亞的地方有好幾個，經文可能只是稱它為非尼哈的小山；CT 與 GT 都說確實地點不詳。
+    verses: [書24:33]
+    entryKey: 地點/基比亞（以法蓮）
+  - id: sychar
+    nameZh: 敘加
+    openBibleFriendly: Sychar
+    uncertain: true
+    rKm: 4
+    modernLabel: 示劍谷東口阿斯卡爾（Askar）一帶（只是可能在這一帶）
+    summary: 靠近雅各給約瑟那塊地的撒瑪利亞城，GT 李道生提及耶穌曾在此見證自己是基督（約4:5）。
+    controversy: 地圖採支持度較高的阿斯卡爾村（Askar），另有將敘加視為示劍本城（巴拉塔遺址）的說法。
+    verses: [約4:5]
+  - id: mizpah-gilead
+    nameZh: 基列米斯巴（迦累得）
+    openBibleFriendly: Mizpah 4
+    unlocated: true
+    uncertain: true
+    rKm: 14
+    modernLabel: 位置不詳（約但河東基列山區，只是可能在這一帶）
+    summary: 雅各與拉班立石作柱並堆石立約之處（創31:44-49）。
+    controversy: 雅各與拉班堆石立約的基列米斯巴，現代有數處不同遺址提案（如吉拉德 Jel'ad、魯邁斯 Tall er-Rumeith 等），分數皆低且無定論，確實地點不詳。
+    verses: [創31:45, 創31:49]
+  - id: mizpah-benjamin
+    nameZh: 便雅憫米斯巴（以便以謝附近）
+    openBibleFriendly: Mizpah 3
+    uncertain: false
+    modernLabel: 耶路撒冷西北山地（Tell en-Nasbeh；以便以謝立石確切點位未定）
+    summary: 撒母耳在米斯巴與善之間立石起名『以便以謝』之處（撒上7:12）。
+    verses: [撒上7:12]

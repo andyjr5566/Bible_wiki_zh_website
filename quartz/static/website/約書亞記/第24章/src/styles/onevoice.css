@@ -1,0 +1,590 @@
+/*
+ * 一拍只講一種東西（Claude.md §六）：
+ * 固定疊層裡每次只有一個面板（目前這一拍）。面板內：
+ *   經文小框／短註小框（同一位置切換、不重疊）、更多鈕、右上的互動小工具、對話泡泡。
+ * 「更多」小卡開在同一側，不捲動頁面。
+ */
+
+.jos-onevoice {
+  --jos-dock-w: min(25rem, 40vw);
+  --jos-dock-r: 22px;
+  --jos-dock-b: 20px;
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.jos-onevoice-hidden {
+  display: none;
+}
+
+.jos-panel {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.jos-panel-on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease 0.06s, visibility 0s;
+}
+
+/* 離開的面板裡，行內設成可見的小框也不能再接收點擊或滾輪 */
+.jos-panel:not(.jos-panel-on),
+.jos-panel:not(.jos-panel-on) * {
+  pointer-events: none !important;
+}
+
+/* ---------- 經文／短註小框 ---------- */
+.jos-voice {
+  position: absolute;
+  right: var(--jos-dock-r);
+  bottom: var(--jos-dock-b);
+  width: var(--jos-dock-w);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.jos-voice-actions {
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+/* 小框疊在同一處；高度由程式依淡入淡出的比重算出，更多鈕才會貼著目前看得見的那個框 */
+.jos-voice-stack {
+  position: relative;
+  width: 100%;
+  height: 0;
+  pointer-events: none;
+}
+
+.jos-vbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-width: 0;
+  pointer-events: none;
+  border-radius: var(--jos-radius);
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-vbox-verse {
+  background: var(--jos-bg-card);
+  backdrop-filter: blur(11px);
+  border: 1px solid var(--jos-border-strong);
+  padding: 12px 16px;
+  max-height: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--jos-border-strong) transparent;
+  font-family: var(--jos-font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+}
+
+.jos-vbox-verse .jos-verse-line {
+  margin: 0 0 5px;
+}
+
+.jos-vbox-verse .jos-verse-line:last-child {
+  margin-bottom: 0;
+}
+
+.jos-vbox-solemn {
+  border-color: var(--jos-rust);
+  border-width: 2px;
+}
+
+.jos-vbox-past {
+  border-color: var(--jos-past);
+  background: linear-gradient(180deg, rgba(168, 139, 106, 0.22), var(--jos-bg-card));
+}
+
+.jos-vbox-note {
+  background: var(--jos-parchment);
+  color: var(--jos-parchment-ink);
+  border: 1px solid var(--jos-parchment-edge);
+  padding: 12px 16px;
+  max-height: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-family: var(--jos-font-serif);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.jos-note-src {
+  font-weight: 700;
+}
+
+.jos-vbox-headline {
+  background: var(--jos-bg-card);
+  backdrop-filter: blur(11px);
+  border: 2px solid var(--jos-rust);
+  padding: 14px 16px;
+}
+
+.jos-vbox-headline .jos-cannot-headline {
+  margin: 0;
+}
+
+/* ---------- 更多鈕 ---------- */
+.jos-more-btn {
+  appearance: none;
+  pointer-events: auto;
+  border: 1px solid var(--jos-border-strong);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 3px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(24, 20, 14, 0.12);
+}
+
+.jos-more-btn:hover {
+  border-color: var(--jos-accent);
+  color: var(--jos-accent);
+}
+
+/* ---------- 更多小卡 ---------- */
+.jos-more-card {
+  position: absolute;
+  right: var(--jos-dock-r);
+  bottom: var(--jos-dock-b);
+  width: min(30rem, 44vw);
+  max-height: calc(100svh - var(--jos-header-h) - 36px);
+  display: flex;
+  flex-direction: column;
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: var(--jos-radius);
+  box-shadow: var(--jos-shadow);
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.jos-more-hidden {
+  display: none;
+}
+
+.jos-more-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--jos-border);
+  flex-shrink: 0;
+}
+
+.jos-more-title {
+  margin: 0;
+  font-family: var(--jos-font-serif);
+  font-size: 0.95rem;
+}
+
+.jos-more-close {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-soft);
+  color: var(--jos-ink);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.jos-more-body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 14px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--jos-border-strong) var(--jos-bg-elev);
+}
+
+.jos-more-sec {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--jos-border);
+}
+
+.jos-more-sec:first-child {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.jos-more-h {
+  margin: 0 0 4px;
+  font-family: var(--jos-font-serif);
+  font-size: 0.9rem;
+  color: var(--jos-bronze);
+}
+
+.jos-more-hint {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  color: var(--jos-ink-muted);
+}
+
+.jos-more-sec-body,
+.jos-more-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jos-more-sec-body .jos-chip-row {
+  margin-top: 0;
+}
+
+.jos-more-sec .jos-widget-bar {
+  margin: 4px 0;
+}
+
+/* ---------- 右上的互動小工具 ---------- */
+.jos-wslot {
+  position: absolute;
+  right: var(--jos-dock-r);
+  top: calc(var(--jos-header-h) + 14px);
+  width: min(26.8rem, 37vw);
+  max-height: calc(100svh - var(--jos-header-h) - 14px - 17rem);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  pointer-events: auto;
+}
+
+.jos-wslot-wide {
+  width: min(35rem, 45vw);
+}
+
+.jos-wslot-full {
+  max-height: calc(100svh - var(--jos-header-h) - 28px);
+}
+
+.jos-wcard {
+  flex-shrink: 0;
+  background: var(--jos-bg-card);
+  backdrop-filter: blur(11px);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: var(--jos-radius);
+  box-shadow: var(--jos-shadow);
+  padding: 11px 14px;
+  margin: 0;
+}
+
+.jos-wcard.jos-hero-plate {
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--jos-border-strong);
+}
+
+.jos-wcard.jos-seg-kicker {
+  border-left: 3px solid var(--jos-accent);
+  border-radius: var(--jos-radius);
+  padding: 8px 12px;
+}
+
+.jos-wcard.jos-prologue-stones,
+.jos-wcard.jos-balak-grid,
+.jos-wcard.jos-gifts-grid {
+  margin: 0;
+}
+
+.jos-wcard.jos-diff-wrap {
+  margin: 0;
+}
+
+.jos-wcard.jos-raise-floating {
+  border: 2px solid var(--jos-oak);
+  background: var(--jos-bg-elev);
+}
+
+.jos-wcard.jos-jump-row {
+  padding: 8px 12px;
+}
+
+/* ---------- 對話泡泡 ---------- */
+.jos-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  max-width: min(22rem, 36vw);
+  min-width: 9rem;
+  text-wrap: pretty;
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  border: 1.5px solid var(--jos-border-strong);
+  border-radius: 18px;
+  padding: 9px 14px 9px;
+  box-shadow: var(--jos-shadow);
+  font-family: var(--jos-font-hand);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.jos-bubble-line {
+  margin: 0 0 3px;
+}
+
+.jos-bubble-line:last-child {
+  margin-bottom: 0;
+}
+
+.jos-bubble-line-who {
+  font-weight: 700;
+  color: var(--jos-bronze);
+}
+
+.jos-bubble-who {
+  position: absolute;
+  left: 12px;
+  top: -10px;
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: 999px;
+  padding: 0 8px;
+  font-family: var(--jos-font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--jos-bronze);
+}
+
+.jos-bubble-who[hidden] {
+  display: none;
+}
+
+.jos-bubble-ref {
+  position: absolute;
+  bottom: 4px;
+  right: 12px;
+  appearance: none;
+  pointer-events: auto;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-family: var(--jos-font-sans);
+  font-size: 0.72rem;
+  color: var(--jos-ink-muted);
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+
+.jos-bubble:has(.jos-bubble-ref) {
+  padding-bottom: 24px;
+}
+
+.jos-bubble .jos-more-btn {
+  position: absolute;
+  right: 10px;
+  top: -11px;
+}
+
+.jos-bubble-tail {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 12px solid var(--jos-bg-elev);
+  filter: drop-shadow(0 1px 0 var(--jos-border-strong));
+  pointer-events: none;
+}
+
+/* 說話的人不在畫面裡，或瀏覽器沒有 3D：泡泡留在經文框的位置 */
+.jos-bubble-docked {
+  left: auto;
+  top: auto;
+  right: var(--jos-dock-r);
+  bottom: var(--jos-dock-b);
+  width: var(--jos-dock-w);
+  max-width: none;
+  transform: none !important;
+  will-change: auto;
+}
+
+.jos-bubble-docked .jos-bubble-tail {
+  display: none;
+}
+
+/* ---------- 手機直拿 ---------- */
+@media (orientation: portrait) and (max-width: 768px) {
+  .jos-onevoice {
+    --jos-dock-w: calc(100vw - 16px);
+    --jos-dock-r: 8px;
+    --jos-dock-b: 8px;
+  }
+
+  .jos-vbox-verse {
+    max-height: 10.5rem;
+    padding: 9px 12px;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .jos-vbox-note {
+    max-height: 10.5rem;
+  }
+
+  .jos-more-card {
+    width: calc(100vw - 16px);
+    max-height: 72svh;
+  }
+
+  .jos-wslot,
+  .jos-wslot-wide {
+    right: 8px;
+    top: calc(var(--jos-header-measured-h, var(--jos-header-h)) + 52px);
+    width: calc(100vw - 16px);
+    max-height: calc(100svh - var(--jos-header-measured-h, var(--jos-header-h)) - 52px - 13rem);
+  }
+
+  .jos-wslot-full {
+    max-height: calc(100svh - var(--jos-header-measured-h, var(--jos-header-h)) - 64px);
+  }
+
+  .jos-more-card {
+    max-height: calc(100svh - var(--jos-header-measured-h, var(--jos-header-h)) - 24px);
+  }
+
+  .jos-bubble {
+    max-width: min(19rem, 70vw);
+  }
+}
+
+/* ---------- 手機橫拿（844×390）：經文框在左下，小工具與更多小卡在右側 ---------- */
+@media (orientation: landscape) and (max-height: 520px) {
+  .jos-onevoice {
+    --jos-dock-w: min(22rem, 40vw);
+    --jos-dock-r: 8px;
+    --jos-dock-b: 8px;
+  }
+
+  .jos-voice {
+    right: auto;
+    left: 10px;
+    bottom: 8px;
+    align-items: flex-start;
+  }
+
+  .jos-voice-actions {
+    justify-content: flex-start;
+  }
+
+  .jos-bubble-docked {
+    left: 10px;
+    right: auto;
+    top: auto;
+    bottom: 8px;
+  }
+
+  .jos-vbox-verse {
+    padding: 6px 10px;
+    max-height: 9.7rem;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .jos-vbox-verse .jos-verse-line {
+    margin-bottom: 3px;
+  }
+
+  .jos-vbox-note {
+    padding: 7px 10px;
+    max-height: 9.7rem;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .jos-vbox-headline {
+    padding: 8px 12px;
+  }
+
+  .jos-more-btn {
+    font-size: 0.72rem;
+    padding: 2px 10px;
+  }
+
+  .jos-more-card {
+    right: 8px;
+    bottom: 8px;
+    width: min(24rem, 54vw);
+    max-height: calc(100svh - var(--jos-header-h) - 16px);
+  }
+
+  .jos-more-head {
+    padding: 4px 10px;
+  }
+
+  .jos-more-body {
+    padding: 2px 10px 10px;
+    font-size: 13px;
+  }
+
+  .jos-wslot,
+  .jos-wslot-wide {
+    right: 8px;
+    top: calc(var(--jos-header-h) + 8px);
+    width: min(25rem, 46vw);
+    max-height: calc(100svh - var(--jos-header-h) - 16px);
+    gap: 6px;
+  }
+
+  .jos-wslot-wide {
+    width: min(30rem, 52vw);
+  }
+
+  .jos-wcard {
+    padding: 7px 10px;
+  }
+
+  .jos-bubble {
+    max-width: min(28rem, 55vw);
+    min-width: 7rem;
+    padding: 6px 11px 6px;
+    border-radius: 14px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .jos-bubble:has(.jos-bubble-ref) {
+    padding-bottom: 17px;
+  }
+
+  .jos-bubble-ref {
+    bottom: 3px;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+}

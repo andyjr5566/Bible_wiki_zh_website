@@ -1,0 +1,612 @@
+# 下半部「再看一次」整理區與結構根據資料
+# 每一筆註釋皆附原檔 line 與逐字 evidence（≥ 8 字，只取自 raw_data/*_joshua_24.txt），由閘門 2 機械驗證。
+
+onlyIBasis:
+  - id: only-i-gt-study
+    source: GT
+    work: GT《約書亞記研經資料(蔡哲民等)》
+    verse: 書24:2-13
+    quote: 每一段都是以神為主角，神以第一人稱發言。
+    paraphrase: 將第2至13節分為列祖（2-4節）、出埃及（5-7節）、約但河東（8-10節）、迦南地（11-13節）四段。
+    line: 78
+    evidence: 每一段都是以神為主角，神以第一人稱發言。
+  - id: only-i-kc
+    source: KC
+    work: KC KingComments
+    verse: 書24:3-13
+    quote: Many times we read there the word ‘I’, which refers to God.
+    quoteZh: 在這一段裡，我們一再讀到指著神的『我』字。
+    line: 7
+    evidence: Many times we read there the word ‘I’, which refers to God.
+
+shapeTreatyNotes:
+  - id: treaty-gt-ryrie
+    source: GT
+    work: GT《約書亞記雷氏研讀本》
+    verse: 書24:1-28
+    quote: 本章使用宗主條約(一個王及其藩屬之間的約)的慣用形式。
+    paraphrase: 將第1至28節分為前言（1-2節）、歷史序言（2-13節）、主要條款（14-24節）、契約的抄寫和存放（25-28節）。
+    line: 5
+    evidence: 本章使用宗主條約(一個王及其藩屬之間的約)的慣用形式。
+  - id: treaty-gt-qidao
+    source: GT
+    work: GT《啟導本聖經約書亞記註釋》
+    verse: 書24:1-28
+    quote: 約的內容有似古代宗主與屬國間的條約，先是序言(1~2節)，然後是歷史的追述(2~13節)，接上是條款(14~24節)。最後是協定達成的記載(25~28節)。
+    line: 9
+    evidence: 約的內容有似古代宗主與屬國間的條約，先是序言(1~2節)
+  - id: treaty-gt-study
+    source: GT
+    work: GT《約書亞記研經資料(蔡哲民等)》
+    verse: 書24:1-28
+    paraphrase: 指出第2至13節先列出宗主耶和華神先前仁慈的作為，第14至24節複述以色列的職責，第25至28節立大石並寫在律法書上作為證明。
+    line: 34
+    evidence: 形式則依照當時宗主與屬國立約的方式和條約內容。
+  - id: treaty-ct-epilogue
+    source: CT
+    work: CT 黃迦勒《約書亞記註解》
+    verse: 書24:29-33
+    quote: 29~33節是別人追記的本書跋文。
+    line: 268
+    evidence: 29~33節是別人追記的本書跋文。
+  - id: treaty-gt-jingdu-dialog
+    source: GT
+    work: GT《聖經精讀本──約書亞記註解》
+    verse: 書24:1-24
+    paraphrase: 將約書亞與全體百姓的對話分為四對來回：1-15節與16-18節、19-20節與21節、22節上半與下半、23節與24節。
+    line: 31
+    evidence: 全體百姓反復表明了自己的決志(1~15節與16~18節；19，20節與21節
+
+oakMoments:
+  - era: 0
+    title: 亞伯蘭在摩利橡樹那裡築壇
+    ref: 創12:6-7
+    summary: 亞伯蘭進迦南地，到了示劍地方、摩利橡樹那裡；耶和華向他顯現應許賜地給他後裔，他在那裡築了一座壇。
+  - era: 1
+    title: 雅各把外邦神像和耳環藏在橡樹底下
+    ref: 創35:4
+    summary: 雅各吩咐家人除掉中間的外邦神，眾人把神像和耳朵上的環子交給雅各，雅各都藏在示劍那裡的橡樹底下。
+  - era: 2
+    title: 約書亞將一塊大石頭立在橡樹下
+    ref: 書24:26
+    summary: 約書亞與百姓立約，將這些話寫在神的律法書上，又將一塊大石頭立在橡樹下耶和華的聖所旁邊。
+
+oakSameTreeNote:
+  id: oak-same-tree-ct
+  source: CT
+  work: CT 黃迦勒《約書亞記註解》
+  verse: 書24:26
+  quote: 『橡樹下』亞伯拉罕曾在示劍的橡樹下築壇敬拜神(參創十二6~7)，極可能指的是同一棵樹；『耶和華的聖所』大概指的是亞伯拉罕所築的祭壇。
+  line: 243
+  evidence: 亞伯拉罕曾在示劍的橡樹下築壇敬拜神(參創十二6~7)，極可能指的是同一棵樹
+
+shechemEvents:
+  - id: shechem-gen12
+    ref: 創12:6-7
+    era: before
+    title: 亞伯蘭到了摩利橡樹那裡築壇
+    summary: 耶和華向亞伯蘭顯現，應許把這地賜給他的後裔，亞伯蘭在那裡為耶和華築了一座壇。
+    storyCue: family-1
+  - id: shechem-gen33
+    ref: 創33:18-20
+    era: before
+    title: 雅各用一百塊銀子買地、築壇
+    summary: 雅各從巴旦亞蘭回來到了示劍城東支搭帳棚，向哈抹的子孫買了那塊地並築壇。
+    storyCue: bones
+  - id: shechem-gen34
+    ref: 創34:1-2
+    era: before
+    title: 底拿的事
+    summary: 雅各的女兒底拿出去見那地的女子們，希未人哈抹的兒子示劍玷辱他。
+  - id: shechem-gen35
+    ref: 創35:2-4
+    era: before
+    title: 雅各家除掉外邦神，藏在示劍的橡樹底下
+    summary: 雅各家中的人把外邦人的神像和耳朵上的環子交給雅各，都藏在示劍那裡的橡樹底下。
+    storyCue: put-away
+  - id: shechem-gen37
+    ref: 創37:12-14
+    era: before
+    title: 約瑟被父親打發往示劍去找哥哥們
+    summary: 約瑟的哥哥們往示劍去放羊，以色列打發約瑟出希伯崙谷往示劍去看哥哥們平安不平安。
+  - id: shechem-jos8
+    ref: 申27:11-13；書8:30-35
+    era: before
+    title: 基利心山與以巴路山上宣告祝福和咒詛
+    summary: 以色列人一半對著基利心山、一半對著以巴路山，在以巴路山上築壇並宣讀律法上祝福和咒詛的話。
+    linkedBy:
+      - id: shechem-jos8-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》（第1節〔文意註解〕）
+        verse: 書24:1
+        quote: 並在基利心山和以巴路山上宣告祝福和咒詛，立志順服聖約(參書八30~35)。
+        line: 20
+        evidence: 並在基利心山和以巴路山上宣告祝福和咒詛，立志順服聖約(參書八30~35)。
+      - id: shechem-jos8-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》（第1節 ◎ 條目 c.）
+        verse: 書24:1
+        quote: 以色列人進入迦南，也在示劍的基利心山與以巴路山宣講律法(書 8：30~35 )。
+        line: 23
+        evidence: 以色列人進入迦南，也在示劍的基利心山與以巴路山宣講律法
+      - id: shechem-jos8-bh
+        source: BH
+        work: BH BibleHub Study（Joshua 24:1 第一段）
+        verse: 書24:1
+        quote: Shechem stood between Mount Ebal and Mount Gerizim, where Israel had previously heard the blessings and curses of the law (Joshua 8:30–35).
+        quoteZh: 示劍位於以巴路山與基利心山之間，以色列人先前曾在那裡聽見律法的祝福與咒詛（書8:30-35）。
+        line: 6
+        evidence: Shechem stood between Mount Ebal and Mount Gerizim, where Israel had previously heard
+  - id: shechem-allotment
+    ref: 書17:7；書20:7；書21:21
+    era: before
+    title: 瑪拿西的境界、逃城、給利未人的城
+    summary: 分地時示劍落在瑪拿西境界旁，在以法蓮山地被分定為誤殺人的逃城，並給了哥轄族利未人。
+  - id: shechem-jos24
+    ref: 書24:1,25-27,32
+    era: jos24
+    title: 立約、立石；約瑟的骸骨葬在這裡
+    summary: 約書亞聚集眾支派在示劍更新盟約、在橡樹下立起大石頭作見證；約瑟的骸骨也葬在雅各所買的那塊地裡。
+    storyCue: gather
+  - id: shechem-judg9-temple
+    ref: 士9:4,46
+    era: later
+    title: 示劍有巴力比利土的廟
+    verbatimOnly: true
+  - id: shechem-judg9-6
+    ref: 士9:6
+    era: later
+    title: 示劍橡樹旁的柱子那裡立亞比米勒為王
+    verbatimOnly: true
+  - id: shechem-1kgs12
+    ref: 王上12:1,25
+    era: later
+    title: 羅波安往示劍去要被立為王；耶羅波安建築示劍
+    summary: 所羅門死後以色列人到示劍要立羅波安作王；王國分裂後耶羅波安在以法蓮山地建築示劍住在其中。
+    linkedBy:
+      - id: shechem-1kgs12-bh
+        source: BH
+        work: BH BibleHub Study（Joshua 24:1 交叉引註）
+        verse: 書24:1
+        paraphrase: 在書24:1交叉引註王上12:1-3羅波安往示劍去的事。
+        line: 8
+        evidence: 1Ki 12:1-3 Then Rehoboam went to Shechem, for all Israel had gone there
+  - id: shechem-john4
+    ref: 約4:5
+    era: later
+    title: 敘加靠近雅各給他兒子約瑟的那塊地
+    summary: 耶穌到了撒瑪利亞的敘加，靠近雅各給他兒子約瑟的那塊地。
+    linkedBy:
+      - id: shechem-john4-gt-li
+        source: GT
+        work: GT 李道生《舊約聖經問題總解(上)》
+        verse: 書24:27
+        quote: 祂曾在臨近示劍的敘加城見證自己是基督。(約四5，25—29)。
+        line: 333
+        evidence: 祂曾在臨近示劍的敘加城見證自己是基督。(約四5，25—29)。
+  - id: shechem-acts7
+    ref: 徒7:16
+    era: later
+    title: 司提反說列祖被帶到示劍安葬
+    summary: 司提反在公會前追述列祖去世後被帶到示劍安葬。
+
+shechemArchaeology:
+  title: 這座城本身
+  points:
+    - 巴拉塔遺址支配基利心山與以巴路山之間的山隘與商道，從銅石器時代到希臘時代共有二十四個文化層。
+    - 中銅器時代興建了巨大的護堤與廟宇；晚銅器時代重建，亞馬拿文獻提到當地君王拉布阿尤以示劍為根據地。
+    - 遺址的鐵器時代沒有毀滅層，約書亞攻取城市名單（書12:7-23）也沒有包括示劍，以色列人可能未經重大爭戰便取得這城控制權。
+  sourceNote:
+    id: shechem-arch-walton
+    source: GT
+    work: GT 華爾頓《約書亞記背景注釋》
+    verse: 書24:1
+    quote: 其考古史從銅石器時代起，到希臘時代為止，一共包括了二十四個文化層。
+    line: 26
+    evidence: 其考古史從銅石器時代起，到希臘時代為止，一共包括了二十四個文化層。
+
+sevenStones:
+  - id: stone-1-gilgal
+    order: 1
+    chapter: 4
+    placeName: 吉甲
+    placeId: gilgal
+    ref: 書4:20
+    what: 從約但河中取來的十二塊石頭
+    markerKind: children-ask
+    markerRef: 書4:6,21
+    markerQuote: 日後你們的子孫問他們的父親說：這些石頭是什麼意思？
+    storyCue: prologue
+  - id: stone-2-achor
+    order: 2
+    chapter: 7
+    placeName: 亞割谷
+    placeId: achor
+    ref: 書7:26
+    what: 堆在亞干身上的一大堆石頭
+    markerKind: until-today
+    markerRef: 書7:26
+    markerQuote: 直存到今日
+    storyCue: prologue
+  - id: stone-3-ai
+    order: 3
+    chapter: 8
+    placeName: 艾城門口
+    placeId: ai
+    ref: 書8:29
+    what: 堆在艾城王屍首上的一大堆石頭
+    markerKind: until-today
+    markerRef: 書8:29
+    markerQuote: 直存到今日
+    storyCue: prologue
+  - id: stone-4-ebal
+    order: 4
+    chapter: 8
+    placeName: 以巴路山
+    placeId: ebal
+    ref: 書8:32
+    what: 抄寫摩西律法的石頭
+    markerKind: law-stone
+    storyCue: prologue
+  - id: stone-5-makkedah
+    order: 5
+    chapter: 10
+    placeName: 瑪基大洞口
+    placeId: makkedah
+    ref: 書10:27
+    what: 放在五王藏身洞口的幾塊大石頭
+    markerKind: until-today
+    markerRef: 書10:27
+    markerQuote: 直存到今日
+    storyCue: prologue
+  - id: stone-6-jordan
+    order: 6
+    chapter: 22
+    placeName: 約但河邊的證壇
+    placeId: jordan-witness
+    ref: 書22:27
+    what: 河東支派所築作證據的壇
+    markerKind: children-ask
+    markerRef: 書22:27
+    markerQuote: 免得你們的子孫日後對我們的子孫說，你們與耶和華無分了。
+    storyCue: prologue
+  - id: stone-7-shechem
+    order: 7
+    chapter: 24
+    placeName: 示劍橡樹下
+    placeId: shechem
+    ref: 書24:26-27
+    what: 立在橡樹下耶和華聖所旁邊的一塊大石頭
+    markerKind: witness-stone
+    markerRef: 書24:27
+    markerQuote: 看哪，這石頭可以向我們作見證
+    storyCue: raise
+
+sevenStonesNotes:
+  - id: seven-stones-ct
+    source: CT
+    work: CT 黃迦勒《約書亞記註解》
+    verse: 書24:27
+    quote: 這是以色列人進入迦南地後，第七次立石作見證(參書四20；七26；八29，32；十27；二十二27)。
+    line: 250
+    evidence: 這是以色列人進入迦南地後，第七次立石作見證(參書四20；七26；八29，32；十27；二十二27)。
+  - id: seven-stones-gt-study
+    source: GT
+    work: GT《約書亞記研經資料(蔡哲民等)》
+    verse: 書24:26
+    quote: 24：26 是約書亞進入迦南地後以色列人的第七次立石，以前六次分別在 4：20 7：26 8：29，32 10：27 22：27。
+    line: 354
+    evidence: 是約書亞進入迦南地後以色列人的第七次立石，以前六次分別在 4：20 7：26 8：29，32 10：27 22：27。
+  - id: seven-stones-gt-qidao
+    source: GT
+    work: GT《啟導本聖經約書亞記註釋》
+    verse: 書24:27
+    quote: 這是約書亞進入迦南地後以民第七次立石，以前六次見四20；七26；八29，32；十27；二十二27。
+    line: 363
+    evidence: 這是約書亞進入迦南地後以民第七次立石，以前六次見四20；七26；八29，32；十27；二十二27。
+  - id: seven-stones-gt-comp
+    source: GT
+    work: GT《約書亞記綜合解讀》
+    verse: 書24:27
+    quote: 這是以色列人進迦南後第七次立起石頭作見證(四20；七26；八29；八32；十27；二十二27)，為要提醒後人。
+    line: 365
+    evidence: 這是以色列人進迦南後第七次立起石頭作見證(四20；七26；八29；八32；十27；二十二27)
+
+otherStones:
+  - id: other-stone-bethel
+    title: 伯特利許願之石
+    ref: 創28:18-22
+    meaning: 作神的殿
+    note:
+      id: other-stone-bethel-gt
+      source: GT
+      work: GT《約書亞記研經資料(蔡哲民等)》
+      verse: 書24:27
+      paraphrase: 和李道生一樣列出伯特利許願之石，說它的意義是作神的殿（創28:18-22）。
+      line: 371
+      evidence: 伯特利許願之石——作神的殿( 創 28：18~22 )。
+  - id: other-stone-mizpah-gilead
+    title: 米斯巴鑒察之石
+    ref: 創31:44-49
+    meaning: 神在人中間鑒察
+    note:
+      id: other-stone-mizpah-gt
+      source: GT
+      work: GT《約書亞記研經資料(蔡哲民等)》
+      verse: 書24:27
+      paraphrase: 和李道生一樣列出米斯巴鑒察之石，說它表明神在人中間鑒察（創31:44-49）。
+      line: 371
+      evidence: 米斯巴鑒察之石——神在人中間鑒察( 創 31：44~49 )。
+  - id: other-stone-jordan
+    title: 約但河斷流之石
+    ref: 書4:1-9
+    meaning: 永遠的紀念
+    note:
+      id: other-stone-jordan-gt
+      source: GT
+      work: GT 李道生《舊約聖經問題總解(上)》
+      verse: 書24:27
+      paraphrase: 列出約但河斷流之石，說它的意義是永遠的紀念（書4:1-9）。
+      line: 333
+      evidence: 約旦河斷流之石——永遠的紀念(書四1—9)。
+  - id: other-stone-ebal
+    title: 以巴路山錄法之石
+    ref: 書8:30-33
+    meaning: 記載宣讀律法
+    note:
+      id: other-stone-ebal-gt
+      source: GT
+      work: GT 李道生《舊約聖經問題總解(上)》
+      verse: 書24:27
+      paraphrase: 列出以巴路山錄法之石，說它的意義是記載、宣讀律法（書8:30-33）。
+      line: 333
+      evidence: 以巴路山錄法之石——記載宣律法，(書八30—33)。
+  - id: other-stone-shechem
+    title: 示劍城盟約之石
+    ref: 書24:25-28
+    meaning: 作見證
+    note:
+      id: other-stone-shechem-gt
+      source: GT
+      work: GT《約書亞記研經資料(蔡哲民等)》
+      verse: 書24:27
+      paraphrase: 列出示劍城盟約之石，說它的意義是作見證（書24:25-28）。
+      line: 372
+      evidence: 示劍城盟約之石——作見證( 書 24：25~28 )。
+  - id: other-stone-ebenezer
+    title: 米斯巴救助之石（以便以謝）
+    ref: 撒上7:11-12
+    meaning: 神的幫助
+    note:
+      id: other-stone-ebenezer-gt
+      source: GT
+      work: GT《約書亞記研經資料(蔡哲民等)》
+      verse: 書24:27
+      paraphrase: 和李道生一樣列出米斯巴救助之石以便以謝，說它的意義是神的幫助（撒上7:11-12）。
+      line: 372
+      evidence: 米斯巴救助之石——以便以謝，神的幫助( 撒上 7：11~12 )。
+
+burialsIntro:
+  id: burials-intro-kc
+  source: KC
+  work: KC KingComments
+  verse: 書24:29-33
+  quote: The book ends with three burials.
+  quoteZh: 這卷書以三個葬禮結束。
+  line: 81
+  evidence: The book ends with three burials.
+
+threeBurials:
+  - id: burial-joshua
+    person: 約書亞
+    genealogyId: 約書亞
+    ref: 書24:29-30
+    placeName: 以法蓮山地的亭拿西拉（迦實山北邊）
+    placeId: timnath-serah
+    ageNote: 正一百一十歲（對照創50:26約瑟正一百一十歲）
+    detail: 耶和華的僕人、嫩的兒子約書亞葬在他地業的境內；迦實山確實地點不詳。
+    entryKey: 地點/亭拿西拉
+    storyCue: joshua-dies
+    notes:
+      - id: burial-joshua-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:29
+        quote: He is called here for the first and also only time “the servant of the LORD”.
+        quoteZh: 他在這裡第一次、也是全書唯一一次被稱為『耶和華的僕人』。
+        line: 81
+        evidence: He is called here for the first and also only time
+      - id: burial-joshua-tyndale
+        source: GT
+        work: GT《丁道爾聖經注釋》
+        verse: 書24:29
+        quote: 約瑟也是一百一十歲去世(創五十26)。這個數字把將以色列帶進迦南的約書亞，和把以色列帶入埃及的祖先連在一起。它也為第32節提到約瑟鋪路。
+        line: 379
+        evidence: 這個數字把將以色列帶進迦南的約書亞，和把以色列帶入埃及的祖先連在一起。
+  - id: burial-joseph
+    person: 約瑟的骸骨
+    genealogyId: 約瑟
+    ref: 書24:32
+    placeName: 示劍（雅各用一百塊銀子買的那塊地）
+    placeId: shechem
+    ageNote: 創50:26記載約瑟正一百一十歲去世，收殮在棺材裡停在埃及
+    detail: 從創50:25約瑟起誓遺命、出13:19摩西把骸骨一同帶去，到書24:32葬在示劍，作了約瑟子孫的產業（另見來11:22；徒7:16）。
+    entryKey: 歷史/約瑟骸骨葬於示劍
+    storyCue: bones
+    notes:
+      - id: burial-joseph-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:32
+        quote: The burial of Joseph’s bones makes it clear that the book does not really end with death, because it shows the hope of the resurrection. With this in mind Joseph wanted his bones to be buried in the land (Heb 11:22).
+        quoteZh: 約瑟骸骨的安葬顯明這卷書並非真的以死亡作結，因為它顯出復活的盼望；約瑟正是存著這盼望，吩咐把他的骸骨葬在這地（來11:22）。
+        line: 91
+        evidence: The burial of Joseph’s bones makes it clear that the book does not really end with death
+      - id: burial-joseph-tyndale
+        source: GT
+        work: GT《丁道爾聖經注釋》
+        verse: 書24:32
+        paraphrase: 指出這裡重提約瑟遺骸與雅各買地，把約書亞記與創世記連起來，總結屬神子民如何從一個家族成為眾支派與國家。
+        line: 420
+        evidence: 便將約書亞記和創世記連起來，成為一個大時代的總結
+  - id: burial-eleazar
+    person: 大祭司以利亞撒
+    genealogyId: 以利亞撒
+    ref: 書24:33
+    placeName: 以法蓮山地、他兒子非尼哈所得的小山
+    placeId: gibeah-phinehas
+    detail: 亞倫的兒子以利亞撒死了，葬在他兒子非尼哈所得的小山上；小山原文作基比亞，確實地點不詳。
+    entryKey: 地點/基比亞（以法蓮）
+    storyCue: eleazar
+    notes:
+      - id: burial-eleazar-ct
+        source: CT
+        work: CT 黃迦勒《約書亞記註解》
+        verse: 書24:33
+        quote: 『以利亞撒』當時的大祭司，死後大祭司的職任由他兒子非尼哈繼承
+        line: 298
+        evidence: 『以利亞撒』當時的大祭司，死後大祭司的職任由他兒子非尼哈繼承
+      - id: burial-eleazar-gt-comp
+        source: GT
+        work: GT《約書亞記綜合解讀》
+        verse: 書24:32-33
+        quote: 現在這兩項任務都已經完成了，神就不再指定約書亞的接班人，而是安排非尼哈接替他父親以利亞撒做大祭司，維持人與神之間的交通。
+        line: 434
+        evidence: 神就不再指定約書亞的接班人，而是安排非尼哈接替他父親以利亞撒做大祭司
+
+section05Title: 免得你忘記
+
+lestForget:
+  - id: forget-1-deut6
+    order: 1
+    stageLabel: 進那地之前，摩西預先提醒
+    refs:
+      - 申6:10-12
+    storyCue: gifts
+    notes:
+      - id: forget-1-tyndale
+        source: GT
+        work: GT《丁道爾聖經注釋》
+        verse: 書24:13
+        quote: 這一節正像申命記六10~11一樣，用以色列從神白白得到的財富和祝福，來形容神的一切應許都已實現。
+        line: 194
+        evidence: 這一節正像申命記六10~11一樣，用以色列從神白白得到的財富和祝福
+      - id: forget-1-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:13
+        paraphrase: 指出書24:13與申6:10-11相呼應。
+        line: 200
+        evidence: 24：13 與 申 6：10~11 相呼應。
+  - id: forget-2-fulfilled
+    order: 2
+    stageLabel: 分地完成與臨別之時
+    refs:
+      - 書21:43-45
+      - 書23:14
+    storyCue: prologue
+    notes:
+      - id: forget-2-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:13
+        quote: The conquest required Israel’s obedience and courage, yet the decisive victory and inheritance came from the Lord (Joshua 21:43–45).
+        quoteZh: 爭戰雖需要以色列人的順服與勇氣，決定性的得勝與產業卻是出於耶和華（書21:43-45）。
+        line: 414
+        evidence: yet the decisive victory and inheritance came from the Lord (Joshua 21:43–45).
+  - id: forget-3-jos24-13
+    order: 3
+    stageLabel: 示劍回顧神所賜的城邑與果園
+    refs:
+      - 書24:13
+    storyCue: gifts
+    notes:
+      - id: forget-3-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:13
+        quote: Israel entered established Canaanite cities and received homes, wells, and fortified settlements prepared before their arrival, as Moses had foretold (Deuteronomy 6:10–11).
+        quoteZh: 正如摩西預先所說的（申6:10-11），以色列人進入已經建好的迦南城邑，得著他們來到之前便已預備好的房屋、水井與堅固居所。
+        line: 421
+        evidence: prepared before their arrival, as Moses had foretold (Deuteronomy 6:10–11).
+  - id: forget-4-jos24-17
+    order: 4
+    stageLabel: 百姓回答為奴之家領出來的神
+    refs:
+      - 書24:17
+    storyCue: answer-1
+    notes:
+      - id: forget-4-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:17
+        paraphrase: 在書24:17『為奴之家』下交叉引註申5:6與出13:3。
+        line: 574
+        evidence: Deu 5:6 I am the LORD your God, who brought you out
+  - id: forget-5-jos24-31
+    order: 5
+    stageLabel: 知道耶和華所行諸事的長老還在的時候
+    refs:
+      - 書24:31
+    storyCue: elders
+    notes:
+      - id: forget-5-gt-study
+        source: GT
+        work: GT《約書亞記研經資料(蔡哲民等)》
+        verse: 書24:31
+        quote: 24：31 也暗示當這些長老死去以後，以色列人就不再專心事奉神了，這正是士師記所描述的混亂狀況。
+        line: 415
+        evidence: 也暗示當這些長老死去以後，以色列人就不再專心事奉神了
+  - id: forget-6-judg2
+    order: 6
+    stageLabel: 後來有別的世代興起
+    refs:
+      - 士2:7-10
+    storyCue: epilogue-diff
+    notes:
+      - id: forget-6-bh
+        source: BH
+        work: BH BibleHub Study
+        verse: 書24:31
+        quote: When that generation passed away, later Israelites failed to remember the LORD’s works, opening the way for the spiritual decline recorded in Judges.
+        quoteZh: 當那一代過去之後，後來的以色列人沒有記念耶和華的作為，開啟了士師記所記載的屬靈衰落。
+        line: 1089
+        evidence: When that generation passed away, later Israelites failed to remember
+      - id: forget-6-kc
+        source: KC
+        work: KC KingComments
+        verse: 書24:31
+        quote: When the witnesses of the power of the LORD and its influence on the people are gone, a new generation rises that is open to the influences of the peoples around them. The following book, Judges, shows this.
+        quoteZh: 當見證耶和華大能及其影響力的人離去後，新的一代興起，向周圍列族的影響敞開；接下來的士師記就顯明了這事。
+        line: 87
+        evidence: When the witnesses of the power of the LORD and its influence on the people are gone
+
+beadQuestions:
+  work: GT《串珠聖經注釋》【思想問題(第24章)】
+  attributionLine: 471
+  attributionEvidence: ──《串珠聖經注釋》
+  items:
+    - number: 1
+      text: １ 1節顯示：約書亞給百姓的囑咐都是出於神，因為百姓是站在神面前領受。基督徒對神僕人的教導應有什麽態度？參16節。
+      line: 459
+      evidence: 1節顯示：約書亞給百姓的囑咐都是出於神，因為百姓是站在神面前領受。
+    - number: 2
+      text: ２ 假若亞伯拉罕沒有蒙神帶領離開拜偶像的環境(2~3)，你想他的信仰會有任何的改變？人可以在神的救恩上誇口麽？參約15：16。
+      line: 461
+      evidence: 假若亞伯拉罕沒有蒙神帶領離開拜偶像的環境(2~3)
+    - number: 3
+      text: ３ 以色列人離開埃及後陸續遇到什麽困難(5~11)？神怎樣施恩給他們，使他們得到應許的迦南地？今日信徒蒙神帶領離開罪惡走永生道路，會有類似的經歷麽？
+      line: 463
+      evidence: 以色列人離開埃及後陸續遇到什麽困難(5~11)？
+    - number: 4
+      text: ４ 約書亞不但嚴囑咐百姓敬畏及事奉耶和華，且以身作則，表明他的家只事奉耶和華(15)。今日教導神話語的人，是否也該如此？
+      line: 465
+      evidence: 約書亞不但嚴囑咐百姓敬畏及事奉耶和華，且以身作則
+    - number: 5
+      text: ５ 約書亞吩咐百姓要除掉他們中間的外邦神(23)，這有可指住在他們中間的迦南人所信奉的偶像。你周圍不認識神的人拜偶像的風氣有否影響你，妨礙你專一服事神呢？
+      line: 467
+      evidence: 約書亞吩咐百姓要除掉他們中間的外邦神(23)，這有可指住在他們中間的迦南人所信奉的偶像。
+    - number: 6
+      text: ６ 31節有什麽含意？參士2：8~13。以色列人容易偏離神，他們的失敗給基督徒什麽警惕？
+      line: 469
+      evidence: 31節有什麽含意？參士2：8~13。以色列人容易偏離神

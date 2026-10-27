@@ -1,0 +1,799 @@
+/* 左側「事奉之線」（18 個 עָבַד 繩結：橡樹綠＝耶和華、鐵鏽紅＝別神、空心圈＝為奴／僕人） */
+.jos-thread-rail {
+  position: fixed;
+  left: 12px;
+  top: calc(var(--jos-header-h) + 12px);
+  z-index: 18;
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  transition: opacity 0.25s ease;
+}
+
+.jos-thread-rail-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.jos-thread-cord {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 6px;
+  background: var(--jos-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--jos-border);
+  border-radius: 999px;
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-thread-cord::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  bottom: 12px;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--jos-border-strong);
+  z-index: 0;
+}
+
+.jos-thread-toggle {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  border: 1px solid var(--jos-border-strong);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jos-knot-pip {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--jos-border-strong);
+  background: var(--jos-bg-elev);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fffaf3;
+}
+
+.jos-knot-pip-yhwh {
+  background: var(--jos-oak);
+  border-color: var(--jos-oak);
+}
+
+.jos-knot-pip-other-gods {
+  background: var(--jos-rust);
+  border-color: var(--jos-rust);
+}
+
+.jos-knot-pip-bondage {
+  background: var(--jos-bg-elev);
+  border-color: var(--jos-ink-muted);
+  color: var(--jos-ink);
+}
+
+.jos-knot-pip-servant {
+  background: var(--jos-bg-elev);
+  border-color: var(--jos-lamp);
+  color: var(--jos-lamp);
+}
+
+.jos-knot-pip-active {
+  transform: scale(1.32);
+  box-shadow: 0 0 0 3px var(--jos-mark-bg);
+}
+
+.jos-thread-drawer {
+  width: min(250px, calc(100vw - 74px));
+  max-height: calc(100svh - var(--jos-header-h) - 32px);
+  overflow-y: auto;
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border-strong);
+  border-radius: var(--jos-radius);
+  padding: 12px;
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-thread-drawer-hidden {
+  display: none;
+}
+
+.jos-thread-title {
+  margin: 0 0 4px;
+  font-family: var(--jos-font-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.jos-thread-sub {
+  margin: 0 0 10px;
+  font-size: 0.76rem;
+  color: var(--jos-ink-muted);
+  line-height: 1.5;
+}
+
+.jos-thread-knots {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jos-knot-btn {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-card);
+  color: var(--jos-ink-muted);
+  border-radius: var(--jos-radius-sm);
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jos-knot-btn:hover {
+  border-color: var(--jos-border-strong);
+  color: var(--jos-ink);
+}
+
+.jos-knot-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--jos-ink-faint);
+}
+
+.jos-knot-yhwh .jos-knot-dot {
+  background: var(--jos-oak);
+}
+
+.jos-knot-other-gods .jos-knot-dot {
+  background: var(--jos-rust);
+}
+
+.jos-knot-bondage .jos-knot-dot {
+  background: transparent;
+  border: 2px solid var(--jos-ink-muted);
+}
+
+.jos-knot-servant .jos-knot-dot {
+  background: transparent;
+  border: 2px solid var(--jos-lamp);
+}
+
+.jos-knot-active {
+  border-color: var(--jos-accent);
+  color: var(--jos-ink);
+  background: var(--jos-accent-soft);
+  font-weight: 600;
+}
+
+/* 36 拍捲動舞台軌（每一拍是疊在 3D 舞台上的 sticky 說明框） */
+.jos-story-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.jos-seg-anchor {
+  height: 0;
+  overflow: hidden;
+}
+
+/* 每一拍只是一段捲動長度；畫面上的內容全在固定的疊層（onevoice.css） */
+.jos-beat {
+  position: relative;
+  min-width: 0;
+  min-height: 138svh;
+  pointer-events: none;
+}
+
+.jos-beat-tall {
+  min-height: 168svh;
+}
+
+.jos-seg-kicker {
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-left: 3px solid var(--jos-accent);
+  background: var(--jos-bg-soft);
+  border-radius: 0 var(--jos-radius-sm) var(--jos-radius-sm) 0;
+}
+
+.jos-seg-kicker-meta {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--jos-bronze);
+}
+
+.jos-seg-kicker-title {
+  margin: 1px 0 0;
+  font-family: var(--jos-font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.jos-seg-kicker-treaty {
+  margin: 3px 0 0;
+  font-size: 0.75rem;
+  color: var(--jos-ink-muted);
+}
+
+/* 序幕開場標題牌 */
+.jos-hero-plate {
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--jos-border);
+}
+
+.jos-eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--jos-bronze);
+  font-weight: 700;
+}
+
+.jos-hero-title {
+  margin: 0 0 6px;
+  font-family: var(--jos-font-serif);
+  font-size: clamp(1.55rem, 3.2vw, 2.05rem);
+  line-height: 1.22;
+  letter-spacing: 0.03em;
+}
+
+.jos-hero-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--jos-ink-muted);
+}
+
+.jos-beat-ref {
+  font-family: var(--jos-font-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--jos-accent);
+  background: var(--jos-accent-soft);
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.jos-space-tag {
+  font-size: 0.73rem;
+  color: var(--jos-ink-faint);
+}
+
+/* 第19節單獨放大的宣告 */
+.jos-cannot-headline {
+  margin: 0 0 10px;
+  font-family: var(--jos-font-serif);
+  font-size: clamp(1.22rem, 2.4vw, 1.48rem);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--jos-rust);
+  letter-spacing: 0.02em;
+}
+
+.jos-verse-box {
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border);
+  border-radius: var(--jos-radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-family: var(--jos-font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+}
+
+.jos-verse-line {
+  margin: 0 0 5px;
+}
+
+.jos-verse-line:last-child {
+  margin-bottom: 0;
+}
+
+.jos-verse-num {
+  font-size: 0.78rem;
+  color: var(--jos-ink-faint);
+  margin-right: 6px;
+  user-select: none;
+}
+
+.jos-verse-dim {
+  opacity: 0.34;
+  transition: opacity 0.2s ease;
+}
+
+.jos-span-focus {
+  border-bottom: 2px solid var(--jos-accent);
+  padding-bottom: 1px;
+}
+
+.jos-span-1cs {
+  color: var(--jos-lamp);
+  background: var(--jos-bronze-soft);
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.jos-span-give {
+  color: var(--jos-oak);
+  background: var(--jos-oak-soft);
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.jos-mark {
+  background: var(--jos-mark-bg);
+  color: inherit;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.jos-prologue-stones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.jos-prologue-stone-btn {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  border-radius: var(--jos-radius-sm);
+  padding: 7px 9px;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.jos-prologue-stone-btn:hover {
+  border-color: var(--jos-accent);
+}
+
+.jos-prologue-stone-place {
+  display: block;
+  font-family: var(--jos-font-serif);
+  font-weight: 700;
+  font-size: 0.84rem;
+}
+
+.jos-prologue-stone-ref {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--jos-bronze);
+  margin-top: 1px;
+}
+
+.jos-widget-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 8px 10px;
+  background: var(--jos-bg-soft);
+  border-radius: var(--jos-radius-sm);
+}
+
+.jos-toggle-pill {
+  appearance: none;
+  border: 1px solid var(--jos-lamp);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.jos-toggle-pill-active {
+  background: var(--jos-lamp);
+  border-color: var(--jos-lamp);
+  color: #1e1b16;
+}
+
+.jos-widget-stat {
+  font-size: 0.78rem;
+  color: var(--jos-ink-muted);
+}
+
+.jos-balak-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.jos-balak-card {
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border);
+  border-radius: var(--jos-radius-sm);
+  padding: 10px;
+}
+
+.jos-balak-step {
+  font-size: 0.75rem;
+  color: var(--jos-bronze);
+  font-weight: 700;
+}
+
+.jos-balak-quote {
+  margin: 4px 0 0;
+  font-family: var(--jos-font-serif);
+  font-size: 0.9rem;
+}
+
+.jos-gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.jos-gift-card {
+  appearance: none;
+  border: 1px solid var(--jos-border-strong);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  border-radius: var(--jos-radius-sm);
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.jos-gift-card-flipped {
+  border-color: var(--jos-bronze);
+  background: var(--jos-bronze-soft);
+}
+
+.jos-gift-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--jos-bronze);
+  margin-bottom: 5px;
+}
+
+.jos-gift-quote {
+  margin: 0;
+  font-family: var(--jos-font-serif);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+/* 第26節「按住，把石頭立起來」浮動列（位於說明框正上方，不擋舞台、手機立石鈕在說明框上方） */
+.jos-raise-floating {
+  pointer-events: auto;
+  flex-shrink: 0;
+  background: var(--jos-bg-elev);
+  border: 2px solid var(--jos-oak);
+  border-radius: var(--jos-radius);
+  padding: 9px 12px;
+  box-shadow: var(--jos-shadow);
+}
+
+.jos-raise-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.jos-raise-btn {
+  appearance: none;
+  border: 1px solid var(--jos-oak);
+  background: var(--jos-oak);
+  color: #f9f5eb;
+  font-family: var(--jos-font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.jos-dark .jos-raise-btn {
+  color: #17150f;
+}
+
+.jos-raise-btn-done {
+  background: var(--jos-lamp);
+  border-color: var(--jos-lamp);
+  color: #1e1b16;
+}
+
+.jos-raise-track {
+  margin-top: 7px;
+  height: 7px;
+  background: var(--jos-bg-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--jos-border);
+}
+
+.jos-raise-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--jos-oak);
+  transition: width 0.08s linear;
+}
+
+.jos-diff-wrap {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jos-diff-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border);
+  border-radius: var(--jos-radius-sm);
+  padding: 10px;
+}
+
+@media (min-width: 720px) {
+  .jos-diff-pair {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+.jos-diff-col {
+  min-width: 0;
+}
+
+.jos-diff-ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--jos-bronze);
+  margin-bottom: 3px;
+}
+
+.jos-diff-reorder-tag {
+  font-size: 0.7rem;
+  color: var(--jos-accent);
+  background: var(--jos-accent-soft);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.jos-diff-text {
+  margin: 0;
+  font-family: var(--jos-font-serif);
+  font-size: 15px;
+  line-height: 1.72;
+}
+
+.jos-diff-hl {
+  background: var(--jos-accent-soft);
+  color: var(--jos-accent);
+  font-weight: 700;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+.jos-diff-unmatched {
+  border: 2px solid var(--jos-accent);
+  background: var(--jos-bg-elev);
+  border-radius: var(--jos-radius-sm);
+  padding: 11px;
+}
+
+.jos-fold {
+  margin-top: 8px;
+  border-top: 1px solid var(--jos-border);
+  padding-top: 6px;
+}
+
+.jos-fold-summary {
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--jos-bronze);
+  padding: 3px 0;
+  list-style: revert;
+}
+
+.jos-fold-body {
+  padding-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jos-comm-card {
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border);
+  border-radius: var(--jos-radius-sm);
+  padding: 9px 11px;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.jos-comm-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.jos-comm-work {
+  font-weight: 700;
+  color: var(--jos-slate);
+  font-size: 0.78rem;
+}
+
+.jos-comm-link {
+  font-size: 0.74rem;
+  color: var(--jos-ink-muted);
+  text-decoration: none;
+}
+
+.jos-comm-link:hover {
+  text-decoration: underline;
+}
+
+.jos-comm-text {
+  margin: 0;
+  line-height: 1.66;
+}
+
+.jos-word-card {
+  background: var(--jos-bg-elev);
+  border: 1px solid var(--jos-border);
+  border-radius: var(--jos-radius-sm);
+  padding: 10px 12px;
+}
+
+.jos-word-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.jos-hebrew {
+  font-family: var(--jos-font-hebrew);
+  font-size: 1.24rem;
+  direction: rtl;
+  unicode-bidi: isolate;
+  color: var(--jos-ink);
+}
+
+.jos-translit {
+  font-size: 0.82rem;
+  color: var(--jos-bronze);
+  font-style: italic;
+}
+
+.jos-word-meta {
+  margin: 0 0 5px;
+  font-size: 0.78rem;
+  color: var(--jos-ink-muted);
+}
+
+.jos-word-note {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.jos-step-credit {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: var(--jos-ink-faint);
+}
+
+.jos-chip-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.jos-chip {
+  appearance: none;
+  border: 1px solid var(--jos-border);
+  background: var(--jos-bg-elev);
+  color: var(--jos-ink);
+  font-family: var(--jos-font-sans);
+  font-size: 0.75rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.jos-chip:hover {
+  border-color: var(--jos-accent);
+  color: var(--jos-accent);
+}
+
+/* 手機版（<= 768px，含 390×844） */
+@media (max-width: 768px) {
+  .jos-thread-rail {
+    left: 8px;
+    top: calc(var(--jos-header-h) + 6px);
+  }
+
+  .jos-thread-cord {
+    padding: 4px;
+    gap: 0;
+  }
+
+  .jos-thread-cord::before,
+  .jos-knot-pip {
+    display: none;
+  }
+
+  .jos-beat {
+    min-height: 136svh;
+  }
+
+  .jos-beat-tall {
+    min-height: 158svh;
+  }
+
+  .jos-verse-box {
+    padding: 10px 12px;
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+
+  .jos-prologue-stones,
+  .jos-gifts-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

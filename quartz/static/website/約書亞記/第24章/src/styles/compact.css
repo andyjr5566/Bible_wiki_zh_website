@@ -1,0 +1,318 @@
+/*
+ * 手機橫拿（GOAL.md 0.2）：以 844×390、932×430 為主要設計尺寸。
+ * 畫面高度 <= 520px 的橫向視窗：頂列變薄、說明框靠右、舞台留在左半。
+ * 直式（<= 768px 寬）維持下方固定高度說明框，只多一條「把手機橫過來看」提示。
+ * 這個檔案最後載入，只覆寫上面三個樣式檔。
+ */
+
+/* ---------- 直拿提示 ---------- */
+.jos-rotate-hint {
+  display: none;
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  /* 第8節的軍陣與第11節的渡河隊伍留在下方；經文框分別讓開人物。 */
+  body.jos-in-stations .jos-panel[data-panel-beat='beat-09-east'] .jos-voice {
+      transform: translate(52px, -248px);
+  }
+  body.jos-in-stations .jos-panel[data-panel-beat='beat-09-east'] .jos-more-btn {
+      transform: translate(350px, 16px);
+  }
+  body.jos-in-stations .jos-panel[data-panel-beat='beat-10-jericho'] .jos-voice {
+      transform: translate(52px, -214px);
+  }
+  body.jos-in-stations .jos-panel[data-panel-beat='beat-10-jericho'] .jos-more-btn {
+      transform: translate(350px, 16px);
+  }
+}
+
+@media (orientation: portrait) and (max-width: 768px) {
+  .jos-rotate-hint {
+    position: fixed;
+    left: 50%;
+    top: calc(var(--jos-header-measured-h, var(--jos-header-h)) + 44px);
+    transform: translateX(-50%);
+    z-index: 44;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100vw - 32px);
+    padding: 5px 6px 5px 12px;
+    background: var(--jos-bg-elev);
+    color: var(--jos-ink);
+    border: 1px solid var(--jos-border-strong);
+    border-radius: 999px;
+    box-shadow: var(--jos-shadow);
+    font-size: 0.82rem;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  .jos-rotate-hint-hidden {
+    display: none;
+  }
+
+  .jos-rotate-hint-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    color: var(--jos-accent);
+  }
+
+  .jos-rotate-hint-close {
+    appearance: none;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--jos-border);
+    background: var(--jos-bg-soft);
+    color: var(--jos-ink-muted);
+    border-radius: 50%;
+    font-size: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+/* ---------- 橫向短視窗（手機橫拿） ---------- */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root {
+    --jos-header-h: 38px;
+  }
+
+  .jos-header {
+    padding: 3px 10px;
+  }
+
+  .jos-header-inner {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .jos-header-left {
+    flex-shrink: 1;
+    gap: 6px;
+  }
+
+  .jos-brand-btn {
+    font-size: 0.9rem;
+    padding: 1px 2px;
+  }
+
+  .jos-header-tools {
+    flex-wrap: nowrap;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .jos-tool-btn,
+  .jos-coach-trigger {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  .jos-toc-popover {
+    width: min(340px, calc(100vw - 24px));
+    max-height: calc(100svh - var(--jos-header-h) - 12px);
+  }
+
+  /* 事奉之線只留開關鈕，繩結收進抽屜 */
+  .jos-thread-rail {
+    left: 6px;
+    top: calc(var(--jos-header-h) + 6px);
+  }
+
+  .jos-thread-cord {
+    padding: 3px;
+    gap: 0;
+  }
+
+  .jos-thread-cord::before,
+  .jos-knot-pip {
+    display: none;
+  }
+
+  .jos-thread-toggle {
+    font-size: 0.66rem;
+    padding: 2px 6px;
+  }
+
+  .jos-thread-drawer {
+    width: min(250px, 42vw);
+    max-height: calc(100svh - var(--jos-header-h) - 20px);
+  }
+
+  .jos-seg-kicker {
+    margin-bottom: 5px;
+    padding: 3px 7px;
+  }
+
+  .jos-seg-kicker-title {
+    font-size: 0.92rem;
+  }
+
+  .jos-hero-title {
+    font-size: 1.35rem;
+  }
+
+  .jos-hero-plate {
+    margin-bottom: 8px;
+    padding-bottom: 7px;
+  }
+
+  .jos-verse-box {
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .jos-verse-line {
+    margin-bottom: 3px;
+  }
+
+  .jos-cannot-headline {
+    font-size: 1.1rem;
+  }
+
+  .jos-widget-bar {
+    margin: 5px 0;
+    padding: 4px 6px;
+  }
+
+  .jos-toggle-pill {
+    font-size: 0.74rem;
+    padding: 4px 9px;
+  }
+
+  .jos-comm-card {
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+
+  .jos-comm-text {
+    line-height: 1.5;
+  }
+
+  .jos-diff-wrap {
+    margin: 6px 0;
+    gap: 6px;
+  }
+
+  .jos-diff-pair {
+    padding: 7px;
+    gap: 8px;
+  }
+
+  .jos-diff-unmatched {
+    padding: 7px;
+  }
+
+  .jos-diff-text {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .jos-word-card {
+    padding: 8px 10px;
+  }
+
+  .jos-raise-floating {
+    padding: 6px 10px;
+  }
+
+  .jos-raise-btn {
+    font-size: 0.82rem;
+    padding: 6px 14px;
+  }
+
+  .jos-prologue-stones {
+    gap: 5px;
+    margin: 8px 0;
+  }
+
+  .jos-prologue-stone-btn {
+    padding: 5px 7px;
+  }
+
+  /* 新手教學面板：放左上（經文框在左下、小卡在右側），不蓋住它們 */
+  .jos-coach-bar {
+    left: 66px;
+    top: calc(var(--jos-header-h) + 8px);
+    bottom: auto;
+    transform: none;
+    width: min(44vw, 24rem);
+    padding: 7px 10px;
+  }
+
+  .jos-coach-prompt {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin-bottom: 4px;
+  }
+
+  .jos-coach-note {
+    font-size: 0.74rem;
+    padding: 4px 7px;
+    margin-bottom: 5px;
+  }
+
+  .jos-coach-stage {
+    font-size: 0.7rem;
+  }
+
+  .jos-return-bar {
+    top: calc(var(--jos-header-h) + 6px);
+    max-width: min(46vw, 24rem);
+    padding: 4px 10px;
+  }
+
+  .jos-return-btn {
+    font-size: 0.78rem;
+  }
+
+  /* 小卡 */
+  .jos-peek-backdrop {
+    padding: 8px;
+    align-items: center;
+  }
+
+  .jos-peek-panel {
+    width: min(560px, 100%);
+    max-height: calc(100svh - 16px);
+    padding: 12px 14px 14px;
+  }
+
+  .jos-peek-title {
+    font-size: 1.05rem;
+  }
+
+  .jos-peek-body {
+    font-size: 0.88rem;
+  }
+
+  /* 整理區：頂端分頁不再黏住，省下畫面高度 */
+  .jos-review-nav {
+    position: static;
+  }
+
+  .jos-review-wrap {
+    padding-top: 20px;
+  }
+
+  .jos-sec { padding: 18px 0 0; }
+
+}
+
+@media (orientation: portrait) and (max-width: 768px) {
+  .jos-coach-bar {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    bottom: auto;
+    top: calc(var(--jos-header-measured-h, var(--jos-header-h)) + 44px);
+  }
+  .jos-thread-rail { top: calc(var(--jos-header-measured-h, var(--jos-header-h)) + 8px); }
+  .jos-toc-popover { max-width: calc(100vw - 24px); left: auto; right: 0; }
+}

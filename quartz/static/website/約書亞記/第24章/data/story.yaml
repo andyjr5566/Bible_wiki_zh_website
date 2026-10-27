@@ -1,0 +1,1594 @@
+# 《至於我和我家》七段 36 拍完整故事資料
+# 經文內文不手寫於此檔，由 build-site.mjs 自 src/data/verses.json 展開填入；
+# 原文詞形與音譯亦不手寫於此檔，由 build-site.mjs 按 (verse, position) 自 src/data/step.json 精確複製。
+
+segments:
+  - id: prologue
+    label: 序
+    title: 七塊石頭
+    rangeLabel: 書23:1-2 → 書24:1 之前
+    beats:
+      - id: beat-01-prologue
+        cue: prologue
+        space: prologue-bar
+        bgVerses:
+          - 書23:1-2
+        summary: 以色列人進迦南以後，好幾次立石頭作記號。示劍這一次是第七次。
+        commentaryPreview: CT 與 GT：進迦南後的第七次立石
+        commentaries:
+          - id: prologue-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:27
+            quote: 這是以色列人進入迦南地後，第七次立石作見證(參書四20；七26；八29，32；十27；二十二27)。
+            line: 250
+            evidence: 這是以色列人進入迦南地後，第七次立石作見證(參書四20；七26；八29，32；十27；二十二27)。
+          - id: prologue-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:26
+            quote: 24：26 是約書亞進入迦南地後以色列人的第七次立石，以前六次分別在 4：20 7：26 8：29，32 10：27 22：27。
+            line: 354
+            evidence: 是約書亞進入迦南地後以色列人的第七次立石，以前六次分別在 4：20 7：26 8：29，32 10：27 22：27。
+        entryLinks:
+          - 主題/立石為證
+        soundCue: prologue-wind
+
+  - id: act-1
+    label: 第一幕
+    title: 聚集在示劍
+    rangeLabel: 24:1
+    treatyNote: 前言 1–2
+    beats:
+      - id: beat-02-gather
+        cue: gather
+        space: valley
+        verse: 書24:1
+        focusSubstrings:
+          - 約書亞將以色列的眾支派聚集在示劍
+        summary: 約書亞把以色列眾支派聚集到示劍。示劍在基利心山和以巴路山中間。
+        placeLinks:
+          - shechem
+          - ebal
+          - gerizim
+        commentaryPreview: 示劍山谷的地理位置與考古背景
+        commentaries:
+          - id: gather-walton
+            source: GT
+            work: GT 華爾頓《約書亞記背景注釋》
+            verse: 書24:1
+            quote: 位於以法蓮山地，耶路撒冷以北三十五哩的示劍(巴拉塔遺址)，支配了基利心山和以巴路山之間的山隘和商道。
+            paraphrase: 並指出示劍遺址的鐵器時代沒有毀滅層，約書亞攻取城市名單（書12:7-23）也未列示劍。
+            line: 26
+            evidence: 位於以法蓮山地，耶路撒冷以北三十五哩的示劍(巴拉塔遺址)，支配了基利心山和以巴路山之間的山隘和商道。
+        entryLinks:
+          - 地點/示劍（城）
+          - 地點/基利心山與以巴路山
+        soundCue: valley-morning
+
+      - id: beat-03-leaders
+        cue: leaders
+        space: valley
+        verse: 書24:1
+        focusSubstrings:
+          - 召了以色列的長老、族長、審判官，並官長來
+        summary: 約書亞召來長老、族長、審判官和官長。他們走到橡樹前的空地。
+        commentaryPreview: 四類領袖各自負責什麼
+        commentaries:
+          - id: leaders-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:1
+            paraphrase: 解釋長老是年長老練的全民代表，族長是支派宗族家族各級首領，審判官主持審理案件並下判決，官長輔佐審判官執行斷案。
+            line: 22
+            evidence: 以上四類名銜，是當時在民政上治理以色列百姓各級官長
+          - id: leaders-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:1
+            quote: Joshua did not treat covenant faithfulness as a private concern; the whole nation, from its leaders to its families, was accountable to the Lord.
+            quoteZh: 約書亞並未把守約的忠誠當作私事；從領袖到家庭，整個國家都要向耶和華負責。
+            line: 15
+            evidence: Joshua did not treat covenant faithfulness as a private concern
+        wordPreview: 四種領袖的原文詞形
+        words:
+          - id: word-v1-elders
+            verse: 1
+            position: 9
+            label: 長老
+            note: 這個字是『長老』的複數。字典的意思是年老的、長老。
+          - id: word-v1-heads
+            verse: 1
+            position: 11
+            label: 族長
+            note: 字典的意思是頭、首領。這裡是複數，後面帶著『它的』，指以色列的首領。和合本譯作族長。
+          - id: word-v1-judges
+            verse: 1
+            position: 12
+            label: 審判官
+            note: 這個字從動詞『審判』來，意思是審判的人。和合本譯作審判官。
+          - id: word-v1-officers
+            verse: 1
+            position: 13
+            label: 官長
+            note: 字典的意思是官員。和合本譯作官長。
+        soundCue: valley-morning
+
+      - id: beat-04-before-god
+        cue: before-god
+        space: valley
+        verse: 書24:1
+        focusSubstrings:
+          - 他們就站在神面前。
+        summary: 眾人面向橡樹前的空地站好。經文說，他們站在神面前。
+        commentaryPreview: 『站在神面前』：約櫃在不在這裡？兩派讀法
+        commentaries:
+          - id: before-god-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:1
+            quote: 『站在神面前』指站在約櫃面前。約櫃已經被從示羅運到這裡，見證百姓與神立約。
+            line: 22
+            evidence: 『站在神面前』指站在約櫃面前。約櫃已經被從示羅運到這裡
+          - id: before-god-gt-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:26
+            paraphrase: 指出當時會幕設在示羅（書18:1），不會為了特別的儀式隨處移動；第26節的聖所可以說是指以巴路山附近的壇，也有人認為是指示劍橡樹下的聖地。
+            line: 348
+            evidence: 因為當時會幕設立在示羅(18：1)，並不可能為了特別的儀式，隨處移動。
+        entryLinks:
+          - 事件/示劍更新盟約
+        soundCue: valley-quiet
+
+      - id: beat-05-family-1
+        cue: family-1
+        space: valley
+        summary: 約瑟子孫的人群裡，女兒拉了拉爺爺的袖子。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 為什麼要在這棵橡樹下聚集？
+          - speaker: grandfather
+            kind: cuv-quote
+            ref: 創12:6
+            text: 亞伯蘭經過那地，到了示劍地方、摩利橡樹那裡。
+          - speaker: grandfather
+            kind: cuv-quote
+            ref: 創12:7
+            text: 耶和華向亞伯蘭顯現，說：我要把這地賜給你的後裔。
+        daughterQA:
+          question: 為什麼要在這棵橡樹下聚集？
+          answerer: grandfather
+          verses:
+            - 創12:6-7
+          entryLinks:
+            - 地點/示劍（城）
+            - 背景/摩利橡樹
+          notes:
+            - id: qa1-ct
+              source: CT
+              work: CT 黃迦勒《約書亞記註解》
+              verse: 書24:1
+              paraphrase: 指出亞伯拉罕進迦南首先在示劍築壇（創12:6-7），雅各回迦南在此築壇、清除偶像（創33:18-20；35:4），以色列人進迦南也在基利心山與以巴路山宣告祝福與咒詛（書8:30-35）。
+              line: 20
+              evidence: 亞伯拉罕進入迦南地之後，首先在示劍為神築壇，神在這裡第一次與亞伯拉罕立約
+            - id: qa1-gt-study-events
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:1
+              paraphrase: 同樣列出示劍的三件往事：亞伯拉罕築壇、雅各清除偶像、以色列人在基利心山與以巴路山宣講律法。
+              line: 23
+              evidence: 有關「示劍」發生過的歷史事件：a.亞伯拉罕進入迦南地之後
+            - id: qa1-gt-study-odd
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:1
+              quote: 通常約書亞記中以色列人都在吉甲、示羅集會，此處奇怪的是在示劍集會。
+              line: 21
+              evidence: 通常約書亞記中以色列人都在吉甲、示羅集會，此處奇怪的是在示劍集會。
+        soundCue: valley-quiet
+
+  - id: act-2
+    label: 第二幕
+    title: 是我做的
+    rangeLabel: 24:2–13
+    treatyNote: 歷史序言 2–13
+    beats:
+      - id: beat-06-beyond-river
+        cue: beyond-river
+        space: map
+        verse: 書24:2
+        interaction: only-i
+        summary: 約書亞轉述耶和華的話。古時列祖住在大河那邊，亞伯拉罕的父親他拉在那裡事奉別神。
+        note: GT《研經資料》：第2到13節每一段都以神為主角，神用第一人稱說話。
+        placeLinks:
+          - euphrates
+          - ur
+          - haran
+        personLinks:
+          - label: 他拉
+            targetId: 他拉
+          - label: 亞伯拉罕
+            targetId: 亞伯拉罕
+          - label: 拿鶴
+            targetId: 拿鶴#他拉
+        commentaryPreview: 大河那邊的吾珥、哈蘭與列祖事奉的別神
+        commentaries:
+          - id: beyond-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:2
+            quote: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥(參創十一28)；『別神』即偶像假神。
+            line: 31
+            evidence: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥
+          - id: beyond-gt-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:2
+            paraphrase: 說明他拉家人所事奉的別神是當時米所波大米普遍崇拜的月神；亞伯拉罕當初同樣身處偶像崇拜中，因神主權的恩典蒙召。
+            line: 49
+            evidence: 他拉的家人所事奉的“別神”就是當時的米所波大米人普遍崇拜的月神。
+          - id: beyond-gt-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:2
+            quote: 吾珥和哈蘭都是敬拜月神的中心，亞伯拉罕的家族和現在被神滅絕的迦南人一樣，都是拜偶像的。
+            line: 51
+            evidence: 吾珥和哈蘭都是敬拜月神的中心，亞伯拉罕的家族
+        wordPreview: 『大河那邊』與本章第一個『事奉』
+        words:
+          - id: word-v2-beyond
+            verse: 2
+            position: 11
+            label: 那邊
+            note: 字典的意思是一邊、對面。和下一個字連起來，就是大河的那一邊。
+          - id: word-v2-river
+            verse: 2
+            position: 12
+            label: 大河
+            note: 字典的意思是河，前面加了表示那一條的小字。CT 說這裡的大河指幼發拉底河。
+          - id: word-v2-served
+            verse: 2
+            position: 21
+            label: 事奉
+            note: 本章第一次出現『事奉』這個動詞。這裡說的是列祖在大河那邊事奉別神。
+          - id: word-v2-gods
+            verse: 2
+            position: 22
+            label: 神（複數）
+            note: 和第 1 節的『神』是同一個字，這裡指許多神。和下一個字合起來就是別神。
+          - id: word-v2-other
+            verse: 2
+            position: 23
+            label: 別（複數）
+            note: 意思是別的，這裡是複數。GT《研經資料》指出，『別的』和『神』在原文都是複數。
+        entryLinks:
+          - 人物/他拉
+          - 人物/亞伯拉罕
+        soundCue: river-flow
+
+      - id: beat-07-abraham
+        cue: abraham
+        space: map
+        verse: 書24:3-4
+        moreVerses:
+          - 創50:26
+        interaction: only-i
+        summary: 神把亞伯拉罕從大河那邊帶來，領他走遍迦南，把以撒賜給他，又把雅各和以掃賜給以撒，把西珥山賜給以掃。後來雅各一家下到埃及。約瑟死後，棺材也停在埃及。
+        placeLinks:
+          - canaan-walk
+          - hebron
+          - seir
+          - egypt
+        personLinks:
+          - label: 亞伯拉罕
+            targetId: 亞伯拉罕
+          - label: 以撒
+            targetId: 以撒
+          - label: 雅各
+            targetId: 以色列
+          - label: 以掃
+            targetId: 以掃
+          - label: 約瑟
+            targetId: 約瑟
+        commentaryPreview: 下埃及也在神的計畫裡嗎？
+        commentaries:
+          - id: abraham-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:4
+            quote: 從頭開始，一直是神在掌控，每件事都是按照祂的計畫在進行，甚至包括下埃及在內。
+            line: 103
+            evidence: 從頭開始，一直是神在掌控，每件事都是按照祂的計畫在進行，甚至包括下埃及在內。
+          - id: abraham-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:4
+            quote: He gives Esau Mount Seir as an inheritance, so that the land of Canaan will be entirely for the descendants of Jacob.
+            quoteZh: 祂把西珥山賜給以掃為業，好叫迦南地完全歸給雅各的後裔。
+            line: 35
+            evidence: He gives Esau Mount Seir as an inheritance, so that the land of Canaan
+        wordPreview: 第 3–4 節神說『我』的六個動詞，其中三次是『賜給』
+        words:
+          - id: word-v3-took
+            verse: 3
+            position: 1
+            label: 我將…帶來
+            note: 第 3 到 13 節，神用『我』做主詞的動詞一共有 20 個，這是第 1 個。字典的意思是拿、帶。
+          - id: word-v3-led
+            verse: 3
+            position: 8
+            label: 領
+            note: 第 2 個『我』的動詞。這個字本來是走，這裡的形式是使他走，也就是領他走。和合本沒有再寫出我字。
+          - id: word-v3-gave
+            verse: 3
+            position: 16
+            label: 賜給
+            note: 第 4 個『我』的動詞，也是本章第一次出現『給』這個字。第 4 節又用了兩次：把雅各和以掃賜給以撒，把西珥山賜給以掃。
+        entryLinks:
+          - 地點/西珥山
+        soundCue: river-flow
+
+      - id: beat-08-egypt
+        cue: egypt
+        space: map
+        verse: 書24:5-7
+        moreVerses:
+          - 出13:19
+        interaction: only-i
+        summary: 神差摩西、亞倫降災給埃及，把百姓領出來。摩西把約瑟的骸骨一同帶走。到了紅海，埃及人追來，神使兩邊中間黑暗，又使海水淹沒埃及人。後來百姓在曠野住了許多年日。
+        placeLinks:
+          - egypt
+          - rameses
+          - redsea
+          - sinai
+          - kadesh
+        personLinks:
+          - label: 摩西
+            targetId: 摩西
+          - label: 亞倫
+            targetId: 亞倫
+        externalLinks:
+          - kind: wilderness
+            label: 在『曠野四十二站』看這段路（另開網頁）
+        commentaryPreview: 為什麼對當天的聽眾說『你們親眼見過』？
+        commentaries:
+          - id: egypt-gt-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:5-7
+            quote: 出埃及的時候，他們中間許多人已經出生，只是還不到二十歲，所以都經歷過十災和過紅海的神跡(5~7節)。
+            line: 113
+            evidence: 出埃及的時候，他們中間許多人已經出生，只是還不到二十歲
+          - id: egypt-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:7
+            quote: The pillar of cloud stood between Israel and Pharaoh’s army, bringing light to God’s people while bringing darkness to their enemies (Exodus 14:19–20).
+            quoteZh: 雲柱立在以色列人與法老軍兵中間，一邊照亮神的子民，一邊使仇敵陷入黑暗（出14:19-20）。
+            line: 215
+            evidence: The pillar of cloud stood between Israel and Pharaoh’s army
+        soundCue: sea-and-wind
+
+      - id: beat-09-east
+        cue: east
+        space: map
+        verse: 書24:8-10
+        moreVerses:
+          - 民22:6
+          - 民23:11
+        interaction: balak-scroll
+        balakStages:
+          - step: 1
+            speaker: 摩押王巴勒差人求巴蘭
+            ref: 民22:6
+            quote: 現在求你來為我咒詛他們
+          - step: 2
+            speaker: 巴勒對巴蘭說
+            ref: 民23:11
+            quote: 不料，你竟為他們祝福。
+          - step: 3
+            speaker: 耶和華如此說
+            ref: 書24:10
+            quote: 我不肯聽巴蘭的話，所以他倒為你們連連祝福。
+        summary: 在約但河東，神把亞摩利人交在百姓手中。摩押王巴勒請巴蘭來咒詛他們。神不肯聽巴蘭的話，巴蘭倒為他們連連祝福。
+        placeLinks:
+          - heshbon
+          - bashan
+          - moab
+        externalLinks:
+          - kind: wilderness
+            label: 在『曠野四十二站』看這段路（另開網頁）
+        commentaryPreview: 巴勒有沒有出兵？咒詛怎樣變成祝福？
+        commentaries:
+          - id: east-tyndale-balak
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:9
+            paraphrase: 對照士11:25耶弗他否認巴勒曾攻擊以色列人，認為那或許是反諷說法，指巴勒雇用巴蘭來咒詛就等於耗盡了他作戰的力量。
+            line: 136
+            evidence: 或許這是一種反諷的說法，講到巴勒雇用巴蘭來咒詛
+          - id: east-gt-study-bless
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:10
+            paraphrase: 說明在巴蘭這件事上，神勝過了先知和他咒詛的力量，把咒詛變成神子民的祝福，所以可以算是救他們脫離巴勒的手。
+            line: 145
+            evidence: 神克服了先知和他咒詛的力量，把它變為祂子民的祝福
+        wordPreview: 『我不肯聽』與河東的『交在』
+        words:
+          - id: word-v8-delivered
+            verse: 8
+            position: 11
+            label: 我將…交在
+            note: 第 14 個『我』的動詞。和第 3 節的『賜給』是同一個字，這是本章第 4 次出現。講到打仗，和合本譯作交在。
+          - id: word-v10-unwilling
+            verse: 10
+            position: 2
+            label: 我不肯
+            note: 第 16 個『我』的動詞。字典的意思是願意，前面有否定的字，就是不肯。CT 列的字義是樂意、同意。
+        entryLinks:
+          - 人物/巴勒
+          - 人物/巴蘭（比珥的兒子）
+        soundCue: desert-wind
+
+      - id: beat-10-jericho
+        cue: jericho
+        space: map
+        verse: 書24:11-12
+        interaction: only-i
+        summary: 過了約但河，耶利哥人和這地的七族都來爭戰，神把他們交在以色列人手裡。神打發黃蜂飛在前面，趕出亞摩利人的二王，並不是用以色列人的刀和弓。
+        placeLinks:
+          - jericho
+        commentaryPreview: 黃蜂：四種讀法，以及『亞摩利人的二王』
+        commentaries:
+          - id: jericho-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:12
+            quote: 『黃蜂』乃寓意，表明從神來的驚恐，使敵人不戰而敗。
+            line: 117
+            evidence: 『黃蜂』乃寓意，表明從神來的驚恐，使敵人不戰而敗。
+          - id: jericho-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:12
+            paraphrase: 認為譯作驚駭，或把黃蜂當作驚恐的圖喻，似乎可以充分解釋出15:14-16與書2:9-11、24，5:1，6:27 對仇敵的描述。
+            line: 172
+            evidence: 或是以黃蜂為圖喻，象徵這種驚恐，這個說法似乎可以充分解釋
+          - id: jericho-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:12
+            quote: 更加穩妥的解釋是按照字面意思進行理解，認為神使用繁殖在巴勒斯坦全城的黃蜂來審判迦南人。
+            line: 178
+            evidence: 更加穩妥的解釋是按照字面意思進行理解，認為神使用繁殖在巴勒斯坦全城的黃蜂
+          - id: jericho-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:12
+            paraphrase: 指出黃蜂（Zirah）原文與埃及（Mizraim）發音相近，可能是雙關語，指劫掠迦南地的埃及軍隊。
+            line: 182
+            evidence: 發音相近，可能是雙關語，指劫掠迦南地的埃及軍隊。
+          - id: jericho-study-kings
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:12
+            paraphrase: 說『亞摩利人的二王』可能指西宏與噩，但這裡應該已經講到約但河西的戰役；七十士譯本作『十二王』。
+            line: 190
+            evidence: 可能是指「西宏」和「噩」，但此處應該已經講到約旦河西的戰役了。
+        wordPreview: 『黃蜂』的原文詞形
+        words:
+          - id: word-v12-hornet
+            verse: 12
+            position: 4
+            label: 黃蜂
+            note: 字典的意思是黃蜂。GT《聖經精讀本》說，這應驗了神在出23:28、申7:20 的應許。有些註釋把黃蜂讀成神使仇敵驚慌的象徵，也有註釋認為它暗指埃及。
+        entryLinks:
+          - 原文/黃蜂
+          - 地點/耶利哥
+        soundCue: valley-quiet
+
+      - id: beat-11-gifts
+        cue: gifts
+        space: map
+        verse: 書24:13
+        moreVerses:
+          - 申6:10-11
+        interaction: gift-cards
+        giftCards:
+          - id: land
+            frontTitle: 地土
+            jos24Quote: 我賜給你們地土，非你們所修治的
+            deut6Quote: 耶和華─你的神領你進他向你列祖亞伯拉罕、以撒、雅各起誓應許給你的地。
+            deut6Ref: 申6:10
+          - id: cities
+            frontTitle: 城邑
+            jos24Quote: 我賜給你們城邑，非你們所建造的。
+            deut6Quote: 那裡有城邑，又大又美，非你所建造的；
+            deut6Ref: 申6:10
+          - id: vineyards
+            frontTitle: 葡萄園
+            jos24Quote: 又得吃非你們所栽種的葡萄園、橄欖園的果子。
+            deut6Quote: 還有葡萄園、橄欖園，非你所栽種的；你吃了而且飽足。
+            deut6Ref: 申6:11
+          - id: oliveyards
+            frontTitle: 橄欖園
+            jos24Quote: 又得吃非你們所栽種的葡萄園、橄欖園的果子。
+            deut6Quote: 還有葡萄園、橄欖園，非你所栽種的；你吃了而且飽足。
+            deut6Ref: 申6:11
+        summary: 第 13 節是神說『我』的最後一節。神賜給百姓地土和城邑，又讓他們吃葡萄園、橄欖園的果子，這些都不是他們自己修治、建造、栽種的。GT《丁道爾》把這一節和申6:10-11 對照，說這是以色列從神白白得到的。
+        commentaryPreview: 與申命記 6:10-11 的前後呼應
+        commentaries:
+          - id: gifts-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:13
+            quote: 這一節正像申命記六10~11一樣，用以色列從神白白得到的財富和祝福，來形容神的一切應許都已實現。
+            line: 194
+            evidence: 這一節正像申命記六10~11一樣，用以色列從神白白得到的財富和祝福
+          - id: gifts-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:11-13
+            quote: All they may enjoy is a gift of His grace (Eph 2:8).
+            quoteZh: 他們所能享用的一切，都是祂恩典的禮物（弗2:8）。
+            line: 47
+            evidence: All they may enjoy is a gift of His grace (Eph 2:8).
+        soundCue: valley-quiet
+
+      - id: beat-12-family-2
+        cue: family-2
+        space: map
+        summary: 地圖退到遠處。女兒看向爺爺，爺爺出埃及的時候還不到二十歲。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 爺爺，你真的看過海水淹沒埃及人嗎？
+          - speaker: grandfather
+            kind: cuv-quote
+            ref: 出14:30
+            text: 以色列人看見埃及人的死屍都在海邊了
+        daughterQA:
+          question: 爺爺，你真的看過海水淹沒埃及人嗎？
+          answerer: grandfather
+          verses:
+            - 出14:30-31
+            - 書24:7
+            - 民14:29-31
+            - 申11:7
+          notes:
+            - id: qa2-gt-comp
+              source: GT
+              work: GT《約書亞記綜合解讀》
+              verse: 書24:5-7
+              quote: 出埃及的時候，他們中間許多人已經出生，只是還不到二十歲，所以都經歷過十災和過紅海的神跡(5~7節)。
+              line: 113
+              evidence: 出埃及的時候，他們中間許多人已經出生，只是還不到二十歲
+            - id: qa2-gt-study
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:7
+              paraphrase: 指出第7節對聽眾說『你們親眼見過』，因為這些人出埃及時應該還沒有成年，所以沒有死在曠野。
+              line: 126
+              evidence: 這些人出埃及時應該尚未成年(所以沒有死在曠野)。
+        soundCue: valley-quiet
+
+  - id: act-3
+    label: 第三幕
+    title: 現在
+    rangeLabel: 24:14–15
+    treatyNote: 主要條款 14–24
+    beats:
+      - id: beat-13-now
+        cue: now
+        space: valley
+        verse: 書24:14
+        summary: 畫面回到示劍山谷。約書亞說：現在你們要敬畏耶和華，誠心實意地事奉他。
+        commentaryPreview: 從神說『我』轉為約書亞說『現在』
+        commentaries:
+          - id: now-gt-study-1
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:14
+            paraphrase: 指出第14節一開始用『現在』是為了回應第1至13節神的作為，轉入複述百姓應盡的責任。
+            line: 206
+            evidence: 一開始就用「現在」這個詞語是為了回應 24：1~13
+          - id: now-gt-study-2
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:14-15
+            quote: 在前段 24：2~13 是以第一人稱指耶和華，但到了 24：14~15 約書亞則改用第三人稱指耶和華，用來勸勉百姓。
+            line: 219
+            evidence: 在前段 24：2~13 是以第一人稱指耶和華，但到了 24：14~15 約書亞則改用第三人稱
+        wordPreview: 『現在』與『誠心實意』
+        words:
+          - id: word-v14-now
+            verse: 14
+            position: 1
+            label: 現在
+            note: 字典的意思是現在，前面連著和字。GT《研經資料》說，第 14 節用『現在』開頭，是在回應第 1 到 13 節。
+          - id: word-v14-sincerity
+            verse: 14
+            position: 7
+            label: 誠心
+            note: 字典的意思是沒有瑕疵、無可指摘。CT 列的字義是完全的、健全的。和合本譯作誠心。
+          - id: word-v14-truth
+            verse: 14
+            position: 8
+            label: 實意
+            note: 字典的意思是真實、忠實。CT 列的字義是忠實、可靠。和合本譯作實意。
+        soundCue: valley-morning
+
+      - id: beat-14-three-gods
+        cue: three-gods
+        space: valley
+        verse: 書24:14-15
+        focusSubstrings:
+          - 將你們列祖在大河那邊和在埃及所事奉的神除掉
+          - 是你們列祖在大河那邊所事奉的神呢？是你們所住這地的亞摩利人的神呢？
+        summary: 約書亞提到三處的神：列祖在大河那邊事奉的神、在埃及事奉的神、這地亞摩利人的神。這三個地方，剛才的地圖都走過。
+        commentaryPreview: 三種神各代表什麼？GT《綜合解讀》的讀法
+        commentaries:
+          - id: three-gods-gt-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:14-15
+            paraphrase: 將三處偶像歸納為：列祖在大河那邊事奉的代表祖先傳統，在埃及事奉的代表先進文明，所住這地亞摩利人的神代表現實利益。
+            line: 223
+            evidence: 是代表祖先傳統的偶像；「在埃及所事奉的」(14節)的，是代表先進文明的偶像
+          - id: three-gods-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:14
+            quote: Abraham’s family had lived among idol worshipers beyond the Euphrates, and Israel had spent generations surrounded by Egypt’s many gods. Joshua’s command reveals that old loyalties and foreign practices still threatened Israel’s covenant faithfulness.
+            quoteZh: 亞伯拉罕家族曾住在大河那邊拜偶像的人中間，以色列人也世世代代被埃及眾神包圍；約書亞的吩咐顯出舊日的效忠與外邦習俗仍威脅著他們對盟約的忠誠。
+            line: 462
+            evidence: Abraham’s family had lived among idol worshipers beyond the Euphrates
+        entryLinks:
+          - 背景/宗主條約
+        soundCue: valley-morning
+
+      - id: beat-15-my-house
+        cue: my-house
+        space: valley
+        verse: 書24:15
+        focusSubstrings:
+          - 至於我和我家，我們必定事奉耶和華。
+        summary: 眾人還沒有回答，約書亞先說：至於我和我家，我們必定事奉耶和華。
+        note: GT《丁道爾》：第14–15節七次說事奉，以約書亞和他的家委身神作結。
+        commentaryPreview: GT《丁道爾》：第 14–15 節七次『事奉』，以約書亞和他的家作結
+        commentaries:
+          - id: my-house-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:14-15
+            paraphrase: 指出第14至15節共重複七次『事奉』，兩次命令、兩次挑戰選擇、兩次提列祖在大河那邊事奉的神，最後以約書亞自己和他的家向神委身作總結。
+            line: 215
+            evidence: 約書亞以自己和他的家要向神委身，作為總結。
+          - id: my-house-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:15
+            quote: 真正對神的忠心，應當能夠影響自己的妻兒、子孫全家(參徒十六1，15，34)。
+            line: 144
+            evidence: 真正對神的忠心，應當能夠影響自己的妻兒、子孫全家
+          - id: my-house-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:15
+            quote: Joshua declares that his household will belong wholly to the LORD, regardless of the nation’s response. His leadership joins personal conviction with family responsibility and calls Israel to follow the one true God without divided allegiance.
+            quoteZh: 無論全國如何回應，約書亞宣告他的家要完全歸屬耶和華；他的帶領把個人信念與家庭責任結合在一起，呼召以色列人專一跟從獨一真神。
+            line: 516
+            evidence: Joshua declares that his household will belong wholly to the LORD
+        wordPreview: 『選擇』與『我和我家…事奉』
+        words:
+          - id: word-v15-choose
+            verse: 15
+            position: 7
+            label: 選擇
+            note: 這是對眾人說的命令：你們要選擇。字典的意思是選擇，CT 列的字義是挑選、決定。
+          - id: word-v15-i
+            verse: 15
+            position: 30
+            label: 我
+            note: 單獨寫出來的『我』字，前面連著和字。和合本在這裡譯作至於我。
+          - id: word-v15-house
+            verse: 15
+            position: 31
+            label: 和我家
+            note: 字典的意思是房屋、一家人。後面帶著『我的』，就是我家。
+          - id: word-v15-we-serve
+            verse: 15
+            position: 32
+            label: 我們必定事奉
+            note: 本章第 8 次出現事奉這個動詞，主詞是我們。CT 指出，和合本的『必定』在原文沒有對應的字。
+        soundCue: valley-quiet
+
+      - id: beat-16-family-3
+        cue: family-3
+        space: valley
+        summary: 約書亞兩次提到大河那邊的神。女兒轉頭問父親，父親是在曠野出生的。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 大河那邊的神是什麼神？
+          - speaker: father
+            kind: cuv-quote
+            ref: 書24:2
+            text: 就是亞伯拉罕和拿鶴的父親他拉，住在大河那邊事奉別神
+        daughterQA:
+          question: 大河那邊的神是什麼神？
+          answerer: father
+          verses:
+            - 書24:2
+            - 書24:14-15
+          entryLinks:
+            - 人物/他拉
+            - 人物/亞伯拉罕
+          notes:
+            - id: qa3-ct
+              source: CT
+              work: CT 黃迦勒《約書亞記註解》
+              verse: 書24:2
+              quote: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥(參創十一28)；『別神』即偶像假神。
+              line: 31
+              evidence: 『大河』指幼發拉底河；『大河那邊』即指迦勒底的吾珥
+            - id: qa3-gt-jingdu
+              source: GT
+              work: GT《聖經精讀本──約書亞記註解》
+              verse: 書24:2
+              paraphrase: 指出他拉一家在大河那邊事奉的別神，是米所波大米人普遍崇拜的月神。
+              line: 49
+              evidence: 他拉的家人所事奉的“別神”就是當時的米所波大米人普遍崇拜的月神。
+            - id: qa3-gt-comp
+              source: GT
+              work: GT《約書亞記綜合解讀》
+              verse: 書24:2,14-15
+              paraphrase: 說明吾珥和哈蘭都是敬拜月神的中心；並把大河那邊、埃及、亞摩利人的神分別理解為代表祖先傳統、先進文明、現實利益的偶像。
+              line: 51
+              evidence: 吾珥和哈蘭都是敬拜月神的中心，亞伯拉罕的家族
+            - id: qa3-gt-study
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:2
+              paraphrase: 指出第2節『別的』與『神』原文都是複數型態，表示列祖本來是多神信仰。
+              line: 60
+              evidence: 「別的」和「神」都是複數型態，表示列祖本來是多神信仰。
+        soundCue: valley-quiet
+
+  - id: act-4
+    label: 第四幕
+    title: 四個來回
+    rangeLabel: 24:16–24
+    treatyNote: 主要條款 14–24
+    beats:
+      - id: beat-17-answer-1
+        cue: answer-1
+        space: valley
+        verse: 書24:16-18
+        moreVerses:
+          - 申5:6
+        summary: 百姓第一次回答。他們說：耶和華領我們出埃及，在我們眼前行大神蹟，一路保護我們，又趕出亞摩利人。所以，我們必事奉耶和華。
+        commentaryPreview: 百姓回答的理由，以及『為奴』與『事奉』同一個字根
+        commentaries:
+          - id: answer1-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:16-18
+            quote: 24：16~18 以色列人宣告他們選擇神的理由跟 24：5~13 中約書亞陳述神的作為一致。
+            line: 247
+            evidence: 以色列人宣告他們選擇神的理由跟 24：5~13 中約書亞陳述神的作為一致。
+          - id: answer1-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:17
+            quote: 'The exodus established the pattern of redemption: God frees His people from bondage so that they may belong to Him and serve Him.'
+            quoteZh: 出埃及立下了救贖的典範：神把祂的子民從捆綁中釋放出來，好叫他們歸屬祂並事奉祂。
+            line: 570
+            evidence: God frees His people from bondage so that they may belong to Him and serve Him.
+        entryLinks:
+          - 原文/事奉與作奴僕同一字根（a.vad）
+        soundCue: crowd-surge
+
+      - id: beat-18-cannot
+        cue: cannot
+        space: valley
+        verse: 書24:19-20
+        interaction: cannot-pause
+        summary: 約書亞對百姓說：你們不能事奉耶和華，因為他是聖潔的神，是忌邪的神。
+        note: KC：約書亞是要講明，人不能三心二意地事奉神。
+        commentaryPreview: 四套註釋怎麼讀這句『你們不能事奉耶和華』
+        commentaries:
+          - id: cannot-gt-study-pause
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:19-20
+            quote: 一般人在百姓選擇神為神的時候，應該就要高興的停止了，但是約書亞卻進一步在 24：19~20 中宣告以色列人無法承擔神的審判，逼迫以色列人進一步面對自己的軟弱。
+            line: 282
+            evidence: 一般人在百姓選擇神為神的時候，應該就要高興的停止了
+          - id: cannot-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:19
+            quote: 要做到這個地步，就必須對付罪惡，特別是在神之外另有所愛慕和追求的罪，分別出來歸神為聖。
+            paraphrase: 並在另一段提出另一層理解：人無法靠自己的力量順從神；並從中讀出因信稱義、神人需要配合的原則。
+            line: 186
+            evidence: 要做到這個地步，就必須對付罪惡，特別是在神之外另有所愛慕
+          - id: cannot-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:19
+            quote: Joshua does not mean to say that God is not a God of forgiveness. He wants to make it clear that God cannot be served with a halfhearted heart and that leaving Him to serve other gods is a serious sin.
+            quoteZh: 約書亞的意思並不是說神是不赦免人的神；他是要講明，人不能懷著三心二意的心事奉神，離棄祂去事奉別神是嚴重的罪。
+            line: 65
+            evidence: Joshua does not mean to say that God is not a God of forgiveness.
+          - id: cannot-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:19
+            quote: Joshua exposed the insufficiency of a divided heart and called them to dependence upon the God they claimed to serve.
+            quoteZh: 約書亞揭露了分裂之心不足以事奉神，呼籲他們倚靠自己所宣稱要事奉的這一位神。
+            line: 645
+            evidence: Joshua exposed the insufficiency of a divided heart and called them
+        wordPreview: 不能、聖潔、忌邪的原文詞形
+        words:
+          - id: word-v19-able
+            verse: 19
+            position: 6
+            label: 能（不能）
+            note: 字典的意思是能夠，前面有否定的字，就是不能。主詞是你們。CT 列的字義是有能力。
+          - id: word-v19-holy
+            verse: 19
+            position: 12
+            label: 聖潔的
+            note: 字典的意思是聖潔，這裡是複數形。GT《研經資料》說，這個字有分離的意思。
+          - id: word-v19-jealous
+            verse: 19
+            position: 15
+            label: 忌邪的
+            note: 字典的意思是忌妒，CT 列的字義是嫉妒的。GT《研經資料》說這是丈夫希望妻子忠貞的那種熱情；BH 也用妻子對丈夫的忠貞來比喻。
+        entryLinks:
+          - 解經爭議/你們不能事奉耶和華
+        soundCue: leaves-only
+
+      - id: beat-19-answer-2
+        cue: answer-2
+        space: valley
+        verse: 書24:21
+        summary: 百姓第二次回答：不然，我們定要事奉耶和華。
+        commentaryPreview: 第二次肯定回答與隨後的考驗
+        commentaries:
+          - id: answer2-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:21
+            paraphrase: 指出百姓以直接堅定的否定回應約書亞的警告，決定選擇效忠耶和華；不過這種信心究竟有多少能耐，仍需經過考驗。
+            line: 295
+            evidence: 決定選擇效忠耶和華神。對基督徒而言，以色列代表承認自己信仰的人
+          - id: answer2-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:21
+            quote: 以色列人在目前這個階段，定意選擇事奉耶和華。
+            line: 206
+            evidence: 以色列人在目前這個階段，定意選擇事奉耶和華。
+        soundCue: crowd-surge
+
+      - id: beat-20-witness
+        cue: witness
+        space: valley
+        verse: 書24:22
+        summary: 約書亞說：你們選定耶和華，要事奉他，你們自己作見證吧！百姓說：我們願意作見證。
+        note: GT《聖經精讀本》：百姓若再遺忘耶和華，就是自己定自己的罪。
+        commentaryPreview: 為什麼叫百姓『自己作見證』？
+        commentaries:
+          - id: witness-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:22
+            quote: 以色列人願意以他們的『選定』作為證詞，他日若轉向別神，就成為他們無可推卸的『見證』，定他們有罪。
+            line: 213
+            evidence: 他日若轉向別神，就成為他們無可推卸的『見證』，定他們有罪。
+          - id: witness-gt-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:22
+            quote: 這句話是指若以色列百姓再次遺忘耶和華，他們將自己定自己的罪。
+            line: 299
+            evidence: 這句話是指若以色列百姓再次遺忘耶和華，他們將自己定自己的罪。
+          - id: witness-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:22
+            paraphrase: 解釋『你們自己作見證吧』就是拿出證據證明自己要把神當神，因此緊接著在第23節要求除去外邦神作為歸向神的證據。
+            line: 303
+            evidence: 所以引出 24：23~34 約書亞要求除去外邦神(當成歸向神的證據)。
+          - id: witness-gt-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:22-24
+            quote: 百姓以自己和自己的證言為見證，表明他們要事奉耶和華的應許是真實的。
+            line: 305
+            evidence: 百姓以自己和自己的證言為見證，表明他們要事奉耶和華的應許是真實的。
+        wordPreview: 『作見證』的原文詞形
+        words:
+          - id: word-v22-witnesses-1
+            verse: 22
+            position: 5
+            label: 作見證（證人）
+            note: 字典的意思是見證人，這裡是複數。CT 列的字義是證人、證據、證言。
+          - id: word-v22-witnesses-2
+            verse: 22
+            position: 17
+            label: 我們願意作見證
+            note: 百姓的回答在原文只有這一個字，和約書亞說的見證人是同一個字。
+        soundCue: valley-morning
+
+      - id: beat-21-put-away
+        cue: put-away
+        space: valley
+        verse: 書24:23
+        moreVerses:
+          - 創35:2
+          - 創35:4
+        interaction: put-away-past
+        summary: 約書亞說：你們現在要除掉你們中間的外邦神，專心歸向耶和華。從前雅各也對家人說過：你們要除掉你們中間的外邦神。那一次，雅各把家人交出的神像藏在示劍的橡樹底下。
+        note: KC：他們真的除掉那些神了嗎？後來證明他們沒有。
+        commentaryPreview: 雅各那一次，家人交出了神像；這一次呢？
+        commentaries:
+          - id: put-away-gt-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:23-24
+            paraphrase: 對照創35:2-4雅各要求除掉外邦神時家人立刻把神像與耳環交給雅各藏在橡樹下，指出此處百姓只用口頭回應，可能暗示有些人沒有徹底清除偶像。
+            line: 316
+            evidence: 這可能暗示有些人沒有徹底清除偶像，結果留下了破口
+          - id: put-away-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:16-18
+            quote: Have they removed the gods, as has been said several times in this chapter that they will do? Later it turns out that they did not do that.
+            quoteZh: 他們真的像本章幾次說過的那樣除掉那些神了嗎？後來事實證明他們並沒有那樣做。
+            line: 61
+            evidence: Have they removed the gods, as has been said several times in this chapter
+          - id: put-away-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:23
+            quote: 『除掉』按照前後文來看，重在指從心裡除掉偶像假神的影響力；『專心歸向』指心意的轉向，清心向著真神。
+            line: 220
+            evidence: 『除掉』按照前後文來看，重在指從心裡除掉偶像假神的影響力
+        wordPreview: 『除掉』與『專心歸向』
+        words:
+          - id: word-v23-remove
+            verse: 23
+            position: 2
+            label: 除掉
+            note: 這是對眾人說的命令。字典的意思是轉離、除去。創35:2 雅各說的除掉是同一個字，也是同樣的命令形式。
+          - id: word-v23-incline
+            verse: 23
+            position: 8
+            label: 歸向
+            note: 也是命令。字典的意思是伸出、伸展，CT 列的字義是轉向、傾斜於。和合本把它和下一個字合起來，譯作專心歸向。
+          - id: word-v23-heart
+            verse: 23
+            position: 10
+            label: 心
+            note: 字典的意思是心。後面帶著『你們的』，就是你們的心。
+        entryLinks:
+          - 神學/除掉外邦神
+          - 背景/摩利橡樹
+        soundCue: valley-quiet
+
+      - id: beat-22-answer-3
+        cue: answer-3
+        space: valley
+        verse: 書24:24
+        summary: 百姓第三次回答約書亞：我們必事奉耶和華─我們的神，聽從他的話。
+        commentaryPreview: 第三次肯定回答，加上『聽從他的話』
+        commentaries:
+          - id: answer3-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:24
+            quote: 『我們必事奉耶和華』這是第三次肯定的回話(參18，21節)，堅立了定要事奉耶和華的宣言。
+            line: 227
+            evidence: 『我們必事奉耶和華』這是第三次肯定的回話(參18，21節)
+          - id: answer3-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:24
+            paraphrase: 指出百姓在此三度作信仰告白，但在約書亞死後下一代卻很快去敬拜亞摩利人的神（士2:11-13；6:10），並說這實在相當諷刺。
+            line: 323
+            evidence: 但在約書亞死後下一代的百姓卻很快地又去敬拜了亞摩利人的神
+        soundCue: crowd-surge
+
+      - id: beat-23-family-4
+        cue: family-4
+        space: valley
+        summary: 四個來回結束。女兒看向父親。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 大家都說要事奉了，他為什麼說『不能』？
+          - speaker: father
+            kind: cuv-quote
+            ref: 書24:19
+            text: 因為他是聖潔的神，是忌邪的神，必不赦免你們的過犯罪惡。
+        daughterQA:
+          question: 大家都說要事奉了，他為什麼說『不能』？
+          answerer: father
+          verses:
+            - 書24:19
+          entryLinks:
+            - 解經爭議/你們不能事奉耶和華
+          notes:
+            - id: qa4-ct
+              source: CT
+              work: CT 黃迦勒《約書亞記註解》
+              verse: 書24:19
+              paraphrase: 一方面指出，要做到討神喜悅的事奉，必須對付罪惡，特別是在神之外另有所愛慕和追求的罪；另一段又指出人無法靠自己的力量順從神，並從中讀出因信稱義、神人需要配合的原則。
+              line: 186
+              evidence: 要做到這個地步，就必須對付罪惡，特別是在神之外另有所愛慕
+            - id: qa4-gt-study
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:19-20
+              paraphrase: 認為這是明顯的激將法，逼百姓正視自己的軟弱，明白不能單靠人的決心與努力守全律法。
+              line: 290
+              evidence: 約書亞在 24：19~20 的斥訓雖是明顯的激將法
+            - id: qa4-kc
+              source: KC
+              work: KC KingComments
+              verse: 書24:19
+              quote: Joshua does not mean to say that God is not a God of forgiveness. He wants to make it clear that God cannot be served with a halfhearted heart and that leaving Him to serve other gods is a serious sin.
+              quoteZh: 約書亞的意思並不是說神是不赦免人的神；他是要講明，人不能懷著三心二意的心事奉神，離棄祂去事奉別神是嚴重的罪。
+              line: 65
+              evidence: Joshua does not mean to say that God is not a God of forgiveness.
+            - id: qa4-bh
+              source: BH
+              work: BH BibleHub Study
+              verse: 書24:19
+              quote: Joshua exposed the insufficiency of a divided heart and called them to dependence upon the God they claimed to serve.
+              quoteZh: 約書亞揭露了分裂之心不足以事奉神，呼籲他們倚靠自己所宣稱要事奉的這一位神。
+              line: 645
+              evidence: Joshua exposed the insufficiency of a divided heart and called them
+        soundCue: valley-quiet
+
+  - id: act-5
+    label: 第五幕
+    title: 寫下，立起
+    rangeLabel: 24:25–28
+    treatyNote: 抄寫存放 25–28
+    beats:
+      - id: beat-24-covenant
+        cue: covenant
+        space: valley
+        verse: 書24:25
+        summary: 當日，約書亞在示劍與百姓立約，為他們立定律例典章。
+        commentaryPreview: 立約與重申摩西的律法
+        commentaries:
+          - id: covenant-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:25
+            paraphrase: 說明約書亞代表神與以色列人立約，雙方誓願受約約束；律例指神向人的要求，典章指神對是否遵行律法的審判判定。
+            line: 234
+            evidence: 約書亞代表神和以色列人立約，表示雙方誓願受「約」的約束
+          - id: covenant-gt-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:25
+            paraphrase: 指出約書亞在此並未提出新的律法條款，只是重申並更新從前摩西的律法。
+            line: 327
+            evidence: 在這裡約書亞並不是提出了新的律法條款，乃是重申了摩西的律法。
+        wordPreview: 『立約』與『律例典章』的逐詞原文
+        words:
+          - id: word-v25-cut
+            verse: 25
+            position: 1
+            label: 立（約）
+            note: 字典的意思是切，也指立約。這裡和下一個字『約』連用，和合本譯作立約。
+          - id: word-v25-covenant
+            verse: 25
+            position: 3
+            label: 約
+            note: 字典的意思是約。
+          - id: word-v25-statute
+            verse: 25
+            position: 9
+            label: 律例
+            note: 字典的意思是條例、法令。CT 列的字義是法令、法規、條例。
+          - id: word-v25-ordinance
+            verse: 25
+            position: 10
+            label: 並典章
+            note: 字典的意思是公正、判決，前面連著和字。CT 列的字義是判決、判例。和合本譯作典章。
+        entryLinks:
+          - 事件/示劍更新盟約
+          - 背景/宗主條約
+        soundCue: valley-quiet
+
+      - id: beat-25-write
+        cue: write
+        space: valley
+        verse: 書24:26
+        focusSubstrings:
+          - 約書亞將這些話都寫在神的律法書上，
+        summary: 約書亞把這些話都寫在神的律法書上。
+        commentaryPreview: 神的律法書是哪一本？
+        commentaries:
+          - id: write-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:26
+            quote: 『這些話』指約書亞與百姓立約的話和律例典章(參閱25節)；『神的律法書』指摩西所寫、放在約櫃旁的律法書(參申三十一26)。
+            line: 241
+            evidence: 『神的律法書』指摩西所寫、放在約櫃旁的律法書(參申三十一26)。
+          - id: write-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:26
+            quote: Joshua added the covenant renewal at Shechem and Israel’s pledged obedience to the sacred record entrusted to the nation. Moses had written the Law as God commanded, and Joshua’s record preserved the people’s renewed commitment within that continuing covenant testimony.
+            quoteZh: 約書亞把示劍更新盟約與以色列人宣誓順服的事，添入託付給全國的神聖記錄裡；摩西曾照神吩咐寫下律法，約書亞的記錄則將百姓重新立下的委身保存在這份延續不斷的盟約見證中。
+            line: 889
+            evidence: Joshua added the covenant renewal at Shechem and Israel’s pledged obedience
+        soundCue: valley-quiet
+
+      - id: beat-26-raise
+        cue: raise
+        space: valley
+        verse: 書24:26
+        focusSubstrings:
+          - 又將一塊大石頭立在橡樹下耶和華的聖所旁邊。
+        interaction: raise-stone
+        summary: 約書亞又把一塊大石頭立在橡樹下，在耶和華的聖所旁邊。
+        commentaryPreview: 橡樹與耶和華的聖所
+        commentaries:
+          - id: raise-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:26
+            quote: 『一塊大石頭』指立石為證，留供後世作永遠的紀念(參書四6)；『橡樹下』亞伯拉罕曾在示劍的橡樹下築壇敬拜神(參創十二6~7)，極可能指的是同一棵樹；『耶和華的聖所』大概指的是亞伯拉罕所築的祭壇。
+            line: 243
+            evidence: 『一塊大石頭』指立石為證，留供後世作永遠的紀念
+          - id: raise-walton
+            source: GT
+            work: GT 華爾頓《約書亞記背景注釋》
+            verse: 書24:26
+            paraphrase: 說明立石與聖樹在早期以色列祭儀中可用來紀念重要事件，也使這次更新盟約的典禮有別於示劍的巴力廟宇。
+            line: 357
+            evidence: 此外，這石和木也有使更新盟約的典禮，有別於示劍之巴力廟宇的作用。
+        wordPreview: 立在、橡樹、聖所的原文詞形
+        words:
+          - id: word-v26-setup
+            verse: 26
+            position: 12
+            label: 立在
+            note: 字典的意思是起來、立定。這裡的形式是使它起來，它指那塊大石頭。CT 列的字義是使直立。
+          - id: word-v26-oak
+            verse: 26
+            position: 15
+            label: 橡樹
+            note: 字典的意思是橡樹，前面加了表示那一棵的小字。CT 說這極可能就是亞伯拉罕在示劍築壇時的那棵樹。
+          - id: word-v26-sanctuary
+            verse: 26
+            position: 17
+            label: 聖所
+            note: 字典的意思是聖所。這聖所指什麼，各家讀法不同，整理區的各家怎麼讀第 11 題把它們並列。
+        entryLinks:
+          - 背景/摩利橡樹
+        soundCue: stone-thud
+
+      - id: beat-27-the-stone
+        cue: the-stone
+        space: valley
+        verse: 書24:27
+        summary: 約書亞對百姓說：這石頭聽見了耶和華所吩咐我們的一切話，可以向我們作見證。
+        note: CT：說石頭聽見了，是擬人的寫法，彷彿石頭也在場聽見。
+        commentaryPreview: 石頭不會說話，怎麼作見證？
+        commentaries:
+          - id: stone-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:27
+            quote: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+            line: 252
+            evidence: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+          - id: stone-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:25-28
+            paraphrase: 形容倘若日後百姓違背誓約，約書亞雖已不在看不到了，但石頭還在，就像不會說話的審判官發出無聲的審判。
+            line: 337
+            evidence: 就像「不會說話的審判官」會向他們發出無聲的審判。
+          - id: stone-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:26-27
+            quote: When Joshua has passed away, the stone remains as a lasting reminder that God has heard everything.
+            quoteZh: 當約書亞離世之後，這塊石頭仍長久留存，提醒人神已經聽見了一切。
+            line: 71
+            evidence: When Joshua has passed away, the stone remains as a lasting reminder
+          - id: stone-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:27
+            quote: Though inanimate, it represented the permanence of God’s words and the seriousness of Israel’s oath.
+            quoteZh: 石頭雖然沒有生命，卻代表神話語的恆久與以色列人誓言的嚴肅。
+            line: 936
+            evidence: Though inanimate, it represented the permanence of God’s words
+        wordPreview: 本節兩次『作見證』與『聽見了』
+        words:
+          - id: word-v27-witness
+            verse: 27
+            position: 11
+            label: 作見證
+            note: 字典的意思是見證。本節用了兩次，兩次都是說這石頭要作見證。
+          - id: word-v27-heard
+            verse: 27
+            position: 14
+            label: 聽見了
+            note: 字典的意思是聽見，主詞是這石頭。CT 說這是擬人的寫法，彷彿石頭也在場聽見。
+        entryLinks:
+          - 主題/立石為證
+        soundCue: valley-quiet
+
+      - id: beat-28-dismiss
+        cue: dismiss
+        space: valley
+        verse: 書24:28
+        summary: 約書亞打發百姓各歸自己的地業去。眾人散去，石頭留在橡樹下。GT《丁道爾》說，約書亞是最後一個回自己地業的人。
+        note: GT《丁道爾》：約書亞是最後一個回自己地業的人。
+        commentaryPreview: 最後一個回自己地業的人，以及『百姓』指誰
+        commentaries:
+          - id: dismiss-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:30
+            quote: 約書亞的產業是支派分配地業時所分的最後一份。他也是最後一個去「自己的地業」之人，因為他必須先打發所有以色列人歸到他們的地業去(28節)。
+            line: 401
+            evidence: 他也是最後一個去「自己的地業」之人，因為他必須先打發所有以色列人歸到他們的地業去
+          - id: dismiss-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:28
+            quote: 『百姓』指代表眾支派的長老、族長、審判官，並官長(參1節)。
+            line: 259
+            evidence: 『百姓』指代表眾支派的長老、族長、審判官，並官長(參1節)。
+          - id: dismiss-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:1
+            paraphrase: 另一種讀法：約書亞在前一章對長老說話，這一章要對全體百姓說話。GT《聖經精讀本》也說本章召集的是整個百姓。
+            line: 15
+            evidence: After Joshua addressed the elders in the previous chapter, he wants to address
+        soundCue: valley-quiet
+
+      - id: beat-29-family-5
+        cue: family-5
+        space: valley
+        moreVerses:
+          - 申6:7
+          - 書4:6
+        summary: 這一家走在回家的路上。女兒回頭看那塊大石頭。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 這塊石頭是什麼意思？
+          - speaker: father
+            kind: cuv-quote
+            ref: 書24:27
+            text: 看哪，這石頭可以向我們作見證
+        daughterQA:
+          question: 這塊石頭是什麼意思？
+          answerer: father
+          verses:
+            - 書24:27
+          entryLinks:
+            - 主題/立石為證
+          notes:
+            - id: qa5-ct
+              source: CT
+              work: CT 黃迦勒《約書亞記註解》
+              verse: 書24:27
+              quote: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+              line: 252
+              evidence: 『聽見了耶和華』這是擬人式筆法，彷彿石頭也在場聽見神對人所說的話。
+            - id: qa5-gt-li
+              source: GT
+              work: GT 李道生《舊約聖經問題總解(上)》
+              verse: 書24:27
+              quote: 由此可知石頭本身並非能聽見神的話，向人作見證。
+              paraphrase: 指出立石是人與神之間立約堅定不移的證據，用來警戒人免得離棄神。
+              line: 333
+              evidence: 由此可知石頭本身並非能聽見神的話，向人作見證。
+            - id: qa5-gt-study
+              source: GT
+              work: GT《約書亞記研經資料(蔡哲民等)》
+              verse: 書24:25-28
+              paraphrase: 說明日後約書亞不在了，石頭還在原地，就像不會說話的審判官向違背誓約的人發出無聲的審判。
+              line: 337
+              evidence: 就像「不會說話的審判官」會向他們發出無聲的審判。
+            - id: qa5-kc
+              source: KC
+              work: KC KingComments
+              verse: 書24:26-27
+              quote: When Joshua has passed away, the stone remains as a lasting reminder that God has heard everything.
+              quoteZh: 當約書亞離世之後，這塊石頭仍長久留存，提醒人神已經聽見了一切。
+              line: 71
+              evidence: When Joshua has passed away, the stone remains as a lasting reminder
+        soundCue: wind-only
+
+  - id: act-6
+    label: 第六幕
+    title: 這些事以後
+    rangeLabel: 24:29–33
+    treatyNote: 跋文 29–33（CT）
+    beats:
+      - id: beat-30-joshua-dies
+        cue: joshua-dies
+        space: stone-time
+        verse: 書24:29-30
+        moreVerses:
+          - 創50:26
+        summary: 這些事以後，嫩的兒子約書亞死了，正一百一十歲。以色列人把他葬在以法蓮山地的亭拿西拉。經文在這裡稱他為『耶和華的僕人』。
+        placeLinks:
+          - ephraim-hill
+          - timnath-serah
+          - gaash
+        personLinks:
+          - label: 約書亞
+            targetId: 約書亞
+          - label: 嫩
+            targetId: 嫩
+        commentaryPreview: 『耶和華的僕人』這個稱呼，與兩個一百一十歲
+        commentaries:
+          - id: joshua-dies-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:29
+            quote: He is called here for the first and also only time “the servant of the LORD”.
+            quoteZh: 他在這裡第一次、也是全書唯一一次被稱為『耶和華的僕人』。
+            line: 81
+            evidence: He is called here for the first and also only time
+          - id: joshua-dies-tyndale
+            source: GT
+            work: GT《丁道爾聖經注釋》
+            verse: 書24:29
+            quote: 約瑟也是一百一十歲去世(創五十26)。這個數字把將以色列帶進迦南的約書亞，和把以色列帶入埃及的祖先連在一起。它也為第32節提到約瑟鋪路。
+            paraphrase: 並指出約書亞去世時得著與摩西相同的特殊頭銜『耶和華的僕人』（參書1:1）。
+            line: 379
+            evidence: 這個數字把將以色列帶進迦南的約書亞，和把以色列帶入埃及的祖先連在一起。
+          - id: joshua-dies-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:30
+            quote: 『迦實山』確實地點不詳，大概在亭拿西拉境內的南邊。
+            line: 275
+            evidence: 『迦實山』確實地點不詳，大概在亭拿西拉境內的南邊。
+        wordPreview: 『耶和華的僕人』逐詞原文
+        words:
+          - id: word-v29-servant
+            verse: 29
+            position: 9
+            label: 僕人
+            note: 字典的意思是僕人、奴僕。本章 16 次『事奉』用的動詞和它同一個字根；第 17 節為奴之家的奴，也是這個字。
+          - id: word-v29-yhwh
+            verse: 29
+            position: 10
+            label: 耶和華
+            note: 神的名字。和前一個字合起來，就是耶和華的僕人。
+        entryLinks:
+          - 地點/亭拿西拉
+          - 地點/迦實山
+          - 原文/事奉與作奴僕同一字根（a.vad）
+        soundCue: wind-only
+
+      - id: beat-31-elders
+        cue: elders
+        space: stone-time
+        verse: 書24:31
+        summary: 那些知道耶和華為以色列人所行諸事的長老還在的時候，以色列人事奉耶和華。日月在石頭上方轉了好幾圈。這一家又來到石頭前，這一次爺爺沒有同來。
+        commentaryPreview: 知道耶和華所行諸事的那一代還在的時候
+        commentaries:
+          - id: elders-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:31
+            quote: 『所行諸事』指5~12節所敘述的全部或一部分神蹟奇事
+            line: 282
+            evidence: 『所行諸事』指5~12節所敘述的全部或一部分神蹟奇事
+          - id: elders-gt-study
+            source: GT
+            work: GT《約書亞記研經資料(蔡哲民等)》
+            verse: 書24:31
+            quote: 24：31 也暗示當這些長老死去以後，以色列人就不再專心事奉神了，這正是士師記所描述的混亂狀況。
+            line: 415
+            evidence: 也暗示當這些長老死去以後，以色列人就不再專心事奉神了
+          - id: elders-gt-jingdu
+            source: GT
+            work: GT《聖經精讀本──約書亞記註解》
+            verse: 書24:31
+            paraphrase: 指出曾經歷神拯救脫離壓迫之恩典的那一代直到最後都信靠耶和華，但他們的後裔卻最終轉去事奉偶像。
+            line: 413
+            evidence: 曾經歷拯救以色列民族脫離暴政與壓迫的神之恩典的人，直至最後都相信耶和華
+        soundCue: wind-only
+
+      - id: beat-32-bones
+        cue: bones
+        space: stone-time
+        verse: 書24:32
+        moreVerses:
+          - 創33:19
+        summary: 以色列人從埃及帶上來的約瑟的骸骨，葬在示劍，就是雅各從前用一百塊銀子向哈抹的子孫買的那塊地。這塊地作了約瑟子孫的產業。
+        note: GT《啟導本》：約瑟臨死囑咐停柩在埃及，他的願望到這裡實現了。
+        placeLinks:
+          - shechem
+        personLinks:
+          - label: 約瑟
+            targetId: 約瑟
+          - label: 雅各
+            targetId: 以色列
+        commentaryPreview: 約瑟臨死的囑咐，到這裡做成了
+        commentaries:
+          - id: bones-gt-qidao
+            source: GT
+            work: GT《啟導本聖經約書亞記註釋》
+            verse: 書24:32
+            quote: 約瑟死時囑咐停柩在埃及，憑信心相信有一日全族必可回歸故里(創五十25)。約瑟的願望實現，以色列人從埃及帶來的約瑟骸骨現在葬在這裡。
+            line: 424
+            evidence: 約瑟死時囑咐停柩在埃及，憑信心相信有一日全族必可回歸故里
+          - id: bones-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:32
+            quote: Joseph’s burial testifies that he trusted God’s promise of the land more than the honor and security he possessed in Egypt.
+            quoteZh: 約瑟的安葬見證他信靠神賜地的應許，勝過他在埃及所擁有的尊榮與安穩。
+            line: 1100
+            evidence: Joseph’s burial testifies that he trusted God’s promise of the land
+        entryLinks:
+          - 歷史/約瑟骸骨葬於示劍
+        soundCue: wind-only
+
+      - id: beat-33-eleazar
+        cue: eleazar
+        space: stone-time
+        verse: 書24:33
+        summary: 亞倫的兒子以利亞撒也死了，葬在以法蓮山地、他兒子非尼哈所得的小山上。這裡的所得，原文和前面神賜給的『給』是同一個字，這是本章第七次出現。
+        placeLinks:
+          - ephraim-hill
+          - gibeah-phinehas
+        personLinks:
+          - label: 以利亞撒
+            targetId: 以利亞撒
+          - label: 非尼哈
+            targetId: 非尼哈
+          - label: 亞倫
+            targetId: 亞倫
+        commentaryPreview: 以利亞撒死後，誰接續大祭司的職任
+        commentaries:
+          - id: eleazar-ct
+            source: CT
+            work: CT 黃迦勒《約書亞記註解》
+            verse: 書24:33
+            quote: 『以利亞撒』當時的大祭司，死後大祭司的職任由他兒子非尼哈繼承
+            paraphrase: 並說明非尼哈所得的小山（原文基比亞）在以法蓮山地，確實地點不詳。
+            line: 298
+            evidence: 『以利亞撒』當時的大祭司，死後大祭司的職任由他兒子非尼哈繼承
+          - id: eleazar-gt-comp
+            source: GT
+            work: GT《約書亞記綜合解讀》
+            verse: 書24:32-33
+            quote: 現在這兩項任務都已經完成了，神就不再指定約書亞的接班人，而是安排非尼哈接替他父親以利亞撒做大祭司，維持人與神之間的交通。
+            line: 434
+            evidence: 神就不再指定約書亞的接班人，而是安排非尼哈接替他父親以利亞撒做大祭司
+        wordPreview: 『小山（基比亞）』與第七次『給（所得）』
+        words:
+          - id: word-v33-gibeah
+            verse: 33
+            position: 7
+            label: 小山（基比亞）
+            note: 原文是地名基比亞。CT 說這個字的意思是山丘，和合本譯作小山。
+          - id: word-v33-given
+            verse: 33
+            position: 11
+            label: 所得（被賜予）
+            note: 意思是被給。前面神把以撒、西珥山、地土城邑賜下，用的都是這個字。這是本章第 7 次，也是最後一次。
+        entryLinks:
+          - 地點/基比亞（以法蓮）
+          - 人物/以利亞撒
+          - 人物/非尼哈
+        soundCue: wind-only
+
+      - id: beat-34-family-6
+        cue: family-6
+        space: stone-time
+        summary: 已經長大的女兒和父親並肩站在橡樹下的大石頭旁。
+        familyLines:
+          - speaker: daughter
+            kind: question
+            text: 為什麼約瑟的骨頭要從埃及帶來？
+          - speaker: father
+            kind: cuv-quote
+            ref: 出13:19
+            text: 因為約瑟曾叫以色列人嚴嚴地起誓
+        daughterQA:
+          question: 為什麼約瑟的骨頭要從埃及帶來？
+          answerer: father
+          verses:
+            - 創50:25
+            - 出13:19
+            - 書24:32
+            - 來11:22
+          entryLinks:
+            - 歷史/約瑟骸骨葬於示劍
+          notes:
+            - id: qa6-kc
+              source: KC
+              work: KC KingComments
+              verse: 書24:32
+              quote: The burial of Joseph’s bones makes it clear that the book does not really end with death, because it shows the hope of the resurrection. With this in mind Joseph wanted his bones to be buried in the land (Heb 11:22).
+              quoteZh: 約瑟骸骨的安葬顯明這卷書並非真的以死亡作結，因為它顯出復活的盼望；約瑟正是存著這盼望，吩咐把他的骸骨葬在這地（來11:22）。
+              line: 91
+              evidence: The burial of Joseph’s bones makes it clear that the book does not really end with death
+            - id: qa6-tyndale
+              source: GT
+              work: GT《丁道爾聖經注釋》
+              verse: 書24:32
+              paraphrase: 指出這裡重提約瑟遺骸與雅各買地，把約書亞記和創世記連起來，總結屬神子民如何從一個家族成為眾支派與國家。
+              line: 420
+              evidence: 便將約書亞記和創世記連起來，成為一個大時代的總結
+        soundCue: wind-only
+
+  - id: epilogue
+    label: 終
+    title: 同一段話，兩本書
+    rangeLabel: 士2:6–10
+    beats:
+      - id: beat-35-epilogue-diff
+        cue: epilogue-diff
+        space: stone-time
+        compareRefs:
+          left: 書24:28-31
+          right: 士2:6-9
+          extraRight: 士2:10
+        interaction: epilogue-diff
+        summary: 士師記第 2 章把這一段幾乎照樣再寫了一次，有幾處次序不同。接著士2:10 多了一句：後來有別的世代興起，不知道耶和華。
+        commentaryPreview: 兩卷書的交接處：從『知道』到『不知道』
+        commentaries:
+          - id: diff-bh
+            source: BH
+            work: BH BibleHub Study
+            verse: 書24:31
+            quote: When that generation passed away, later Israelites failed to remember the LORD’s works, opening the way for the spiritual decline recorded in Judges.
+            quoteZh: 當那一代過去之後，後來的以色列人沒有記念耶和華的作為，開啟了士師記所記載的屬靈衰落。
+            line: 1089
+            evidence: When that generation passed away, later Israelites failed to remember
+          - id: diff-kc
+            source: KC
+            work: KC KingComments
+            verse: 書24:31
+            quote: When the witnesses of the power of the LORD and its influence on the people are gone, a new generation rises that is open to the influences of the peoples around them. The following book, Judges, shows this.
+            quoteZh: 當見證耶和華大能及其影響力的人離去後，新的一代興起，向周圍列族的影響敞開；接下來的士師記就顯明了這事。
+            line: 87
+            evidence: When the witnesses of the power of the LORD and its influence on the people are gone
+        soundCue: wind-only
+
+      - id: beat-36-epilogue-stone
+        cue: epilogue-stone
+        space: stone-time
+        summary: 橡樹下的石頭留在原地，四周一個人也沒有。
+        note: KC：他的告別辭會在他們心裡迴響多久？士師記給了答案。
+        commentaries:
+          - id: epilogue-kc-question
+            source: KC
+            work: KC KingComments
+            verse: 書24:28
+            quote: How long will his farewell speech resonate in their hearts and have its beneficial effect on the practice of their lives as people of God? The book of Judges gives the answer.
+            quoteZh: 他的告別辭會在他們心裡迴響多久，在他們作神子民的生活裡發生多久的好影響？士師記給了答案。
+            line: 77
+            evidence: How long will his farewell speech resonate in their hearts and have its beneficial effect
+        soundCue: wind-only

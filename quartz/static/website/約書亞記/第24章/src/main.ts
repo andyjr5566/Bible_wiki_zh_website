@@ -9,7 +9,7 @@ import './styles/storyteller.css';
 import { DefaultLoadingManager } from 'three';
 import { attachAutoplay } from './story/autoplay';
 import { createLoadingProgress } from './ui/loading';
-import { exposeScrollForTools, setupScroller } from './ui/scroller';
+import { exposeScrollForTools, liftFixedLayers, setupScroller } from './ui/scroller';
 
 import shechemDemUrl from './assets/dem/shechem-dem.json?url';
 import wideReliefUrl from './assets/dem/wide-relief.jpg';
@@ -158,6 +158,7 @@ function mountApp(siteData: SiteData): void {
     peek.element,
     createRotateHint(),
   );
+  liftFixedLayers();
 
   // 初始化常駐 3D WebGL 舞台
   sceneHandle = createScene({

@@ -158,6 +158,78 @@ export interface StoryAudioController {
   playStoneThud(): void;
 }
 
+/**
+ * 一個聲音（環境循環、配樂或單響）。音量一律經 Web Audio 的音量節點控制，並由這裡記住目前的值：
+ * iPhone Safari 把 <audio> 的 volume 當唯讀（設了無效、讀回來永遠是 1），
+ * 以前直接設 el.volume，在 iPhone 上每個聲音都是最大聲，淡出永遠「沒完成」所以也不會暫停，
+ * 播過的環境聲與配樂一路疊著播（2026-10-28 使用者：一直有雜音，而且太大聲）。
+ */
+interface Voice {
+  el: HTMLAudioElement;
+  gain: GainNode | null;
+  level: number;
+}
+
+let audioCtx: AudioContext | null = null;
+
+/** 在讀者第一次操作時建立（瀏覽器規定）；iPhone 要在點擊裡 resume 並播一小段無聲才會解鎖。 */
+function unlockAudioContext(): void {
+  try {
+    const nav = navigator as Navigator & { audioSession?: { type: string } };
+    // iPhone 的靜音鍵會把 Web Audio 一起靜音；聲明這是要播放的內容，和以前的 <audio> 一樣照常出聲
+    if (nav.audioSession) nav.audioSession.type = 'playback';
+    if (!audioCtx) {
+      const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!Ctor) return;
+      audioCtx = new Ctor();
+    }
+    if (audioCtx.state !== 'running') {
+      void audioCtx.resume().catch(() => {});
+      const silent = audioCtx.createBufferSource();
+      silent.buffer = audioCtx.createBuffer(1, 1, 22050);
+      silent.connect(audioCtx.destination);
+      silent.start(0);
+    }
+  } catch {
+    audioCtx = null;
+  }
+}
+
+function createVoice(url: string, loop: boolean): Voice {
+  const el = new Audio(url);
+  el.loop = loop;
+  el.preload = 'auto';
+  let gain: GainNode | null = null;
+  if (audioCtx) {
+    try {
+      gain = audioCtx.createGain();
+      gain.gain.value = 0;
+      audioCtx.createMediaElementSource(el).connect(gain).connect(audioCtx.destination);
+    } catch {
+      gain = null;
+    }
+  }
+  if (!gain) el.volume = 0;
+  const voice: Voice = { el, gain, level: 0 };
+  setLevel(voice, 0);
+  return voice;
+}
+
+/** immediate：單響直接到位，不要被平滑掉起音 */
+function setLevel(v: Voice, level: number, immediate = false): void {
+  v.level = Math.max(0, Math.min(1, level));
+  // 給檢查工具讀（tools/check-ambience.mjs、check-music-cues.mjs）
+  (v.el as HTMLAudioElement & { josLevel?: number }).josLevel = v.level;
+  if (v.gain && audioCtx) {
+    const param = v.gain.gain;
+    param.cancelScheduledValues(audioCtx.currentTime);
+    if (immediate) param.setValueAtTime(v.level, audioCtx.currentTime);
+    else param.setTargetAtTime(v.level, audioCtx.currentTime, 0.03);
+  } else {
+    v.el.volume = v.level;
+  }
+}
+
 function seekTo(el: HTMLAudioElement, seconds: number): void {
   try {
     if (el.readyState >= 1) el.currentTime = seconds;
@@ -168,7 +240,7 @@ function seekTo(el: HTMLAudioElement, seconds: number): void {
 }
 
 export function createStoryAudio(_data: SiteData, state: StoryState, onActivated?: () => void): StoryAudioController {
-  const loops: Partial<Record<LoopKey, HTMLAudioElement>> = {};
+  const loops: Partial<Record<LoopKey, Voice>> = {};
   const targets: Record<LoopKey, number> = {
     valleyWind: 0,
     oakLeaves: 0,
@@ -178,48 +250,34 @@ export function createStoryAudio(_data: SiteData, state: StoryState, onActivated
     crowdMurmur: 0,
   };
 
-  const musicEls: Partial<Record<MusicKey, HTMLAudioElement>> = {};
+  const musicEls: Partial<Record<MusicKey, Voice>> = {};
   const musicTargets = Object.fromEntries(Object.keys(MUSIC_URLS).map(k => [k, 0])) as Record<MusicKey, number>;
   let musicFade: MusicFade = 'normal';
   let musicStartAt: number | undefined;
 
-  let seaCloseShot: HTMLAudioElement | null = null;
-  let crowdSurgeShot: HTMLAudioElement | null = null;
-  let stoneThudShot: HTMLAudioElement | null = null;
+  let seaCloseShot: Voice | null = null;
+  let crowdSurgeShot: Voice | null = null;
+  let stoneThudShot: Voice | null = null;
   let lastBeatId = '';
   let seaClosing = false;
   let fadeTimer: number | null = null;
 
   function ensureElements(): void {
     for (const k of Object.keys(LOOP_URLS) as LoopKey[]) {
-      if (!loops[k]) {
-        const el = new Audio(LOOP_URLS[k]);
-        el.loop = true;
-        el.preload = 'auto';
-        el.volume = 0;
-        loops[k] = el;
-      }
+      if (!loops[k]) loops[k] = createVoice(LOOP_URLS[k], true);
     }
-    if (!seaCloseShot) {
-      seaCloseShot = new Audio(seaCrashUrl);
-      seaCloseShot.preload = 'auto';
-    }
-    if (!crowdSurgeShot) {
-      crowdSurgeShot = new Audio(crowdSurgeUrl);
-      crowdSurgeShot.preload = 'auto';
-    }
-    if (!stoneThudShot) {
-      stoneThudShot = new Audio(stoneThudUrl);
-      stoneThudShot.preload = 'auto';
-    }
+    seaCloseShot ??= createVoice(seaCrashUrl, false);
+    crowdSurgeShot ??= createVoice(crowdSurgeUrl, false);
+    stoneThudShot ??= createVoice(stoneThudUrl, false);
   }
 
-  function playOneShot(el: HTMLAudioElement | null, vol: number): void {
-    if (!el || !state.soundOn || !state.audioReady || document.hidden) return;
+  function playOneShot(shot: Voice | null, vol: number): void {
+    if (!shot || !state.soundOn || !state.audioReady || document.hidden) return;
     try {
+      const el = shot.el;
       el.pause();
       el.currentTime = 0;
-      el.volume = Math.max(0, Math.min(1, vol));
+      setLevel(shot, vol, true);
       void el.play().catch(() => {});
     } catch {
       // 瀏覽器自動播放限制下安全靜默
@@ -296,19 +354,20 @@ export function createStoryAudio(_data: SiteData, state: StoryState, onActivated
   function stepVolumes(): void {
     let anyActive = false;
     for (const k of Object.keys(targets) as LoopKey[]) {
-      const el = loops[k];
-      if (!el) continue;
+      const voice = loops[k];
+      if (!voice) continue;
+      const el = voice.el;
       const goal = targets[k] * (WIND_LOOPS.has(k) ? WIND_SCALE : 1);
       if (goal > 0.005 && el.paused && state.soundOn && !document.hidden) {
         void el.play().catch(() => {});
       }
-      const diff = goal - el.volume;
+      const diff = goal - voice.level;
       if (Math.abs(diff) > 0.012) {
         // 換站、換幕時環境音約 2 秒慢慢交疊；第19節的安靜要快
-        el.volume = Math.max(0, Math.min(1, el.volume + diff * (state.cue === 'cannot' ? 0.28 : 0.08)));
+        setLevel(voice, voice.level + diff * (state.cue === 'cannot' ? 0.28 : 0.08));
         anyActive = true;
       } else {
-        el.volume = goal;
+        if (voice.level !== goal) setLevel(voice, goal);
         if (goal <= 0.002 && !el.paused) {
           el.pause();
         }
@@ -320,26 +379,24 @@ export function createStoryAudio(_data: SiteData, state: StoryState, onActivated
     const musicRate = FADE_RATE[musicFade];
     for (const k of Object.keys(musicTargets) as MusicKey[]) {
       const goal = musicTargets[k];
-      let el = musicEls[k];
-      if (!el) {
+      let voice = musicEls[k];
+      if (!voice) {
         if (goal <= 0.005) continue;
-        el = new Audio(MUSIC_URLS[k]);
-        el.loop = true;
-        el.preload = 'auto';
-        el.volume = 0;
-        musicEls[k] = el;
+        voice = createVoice(MUSIC_URLS[k], true);
+        musicEls[k] = voice;
       }
-      if (goal > 0.005 && (el.paused || el.volume <= 0.005)) {
+      const el = voice.el;
+      if (goal > 0.005 && (el.paused || voice.level <= 0.005)) {
         // 從安靜重新進來：有指定的話跳到那一秒（例如追擊曲直接從最緊的段落開始）
-        if (musicStartAt !== undefined && el.volume <= 0.005) seekTo(el, musicStartAt);
+        if (musicStartAt !== undefined && voice.level <= 0.005) seekTo(el, musicStartAt);
         if (el.paused && state.soundOn && !document.hidden) void el.play().catch(() => {});
       }
-      const diff = goal - el.volume;
+      const diff = goal - voice.level;
       if (Math.abs(diff) > 0.004) {
-        el.volume = Math.max(0, Math.min(1, el.volume + diff * musicRate));
+        setLevel(voice, voice.level + diff * musicRate);
         anyActive = true;
       } else {
-        el.volume = goal;
+        if (voice.level !== goal) setLevel(voice, goal);
         if (goal <= 0.002 && !el.paused) el.pause();
       }
       if (goal > 0.002) anyActive = true;
@@ -358,6 +415,8 @@ export function createStoryAudio(_data: SiteData, state: StoryState, onActivated
   }
 
   document.addEventListener('visibilitychange', () => {
+    // iPhone 切到背景再回來時，Web Audio 會被暫停
+    if (!document.hidden && audioCtx && audioCtx.state !== 'running') void audioCtx.resume().catch(() => {});
     computeTargets(false);
     ensureFadeLoop();
   });
@@ -365,8 +424,16 @@ export function createStoryAudio(_data: SiteData, state: StoryState, onActivated
   // 瀏覽器要讀者先操作過頁面才准出聲；在那之前不載入任何音檔，首屏不受影響。
   let lastInReviewZone = false;
   const activationEvents = ['pointerdown', 'keydown', 'touchend', 'click'];
+  // iPhone 只在點一下（不是捲動的手勢）裡才准解鎖聲音：沒解鎖成功前每次點擊都再試一次
+  const unlockEvents = ['touchend', 'click', 'keydown'];
+  function retryUnlock(): void {
+    unlockAudioContext();
+    if (audioCtx?.state === 'running') for (const name of unlockEvents) window.removeEventListener(name, retryUnlock, true);
+  }
   function activate(): void {
     if (state.audioReady) return;
+    unlockAudioContext();
+    for (const name of unlockEvents) window.addEventListener(name, retryUnlock, { capture: true, passive: true });
     state.audioReady = true;
     for (const name of activationEvents) window.removeEventListener(name, activate, true);
     if (state.soundOn) ensureElements();

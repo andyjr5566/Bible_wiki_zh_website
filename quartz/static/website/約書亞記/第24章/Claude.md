@@ -463,6 +463,8 @@ CSS class 一律 `jos-` 開頭，用之前查舊站有沒有同名。
 
 各站的音量表在 `src/story/audio.ts` 的 `STATION_SOUND` 與 `redseaRoar`；`tools/check-ambience.mjs` 逐段取樣第二幕各環境音的實際音量。
 
+音量一律經 Web Audio 的音量節點（`createVoice`／`setLevel`），不可直接設或讀 `<audio>` 的 volume：iPhone Safari 的 volume 是唯讀、永遠是 1，以前在 iPhone 上每個聲音都最大聲、淡出不會結束、播過的全部疊著播（2026-10-28 使用者回報雜音很吵）。`tools/probe-audio-pileup.mjs`（IOS=1 模擬）走完全部拍，同時在播的聲音應不超過 4 個。
+
 不用的：號角（經文這裡沒有）、營火（沒有）、鑿石聲（石頭是立起來的，經文沒說有鑿）。
 
 ### 配樂（2026-10-27 使用者要求，取代原本『不用背景音樂』）

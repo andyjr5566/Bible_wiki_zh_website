@@ -21,6 +21,7 @@ import { attachScrollTracker } from './story/scroll';
 import { createInitialState, type StoryState } from './story/state';
 import { createCoachPanel } from './ui/coach';
 import { h } from './ui/dom';
+import { refreshViewportHeight } from './ui/viewport';
 import { createHeader } from './ui/header';
 import { createPeekDrawer } from './ui/peek';
 import { createReviewView } from './ui/review-view';
@@ -87,7 +88,7 @@ function mountApp(siteData: SiteData): void {
   let syncAll = () => {};
 
   const coach = createCoachPanel(state);
-  const storyAudio = createStoryAudio(siteData, state);
+  const storyAudio = createStoryAudio(siteData, state, () => syncAll());
   const peek = createPeekDrawer(siteData, state, () => syncAll());
   const header = createHeader(
     siteData,
@@ -229,7 +230,7 @@ function mountApp(siteData: SiteData): void {
     window.addEventListener(
       'resize',
       () => {
-        sceneHandle?.resize(window.innerWidth, window.innerHeight, window.devicePixelRatio || 1);
+        sceneHandle?.resize(window.innerWidth, refreshViewportHeight(), window.devicePixelRatio || 1);
       },
       { passive: true },
     );
@@ -268,7 +269,7 @@ function mountApp(siteData: SiteData): void {
       inReviewZone = inRev;
       syncAll();
     },
-    () => { storyView.tick(); stationPlayer.tick(inReviewZone); },
+    () => { storyView.tick(); stationPlayer.tick(inReviewZone); storyAudio.sync(inReviewZone); },
   );
 
   if (window.location.hash) {

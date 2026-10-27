@@ -37,7 +37,7 @@ export const stationLayouts: Record<string, VerseLayout> = {
   moab: layout('upper-left', 'ivory'), jordan: layout('upper-left', 'ivory'),
   canaan: layout('upper-left', 'ivory'),
 };
-export const FLIGHT_PX = 800;
+export const FLIGHT_PX = 880;
 export const ENTER_PX = 180;
 export function stationReadPx(station: ContentStation): number {
   return stationRhythm(station, siteData).px;

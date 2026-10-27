@@ -8,6 +8,7 @@ import type { TagAnchorSpec } from './choreography';
 import { createMemoryMap } from './memory-map';
 import { ease, sampleStation } from './stations';
 import { ENTER_PX } from '../data/storytelling';
+import { viewportHeight } from '../ui/viewport';
 import { createPaintPass } from './paint-pass';
 import { createSceneProps } from './props';
 import { createValleyTerrain, type DemGridData } from './terrain';
@@ -127,8 +128,10 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
 
   const choreographer = createChoreographer(terrain, props, cast, memMap);
 
+  const driftDir = new THREE.Vector3();
+  const driftSide = new THREE.Vector3();
   let viewW = Math.max(1, window.innerWidth);
-  let viewH = Math.max(1, window.innerHeight);
+  let viewH = Math.max(1, viewportHeight());
   let currentDpr = 1;
   let lastOffsetX = -99999;
   let lastOffsetY = -99999;
@@ -202,7 +205,12 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     }
   }
 
+  let sizedKey = '';
   function resize(width: number, height: number, dpr: number): void {
+    // 網址列伸縮等不影響畫布大小的 resize 事件不重設緩衝區與鏡頭比例
+    const key = `${Math.round(width)}:${Math.round(height)}:${dpr}`;
+    if (key === sizedKey) return;
+    sizedKey = key;
     viewW = Math.max(1, width);
     viewH = Math.max(1, height);
     const isMobile = viewW <= 768;
@@ -653,7 +661,16 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     const swayX = state.motionOff || station || state.cue.startsWith('family-') ? 0 : Math.sin(elapsed * 0.85) * 0.03;
     const swayY = state.motionOff || station || state.cue.startsWith('family-') ? 0 : Math.cos(elapsed * 1.15) * 0.016;
 
-    camera.position.set(camPosCur.x + swayX, camPosCur.y + swayY, camPosCur.z);
+    // 捲動帶動的慢推：示劍各拍從頭到尾鏡頭朝注視點推近約 8%、橫移一點，文字停留較久時畫面也不會停格。
+    // 跟進度綁定（不是時間），往回捲會倒回；地圖與第二幕的站不加。
+    const drift = station || state.space === 'map' ? 0 : state.beatProgress - 0.5;
+    driftDir.subVectors(camLookCur, camPosCur);
+    driftSide.crossVectors(driftDir, camera.up).normalize();
+    camera.position.set(
+      camPosCur.x + swayX + driftDir.x * drift * 0.08 + driftSide.x * drift * 0.5,
+      camPosCur.y + swayY + driftDir.y * drift * 0.08,
+      camPosCur.z + driftDir.z * drift * 0.08 + driftSide.z * drift * 0.5,
+    );
     camera.lookAt(camLookCur);
     panorama.mesh.position.copy(camera.position);
     panorama.overlay.position.copy(camera.position);
@@ -667,7 +684,7 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     lastFrameMs = performance.now() - t0;
   }
 
-  resize(window.innerWidth, window.innerHeight, window.devicePixelRatio || 1);
+  resize(window.innerWidth, viewportHeight(), window.devicePixelRatio || 1);
   rafId = window.requestAnimationFrame(renderFrame);
   window.setTimeout(() => onEvent({ type: 'ready' }), 50);
 

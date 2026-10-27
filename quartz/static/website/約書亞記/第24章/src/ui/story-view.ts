@@ -3,13 +3,14 @@ import type { FamilyLine, SiteData, StoryBeat, StorySegment, VerseLine } from '.
 import type { BubblePlacement } from '../scene';
 import { sampleStation, stationsForBeat } from '../scene/stations';
 import { beatReadPx, FLIGHT_PX, splitSentences, stationLayouts, stationReadPx, verseLayouts, voiceWeights } from '../data/storytelling';
-import { primaryRefOf, stationRhythm, storyLines } from '../data/story-content.mjs';
+import { GROUP_SIZE, primaryRefOf, sentencePlan, stationRhythm, storyLines, verseWeight } from '../data/story-content.mjs';
 import { scrollToElement } from '../story/scroll';
 import { beatPlaybackSeconds } from '../story/autoplay';
 import { paceRate, sentenceRevealSeconds } from '../story/playback-speed';
 import { reviewNavigate } from './review-navigation';
 import type { StoryState } from '../story/state';
 import { h } from './dom';
+import { viewportHeight } from './viewport';
 import { beatHasMore, buildMoreBody, createMoreCard, SPEAKER_NAMES } from './more-card';
 import type { PeekController } from './peek';
 
@@ -32,6 +33,8 @@ const SPEAKER_ACTORS: Record<FamilyLine['speaker'], string[]> = {
 /** 第19節：先只有一行大字，再換成整段經文 */
 const HEADLINE_FADE_FROM = 0.22;
 const HEADLINE_FADE_TO = 0.3;
+/** 一節的時間依 sentencePlan 的份量分給各句，到 86% 為止（之後整節淡出）。 */
+const SENTENCE_SPREAD = 0.835;
 const KICKER_FADE_FROM = 0.4;
 const KICKER_FADE_TO = 0.5;
 
@@ -583,7 +586,7 @@ export function createStoryView(
     renderBubble(b, idx);
     // Idle breathing and pointing change card bounds; they must not reflow speech.
     // Reproject only while scrolling/resizing, then retain the settled placement.
-    const viewport = `${innerWidth}:${innerHeight}:${topInset}`;
+    const viewport = `${innerWidth}:${viewportHeight()}:${topInset}`;
     const changed = b.lastProgress !== p || b.lastViewport !== viewport || !b.placedKey;
     b.lastProgress = p;
     b.lastViewport = viewport;
@@ -652,8 +655,15 @@ export function createStoryView(
     const sourceProgress = station ? Math.min(.999999, station.p / (panel.note ? .70 : 1)) : reading;
     const currentLines = storyLines(panel.beat, data, station?.station);
     const verseCount = Math.max(1, currentLines.length);
-    const verseIndex = Math.min(verseCount - 1, Math.floor(sourceProgress * verseCount));
-    const verseLocal = sourceProgress * verseCount - verseIndex;
+    // 每一節分到的捲動長度依字數，長的節不會被短的節擠掉停留時間
+    const verseWeights = currentLines.map(line => verseWeight(line.text));
+    const weightTotal = verseWeights.reduce((sum, w) => sum + w, 0) || 1;
+    let verseIndex = 0, verseStart = 0;
+    while (verseIndex < verseCount - 1 && sourceProgress * weightTotal >= verseStart + verseWeights[verseIndex]) {
+      verseStart += verseWeights[verseIndex++];
+    }
+    const verseShare = (verseWeights[verseIndex] ?? weightTotal) / weightTotal;
+    const verseLocal = Math.max(0, Math.min(.999999, (sourceProgress * weightTotal - verseStart) / (verseWeights[verseIndex] ?? weightTotal)));
     const selectedVerse = currentLines[verseIndex]?.v;
     const placement = station ? stationLayouts[station.station.id] : verseLayouts[panel.beat.cue];
     panel.el.dataset.verseLayout = placement.position;
@@ -703,17 +713,24 @@ export function createStoryView(
       });
     }
     const sentences = panel.verse?.el.querySelectorAll<HTMLElement>('.jos-story-sentence');
-    const secondsPerVerse = station
-      ? stationRhythm(station.station, data).seconds * (panel.note ? .70 : 1) / verseCount
-      : beatPlaybackSeconds(panel.beat, data) * (readingEnd - readingStart) / verseCount;
+    const secondsPerVerse = (station
+      ? stationRhythm(station.station, data).seconds * (panel.note ? .70 : 1)
+      : beatPlaybackSeconds(panel.beat, data) * (readingEnd - readingStart)) * verseShare;
+    // 句子出現的時間點依字數分配，每組最後一句另有停留（sentencePlan），不會出現一下就換掉。
+    const sentenceWeights = sentencePlan(currentLines[verseIndex]?.text ?? '').weights;
+    const sentenceTotal = sentenceWeights.reduce((sum, w) => sum + w, 0) || 1;
+    const sentenceStarts: number[] = [];
+    let sentenceCum = 0;
+    for (const w of sentenceWeights) { sentenceStarts.push(.025 + sentenceCum / sentenceTotal * SENTENCE_SPREAD); sentenceCum += w; }
+    let latest = 0;
+    sentenceStarts.forEach((start, i) => { if (verseLocal >= start) latest = i; });
     sentences?.forEach((sentence, index) => {
-      const start = .025 + index / Math.max(1, sentences.length) * .58;
+      const start = sentenceStarts[index];
       const rate = state.autoplaying ? paceRate(state.playbackRate) : 1;
       const duration = sentenceRevealSeconds(rate) * rate / secondsPerVerse;
       const reveal = (verseLocal - start) / duration;
       // Three phrases per inscription keep the open part of the painting clear.
-      const latest = Math.max(0, Math.min(sentences.length - 1, Math.floor((verseLocal - .025) / .58 * sentences.length)));
-      sentence.hidden = Math.floor(index / 3) !== Math.floor(latest / 3);
+      sentence.hidden = Math.floor(index / GROUP_SIZE) !== Math.floor(latest / GROUP_SIZE);
       sentence.style.visibility = reveal <= 0 ? 'hidden' : 'visible';
       sentence.style.opacity = '1';
       const chars = sentence.querySelectorAll<HTMLElement>('.jos-story-char');

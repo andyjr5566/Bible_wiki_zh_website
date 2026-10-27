@@ -72,13 +72,13 @@ describe('說書式經文與節奏閘門', () => {
       expect(joined).toBe(siteData.verses[ref]);
     }
   });
-  it('短句縮到600px；字數、動作與進出場同時驅動捲動和播放', () => {
+  it('短句縮到約600px（另加組尾停留）；字數、停留、動作與進出場同時驅動捲動和播放', () => {
     const beats = siteData.segments.flatMap(s => s.beats);
     const short = beatRhythm(beats.find(b => b.cue === 'before-god')!, siteData);
-    expect(short.px).toBe(600);
+    expect(short.px).toBeLessThanOrEqual(720); // 600 起跳，另加一組的停留
     expect(short.seconds).toBeLessThan(8);
     for (const rhythm of [...beats.map(b => beatRhythm(b, siteData)), ...stations.map(s => stationRhythm(s, siteData))]) {
-      expect(rhythm.readingPx).toBeCloseTo((rhythm.characters + rhythm.noteCharacters) / 9 * 100);
+      expect(rhythm.readingPx).toBeCloseTo((rhythm.characters + rhythm.noteCharacters + rhythm.holdCharacters) / 7 * 100);
       expect(rhythm.px).toBeGreaterThanOrEqual(rhythm.readingPx + rhythm.actionPx + rhythm.transitionPx);
     }
   });

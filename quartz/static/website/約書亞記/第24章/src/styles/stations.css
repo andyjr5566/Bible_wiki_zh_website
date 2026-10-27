@@ -1,6 +1,7 @@
 .jos-station-player {
   position: fixed;
-  inset: var(--jos-station-top, 56px) 0 0;
+  inset: var(--jos-station-top, 56px) 0 auto 0;
+  height: calc(100svh - var(--jos-station-top, 56px));
   z-index: 2;
   display: grid;
   place-items: center;
@@ -19,7 +20,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: max(100%, calc((100dvh - var(--jos-station-top, 56px)) * 16 / 9));
+  width: max(100%, calc((100svh - var(--jos-station-top, 56px)) * 16 / 9));
   height: max(100%, calc(100vw * 9 / 16));
   aspect-ratio: 16 / 9;
   transform: translate(-50%, -50%);

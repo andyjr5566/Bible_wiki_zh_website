@@ -1,5 +1,6 @@
 import type { SiteData, StoryBeat } from '../data/types';
 import { clamp01, type StoryState } from './state';
+import { viewportHeight } from '../ui/viewport';
 
 function getHeaderOffset(): number {
   const hdr = document.querySelector<HTMLElement>('.jos-header');
@@ -73,10 +74,10 @@ export function attachScrollTracker(
 
     const reviewRoot = document.getElementById('jos-review-root');
     const inReview = reviewRoot
-      ? reviewRoot.getBoundingClientRect().top <= window.innerHeight * 0.58
+      ? reviewRoot.getBoundingClientRect().top <= viewportHeight() * 0.58
       : false;
 
-    const anchorY = window.innerHeight * 0.36;
+    const anchorY = viewportHeight() * 0.36;
     const beatEls = document.querySelectorAll<HTMLElement>('[data-beat-id]');
     let chosenEl: HTMLElement | null = null;
     let bestDist = Infinity;

@@ -66,7 +66,8 @@ html {
 /* 3D 場景投影名牌層（不重疊、不擋互動、說話時自動收起） */
 .jos-stage-tags {
   position: fixed;
-  inset: 0;
+  inset: 0 0 auto 0;
+  height: 100svh;
   pointer-events: none;
   z-index: 2;
   overflow: hidden;

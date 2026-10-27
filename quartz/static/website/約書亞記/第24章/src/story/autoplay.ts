@@ -4,6 +4,7 @@ import { sampleStation } from '../scene/stations';
 import { FLIGHT_PX, stationReadPx } from '../data/storytelling';
 import { beatRhythm, stationRhythm } from '../data/story-content.mjs';
 import { paceRate, stepAutoplayFrame } from './playback-speed';
+import { viewportHeight } from '../ui/viewport';
 
 /** Seconds are apportioned to each verse, not to the entire map beat. */
 export function readingSeconds(text: string, actionSeconds = 4): number {
@@ -46,7 +47,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
     const element = document.querySelector<HTMLElement>(`section[data-beat-id="${state.beat}"]`);
     if (!beat || !element) { stop(); return; }
     const lastElement = document.querySelector<HTMLElement>(`section[data-beat-id="${beats.at(-1)!.id}"]`)!;
-    const end = window.scrollY + lastElement.getBoundingClientRect().bottom - innerHeight * .36 - 1;
+    const end = window.scrollY + lastElement.getBoundingClientRect().bottom - viewportHeight() * .36 - 1;
     if (position >= end) { stop(); return; }
     if (beat.interaction === 'cannot-pause' && !pausedHeadline && state.beatProgress >= .06) {
       pausedHeadline = true;
@@ -56,7 +57,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
     let speed: number;
     const station = sampleStation(beat.id, state.beatProgress);
     if (station) {
-      speed = station.flight ? FLIGHT_PX / 6 : stationReadPx(station.station) / stationRhythm(station.station, data).seconds;
+      speed = station.flight ? FLIGHT_PX / 6.6 : stationReadPx(station.station) / stationRhythm(station.station, data).seconds;
     } else {
       speed = element.offsetHeight / beatPlaybackSeconds(beat, data);
     }
@@ -78,7 +79,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
   button.addEventListener('click', () => {
     if (playing) { stop(); return; }
     const finalSection = document.querySelector<HTMLElement>(`section[data-beat-id="${beats.at(-1)!.id}"]`)!;
-    if (finalSection.getBoundingClientRect().bottom <= innerHeight * .36) return;
+    if (finalSection.getBoundingClientRect().bottom <= viewportHeight() * .36) return;
     setPlaying(true); position = window.scrollY; last = 0; velocity = 0; pauseRemaining = 0;
     raf = requestAnimationFrame(frame);
   });

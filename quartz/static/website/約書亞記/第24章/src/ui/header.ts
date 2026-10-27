@@ -1,6 +1,6 @@
 import type { SiteData } from '../data/types';
 import { scrollToElement } from '../story/scroll';
-import { saveDarkMode, saveMotionOff, type StoryState } from '../story/state';
+import { saveDarkMode, saveMotionOff, saveSoundOn, type StoryState } from '../story/state';
 import { coachCustomFlags } from './coach';
 import { h } from './dom';
 import { reviewNavigate } from './review-navigation';
@@ -168,6 +168,7 @@ export function createHeader(
   const playbackControls = h('div', { className: 'jos-playback-controls' }, autoplayBtn, speedSelect);
   soundBtn.addEventListener('click', () => {
     state.soundOn = !state.soundOn;
+    saveSoundOn(state.soundOn);
     onSoundToggle?.();
     sync();
   });
@@ -234,7 +235,7 @@ export function createHeader(
       item.classList.toggle('jos-toc-item-active', state.segment === id);
     }
 
-    soundBtn.textContent = state.soundOn ? '聲音：開' : '聲音：關';
+    soundBtn.textContent = !state.soundOn ? '聲音：關' : state.audioReady ? '聲音：開' : '聲音：點一下';
     soundBtn.classList.toggle('jos-tool-btn-on', state.soundOn);
 
     motionBtn.textContent = state.motionOff ? '動態：關' : '動態：開';

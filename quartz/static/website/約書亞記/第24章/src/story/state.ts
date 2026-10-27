@@ -36,8 +36,10 @@ export interface StoryState {
   dark: boolean;
   /** 頂列「動態」開關（預設 false = 有動態，不跟作業系統 prefers-reduced-motion） */
   motionOff: boolean;
-  /** 頂列「聲音」開關（首次使用者手勢後啟用 <audio>） */
+  /** 頂列「聲音」開關（預設開；瀏覽器要等讀者第一次點擊或按鍵才准播放） */
   soundOn: boolean;
+  /** 讀者已經操作過頁面，瀏覽器允許出聲；在這之前不載入音檔 */
+  audioReady: boolean;
   playbackRate: number;
   autoplaying: boolean;
   /** 「更多」小卡是否開著（新手教學偵測用） */
@@ -48,6 +50,7 @@ export interface StoryState {
 
 const MOTION_STORAGE_KEY = 'jos24-motion-off';
 const THEME_STORAGE_KEY = 'jos24-dark';
+const SOUND_OFF_STORAGE_KEY = 'jos24-sound-off';
 
 function readBoolStorage(key: string, fallback: boolean): boolean {
   try {
@@ -96,7 +99,8 @@ export function createInitialState(): StoryState {
     dark: hasWindow ? readBoolStorage(THEME_STORAGE_KEY, false) : false,
     // 預設一律有動態（motionOff = false），不讀作業系統 prefers-reduced-motion
     motionOff: hasWindow ? readBoolStorage(MOTION_STORAGE_KEY, false) : false,
-    soundOn: false,
+    soundOn: hasWindow ? !readBoolStorage(SOUND_OFF_STORAGE_KEY, false) : true,
+    audioReady: hasWindow && Boolean((navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive),
     playbackRate: readPlaybackRate(),
     autoplaying: false,
     moreOpen: false,
@@ -106,6 +110,10 @@ export function createInitialState(): StoryState {
 
 export function saveMotionOff(motionOff: boolean): void {
   writeBoolStorage(MOTION_STORAGE_KEY, motionOff);
+}
+
+export function saveSoundOn(on: boolean): void {
+  writeBoolStorage(SOUND_OFF_STORAGE_KEY, !on);
 }
 
 export function saveDarkMode(dark: boolean): void {

@@ -1,6 +1,7 @@
 import type { SiteData, StoryBeat } from '../data/types';
 import { clamp01, type StoryState } from './state';
 import { viewportHeight } from '../ui/viewport';
+import { maxScrollY, onScroll as listenScroll, scrollToY, scrollY } from '../ui/scroller';
 
 function getHeaderOffset(): number {
   const hdr = document.querySelector<HTMLElement>('.jos-header');
@@ -17,17 +18,14 @@ export function scrollToElement(
   if (!target) return;
   if (bookmark) {
     state.returnSpot = {
-      scrollY: window.scrollY,
+      scrollY: scrollY(),
       label: bookmark.label,
     };
     onStateChange?.();
   }
   const rect = target.getBoundingClientRect();
-  const top = Math.max(0, window.scrollY + rect.top - getHeaderOffset());
-  window.scrollTo({
-    top,
-    behavior: state.motionOff ? 'auto' : 'smooth',
-  });
+  const top = Math.max(0, scrollY() + rect.top - getHeaderOffset());
+  scrollToY(top, !state.motionOff);
 }
 
 export function scrollBackToBookmark(state: StoryState, onStateChange?: () => void): void {
@@ -35,10 +33,7 @@ export function scrollBackToBookmark(state: StoryState, onStateChange?: () => vo
   const targetY = state.returnSpot.scrollY;
   state.returnSpot = null;
   onStateChange?.();
-  window.scrollTo({
-    top: targetY,
-    behavior: state.motionOff ? 'auto' : 'smooth',
-  });
+  scrollToY(targetY, !state.motionOff);
 }
 
 export function attachScrollTracker(
@@ -56,7 +51,7 @@ export function attachScrollTracker(
 
   let ticking = false;
   let prevInReview = false;
-  let visualY = window.scrollY;
+  let visualY = scrollY();
   let targetY = visualY;
   let previousFrame = performance.now();
 
@@ -68,9 +63,8 @@ export function attachScrollTracker(
     visualY += (targetY - visualY) * gain;
     if (Math.abs(targetY - visualY) < .05) visualY = targetY;
     ticking = false;
-    const visualOffset = window.scrollY - visualY;
-    const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-    state.pageProgress = clamp01(window.scrollY / docH);
+    const visualOffset = scrollY() - visualY;
+    state.pageProgress = clamp01(scrollY() / maxScrollY());
 
     const reviewRoot = document.getElementById('jos-review-root');
     const inReview = reviewRoot
@@ -140,7 +134,7 @@ export function attachScrollTracker(
   }
 
   function onScroll(): void {
-    targetY = window.scrollY;
+    targetY = scrollY();
     if (!ticking) {
       ticking = true;
       previousFrame = performance.now() - 1000 / 60;
@@ -148,12 +142,12 @@ export function attachScrollTracker(
     }
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  const stopScroll = listenScroll(onScroll);
   window.addEventListener('resize', onScroll, { passive: true });
   updateFromScroll();
 
   return () => {
-    window.removeEventListener('scroll', onScroll);
+    stopScroll();
     window.removeEventListener('resize', onScroll);
   };
 }

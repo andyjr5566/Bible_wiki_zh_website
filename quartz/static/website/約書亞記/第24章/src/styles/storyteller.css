@@ -220,3 +220,10 @@
   .jos-panel[data-verse-tone='ivory'] .jos-vbox-verse { text-shadow: 0 0 5px #14101b, 0 1px 2px #14101b; }
   .jos-vbox-verse::before, .jos-vbox-headline::before { will-change: transform; }
 }
+/* 觸控裝置的專用捲動區（src/ui/scroller.ts）：網頁本身不捲，網址列不伸縮，
+   所以「整頁高度」一律用目前可見高度（dvh），3D 畫布與站圖才不會比畫面高、往下偏 */
+html.jos-scroll-mode { --jos-full-h: 100dvh; --jos-full-lh: 100dvh; }
+html.jos-scroll-mode, html.jos-scroll-mode body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+/* 捲動區自成一層：要在 3D 畫布（0）、站圖與名牌（2）之上，頂列與經文才不會被站圖蓋住 */
+.jos-scroll { position: fixed; inset: 0; z-index: 3; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+html.jos-scroll-mode .jos-canvas, html.jos-scroll-mode .jos-webgl-fallback { height: var(--jos-full-h); }

@@ -10,7 +10,7 @@ function measure(): number {
   if (!probe) {
     probe = document.createElement('div');
     probe.setAttribute('aria-hidden', 'true');
-    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;visibility:hidden;pointer-events:none;';
+    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:var(--jos-full-h,100vh);visibility:hidden;pointer-events:none;';
     document.body.appendChild(probe);
   }
   return probe.offsetHeight || window.innerHeight;

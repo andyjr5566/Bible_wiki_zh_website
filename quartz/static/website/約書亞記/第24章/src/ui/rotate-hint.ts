@@ -1,4 +1,5 @@
 import { h } from './dom';
+import { onScroll as listenScroll, scrollY } from './scroller';
 
 const STORAGE_KEY = 'jos24-rotate-hint-closed';
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -57,12 +58,11 @@ export function createRotateHint(): HTMLElement {
   );
   if (wasClosed()) el.classList.add('jos-rotate-hint-hidden');
   // 開始往下讀就收起來，不一直壓在畫面上
-  const onScroll = () => {
-    if (window.scrollY < window.innerHeight * 0.8) return;
+  const stop = listenScroll(() => {
+    if (scrollY() < window.innerHeight * 0.8) return;
     el.classList.add('jos-rotate-hint-hidden');
-    window.removeEventListener('scroll', onScroll);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
+    stop();
+  });
   closeBtn.addEventListener('click', () => {
     el.classList.add('jos-rotate-hint-hidden');
     rememberClosed();

@@ -6,8 +6,46 @@
     <title>至於我和我家</title>
     <link rel="preload" href="/src/assets/fonts/story-iansui.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="data:," />
+    <style>
+      /* 載入畫面：寫在 HTML 裡，程式還沒下載完就先出現 */
+      .jos-loading {
+        --ld-bg: #e8e0cf; --ld-ink: #1e1b16; --ld-mut: #6b6455; --ld-line: #cdbf9f; --ld-fill: #9a6a12;
+        position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center;
+        background: var(--ld-bg); color: var(--ld-ink);
+        font-family: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+        transition: opacity .6s ease, visibility 0s linear .6s;
+      }
+      @media (prefers-color-scheme: dark) {
+        .jos-loading { --ld-bg: #17150f; --ld-ink: #ebe3d2; --ld-mut: #a89f8c; --ld-line: #3a3527; --ld-fill: #e0aa4c; }
+      }
+      .jos-loading-done { opacity: 0; visibility: hidden; }
+      .jos-loading-inner { width: min(26rem, 82vw); text-align: center; }
+      .jos-loading svg { width: 92px; height: 92px; display: block; margin: 0 auto 10px; overflow: visible; }
+      .jos-loading-kicker { margin: 0; font-size: .9rem; letter-spacing: .12em; color: var(--ld-mut); }
+      .jos-loading-title { margin: .2em 0 1.1em; font-size: clamp(1.8rem, 6vw, 2.6rem); font-weight: 700; letter-spacing: .08em; }
+      .jos-loading-bar { position: relative; height: 4px; border-radius: 4px; background: var(--ld-line); overflow: hidden; }
+      .jos-loading-bar i { position: absolute; inset: 0; background: var(--ld-fill); transform-origin: left; transform: scaleX(0); }
+      .jos-loading-indeterminate .jos-loading-bar i { width: 30%; transform: none; animation: jos-ld-slide 1.4s ease-in-out infinite; }
+      @keyframes jos-ld-slide { from { left: -30%; } to { left: 100%; } }
+      .jos-loading-status { display: flex; justify-content: space-between; margin: .7em 0 0; font-size: .85rem; color: var(--ld-mut); font-family: system-ui, sans-serif; }
+      @media (max-height: 420px) { .jos-loading svg { width: 52px; height: 52px; margin-bottom: 4px; } .jos-loading-title { margin-bottom: .7em; } }
+    </style>
   </head>
   <body class="jos-body">
+    <div id="jos-loading" class="jos-loading jos-loading-indeterminate" role="progressbar" aria-label="網頁載入中" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="jos-loading-inner">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <line x1="8" y1="88" x2="92" y2="88" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".45" />
+          <g class="jos-loading-stone" transform="rotate(-90 50 86)">
+            <path d="M42 86 C40 66 41 40 45 22 C47 15 54 14 57 21 C61 40 61 66 58 86 Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" />
+          </g>
+        </svg>
+        <p class="jos-loading-kicker">約書亞記 24 章・示劍立約</p>
+        <h1 class="jos-loading-title">至於我和我家</h1>
+        <div class="jos-loading-bar"><i></i></div>
+        <p class="jos-loading-status"><span class="jos-loading-label">正在開啟</span><span class="jos-loading-pct"></span></p>
+      </div>
+    </div>
     <canvas id="jos-canvas" class="jos-canvas" aria-hidden="true"></canvas>
     <div id="app" class="jos-app"></div>
     <script type="module" src="/src/main.ts"></script>

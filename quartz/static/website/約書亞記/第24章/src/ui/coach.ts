@@ -1,5 +1,6 @@
 import type { StoryState } from '../story/state';
 import { h } from './dom';
+import { scrollY } from './scroller';
 
 interface CoachStepSpec {
   stageIdx: number;
@@ -21,7 +22,7 @@ const STEPS: CoachStepSpec[] = [
     stepNum: 1,
     prompt: '請往下捲動畫面，從序幕讀到第一幕。',
     explain: '畫面跟著捲動走，也可以按頂列的『自動播放』慢慢看。',
-    checkDone: (s) => s.segment !== 'prologue' || window.scrollY > window.innerHeight * 0.65,
+    checkDone: (s) => s.segment !== 'prologue' || scrollY() > window.innerHeight * 0.65,
   },
   {
     stageIdx: 1,

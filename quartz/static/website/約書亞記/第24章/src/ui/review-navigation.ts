@@ -1,13 +1,14 @@
 import type { SiteData } from '../data/types';
 import type { StoryState } from '../story/state';
 import { coachCustomFlags } from './coach';
+import { scrollToY, scrollY } from './scroller';
 
 /** Explicit reader navigation only. Opening a preview or changing a layer never calls this. */
 export function reviewNavigate(target: HTMLElement | null, state: StoryState, sync?: () => void, bookmark = false): void {
   if (!target) return;
-  if (bookmark) state.returnSpot = { scrollY: window.scrollY, label: '剛才讀的地方' };
+  if (bookmark) state.returnSpot = { scrollY: scrollY(), label: '剛才讀的地方' };
   const header = document.querySelector('.jos-header')?.getBoundingClientRect().height ?? 52;
-  window.scrollTo({ top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - header - 16), behavior: 'instant' });
+  scrollToY(Math.max(0, scrollY() + target.getBoundingClientRect().top - header - 16));
   if (!state.motionOff) {
     document.body.classList.remove('jos-review-wipe');
     requestAnimationFrame(() => document.body.classList.add('jos-review-wipe'));

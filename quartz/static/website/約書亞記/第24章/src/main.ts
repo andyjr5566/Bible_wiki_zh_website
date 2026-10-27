@@ -6,7 +6,10 @@ import './styles/compact.css';
 import './styles/onevoice.css';
 import './styles/stations.css';
 import './styles/storyteller.css';
+import { DefaultLoadingManager } from 'three';
 import { attachAutoplay } from './story/autoplay';
+import { createLoadingProgress } from './ui/loading';
+import { exposeScrollForTools, setupScroller } from './ui/scroller';
 
 import shechemDemUrl from './assets/dem/shechem-dem.json?url';
 import wideReliefUrl from './assets/dem/wide-relief.jpg';
@@ -38,14 +41,27 @@ declare global {
   }
 }
 
+const loading = createLoadingProgress();
+// 3D 場景的貼圖與模型都經過 three 的預設載入管理器；件數進度就是景物與人物圖的下載進度
+let assetsLoaded = 0, assetsTotal = 0;
+DefaultLoadingManager.onProgress = (_url, loaded, total) => {
+  assetsLoaded = loaded; assetsTotal = total;
+  loading.set('assets', total ? loaded / total : 0);
+};
+DefaultLoadingManager.onLoad = () => loading.set('assets', 1);
+
 function mountApp(siteData: SiteData): void {
   const app = document.getElementById('app');
   const canvas = document.getElementById('jos-canvas') as HTMLCanvasElement | null;
   if (!app || !canvas) return;
+  setupScroller(app);
+  exposeScrollForTools();
+  // 固定圖層插在捲動區（觸控裝置）或 #app 之前，維持在 body 底下、不跟著捲
+  const bodyAnchor = document.getElementById('jos-scroll') ?? app;
 
   const state = createInitialState();
   const stationPlayer = createStationPlayer(state);
-  document.body.insertBefore(stationPlayer.element, app);
+  document.body.insertBefore(stationPlayer.element, bodyAnchor);
   window.__josState = state;
 
   let sceneHandle: ExtendedSceneHandle | null = null;
@@ -62,14 +78,14 @@ function mountApp(siteData: SiteData): void {
   }
 
   const fallback = createWebglFallback(state);
-  document.body.insertBefore(fallback.element, app);
+  document.body.insertBefore(fallback.element, bodyAnchor);
 
   const stageTagsEl = h('div', {
     id: 'jos-stage-tags',
     className: 'jos-stage-tags',
     'aria-hidden': 'true',
   });
-  document.body.insertBefore(stageTagsEl, app);
+  document.body.insertBefore(stageTagsEl, bodyAnchor);
   const tagNodes = new Map<string, HTMLDivElement>();
   const seenTagIds = new Set<string>();
 
@@ -153,6 +169,9 @@ function mountApp(siteData: SiteData): void {
         storyView.syncRaiseUi();
         coach.notifyAction();
         storyAudio.playStoneThud();
+      } else if (ev.type === 'ready') {
+        loading.set('frame', 1);
+        if (assetsTotal === 0 || assetsLoaded >= assetsTotal) loading.set('assets', 1);
       } else if (ev.type === 'webgl-lost') {
         webglLost = true;
         canvas.style.display = 'none';
@@ -163,6 +182,8 @@ function mountApp(siteData: SiteData): void {
   window.__josScene = sceneHandle;
 
   if (!sceneHandle) {
+    // 沒有 3D：只剩靜止插圖，不必等場景
+    loading.set('assets', 1); loading.set('terrain', 1); loading.set('frame', 1);
     canvas.style.display = 'none';
     fallback.setActive(true);
   } else {
@@ -188,7 +209,7 @@ function mountApp(siteData: SiteData): void {
       baseElevM: baseElev,
       heights,
     });
-    }).catch(error => console.error('DEM could not be loaded', error));
+    }).catch(error => console.error('DEM could not be loaded', error)).finally(() => loading.set('terrain', 1));
     storyView.attachScene(sceneHandle);
     sceneHandle.setFrameListener(() => {
       prepareSceneAssets();
@@ -284,12 +305,13 @@ function mountApp(siteData: SiteData): void {
 
 // 優先載入本地經文字體；短逾時後仍可閱讀，避免慢速連線無限等待。
 void Promise.all([
-  loadSiteData(),
+  loadSiteData(fraction => loading.set('data', fraction)).then(data => { loading.set('data', 1); return data; }),
   Promise.race([
     document.fonts.load('18px "JOS Story"').catch(() => []),
     new Promise(resolve => window.setTimeout(resolve, 1200)),
-  ]),
+  ]).then(() => loading.set('font', 1)),
 ]).then(([data]) => mountApp(data)).catch(error => {
+  loading.finish();
   console.error('Site could not be opened', error);
   const app = document.getElementById('app');
   if (app) app.textContent = '暫時無法開啟，請重新整理。';

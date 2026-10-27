@@ -5,6 +5,7 @@ import { FLIGHT_PX, stationReadPx } from '../data/storytelling';
 import { beatRhythm, stationRhythm } from '../data/story-content.mjs';
 import { paceRate, stepAutoplayFrame } from './playback-speed';
 import { viewportHeight } from '../ui/viewport';
+import { scrollToY, scrollY } from '../ui/scroller';
 
 /** Seconds are apportioned to each verse, not to the entire map beat. */
 export function readingSeconds(text: string, actionSeconds = 4): number {
@@ -16,7 +17,7 @@ export function beatPlaybackSeconds(beat: StoryBeat, data: SiteData): number {
 }
 export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLButtonElement, onChange: () => void) {
   const beats = data.segments.flatMap(s => s.beats);
-  let playing = false, raf = 0, last = 0, velocity = 0, position = window.scrollY;
+  let playing = false, raf = 0, last = 0, velocity = 0, position = scrollY();
   let pauseRemaining = 0, pausedHeadline = false;
   const setPlaying = (value: boolean) => {
     playing = value;
@@ -47,7 +48,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
     const element = document.querySelector<HTMLElement>(`section[data-beat-id="${state.beat}"]`);
     if (!beat || !element) { stop(); return; }
     const lastElement = document.querySelector<HTMLElement>(`section[data-beat-id="${beats.at(-1)!.id}"]`)!;
-    const end = window.scrollY + lastElement.getBoundingClientRect().bottom - viewportHeight() * .36 - 1;
+    const end = scrollY() + lastElement.getBoundingClientRect().bottom - viewportHeight() * .36 - 1;
     if (position >= end) { stop(); return; }
     if (beat.interaction === 'cannot-pause' && !pausedHeadline && state.beatProgress >= .06) {
       pausedHeadline = true;
@@ -67,7 +68,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
     const next = stepAutoplayFrame(position, velocity, speed, dt, pace, paused);
     velocity = next.velocity;
     position = Math.min(end, next.position);
-    window.scrollTo({ top: position, behavior: 'instant' });
+    scrollToY(position);
     if (beat.interaction === 'raise-stone' && !state.raiseStone.done) {
       state.raiseStone.auto = true;
       state.raiseStone.progress = Math.min(1, state.raiseStone.progress + dt * pace / 3);
@@ -80,7 +81,7 @@ export function attachAutoplay(data: SiteData, state: StoryState, button: HTMLBu
     if (playing) { stop(); return; }
     const finalSection = document.querySelector<HTMLElement>(`section[data-beat-id="${beats.at(-1)!.id}"]`)!;
     if (finalSection.getBoundingClientRect().bottom <= viewportHeight() * .36) return;
-    setPlaying(true); position = window.scrollY; last = 0; velocity = 0; pauseRemaining = 0;
+    setPlaying(true); position = scrollY(); last = 0; velocity = 0; pauseRemaining = 0;
     raf = requestAnimationFrame(frame);
   });
   return { stop, isPlaying: () => playing };

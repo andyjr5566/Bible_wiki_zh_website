@@ -1,5 +1,6 @@
 import type { SiteData } from '../data/types';
 import { scrollToElement } from '../story/scroll';
+import { scrollToY } from './scroller';
 import { saveDarkMode, saveMotionOff, saveSoundOn, type StoryState } from '../story/state';
 import { coachCustomFlags } from './coach';
 import { h } from './dom';
@@ -32,7 +33,7 @@ export function createHeader(
 ): HeaderController {
   const brandBtn = h('button', { type: 'button', className: 'jos-brand-btn' }, data.meta.title);
   brandBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: state.motionOff ? 'auto' : 'smooth' });
+    scrollToY(0, !state.motionOff);
   });
 
   // 目錄下拉選單（七段路線＋條約四段與跋文小字註記＋整理區入口）
@@ -207,7 +208,7 @@ export function createHeader(
     if (!state.returnSpot) return;
     const top = state.returnSpot.scrollY;
     state.returnSpot = null;
-    window.scrollTo({ top, behavior: 'instant' });
+    scrollToY(top);
     sync();
   });
   const returnCloseBtn = h(

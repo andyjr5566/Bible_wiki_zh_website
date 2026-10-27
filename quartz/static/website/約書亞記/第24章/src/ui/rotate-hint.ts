@@ -56,6 +56,13 @@ export function createRotateHint(): HTMLElement {
     closeBtn,
   );
   if (wasClosed()) el.classList.add('jos-rotate-hint-hidden');
+  // 開始往下讀就收起來，不一直壓在畫面上
+  const onScroll = () => {
+    if (window.scrollY < window.innerHeight * 0.8) return;
+    el.classList.add('jos-rotate-hint-hidden');
+    window.removeEventListener('scroll', onScroll);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
   closeBtn.addEventListener('click', () => {
     el.classList.add('jos-rotate-hint-hidden');
     rememberClosed();

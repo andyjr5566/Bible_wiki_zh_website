@@ -294,6 +294,7 @@ export function createStoryView(
   main.append(h('div', { className: 'jos-story-outro-runway', 'aria-hidden': 'true' }), overlay);
   rerenderHighlights();
 
+  let measuredWidth = 0;
   function measureHeader(): void {
     const hdr = document.querySelector<HTMLElement>('.jos-header');
     if (hdr && hdr !== observedHeader) {
@@ -301,7 +302,11 @@ export function createStoryView(
       observedHeader = hdr;
       headerObserver.observe(hdr);
     }
-    topInset = (hdr ? hdr.getBoundingClientRect().height : 52) + 8;
+    const nextInset = (hdr ? hdr.getBoundingClientRect().height : 52) + 8;
+    // 手機捲動時網址列伸縮會一直觸發 resize；寬度與頂列高度沒變就不重排泡泡，否則泡泡會跟著跳
+    if (nextInset === topInset && innerWidth === measuredWidth) return;
+    topInset = nextInset;
+    measuredWidth = innerWidth;
     document.documentElement.style.setProperty('--jos-station-top', `${topInset - 8}px`);
     for (const p of panels.values()) if (p.bubble) p.bubble.renderedKey = '';
   }
@@ -626,7 +631,11 @@ export function createStoryView(
   }
 
   function activate(next: Panel | null): void {
-    if (active) active.el.classList.remove('jos-panel-on');
+    if (active) {
+      active.el.classList.remove('jos-panel-on');
+      // 巴勒的牌在摩押站用行內 visibility 設成可見；行內的 visible 會蓋過面板的隱藏，離開時要清掉，否則牌會一直留在後面每一拍
+      if (active.slot) active.slot.style.visibility = '';
+    }
     active = next;
     if (next) {
       next.el.classList.add('jos-panel-on');
@@ -666,10 +675,14 @@ export function createStoryView(
     const verseLocal = Math.max(0, Math.min(.999999, (sourceProgress * weightTotal - verseStart) / (verseWeights[verseIndex] ?? weightTotal)));
     const selectedVerse = currentLines[verseIndex]?.v;
     const placement = station ? stationLayouts[station.station.id] : verseLayouts[panel.beat.cue];
-    panel.el.dataset.verseLayout = placement.position;
-    panel.el.dataset.verseTone = placement.tone;
-    panel.el.style.setProperty('--jos-story-width', `${placement.width}vw`);
-    panel.el.style.setProperty('--jos-story-mobile-width', `${placement.mobileWidth}vw`);
+    const layoutKey = `${placement.position}|${placement.tone}|${placement.width}|${placement.mobileWidth}`;
+    if (panel.el.dataset.layoutKey !== layoutKey) {
+      panel.el.dataset.layoutKey = layoutKey;
+      panel.el.dataset.verseLayout = placement.position;
+      panel.el.dataset.verseTone = placement.tone;
+      panel.el.style.setProperty('--jos-story-width', `${placement.width}vw`);
+      panel.el.style.setProperty('--jos-story-mobile-width', `${placement.mobileWidth}vw`);
+    }
     if (panel.verse && original) {
       const verseEl = panel.verse.el;
       const verseKey = `${station?.station.id ?? panel.beat.id}:${selectedVerse}:${state.onlyI}:${state.sameGive}`;
@@ -683,9 +696,14 @@ export function createStoryView(
         verseEl.setAttribute('aria-label', ref);
         verseEl.scrollTop = 0;
       }
+      if (station && panel.slot && !panel.beat.balakStages) {
+        // 第二幕站上的卡片（例如第13節的恩賜卡）飛行途中先收起，到站才出現；'' 表示跟隨面板，不用 visible 蓋過面板的隱藏
+        const next = station.flight ? 'hidden' : '';
+        if (panel.slot.style.visibility !== next) panel.slot.style.visibility = next;
+      }
       if (station && panel.slot && panel.beat.balakStages) {
         // 飛行途中不顯示；牌只在翻到接近正面時才浮現，不會停在邊緣翻到一半的樣子。
-        panel.slot.style.visibility = station.station.id === 'moab' && !station.flight ? 'visible' : 'hidden';
+        panel.slot.style.visibility = station.station.id === 'moab' && !station.flight ? '' : 'hidden';
         const stage = Math.min(2, Math.floor(station.p * 3));
         panel.slot.querySelectorAll<HTMLElement>('.jos-balak-card').forEach((card, i) => {
           card.hidden = i !== stage;
@@ -709,7 +727,8 @@ export function createStoryView(
       const rows = panel.slot.querySelectorAll<HTMLElement>('[data-diff-row]');
       const current = Math.min(rows.length - 1, Math.floor(Math.min(.999, p / .94) * rows.length));
       rows.forEach((row, index) => {
-        row.dataset.diffState = index === current ? 'current' : index === current - 1 ? 'previous' : index < current ? 'past' : 'future';
+        const next = index === current ? 'current' : index === current - 1 ? 'previous' : index < current ? 'past' : 'future';
+        if (row.dataset.diffState !== next) row.dataset.diffState = next;
       });
     }
     const sentences = panel.verse?.el.querySelectorAll<HTMLElement>('.jos-story-sentence');
@@ -730,28 +749,21 @@ export function createStoryView(
       const duration = sentenceRevealSeconds(rate) * rate / secondsPerVerse;
       const reveal = (verseLocal - start) / duration;
       // Three phrases per inscription keep the open part of the painting clear.
-      sentence.hidden = Math.floor(index / GROUP_SIZE) !== Math.floor(latest / GROUP_SIZE);
-      sentence.style.visibility = reveal <= 0 ? 'hidden' : 'visible';
-      sentence.style.opacity = '1';
+      const hidden = Math.floor(index / GROUP_SIZE) !== Math.floor(latest / GROUP_SIZE);
+      if (sentence.hidden !== hidden) sentence.hidden = hidden;
+      if (hidden) return;
+      const visibility = reveal <= 0 ? 'hidden' : 'visible';
+      if (sentence.style.visibility !== visibility) sentence.style.visibility = visibility;
+      if (sentence.style.opacity !== '1') sentence.style.opacity = '1';
+      // 每個字的透明度只在變了才寫（以 5% 為一階）；手機上每幀重寫幾十個字的樣式會卡頓，看起來像抖動
       const chars = sentence.querySelectorAll<HTMLElement>('.jos-story-char');
       chars.forEach((char, i) => {
         const alpha = state.motionOff ? (reveal > 0 ? 1 : 0) : smoothstep(i / chars.length * .8, i / chars.length * .8 + .2, reveal);
-        char.style.opacity = String(alpha);
+        const value = String(Math.round(alpha * 20) / 20);
+        if (char.style.opacity !== value) char.style.opacity = value;
       });
     });
     if (panel.kicker) setWeight(panel.kicker, 1 - smoothstep(KICKER_FADE_FROM, KICKER_FADE_TO, p));
-    if (panel.stackEl) {
-      // 疊在一起的小框，高度取目前各框高度的加權平均，更多鈕貼著看得見的那個框
-      let hh = 0;
-      if (panel.headline) hh += panel.headline.el.offsetHeight * headW * (1 - noteW);
-      if (panel.verse) hh += panel.verse.el.offsetHeight * verseW;
-      if (panel.note) hh += panel.note.el.offsetHeight * noteW;
-      const rounded = Math.round(hh);
-      if (rounded !== panel.stackH) {
-        panel.stackH = rounded;
-        panel.stackEl.style.height = `${rounded}px`;
-      }
-    }
     tickBubble(panel, p);
   }
 

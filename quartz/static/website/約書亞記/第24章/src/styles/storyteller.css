@@ -173,8 +173,42 @@
   .jos-panel[data-panel-beat='beat-35-epilogue-diff'] .jos-wslot-wide { width: 86vw; }
 }
 @media (orientation: portrait) and (max-width: 768px) {
-  .jos-panel .jos-vbox-verse { top: 25vh; left: 12vw; width: 80vw; font-size: 22px; }
+  .jos-panel .jos-vbox-verse { top: calc(var(--jos-header-measured-h, 44px) + 46px); left: 6vw; width: 88vw; font-size: 21px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .jos-story-sentence { transform: none !important; }
 }
+
+/* ---------- 手機（2026-10-27 手機總檢）：放在最後載入的這個檔案，才蓋得過 onevoice／stations 的同名規則 ---------- */
+/* 毛玻璃模糊疊在一直變化的 3D 畫面上，手機每一格都要重算，捲動會一頓一頓（看起來像抖動）：手機上全部關掉，改用不透明底色 */
+@media (max-width: 932px), (max-height: 520px) {
+  * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .jos-header { background: var(--jos-bg-elev); }
+}
+
+@media (orientation: portrait) and (max-width: 768px) {
+  /* 頂列只佔一行，多的按鈕左右滑 */
+  .jos-header-inner { flex-wrap: nowrap; }
+  .jos-header-left { flex: 0 0 auto; }
+  .jos-header-tools { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .jos-header-tools::-webkit-scrollbar { display: none; }
+  .jos-header-tools > * { flex-shrink: 0; }
+  /* 「把手機橫過來看」移到左下角，不壓在經文與泡泡上 */
+  .jos-rotate-hint { top: auto; bottom: 14px; left: 12px; transform: none; }
+  /* 卡片與互動（七塊石頭、恩賜卡、巴勒的牌、立石按鈕）在下半部，經文在上半部，兩者不重疊 */
+  .jos-wslot,
+  .jos-wslot-wide { top: auto; bottom: 52px; max-height: 44svh; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  /* 有卡片的拍，經文讓出右側卡片的寬度 */
+  .jos-panel:has(.jos-wslot > :not(.jos-seg-kicker)) .jos-vbox-verse {
+    width: min(var(--jos-story-mobile-width, 60vw), calc(100vw - 8vw - min(25rem, 46vw) - 28px));
+  }
+  .jos-panel:has(.jos-wslot-wide > :not(.jos-seg-kicker)) .jos-vbox-verse {
+    width: min(var(--jos-story-mobile-width, 60vw), calc(100vw - 8vw - min(30rem, 52vw) - 28px));
+  }
+  /* 最後一拍的「往下還有補充整理」移到左下，不和右下的短註疊在一起 */
+  .jos-outro-hint { left: 12px; bottom: 12px; transform: none; animation-name: jos-outro-hint-in, jos-outro-hint-bob-left; }
+}
+@keyframes jos-outro-hint-bob-left { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }

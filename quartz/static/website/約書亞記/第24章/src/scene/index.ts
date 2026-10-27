@@ -133,6 +133,10 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
   let viewW = Math.max(1, window.innerWidth);
   let viewH = Math.max(1, viewportHeight());
   let currentDpr = 1;
+  // 手機畫不及時自動降解析度（只降不升）：捲動時掉格會讓畫面一頓一頓追進度，看起來像劇烈抖動
+  let dprCap = Infinity;
+  let frameEma = 16.7;
+  let framesSinceDprChange = 0;
   let lastOffsetX = -99999;
   let lastOffsetY = -99999;
   let disposed = false;
@@ -214,7 +218,7 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     viewW = Math.max(1, width);
     viewH = Math.max(1, height);
     const isMobile = viewW <= 768;
-    currentDpr = Math.min(dpr || 1, isMobile || viewH <= 520 ? 1.5 : 1.75);
+    currentDpr = Math.min(dpr || 1, isMobile || viewH <= 520 ? 1.5 : 1.75, dprCap);
     renderer.setPixelRatio(currentDpr);
     renderer.setSize(viewW, viewH, false);
     paint.resize(viewW, viewH, currentDpr);
@@ -525,6 +529,24 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     return bubbleOut;
   }
 
+  function adaptResolution(interval: number): void {
+    const phone = viewW <= 932 || viewH <= 520;
+    if (!phone || !(interval > 0 && interval < 250)) return;
+    frameEma = frameEma * 0.95 + interval * 0.05;
+    framesSinceDprChange++;
+    // 約每秒不到 40 格持續 1.5 秒以上：解析度降一階（1.5 → 1.25 → 1）
+    if (frameEma > 25 && framesSinceDprChange > 60 && currentDpr > 1.01) {
+      dprCap = Math.max(1, currentDpr - 0.25);
+      currentDpr = dprCap;
+      renderer.setPixelRatio(currentDpr);
+      renderer.setSize(viewW, viewH, false);
+      paint.resize(viewW, viewH, currentDpr);
+      sizedKey = `${Math.round(viewW)}:${Math.round(viewH)}:${window.devicePixelRatio || 1}`;
+      framesSinceDprChange = 0;
+      frameEma = 16.7;
+    }
+  }
+
   function renderFrame(now: number): void {
     if (disposed) return;
     rafId = window.requestAnimationFrame(renderFrame);
@@ -534,8 +556,10 @@ export function createScene(opts: SceneOptions): ExtendedSceneHandle | null {
     }
 
     const t0 = performance.now();
-    const dt = clampDt((now - prevNow) / 1000);
+    const interval = now - prevNow;
+    const dt = clampDt(interval / 1000);
     prevNow = now;
+    adaptResolution(interval);
     if (!state.motionOff) {
       elapsed += dt;
     }

@@ -303,7 +303,9 @@ export function createChoreographer(
     if (cue === 'now' && p < 0.35) {
       const landT = p / 0.35;
       state.mapElevation = 1 - landT;
-      memMap.setVisibility((1 - landT) * 0.55);
+      // 地圖只在剛開始降落時淡淡留著；鏡頭降到人群高度前就要消失，否則地名會整片疊在人群上（手機橫擺尤其明顯）
+      const fade = Math.max(0, 1 - p / 0.15);
+      memMap.setVisibility(fade * fade * 0.35);
     } else if (cue === 'three-gods') {
       state.mapElevation = 0;
       memMap.setVisibility(0);
@@ -884,7 +886,8 @@ export function createChoreographer(
     // 橫向短畫面從前排左側的空地看向對話雙方，避開低機位前景人群。
     // 保留每拍人物與動作；不把約書亞背後補成另一排聽眾。
     if (window.innerHeight <= 520 && window.innerWidth > window.innerHeight &&
-      ['three-gods', 'my-house', 'answer-1', 'answer-2', 'witness', 'answer-3', 'covenant'].includes(cue)) {
+      (['three-gods', 'my-house', 'answer-1', 'answer-2', 'witness', 'answer-3', 'covenant'].includes(cue) ||
+        (cue === 'now' && p > 0.35))) {
       shot.pos.set(-3.4, terrain.sampleHeight(-3.4, 2.2) + 2.45, 2.2);
       shot.look.set(-0.7, terrain.sampleHeight(-0.7, -1.3) + 1.05, -1.3);
       shot.fov = 48;

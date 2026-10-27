@@ -77,18 +77,28 @@ export function createStationPlayer(state: StoryState) {
     item = { node, images, ready: false };
     resident.set(station.id, item);
     const current = item;
-    void Promise.allSettled(images.map(img => img.decode())).then(results => {
+    const decoded = images.map(img => img.decode());
+    void Promise.allSettled(decoded).then(results => {
       results.forEach((result, i) => {
         if (result.status === 'rejected') {
           images[i].style.visibility = 'hidden';
           console.error('Station image could not be decoded', station.id, images[i].src);
         }
       });
+      markReady();
+    });
+    // 天空與遠景兩層好了就先顯示（最多等 1.2 秒），其餘圖層載入後再補上；不再整站空白等全部解碼完
+    void Promise.race([
+      Promise.allSettled(decoded.slice(0, 2)),
+      new Promise(resolve => window.setTimeout(resolve, 1200)),
+    ]).then(markReady);
+    function markReady() {
+      if (current.ready) return;
       current.ready = true;
       current.node.dataset.ready = 'true';
       lastKey = '';
       tick(element.hidden);
-    });
+    }
     return item;
   }
 
@@ -119,8 +129,27 @@ export function createStationPlayer(state: StoryState) {
     });
   }
 
+  // 進第二幕前，在背景把全部站圖依序下載進瀏覽器快取（只下載不解碼，免得手機記憶體不夠）；
+  // 讀者捲得比網路快時，到站才不會一片空白
+  let warmed = false;
+  function warmCache() {
+    if (warmed) return;
+    warmed = true;
+    const urls = [...new Set(stations.flatMap(st => st.layers.map(layer => source(layer.asset))))];
+    let next = 0;
+    const worker = async () => {
+      while (next < urls.length) {
+        const url = urls[next++];
+        try { await (await fetch(url, { priority: 'low' } as RequestInit)).arrayBuffer(); } catch { /* 下載失敗就到站時再載 */ }
+      }
+    };
+    void worker();
+    void worker();
+  }
+
   function tick(hidden = false) {
     if (!hidden && state.cue === 'family-1') preload(stations[0]);
+    if (!hidden && (state.cue === 'family-1' || state.segment === 'act-2')) warmCache();
     const sample = !hidden && sampleStation(state.beat, state.beatProgress);
     const active = Boolean(sample);
     element.hidden = !active;

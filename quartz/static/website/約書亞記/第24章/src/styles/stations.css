@@ -1,7 +1,8 @@
 .jos-station-player {
   position: fixed;
   inset: var(--jos-station-top, 56px) 0 auto 0;
-  height: calc(100svh - var(--jos-station-top, 56px));
+  /* 以最大可見高度計算：網址列收起時下方不露空帶，網址列出現時多的部分只是被遮住 */
+  height: calc(100lvh - var(--jos-station-top, 56px));
   z-index: 2;
   display: grid;
   place-items: center;
@@ -20,7 +21,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: max(100%, calc((100svh - var(--jos-station-top, 56px)) * 16 / 9));
+  width: max(100%, calc((100lvh - var(--jos-station-top, 56px)) * 16 / 9));
   height: max(100%, calc(100vw * 9 / 16));
   aspect-ratio: 16 / 9;
   transform: translate(-50%, -50%);

@@ -212,3 +212,11 @@
   .jos-outro-hint { left: 12px; bottom: 12px; transform: none; animation-name: jos-outro-hint-in, jos-outro-hint-bob-left; }
 }
 @keyframes jos-outro-hint-bob-left { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+/* 手機：每個字的霧化字形（30px 描邊＋blur）在字逐一浮現時每格都要重畫，手機會掉格、甚至畫出色塊殘影；
+   改用一層輕的文字陰影，經文後方的大光暈保留並只畫一次 */
+@media (max-width: 932px), (max-height: 520px) {
+  .jos-story-char::before, .jos-story-ref::before, .jos-cannot-headline::before { display: none; }
+  .jos-panel .jos-vbox-verse, .jos-panel .jos-vbox-headline { text-shadow: 0 0 4px #fff7e3, 0 1px 2px #fff7e3; }
+  .jos-panel[data-verse-tone='ivory'] .jos-vbox-verse { text-shadow: 0 0 5px #14101b, 0 1px 2px #14101b; }
+  .jos-vbox-verse::before, .jos-vbox-headline::before { will-change: transform; }
+}

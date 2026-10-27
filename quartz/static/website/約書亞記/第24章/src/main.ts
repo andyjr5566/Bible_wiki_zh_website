@@ -248,13 +248,21 @@ function mountApp(siteData: SiteData): void {
       }
     });
 
-    window.addEventListener(
-      'resize',
-      () => {
-        sceneHandle?.resize(window.innerWidth, refreshViewportHeight(), window.devicePixelRatio || 1);
-      },
-      { passive: true },
-    );
+    // 繪製尺寸一律照畫布在畫面上的實際大小。iPhone 轉向時 resize 事件常帶著轉向前的尺寸，
+    // 專用捲動區又讓網址列不再伸縮、不會再補送事件，畫布就卡在直拿的尺寸被撐成橫擺：
+    // 畫面拉寬、變糊，繪畫後製的筆觸變成一道道錯開的重影（2026-10-27 使用者在 iPhone 上回報）。
+    // 所以除了 resize，也監看畫布本身的大小，轉向後再補量幾次。
+    const syncSceneSize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const height = refreshViewportHeight();
+      sceneHandle?.resize(rect.width || window.innerWidth, rect.height || height, window.devicePixelRatio || 1);
+    };
+    window.addEventListener('resize', syncSceneSize, { passive: true });
+    window.visualViewport?.addEventListener('resize', syncSceneSize, { passive: true });
+    window.addEventListener('orientationchange', () => {
+      for (const ms of [0, 150, 400, 900]) window.setTimeout(syncSceneSize, ms);
+    });
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncSceneSize).observe(canvas);
 
     // 首屏滑鼠微視差與 pointer 喚醒閒置計時
     window.addEventListener(

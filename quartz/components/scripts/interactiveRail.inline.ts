@@ -17,9 +17,14 @@ const ALL_CLASS = "bwz-ia-rail-all"
 const RAIL_TOP_VAR = "--bwz-ia-top"
 // 標題和書卷列之間留的空隙（px）
 const GAP = 12
+// 手機（左欄變成貼頂工具列）的寬度；和 chapterQuickBar.inline.ts 一致
+const RAIL_MOBILE_QUERY = "(max-width: 800px)"
 
-// 和 chapterQuickBar.inline.ts 相同：貼頂的工具列目前的下緣，沒有貼頂就是 0
+// 手機版貼頂工具列目前的下緣，沒有貼頂就是 0。
+// 只在手機寬度才算：桌機的左欄是整欄貼頂的側邊欄（高度等於視窗），下緣就是視窗底，
+// 當成工具列會把書卷列推到畫面最下面。
 function toolbarBottom(): number {
+  if (!window.matchMedia(RAIL_MOBILE_QUERY).matches) return 0
   const toolbar = document.querySelector<HTMLElement>(".sidebar.left")
   if (!toolbar) return 0
   const pos = getComputedStyle(toolbar).position

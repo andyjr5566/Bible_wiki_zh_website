@@ -121,9 +121,9 @@ herem 在出埃及記、利未記與申命記中分別落在刑律、永獻條�
 
 ## 來源依據
 
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT22.htm — ccbiblestudy 拾穗（GT）出埃及記第22章
-- https://biblehub.com/study/exodus/22.htm — BibleHub Study 出埃及記第22章
-- https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT27.htm — ccbiblestudy 註解（CT）利未記第27章
-- https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT27.htm — ccbiblestudy 拾穗（GT）利未記第27章
-- https://www.kingcomments.com/en/bible-studies/Lev/27 — KingComments 利未記第27章
-- https://github.com/STEPBible/STEPBible-Data — STEP Bible 原文資料（CC BY 4.0）利未記第27章
+- 拾穗（ccbiblestudy GT）: 出埃及記第二十二章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT22.htm>）
+- 研經註解（BibleHub Study）: Exodus 22（<https://biblehub.com/study/exodus/22.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記第二十七章註解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT27.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第二十七章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT27.htm>）
+- 研經註解（KingComments）: Leviticus 27（<https://www.kingcomments.com/en/bible-studies/Lev/27>）
+- 原文資料（STEP Bible）: 利未記第27章（CC BY 4.0）（<https://github.com/STEPBible/STEPBible-Data>）

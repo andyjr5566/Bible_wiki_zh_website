@@ -43,4 +43,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Luke 7 （<https://biblehub.com/luke/7.htm>）
+- 研經註解（BibleHub Study）: Luke 7 （<https://biblehub.com/luke/7.htm>）（<https://biblehub.com/study/luke/7.htm>）

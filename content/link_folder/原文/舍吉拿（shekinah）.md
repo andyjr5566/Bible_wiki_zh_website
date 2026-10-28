@@ -37,6 +37,6 @@ source_scope: collected_only
 
 ## 來源依據
 
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT25.htm — ccbiblestudy 註解（CT）出埃及記第25章
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT25.htm — ccbiblestudy 拾穗（GT）出埃及記第25章
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm — ccbiblestudy 拾穗（GT）出埃及記第24章
+- 逐節註解（ccbiblestudy CT）: 出埃及記第二十五章註解（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第二十五章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT25.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第二十四章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT24.htm>）

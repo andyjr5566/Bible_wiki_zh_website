@@ -46,7 +46,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT17.htm
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT17.htm
-- https://www.kingcomments.com/en/bible-studies/Exo/17
-- https://biblehub.com/study/exodus/17.htm
+- 逐節註解（ccbiblestudy CT）: 出埃及記第十七章註解（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT17.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第十七章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT17.htm>）
+- 研經註解（KingComments）: Exodus 17（<https://www.kingcomments.com/en/bible-studies/Exo/17>）
+- 研經註解（BibleHub Study）: Exodus 17（<https://biblehub.com/study/exodus/17.htm>）

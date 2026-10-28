@@ -43,8 +43,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第8節 ha./ku.Bah（H6898，morphology HTd/Ncfsa，簡要義域 qub.bah: tent，本節譯義 the tent） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五8〔原文字義〕「亭子」帳棚；〔文意註解〕『亭子』指供休息的帳棚 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五6《舊約聖經背景註釋》他們所進的「亭子」似乎是個聖室；《啟導本聖經註釋》不顧一切進到帳棚中宣淫 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 6 - 15 段：Phinehas understands what is happening (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:8 段：The tent symbolizes a place of privacy and intimacy (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第8節 ha./ku.Bah（H6898，morphology HTd/Ncfsa，簡要義域 qub.bah: tent，本節譯義 the tent）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五8〔原文字義〕「亭子」帳棚；〔文意註解〕『亭子』指供休息的帳棚（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五6《舊約聖經背景註釋》他們所進的「亭子」似乎是個聖室；《啟導本聖經註釋》不顧一切進到帳棚中宣淫（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 6 - 15 段：Phinehas understands what is happening（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:8 段：The tent symbolizes a place of privacy and intimacy（<https://biblehub.com/study/numbers/25.htm>）

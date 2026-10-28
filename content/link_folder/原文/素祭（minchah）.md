@@ -140,12 +140,12 @@ CT 補上素祭的實際功能：敬拜者藉此表明忠貞與感恩，「也�
 
 ## 來源依據
 
-- 逐節註解: 利未記第2章逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT02.htm>）
-- 拾穗: 利未記第2章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT02.htm>）
-- 研經註解: KingComments 利未記第2章註解（<https://www.kingcomments.com/en/bible-studies/Lev/2>）
-- 研經註解: BibleHub 利未記第2章研經註解（<https://biblehub.com/study/leviticus/2.htm>）
-- 原文資料: 利未記 2:1 מִנְחָה H4503G 逐字解「grain offering」、詞典義域「offering」（<https://github.com/STEPBible/STEPBible-Data>）
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm — ccbiblestudy 註解（CT）民數記第5章
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm — ccbiblestudy 拾穗（GT）民數記第5章
-- https://www.kingcomments.com/en/bible-studies/Num/5 — KingComments 民數記第5章
-- https://biblehub.com/study/numbers/5.htm — BibleHub Study 民數記第5章
+- 逐節註解（ccbiblestudy CT）: 利未記第2章逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT02.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第二章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT02.htm>）
+- 研經註解（KingComments）: Leviticus 2（<https://www.kingcomments.com/en/bible-studies/Lev/2>）
+- 研經註解（BibleHub Study）: BibleHub 利未記第2章研經註解（<https://biblehub.com/study/leviticus/2.htm>）
+- 原文資料（STEP Bible）: 利未記 2:1 מִנְחָה H4503G 逐字解「grain offering」、詞典義域「offering」（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第五章註解（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第五章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm>）
+- 研經註解（KingComments）: Numbers 5（<https://www.kingcomments.com/en/bible-studies/Num/5>）
+- 研經註解（BibleHub Study）: Numbers 5（<https://biblehub.com/study/numbers/5.htm>）

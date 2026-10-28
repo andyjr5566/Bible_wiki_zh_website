@@ -49,5 +49,5 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Numbers 21:9 — 銅蛇的製造與醫治（<https://biblehub.com/numbers/21.htm>）
-- BH: 2 Kings 18:4 — 希西家毀滅銅蛇（<https://biblehub.com/2_kings/18.htm>）
+- 研經註解（BibleHub Study）: Numbers 21:9 — 銅蛇的製造與醫治（<https://biblehub.com/numbers/21.htm>）（<https://biblehub.com/study/numbers/21.htm>）
+- 研經註解（BibleHub Study）: 2 Kings 18:4 — 希西家毀滅銅蛇（<https://biblehub.com/2_kings/18.htm>）（<https://biblehub.com/study/2_kings/18.htm>）

@@ -49,4 +49,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: 1 Samuel 1 （<https://biblehub.com/1_samuel/1.htm>）
+- 研經註解（BibleHub Study）: 1 Samuel 1 （<https://biblehub.com/1_samuel/1.htm>）（<https://biblehub.com/study/1_samuel/1.htm>）

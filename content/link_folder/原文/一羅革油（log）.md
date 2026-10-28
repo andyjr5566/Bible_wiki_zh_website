@@ -39,7 +39,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記第十四章註解 — 10, 12, 15, 21, 24 節原文字義與文意註解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT14.htm>）
-- 拾穗: 利未記第十四章拾穗 — 10, 12, 15, 21, 24 節註釋（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT14.htm>）
-- 研經註解: Leviticus 14 — 10, 12, 15, 21, 24 節註解（<https://www.kingcomments.com/en/bible-studies/Lev/14>）
-- 研經註解: Leviticus 14 — 10, 12, 15, 21, 24 節研經註解（<https://biblehub.com/study/leviticus/14.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記第十四章註解 — 10, 12, 15, 21, 24 節原文字義與文意註解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT14.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第十四章拾穗 — 10, 12, 15, 21, 24 節註釋（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT14.htm>）
+- 研經註解（KingComments）: Leviticus 14 — 10, 12, 15, 21, 24 節註解（<https://www.kingcomments.com/en/bible-studies/Lev/14>）
+- 研經註解（BibleHub Study）: Leviticus 14 — 10, 12, 15, 21, 24 節研經註解（<https://biblehub.com/study/leviticus/14.htm>）

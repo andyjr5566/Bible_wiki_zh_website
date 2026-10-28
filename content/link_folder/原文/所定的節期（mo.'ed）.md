@@ -40,6 +40,6 @@ BibleHub 也照這兩層讀：還願祭是為履行向神許下的承諾而獻�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 29 — 29:39 words 4-11：H4150H be./mo.'a.dei./Khem、H905J le./Vad、H5088 nid.rei/Khem、H5071 nid.vo.tei/Khem、H5930A、H4503G、H5262、H8002 （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 29 — 29:39 words 4-11：H4150H be./mo.'a.dei./Khem、H905J le./Vad、H5088 nid.rei/Khem、H5071 nid.vo.tei/Khem、H5930A、H4503G、H5262、H8002（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十九章註解 — 29:39 原文字義——節期、所許的願、甘心所獻 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT29.htm>）
 - 研經註解（BibleHub Study）: Numbers 29 — 29:39 in addition to your vow and freewill offerings——兩類自願祭的分別 （<https://biblehub.com/study/numbers/29.htm>）

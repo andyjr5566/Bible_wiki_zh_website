@@ -66,7 +66,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記第十六章註解 — 內容綱要與逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT16.htm>）
-- 拾穗: 利未記第十六章拾穗 — 贖罪日制度與歷史背景（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT16.htm>）
-- 研經註解: Leviticus 16 — Come Near to God（<https://www.kingcomments.com/en/bible-studies/Lev/16>）
-- 研經註解: The Day of Atonement — Leviticus 16:1-34（<https://biblehub.com/study/leviticus/16.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記第十六章註解 — 內容綱要與逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT16.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第十六章拾穗 — 贖罪日制度與歷史背景（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT16.htm>）
+- 研經註解（KingComments）: Leviticus 16 — Come Near to God（<https://www.kingcomments.com/en/bible-studies/Lev/16>）
+- 研經註解（BibleHub Study）: The Day of Atonement — Leviticus 16:1-34（<https://biblehub.com/study/leviticus/16.htm>）

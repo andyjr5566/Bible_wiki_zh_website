@@ -40,8 +40,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第3節 va/i.yi.Tza.med（H6775，morphology Hc/VNw3ms，本節譯義 and it joined itself）、va/i.yi.char（H2734）與 'af（H639G） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五3〔原文字義〕「連合」束緊，綁在一起；〔文意註解〕指獻身參與崇拜活動；〔話中之光〕「聯合」有的譯為「負軛」 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五3 丁良才《民數記註釋》列出平行經文；《聖經精讀本》與巴力毗珥聯合的是少數，神卻向整個以色列發怒 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：The word ‘joined’ has the power of ‘going together under one yoke with’，並引 2Cor 6:14-15 (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:3 段：a breach of their covenant with Yahweh, who had commanded exclusive worship (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第3節 va/i.yi.Tza.med（H6775，morphology Hc/VNw3ms，本節譯義 and it joined itself）、va/i.yi.char（H2734）與 'af（H639G）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五3〔原文字義〕「連合」束緊，綁在一起；〔文意註解〕指獻身參與崇拜活動；〔話中之光〕「聯合」有的譯為「負軛」（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五3 丁良才《民數記註釋》列出平行經文；《聖經精讀本》與巴力毗珥聯合的是少數，神卻向整個以色列發怒（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：The word ‘joined’ has the power of ‘going together under one yoke with’，並引 2Cor 6:14-15（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:3 段：a breach of their covenant with Yahweh, who had commanded exclusive worship（<https://biblehub.com/study/numbers/25.htm>）

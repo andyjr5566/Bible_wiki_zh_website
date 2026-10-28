@@ -33,6 +33,8 @@ export function createStationPlayer(state: StoryState) {
       img.alt = '';
       img.decoding = 'async';
       img.className = `jos-station-layer${layer.role === 'person' ? ' jos-station-person' : ''}`;
+      // 縮小擺放的剪影，圖片邊界會露在畫面中間；邊緣淡出（stations.css）
+      if (layer.role !== 'coffin' && !layer.clip && layer.scale < 1) img.classList.add('jos-station-feather');
       img.dataset.layerId = layer.id;
       img.dataset.role = layer.role;
       if (layer.clip) img.style.clipPath = layer.clip;

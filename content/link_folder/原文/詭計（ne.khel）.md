@@ -40,8 +40,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第18節 be./nikh.lei./Hem（H5231，簡要義域 ne.khel: trick）與 ni.ke.Lu（H5230，簡要義域 na.khal: to plot，morphology HVpp3cp） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五18〔原文字義〕「詭計」狡猾，手段；〔文意註解〕出自巴蘭的教訓（參啟二14） (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五18 丁良才《民數記註釋》米甸人沒有明明地攻擊以色列人，乃是用巧法謀害使他們自取滅亡；民二十五1~18《聖經精讀本》巴蘭想借以色列內部的紛爭和悖逆惹動神的憤怒 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：Balaam knows how to draw the people away from God by a trick (Num 31:16)；啟2:14 那裡它已成為一套教訓 (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:18 段：This deceit is reminiscent of the serpent's deception in Genesis 3 (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第18節 be./nikh.lei./Hem（H5231，簡要義域 ne.khel: trick）與 ni.ke.Lu（H5230，簡要義域 na.khal: to plot，morphology HVpp3cp）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五18〔原文字義〕「詭計」狡猾，手段；〔文意註解〕出自巴蘭的教訓（參啟二14）（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五18 丁良才《民數記註釋》米甸人沒有明明地攻擊以色列人，乃是用巧法謀害使他們自取滅亡；民二十五1~18《聖經精讀本》巴蘭想借以色列內部的紛爭和悖逆惹動神的憤怒（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：Balaam knows how to draw the people away from God by a trick (Num 31:16)；啟2:14 那裡它已成為一套教訓（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:18 段：This deceit is reminiscent of the serpent's deception in Genesis 3（<https://biblehub.com/study/numbers/25.htm>）

@@ -85,5 +85,6 @@ station('jordan', 'beat-10-jericho', [11, 12], 2.4, 'jericho', [
     actor('jordan', 'crossing', .48, -12, 15, actions=[action('opacity', .4, .6, 1, 0)]),
     actor('jordan', 'swords-down', .45, -10, 15, actions=[action('opacity', .4, .6, 0, 1)])])
 station('canaan', 'beat-11-gifts', [13], 2, 'shechem', [
-    layer('towns-vines', 'lab/assets-codex/canaan/towns-vines.png', 1, 0, 2, 4, key='white')])
+    # 鋪滿畫面的圖層要比畫面大出視差的幅度（±2%），否則左右邊界會露出來
+    layer('towns-vines', 'lab/assets-codex/canaan/towns-vines.png', 1.04, 0, 2, 4, key='white')])
 (ROOT / 'src/data/stations.json').write_text(json.dumps(stations, indent=2) + '\n', encoding='utf-8')

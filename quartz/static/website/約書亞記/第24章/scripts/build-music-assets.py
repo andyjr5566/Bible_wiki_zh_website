@@ -22,7 +22,7 @@ TRACKS = [
     ("ruins", "ruins_of_an_ancient_culture_.wav", 0.0, 75.0),
     ("plains", "sunset_plains.wav", 30.0, 120.0),
     ("hope", "hope.mp3", 10.0, 120.0),
-    # 2026-10-27 使用者試聽後選定（collect/audio/bgm-more/聽歌清單.html）
+    # 2026-10-27 使用者試聽 65 首候選後選定；collect/audio/ 只留這幾首的原檔
     ("epic", str(MORE / "epic-endgame-cinematic" / "ChoirChordsBassMaster.wav"), 4.0, 84.0),
     ("pursuit", str(MORE / "determined-pursuit-epic-orchestra-loop" / "determined_pursuit_loop.wav"), 0.0, 108.0),
     ("waiting", str(MORE / "waiting-ii" / "Waiting II_0.ogg"), 2.0, 94.0),

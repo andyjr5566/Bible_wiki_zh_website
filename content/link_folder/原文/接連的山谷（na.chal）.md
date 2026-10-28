@@ -50,8 +50,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第6節 ki/n.cha.Lim ni.Ta.yu（H5158B，本節譯義 like wadis...they are stretched out，簡要義域 na.chal: palm-tree） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四6〔原文字義〕「接連」延長，擴展；〔文意註解〕形容帳棚接連成排，起伏如同山谷 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四5～7《舊約聖經背景註釋》將他們比喻為沉香和香柏的樹林 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：像伸展開來、有溪流穿過的谷地 (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:6 段：They spread out like palm groves，並說棕樹林在古代近東綠洲一帶常見 (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第6節 ki/n.cha.Lim ni.Ta.yu（H5158B，本節譯義 like wadis...they are stretched out，簡要義域 na.chal: palm-tree）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四6〔原文字義〕「接連」延長，擴展；〔文意註解〕形容帳棚接連成排，起伏如同山谷（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四5～7《舊約聖經背景註釋》將他們比喻為沉香和香柏的樹林（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：像伸展開來、有溪流穿過的谷地（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:6 段：They spread out like palm groves，並說棕樹林在古代近東綠洲一帶常見（<https://biblehub.com/study/numbers/24.htm>）

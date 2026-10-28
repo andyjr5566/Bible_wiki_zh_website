@@ -133,8 +133,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 26 — 第55節 be./go.Ral（H1486，簡要義域 go.ral: allotted，本節譯義 by lot）與 ma.tot-（H4294H）；第53節 be./na.cha.Lah（H5159） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十六章註解 — 民二十六55〔原文字義〕「拈鬮」小鵝卵石；「承受為業」得到產業；〔話中之光〕『拈鬮分地』表示神的主權 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT26.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十六章拾穗 — 民二十六52《民數記串珠聖經註釋》分配地業是根據兩個原則；《聖經精讀本》使用拈鬮的兩個理由；民二十六55《舊約聖經背景註釋》馬里的君王也是用這方法將封地分配給藩屬和退伍者；丁良才《民數記註釋》一按人數定多少，二按拈鬮定方向 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT26.htm)
-- 研經註解（KingComments）: Numbers 26 — 52 - 56 段：產業的大小取決於家族的大小 (https://www.kingcomments.com/en/bible-studies/Num/26)
-- 研經註解（BibleHub Study）: Numbers 26 — Numbers 26:55 段：lots were often used to make decisions believed to be guided by divine will，並引 1 Samuel 10:20-24、Acts 1:26 (https://biblehub.com/study/numbers/26.htm)
+- 原文資料（STEP Bible）: Numbers 26 — 第55節 be./go.Ral（H1486，簡要義域 go.ral: allotted，本節譯義 by lot）與 ma.tot-（H4294H）；第53節 be./na.cha.Lah（H5159）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十六章註解 — 民二十六55〔原文字義〕「拈鬮」小鵝卵石；「承受為業」得到產業；〔話中之光〕『拈鬮分地』表示神的主權（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT26.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十六章拾穗 — 民二十六52《民數記串珠聖經註釋》分配地業是根據兩個原則；《聖經精讀本》使用拈鬮的兩個理由；民二十六55《舊約聖經背景註釋》馬里的君王也是用這方法將封地分配給藩屬和退伍者；丁良才《民數記註釋》一按人數定多少，二按拈鬮定方向（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT26.htm>）
+- 研經註解（KingComments）: Numbers 26 — 52 - 56 段：產業的大小取決於家族的大小（<https://www.kingcomments.com/en/bible-studies/Num/26>）
+- 研經註解（BibleHub Study）: Numbers 26 — Numbers 26:55 段：lots were often used to make decisions believed to be guided by divine will，並引 1 Samuel 10:20-24、Acts 1:26（<https://biblehub.com/study/numbers/26.htm>）

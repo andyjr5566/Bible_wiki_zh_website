@@ -59,7 +59,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記 3:1, 6 無殘疾表徵奉獻給神的必須完好（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT03.htm>）
-- 拾穗: 利未記 3:1, 6 無殘疾與燔祭同樣要求（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT03.htm>）
-- 研經註解: Leviticus 3 無殘疾預表基督完美無瑕（<https://www.kingcomments.com/en/bible-studies/Lev/3>）
-- 研經註解: Leviticus 3:1, 6 牲畜必須無瑕疵（<https://biblehub.com/study/leviticus/3.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記 3:1, 6 無殘疾表徵奉獻給神的必須完好（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT03.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記 3:1, 6 無殘疾與燔祭同樣要求（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT03.htm>）
+- 研經註解（KingComments）: Leviticus 3 無殘疾預表基督完美無瑕（<https://www.kingcomments.com/en/bible-studies/Lev/3>）
+- 研經註解（BibleHub Study）: Leviticus 3:1, 6 牲畜必須無瑕疵（<https://biblehub.com/study/leviticus/3.htm>）

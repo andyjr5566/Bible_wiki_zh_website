@@ -95,13 +95,24 @@ body.jos-motion-off .jos-station-memory-light {
 .jos-balak-card[hidden] { display: none; }
 /* 翻牌時外框不再出現捲軸 */
 .jos-in-stations .jos-panel-on .jos-wslot:has(.jos-balak-grid) { overflow: visible; max-height: none; }
+/* 人物與道具圖是去背的剪影，有些本身就畫到圖片邊緣（軍隊兩端、巴勒腳下的岩石、帳棚）；
+   縮小擺進畫面後，圖片邊界會變成一刀切齊的直線或黑色方塊。左右與下緣淡出，上緣都是天空不必處理 */
+.jos-station-feather {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to top, transparent, #000 12%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to top, transparent, #000 12%);
+  mask-composite: intersect;
+}
 @media (max-height: 520px) and (orientation: landscape) {
-  .jos-station-composition { top: 34%; }
-  .jos-station-person { left: 26%; }
-  .jos-station-layer[data-layer-id='battle'] { left: 10%; }
-  .jos-station-layer[data-layer-id='far-crowd'] { left: 0; }
-  .jos-station-layer[data-layer-id='near-family'] { left: 36%; }
-  .jos-in-stations .jos-panel-on .jos-wslot { max-width: 39vw; max-height: 42vh; overflow-y: auto; }
+  /* 手機橫擺畫面矮：站圖底部貼齊畫面底部（人物都在下半），多出來的高度只裁掉天空，底下不會露出空帶 */
+  .jos-station-composition { top: auto; bottom: 0; transform: translateX(-50%); }
+  /* 小卡區可以用到「更多」按鈕上方：只給 42vh 時，第 11 拍的四張小卡下排被截掉一半 */
+  .jos-in-stations .jos-panel-on .jos-wslot { max-width: 39vw; max-height: calc(100dvh - var(--jos-header-measured-h, 44px) - 64px); overflow-y: auto; }
+}
+/* 巴勒與巴蘭腳下的岩石佔圖片下方三成，底邊一路平切；淡出加長，岩石才會融進山丘而不是一塊板子 */
+.jos-station-feather[data-layer-id='balak-balaam'] {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to top, transparent, #000 32%);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent), linear-gradient(to top, transparent, #000 32%);
 }
 @media (orientation: portrait) {
   .jos-station-player { align-items: start; padding-top: 12vh; }

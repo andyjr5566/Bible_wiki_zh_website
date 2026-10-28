@@ -120,12 +120,12 @@ CT 用一句話概括同一個分野：「贖罪祭的罪是指在根本上籠�
 
 ## 來源依據
 
-- 逐節註解: 利未記第五章註解——贖愆祭條例、15-19節逐節釋義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT05.htm>）
-- 拾穗: 利未記第五章拾穗——14-19節贖愆祭背景、賠償細節、公綿羊規定（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT05.htm>）
-- 研經註解: Leviticus 5 KingComments——14-19節贖愆祭神學意義、基督預表、估價與賠償（<https://www.kingcomments.com/en/bible-studies/Lev/5>）
-- 研經註解: Leviticus 5 BibleHub Study——15-19節逐節研讀、聖物誤犯、加五分之一、公綿羊贖愆祭（<https://biblehub.com/study/leviticus/5.htm>）
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm — ccbiblestudy 註解（CT）民數記第5章
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm — ccbiblestudy 拾穗（GT）民數記第5章
-- https://www.kingcomments.com/en/bible-studies/Num/5 — KingComments 民數記第5章
-- https://biblehub.com/study/numbers/5.htm — BibleHub Study 民數記第5章
-- https://github.com/STEPBible/STEPBible-Data — STEP Bible 原文資料（CC BY 4.0）民數記第5章
+- 逐節註解（ccbiblestudy CT）: 利未記第五章註解——贖愆祭條例、15-19節逐節釋義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT05.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第五章拾穗——14-19節贖愆祭背景、賠償細節、公綿羊規定（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT05.htm>）
+- 研經註解（KingComments）: Leviticus 5 KingComments——14-19節贖愆祭神學意義、基督預表、估價與賠償（<https://www.kingcomments.com/en/bible-studies/Lev/5>）
+- 研經註解（BibleHub Study）: Leviticus 5 BibleHub Study——15-19節逐節研讀、聖物誤犯、加五分之一、公綿羊贖愆祭（<https://biblehub.com/study/leviticus/5.htm>）
+- 逐節註解（ccbiblestudy CT）: 民數記第五章註解（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第五章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm>）
+- 研經註解（KingComments）: Numbers 5（<https://www.kingcomments.com/en/bible-studies/Num/5>）
+- 研經註解（BibleHub Study）: Numbers 5（<https://biblehub.com/study/numbers/5.htm>）
+- 原文資料（STEP Bible）: 民數記第5章（CC BY 4.0）（<https://github.com/STEPBible/STEPBible-Data>）

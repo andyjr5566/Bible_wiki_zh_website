@@ -40,7 +40,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 31 — 31:2 words 1-2 נְקֹ֗ם נִקְמַת֙ / ne.Kom nik.Mat / H5358＋H5360；31:3 words 13-14 לָ/תֵ֥ת נִקְמַת\־ / la./Tet nik.mat- / H5414H＋H5360 （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 31 — 31:2 words 1-2 נְקֹ֗ם נִקְמַת֙ / ne.Kom nik.Mat / H5358＋H5360；31:3 words 13-14 לָ/תֵ֥ת נִקְמַת\־ / la./Tet nik.mat- / H5414H＋H5360（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第三十一章註解 — 31:2 與 31:3 原文字義；31:3 文意註解——神子民的仇亦即神的仇 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT31.htm>）
 - 拾穗（ccbiblestudy GT）: 民數記第三十一章拾穗 — 31:3《聖經精讀本》註——為耶和華報仇 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT31.htm>）
 - 研經註解（KingComments）: Numbers 31 — 3 - 6 Who Should Go to the War——vengeance for the sons of Israel 與 the LORD's vengeance （<https://www.kingcomments.com/en/bible-studies/Num/31>）

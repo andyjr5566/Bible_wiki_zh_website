@@ -40,8 +40,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第3、15節 she.Tum ha.'A.yin（H8365，morphology HNcmsc，本節譯義 <the> opened of the eye，簡要義域 sha.tam: to open）；第4、16節 u./ge.Lui（H1540I） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四3〔原文字義〕「閉住」打開；〔話中之光〕閉住或作睜開，這四個字的意思歸於一 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四3 丁良才《民數記註釋》肉眼雖閉住心眼卻睜開；《聖經精讀本》因聖靈而閉著眼睛；《民數記串珠聖經註釋》民二十四3~4 改譯作眼睛蒙開啟 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：巴蘭是眼睛被開啟的人，但這不說明他自己的信心 (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:3 段：having "open eyes" often refers to spiritual enlightenment (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第3、15節 she.Tum ha.'A.yin（H8365，morphology HNcmsc，本節譯義 <the> opened of the eye，簡要義域 sha.tam: to open）；第4、16節 u./ge.Lui（H1540I）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四3〔原文字義〕「閉住」打開；〔話中之光〕閉住或作睜開，這四個字的意思歸於一（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四3 丁良才《民數記註釋》肉眼雖閉住心眼卻睜開；《聖經精讀本》因聖靈而閉著眼睛；《民數記串珠聖經註釋》民二十四3~4 改譯作眼睛蒙開啟（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：巴蘭是眼睛被開啟的人，但這不說明他自己的信心（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:3 段：having "open eyes" often refers to spiritual enlightenment（<https://biblehub.com/study/numbers/24.htm>）

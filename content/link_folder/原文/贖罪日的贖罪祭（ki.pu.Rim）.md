@@ -42,7 +42,7 @@ BibleHub 的讀法接近丁良才：這裡另加的贖罪祭凸顯出在一年�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 29 — 29:11 words 4-7：חַטָּ֑את / cha.Tat / H2403H / HNcfsa 與 חַטַּ֤את הַ/כִּפֻּרִים֙ / cha.Tat ha./ki.pu.Rim / H2403H＋H3725 / HNcfsc＋HTd/Ncmpa；29:5 word 5 לְ/כַפֵּ֖ר / le./kha.Per / H3722A / HR/Vpcc （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 29 — 29:11 words 4-7：חַטָּ֑את / cha.Tat / H2403H / HNcfsa 與 חַטַּ֤את הַ/כִּפֻּרִים֙ / cha.Tat ha./ki.pu.Rim / H2403H＋H3725 / HNcfsc＋HTd/Ncmpa；29:5 word 5 לְ/כַפֵּ֖ר / le./kha.Per / H3722A / HR/Vpcc（<https://github.com/STEPBible/STEPBible-Data>）
 - 拾穗（ccbiblestudy GT）: 民數記第二十九章拾穗 — 29:11 丁良才註——這贖罪祭在利十六章上所記的以外 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT29.htm>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十九章註解 — 29:11 文意註解；29:5 原文字義——贖罪 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT29.htm>）
 - 研經註解（BibleHub Study）: Numbers 29 — 29:11 In addition to the sin offering of atonement——持續需要贖罪 （<https://biblehub.com/study/numbers/29.htm>）

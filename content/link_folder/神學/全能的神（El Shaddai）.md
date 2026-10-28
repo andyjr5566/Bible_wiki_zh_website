@@ -14,33 +14,23 @@ source_scope: collected_only
 
 ## 按書卷累積
 
-### 觸發來源
-
-- [[01 創世記/第17章|創世記 第17 章]]：1節
-
-### 聖經出現
-
-- [[01 創世記/第17章|創世記 第17 章]]：1節
-- [[01 創世記/第28章|創世記 第28 章]]：3節
-- [[01 創世記/第35章|創世記 第35 章]]：11節
-- [[02 出埃及記/第6章|出埃及記 第6 章]]：3節
-- [[18 約伯記/第40章|約伯記 第40 章]]：1節
-
 ### 創世記
 
 <!-- accumulation:創世記:17:start -->
 #### [[01 創世記/第17章|第17章]]
-- 亞伯蘭九十九歲時，耶和華向他顯現說：「我是全能的神，你當在我面前作完全人。」
-- 神用此名激發亞伯拉罕的信心
-- 原文字義：אֵל שַׁדַּי（H410、H7706，「全能的神」），תָמִים（H8549，「完全人／純全誠實」）
-- 來源：CT, GT, STEP Bible
+- 本章重點：
+  - 亞伯蘭九十九歲時，耶和華向他顯現說：「我是全能的神，你當在我面前作完全人。」
+  - 神用此名激發亞伯拉罕的信心
+  - 原文字義：אֵל שַׁדַּי（H410、H7706，「全能的神」），תָמִים（H8549，「完全人／純全誠實」）
+- 與本章關聯：後文反覆用這名：以撒用它為雅各祝福（創28:3），把雅各的福連回本章的約；神向雅各自稱「全能的神」（創35:11）；出6:3 說神向三位族長都這樣顯現。
 <!-- accumulation:創世記:17:end -->
 
 <!-- accumulation:創世記:28:start -->
 #### [[01 創世記/第28章|第28章]]
-- 以撒以「全能的神」之名祝福雅各，祈求他生養眾多、成為多族。
-- 此名把雅各所得之福連回創世記第十七章神向亞伯拉罕所作的約。
-- 來源：BH、CT、GT
+- 本章重點：
+  - 以撒以「全能的神」之名祝福雅各，祈求他生養眾多、成為多族。
+  - 此名把雅各所得之福連回創世記第十七章神向亞伯拉罕所作的約。
+- 與本章關聯：以撒在創28:3 先用這個名字為雅各祝福。後來神在創35章親口對雅各說「我是全能的神」，雅各在創48章也回憶全能的神曾在路斯向他顯現；路斯就是伯特利（創28:19）。
 <!-- accumulation:創世記:28:end -->
 
 <!-- accumulation:創世記:35:start -->
@@ -113,31 +103,33 @@ GT《啟導本》整理了使用的時代分佈：西乃律法頒佈前，以色
 
 GT 丁良才給的理由最直接：「神用這話，為要激發亞伯蘭的信心」，並引創十八14、耶三十二17、太十九26 為同型。GT《聖經精讀本》從時間點讀出同樣的意思：九十九歲「表明亞伯蘭對後裔的期望已完全斷絕，人絕望的時刻，正是神動工的時間」。KC 則注意到稱謂的轉換本身：這裡用的不是「耶和華神」，因為這一次的重點不是祂對亞伯蘭而言是誰，而是**祂自己是誰**。
 
+本條目也牽涉的經文：伯40:1。
+
 ## 相關條目
 
 ## 來源依據
 
-- 創世記 17章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT17.htm
-- 創世記 17章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT17.htm
-- 創世記 17章 KC: https://www.kingcomments.com/en/bible-studies/Gen/17
-- 創世記 17章 BH: https://biblehub.com/study/genesis/17.htm
-- 創世記 28章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT28.htm
-- 創世記 28章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT28.htm
-- 創世記 28章 KC: https://www.kingcomments.com/en/bible-studies/Gen/28
-- 創世記 28章 BH: https://biblehub.com/study/genesis/28.htm
-- 創世記 35章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT35.htm
-- 創世記 35章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT35.htm
-- 創世記 35章 KC: https://www.kingcomments.com/en/bible-studies/Gen/35
-- 創世記 35章 BH: https://biblehub.com/study/genesis/35.htm
-- 創世記 43章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT43.htm
-- 創世記 43章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT43.htm
-- 創世記 43章 KC: https://www.kingcomments.com/en/bible-studies/Gen/43
-- 創世記 43章 BH: https://biblehub.com/study/genesis/43.htm
-- 創世記 48章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT48.htm
-- 創世記 48章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT48.htm
-- 創世記 48章 KC: https://www.kingcomments.com/en/bible-studies/Gen/48
-- 創世記 48章 BH: https://biblehub.com/study/genesis/48.htm
-- 創世記 49章 CT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT49.htm
-- 創世記 49章 GT: https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT49.htm
-- 創世記 49章 KC: https://www.kingcomments.com/en/bible-studies/Gen/49
-- 創世記 49章 BH: https://biblehub.com/study/genesis/49.htm
+- 逐節註解（ccbiblestudy CT）: 創世記第十七章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT17.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第十七章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT17.htm>）
+- 研經註解（KingComments）: Genesis 17（<https://www.kingcomments.com/en/bible-studies/Gen/17>）
+- 研經註解（BibleHub Study）: Genesis 17（<https://biblehub.com/study/genesis/17.htm>）
+- 逐節註解（ccbiblestudy CT）: 創世記第二十八章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT28.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第二十八章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT28.htm>）
+- 研經註解（KingComments）: Genesis 28（<https://www.kingcomments.com/en/bible-studies/Gen/28>）
+- 研經註解（BibleHub Study）: Genesis 28（<https://biblehub.com/study/genesis/28.htm>）
+- 逐節註解（ccbiblestudy CT）: 創世記第三十五章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT35.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第三十五章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT35.htm>）
+- 研經註解（KingComments）: Genesis 35（<https://www.kingcomments.com/en/bible-studies/Gen/35>）
+- 研經註解（BibleHub Study）: Genesis 35（<https://biblehub.com/study/genesis/35.htm>）
+- 逐節註解（ccbiblestudy CT）: 創世記第四十三章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT43.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第四十三章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT43.htm>）
+- 研經註解（KingComments）: Genesis 43（<https://www.kingcomments.com/en/bible-studies/Gen/43>）
+- 研經註解（BibleHub Study）: Genesis 43（<https://biblehub.com/study/genesis/43.htm>）
+- 逐節註解（ccbiblestudy CT）: 創世記第四十八章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT48.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第四十八章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT48.htm>）
+- 研經註解（KingComments）: Genesis 48（<https://www.kingcomments.com/en/bible-studies/Gen/48>）
+- 研經註解（BibleHub Study）: Genesis 48（<https://biblehub.com/study/genesis/48.htm>）
+- 逐節註解（ccbiblestudy CT）: 創世記第四十九章註解（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT49.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第四十九章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT49.htm>）
+- 研經註解（KingComments）: Genesis 49（<https://www.kingcomments.com/en/bible-studies/Gen/49>）
+- 研經註解（BibleHub Study）: Genesis 49（<https://biblehub.com/study/genesis/49.htm>）

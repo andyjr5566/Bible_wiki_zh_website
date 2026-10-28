@@ -88,12 +88,12 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記第十三章註解——壹、內容綱要、貳、逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT13.htm>）
-- 拾穗: 利未記第十三章拾穗——大麻風病的條例、診斷標準、屬靈意義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT13.htm>）
-- 研經註解: Leviticus 13——Come Near to God、Laws about Skin Diseases、Laws about Mildew（<https://www.kingcomments.com/en/bible-studies/Lev/13>）
-- 研經註解: Leviticus 13——Laws about Skin Diseases、Laws about Mildew（<https://biblehub.com/study/leviticus/13.htm>）
-- 原文資料: STEP Bible 利未記13章逐字資料（צָרָעַת H6883、נֶגַע H5061、צָרוּעַ H6879、שְׂאֵת H7613、סַפַּחַת H5597、בַהֶרֶת H934、סָגַר H5462）（<https://github.com/STEPBible/STEPBible-Data>）
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm — ccbiblestudy 註解（CT）民數記第5章
-- https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm — ccbiblestudy 拾穗（GT）民數記第5章
-- https://www.kingcomments.com/en/bible-studies/Num/5 — KingComments 民數記第5章
-- https://biblehub.com/study/numbers/5.htm — BibleHub Study 民數記第5章
+- 逐節註解（ccbiblestudy CT）: 利未記第十三章註解——壹、內容綱要、貳、逐節詳解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT13.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第十三章拾穗——大麻風病的條例、診斷標準、屬靈意義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT13.htm>）
+- 研經註解（KingComments）: Leviticus 13——Come Near to God、Laws about Skin Diseases、Laws about Mildew（<https://www.kingcomments.com/en/bible-studies/Lev/13>）
+- 研經註解（BibleHub Study）: Leviticus 13——Laws about Skin Diseases、Laws about Mildew（<https://biblehub.com/study/leviticus/13.htm>）
+- 原文資料（STEP Bible）: 利未記13章逐字資料（צָרָעַת H6883、נֶגַע H5061、צָרוּעַ H6879、שְׂאֵת H7613、סַפַּחַת H5597、בַהֶרֶת H934、סָגַר H5462）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第五章註解（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT05.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第五章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT05.htm>）
+- 研經註解（KingComments）: Numbers 5（<https://www.kingcomments.com/en/bible-studies/Num/5>）
+- 研經註解（BibleHub Study）: Numbers 5（<https://biblehub.com/study/numbers/5.htm>）

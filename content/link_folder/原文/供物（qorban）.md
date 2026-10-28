@@ -94,8 +94,8 @@ GT《舊約聖經背景註釋》對民7:84-88 的清單另有一個判斷：那�
 
 ## 來源依據
 
-- 逐節註解: 利未記 1:2-3 供物原文字義「就近祭壇」、獻供物乃自願而非強迫（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT01.htm>）
-- 拾穗: 利未記 1:2 供物原文 qorban「攜近」聖壇之物、雷氏研讀本五種供物、聖經精讀本各耳板字義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT01.htm>）
-- 研經註解: Leviticus 1 offering 作為獻給神的禮物之意義（<https://www.kingcomments.com/en/bible-studies/Lev/1>）
-- 研經註解: Leviticus 1:2 offering means gift brought near to God（<https://biblehub.com/study/leviticus/1.htm>）
-- 原文資料: 利未記 1:2-3 קׇרְבָּן H7133A 與 קָרַב H7126H Hiphil 同字根、名詞與使役動詞對照（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 利未記 1:2-3 供物原文字義「就近祭壇」、獻供物乃自願而非強迫（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT01.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記 1:2 供物原文 qorban「攜近」聖壇之物、雷氏研讀本五種供物、聖經精讀本各耳板字義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT01.htm>）
+- 研經註解（KingComments）: Leviticus 1 offering 作為獻給神的禮物之意義（<https://www.kingcomments.com/en/bible-studies/Lev/1>）
+- 研經註解（BibleHub Study）: Leviticus 1:2 offering means gift brought near to God（<https://biblehub.com/study/leviticus/1.htm>）
+- 原文資料（STEP Bible）: 利未記 1:2-3 קׇרְבָּן H7133A 與 קָרַב H7126H Hiphil 同字根、名詞與使役動詞對照（<https://github.com/STEPBible/STEPBible-Data>）

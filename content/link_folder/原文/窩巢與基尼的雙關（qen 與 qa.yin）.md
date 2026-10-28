@@ -47,7 +47,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第21節 ha./kei.Ni（H7017）、ki.Ne./cha（H7064，簡要義域 qen: nest）；第22節 Ka.yin（H7014A，簡要義域 qa.yin: Kain）、le./Va.'er（H1197A）；另 'ei.Tan（H386）、ba./Se.la'（H5553H） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四21〔文意註解〕『窩巢』雙關語，既指「窩巢」，又指「基尼人」；民二十四22〔原文字義〕「衰微」燒盡，消耗 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：他們以為住在高高的巖石上就能逃過毀滅，但要像該隱一樣被消耗 (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:21 段：nest set in a cliff suggests a strong, defensible position (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第21節 ha./kei.Ni（H7017）、ki.Ne./cha（H7064，簡要義域 qen: nest）；第22節 Ka.yin（H7014A，簡要義域 qa.yin: Kain）、le./Va.'er（H1197A）；另 'ei.Tan（H386）、ba./Se.la'（H5553H）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四21〔文意註解〕『窩巢』雙關語，既指「窩巢」，又指「基尼人」；民二十四22〔原文字義〕「衰微」燒盡，消耗（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：他們以為住在高高的巖石上就能逃過毀滅，但要像該隱一樣被消耗（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:21 段：nest set in a cliff suggests a strong, defensible position（<https://biblehub.com/study/numbers/24.htm>）

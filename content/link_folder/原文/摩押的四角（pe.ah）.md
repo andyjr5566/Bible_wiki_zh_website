@@ -40,8 +40,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第17節 pa.'a.Tei（H6285，morphology HNcfdc 雙數，本節譯義 [the] corners of）與 u./ma.Chatz（H4272，同第8節 yim.Chatz） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四17〔文意註解〕『四角』指國境的四周邊緣，有的譯本翻作國家的首領 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四17《民數記串珠聖經註釋》預言將興起一位君王，三百多年後大衛王果然作成了這件事（撒下8:2, 14） (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：the "corners of Moab", means the boundaries of Moab (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:17 段：The imagery of crushing skulls signifies a decisive and complete victory (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第17節 pa.'a.Tei（H6285，morphology HNcfdc 雙數，本節譯義 [the] corners of）與 u./ma.Chatz（H4272，同第8節 yim.Chatz）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四17〔文意註解〕『四角』指國境的四周邊緣，有的譯本翻作國家的首領（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四17《民數記串珠聖經註釋》預言將興起一位君王，三百多年後大衛王果然作成了這件事（撒下8:2, 14）（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：the "corners of Moab", means the boundaries of Moab（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:17 段：The imagery of crushing skulls signifies a decisive and complete victory（<https://biblehub.com/study/numbers/24.htm>）

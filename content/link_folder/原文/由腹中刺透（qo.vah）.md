@@ -48,8 +48,8 @@ CT〔原文字義〕給「止息」的字義是「限制，阻礙」，與 STEP 
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第8節 va/i.yid.Kor（H1856）、koa.Ta/h（H6897，簡要義域 qo.vah: belly）、she.nei./Hem（H8147）與 va./te.'a.Tzar（H6113，簡要義域 a.tsar: to restrain） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五8〔原文字義〕「亭子」帳棚、「瘟疫」疫病，傳染病、「止息」限制，阻礙；〔文意註解〕『由腹中刺透』將兩人一起刺死 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五6《啟導本聖經註釋》「腹」可指女人性器官，似暗示二人是行淫時被刺殺而死 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 6 - 15 段：When he has executed the judgment, the plague stops (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:8 段：The mention of the woman's belly may symbolize the root of the sin (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第8節 va/i.yid.Kor（H1856）、koa.Ta/h（H6897，簡要義域 qo.vah: belly）、she.nei./Hem（H8147）與 va./te.'a.Tzar（H6113，簡要義域 a.tsar: to restrain）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五8〔原文字義〕「亭子」帳棚、「瘟疫」疫病，傳染病、「止息」限制，阻礙；〔文意註解〕『由腹中刺透』將兩人一起刺死（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五6《啟導本聖經註釋》「腹」可指女人性器官，似暗示二人是行淫時被刺殺而死（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 6 - 15 段：When he has executed the judgment, the plague stops（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:8 段：The mention of the woman's belly may symbolize the root of the sin（<https://biblehub.com/study/numbers/25.htm>）

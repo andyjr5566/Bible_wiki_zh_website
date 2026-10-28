@@ -49,8 +49,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第24節 ki.Tim（H3794H，簡要義域 kit.ti: Cyprus）、ve./Tzim（H6716）、mi./Yad（H3027K，簡要義域 yad: hand）；第20、24節結尾同作 'a.Dei 'o.Ved（H5704＋H8） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四24〔文意註解〕『基提界』指希臘人；本句預言亞歷山大征服近東一帶地方 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四24《舊約聖經背景註釋》塞浦路斯島的古稱、以基提翁（Kition）城為名；《啟導本聖經註釋》極可能為腓尼基人；《民數記串珠聖經註釋》此處所提及的民族是非利士人；丁良才《民數記註釋》作地中海以西各國的代表 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：不只賽普勒斯島居民，還包括地中海西側諸強權，羅馬在內 (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:24 段：a seafaring people, possibly the Phoenicians or Greeks (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第24節 ki.Tim（H3794H，簡要義域 kit.ti: Cyprus）、ve./Tzim（H6716）、mi./Yad（H3027K，簡要義域 yad: hand）；第20、24節結尾同作 'a.Dei 'o.Ved（H5704＋H8）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四24〔文意註解〕『基提界』指希臘人；本句預言亞歷山大征服近東一帶地方（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四24《舊約聖經背景註釋》塞浦路斯島的古稱、以基提翁（Kition）城為名；《啟導本聖經註釋》極可能為腓尼基人；《民數記串珠聖經註釋》此處所提及的民族是非利士人；丁良才《民數記註釋》作地中海以西各國的代表（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：不只賽普勒斯島居民，還包括地中海西側諸強權，羅馬在內（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:24 段：a seafaring people, possibly the Phoenicians or Greeks（<https://biblehub.com/study/numbers/24.htm>）

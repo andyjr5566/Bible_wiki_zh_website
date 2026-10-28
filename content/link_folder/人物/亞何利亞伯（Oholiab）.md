@@ -54,11 +54,11 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Exodus 31 — 亞何利亞伯的選召與但支派的關聯（<https://biblehub.com/study/exodus/31.htm>）
-- CT: 出埃及記第三十一章註解 — 亞何利亞伯作為副手的靈意（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT31.htm>）
-- GT: 出埃及記第三十一章拾穗 — 亞何利亞伯名字的含義與同工角色（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT31.htm>）
-- KC: Exodus 31 — 亞何利亞伯名字的意義與支援角色（<https://www.kingcomments.com/en/bible-studies/Exo/31>）
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT31.htm — ccbiblestudy 註解（CT）出埃及記第31章
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT31.htm — ccbiblestudy 拾穗（GT）出埃及記第31章
-- https://www.kingcomments.com/en/bible-studies/Exo/31 — KingComments 出埃及記第31章
-- https://biblehub.com/study/exodus/31.htm — BibleHub Study 出埃及記第31章
+- 研經註解（BibleHub Study）: Exodus 31 — 亞何利亞伯的選召與但支派的關聯（<https://biblehub.com/study/exodus/31.htm>）
+- 逐節註解（ccbiblestudy CT）: 出埃及記第三十一章註解 — 亞何利亞伯作為副手的靈意（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT31.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第三十一章拾穗 — 亞何利亞伯名字的含義與同工角色（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT31.htm>）
+- 研經註解（KingComments）: Exodus 31 — 亞何利亞伯名字的意義與支援角色（<https://www.kingcomments.com/en/bible-studies/Exo/31>）
+- 逐節註解（ccbiblestudy CT）: 出埃及記第三十一章註解（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT31.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第三十一章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT31.htm>）
+- 研經註解（KingComments）: Exodus 31（<https://www.kingcomments.com/en/bible-studies/Exo/31>）
+- 研經註解（BibleHub Study）: Exodus 31（<https://biblehub.com/study/exodus/31.htm>）

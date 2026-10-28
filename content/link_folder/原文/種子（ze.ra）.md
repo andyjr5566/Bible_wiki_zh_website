@@ -57,8 +57,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第7節 ve./zar.'/O（H2233H，本節譯義 and offspring its，簡要義域 ze.ra: seed: children）與 mi./Dal.Ya/v（H1805，morphology HR/Ncmdc/Sp3ms 雙數） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四7〔文意註解〕形容以色列人數多如從桶裡滿溢流出的水、繁增迅速 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四7 丁良才《民數記註釋》「種子要撒在多水之處」有兩種解法 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm)
-- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：Buckets presupposes labor，水流出去成為別人的祝福 (https://www.kingcomments.com/en/bible-studies/Num/24)
-- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:7 段：The term "seed" refers to descendants or offspring (https://biblehub.com/study/numbers/24.htm)
+- 原文資料（STEP Bible）: Numbers 24 — 第7節 ve./zar.'/O（H2233H，本節譯義 and offspring its，簡要義域 ze.ra: seed: children）與 mi./Dal.Ya/v（H1805，morphology HR/Ncmdc/Sp3ms 雙數）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四7〔文意註解〕形容以色列人數多如從桶裡滿溢流出的水、繁增迅速（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四7 丁良才《民數記註釋》「種子要撒在多水之處」有兩種解法（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
+- 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：Buckets presupposes labor，水流出去成為別人的祝福（<https://www.kingcomments.com/en/bible-studies/Num/24>）
+- 研經註解（BibleHub Study）: Numbers 24 — Numbers 24:7 段：The term "seed" refers to descendants or offspring（<https://biblehub.com/study/numbers/24.htm>）

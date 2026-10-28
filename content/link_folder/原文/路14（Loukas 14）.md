@@ -44,4 +44,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Luke 14 （<https://biblehub.com/luke/14.htm>）
+- 研經註解（BibleHub Study）: Luke 14 （<https://biblehub.com/luke/14.htm>）（<https://biblehub.com/study/luke/14.htm>）

@@ -88,6 +88,19 @@ function mountApp(siteData: SiteData): void {
   document.body.insertBefore(stageTagsEl, bodyAnchor);
   const tagNodes = new Map<string, HTMLDivElement>();
   const seenTagIds = new Set<string>();
+  // 名牌不可壓在經文或泡泡上：手機橫擺畫面矮，「約書亞」「約瑟的骸骨」名牌曾疊在經文第二行（2026-10-28）。
+  // 字框位置每 200ms 量一次就夠，不必每格強迫重排
+  let textRects: DOMRect[] = [];
+  let textRectsAt = 0;
+  const readTextRects = () =>
+    [...document.querySelectorAll<HTMLElement>('.jos-panel-on .jos-vbox-verse, .jos-panel-on .jos-vbox-headline, .jos-bubble')]
+      .filter(el => {
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && Number(cs.opacity) > 0.05;
+      })
+      .map(el => el.getBoundingClientRect());
+  const coversText = (x: number, y: number, w: number, h: number) =>
+    textRects.some(r => x - w / 2 < r.right + 6 && x + w / 2 > r.left - 6 && y - h < r.bottom + 6 && y > r.top - 6);
 
   function syncBodyClasses(): void {
     document.body.classList.toggle('jos-dark', state.dark);
@@ -221,6 +234,11 @@ function mountApp(siteData: SiteData): void {
       stationPlayer.tick(inReviewZone);
       if (inReviewZone) return;
       const labels = sceneHandle!.getCurrentLabels();
+      const now = performance.now();
+      if (now - textRectsAt > 200) {
+        textRectsAt = now;
+        textRects = readTextRects();
+      }
       seenTagIds.clear();
       for (let i = 0; i < labels.length; i++) {
         const item = labels[i];
@@ -237,9 +255,14 @@ function mountApp(siteData: SiteData): void {
           node.style.display = 'none';
         } else {
           node.style.display = 'block';
-          if (node.textContent !== item.label) node.textContent = item.label;
+          if (node.textContent !== item.label) {
+            node.textContent = item.label;
+            node.dataset.w = String(node.offsetWidth);
+            node.dataset.h = String(node.offsetHeight);
+          }
           node.style.left = `${Math.round(item.x)}px`;
           node.style.top = `${Math.round(item.y)}px`;
+          node.style.visibility = coversText(item.x, item.y, Number(node.dataset.w), Number(node.dataset.h)) ? 'hidden' : '';
         }
       }
       for (const [id, node] of tagNodes.entries()) {

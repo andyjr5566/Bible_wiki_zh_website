@@ -54,7 +54,7 @@ CT 支持鬼魔說的第四條理由是：利17:7 明說「不可獻祭給鬼魔
 
 ## 來源依據
 
-- 逐節註解: 利未記第十六章註解 — 8,10,26節文意註解與靈意註解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT16.htm>）
-- 拾穗: 利未記第十六章拾穗 — 8,10,26節阿撒瀉勒多種解釋與背景資料（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT16.htm>）
-- 研經註解: Leviticus 16 — The Live, Send Away Goat（<https://www.kingcomments.com/en/bible-studies/Lev/16>）
-- 研經註解: Leviticus 16:8-10 — Scapegoat/Azazel（<https://biblehub.com/study/leviticus/16.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記第十六章註解 — 8,10,26節文意註解與靈意註解（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT16.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記第十六章拾穗 — 8,10,26節阿撒瀉勒多種解釋與背景資料（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT16.htm>）
+- 研經註解（KingComments）: Leviticus 16 — The Live, Send Away Goat（<https://www.kingcomments.com/en/bible-studies/Lev/16>）
+- 研經註解（BibleHub Study）: Leviticus 16:8-10 — Scapegoat/Azazel（<https://biblehub.com/study/leviticus/16.htm>）

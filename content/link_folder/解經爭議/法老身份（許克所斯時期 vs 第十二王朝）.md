@@ -34,5 +34,7 @@ GT《舊約背景註釋》把兩邊的理由都列了出來：主張許克所斯
 
 ## 來源依據
 
-- 創世記41:1-57
-- ccbiblestudy CT/GT、KingComments、BibleHub Study 創世記41章
+- 逐節註解（ccbiblestudy CT）: 創世記第四十一章註解 — 創世記41章（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01CT41.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第四十一章拾穗 — 創世記41章（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT41.htm>）
+- 研經註解（KingComments）: Genesis 41 — 創世記41章（<https://www.kingcomments.com/en/bible-studies/Gen/41>）
+- 研經註解（BibleHub Study）: Genesis 41 — 創世記41章（<https://biblehub.com/study/genesis/41.htm>）

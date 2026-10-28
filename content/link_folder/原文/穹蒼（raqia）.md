@@ -33,6 +33,6 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Genesis 1:6-8 — the expanse (raqia) separating the waters above and below（<https://biblehub.com/study/genesis/1.htm>）
-- GT: 創世記第一章拾穗 — 穹蒼字義、三層宇宙觀與空氣以上的水（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT01.htm>）
+- 研經註解（BibleHub Study）: Genesis 1:6-8 — the expanse (raqia) separating the waters above and below（<https://biblehub.com/study/genesis/1.htm>）
+- 拾穗（ccbiblestudy GT）: 創世記第一章拾穗 — 穹蒼字義、三層宇宙觀與空氣以上的水（<https://www.ccbiblestudy.org/Old%20Testament/01Gen/01GT01.htm>）
 - 原文資料（STEP Bible）: 創1:6-8、14-15、17、20「穹蒼」的用字與出現次數（`H7549`）（<https://github.com/STEPBible/STEPBible-Data>）

@@ -70,5 +70,5 @@ STEP 顯示申27:2 是 va./ha.ke.mo.Ta（H6965I，使役語態第二人稱單數
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 30 — 30:4 words 13、22 H6965I；30:5 word 2 H5106 he.Ni'；30:13 words 9-11 H6965I ye.ki.Me./nu 對 H6565A ye.fe.Re./nu；30:15 words 2-3 ha.Fer ya.Fer （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 30 — 30:4 words 13、22 H6965I；30:5 word 2 H5106 he.Ni'；30:13 words 9-11 H6965I ye.ki.Me./nu 對 H6565A ye.fe.Re./nu；30:15 words 2-3 ha.Fer ya.Fer（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第三十章註解 — 30:4、5、8、12、13、15 原文字義——為定、不應承、廢了、全廢了(原文雙同字) （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT30.htm>）

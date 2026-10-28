@@ -57,6 +57,6 @@ GT《約書亞記研經資料》在書6:5 正好把兩種用法都點出來：�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 29 — 29:1 word 15 תְּרוּעָ֖ה / te.ru.'Ah / H8643 / HNcfsa，context gloss「[the] sound of a loud blast」；lexicon תְּרוּעָה (te.ru.ah): shout （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 29 — 29:1 word 15 תְּרוּעָ֖ה / te.ru.'Ah / H8643 / HNcfsa，context gloss「[the] sound of a loud blast」；lexicon תְּרוּעָה (te.ru.ah): shout（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十九章註解 — 29:1 文意註解——吹角的用意 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT29.htm>）
 - 拾穗（ccbiblestudy GT）: 民數記第二十九章拾穗 — 29:1《民數記串珠聖經註釋》吹角日；29:6 丁良才註——銀號筒與百姓吹角 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT29.htm>）

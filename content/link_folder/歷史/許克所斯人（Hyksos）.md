@@ -52,6 +52,6 @@ GT《每日研經叢書》把埃及人對以色列人的反感連到這段被統
 
 ## 來源依據
 
-- CT: 出埃及記 1章 第8節新王與許克索斯王朝的更替（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT01.htm>）
-- GT: 出埃及記 1章 啟導本、精讀本、中文聖經註釋、舊約背景註釋、每日研經叢書、李道生論許克所斯王朝（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT01.htm>）
-- BH: Exodus 1:8 — 新王可能是許克所斯的興起或本土王朝的復權（<https://biblehub.com/study/exodus/1.htm>）
+- 逐節註解（ccbiblestudy CT）: 出埃及記 1章 第8節新王與許克索斯王朝的更替（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT01.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記 1章 啟導本、精讀本、中文聖經註釋、舊約背景註釋、每日研經叢書、李道生論許克所斯王朝（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT01.htm>）
+- 研經註解（BibleHub Study）: Exodus 1:8 — 新王可能是許克所斯的興起或本土王朝的復權（<https://biblehub.com/study/exodus/1.htm>）

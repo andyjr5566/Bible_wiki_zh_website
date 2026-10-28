@@ -993,7 +993,7 @@
         "id": "towns-vines",
         "asset": "towns-vines.webp",
         "source": "lab/assets-codex/canaan/towns-vines.png",
-        "scale": 1,
+        "scale": 1.04,
         "x": 0,
         "y": 2,
         "parallax": 4,

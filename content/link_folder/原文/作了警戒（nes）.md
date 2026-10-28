@@ -43,8 +43,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 26 — 第10節 le./Nes（H5251H，morphology HR/Ncmsa，本節譯義 a warning sign，簡要義域 nes: ensign）；同節 va./tif.Tach（H6605A）、va./tiv.La'（H1104）、ha./'Esh（H784） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十六章註解 — 民二十六10〔文意註解〕『二百五十個人』他們是以色列會中有名望的首領(參十六2，35) (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT26.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十六章拾穗 — 民二十六10 丁良才《民數記註釋》七十士所譯的希臘文舊約和撒瑪利亞人的摩西五經將本節譯作……他們就作了鑒戒 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT26.htm)
-- 研經註解（KingComments）: Numbers 26 — 5 - 11 段：They are a sign that warns against any form of pride and rebellion (https://www.kingcomments.com/en/bible-studies/Num/26)
-- 研經註解（BibleHub Study）: Numbers 26 — Numbers 26:10 段：The judgment against Korah and his followers serves as a perpetual warning，並引 1 Corinthians 10:11 (https://biblehub.com/study/numbers/26.htm)
+- 原文資料（STEP Bible）: Numbers 26 — 第10節 le./Nes（H5251H，morphology HR/Ncmsa，本節譯義 a warning sign，簡要義域 nes: ensign）；同節 va./tif.Tach（H6605A）、va./tiv.La'（H1104）、ha./'Esh（H784）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十六章註解 — 民二十六10〔文意註解〕『二百五十個人』他們是以色列會中有名望的首領(參十六2，35)（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT26.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十六章拾穗 — 民二十六10 丁良才《民數記註釋》七十士所譯的希臘文舊約和撒瑪利亞人的摩西五經將本節譯作……他們就作了鑒戒（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT26.htm>）
+- 研經註解（KingComments）: Numbers 26 — 5 - 11 段：They are a sign that warns against any form of pride and rebellion（<https://www.kingcomments.com/en/bible-studies/Num/26>）
+- 研經註解（BibleHub Study）: Numbers 26 — Numbers 26:10 段：The judgment against Korah and his followers serves as a perpetual warning，並引 1 Corinthians 10:11（<https://biblehub.com/study/numbers/26.htm>）

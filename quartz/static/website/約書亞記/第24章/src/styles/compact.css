@@ -10,22 +10,6 @@
   display: none;
 }
 
-@media (orientation: landscape) and (max-height: 520px) {
-  /* 第8節的軍陣與第11節的渡河隊伍留在下方；經文框分別讓開人物。 */
-  body.jos-in-stations .jos-panel[data-panel-beat='beat-09-east'] .jos-voice {
-      transform: translate(52px, -248px);
-  }
-  body.jos-in-stations .jos-panel[data-panel-beat='beat-09-east'] .jos-more-btn {
-      transform: translate(350px, 16px);
-  }
-  body.jos-in-stations .jos-panel[data-panel-beat='beat-10-jericho'] .jos-voice {
-      transform: translate(52px, -214px);
-  }
-  body.jos-in-stations .jos-panel[data-panel-beat='beat-10-jericho'] .jos-more-btn {
-      transform: translate(350px, 16px);
-  }
-}
-
 @media (orientation: portrait) and (max-width: 768px) {
   .jos-rotate-hint {
     position: fixed;

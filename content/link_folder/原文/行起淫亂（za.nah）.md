@@ -42,8 +42,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第1節 va/i.Ya.chel（H2490C，簡要義域 cha.lal: to profane/begin: begin）與 li/z.Not（H2181，簡要義域 za.nah: to fornicate） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五1〔原文字義〕「行起」玷污，褻瀆；「淫亂」姦淫，做妓女；〔文意註解〕有宗教及情欲雙重的意思 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五1《聖經精讀本》摩押女子邀請他們參加淫亂的宴席；民二十五2 丁良才《民數記註釋》眾先知屢次稱拜偶像為行淫；《啟導本聖經註釋》迦南人的迷信盛行以女子賣淫獻神為祭 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：看似友善的邀請，世界的友誼有時比它的敵意更可怕 (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:1 段：suggests not just a physical act but a turning away from covenant faithfulness (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第1節 va/i.Ya.chel（H2490C，簡要義域 cha.lal: to profane/begin: begin）與 li/z.Not（H2181，簡要義域 za.nah: to fornicate）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五1〔原文字義〕「行起」玷污，褻瀆；「淫亂」姦淫，做妓女；〔文意註解〕有宗教及情欲雙重的意思（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五1《聖經精讀本》摩押女子邀請他們參加淫亂的宴席；民二十五2 丁良才《民數記註釋》眾先知屢次稱拜偶像為行淫；《啟導本聖經註釋》迦南人的迷信盛行以女子賣淫獻神為祭（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 1 - 5 段：看似友善的邀請，世界的友誼有時比它的敵意更可怕（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:1 段：suggests not just a physical act but a turning away from covenant faithfulness（<https://biblehub.com/study/numbers/25.htm>）

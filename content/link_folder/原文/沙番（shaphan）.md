@@ -37,6 +37,6 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記 11:5 沙番原文字義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT11.htm>）
-- 拾穗: 利未記 11:5 沙番音譯、動物學身分與反芻爭議（啟導本／串珠／雷氏研讀本／精讀本／艾基斯《舊約聖經難題彙編》）（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT11.htm>）
-- 研經註解: Leviticus 11:5 The rock badger identification（<https://www.kingcomments.com/en/bible-studies/Lev/11>）
+- 逐節註解（ccbiblestudy CT）: 利未記 11:5 沙番原文字義（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT11.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記 11:5 沙番音譯、動物學身分與反芻爭議（啟導本／串珠／雷氏研讀本／精讀本／艾基斯《舊約聖經難題彙編》）（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT11.htm>）
+- 研經註解（KingComments）: Leviticus 11:5 The rock badger identification（<https://www.kingcomments.com/en/bible-studies/Lev/11>）

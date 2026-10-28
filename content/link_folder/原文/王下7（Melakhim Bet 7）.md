@@ -41,4 +41,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: 2 Kings 7 （<https://biblehub.com/2_kings/7.htm>）
+- 研經註解（BibleHub Study）: 2 Kings 7 （<https://biblehub.com/2_kings/7.htm>）（<https://biblehub.com/study/2_kings/7.htm>）

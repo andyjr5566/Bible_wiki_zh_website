@@ -41,7 +41,7 @@ GT《聖經精讀本》提醒不要把禁工讀成貶低工作：「聖經說勞
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 29 — 29:7 words 12-13 כָּל־ / kol- / H3605＋מְלָאכָ֖ה / me.la.Khah / H4399 / HNcfsa（context gloss 為 work）；對照 29:1、12、35 的 מְלֶ֥אכֶת עֲבֹדָ֖ה / me.Le.khet 'a.vo.Dah / H4399＋H5656I（context gloss 分別為 work of 與 servitude） （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 29 — 29:7 words 12-13 כָּל־ / kol- / H3605＋מְלָאכָ֖ה / me.la.Khah / H4399 / HNcfsa（context gloss 為 work）；對照 29:1、12、35 的 מְלֶ֥אכֶת עֲבֹדָ֖ה / me.Le.khet 'a.vo.Dah / H4399＋H5656I（context gloss 分別為 work of 與 servitude）（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十九章註解 — 29:1 與 29:7 原文字義與文意註解——勞碌的工、什麼工 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT29.htm>）
 - 拾穗（ccbiblestudy GT）: 民數記第二十九章拾穗 — 29:35《聖經精讀本》註——什麼勞碌的工都不可作 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT29.htm>）
 - 研經註解（BibleHub Study）: Numbers 29 — 29:7 you must not do any work——禁工與安息日原則 （<https://biblehub.com/study/numbers/29.htm>）

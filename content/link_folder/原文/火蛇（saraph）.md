@@ -53,5 +53,5 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Numbers 21:6 — 火蛇的來襲與審判（<https://biblehub.com/numbers/21.htm>）
-- BH: Isaiah 14:29 — 火蛇的先知意象（<https://biblehub.com/isaiah/14.htm>）
+- 研經註解（BibleHub Study）: Numbers 21:6 — 火蛇的來襲與審判（<https://biblehub.com/numbers/21.htm>）（<https://biblehub.com/study/numbers/21.htm>）
+- 研經註解（BibleHub Study）: Isaiah 14:29 — 火蛇的先知意象（<https://biblehub.com/isaiah/14.htm>）（<https://biblehub.com/study/isaiah/14.htm>）

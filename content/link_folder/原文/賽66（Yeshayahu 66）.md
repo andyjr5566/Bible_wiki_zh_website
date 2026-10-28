@@ -43,4 +43,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Isaiah 66 （<https://biblehub.com/isaiah/66.htm>）
+- 研經註解（BibleHub Study）: Isaiah 66 （<https://biblehub.com/isaiah/66.htm>）（<https://biblehub.com/study/isaiah/66.htm>）

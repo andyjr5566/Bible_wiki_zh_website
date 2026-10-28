@@ -134,7 +134,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 逐節註解: 利未記 3:5, 11, 16 火祭定義與馨香之氣（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT03.htm>）
-- 拾穗: 利未記 3:5, 11, 16 火祭為神的食物（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT03.htm>）
-- 研經註解: Leviticus 3 火祭表徵基督工作完全歸神、經得起試驗（<https://www.kingcomments.com/en/bible-studies/Lev/3>）
-- 研經註解: Leviticus 3:5, 11, 16 火祭與馨香之氣（<https://biblehub.com/study/leviticus/3.htm>）
+- 逐節註解（ccbiblestudy CT）: 利未記 3:5, 11, 16 火祭定義與馨香之氣（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03CT03.htm>）
+- 拾穗（ccbiblestudy GT）: 利未記 3:5, 11, 16 火祭為神的食物（<https://www.ccbiblestudy.org/Old%20Testament/03Lev/03GT03.htm>）
+- 研經註解（KingComments）: Leviticus 3 火祭表徵基督工作完全歸神、經得起試驗（<https://www.kingcomments.com/en/bible-studies/Lev/3>）
+- 研經註解（BibleHub Study）: Leviticus 3:5, 11, 16 火祭與馨香之氣（<https://biblehub.com/study/leviticus/3.htm>）

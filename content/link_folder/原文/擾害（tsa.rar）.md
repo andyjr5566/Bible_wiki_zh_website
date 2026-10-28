@@ -39,8 +39,8 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 25 — 第17節 tza.Ror（H6887D，morphology HVqaa）與 ve./hi.ki.Tem（H5221，簡要義域 na.khah: to smite）；第18節 tzo.re.Rim（H6887D，本節譯義 [are] opposers） (https://github.com/STEPBible/STEPBible-Data)
-- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五17〔原文字義〕「擾害」綁住，繫住，使陷困境；〔文意註解〕意指不可再跟他們友好相處 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm)
-- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五17《民數記串珠聖經註釋》「擾害」：意思是把對方當作敵人 (https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm)
-- 研經註解（KingComments）: Numbers 25 — 16 - 18 段：以色列對米甸人的態度由米甸人對以色列的態度決定；對任何能引我們犯罪的事物都要敵對 (https://www.kingcomments.com/en/bible-studies/Num/25)
-- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:17 段：This directive is a divine response to the spiritual and moral corruption (https://biblehub.com/study/numbers/25.htm)
+- 原文資料（STEP Bible）: Numbers 25 — 第17節 tza.Ror（H6887D，morphology HVqaa）與 ve./hi.ki.Tem（H5221，簡要義域 na.khah: to smite）；第18節 tzo.re.Rim（H6887D，本節譯義 [are] opposers）（<https://github.com/STEPBible/STEPBible-Data>）
+- 逐節註解（ccbiblestudy CT）: 民數記第二十五章註解 — 民二十五17〔原文字義〕「擾害」綁住，繫住，使陷困境；〔文意註解〕意指不可再跟他們友好相處（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT25.htm>）
+- 拾穗（ccbiblestudy GT）: 民數記第二十五章拾穗 — 民二十五17《民數記串珠聖經註釋》「擾害」：意思是把對方當作敵人（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT25.htm>）
+- 研經註解（KingComments）: Numbers 25 — 16 - 18 段：以色列對米甸人的態度由米甸人對以色列的態度決定；對任何能引我們犯罪的事物都要敵對（<https://www.kingcomments.com/en/bible-studies/Num/25>）
+- 研經註解（BibleHub Study）: Numbers 25 — Numbers 25:17 段：This directive is a divine response to the spiritual and moral corruption（<https://biblehub.com/study/numbers/25.htm>）

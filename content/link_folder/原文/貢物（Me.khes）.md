@@ -38,5 +38,5 @@ CT 在民31:28 特別記下這件事：「貢物這詞的原文，聖經中僅�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 31 — 31:28 words 1-12 וַ/הֲרֵמֹתָ֨ מֶ֜כֶס / va./ha.re.mo.Ta Me.khes / H7311A＋H4371（lexicon: a tax）；'e.Chad Ne.fesh me./cha.Mesh ha./me.'ot （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 31 — 31:28 words 1-12 וַ/הֲרֵמֹתָ֨ מֶ֜כֶס / va./ha.re.mo.Ta Me.khes / H7311A＋H4371（lexicon: a tax）；'e.Chad Ne.fesh me./cha.Mesh ha./me.'ot（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第三十一章註解 — 31:28、29、30 原文字義與文意註解——貢物僅出現在本章、每五百取一與每五十取一 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT31.htm>）

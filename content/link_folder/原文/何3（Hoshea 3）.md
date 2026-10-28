@@ -42,4 +42,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Hosea 3 （<https://biblehub.com/hosea/3.htm>）
+- 研經註解（BibleHub Study）: Hosea 3 （<https://biblehub.com/hosea/3.htm>）（<https://biblehub.com/study/hosea/3.htm>）

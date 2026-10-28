@@ -40,7 +40,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT10.htm
-- https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT10.htm
-- https://www.kingcomments.com/en/bible-studies/Exo/10
-- https://biblehub.com/study/exodus/10.htm
+- 逐節註解（ccbiblestudy CT）: 出埃及記第十章註解（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02CT10.htm>）
+- 拾穗（ccbiblestudy GT）: 出埃及記第十章拾穗（<https://www.ccbiblestudy.org/Old%20Testament/02Exo/02GT10.htm>）
+- 研經註解（KingComments）: Exodus 10（<https://www.kingcomments.com/en/bible-studies/Exo/10>）
+- 研經註解（BibleHub Study）: Exodus 10（<https://biblehub.com/study/exodus/10.htm>）

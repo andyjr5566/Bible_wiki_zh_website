@@ -54,5 +54,5 @@ CT 在申十六8 的原文字義註「嚴肅會」嚴肅會，聚會，文意註
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 29 — 29:35 word 3 עֲצֶ֖רֶת / 'a.Tze.ret / H6116 / HNcfsa，context gloss「an assembly」；對照 29:1、7、12 的 H4744 mik.ra'＋H6944G ko.desh （<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 29 — 29:35 word 3 עֲצֶ֖רֶת / 'a.Tze.ret / H6116 / HNcfsa，context gloss「an assembly」；對照 29:1、7、12 的 H4744 mik.ra'＋H6944G ko.desh（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十九章註解 — 29:35 原文字義與文意註解——嚴肅會、七月二十二日、視同安息日 （<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT29.htm>）

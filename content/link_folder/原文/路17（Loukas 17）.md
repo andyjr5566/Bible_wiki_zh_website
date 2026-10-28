@@ -45,4 +45,4 @@ source_scope: collected_only
 
 ## 來源依據
 
-- BH: Luke 17 （<https://biblehub.com/luke/17.htm>）
+- 研經註解（BibleHub Study）: Luke 17 （<https://biblehub.com/luke/17.htm>）（<https://biblehub.com/study/luke/17.htm>）

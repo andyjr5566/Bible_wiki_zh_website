@@ -34,6 +34,7 @@ const WORDS = {
   intro: "方舟有多大？十二支派怎麼圍著會幕紮營？這些網站把經文畫成場景和地圖，可以自己動手看。點了會開新分頁。",
   wideHeading: "貫穿好幾卷書",
   axisHeading: "依聖經順序",
+  railLabel: "跳到書卷",
   sourceHeading: "依章節的清單",
   coverageLabel: "涵蓋的書卷",
   legend: "數字是涵蓋的章數",
@@ -403,6 +404,33 @@ function chapterMarker(
   return el("a", { ...props, href: relativePath(slug, firstSlug) }, [label])
 }
 
+/** 書卷在長軸上的錨點 id；書卷列的連結和捲動腳本（interactiveRail.inline.ts）都靠它對應。 */
+export function bookAnchorId(bookNum: number): string {
+  return `bwz-ia-b-${bookNum}`
+}
+
+/** 長軸上方的書卷列：只列「有網站的書卷」，網站變多時列隨之變長，不必手動維護。
+ *  純連結，沒有腳本也能跳；捲動高亮與手機吸頂位置由 interactiveRail.inline.ts 補上。 */
+function buildRail(groups: ReturnType<typeof axisGroups>): Element {
+  const chips = groups.map(({ book }) =>
+    el("li", {}, [
+      el("a", {
+        className: ["bwz-ia-rail-chip"],
+        href: `#${bookAnchorId(book.num)}`,
+        "aria-label": book.name,
+        title: book.name,
+        dataBook: String(book.num),
+      }, [
+        el("span", { className: ["bwz-ia-rail-s"], "aria-hidden": "true" }, [book.short]),
+        el("span", { className: ["bwz-ia-rail-f"], "aria-hidden": "true" }, [book.name]),
+      ]),
+    ]),
+  )
+  return el("nav", { className: ["bwz-ia-rail"], "aria-label": WORDS.railLabel }, [
+    el("ol", {}, chips),
+  ])
+}
+
 function buildAxis(
   sites: readonly InteractiveSite[],
   slug: string,
@@ -414,7 +442,7 @@ function buildAxis(
   const items: Element[] = []
   let stopIndex = 0
   for (const group of groups) {
-    items.push(el("li", { className: ["bwz-ia-book"] }, [
+    items.push(el("li", { className: ["bwz-ia-book"], id: bookAnchorId(group.book.num) }, [
       el("span", { className: ["bwz-ia-book-name"] }, [group.book.name]),
     ]))
     for (const item of group.items) {
@@ -428,6 +456,7 @@ function buildAxis(
   }
 
   return el("div", { className: ["bwz-ia-scroll"] }, [
+    buildRail(groups),
     el("span", { className: ["bwz-ia-rod"], "aria-hidden": "true" }),
     el("ol", { className: ["bwz-ia-axis"] }, items),
     el("span", { className: ["bwz-ia-rod"], "aria-hidden": "true" }),

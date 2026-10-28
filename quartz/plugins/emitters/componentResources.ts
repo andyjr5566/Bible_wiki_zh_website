@@ -22,6 +22,8 @@ import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
 import chapterQuickBarScript from "../../components/scripts/chapterQuickBar.inline"
 // @ts-ignore
 import knowledgeHubScript from "../../components/scripts/knowledgeHub.inline"
+// @ts-ignore
+import interactiveRailScript from "../../components/scripts/interactiveRail.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -128,6 +130,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Knowledge hub filters (知識節點類別頁的書卷／關鍵字篩選、總入口的搜尋鈕)
   componentResources.afterDOMLoaded.push(knowledgeHubScript)
+
+  // Interactive hub book rail (互動網站總入口的書卷列：點書卷跳到位置、捲動高亮)
+  componentResources.afterDOMLoaded.push(interactiveRailScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

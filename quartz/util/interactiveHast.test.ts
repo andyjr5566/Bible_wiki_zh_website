@@ -410,6 +410,16 @@ test("總入口保留 h1，收起原清單，並建立 wide 牆與交錯長軸",
   assert.deepEqual(byClass(hub, "bwz-ia-book-name").map(nodeText), [
     "創世記", "出埃及記", "利未記", "民數記",
   ])
+  // 書卷列：只列長軸上有網站的書卷，每顆連到長軸上同一卷的標題
+  const rail = byClass(hub, "bwz-ia-rail")[0]
+  assert.equal(rail.tagName, "nav")
+  const chips = byClass(rail, "bwz-ia-rail-chip")
+  assert.deepEqual(chips.map((node) => node.properties["aria-label"]), [
+    "創世記", "出埃及記", "利未記", "民數記",
+  ])
+  const bookIds = byClass(hub, "bwz-ia-book").map((node) => node.properties.id)
+  assert.deepEqual(chips.map((node) => node.properties.href), bookIds.map((id) => `#${id}`))
+  assert.equal(new Set(bookIds).size, bookIds.length)
   assert.deepEqual(byClass(hub, "bwz-ia-stop").map((node) =>
     (node.properties.className as string[]).find((name) => name === "bwz-ia-l" || name === "bwz-ia-r"),
   ), ["bwz-ia-l", "bwz-ia-r", "bwz-ia-l", "bwz-ia-r", "bwz-ia-l", "bwz-ia-r"])

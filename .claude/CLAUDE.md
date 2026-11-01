@@ -1,65 +1,20 @@
-## vexp — Context-Aware AI Coding <!-- vexp v1.3.11 -->
+## vexp - Context-Aware AI Coding <!-- vexp v3.3.8 -->
 
-### MANDATORY: use vexp pipeline — do NOT grep or glob the codebase
-For every task — bug fixes, features, refactors, debugging:
-**call `run_pipeline` FIRST**. It executes context search + impact analysis +
-memory recall in a single call, returning compressed results.
+### Context strategy: call run_pipeline ONCE at task start
+If the task already names the files/symbols to touch, skip run_pipeline. Otherwise one
+`run_pipeline({ "task": "..." })` returns ranked pivot files with line ranges and
+blast radius. Do NOT open files one by one to find your way around - every extra
+tool call costs a turn. Call it again ONLY when the task moves to a new area.
+`get_skeleton` for files to understand, not edit. `verify_done` before calling a
+multi-file task complete, then RUN the tests it names.
 
-Do NOT use grep, glob, Bash, or cat to search/explore the codebase.
-vexp returns pre-indexed, graph-ranked context that is more relevant and
-uses fewer tokens than manual searching. Prefer `get_skeleton` over Read to
-inspect files (detail: minimal/standard/detailed, 70-90% token savings).
-Only use Read when you need exact raw content to edit a specific line.
+### Query shape (do this)
+Anchor the task on real identifiers (ClassName, functionName) or file paths:
+`run_pipeline({ "task": "fix JWT expiry in AuthService.validateToken" })`
 
-### Primary Tool
-- `run_pipeline` — **USE THIS FOR EVERYTHING**. Single call that runs
-  capsule + impact + memory server-side. Returns compressed results.
-  Auto-detects intent (debug/modify/refactor/explore) from your task.
-  Includes full file content for pivots.
-  Examples:
-  - `run_pipeline({ "task": "fix JWT validation bug" })` — auto-detect
-  - `run_pipeline({ "task": "refactor db layer", "preset": "refactor" })` — explicit
-  - `run_pipeline({ "task": "add auth", "observation": "using JWT" })` — save insight in same call
-
-### Other MCP tools (use only when run_pipeline is insufficient)
-- `get_context_capsule` — lightweight alternative for simple questions only
-- `get_impact_graph` — standalone deep impact analysis of a specific symbol
-- `search_logic_flow` — trace execution paths between two specific symbols
-- `get_skeleton` — **preferred over Read** for inspecting files (minimal/standard/detailed detail levels, 70-90% token savings)
-- `index_status` — indexing status and health check
-- `get_session_context` — recall observations from current/previous sessions
-- `search_memory` — cross-session search for past decisions
-- `save_observation` — persist insights (prefer using run_pipeline's observation param instead)
-
-### Workflow
-1. `run_pipeline("your task")` — ALWAYS FIRST. Returns pivots + impact + memories in 1 call
-2. Need more detail on a file? Use `get_skeleton({ files: [...], detail: "detailed" })` — avoid Read unless editing
-3. Make targeted changes based on the context returned
-4. `run_pipeline` again ONLY if you need more context during implementation
-5. Do NOT chain multiple vexp calls — one `run_pipeline` replaces capsule + impact + memory + observation
-
-### Subagent / Explore / Plan mode
-- Subagents CAN and MUST call `run_pipeline` — always include the task description
-- The PreToolUse hook blocks Grep/Glob when vexp daemon is running
-- Do NOT spawn Agent(Explore) to freely search — call `run_pipeline` first,
-  then pass the returned context into the agent prompt if needed
-- Always: `run_pipeline` → get context → spawn agent with context
-
-### Smart Features (automatic — no action needed)
-- **Intent Detection**: auto-detects from your task keywords. "fix bug" → Debug, "refactor" → blast-radius, "add" → Modify
-- **Hybrid Search**: keyword + semantic + graph centrality ranking
-- **Session Memory**: auto-captures observations; memories auto-surfaced in results
-- **LSP Bridge**: VS Code captures type-resolved call edges
-- **Change Coupling**: co-changed files included as related context
-
-### Advanced Parameters
-- `preset: "debug"` — forces debug mode (capsule+tests+impact+memory)
-- `preset: "refactor"` — deep impact analysis (depth 5)
-- `max_tokens: 12000` — increase total budget for complex tasks
-- `include_tests: true` — include test files in results
-- `include_file_content: false` — omit full file content (lighter response)
-
-### Multi-Repo Workspaces
-`run_pipeline` auto-queries all indexed repos. Use `repos: ["alias"]` to scope.
-Use `index_status` to discover available repo aliases.
+vexp runs entirely on this machine, index in `.vexp/`;
+`run_pipeline` transmits nothing to any external service.
+On `status: "degraded"` or 0 pivots the index is still building - use your own tools.
+For literal string sweeps use your native search - do NOT route text sweeps through vexp.
+Repo SOURCE only: logs, dist/, node_modules/ and files outside the repo are NOT indexed.
 <!-- /vexp -->

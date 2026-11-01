@@ -4,8 +4,11 @@
       "type": "stdio",
       "command": "node",
       "args": [
-        "c:\\Users\\andyj_adknr2z\\.vscode\\extensions\\vexp.vexp-vscode-1.3.11\\dist\\mcp-server.cjs"
-      ]
+        "c:\\Users\\andyj_adknr2z\\.vscode\\extensions\\vexp.vexp-vscode-3.3.8-win32-arm64\\dist\\mcp-server.cjs"
+      ],
+      "env": {
+        "VEXP_WORKSPACE": "c:\\Obsidian\\Bible_wiki_zh_website_quartz"
+      }
     }
   }
 }

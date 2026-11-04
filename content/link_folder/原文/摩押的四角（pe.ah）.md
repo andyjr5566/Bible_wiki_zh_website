@@ -12,9 +12,9 @@ source_scope: collected_only
 
 民數記24:17 下半：「必打破摩押的四角，毀壞擾亂之子」。
 
-**原文是「兩側」，而且是雙數。** STEP 顯示「四角」是 pa.'a.Tei（H6285），morphology 標的是 HNcfdc——雙數陰性附屬形，本節譯義是 [the] corners of，簡要義域是 pe.ah: side。KC 直接指出字面：他說經文說的是摩押的「額角」，字面是「摩押的諸角」，意思是摩押的邊界。
+**原文是『兩側』，而且是雙數。** STEP 顯示「四角」是 pa.'a.Tei（H6285），詞形標記 標的是 HNcfdc——雙數陰性附屬形，本節譯義是 [the] corners of，字典的意思是 pe.ah: side。KC 直接指出字面：「The “forehead of Moab”, literally the “corners of Moab”, means the boundaries of Moab.」（『摩押的額角』，字面是『摩押的諸角』，意思是摩押的邊界。）
 
-**「打破」和民24:8 是同一個字。** STEP 顯示這裡的「打破」是 u./ma.Chatz（H4272，簡要義域 ma.chats: to wound），本節譯義 it will shatter；而民24:8「用箭射透他們」是 yim.Chatz，同一個 H4272。第三篇詩歌說以色列射透敵國，第四篇詩歌說那位要來的打破摩押——原文用的是同一個動詞。
+**「打破」和民24:8 是同一個字。** STEP 顯示這裡的「打破」，原形是 מָחַץ（ma.chats，H4272），字典的意思是「to wound」（刺傷），這一節譯作『it will shatter』（打碎）；而民24:8「用箭射透他們」是 yim.Chatz，同一個 H4272。第三篇詩歌說以色列射透敵國，第四篇詩歌說那位要來的打破摩押——原文用的是同一個動詞。
 
 **各家理解的落差。** CT〔文意註解〕說「『四角』指國境的四周邊緣，有的譯本翻作國家的首領；全句意指摩押必被完全征服」——CT 自己就記下兩種譯法。BH 所用的譯本走的正是後一種，把這半節譯作他必打碎摩押的頭骨（He will crush the skulls of Moab），並說這個意象表示決定性而徹底的勝利。
 
@@ -40,7 +40,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第17節 pa.'a.Tei（H6285，morphology HNcfdc 雙數，本節譯義 [the] corners of）與 u./ma.Chatz（H4272，同第8節 yim.Chatz）（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 24 — 第17節 pa.'a.Tei（H6285，詞形變化 HNcfdc 雙數，本節譯義 [the] corners of）與 u./ma.Chatz（H4272，同第8節 yim.Chatz）（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四17〔文意註解〕『四角』指國境的四周邊緣，有的譯本翻作國家的首領（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
 - 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四17《民數記串珠聖經註釋》預言將興起一位君王，三百多年後大衛王果然作成了這件事（撒下8:2, 14）（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
 - 研經註解（KingComments）: Numbers 24 — 15 - 24 Fourth Discourse 段：the "corners of Moab", means the boundaries of Moab（<https://www.kingcomments.com/en/bible-studies/Num/24>）

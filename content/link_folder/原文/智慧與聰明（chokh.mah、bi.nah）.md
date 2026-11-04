@@ -15,16 +15,16 @@ source_scope: collected_only
 
 **四個字，兩組詞。** STEP 原文資料顯示本節同一節裡出現名詞與形容詞各一組：
 
-| 和合本 | 原文 | Extended Strong | 簡要詞典義 |
+| 和合本 | 原文 | Strong 編號 | 字典的意思 |
 |---|---|---|---|
-| 你們的智慧 | cha.khe.mat/Khem | H2451 | chokh.mah: wisdom |
-| 你們的聰明 | u./Vi.nat/Khem | H998 | bi.nah: understanding |
-| 有智慧 | cha.Kham | H2450 | cha.kham: wise |
-| 有聰明 | ve./na.Von | H995 | bin: to understand |
+| 你們的智慧 | chokh.mah（後加『你們的』字尾） | H2451 | 「wisdom」（智慧） |
+| 你們的聰明 | bi.nah（前面接連接詞，後加『你們的』字尾） | H998 | 「understanding」（聰明） |
+| 有智慧 | cha.kham | H2450 | 「wise」（有智慧的） |
+| 有聰明 | bin（前面接連接詞） | H995 | 「to understand」（明白） |
 
 **CT 把兩個字的分工說得最細。** 〔原文字義〕：「智慧」精明，睿智；「聰明」理解力。文意註解再補一層：「『智慧』是識透事實真相的智力，偏重在原則和計劃方面；『聰明』是把前述智慧在行動上表明出來的智力，偏重在細則和執行方面。」
 
-**這份智慧不是拿來自誇的，是拿來被看見的。** GT《聖經精讀本》說：「以色列之所以能夠被列邦視為『大國』，並不是因他們的領土或軍事力量，乃是因為他們擁有真智慧與知識的根源（詩19:7；箴1:7；9:10），並且那賜律法的耶和華與他們同在。」
+**這份智慧是要讓列邦看見的。** GT《聖經精讀本》說：「以色列之所以能夠被列邦視為『大國』，並不是因他們的領土或軍事力量，乃是因為他們擁有真智慧與知識的根源（詩19:7；箴1:7；9:10），並且那賜律法的耶和華與他們同在。」
 
 KC 講的是同一件事：「Not their prosperity or military power, but a life according to the statutes and judgments of God's Word distinguishes God's people from the world.」（把神的子民與世界分別出來的，不是他們的繁榮或軍事力量，而是照著神話語的律例典章而活的生命。）
 
@@ -53,4 +53,4 @@ BH 則指出這智慧「are not merely intellectual but are deeply spiritual, ro
 - 拾穗（ccbiblestudy GT）: 申四6~8《聖經精讀本》——大國的根據不在領土或軍事力量（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT04.htm>）
 - 研經註解（KingComments）: Deuteronomy 4:6-8 — God's People and the Other Peoples（<https://www.kingcomments.com/en/bible-studies/Deu/4>）
 - 研經註解（BibleHub Study）: Deuteronomy 4:6 — wisdom and understanding 根源於敬畏耶和華（<https://biblehub.com/study/deuteronomy/4.htm>）
-- 原文資料（STEP Bible）: Deuteronomy 4:6 — H2451／H998／H2450／H995 的詞形與簡要詞典義（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Deuteronomy 4:6 — H2451／H998／H2450／H995 的詞形與字典的意思（<https://github.com/STEPBible/STEPBible-Data>）

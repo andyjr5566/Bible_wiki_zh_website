@@ -13,7 +13,7 @@ source_scope: collected_only
 
 ## 定義
 
-申命記七章7節的「專愛」對應字形 חָשַׁ֧ק，詞元是 חָשַׁק（cha.shaq），exact Strong 為 H2836A。STEP 將本節詞形標為 HVqp3ms，也就是 Qal 完成式第三人稱陽性單數；本節的 context gloss 是 he loved（他愛）。詞典把 חָשַׁק 的義域概括為 to desire，可用渴望、愛慕來理解這個詞可能涵蓋的方向；義域仍須由本節上下文決定，不能把所有可能含義都塞進「專愛」。七章7-8節直接交代了這份愛的語境：耶和華揀選以色列，並非因他們人數眾多；祂愛他們，也守祂向列祖所起的誓。逐節註解把「專愛」解作強烈傾心的愛；拾穗、KingComments 與 BibleHub Study 都把焦點放在神主動的選擇，指出以色列的人數、力量或美德並未構成蒙揀選的理由。這個詞在本章因此顯出神把愛放在祂子民身上的主動行動，也與隨後的守約、救贖和信實相連。
+申7:7 的「專愛」對應字形 חָשַׁ֧ק，詞元是 חָשַׁק（cha.shaq），H2836A。STEP 將這個詞形標為 Qal 完成式第三人稱陽性單數，這一節譯作「he loved」（他愛）。字典把 חָשַׁק 的意思概括為「to desire」（渴慕），可用渴望、愛慕來理解這個詞可能涵蓋的方向；義域仍須由這一節的上下文決定，不能把所有可能含義都塞進「專愛」。申7:7-8 直接交代了這份愛的語境：耶和華揀選以色列，並非因他們人數眾多；祂愛他們，也守祂向列祖所起的誓。逐節註解把「專愛」解作強烈傾心的愛；拾穗、KingComments 與 BibleHub Study 都把焦點放在神主動的選擇，指出以色列的人數、力量或美德並未構成蒙揀選的理由。這個詞在申7 因此顯出神把愛放在祂子民身上的主動行動，也與隨後的守約、救贖和信實相連。
 
 ## 按書卷累積
 
@@ -39,7 +39,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: 申命記7:7「專愛」的字形、詞元、Strong、morphology、context gloss 與 lexicon 義域（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: 申命記7:7「專愛」的字形、詞元、Strong、詞形變化、context gloss 與 lexicon 義域（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 申命記7:7-9，專愛、揀選與守約之愛（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05CT07.htm>）
 - 拾穗（ccbiblestudy GT）: 申命記7:6-9，揀選不以人數或美德為根據（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT07.htm>）
 - 研經註解（KingComments）: 申命記7:6-11，神的愛由祂自己發出並連於祂的應許（<https://www.kingcomments.com/en/bible-studies/Deu/7>）

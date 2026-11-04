@@ -14,7 +14,7 @@ source_scope: collected_only
 
 ### 原文
 
-STEP 顯示這一句是 tih.Yeh zot 'ot be./kir.be./Khem——'ot（H226H，簡要詞典義 ot: sign: indicator），be./kir.be./Khem（H7130G，簡要詞典義 qe.rev: entrails: among，這裡是「在你們中間」）。CT 的原文字義給「證據」的就是「記號」兩個字，並說這是指具有意義的記號。
+STEP 顯示這一句是 ha.yah zot ot qe.rev——ot（H226H，字典的意思是「sign: indicator」（記號；標誌）），qe.rev（H7130G，字典的意思是「entrails: among」（內臟；在……之中），這裡是「在你們中間」）。CT 的原文字義給「證據」的就是「記號」兩個字，並說這是指具有意義的記號。
 
 這裡的 ot 是單獨使用，指一件立在地上、看得見摸得著的實物。它與同一個字在別處與其他詞連用、指神蹟奇事的用法屬於不同的搭配。
 
@@ -36,7 +36,7 @@ KC 說這些石頭要成為給他們和他們兒女的一個記號，而且記�
 
 <!-- accumulation:約書亞記:4:start -->
 #### [[06 約書亞記/第4章|第4章]]
-- 本章重點：第6節「這些石頭在你們中間可以作為證據」。STEP 為 tih.Yeh zot 'ot be./kir.be./Khem——'ot（H226H，簡要詞典義 ot: sign: indicator）加 be./kir.be./Khem（H7130G，簡要詞典義 qe.rev: entrails: among）。CT 原文字義給「證據」記號，並說指具有意義的記號。GT《研經資料》另舉聖經中其他作為後代的「記號」：民17:10 亞倫的杖給背叛的人留作記號、賽55:13 千禧年國度中松樹長出代替荊棘與番石榴長出替代蒺藜、出12:13 逾越節以血為記號使瘟疫不臨到以色列家庭。KC 說這些石頭要成為給他們和兒女的記號，日後孩子問起意思，父母就可以說這裡是他們進入那地的地方；BH 說這十二塊石頭形成一座長久的紀念，見證耶和華的能力與信實。
+- 本章重點：第6節「這些石頭在你們中間可以作為證據」。STEP 為 tih.Yeh zot 'ot qe.rev——'ot（H226H，字典的意思是「sign: indicator」）加 qe.rev（H7130G，字典的意思是「entrails: among」）。CT 原文字義給「證據」記號，並說指具有意義的記號。GT《研經資料》另舉聖經中其他作為後代的「記號」：民17:10 亞倫的杖給背叛的人留作記號、賽55:13 千禧年國度中松樹長出代替荊棘與番石榴長出替代蒺藜、出12:13 逾越節以血為記號使瘟疫不臨到以色列家庭。KC 說這些石頭要成為給他們和兒女的記號，日後孩子問起意思，父母就可以說這裡是他們進入那地的地方；BH 說這十二塊石頭形成一座長久的紀念，見證耶和華的能力與信實。
 - 與本章關聯：第6節上半句立記號、下半句就寫出孩子的提問——記號與解釋在同一節裡綁在一起。這也是本章第21至24節整段再講一次的那件事。
 <!-- accumulation:約書亞記:4:end -->
 
@@ -50,7 +50,7 @@ KC 說這些石頭要成為給他們和他們兒女的一個記號，而且記�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Joshua 4:6 — 'ot（H226H，簡要詞典義 ot: sign: indicator）、be./kir.be./Khem（H7130G，簡要詞典義 qe.rev: among）詞形、Strong 與 morphology（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Joshua 4:6 — ot（H226H，字典的意思是「sign: indicator」（記號；標誌））、qe.rev（H7130G，字典的意思是「among」（在……之中））各詞形、Strong 編號與詞形標記（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 約書亞記第四章註解 — 書四6〔原文字義〕「證據」記號與〔文意註解〕（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06CT04.htm>）
 - 拾穗（ccbiblestudy GT）: 約書亞記第四章拾穗 — 書四7《研經資料》◎聖經中提到其他作為後代的「記號」（民17:10、賽55:13、出12:13）（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06GT04.htm>）
 - 研經註解（KingComments）: Joshua 4 — 1 - 8 Twelve Stones as a Sign for the Children（These stones should become a sign for them and their children）（<https://www.kingcomments.com/en/bible-studies/Jos/4>）

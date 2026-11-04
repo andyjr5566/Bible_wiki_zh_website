@@ -12,7 +12,7 @@ source_scope: collected_only
 
 ## 定義
 
-申命記第二十三章第1至8節裡出現六次的說法。STEP 顯示原文是 bi/k.Hal Yah.weh——qa.hal（H6951，簡要詞典義 assembly）加上耶和華的名。中文譯成「耶和華的會」。
+申23:1-8 裡出現六次的說法。STEP 顯示原文是 qa.hal（H6951），字典的意思是「assembly」（會眾），前面帶介系詞，後面接耶和華的名。中文譯成「耶和華的會」。
 
 ### 這句話到底指什麼
 
@@ -20,7 +20,7 @@ source_scope: collected_only
 
 GT《聖經精讀本──申命記註解》把可能的說法整份列了出來，再選定其中一個：「這句話究竟意味著什麼,大家對此議論紛雲:①指不能居住在以色列百姓當中;②指不能成為以色列百姓;③指不能與以色列百姓結婚;④指不能在以色列社會中擔當任何職分;⑤指不能參與以色列公開敬拜神的儀式。若考慮聖經中的幾個實例與上文下理,第五個見解最為恰當。」GT《啟導本》也補上一句同方向的限定：這些限制「但不禁止不得與會的人住在以色列人中」。
 
-KC 注意到本段的結構：第1至14節出現兩個稱呼——第1至8節六次的 assembly of the LORD，第9至14節六次的 camp；他說前者關乎神百姓的聚集，後者關乎爭戰，而兩者都與神在百姓中間的同在有關。
+KC 注意到本段的結構：申23:1-14 出現兩個稱呼——申23:1-8 六次的 assembly of the LORD，申23:9-14 六次的 camp；他說前者關乎神百姓的聚集，後者關乎爭戰，而兩者都與神在百姓中間的同在有關。
 
 ### 誰不可入
 
@@ -31,7 +31,7 @@ KC 注意到本段的結構：第1至14節出現兩個稱呼——第1至8節六
 | [[亞捫人]]、[[摩押人]] | 雖過十代也永不可 | 3 |
 | [[以東]]人、埃及人 | 第三代子孫可以入 | 7-8 |
 
-第1節的兩種情形，STEP 逐詞是 fe.tzu.a' da.Ka'（H6481 pa.tsa: to wound 加 H1795 dak.kah: crushing）與 u.khe.Rut sha.fe.Khah（H3772G ka.rat: to cut 加 H8212 shoph.khah，本節譯義 penis）。CT 的原文字義給的是同一組意思：「外腎」壓碎受傷；「受傷」打得青腫，瘀傷；「閹割(原文雙字)」男性生殖器官(首字)；割除(次字)。
+申23:1 的兩種情形，STEP 逐詞是 pa.tsa 加 dak.kah（H6481 pa.tsa: to wound 加 H1795 dak.kah: crushing）與 ka.rat 加 shoph.khah（H3772G ka.rat: to cut 加 H8212 shoph.khah，本節譯義 penis）。CT 的原文字義給的是同一組意思：「外腎」壓碎受傷；「受傷」打得青腫，瘀傷；「閹割(原文雙字)」男性生殖器官(首字)；割除(次字)。
 
 GT《申命記雷氏研讀本》與《啟導本》都認為這條的理由與異教有關：雷氏說「有關這條對閹人的限制，部分原因也許在於防止以色列人仿效一些異教的風俗」；啟導本說得更具體，因迦南異教常有被閹男子作孌童，參與拜鬼神的儀式。
 
@@ -45,7 +45,7 @@ GT《申命記雷氏研讀本》與《啟導本》都認為這條的理由與異
 
 <!-- accumulation:申命記:23:start -->
 #### [[05 申命記/第23章|第23章]]
-- 本章重點：第1至8節六次出現「耶和華的會」。STEP：bi/k.Hal Yah.weh，qa.hal（H6951，assembly）。CT 說這指公開參與敬拜神儀式的權利；GT《啟導本》說這是以色列人為戰爭、慶典等目的而有的集會，參加者限男性，但不禁止不得與會的人住在以色列人中；GT《聖經精讀本》列出五種說法並選定第五種（不能參與公開敬拜神的儀式）；KC 指出第1至8節六次用 assembly of the LORD、第9至14節六次用 camp。被排除的有四類：外腎受傷或被閹割的（STEP：fe.tzu.a' da.Ka'、u.khe.Rut sha.fe.Khah）、私生子、亞捫人與摩押人；以東人與埃及人則第三代可入。GT《雷氏研讀本》與《啟導本》都把第1節的理由連到異教風俗。
+- 本章重點：第1至8節六次出現「耶和華的會」。STEP：qa.hal Yah.weh，qa.hal（H6951，assembly）。CT 說這指公開參與敬拜神儀式的權利；GT《啟導本》說這是以色列人為戰爭、慶典等目的而有的集會，參加者限男性，但不禁止不得與會的人住在以色列人中；GT《聖經精讀本》列出五種說法並選定第五種（不能參與公開敬拜神的儀式）；KC 指出第1至8節六次用 assembly of the LORD、第9至14節六次用 camp。被排除的有四類：外腎受傷或被閹割的（STEP：fe.tzu.a' da.Ka'、u.khe.Rut sha.fe.Khah）、私生子、亞捫人與摩押人；以東人與埃及人則第三代可入。GT《雷氏研讀本》與《啟導本》都把第1節的理由連到異教風俗。
 - 與本章關聯：這個詞把本章前八節綁成一組，也決定了整章的走向——先界定誰能站在神面前，再談營中的潔淨、對逃奴的收容、對錢財與許願的誠實。CT 與 KC 都注意到後來以賽亞書與使徒行傳把這道門重新打開。
 <!-- accumulation:申命記:23:end -->
 
@@ -63,4 +63,4 @@ GT《申命記雷氏研讀本》與《啟導本》都認為這條的理由與異
 - 拾穗（ccbiblestudy GT）: 申二十三1《申命記雷氏研讀本》《啟導本聖經申命記註釋》《聖經精讀本──申命記註解》《申命記串珠聖經註釋》——異教風俗、集會的性質與男性限制、五種說法的取捨、太監後來被接納（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT23.htm>）
 - 研經註解（KingComments）: Deuteronomy 23:1-8 — assembly of the LORD 與 camp 各六次、徒8 的太監是恩典超越律法、恩典不廢聖潔（<https://www.kingcomments.com/en/bible-studies/Deu/23>）
 - 研經註解（BibleHub Study）: Deuteronomy 23:1-8 — assembly of the LORD 指以色列會眾、身體完整與聖潔的關聯、利21:17-23 的對照（<https://biblehub.com/study/deuteronomy/23.htm>）
-- 原文資料（STEP Bible）: Deuteronomy 23:1-2 — H6951、H6481、H1795、H3772G、H8212 的詞形、morphology 與簡要詞典義（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Deuteronomy 23:1-2 — H6951、H6481、H1795、H3772G、H8212 的詞形、詞形變化 與字典的意思（<https://github.com/STEPBible/STEPBible-Data>）

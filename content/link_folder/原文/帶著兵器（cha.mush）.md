@@ -15,13 +15,13 @@ source_scope: collected_only
 
 ### 原文
 
-STEP 顯示「帶著兵器」是 cha.mu.Shim（H2571，形態 HVqsmpa），本節譯義是 arrayed for battle，簡要詞典義是 cha.mush: armed。同一節的「大能的勇士」是 gi.bo.Rei ha./Cha.yil（H1368 加 H2428G），「過去」是 ta.'av.Ru（H5674A，簡要詞典義 a.var: to pass），「幫助」是 va./'a.zar.Tem（H5826，簡要詞典義 a.zar: to help）。
+STEP 顯示「帶著兵器」是 cha.mu.Shim（H2571，形態 HVqsmpa），本節譯義是 arrayed for battle，原形 cha.mush，字典的意思是「armed」（配備兵器的）。同一節的「大能的勇士」是 gib.bor cha.yil（H1368 加 H2428G），「過去」是 ta.'av.Ru（H5674A，原形 a.var，字典的意思是「to pass」（經過）），「幫助」是 a.zar（H5826，字典的意思是「to help」（幫助））。
 
 ### 與數字五的關聯
 
 GT 兩份子來源都指向同一個字根。GT《約書亞記綜合解讀》說：「「帶著兵器 חָמַשׁ」原文的字根是「第五 חֹמֶשׁ」，可能當時的以色列軍隊採用五人一組的戰鬥隊形。」GT《聖經精讀本──約書亞記註解》說得更完整：帶著兵器的希伯來語派生於指數字五的詞根，含有準備參戰之意；據推測，兩個半支派軍隊可能是採用了五人為一組的戰鬥隊型。
 
-STEP 這一層能確認的是本節的字形、Extended Strong 與詞義（armed／arrayed for battle）；字根與「第五」的關聯以及五人隊形的推測，是上述兩份 GT 子來源的說明，兩位作者自己也用了「可能」與「據推測」。
+STEP 這一層能確認的是本節的字形、Strong 編號與詞義（armed／arrayed for battle）；字根與「第五」的關聯以及五人隊形的推測，是上述兩份 GT 子來源的說明，兩位作者自己也用了「可能」與「據推測」。
 
 ### 人數的估算
 
@@ -39,13 +39,13 @@ BH 注意到位置：他們最強的戰士要與其餘以色列人一同過約�
 
 <!-- accumulation:約書亞記:1:start -->
 #### [[06 約書亞記/第1章|第1章]]
-- 本章重點：第14節「但你們中間一切大能的勇士都要帶著兵器在你們的弟兄前面過去，幫助他們」。STEP 顯示「帶著兵器」是 cha.mu.Shim（H2571，HVqsmpa，本節譯義 arrayed for battle，簡要詞典義 cha.mush: armed），「大能的勇士」是 gi.bo.Rei ha./Cha.yil（H1368＋H2428G），「幫助」是 va./'a.zar.Tem（H5826）。GT《約書亞記綜合解讀》說原文的字根是「第五 חֹמֶשׁ」，可能當時的以色列軍隊採用五人一組的戰鬥隊形；GT《聖經精讀本》說希伯來語派生於指數字五的詞根，含有準備參戰之意，並據書4:13 推算兩個半支派參戰約四萬人，而依民26:7、18、34 他們中間可以拿兵器的約有十一萬人，其中約七萬名似乎是為了保護妻兒與家畜而留守在約但河東。CT 說大能的勇士指從二十歲以外能出去打仗的（參民二十六2）；GT《啟導本》同樣說是年滿20歲能使用兵器英勇作戰的人。BH 說他們最強的戰士要與其餘以色列人一同過河並站在前列，顯出合一與對摩西所傳命令的忠實。KC 說這是他們住在河東的條件，也是他們答應過的事。
+- 本章重點：第14節「但你們中間一切大能的勇士都要帶著兵器在你們的弟兄前面過去，幫助他們」。STEP 顯示「帶著兵器」是 cha.mu.Shim（H2571，HVqsmpa，這一節譯作「arrayed for battle」，字典的意思是「armed」），「大能的勇士」是 gi.bo.Rei cha.yil（H1368＋H2428G），「幫助」是 a.zar（H5826）。GT《約書亞記綜合解讀》說原文的字根是「第五 חֹמֶשׁ」，可能當時的以色列軍隊採用五人一組的戰鬥隊形；GT《聖經精讀本》說希伯來語派生於指數字五的詞根，含有準備參戰之意，並據書4:13 推算兩個半支派參戰約四萬人，而依民26:7、18、34 他們中間可以拿兵器的約有十一萬人，其中約七萬名似乎是為了保護妻兒與家畜而留守在約但河東。CT 說大能的勇士指從二十歲以外能出去打仗的（參民二十六2）；GT《啟導本》同樣說是年滿20歲能使用兵器英勇作戰的人。BH 說他們最強的戰士要與其餘以色列人一同過河並站在前列，顯出合一與對摩西所傳命令的忠實。KC 說這是他們住在河東的條件，也是他們答應過的事。
 - 與本章關聯：這個字是本章對河東二支派半唯一的具體要求。第14節把留下的（妻子、孩子、牲畜）與過去的（帶著兵器的勇士）分成兩半，而 STEP 的形態顯示這個字描述的是狀態——他們是以列陣備戰的樣子過河的，不只是隨行。
 <!-- accumulation:約書亞記:1:end -->
 
 <!-- accumulation:約書亞記:4:start -->
 #### [[06 約書亞記/第4章|第4章]]
-- 本章重點：第12節「帶著兵器在以色列人前頭過去」，STEP 為 cha.mu.Shim（H2571，簡要詞典義 cha.mush: armed，本節 context gloss 是 arrayed for battle）——與書1:14 約書亞下命令時用的是同一個字。GT《研經資料》說「帶著兵器」是「列以戰陣」，並說這意味著他們在迦南地從事爭戰的開始；過了約但河他們就踏進敵人的疆土、危機四伏，所以要全副武裝預備作戰。第13節「都準備打仗」則換成另一個字 cha.lu.Tzei ha./tza.Va'（H2502B 加 H6635H），GT《綜合解讀》說原文是「裝備好的軍隊」。
+- 本章重點：第12節「帶著兵器在以色列人前頭過去」，STEP 為 cha.mu.Shim（H2571，字典的意思是「armed」，這一節譯作「arrayed for battle」）——與書1:14 約書亞下命令時用的是同一個字。GT《研經資料》說「帶著兵器」是「列以戰陣」，並說這意味著他們在迦南地從事爭戰的開始；過了約但河他們就踏進敵人的疆土、危機四伏，所以要全副武裝預備作戰。第13節「都準備打仗」則換成另一個字 cha.lu.Tzei tsa.va（H2502B 加 H6635H），GT《綜合解讀》說原文是「裝備好的軍隊」。
 - 與本章關聯：書1:14 是命令，本章第12節是執行，兩處用的是同一個字。
 <!-- accumulation:約書亞記:4:end -->
 ## 主題發展
@@ -65,7 +65,7 @@ BH 注意到位置：他們最強的戰士要與其餘以色列人一同過約�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Joshua 1:14 — cha.mu.Shim（H2571，HVqsmpa，cha.mush: armed）、gi.bo.Rei ha./Cha.yil（H1368＋H2428G）、ta.'av.Ru（H5674A）、va./'a.zar.Tem（H5826）（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Joshua 1:14 — cha.mush（H2571，HVqsmpa，字典的意思是「armed」（配備兵器的））、gib.bor cha.yil（H1368＋H2428G）、a.var（H5674A）、a.zar（H5826）（<https://github.com/STEPBible/STEPBible-Data>）
 - 拾穗（ccbiblestudy GT）: 約書亞記第一章拾穗 — 書一14《約書亞記綜合解讀》字根「第五」與五人隊形，《聖經精讀本──約書亞記註解》人數推算，《啟導本聖經約書亞記註釋》大能的勇士定義（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06GT01.htm>）
 - 逐節註解（ccbiblestudy CT）: 約書亞記第一章註解 — 書一14〔原文字義〕「大能」強壯的，勇敢的與〔文意註解〕（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06CT01.htm>）
 - 研經註解（BibleHub Study）: Joshua 1 — Joshua 1:14「But all your mighty men of valor must be armed for battle」段（<https://biblehub.com/study/joshua/1.htm>）

@@ -10,9 +10,9 @@ source_scope: collected_only
 
 ## 定義
 
-第26節神給摩西的答覆只有兩個字：「罷了！」
+申3:26 神給摩西的答覆只有兩個字：「罷了！」
 
-**原文。** STEP 顯示是 rav- La/kh（H7227A，rav，簡要詞典義 many，後面接介詞），本節 context gloss 把兩個字分別譯作 enough 與 for you。CT 原文字義給的是：「罷了」夠了。
+**原文。** STEP 顯示是 rav（H7227A），字典的意思是「many」（多），後面接介詞加『你』字尾（H9005）；這一節把兩個字分別譯作「enough」（夠了）與「for you」（對你）。CT 原文字義給的是：「罷了」夠了。
 
 **這句話的作用。** CT：「『對我說：罷了！你不要向我再提這事』：意指神不允摩西所求。」BH：「God's response is definitive and final, illustrating His authority and the limits of human intercession. This phrase can be seen as a boundary set by God, teaching that there are times when His decisions are irrevocable.」（神的回應斬釘截鐵，顯出祂的權柄，也顯出人代求的界限。這句話可以看作神設下的一道界線，教導人：有些時候祂的決定是不能更改的。）
 
@@ -28,7 +28,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:3:start -->
 #### [[05 申命記/第3章|第3章]]
-- 本章重點：第26節「罷了！你不要向我再提這事」。STEP 顯示是 rav- La/kh（H7227A rav，簡要詞典義 many），context gloss 把兩個字分別譯作 enough 與 for you；CT 原文字義「罷了」＝夠了，並說這意指神不允摩西所求；BH 說神的回應斬釘截鐵，是祂設下的一道界線；GT《聖經精讀本》與 KC、CT 三家都把它與神對保羅的回答（林後12:9）並排；KC 另指出摩西仍得了答覆——神讓他站在能看見全地長闊的地方。
+- 本章重點：第26節「罷了！你不要向我再提這事」。STEP 顯示是 rav- 與一個介系詞加「你」字尾的字（H7227A rav，字典的意思是「many」），這一節把兩個字分別譯作「enough」與「for you」；CT 原文字義「罷了」＝夠了，並說這意指神不允摩西所求；BH 說神的回應斬釘截鐵，是祂設下的一道界線；GT《聖經精讀本》與 KC、CT 三家都把它與神對保羅的回答（林後12:9）並排；KC 另指出摩西仍得了答覆——神讓他站在能看見全地長闊的地方。
 - 與本章關聯：這兩個字是本章最短的一句話，卻是整段禱告的轉折點。第23節摩西開口求，第26節被止住，第27-28節神改用另一種方式回應：讓他看，並叫他把工作交出去。
 <!-- accumulation:申命記:3:end -->
 

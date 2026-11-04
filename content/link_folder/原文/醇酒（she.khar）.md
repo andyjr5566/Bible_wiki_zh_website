@@ -14,7 +14,7 @@ source_scope: collected_only
 
 ## 定義
 
-民數記28:7命人把「醇酒」奉給耶和華為奠祭。STEP 所收字形是 שֵׁכָר，transliteration 為 she.Khar，exact Strong 為 H7941，morphology 是 HNcmsa（希伯來文陽性名詞單數絕對形），context gloss 是 strong drink；lemma 的簡要義同樣是 strong drink。
+民數記28:7命人把「醇酒」奉給耶和華為奠祭。STEP 所收字形是 שֵׁכָר，Strong 編號 為 H7941，原形是 שֵׁכָר（she.khar，H7941），字典的意思是「strong drink」（濃酒），詞形標記 是 HNcmsa（希伯來文陽性名詞單數絕對形），這一節譯作『strong drink』。
 
 CT 特別指出，本節用的不是聖經常見表示葡萄酒的字，而是這個表示較濃發酵飲料的名詞。民28:14 一般「酒」則是 H3196 yayin，因此同一章可見兩個不同詞彙。中文「醇酒」在這裡首先是奠祭液體的語境譯法，不宜逕自等同於現代蒸餾烈酒。
 

@@ -31,7 +31,7 @@ source_scope: collected_only
 <!-- accumulation:民數記:24:start -->
 #### [[04 民數記/第24章|第24章]]
 - 本章重點：民數記24:8：「神領他出埃及；他似乎有野牛之力」——與民23:22 同一句式在本章再次出現。
-- 與本章關聯：STEP 顯示這個片語是 ke./to.'a.Fot re.'Em（H8443＋H7214），本節譯義是 like [the] horns of a wild ox，簡要義域 to.a.phah: peak、re.em: wild ox。也就是說中文的「力」在原文是「角」。CT 說這是「形容超乎平常的力量，是人所無法抵擋的」，並直接連回民23:22。
+- 與本章關聯：STEP 顯示這個片語是 to.a.phah re.'Em（H8443＋H7214），這一節譯作「like [the] horns of a wild ox」，字典的意思是「peak」、re.em，字典的意思是「wild ox」（野牛）。也就是說中文的「力」在原文是「角」。CT 說這是「形容超乎平常的力量，是人所無法抵擋的」，並直接連回民23:22。
 <!-- accumulation:民數記:24:end -->
 ## 相關條目
 

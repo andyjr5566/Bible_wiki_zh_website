@@ -17,11 +17,11 @@ source_scope: collected_only
 
 ### 原文
 
-STEP 顯示「眼中的瞳人」是 ke./i.Shon ei.N/o（H380 加 H5869A，簡要詞典義 i.shon: pupil、a.yin: eye，本節譯義是 like the pupil of his eye）。也就是眼球正中那一小點，光線進出的地方。
+STEP 顯示「眼中的瞳人」是 i.shon a.yin（H380 加 H5869A，字典的意思是「pupil」（瞳人）、a.yin，字典的意思是「eye」（眼睛），本節譯義是 like the pupil of his eye）。也就是眼球正中那一小點，光線進出的地方。
 
-同一節還有三個動詞，一個比一個近身：ye.soe.Ven./hu（H5437H，簡要詞典義 sa.vav: to turn: surround，本節譯義 he surrounded it）、ye.Vo.Ne./hu（H995，簡要詞典義 bin: to understand，本節譯義 he took care of it）、yi.tze.Ren./hu（H5341，簡要詞典義 na.tsar: to watch，本節譯義 he guarded it）。和合本譯作環繞、看顧、保護。
+同一節還有三個動詞，一個比一個近身：sa.vav（H5437H，字典的意思是「to turn: surround」（轉；環繞），本節譯義 he surrounded it）、bin（H995，字典的意思是「to understand」（明白），本節譯義 he took care of it）、na.tsar（H5341，字典的意思是「to watch」（看守），本節譯義 he guarded it）。和合本譯作環繞、看顧、保護。
 
-節首的地點也值得看一眼：be./E.retz mid.Bar u./ve./To.hu ye.Lel ye.shi.Mon（H4057B mid.bar: wilderness、H8414 to.hu: formlessness、H3214 ye.lel: howling、H3452H ye.shi.mon: wilderness）。
+節首的地點如下：e.rets mid.Bar to.hu ye.Lel ye.shi.Mon（H4057B mid.bar: wilderness、H8414 to.hu: formlessness、H3214 ye.lel: howling、H3452H ye.shi.mon: wilderness）。
 
 ### 為什麼用瞳人打比方
 
@@ -43,7 +43,7 @@ CT 在話中之光說得更短：以色列人斷無離棄神的藉口。
 
 <!-- accumulation:申命記:32:start -->
 #### [[05 申命記/第32章|第32章]]
-- 本章重點：第10節「耶和華遇見他在曠野─荒涼野獸吼叫之地，就環繞他，看顧他，保護他，如同保護眼中的瞳人」。STEP 顯示「瞳人」是 ke./i.Shon ei.N/o（H380 i.shon: pupil 加 H5869A a.yin: eye），三個動詞是 ye.soe.Ven./hu（H5437H sa.vav）、ye.Vo.Ne./hu（H995 bin，本節譯義 he took care of it）、yi.tze.Ren./hu（H5341 na.tsar），地點是 mid.Bar（H4057B）、To.hu（H8414）、ye.Lel（H3214）、ye.shi.Mon（H3452H）。CT 說瞳人是身體上敏感而受保護的重要部分，比喻神看以色列為至寶，並說保護是周密的、萬無一失的，有什麼要打進眼睛裡眼皮立刻蓋下。GT《申命記串珠聖經註釋》說這表示以色列是神眼中看為至寶的；GT《申命記雷氏研讀本》要讀者參看撒迦利亞書2章8節；GT《聖經精讀本──申命記註解》說那是不能期待得到任何收穫、只能聽見野生動物吼叫的大而可畏之地，沒有神的照顧決不能活著走出那塊地。KC 引撒迦利亞書2章8節與詩篇17篇8節。BH 說這是珍貴之物的隱喻，眼睛的意象帶著警醒與不斷看守的意思。
+- 本章重點：第10節「耶和華遇見他在曠野─荒涼野獸吼叫之地，就環繞他，看顧他，保護他，如同保護眼中的瞳人」。STEP 顯示「瞳人」是 i.shon a.yin（H380 i.shon: pupil 加 H5869A，字典的意思是「eye」），三個動詞是 sa.vav（H5437H）、bin（H995，這一節譯作「he took care of it」）、na.tsar（H5341），地點是 mid.Bar（H4057B）、To.hu（H8414）、ye.Lel（H3214）、ye.shi.Mon（H3452H）。CT 說瞳人是身體上敏感而受保護的重要部分，比喻神看以色列為至寶，並說保護是周密的、萬無一失的，有什麼要打進眼睛裡眼皮立刻蓋下。GT《申命記串珠聖經註釋》說這表示以色列是神眼中看為至寶的；GT《申命記雷氏研讀本》要讀者參看撒迦利亞書2章8節；GT《聖經精讀本──申命記註解》說那是不能期待得到任何收穫、只能聽見野生動物吼叫的大而可畏之地，沒有神的照顧決不能活著走出那塊地。KC 引撒迦利亞書2章8節與詩篇17篇8節。BH 說這是珍貴之物的隱喻，眼睛的意象帶著警醒與不斷看守的意思。
 - 與本章關聯：這是本章追述神恩那一段（7至14節）裡最貼身的一個比喻。上一句才說曠野是野獸吼叫之地，下一句馬上換成眼瞳——地方有多兇險，保護就寫得有多細。第11節的鷹接著把同一件事再說一次。
 <!-- accumulation:申命記:32:end -->
 
@@ -60,4 +60,4 @@ CT 在話中之光說得更短：以色列人斷無離棄神的藉口。
 - 拾穗（ccbiblestudy GT）: 申三十二10節《申命記串珠聖經註釋》《聖經精讀本──申命記註解》、第7~14節《申命記雷氏研讀本》（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT32.htm>）
 - 研經註解（KingComments）: Deuteronomy 32:5-14 God's Care for His People（<https://www.kingcomments.com/en/bible-studies/Deu/32>）
 - 研經註解（BibleHub Study）: Deuteronomy 32:10 He guarded him as the apple of His eye、in a barren, howling wilderness（<https://biblehub.com/study/deuteronomy/32.htm>）
-- 原文資料（STEP Bible）: Deuteronomy 32:10 — H380 i.Shon、H5869A、H5437H、H995、H5341 的詞形與 morphology（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Deuteronomy 32:10 — H380 i.Shon、H5869A、H5437H、H995、H5341 的詞形與 詞形變化（<https://github.com/STEPBible/STEPBible-Data>）

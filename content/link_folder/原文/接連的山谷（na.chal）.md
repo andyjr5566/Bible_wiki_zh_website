@@ -12,7 +12,7 @@ source_scope: collected_only
 
 民數記24:6：「如接連的山谷，如河旁的園子」——這半節的第一個比喻，各家譯法差距很大。
 
-**STEP 在同一個 Strong 底下給了兩種東西。** 原文是 ki/n.cha.Lim ni.Ta.yu（H5158B），STEP 給的本節譯義是 like wadis（乾河谷）…they are stretched out，簡要義域列的卻是 na.chal: palm-tree（棕樹）。也就是說這個字的義域本身就橫跨「河谷」與「棕樹」兩邊。
+**STEP 在同一個 Strong 底下給了兩種東西。** 「山谷」的原形是 נַ֫חַל（na.chal，H5158B），STEP 給的本節譯義是 like wadis（乾河谷）…they are stretched out，字典的意思卻列「palm-tree」（棕樹）。也就是說這個字的義域本身就橫跨「河谷」與「棕樹」兩邊。
 
 **各家落在不同一邊。**
 
@@ -29,7 +29,7 @@ source_scope: collected_only
 
 <!-- accumulation:民數記:24:start -->
 #### [[04 民數記/第24章|第24章]]
-- 本章重點：民數記24:6「如接連的山谷」，STEP 本節譯義作 wadis，簡要義域卻列 palm-tree，各家譯法分歧。
+- 本章重點：民數記24:6「如接連的山谷」，STEP 本節譯義作 wadis，字典的意思卻列出「palm-tree」，各家譯法分歧。
 - 與本章關聯：這是巴蘭第三篇詩歌四個比喻的第一個。STEP 顯示 H5158B 的義域本身就橫跨河谷與棕樹，CT 與 KC 取河谷、BH 所用譯本取棕樹林——但四個比喻合起來的方向一致：有水、有生命、鋪展得開。
 <!-- accumulation:民數記:24:end -->
 
@@ -37,7 +37,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:2:start -->
 #### [[05 申命記/第2章|第2章]]
-- 本章重點：第24節「過亞嫩谷」、第36節「亞嫩谷邊」與「谷中的城」。STEP 顯示這三處的「谷」都是 Na.chal（H5158N），簡要詞典義 torrent: valley，context gloss 作 wadi——與 GT《聖經精讀本》所說「不下雨的季節河床會乾涸成谷」的旱溪一致。
+- 本章重點：第24節「過亞嫩谷」、第36節「亞嫩谷邊」與「谷中的城」。STEP 顯示這三處的「谷」都是 Na.chal（H5158N），字典的意思是「torrent: valley」，這一節譯作「wadi」——與 GT《聖經精讀本》所說「不下雨的季節河床會乾涸成谷」的旱溪一致。
 - 與本章關聯：本章讓這個字有了一個具體的例子：亞嫩既叫河也叫谷，原文用的是同一個 na.chal，因為它本來就是雨季有水、旱季乾涸的地形。
 <!-- accumulation:申命記:2:end -->
 

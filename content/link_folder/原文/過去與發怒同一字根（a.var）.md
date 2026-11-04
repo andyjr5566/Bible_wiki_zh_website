@@ -12,7 +12,7 @@ source_scope: collected_only
 
 申命記第3章後半反覆在講一件事：誰可以過河。原文用的字根也一直是同一個。
 
-**六處「過」。** STEP 顯示以下各處都是 H5674A（a.var，簡要詞典義 to pass）：
+**六處「過」。** STEP 顯示以下各處都是 H5674A（a.var），字典的意思是「to pass」（經過、過去）：
 
 | 節 | 經文 | 原文（STEP） |
 |---|---|---|
@@ -22,13 +22,13 @@ source_scope: collected_only
 | 27 | 你必不能過這約但河 | ta.'a.Vor |
 | 28 | 他必在這百姓前面過去 | ya.'a.Vor |
 
-第20、25節的「約但河那邊」則是同字根的名詞 be./'E.ver（H5676H，e.ver，簡要詞典義 side: beyond）。
+申3:20、25 的「約但河那邊」則是同字根的名詞 e.ver（H5676H，前面接介詞），字典的意思是「side: beyond」（那邊、對岸）。
 
-**第26節的「發怒」。** STEP 顯示是 va/i.yit.'a.Ber（H5674B），簡要詞典義 be angry；它與上表各處的 base Strong 同為 H5674，只是 Extended Strong 分成 A 與 B。CT 原文字義給第26節「發怒」的是：離開，消逝。
+**申3:26 的「發怒」。** STEP 顯示是 a.var（H5674B，前面接連接詞，Hithpael 語態），字典的意思是「be angry」（發怒）；它與上表各處的 base Strong 同為 H5674，只是 Strong 編號 分成 A 與 B。CT 原文字義給申3:26「發怒」的是：離開，消逝。
 
 **神為什麼發怒。** CT：「『因你們的緣故』表面是因以色列人爭鬧求水喝，實際是因摩西違背神的命令，用杖擊打磐石兩下(參民二十11~13)。」KC 讀的角度不同：「The LORD had become angry with Moses, but it was on account of the people's past deportment. His deed was the result of the sin of the people (Psa 106:32-33).」（耶和華向摩西發怒，但那是因為百姓過去的行徑。他的作為是百姓犯罪的結果（詩106:32-33）。）
 
-**這一段的主線。** 第25節摩西求「容我過去」，第27節神說「你必不能過這約但河」，第28節說約書亞「必在這百姓前面過去」。BH：「The Jordan River represents a boundary between the wilderness and the fulfillment of God's promises, a type of the transition from earthly life to eternal rest.」（約但河代表曠野與神應許成就之間的界線，也預表從今生過渡到永遠安息。）
+**這一段的主線。** 申3:25 摩西求「容我過去」，申3:27 神說「你必不能過這約但河」，申3:28 說約書亞「必在這百姓前面過去」。BH：「The Jordan River represents a boundary between the wilderness and the fulfillment of God's promises, a type of the transition from earthly life to eternal rest.」（約但河代表曠野與神應許成就之間的界線，也預表從今生過渡到永遠安息。）
 
 ## 按書卷累積
 
@@ -36,7 +36,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:3:start -->
 #### [[05 申命記/第3章|第3章]]
-- 本章重點：第18、21、25、27、28節的「過去」在 STEP 都是 H5674A（a.var，to pass）；第26節「向我發怒」是 va/i.yit.'a.Ber（H5674B，be angry），base Strong 同為 H5674。第20、25節的「約但河那邊」是同字根名詞 be./'E.ver（H5676H）。CT 原文字義給第26節「發怒」＝離開，消逝，並說「因你們的緣故」表面是百姓爭鬧求水，實際是摩西擊打磐石兩下；KC 說神的怒是因百姓過去的行徑（詩106:32-33）。
+- 本章重點：第18、21、25、27、28節的「過去」在 STEP 都是 H5674A（a.var，to pass）；第26節「向我發怒」是 a.var（H5674B，be angry），base Strong 同為 H5674。第20、25節的「約但河那邊」是同字根名詞 e.ver（H5676H）。CT 原文字義給第26節「發怒」＝離開，消逝，並說「因你們的緣故」表面是百姓爭鬧求水，實際是摩西擊打磐石兩下；KC 說神的怒是因百姓過去的行徑（詩106:32-33）。
 - 與本章關聯：本章後半的問題只有一個：誰能過去。同一個字根在五節之內把三方的答案講完——兩支派半要過去、摩西不能過去、約書亞必過去；夾在中間的第26節，是同一個字根的另一個意思。
 <!-- accumulation:申命記:3:end -->
 

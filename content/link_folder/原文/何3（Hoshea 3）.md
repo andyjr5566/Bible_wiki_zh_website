@@ -30,7 +30,6 @@ source_scope: collected_only
 
 ## 相關條目
 
-- [[撒上1（Shmuel Aleph 1）]]
 - [[王下7（Melakhim Bet 7）]]
 - [[賽66（Yeshayahu 66）]]
 - [[路8（Loukas 8）]]

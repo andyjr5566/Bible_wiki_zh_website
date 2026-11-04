@@ -10,9 +10,9 @@ source_scope: collected_only
 
 ## 定義
 
-第23節「那時，我懇求耶和華說」——這是摩西為自己開口。
+申3:23「那時，我懇求耶和華說」——這是摩西為自己開口。
 
-**原文。** STEP 顯示是 va./'et.cha.Nan（H2603A，詞典形 cha.nan，簡要詞典義 be gracious），反身語態，本節 context gloss 作「I sought favor」，字面是「我求恩」。CT 原文字義給的是：「懇求」求恩，憐憫。
+**原文。** STEP 顯示是 cha.nan（H2603A，前面接連接詞），反身語態，字典的意思是「be gracious」（施恩），這一節譯作「I sought favor」（我求恩）。CT 原文字義給的是：「懇求」求恩，憐憫。
 
 **他求的是什麼。** KC：「He does not speak here about his failure and the punishment of God, but about his desire to enter the land.」（他在這裡講的不是自己的失敗與神的刑罰，而是想進那地的渴望。）KC 接著界定這個請求的性質：「He did not speak his question in rebellion. He has not asked to enter the land to be a leader, to assert himself. His question did not arise from envy of Joshua. To him it is about the land itself.」（他提出這個請求不是出於悖逆。他求進那地不是為了當領袖、彰顯自己，也不是出於嫉妒約書亞。對他來說，這件事只關乎那地本身。）
 
@@ -26,7 +26,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:3:start -->
 #### [[05 申命記/第3章|第3章]]
-- 本章重點：第23節「那時，我懇求耶和華說」。STEP 顯示是 va./'et.cha.Nan（H2603A cha.nan，簡要詞典義 be gracious），反身語態，context gloss「I sought favor」；CT 原文字義給「懇求」＝求恩，憐憫；BH 說這個希伯來字可以帶著孤注一擲或急迫的意味；KC 說摩西講的不是自己的失敗與刑罰，而是想進那地的渴望，且這個請求不出於悖逆、不出於嫉妒約書亞；GT《聖經精讀本》說他是「小心翼翼地求神施恩改變決定」。
+- 本章重點：第23節「那時，我懇求耶和華說」。STEP 顯示是 cha.nan（H2603A，字典的意思是「be gracious」），反身語態，這一節譯作「I sought favor」；CT 原文字義給「懇求」＝求恩，憐憫；BH 說這個希伯來字可以帶著孤注一擲或急迫的意味；KC 說摩西講的不是自己的失敗與刑罰，而是想進那地的渴望，且這個請求不出於悖逆、不出於嫉妒約書亞；GT《聖經精讀本》說他是「小心翼翼地求神施恩改變決定」。
 - 與本章關聯：這個字開啟本章最後一段（23-29節）。前面兩段都是神給、摩西分；到這一節，摩西第一次為自己開口求，而這一次沒有得著。
 <!-- accumulation:申命記:3:end -->
 

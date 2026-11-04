@@ -11,11 +11,11 @@ source_scope: collected_only
 
 ## 定義
 
-申命記第二十四章第1節裡，丈夫可以寫休書的那個理由：「見他有什麼不合理的事」。這五個中文字在原文只有兩個詞。
+申24:1 裡，丈夫可以寫休書的那個理由：「見他有什麼不合理的事」。這五個中文字在原文只有兩個詞。
 
 ### 這個詞上一章才出現過
 
-STEP 顯示這裡是 'er.Vat da.Var——er.vah（H6172，簡要詞典義 nakedness）加 da.var（H1697L，簡要詞典義 word: case）。同一組詞在上一章第14節也出現過，中文譯成另一個樣子。GT《申命記串珠聖經註釋》直接把兩處接起來：「「不合理的事」：23:14譯作「污穢」，指不潔淨的事（但不會是姦淫，因淫婦必須接受死刑），這裡或許指婦人生理的缺陷，如不能懷孕生育等。」
+STEP 顯示這裡是 er.vah 加 da.var——er.vah（H6172），字典的意思是「nakedness」（赤露），加 da.var（H1697L），字典的意思是「word: case」（話；事件）。同一組詞在申23:14 也出現過，中文譯成另一個樣子。GT《申命記串珠聖經註釋》直接把兩處接起來：「「不合理的事」：23:14譯作「污穢」，指不潔淨的事（但不會是姦淫，因淫婦必須接受死刑），這裡或許指婦人生理的缺陷，如不能懷孕生育等。」
 
 ### 不是姦淫，這一點各家一致
 
@@ -48,4 +48,4 @@ GT《聖經精讀本──申命記註解》把爭議記了下來：「在猶太
 - 拾穗（ccbiblestudy GT）: 申二十四1《申命記串珠聖經註釋》《申命記雷氏研讀本》《啟導本聖經申命記註釋》《聖經精讀本──申命記註解》——23:14 譯作污穢、可惡或下流的行為、Hillel 與 Shammai 兩學派的分歧（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT24.htm>）
 - 研經註解（KingComments）: Deuteronomy 24:1 — 這個理由可以是丈夫所稱的任何不體面之事，但與姦淫無關（申22:20-22）（<https://www.kingcomments.com/en/bible-studies/Deu/24>）
 - 研經註解（BibleHub Study）: Deuteronomy 24:1 — indecency 一詞的爭議、暗示道德或身體上的缺陷而非通姦、影響後來的拉比教導（<https://biblehub.com/study/deuteronomy/24.htm>）
-- 原文資料（STEP Bible）: Deuteronomy 24:1 — H6172、H1697L 的詞形、morphology 與簡要詞典義（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Deuteronomy 24:1 — H6172、H1697L 的詞形、詞形變化 與字典的意思（<https://github.com/STEPBible/STEPBible-Data>）

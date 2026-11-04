@@ -30,7 +30,6 @@ source_scope: collected_only
 
 ## 相關條目
 
-- [[撒上1（Shmuel Aleph 1）]]
 - [[王下7（Melakhim Bet 7）]]
 - [[何3（Hoshea 3）]]
 - [[路9（Loukas 9）]]

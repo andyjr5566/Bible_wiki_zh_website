@@ -11,9 +11,9 @@ source_scope: collected_only
 
 ## 定義
 
-申命記第二十八章20節：「耶和華因你行惡離棄他，必在你手裡所辦的一切事上，使咒詛、擾亂、責罰臨到你」。
+申28:20：「耶和華因你行惡離棄他，必在你手裡所辦的一切事上，使咒詛、擾亂、責罰臨到你」。
 
-這三個詞在中文裡看起來像同義的堆疊，原文則是三個各自獨立的陰性名詞。STEP 顯示分別是 ha./me.'e.Rah（H3994，簡要詞典義 me.e.rah: curse）、ha./me.hu.Mah（H4103，簡要詞典義 me.hu.mah: tumult）、ha./mig.'E.ret（H4045，簡要詞典義 mig.e.ret: rebuke）。值得注意的是第一個字並不是第15節那個「咒詛」——第15、45節用的是 ha./ke.la.Lot（H7045，簡要詞典義 qe.la.lah: curse），與這裡的 H3994 是兩個不同的字。
+這三個詞在中文裡看起來像同義的堆疊，原文則是三個各自獨立的陰性名詞。STEP 顯示分別是 me.e.rah（H3994，字典的意思是「curse」（咒詛））、me.hu.mah（H4103，字典的意思是「tumult」（擾亂））、mig.e.ret（H4045，字典的意思是「rebuke」（斥責））。第一個字與申28:15 那個「咒詛」不同——申28:15、45 用的是 qe.la.lah（H7045，字典的意思是「curse」（咒詛）），與這裡的 H3994 是兩個不同的字。
 
 ### 三個詞各指什麼
 
@@ -23,7 +23,7 @@ GT《申命記串珠聖經註釋》對第二個詞給了一個具體得多的畫
 
 ### 這一節把原因寫在最後
 
-這一節末尾說「因你行惡離棄他」。CT 指出原文直譯是「因你離棄祂的惡行」，並從這個語序讀出一個判斷：並非行惡才會離棄神，離棄神本身就是惡行；人若離棄了神，無論是行惡還是行善，在神的眼裡都是惡行。STEP 顯示這一句是 mi./pe.Nei（H6440I，因為）Ro'.a（H7455，簡要詞典義 ro.a: evil）ma.'a.la.Lei./kha（H4611，簡要詞典義 ma.a.lal: deed）'a.zav.Ta./ni（H5800A，簡要詞典義 a.zav: to forsake，你離棄了我）。
+這一節末尾說「因你行惡離棄他」。CT 指出原文直譯是「因你離棄祂的惡行」，並從這個語序讀出一個判斷：並非行惡才會離棄神，離棄神本身就是惡行；人若離棄了神，無論是行惡還是行善，在神的眼裡都是惡行。STEP 顯示這一句是 pa.neh（H6440I，因為）Ro'.a（H7455，字典的意思是「evil」（邪惡））ma.a.lal（H4611，字典的意思是「deed」（行為））a.zav（H5800A，字典的意思是「to leave: forsake」（離開；離棄），你離棄了我）。
 
 KC 讀這一段的角度是漸進：這裡與接下來幾節提到的災殃並不是一次全部臨到；每當百姓在不順服上再陷一步，神就打發別的災殃，要使百姓回轉歸向他自己。
 
@@ -33,7 +33,7 @@ KC 讀這一段的角度是漸進：這裡與接下來幾節提到的災殃並�
 
 <!-- accumulation:申命記:28:start -->
 #### [[05 申命記/第28章|第28章]]
-- 本章重點：第20節「使咒詛、擾亂、責罰臨到你」。STEP 顯示這是三個各自獨立的陰性名詞：ha./me.'e.Rah（H3994 me.e.rah: curse）、ha./me.hu.Mah（H4103 me.hu.mah: tumult）、ha./mig.'E.ret（H4045 mig.e.ret: rebuke），與第15、45節的 ha./ke.la.Lot（H7045 qe.la.lah）不是同一個字；句末是 mi./pe.Nei Ro'.a ma.'a.la.Lei./kha 'a.zav.Ta./ni（H6440I＋H7455＋H4611＋H5800A）。CT 分別解釋三詞並指出原文直譯是「因你離棄祂的惡行」，據此說並非行惡才會離棄神、離棄神本身就是惡行；GT《串珠》說擾亂指在戰場上恐慌站不住腳；GT《精讀本》說這是使用幾個近義詞的重複手法、擾亂意指因神的懲罰所發生的大騷動與驚恐；BH 說這個字可帶恐慌或方向感錯亂之意；KC 說這些災殃不是一次全部臨到，每當百姓再陷一步神就打發別的災殃要使他們回轉。
+- 本章重點：第20節「使咒詛、擾亂、責罰臨到你」。STEP 顯示這是三個各自獨立的陰性名詞：me.e.rah（H3994 me.e.rah: curse）、me.hu.mah（H4103 me.hu.mah: tumult）、mig.e.ret（H4045 mig.e.ret: rebuke），與第15、45節的 qe.la.lah（H7045 qe.la.lah）不是同一個字；句末是 pa.neh Ro'.a ma.a.lal a.zav（H6440I＋H7455＋H4611＋H5800A）。CT 分別解釋三詞並指出原文直譯是「因你離棄祂的惡行」，據此說並非行惡才會離棄神、離棄神本身就是惡行；GT《串珠》說擾亂指在戰場上恐慌站不住腳；GT《精讀本》說這是使用幾個近義詞的重複手法、擾亂意指因神的懲罰所發生的大騷動與驚恐；BH 說這個字可帶恐慌或方向感錯亂之意；KC 說這些災殃不是一次全部臨到，每當百姓再陷一步神就打發別的災殃要使他們回轉。
 - 與本章關聯：第20節是咒詛段從清單式的六句轉入長篇描述的接縫，三個名詞一次把心理、群體與神人關係三個層面都點到。它也是全章唯一一處用 H3994 講咒詛的地方，其餘都用 H7045。
 <!-- accumulation:申命記:28:end -->
 
@@ -50,4 +50,4 @@ KC 讀這一段的角度是漸進：這裡與接下來幾節提到的災殃並�
 - 拾穗（ccbiblestudy GT）: 申二十八20節《申命記串珠聖經註釋》《聖經精讀本──申命記註解》（<https://www.ccbiblestudy.org/Old%20Testament/05Deut/05GT28.htm>）
 - 研經註解（KingComments）: Deuteronomy 28:20-26 Curse of Disease, Drought and Flight（<https://www.kingcomments.com/en/bible-studies/Deu/28>）
 - 研經註解（BibleHub Study）: Deuteronomy 28:20 — confusion and reproof（<https://biblehub.com/study/deuteronomy/28.htm>）
-- 原文資料（STEP Bible）: Deuteronomy 28:20 — H3994、H4103、H4045、H7455、H4611、H5800A — 詞形、Strong、morphology 與簡要詞典義（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Deuteronomy 28:20 — H3994、H4103、H4045、H7455、H4611、H5800A — 詞形、Strong、詞形變化 與字典的意思（<https://github.com/STEPBible/STEPBible-Data>）

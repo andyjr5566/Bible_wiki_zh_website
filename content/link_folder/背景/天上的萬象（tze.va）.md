@@ -13,7 +13,7 @@ source_scope: collected_only
 
 申命記4:19 把偶像禁令從地上抬到天上：「又恐怕你向天舉目觀看，見耶和華─你的神為天下萬民所擺列的日月星，就是天上的萬象，自己便被勾引敬拜事奉他。」
 
-**「萬象」原文是軍隊。** STEP 原文資料顯示是 tze.Va'（H6635A），簡要詞典義 tsa.va: army；CT〔原文字義〕給的是「萬象」軍隊，星辰。GT《聖經精讀本》的說法方向相同：「『萬象』意指『眾人』、『大集團』、『天上的眾人』指『所有眾星宿』」。同節的「擺列」是 cha.Lak（H2505A，cha.laq: to divide），本節譯義 he has assigned；「勾引」是 ni.dach.Ta（H5080，na.dach: to banish），Niphal，本節譯義 you will be drawn aside。
+**「萬象」原文是軍隊。** STEP 原文資料顯示是 tze.Va'（H6635A），字典的意思是 tsa.va「army」（軍隊）；CT〔原文字義〕給的是「萬象」軍隊，星辰。GT《聖經精讀本》的說法方向相同：「『萬象』意指『眾人』、『大集團』、『天上的眾人』指『所有眾星宿』」。同節的「擺列」是 cha.Lak（H2505A，cha.laq，字典的意思是「to divide」（分開）），本節譯義 he has assigned；「勾引」是 ni.dach.Ta（H5080，na.dach，字典的意思是「to banish」（驅逐）），Niphal，本節譯義 you will be drawn aside。
 
 **當時這是真實的宗教環境。** GT《雷氏研讀本》：「當時星象的膜拜在近東一帶十分流行。本節指出日月星辰是為了萬民的利益而創造，並不是一些控制人類命運的力量。」GT《串珠聖經註釋》給出具體地點：「早在亞伯拉罕的時代，吾珥和哈蘭二城的居民已有月神的敬拜，而埃及亦敬拜日神。」
 
@@ -29,7 +29,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:4:start -->
 #### [[05 申命記/第4章|第4章]]
-- 本章重點：第19節「見耶和華─你的神為天下萬民所擺列的日月星，就是天上的萬象」。STEP：tze.Va'（H6635A，tsa.va，簡要詞典義 army）、cha.Lak（H2505A，he has assigned）、ni.dach.Ta（H5080，na.dach，you will be drawn aside）。CT〔原文字義〕「萬象」軍隊，星辰；GT《聖經精讀本》：「天上的眾人」指所有眾星宿。GT《雷氏研讀本》：當時星象的膜拜在近東一帶十分流行；GT《串珠》：吾珥和哈蘭二城的居民已有月神的敬拜，而埃及亦敬拜日神。BH：天體是神賜給全人類使用的，不是拿來敬拜的。
+- 本章重點：第19節「見耶和華─你的神為天下萬民所擺列的日月星，就是天上的萬象」。STEP：tze.Va'（H6635A，tsa.va，字典的意思是「army」）、cha.Lak（H2505A，he has assigned）、ni.dach.Ta（H5080，na.dach，you will be drawn aside）。CT〔原文字義〕「萬象」軍隊，星辰；GT《聖經精讀本》：「天上的眾人」指所有眾星宿。GT《雷氏研讀本》：當時星象的膜拜在近東一帶十分流行；GT《串珠》：吾珥和哈蘭二城的居民已有月神的敬拜，而埃及亦敬拜日神。BH：天體是神賜給全人類使用的，不是拿來敬拜的。
 - 與本章關聯：第16-18節列的是地上的形像（男女、走獸、飛鳥、爬物、魚），第19節接著往上升到天體。KC 說這是「a form of worship elevated above the earth」（一種被抬高到地上之上的敬拜），但同樣是可憎的——方向換了，性質沒換。
 <!-- accumulation:申命記:4:end -->
 

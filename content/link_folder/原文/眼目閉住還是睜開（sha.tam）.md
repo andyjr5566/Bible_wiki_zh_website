@@ -12,13 +12,13 @@ source_scope: collected_only
 
 民數記24:3、15：「他便題起詩歌說：比珥的兒子巴蘭說，眼目閉住（閉住或作：睜開）的人說」——和合本在正文括號裡自己並列了兩個相反的譯法。
 
-**STEP 怎麼標。** 原文是 she.Tum ha.'A.yin（H8365），morphology 是 HNcmsc，STEP 給的本節譯義是 <the> opened of the eye，簡要義域是 sha.tam: to open。CT〔原文字義〕給的答案完全一樣，只有兩個字：「閉住」打開。
+**STEP 怎麼標。** 原文是 she.Tum ha.'A.yin（H8365），詞形標記 是 HNcmsc，STEP 給的本節譯義是 <the> opened of the eye，字典的意思是 sha.tam: to open。CT〔原文字義〕給的答案完全一樣，只有兩個字：「閉住」打開。
 
 **兩種讀法其實指向同一件事。** CT〔話中之光〕與 GT 丁良才《民數記註釋》用了同一句話收尾：「閉住或作睜開，這四個字的意思歸於一，因為肉眼雖閉住，心眼卻睜開了。」GT《聖經精讀本》講得更具體：「巴蘭以前使用法術,是為了求神的啟示,但是現在因聖靈而“閉著眼睛”,只能在心靈裡聽到神的聲音。」GT《民數記串珠聖經註釋》乾脆把整句改譯成「他的眼睛蒙開啟，耳朵得聽神的言語」。
 
 **KC 提醒不要把「看見」當作信心。** KC 說巴蘭是那眼睛被開啟的人（the man whose eye is opened），他看見的比許多神子民所看見的還多得多，但這一點也不說明他自己的信心如何。BH 也把眼睛張開理解為屬靈的開悟，並拿以賽亞、以西結的異象作對照。
 
-**和民24:4 的「睜開」不是同一個字。** 第4、16節「眼目睜開而仆倒」用的是 u./ge.Lui（H1540I，簡要義域 ga.lah: to reveal: uncover），也就是民22:31 神開巴蘭眼睛時用的那個「揭開」。民24:3 這個 sha.tam 在原文另有其字。
+**和民24:4 的「睜開」不是同一個字。** 民24:4、16「眼目睜開而仆倒」用的是 גָּלָה（ga.lah，H1540I），字典的意思是「to reveal: uncover」（顯露、揭開），也就是民22:31 神開巴蘭眼睛時用的那個「揭開」。民24:3 這個 sha.tam 在原文另有其字。
 
 ## 按書卷累積
 
@@ -40,7 +40,7 @@ source_scope: collected_only
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Numbers 24 — 第3、15節 she.Tum ha.'A.yin（H8365，morphology HNcmsc，本節譯義 <the> opened of the eye，簡要義域 sha.tam: to open）；第4、16節 u./ge.Lui（H1540I）（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Numbers 24 — 第3、15節 she.Tum ha.'A.yin（H8365，詞形變化 HNcmsc，本節譯義 <the> opened of the eye，簡要義域 sha.tam: to open）；第4、16節 u./ge.Lui（H1540I）（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 民數記第二十四章註解 — 民二十四3〔原文字義〕「閉住」打開；〔話中之光〕閉住或作睜開，這四個字的意思歸於一（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04CT24.htm>）
 - 拾穗（ccbiblestudy GT）: 民數記第二十四章拾穗 — 民二十四3 丁良才《民數記註釋》肉眼雖閉住心眼卻睜開；《聖經精讀本》因聖靈而閉著眼睛；《民數記串珠聖經註釋》民二十四3~4 改譯作眼睛蒙開啟（<https://www.ccbiblestudy.org/Old%20Testament/04Num/04GT24.htm>）
 - 研經註解（KingComments）: Numbers 24 — 3 - 9 Third Discourse 段：巴蘭是眼睛被開啟的人，但這不說明他自己的信心（<https://www.kingcomments.com/en/bible-studies/Num/24>）

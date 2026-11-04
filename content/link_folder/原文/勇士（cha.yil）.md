@@ -10,13 +10,13 @@ source_scope: collected_only
 
 ## 定義
 
-第18節摩西對兩支派半下的命令：「你們所有的勇士都要帶著兵器，在你們的弟兄以色列人前面過去。」
+申3:18 摩西對兩支派半下的命令：「你們所有的勇士都要帶著兵器，在你們的弟兄以色列人前面過去。」
 
-**「勇士」在原文是兩個字。** STEP 顯示是 be.nei- Cha.yil（H1121G，ben「兒子」，加 H2428G，cha.yil，簡要詞典義 strength）。CT 原文字義的拆法一樣：「『勇士(原文雙字)』有能力的，武力(首字)；兒子，少壯的(次字)」。
+**「勇士」在原文是兩個字。** STEP 顯示是 be.nei- Cha.yil（H1121G，ben，兒子；加 H2428G，cha.yil，字典的意思是「strength」，力量）。CT 原文字義的拆法一樣：「『勇士(原文雙字)』有能力的，武力(首字)；兒子，少壯的(次字)」。
 
 **指的是誰。** CT 說得很平實：「『你們』意指流便和迦得兩個支派加上瑪拿西的半個支派；『所有的勇士』指可以上戰場的男人。」BH：「The phrase "men of valor" indicates the need for courage and readiness in fulfilling God's commands.」（「勇士」這個詞指出，遵行神的命令既需要勇氣，也需要預備好。）
 
-**同一節的「帶著兵器」是另一個字。** STEP 顯示是 cha.lu.Tzim（H2502B，cha.lats，to arm），被動分詞，本節 context gloss 作 equipped（已裝備好的）。
+**同一節的「帶著兵器」是另一個字。** STEP 顯示是 cha.lu.Tzim（H2502B，cha.lats），被動分詞，字典的意思是「to arm」（武裝），這一節譯作「equipped」（已裝備好的）。
 
 **這道命令的重點在「前面過去」。** BH：「This instruction highlights the leadership role that the eastern tribes were to take in the conquest of Canaan.」（這道指示點出河東各支派在征服迦南時要擔起的帶頭角色。）KC 把它讀成互相顧惜：「We can learn from this that we should not only look for our own interests, but also for those of others (Phil 2:4).」（我們可以從這裡學到，不要只顧自己的事，也要顧別人的事（腓2:4）。）
 
@@ -26,7 +26,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:3:start -->
 #### [[05 申命記/第3章|第3章]]
-- 本章重點：第18節「你們所有的勇士都要帶著兵器」。STEP 顯示「勇士」是 be.nei- Cha.yil（H1121G ben ＋ H2428G cha.yil，簡要詞典義 strength）；CT 原文字義同樣拆成兩個字：「有能力的，武力(首字)；兒子，少壯的(次字)」，並說「『所有的勇士』指可以上戰場的男人」；BH 說這個詞指出遵行神命令需要勇氣與預備。同節「帶著兵器」是另一個字 cha.lu.Tzim（H2502B）。
+- 本章重點：第18節「你們所有的勇士都要帶著兵器」。STEP 顯示「勇士」是 be.nei- Cha.yil（H1121G ben ＋ H2428G cha.yil，字典的意思是「strength」）；CT 原文字義同樣拆成兩個字：「有能力的，武力(首字)；兒子，少壯的(次字)」，並說「『所有的勇士』指可以上戰場的男人」；BH 說這個詞指出遵行神命令需要勇氣與預備。同節「帶著兵器」是另一個字 cha.lu.Tzim（H2502B）。
 - 與本章關聯：這個詞界定了誰必須過河：不是全部的人，是能打仗的男丁。第19節接著把妻子、孩子、牲畜留在河東的城裡——兩節合起來，就是兩支派半當年應許的具體內容。
 <!-- accumulation:申命記:3:end -->
 
@@ -34,8 +34,8 @@ source_scope: collected_only
 
 <!-- accumulation:約書亞記:1:start -->
 #### [[06 約書亞記/第1章|第1章]]
-- 本章重點：第14節「你們中間一切大能的勇士都要帶著兵器在你們的弟兄前面過去」，STEP 為 gi.bo.Rei ha./Cha.yil（H1368 gib.bor 加 H2428G cha.yil）。CT 說『大能的勇士』指戰鬥人員，亦即從二十歲以外、能出去打仗的（參民二十六2）；GT《啟導本》說是年滿20歲，能使用兵器英勇作戰的人；GT《研經資料》說「大能的勇士」原文是「強壯的軍隊」。BH 說他們最強的戰士要與其餘以色列人一同過約但河，並在戰役中站在前列。
-- 與本章關聯：申3:18 摩西對兩支派半下的是同一道命令，本章由約書亞再下一次；中文幾乎一樣，原文用的詞卻換了一組——申3:18 是 be.nei- Cha.yil，本章是 gi.bo.Rei ha./Cha.yil，共用的只有 cha.yil 這個字。
+- 本章重點：第14節「你們中間一切大能的勇士都要帶著兵器在你們的弟兄前面過去」，STEP 為 gi.bo.Rei cha.yil（H1368 gib.bor 加 H2428G cha.yil，cha.yil 前面有定冠詞）。CT 說『大能的勇士』指戰鬥人員，亦即從二十歲以外、能出去打仗的（參民二十六2）；GT《啟導本》說是年滿20歲，能使用兵器英勇作戰的人；GT《研經資料》說「大能的勇士」原文是「強壯的軍隊」。BH 說他們最強的戰士要與其餘以色列人一同過約但河，並在戰役中站在前列。
+- 與本章關聯：申3:18 摩西對兩支派半下的是同一道命令，本章由約書亞再下一次；中文幾乎一樣，原文用的詞卻換了一組——申3:18 是 be.nei- Cha.yil，本章是 gi.bo.Rei 加前面有定冠詞的 cha.yil，共用的只有 cha.yil 這個字。
 <!-- accumulation:約書亞記:1:end -->
 
 ## 主題發展
@@ -47,7 +47,7 @@ source_scope: collected_only
 | 出處 | 「勇士」 | 「帶著兵器」 |
 | --- | --- | --- |
 | 申3:18 | be.nei- Cha.yil（H1121G 加 H2428G） | cha.lu.Tzim（H2502B，cha.lats） |
-| 書1:14 | gi.bo.Rei ha./Cha.yil（H1368 加 H2428G） | cha.mu.Shim（H2571，cha.mush） |
+| 書1:14 | gi.bo.Rei（H1368）加 cha.yil（H2428G，前面有定冠詞） | cha.mu.Shim（H2571，cha.mush） |
 
 兩處共用的只有 cha.yil 這一個字。==命令的內容一字未改，用來說這件事的詞卻整組換過。==
 

@@ -15,7 +15,7 @@ source_scope: collected_only
 
 ### 原文是兩個字
 
-STEP 顯示「麻秸」是 be./fish.Tei ha./'Etz，由兩個名詞組成：H6593（簡要詞典義 pish.teh: flax）與 H6086I（簡要詞典義 ets: tree: stick）。同節的「藏」是 va./tit.me.Ne/m（H2934 ta.man），「所擺的」是 ha./'a.ru.Khot（H6186A 簡要詞典義 a.rakh: to arrange），「房頂」是 ha./Ga.ga/h 與 ha./Gag（H1406 gag）。
+STEP 顯示「麻秸」是 pish.teh ets，由兩個名詞組成：H6593（字典的意思是「flax」（亞麻））與 H6086I（字典的意思是「tree: stick」（樹；木頭））。同節的「藏」是 ta.man（H2934），「所擺的」是 a.rakh（H6186A，字典的意思是「to arrange」（排列）），「房頂」是 gag（H1406，這節出現兩個詞形）。
 
 CT 的原文字義給的拆法一樣：「麻稭(原文雙字)」桿，木麻(首字)；亞麻(次字)；「領」安排。GT《約書亞記綜合解讀》直接說「麻秸」原文是「亞麻木頭」。
 
@@ -39,7 +39,7 @@ KC 說亞麻是細麻布的原料，而細麻講的是聖徒的義行（啟19:8�
 
 <!-- accumulation:約書亞記:2:start -->
 #### [[06 約書亞記/第2章|第2章]]
-- 本章重點：第6節「將他們藏在那裡所擺的麻秸中」。STEP 顯示「麻秸」是 be./fish.Tei ha./'Etz（H6593 pish.teh: flax 加 H6086I ets: tree: stick），「藏」是 va./tit.me.Ne/m（H2934），「所擺的」是 ha./'a.ru.Khot（H6186A a.rakh: to arrange），「房頂」是 H1406 gag。CT 原文字義給「麻稭(原文雙字)」桿，木麻(首字)；亞麻(次字)，並說亞麻的莖長約一公尺、曬乾後可作燃料；GT《綜合解讀》說原文是「亞麻木頭」。加工程序各家一致：GT《雷氏研讀本》說長三至四英尺的亞蔴草柄先泡在水中再平放在平頂屋上曬乾，GT《串珠》說可用來紡制麻線。GT《研經資料》列出濕臭的漚麻與曬乾的亞麻莖兩種可能，並判斷比較前後文應該是曬乾的亞麻莖。GT《綜合解讀》由此推出時間是逾越節前夕、收割的日子，大麥和亞麻同時成熟，並說這種細節不瞭解當時當地情況的人很難編造；BH 說這正合春季。KC 說亞麻是細麻布的原料，細麻講的是聖徒的義行（啟19:8），並引箴31:13。
+- 本章重點：第6節「將他們藏在那裡所擺的麻秸中」。STEP 顯示「麻秸」是 pish.teh ets（H6593 pish.teh: flax 加 H6086I，字典的意思是「tree: stick」），「藏」是 ta.man（H2934），「所擺的」是 a.rakh（H6186A，字典的意思是「to arrange」），「房頂」是 H1406 gag。CT 原文字義給「麻稭(原文雙字)」桿，木麻(首字)；亞麻(次字)，並說亞麻的莖長約一公尺、曬乾後可作燃料；GT《綜合解讀》說原文是「亞麻木頭」。加工程序各家一致：GT《雷氏研讀本》說長三至四英尺的亞蔴草柄先泡在水中再平放在平頂屋上曬乾，GT《串珠》說可用來紡制麻線。GT《研經資料》列出濕臭的漚麻與曬乾的亞麻莖兩種可能，並判斷比較前後文應該是曬乾的亞麻莖。GT《綜合解讀》由此推出時間是逾越節前夕、收割的日子，大麥和亞麻同時成熟，並說這種細節不瞭解當時當地情況的人很難編造；BH 說這正合春季。KC 說亞麻是細麻布的原料，細麻講的是聖徒的義行（啟19:8），並引箴31:13。
 - 與本章關聯：這是本章唯一一處插敘，補出探子被藏在哪裡。而這堆麻秸同時是三件事的線索：喇合的日常生計、耶利哥的房屋結構，以及以色列人到達約但河邊的季節。
 <!-- accumulation:約書亞記:2:end -->
 
@@ -51,7 +51,7 @@ KC 說亞麻是細麻布的原料，而細麻講的是聖徒的義行（啟19:8�
 
 ## 來源依據
 
-- 原文資料（STEP Bible）: Joshua 2:6 — be./fish.Tei（H6593，pish.teh: flax）、ha./'Etz（H6086I，ets: tree: stick）、va./tit.me.Ne/m（H2934）、ha./'a.ru.Khot（H6186A）、H1406 gag（<https://github.com/STEPBible/STEPBible-Data>）
+- 原文資料（STEP Bible）: Joshua 2:6 — pish.teh（H6593，字典的意思是「flax」（亞麻））、ets（H6086I，字典的意思是「tree: stick」（樹；木頭））、ta.man（H2934）、a.rakh（H6186A）、H1406 gag（<https://github.com/STEPBible/STEPBible-Data>）
 - 逐節註解（ccbiblestudy CT）: 約書亞記第二章註解 — 書二6〔原文字義〕「麻稭(原文雙字)」與〔文意註解〕（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06CT02.htm>）
 - 拾穗（ccbiblestudy GT）: 約書亞記第二章拾穗 — 書二6《約書亞記雷氏研讀本》《啟導本聖經約書亞記註釋》《串珠聖經注釋》《約書亞記綜合解讀》《約書亞記研經資料》論麻秸與季節（<https://www.ccbiblestudy.org/Old%20Testament/06Josh/06GT02.htm>）
 - 研經註解（KingComments）: Joshua 2 — 1 - 7 The Spies with Rahab（Rahab hides the spies under stalks of flax…；Rev 19:8；Pro 31:13）（<https://www.kingcomments.com/en/bible-studies/Jos/2>）

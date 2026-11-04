@@ -30,7 +30,6 @@ source_scope: collected_only
 
 ## 相關條目
 
-- [[撒上1（Shmuel Aleph 1）]]
 - [[何3（Hoshea 3）]]
 - [[賽66（Yeshayahu 66）]]
 - [[路7（Loukas 7）]]

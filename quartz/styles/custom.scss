@@ -1185,6 +1185,121 @@ details.collapsible-subheading {
   }
 }
 
+/* ---------- 每頁的「← 上一頁」／「↑ 〈上一層標題〉」（腳本 components/scripts/backButton.inline.ts，規則 backNav.ts） ----------
+   同一個元素兩種外觀：桌機是文章標題上方（麵包屑上面）的一行小字；手機（<= 800px）是左下角浮動膠囊。 */
+:root {
+  /* 手機浮動鈕的位置只在這裡定義：左下「筆記」鈕（離底 20、高 46）正上方再留 10px。
+     不必避開置中的「↩ 返回」那一排：它出現時我們整個隱藏（見下方互斥規則）。
+     「加入主畫面」橫幅出現時整排會上移（--bwz-pwa-h，規則同 Head.tsx 與 verse-return），所以兩種狀況各一個值 */
+  --bwz-bb-bottom: calc(20px + 46px + 10px);
+  --bwz-bb-bottom-pwa: calc(var(--bwz-pwa-h, 64px) + 12px + 46px + 10px);
+  /* 比「↩ 返回」（880）高、比筆記（890）、導覽（900）、搜尋（999）低，這些視窗打開時才不會被我們蓋住 */
+  --bwz-bb-z: 885;
+}
+
+/* 互斥（唯一定義處）：同一個畫面不可同時有兩個「返回」類功能。verse-return 的「↩ 返回」（.bwz-vr，回到剛才的經節
+   或本章整理）比較貼近讀者當下在做的事，所以它在 DOM 裡時我們整個隱藏（桌機行內條與手機浮動鈕都是），它被移除後自然回來。
+   verse-return 是新增／移除 .bwz-vr 這個節點，所以純 CSS 的 :has() 就能偵測，兩個外掛不必互相認識。 */
+body:has(.bwz-vr) .bwz-bb {
+  display: none;
+}
+
+.bwz-bb {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  max-width: 100%;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--darkgray);
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--secondary);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* 書卷名很長時截斷，不撐破版面 */
+  .bwz-bb-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 800px) {
+  .bwz-bb {
+    position: fixed;
+    left: 20px;
+    bottom: calc(var(--bwz-bb-bottom) + env(safe-area-inset-bottom, 0px));
+    z-index: var(--bwz-bb-z);
+    box-sizing: border-box;
+    min-height: 44px;
+    max-width: min(60vw, 14rem);
+    margin: 0;
+    padding: 0 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 999px;
+    background: var(--light);
+    color: var(--dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    transition: bottom 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover,
+    &:active {
+      background: var(--highlight);
+      color: var(--dark);
+    }
+
+    &:focus-visible {
+      outline-offset: 3px;
+      border-radius: 999px;
+    }
+  }
+
+  html[data-bwz-pwa-banner]:not([data-bwz-prompt="tour"]):not([data-bwz-prompt="launcher"]) .bwz-bb {
+    bottom: calc(var(--bwz-bb-bottom-pwa) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 探索抽屜、搜尋、放大關係圖、筆記視窗、導覽進行中：先藏起來（和「↩ 返回」、快捷列一致），關掉後恢復 */
+  html.mobile-no-scroll .bwz-bb,
+  body:has(.explorer:not(.collapsed) .mobile-explorer) .bwz-bb,
+  html:has(.search > .search-container.active) .bwz-bb,
+  html:has(.global-graph-outer.active) .bwz-bb,
+  html:has(.bwz-n-overlay) .bwz-bb,
+  html.bwz-touring .bwz-bb {
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-bb {
+    transition: none;
+  }
+}
+
+@media print {
+  .bwz-bb {
+    display: none;
+  }
+}
+
 /* ---------- 強數字（Strong numbers） ---------- */
 .strong-no {
   font-size: 0.78em;

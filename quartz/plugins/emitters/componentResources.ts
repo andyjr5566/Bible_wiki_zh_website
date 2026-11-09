@@ -21,6 +21,8 @@ import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
 // @ts-ignore
 import chapterQuickBarScript from "../../components/scripts/chapterQuickBar.inline"
 // @ts-ignore
+import backButtonScript from "../../components/scripts/backButton.inline"
+// @ts-ignore
 import knowledgeHubScript from "../../components/scripts/knowledgeHub.inline"
 // @ts-ignore
 import interactiveRailScript from "../../components/scripts/interactiveRail.inline"
@@ -127,6 +129,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Chapter quick bar (手機章節快捷列＋探索抽屜捲到目前章節)
   componentResources.afterDOMLoaded.push(chapterQuickBarScript)
+
+  // Back button (每頁「上一頁」／「返回上一層」；規則在 backNav.ts)
+  componentResources.afterDOMLoaded.push(backButtonScript)
 
   // Knowledge hub filters (知識節點類別頁的書卷／關鍵字篩選、總入口的搜尋鈕)
   componentResources.afterDOMLoaded.push(knowledgeHubScript)

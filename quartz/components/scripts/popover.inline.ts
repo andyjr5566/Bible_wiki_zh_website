@@ -1,9 +1,73 @@
-import { computePosition, flip, inline, shift } from "@floating-ui/dom"
+import { computePosition, flip, inline, shift, size } from "@floating-ui/dom"
 import { normalizeRelativeURLs } from "../../util/path"
 import { fetchCanonical } from "./util"
 
 const p = new DOMParser()
 let activeAnchor: HTMLAnchorElement | null = null
+let repositionPopover: (() => void) | undefined
+
+function movePopover(popover: HTMLElement, x: number, y: number) {
+  popover.style.transform = `translate(${x.toFixed()}px, ${y.toFixed()}px)`
+}
+
+function addResizeHandle(popover: HTMLElement, inner: HTMLElement) {
+  const handle = document.createElement("button")
+  handle.type = "button"
+  handle.className = "popover-resize"
+  handle.title = "拖曳或使用方向鍵調整預覽大小"
+  handle.setAttribute("aria-label", handle.title)
+  popover.appendChild(handle)
+
+  function startResize() {
+    const bounds = popover.getBoundingClientRect()
+    const { width, height } = inner.getBoundingClientRect()
+    const viewport = document.documentElement
+    const left = popover.dataset.resizeX === "left"
+    const top = popover.dataset.resizeY === "top"
+    const maxWidth = width + (left ? bounds.left : viewport.clientWidth - bounds.right)
+    const maxHeight = height + (top ? bounds.top : viewport.clientHeight - bounds.bottom)
+
+    return (dx: number, dy: number) => {
+      const nextWidth = Math.min(maxWidth, Math.max(160, width + (left ? -dx : dx)))
+      const nextHeight = Math.min(maxHeight, Math.max(96, height + (top ? -dy : dy)))
+      popover.style.removeProperty("--popover-available-width")
+      popover.style.removeProperty("--popover-available-height")
+      inner.style.setProperty("--popover-resized-width", `${nextWidth}px`)
+      inner.style.setProperty("--popover-height", `${nextHeight}px`)
+      // Keep the opposite corner fixed, including when the handle faces left or up.
+      movePopover(
+        popover,
+        bounds.left + (left ? width - nextWidth : 0),
+        bounds.top + (top ? height - nextHeight : 0),
+      )
+    }
+  }
+
+  let drag: { x: number; y: number; resize: ReturnType<typeof startResize> } | undefined
+  handle.addEventListener("pointerdown", (event) => {
+    if (!event.isPrimary || event.button !== 0) return
+    event.preventDefault()
+    drag = { x: event.clientX, y: event.clientY, resize: startResize() }
+    handle.setPointerCapture(event.pointerId)
+    popover.classList.add("is-resizing")
+  })
+  handle.addEventListener("pointermove", (event) => {
+    if (!drag || !handle.hasPointerCapture(event.pointerId)) return
+    drag.resize(event.clientX - drag.x, event.clientY - drag.y)
+  })
+  handle.addEventListener("lostpointercapture", () => {
+    drag = undefined
+    popover.classList.remove("is-resizing")
+  })
+  handle.addEventListener("keydown", (event) => {
+    const step = 24
+    const dx = Number(event.key === "ArrowRight") - Number(event.key === "ArrowLeft")
+    const dy = Number(event.key === "ArrowDown") - Number(event.key === "ArrowUp")
+    if (dx === 0 && dy === 0) return
+    event.preventDefault()
+    startResize()(step * dx, step * dy)
+  })
+}
 
 async function mouseEnterHandler(
   this: HTMLAnchorElement,
@@ -15,19 +79,68 @@ async function mouseEnterHandler(
   }
 
   async function setPosition(popoverElement: HTMLElement) {
+    const resizable = popoverElement.classList.contains("popover-resizable")
+    const inlineAnchor = inline({ x: clientX, y: clientY })
+    let matchContentWidth = false
+    if (resizable) {
+      const center = document.querySelector("#quartz-body > .center")
+      const content = center?.querySelector(":scope > article") ?? center
+      const width = content?.getBoundingClientRect().width ?? 0
+      const inner = popoverElement.querySelector<HTMLElement>(".popover-inner")
+      if (width > 0) {
+        popoverElement.style.setProperty("--popover-default-width", `${width}px`)
+        matchContentWidth = !inner?.style.getPropertyValue("--popover-resized-width")
+      } else {
+        popoverElement.style.removeProperty("--popover-default-width")
+      }
+    }
+    popoverElement.style.removeProperty("--popover-available-width")
+    popoverElement.style.removeProperty("--popover-available-height")
     const { x, y } = await computePosition(link, popoverElement, {
       strategy: "fixed",
-      middleware: [inline({ x: clientX, y: clientY }), shift(), flip()],
+      middleware: resizable
+        ? [
+            inlineAnchor,
+            // Keep the default width when only a shorter preview fits above or below the link.
+            flip({ fallbackAxisSideDirection: matchContentWidth ? "none" : "end" }),
+            shift(),
+            size({
+              apply({ availableWidth, availableHeight }) {
+                popoverElement.style.setProperty("--popover-available-width", `${availableWidth}px`)
+                popoverElement.style.setProperty(
+                  "--popover-available-height",
+                  `${availableHeight}px`,
+                )
+              },
+            }),
+          ]
+        : [inlineAnchor, shift(), flip()],
     })
-    Object.assign(popoverElement.style, {
-      transform: `translate(${x.toFixed()}px, ${y.toFixed()}px)`,
-    })
+    movePopover(popoverElement, x, y)
+
+    if (resizable) {
+      const viewport = document.documentElement
+      popoverElement.dataset.resizeX =
+        x + popoverElement.offsetWidth / 2 > viewport.clientWidth / 2 ? "left" : "right"
+      popoverElement.dataset.resizeY =
+        y + popoverElement.offsetHeight / 2 > viewport.clientHeight / 2 ? "top" : "bottom"
+    }
   }
 
   function showPopover(popoverElement: HTMLElement) {
     clearActivePopover()
     popoverElement.classList.add("active-popover")
-    setPosition(popoverElement as HTMLElement)
+    setPosition(popoverElement)
+    repositionPopover = () => {
+      if (
+        popoverElement.isConnected &&
+        popoverElement.matches(".active-popover, :hover, :focus-within") &&
+        !popoverElement.classList.contains("is-resizing") &&
+        link.isConnected
+      ) {
+        setPosition(popoverElement)
+      }
+    }
 
     if (hash !== "") {
       const inner = popoverElement.querySelector(".popover-inner") as HTMLElement | null
@@ -105,6 +218,8 @@ async function mouseEnterHandler(
       if (elts.length === 0) return
 
       elts.forEach((elt) => popoverInner.appendChild(elt))
+      popoverElement.classList.add("popover-resizable")
+      addResizeHandle(popoverElement, popoverInner)
   }
 
   if (!!document.getElementById(popoverId)) {
@@ -139,3 +254,4 @@ function setupPopovers() {
 
 document.addEventListener("nav", setupPopovers)
 document.addEventListener("render", setupPopovers)
+window.addEventListener("resize", () => repositionPopover?.())

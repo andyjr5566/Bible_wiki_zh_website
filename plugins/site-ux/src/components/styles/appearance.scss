@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
-   「Aa 外觀」按鈕與面板；以及字級、經文連結樣式（靠 <html> 屬性切換）
+   「Aa 外觀」按鈕與面板；以及字級、字體、經文連結樣式（靠 <html> 屬性切換）
    預設值（紙質、中、明顯）不會在 <html> 留下任何屬性，所以預設外觀完全不受這個檔影響。
    ══════════════════════════════════════════════════════════════ */
 
@@ -230,6 +230,40 @@
     li {
       font-size: calc(1.4rem * var(--ux-fs)) !important;
     }
+  }
+}
+
+/* 示範字體與閱讀區使用相同的字型堆疊。 */
+:root {
+  --ux-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --ux-serif: "Noto Serif TC", "Songti TC", PMingLiU, serif;
+}
+
+.site-ux-opt[data-name="fontFamily"][data-value="sans"] {
+  font-family: var(--ux-sans);
+}
+
+.site-ux-opt[data-name="fontFamily"][data-value="serif"] {
+  font-family: var(--ux-serif);
+}
+
+:root[data-ux-font="sans"] {
+  --ux-reading-font: var(--ux-sans);
+}
+
+:root[data-ux-font="serif"] {
+  --ux-reading-font: var(--ux-serif);
+}
+
+:root[data-ux-font] :is(article, .bwz-masthead, .popover-inner, .bwz-touch-preview-content) {
+  --bodyFont: var(--ux-reading-font);
+  --headerFont: var(--ux-reading-font);
+  --font-text: var(--ux-reading-font);
+  font-family: var(--ux-reading-font);
+
+  // Some theme rules set a font directly on text in the previews.
+  :is(p, li, td, th, blockquote, h1, h2, h3, h4, h5, h6) {
+    font-family: var(--ux-reading-font) !important;
   }
 }
 

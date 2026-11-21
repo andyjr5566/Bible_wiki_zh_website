@@ -1,12 +1,14 @@
-// 「Aa 外觀」面板：底色／字級／經文連結。按鈕由伺服器端畫在左上工具列，面板在按下按鈕時才建立。
+// 「Aa 外觀」面板：底色／字級／字體／經文連結。按鈕由伺服器端畫在左上工具列，面板在按下按鈕時才建立。
 import {
   DEFAULTS,
   applySettings,
+  normalize,
   readSettings,
   writeSetting,
   type SettingName,
   type Settings,
 } from "../../lib/settings"
+import { syncReadingFont } from "../../lib/readingFont"
 import { markVerseList } from "../../lib/verses"
 import { currentView, type ReadingView } from "../../lib/readingView"
 import { initPureMode, isPureAvailable, prepareForNav, setReadingView } from "../../lib/pureMode"
@@ -34,6 +36,15 @@ const GROUPS: GroupSpec[] = [
       ["s", "小"],
       ["m", "中"],
       ["l", "大"],
+    ],
+  },
+  {
+    name: "fontFamily",
+    label: "字體",
+    options: [
+      ["default", "預設"],
+      ["sans", "黑體"],
+      ["serif", "宋體"],
     ],
   },
   {
@@ -75,6 +86,7 @@ let current: OpenPanel | null = null
 
 function applyAll(settings: Settings): void {
   applySettings(settings)
+  syncReadingFont(settings.fontFamily)
   markVerseList()
 }
 
@@ -83,11 +95,11 @@ function announceBg(bg: string): void {
   document.dispatchEvent(new CustomEvent("bgchange", { detail: { bg } }))
 }
 
-function change(name: SettingName, value: string): void {
-  const next = { ...readSettings(), [name]: value } as Settings
-  writeSetting(name, value as never)
+function change(name: SettingName, selected: string): void {
+  const value = normalize(name, selected)
+  writeSetting(name, value)
   // 即使儲存失敗（隱私模式），畫面仍然套用這次的選擇
-  applyAll({ ...next })
+  applyAll({ ...currentSettings(), [name]: value })
   if (name === "bg") announceBg(value)
 }
 
@@ -105,6 +117,7 @@ function currentSettings(): Settings {
   return {
     bg: root.getAttribute("data-bg") === "pure" ? "pure" : "paper",
     fontSize: fs === "s" || fs === "l" ? fs : "m",
+    fontFamily: normalize("fontFamily", root.getAttribute("data-ux-font")),
     links: links === "quiet" || links === "hidden" ? links : "normal",
   }
 }

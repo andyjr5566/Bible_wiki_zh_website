@@ -20,6 +20,7 @@ import notePropertiesZhScript from "../../components/scripts/notePropertiesZh.in
 import youtubeFacadeScript from "../../components/scripts/youtubeFacade.inline"
 // @ts-ignore
 import chapterQuickBarScript from "../../components/scripts/chapterQuickBar.inline"
+import sidebarToggleScript from "../../components/scripts/sidebarToggle.inline"
 // @ts-ignore
 import backButtonScript from "../../components/scripts/backButton.inline"
 // @ts-ignore
@@ -129,6 +130,7 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Chapter quick bar (手機章節快捷列＋探索抽屜捲到目前章節)
   componentResources.afterDOMLoaded.push(chapterQuickBarScript)
+  componentResources.beforeDOMLoaded.push(sidebarToggleScript)
 
   // Back button (每頁「上一頁」／「返回上一層」；規則在 backNav.ts)
   componentResources.afterDOMLoaded.push(backButtonScript)

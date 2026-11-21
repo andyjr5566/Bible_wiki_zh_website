@@ -45,6 +45,8 @@ describe("normalize", () => {
   it("合法值原樣回傳，其他一律回預設", () => {
     expect(normalize("bg", "pure")).toBe("pure")
     expect(normalize("fontSize", "l")).toBe("l")
+    expect(normalize("fontFamily", "sans")).toBe("sans")
+    expect(normalize("fontFamily", "unknown")).toBe("default")
     expect(normalize("links", "hidden")).toBe("hidden")
     expect(normalize("bg", "dark")).toBe("paper")
     expect(normalize("fontSize", null)).toBe("m")
@@ -55,7 +57,7 @@ describe("normalize", () => {
 describe("readSettings", () => {
   it("沒有任何儲存時就是預設", () => {
     expect(readSettings(memoryStorage())).toEqual(DEFAULTS)
-    expect(DEFAULTS).toEqual({ bg: "paper", fontSize: "m", links: "normal" })
+    expect(DEFAULTS).toEqual({ bg: "paper", fontSize: "m", fontFamily: "default", links: "normal" })
   })
 
   it("舊的「素」按鈕存下的 theme-bg=pure 仍然有效（升級後不用重設）", () => {
@@ -68,6 +70,7 @@ describe("readSettings", () => {
     const s = memoryStorage({
       "theme-bg": "magenta",
       "bwz-ux-fontsize": "xl",
+      "bwz-ux-fontfamily": "unknown",
       "bwz-ux-verselinks": "",
     })
     expect(readSettings(s)).toEqual(DEFAULTS)
@@ -83,9 +86,10 @@ describe("writeSetting", () => {
   it("寫入後讀得回來", () => {
     const s = memoryStorage()
     expect(writeSetting("fontSize", "l", s)).toBe(true)
+    expect(writeSetting("fontFamily", "serif", s)).toBe(true)
     expect(writeSetting("links", "quiet", s)).toBe(true)
     expect(writeSetting("bg", "pure", s)).toBe(true)
-    expect(readSettings(s)).toEqual({ bg: "pure", fontSize: "l", links: "quiet" })
+    expect(readSettings(s)).toEqual({ bg: "pure", fontSize: "l", fontFamily: "serif", links: "quiet" })
     expect(s.data.get("theme-bg")).toBe("pure")
   })
 
@@ -110,10 +114,11 @@ describe("applySettings", () => {
 
   it("非預設值寫成屬性，換回預設時移除", () => {
     const root = fakeRoot()
-    applySettings({ bg: "pure", fontSize: "s", links: "hidden" }, root)
+    applySettings({ bg: "pure", fontSize: "s", fontFamily: "sans", links: "hidden" }, root)
     expect(Object.fromEntries(root.attrs)).toEqual({
       "data-bg": "pure",
       "data-ux-fs": "s",
+      "data-ux-font": "sans",
       "data-ux-links": "hidden",
     })
     applySettings(DEFAULTS, root)
@@ -122,10 +127,14 @@ describe("applySettings", () => {
 
   it("applyStoredSettings 讀取儲存並套用", () => {
     const root = fakeRoot()
-    const result = applyStoredSettings(memoryStorage({ "theme-bg": "pure", "bwz-ux-fontsize": "l" }), root)
-    expect(result).toEqual({ bg: "pure", fontSize: "l", links: "normal" })
+    const result = applyStoredSettings(
+      memoryStorage({ "theme-bg": "pure", "bwz-ux-fontsize": "l", "bwz-ux-fontfamily": "serif" }),
+      root,
+    )
+    expect(result).toEqual({ bg: "pure", fontSize: "l", fontFamily: "serif", links: "normal" })
     expect(root.getAttribute("data-bg")).toBe("pure")
     expect(root.getAttribute("data-ux-fs")).toBe("l")
+    expect(root.getAttribute("data-ux-font")).toBe("serif")
     expect(root.getAttribute("data-ux-links")).toBeNull()
   })
 })

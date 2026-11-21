@@ -274,9 +274,7 @@ const STEPS: Step[] = [
     targets: () => [lambLink()].filter(visible),
     title: () => (isMobile() ? "點進條目" : "想看完整內容就點下去"),
     text: () =>
-      isMobile()
-        ? "點第 6 節的「羊羔」。看完按瀏覽器的返回，就回到原本讀的那節。"
-        : "點「羊羔」打開條目。看完按瀏覽器的返回，就回到原本讀的那節。",
+      "點第 6 節的「羊羔」。如果先看到預覽，按「前往條目」。看完可用返回按鈕回到經節。",
     done: () => currentSlug() === SLUG.entry,
     onSkip: () => go(SLUG.entry),
   },

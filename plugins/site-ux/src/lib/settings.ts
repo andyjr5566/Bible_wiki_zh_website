@@ -1,18 +1,20 @@
-// 「Aa 外觀」設定：底色、字級、經文連結樣式。
+// 「Aa 外觀」設定：底色、字級、字體、經文連結樣式。
 // 純函式加最小的 Storage／Element 介面，方便單元測試；所有 localStorage 讀寫都包 try/catch，
 // 隱私模式、被封鎖或額度用完時一律退回預設值，不丟錯。
 
 export type Bg = "paper" | "pure"
 export type FontSize = "s" | "m" | "l"
+export type FontFamily = "default" | "sans" | "serif"
 export type VerseLinks = "normal" | "quiet" | "hidden"
 
 export interface Settings {
   bg: Bg
   fontSize: FontSize
+  fontFamily: FontFamily
   links: VerseLinks
 }
 
-export const DEFAULTS: Settings = { bg: "paper", fontSize: "m", links: "normal" }
+export const DEFAULTS: Settings = { bg: "paper", fontSize: "m", fontFamily: "default", links: "normal" }
 
 /**
  * 底色沿用原本「素」按鈕的 key 與值（"theme-bg"："pure"／"paper"），
@@ -21,12 +23,14 @@ export const DEFAULTS: Settings = { bg: "paper", fontSize: "m", links: "normal" 
 export const STORAGE_KEYS = {
   bg: "theme-bg",
   fontSize: "bwz-ux-fontsize",
+  fontFamily: "bwz-ux-fontfamily",
   links: "bwz-ux-verselinks",
 } as const
 
 export const OPTIONS = {
   bg: ["paper", "pure"],
   fontSize: ["s", "m", "l"],
+  fontFamily: ["default", "sans", "serif"],
   links: ["normal", "quiet", "hidden"],
 } as const
 
@@ -73,6 +77,7 @@ export function readSettings(storage: StorageLike | null = defaultStorage()): Se
   return {
     bg: readOne("bg", storage),
     fontSize: readOne("fontSize", storage),
+    fontFamily: readOne("fontFamily", storage),
     links: readOne("links", storage),
   }
 }
@@ -99,6 +104,9 @@ export function applySettings(settings: Settings, root: RootLike = document.docu
 
   if (settings.fontSize === "m") root.removeAttribute("data-ux-fs")
   else root.setAttribute("data-ux-fs", settings.fontSize)
+
+  if (settings.fontFamily === "default") root.removeAttribute("data-ux-font")
+  else root.setAttribute("data-ux-font", settings.fontFamily)
 
   if (settings.links === "normal") root.removeAttribute("data-ux-links")
   else root.setAttribute("data-ux-links", settings.links)

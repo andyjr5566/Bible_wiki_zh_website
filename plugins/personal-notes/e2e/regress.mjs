@@ -144,5 +144,48 @@ check("我的筆記頁：畫出內容", await ev(`!!document.querySelector('[dat
 
 const google = urls.filter((u) => /accounts\.google\.com|googleapis\.com\/drive/.test(u))
 check("全程未登入：沒有連到 Google 帳號／雲端硬碟", google.length === 0, google.join(", "))
+
+// 7. 左欄收合與觸控條目預覽
+const hurPath = "/" + encodeURI("link_folder/人物/戶珥") + "?skip=1"
+await go(hurPath, 1500)
+const readingWidth = await ev(`document.querySelector('#quartz-body > .center').clientWidth`)
+await ev(`document.querySelector('.bwz-sidebar-toggle').click()`)
+check("桌面左欄：收合後放寬閱讀區", await ev(`document.querySelector('.bwz-sidebar-toggle').getAttribute('aria-expanded') === 'false' && document.querySelector('#bwz-left-sidebar').getClientRects().length === 0 && document.querySelector('#quartz-body > .center').clientWidth > ${readingWidth}`))
+await go(hurPath, 1200)
+check("桌面左欄：重新載入保留收合狀態", await ev(`document.querySelector('.bwz-sidebar-toggle').getAttribute('aria-expanded') === 'false'`))
+await ev(`document.querySelector('.bwz-sidebar-toggle').click()`)
+check("桌面左欄：可恢復左欄", await ev(`document.querySelector('#bwz-left-sidebar').getClientRects().length > 0`))
+
+const moses = 'article a.internal[data-slug="link_folder/人物/摩西"]'
+async function centerOf(selector) {
+  return ev(`(() => {
+    const el = document.querySelector(${JSON.stringify(selector)});
+    if (!el) return null;
+    el.scrollIntoView({ block: 'center', behavior: 'instant' });
+    const rect = el.getClientRects()[0];
+    if (!rect) return null;
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  })()`)
+}
+async function tap(selector) {
+  const point = await centerOf(selector)
+  if (!point) return
+  await send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [point] })
+  await send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+}
+const hoverPoint = await centerOf(moses)
+if (hoverPoint) await send("Input.dispatchMouseEvent", { type: "mouseMoved", ...hoverPoint })
+check("滑鼠移入仍顯示浮動預覽", await waitSearch(`!!document.querySelector('.popover.active-popover .popover-inner')`))
+await s.setViewport(390, 844, { dpr: 2, mobile: true, touch: true })
+await go(hurPath, 1200)
+check("手機版保留抽屜，隱藏桌面收合按鈕", await ev(`document.querySelector('.bwz-sidebar-toggle').getClientRects().length === 0 && document.querySelector('#bwz-left-sidebar').getClientRects().length > 0`))
+await tap(moses)
+check("觸控條目先顯示預覽，留在原頁", await waitSearch(`!!document.querySelector('.bwz-touch-preview[open] .bwz-touch-preview-content .popover-hint') && document.body.dataset.slug.endsWith('戶珥')`))
+await tap(".bwz-touch-preview[open] header button")
+check("關閉觸控預覽後留在原頁", await waitSearch(`!document.querySelector('.bwz-touch-preview[open]') && document.body.dataset.slug.endsWith('戶珥')`))
+await tap(moses)
+await waitSearch(`!!document.querySelector('.bwz-touch-preview[open]')`)
+await tap(".bwz-touch-preview[open] footer a")
+check("選擇「前往條目」後才開啟目標頁", await waitSearch(`document.body.dataset.slug.endsWith('摩西') && !document.querySelector('.bwz-touch-preview[open]')`))
 check("全程沒有 JavaScript 例外", errors.length === 0, errors.slice(0, 3).join(" | "))
 finish()

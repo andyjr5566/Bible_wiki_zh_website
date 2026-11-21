@@ -18,7 +18,7 @@ const Appearance: QuartzComponent = ({ displayClass }: QuartzComponentProps) => 
       type="button"
       class={displayClass ? `${displayClass} site-ux-btn` : "site-ux-btn"}
       aria-label="外觀"
-      title="外觀：底色、字級、經文連結"
+      title="外觀：底色、字級、字體、經文連結"
       aria-haspopup="dialog"
       aria-expanded="false"
     >

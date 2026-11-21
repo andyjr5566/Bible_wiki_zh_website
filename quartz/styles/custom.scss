@@ -888,6 +888,55 @@ details.collapsible-subheading {
   }
 }
 
+.bwz-sidebar-toggle {
+  display: none;
+}
+
+@media (min-width: 801px) {
+  .page > #quartz-body > .bwz-sidebar-toggle:not([hidden]) {
+    grid-area: grid-sidebar-left;
+    position: sticky;
+    inset-block-start: 0.75rem;
+    align-self: start;
+    justify-self: end;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0.75rem 0.35rem 0;
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.65rem;
+    background: var(--light);
+    color: var(--dark);
+    font: inherit;
+    font-size: 1.65rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .bwz-sidebar-toggle:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+
+  .bwz-sidebar-toggle[aria-expanded="false"] > span {
+    transform: rotate(180deg);
+  }
+
+  // Ctrl/Cmd + K can still open the dialog mounted inside the left sidebar.
+  html[data-bwz-sidebar-collapsed]
+    .page
+    > #quartz-body:has(> .bwz-sidebar-toggle):not(:has(.search-container.active)) {
+    --bwz-left-sidebar-width: 3.5rem;
+
+    > #bwz-left-sidebar {
+      display: none;
+    }
+  }
+}
+
 /* 探索目錄最上方的「全部收合」（有資料夾展開時才出現） */
 .explorer-collapse-all {
   display: inline-flex;

@@ -23,7 +23,18 @@ export const DefaultFrame: PageFrame = {
   }: PageFrameProps) {
     return (
       <>
-        <div class="left sidebar">
+        {left.length > 0 && (
+          <button
+            class="bwz-sidebar-toggle"
+            type="button"
+            aria-controls="bwz-left-sidebar"
+            aria-expanded="true"
+            hidden
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+        )}
+        <div id="bwz-left-sidebar" class="left sidebar">
           {left.map((BodyComponent) => (
             <BodyComponent {...componentData} />
           ))}

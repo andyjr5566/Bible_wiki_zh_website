@@ -183,7 +183,7 @@ $kn-shadow-hover: 0 14px 28px -14px rgb(60 40 10 / 0.55);
   text-align: left;
 }
 
-/* 搜尋按鈕（外觀呼應首頁入口；實際是去按網站原本的搜尋鈕） */
+/* 開啟知識庫進階搜尋，外觀呼應首頁入口 */
 .bwz-kn-search {
   display: flex;
   align-items: center;
@@ -216,17 +216,6 @@ $kn-shadow-hover: 0 14px 28px -14px rgb(60 40 10 / 0.55);
     color: $kn-muted;
   }
 
-  kbd {
-    flex-shrink: 0;
-    font: inherit;
-    font-size: 0.75rem;
-    border: 1px solid $kn-line;
-    border-radius: 6px;
-    padding: 0.15rem 0.45rem;
-    color: $kn-muted;
-    background: var(--lightgray);
-  }
-
   @media (hover: hover) {
     &:hover {
       border-color: $kn-accent;
@@ -241,8 +230,7 @@ $kn-shadow-hover: 0 14px 28px -14px rgb(60 40 10 / 0.55);
   }
 
   @media #{$mobile} {
-    .bwz-kn-search-hint,
-    kbd {
+    .bwz-kn-search-hint {
       display: none;
     }
   }

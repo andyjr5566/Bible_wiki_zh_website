@@ -1,136 +1,59 @@
+import { normalizeRelativeURLs, resolveBasePath } from "@quartz-community/utils";
 import {
-  removeAllChildren,
-  normalizeRelativeURLs,
-  registerEscapeHandler,
-  resolveBasePath,
-  escapeHTML,
-} from "@quartz-community/utils";
-import {
-  findExactMatchSlugs,
-  getBookNameFromSlug,
-  isSearchExcludedSlug,
+  containsExactSearchText,
+  findKnowledgeMatchSlugs,
+  getKnowledgeSearchCategories,
+  getKnowledgeSearchCategory,
+  getKnowledgeSearchCategoryLabel,
   shouldRunExactSearch,
-  rankExactMatches,
   warmExactSearchCache,
-  getResultCategory,
-  summarizeCategories,
-  CATEGORY_CHAPTER,
 } from "../searchLogic";
+import { createIndexLoader } from "../searchFlow";
+import { parseScriptureRef } from "../scriptureRef";
 import {
-  appendSemanticResults,
-  composeSearchView,
-  createIndexLoader,
-  fetchJsonWithTimeout,
-  pageResults,
-  SEMANTIC_SEARCH_TIMEOUT_MS,
-  type SearchIndexState,
-  type SearchViewNote,
-  type SemanticSearchState,
-} from "../searchFlow";
+  getVerseMatchRanges,
+  getVerseSearchSuggestions,
+  normalizeVerseSearchTerm,
+  prepareVerseIndex,
+  searchVerses,
+  type PreparedVerse,
+} from "../verseSearch";
 import {
   buildScriptureCard,
   findVerseItems,
   pickVerseItems,
   type ScriptureCard,
 } from "../verseTarget";
-import { getNextVisibleIndex, getSearchAnnouncement, shouldAnnounce } from "../searchA11y";
 import { buildSnippetHtml } from "../snippet";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
-const SEARCH_API_ORIGIN = "https://bible-wiki-zh-website.vercel.app";
-// 一次先畫幾張結果卡片：完整站第一次查詢在全新瀏覽器量到 60 張要 301 ms，改 30 張留出餘裕（B4-1：300 ms 內）
 const RESULT_RENDER_LIMIT = 30;
-
-function isGitHubPagesHost(): boolean {
-  return window.location.hostname === GITHUB_PAGES_HOST;
-}
 
 function getSearchBasePath(): string {
   const configuredBasePath = document.body?.dataset?.basepath ?? "";
   if (configuredBasePath) return configuredBasePath;
-  return isGitHubPagesHost() ? GITHUB_PAGES_BASE_PATH : "";
+  return window.location.hostname === GITHUB_PAGES_HOST ? GITHUB_PAGES_BASE_PATH : "";
 }
 
 function resolveSearchPath(slug: string): string {
   return resolveBasePath(slug, getSearchBasePath());
 }
 
-function getSearchApiUrl(query: string): string {
-  const origin = isGitHubPagesHost() ? SEARCH_API_ORIGIN : window.location.origin;
-  const url = new URL("/api/search", origin);
-  url.searchParams.set("q", query);
-  return url.toString();
-}
-
 interface Item {
-  id: number;
-  slug: string;
   title: string;
   content: string;
   tags: string[];
-  [key: string]: any;
 }
-
-interface SearchResultView {
-  title: string;
-  content: string;
-}
-
-interface SearchDisplayResult {
-  id: string;
-  slug: string;
-  tags: string[];
-  type: string;
-  getView(): SearchResultView;
-}
-
-interface DisplayResultsOptions {
-  pending?: boolean;
-  semanticUnavailable?: boolean;
-  indexNote?: SearchViewNote;
-  preserveFocus?: boolean;
-  preserveRenderedCount?: boolean;
-}
-
-let currentSearchTerm: string = "";
-let resultOptionSequence = 0;
-let resultsContainerSequence = 0;
 
 let contentData: Record<string, Item> | null = null;
 const pendingContentIndexUpdates = new Set<string>();
 const ensureIndex = createIndexLoader(fetchContentIndex, async (data) => {
   contentData = data;
   await applyPendingContentIndexUpdates();
-  // 索引下載完（通常在使用者還沒打完字之前）就先把正規化全文算好，第一次查詢不用再花這段時間
-  setTimeout(() => {
-    if (contentData) warmExactSearchCache(contentData);
-  }, 0);
+  warmExactSearchCache(data);
 });
 const fetchContentCache = new Map<string, Element[]>();
-
-function canPreloadContentIndex(): boolean {
-  return (
-    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData !== true
-  );
-}
-
-interface SemanticSearchResultData {
-  slug: string;
-  title?: unknown;
-  text?: unknown;
-}
-
-function isSemanticSearchPayload(data: unknown): data is { results: SemanticSearchResultData[] } {
-  if (typeof data !== "object" || data === null || !("results" in data)) return false;
-  const results = (data as { results?: unknown }).results;
-  // 個別格式不對的結果在下面逐筆略過（appendSemanticResults 會跳過沒有 slug 的），不要因為一筆壞資料就丟掉整包
-  return Array.isArray(results);
-}
-
-function parseSearchQuery(input: string): { query: string } {
-  return { query: input.trim() };
-}
 const parser = new DOMParser();
 
 async function fetchContent(slug: string): Promise<Element[]> {
@@ -163,881 +86,842 @@ function runCleanups() {
   cleanupFns.length = 0;
 }
 
+type SearchMode = "verse" | "knowledge";
+
+const verseDraft = { query: "", refinements: [] as string[], matchVariants: false };
+let knowledgeSelection: Set<string> | null = null;
+const shortlistKey = "search-verse-shortlist-v1";
+const shortlist = new Map<string, string>();
+try {
+  const saved: unknown = JSON.parse(sessionStorage.getItem(shortlistKey) ?? "[]");
+  if (Array.isArray(saved)) {
+    for (const entry of saved) {
+      if (
+        Array.isArray(entry) &&
+        typeof entry[0] === "string" &&
+        /#v[1-9]\d*$/.test(entry[0]) &&
+        typeof entry[1] === "string"
+      ) {
+        shortlist.set(entry[0], entry[1]);
+      }
+    }
+  }
+} catch {
+  // Storage can be unavailable. The open tab still has an in-memory shortlist.
+}
+
+function saveShortlist() {
+  try {
+    sessionStorage.setItem(shortlistKey, JSON.stringify(Array.from(shortlist)));
+  } catch {
+    // The shortlist can still be used when storage is unavailable or full.
+  }
+}
+
+let verses: PreparedVerse[] | null = null;
+const ensureVerseIndex = createIndexLoader(
+  async () => {
+    const response = await fetch(resolveSearchPath("static/verseIndex.json"));
+    if (!response.ok) throw new Error("Unable to load verse index");
+    return prepareVerseIndex(await response.json());
+  },
+  (data) => {
+    verses = data;
+  },
+);
+
+const verseReference = (verse: PreparedVerse) =>
+  verse.book + " " + verse.chapter + ":" + verse.verse;
+
+function paintMatches(parent: HTMLElement, text: string, terms: string[], matchVariants = false) {
+  let offset = 0;
+  for (const { start, end } of getVerseMatchRanges(text, terms, matchVariants)) {
+    parent.append(text.slice(offset, start));
+    const match = document.createElement("span");
+    match.className = "highlight";
+    match.textContent = text.slice(start, end);
+    parent.append(match);
+    offset = end;
+  }
+  parent.append(text.slice(offset));
+}
+
+function makeSearchButton(className: string, text: string) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = className;
+  button.textContent = text;
+  return button;
+}
+
 function setupSearch() {
-  const searchElements = document.querySelectorAll(".search");
-
-  for (const searchEl of Array.from(searchElements)) {
-    const container = searchEl.querySelector(".search-container") as HTMLElement | null;
-    const searchButton = searchEl.querySelector(".search-button") as HTMLElement | null;
-    const searchBar = searchEl.querySelector(".search-bar") as HTMLInputElement;
-    const searchLayout = searchEl.querySelector(".search-layout");
-
-    if (!container || !searchButton || !searchBar || !searchLayout) continue;
-
-    const sidebar = container.closest(".sidebar") as HTMLElement | null;
-    const enablePreview = searchLayout.getAttribute("data-preview") === "true";
-    const fieldPriorityAttr = searchLayout.getAttribute("data-field-priority");
-    const fieldPriority: string[] = fieldPriorityAttr
-      ? JSON.parse(fieldPriorityAttr)
-      : ["title", "content", "tags"];
-
-    let results = searchLayout.querySelector(".results-container") as HTMLDivElement | null;
-    if (!results) {
-      results = document.createElement("div");
-      results.className = "results-container";
-      searchLayout.appendChild(results);
-    }
-    if (!results.id) {
-      let resultsId = "";
-      do {
-        resultsId = `search-results-${++resultsContainerSequence}`;
-      } while (document.getElementById(resultsId));
-      results.id = resultsId;
-    }
-    results.setAttribute("role", "listbox");
-    results.setAttribute("aria-label", "搜尋結果");
-    searchBar.setAttribute("aria-controls", results.id);
-    searchBar.setAttribute("role", "combobox");
-    searchBar.setAttribute("aria-autocomplete", "list");
-    searchBar.setAttribute("aria-expanded", "false");
-
-    let status = container.querySelector(".search-sr-only") as HTMLElement | null;
-    if (!status) {
-      status = document.createElement("div");
-      status.className = "search-sr-only";
-      status.setAttribute("role", "status");
-      status.setAttribute("aria-live", "polite");
-      status.setAttribute("aria-atomic", "true");
-      container.appendChild(status);
-    }
-
-    let preview = searchLayout.querySelector(".preview-container") as HTMLDivElement | null;
-    if (enablePreview && !preview) {
-      preview = document.createElement("div");
+  const roots = Array.from(document.querySelectorAll<HTMLElement>(".search"));
+  const preferredRoot = () => roots.find((root) => root.getClientRects().length > 0) ?? roots[0];
+  for (const root of roots) {
+    const container = root.querySelector<HTMLElement>(".search-container");
+    const searchButton = root.querySelector<HTMLButtonElement>(".search-button");
+    const searchBar = root.querySelector<HTMLInputElement>(".search-bar");
+    const layout = root.querySelector<HTMLElement>(".search-layout");
+    if (!container || !searchButton || !searchBar || !layout) continue;
+    const results = root.querySelector<HTMLElement>(".results-container")!;
+    const status = root.querySelector<HTMLElement>(".search-sr-only")!;
+    const count = root.querySelector<HTMLElement>(".search-result-count")!;
+    const controls = root.querySelector<HTMLElement>(".search-verse-controls")!;
+    const knowledgeControls = root.querySelector<HTMLFieldSetElement>(
+      ".search-knowledge-controls",
+    )!;
+    const categoryList = root.querySelector<HTMLElement>(".search-knowledge-categories")!;
+    const refineForm = root.querySelector<HTMLFormElement>(".search-refine-form")!;
+    const refineInput = root.querySelector<HTMLInputElement>(".search-refine-input")!;
+    const refineAdd = root.querySelector<HTMLButtonElement>(".search-refine-add")!;
+    const refinements = root.querySelector<HTMLElement>(".search-refinements")!;
+    const variants = root.querySelector<HTMLInputElement>(".search-match-variants")!;
+    const suggestions = root.querySelector<HTMLElement>(".search-suggestions")!;
+    const shortlistDetails = root.querySelector<HTMLDetailsElement>(".search-verse-list")!;
+    const shortlistBody = root.querySelector<HTMLElement>(".search-verse-list-body")!;
+    const shortlistCount = root.querySelector<HTMLElement>(".search-verse-list-count")!;
+    const copyButton = root.querySelector<HTMLButtonElement>(".search-verse-copy")!;
+    const sidebar = container.closest<HTMLElement>(".sidebar");
+    const modes = Array.from(root.querySelectorAll<HTMLButtonElement>(".search-mode"));
+    const controller = new AbortController();
+    const { signal } = controller;
+    const preview = layout.dataset.preview === "true" ? document.createElement("div") : null;
+    if (preview) {
       preview.className = "preview-container";
-      searchLayout.appendChild(preview);
+      layout.append(preview);
     }
 
-    let currentHover: HTMLElement | null = null;
-    // 使用者這次查詢有沒有自己移動過選取（方向鍵、滑鼠、Tab）。沒動過時，結果重畫一律選最上面那一張；
-    // 經文跳轉卡片比全文結果晚出現（要先查小索引），不這樣做的話選取會停在第一筆全文結果，按 Enter 就跳錯頁
-    let selectionTouched = false;
-    let previewToken = 0;
-    let previewDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-    let latestSearchRequest = 0;
-    let searchDebounceTimer: ReturnType<typeof setTimeout> | undefined;
-    let semanticRequestController: AbortController | null = null;
-    // 目前選的類型篩選；null 代表「全部」。換新查詢時重設，語意結果晚到時保留。
-    let activeCategory: string | null = null;
-    // 目前查詢若是經文參照（出12:3），結果清單最上面的「經文跳轉」卡片資料
-    let scriptureCard: ScriptureCard | null = null;
-    let currentResults: SearchDisplayResult[] = [];
-    let currentDisplayOptions: DisplayResultsOptions = {};
-    let renderedResultCount = 0;
-    const announcedMessages = new Set<string>();
+    let mode: SearchMode = "verse";
+    let opener: HTMLElement = searchButton;
+    let searchComposing = false;
+    let refineComposing = false;
+    let request = 0;
+    let previewRequest = 0;
+    let searchTimer: ReturnType<typeof setTimeout> | undefined;
+    let previewTimer: ReturnType<typeof setTimeout> | undefined;
+    let categoryKeys: string[] = [];
+    let verseHits: PreparedVerse[] = [];
+    let knowledgeHits: string[] = [];
+    let rendered = 0;
+    let activeTerms: string[] = [];
+    let activeTerm = "";
 
-    const announce = (message: string | null) => {
-      if (shouldAnnounce(announcedMessages, message)) status!.textContent = message!;
+    const announce = (message: string) => {
+      status.textContent = message;
+    };
+    const links = () =>
+      Array.from(results.querySelectorAll<HTMLAnchorElement>("a.result-card[href]"));
+
+    const paintCategoryFilters = (categories: string[]) => {
+      if (categories.join("\n") !== categoryKeys.join("\n")) {
+        categoryKeys = categories;
+        categoryList.replaceChildren(
+          ...categories.map((category) => {
+            const label = document.createElement("label");
+            label.className = "search-check";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "search-knowledge-category";
+            checkbox.dataset.category = category;
+            label.append(checkbox, getKnowledgeSearchCategoryLabel(category));
+            return label;
+          }),
+        );
+      }
+      for (const checkbox of Array.from(categoryList.querySelectorAll<HTMLInputElement>("input"))) {
+        checkbox.checked = knowledgeSelection?.has(checkbox.dataset.category!) ?? true;
+      }
     };
 
-    const preloadIndex = () => {
-      if (canPreloadContentIndex()) void ensureIndex();
+    const updateVerseToggles = () => {
+      for (const toggle of Array.from(
+        results.querySelectorAll<HTMLButtonElement>(".search-verse-add"),
+      )) {
+        const selected = shortlist.has(toggle.dataset.verseId!);
+        toggle.setAttribute("aria-pressed", String(selected));
+        toggle.textContent = selected ? "已加入" : "加入清單";
+      }
     };
 
-    const hideSearch = () => {
-      container.classList.remove("active");
-      if (sidebar) sidebar.style.zIndex = "";
-      searchButton.setAttribute("aria-expanded", "false");
-      searchBar.setAttribute("aria-expanded", "false");
-      searchBar.removeAttribute("aria-activedescendant");
-      searchBar.value = "";
-      removeAllChildren(results!);
-      searchLayout.querySelector(".result-filters")?.remove();
-      if (preview) removeAllChildren(preview);
-      status!.textContent = "";
-      searchLayout.classList.remove("display-results");
-      latestSearchRequest++;
-      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-      semanticRequestController?.abort();
-      semanticRequestController = null;
-      currentHover = null;
-      searchButton.focus();
+    const paintShortlist = () => {
+      shortlistCount.textContent = String(shortlist.size);
+      copyButton.disabled = shortlist.size === 0;
+      copyButton.textContent = "複製清單";
+      if (shortlist.size === 0) {
+        shortlistBody.textContent = "從經文結果加入要比較的經節。";
+        return;
+      }
+      const list = document.createElement("ul");
+      for (const [id, text] of shortlist) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        const anchor = id.lastIndexOf("#");
+        link.dataset.slug = id.slice(0, anchor);
+        link.dataset.verse = id.slice(anchor + 2);
+        link.href = resolveSearchPath(link.dataset.slug) + id.slice(anchor);
+        link.textContent = text;
+        const remove = makeSearchButton("search-verse-remove", "移除");
+        remove.dataset.verseId = id;
+        remove.setAttribute("aria-label", "移除 " + text.split("\t")[0]);
+        item.append(link, remove);
+        list.append(item);
+      }
+      shortlistBody.replaceChildren(list);
     };
 
-    const showSearch = () => {
-      preloadIndex();
+    const paintVerseControls = () => {
+      const query = verseDraft.query.trim();
+      const isReference = parseScriptureRef(query) !== null;
+      refineInput.disabled = !query || isReference;
+      refineAdd.disabled = refineInput.disabled;
+      variants.checked = verseDraft.matchVariants;
+      refinements.replaceChildren(
+        ...verseDraft.refinements.map((word) => {
+          const button = makeSearchButton("search-refinement", word + " ×");
+          button.dataset.refine = word;
+          button.setAttribute("aria-label", "移除條件 " + word);
+          return button;
+        }),
+      );
+      refinements.hidden = refinements.childElementCount === 0;
+      suggestions.replaceChildren(
+        ...getVerseSearchSuggestions(query).map((word) => {
+          const button = makeSearchButton("search-suggestion", "也可查「" + word + "」");
+          button.dataset.suggestion = word;
+          return button;
+        }),
+      );
+      suggestions.hidden = suggestions.childElementCount === 0;
+    };
+
+    const makeVerseCard = (verse: PreparedVerse) => {
+      const row = document.createElement("div");
+      row.className = "search-verse-row";
+      const card = document.createElement("a");
+      card.className = "result-card search-verse-result";
+      card.dataset.slug = verse.slug;
+      card.dataset.verse = String(verse.verse);
+      card.href = resolveSearchPath(verse.slug) + "#v" + verse.verse;
+      const title = document.createElement("h3");
+      title.textContent = verseReference(verse);
+      const text = document.createElement("p");
+      text.className = "search-verse-text";
+      paintMatches(text, verse.text, activeTerms, verseDraft.matchVariants);
+      card.append(title, text);
+
+      const toggle = makeSearchButton("search-verse-add", "");
+      toggle.dataset.verseId = verse.id;
+      toggle.setAttribute("aria-label", "暫存 " + verseReference(verse));
+      row.append(card, toggle);
+      return row;
+    };
+
+    const makeKnowledgeCard = (slug: string) => {
+      const item = contentData![slug]!;
+      const card = document.createElement("a");
+      card.className = "result-card";
+      card.dataset.slug = slug;
+      card.href = resolveSearchPath(slug);
+      const title = document.createElement("h3");
+      title.className = "card-title";
+      const category = getKnowledgeSearchCategory(slug)!;
+      card.dataset.category = category;
+      const label = document.createElement("span");
+      label.className = "result-category";
+      label.dataset.category = category;
+      label.textContent = getKnowledgeSearchCategoryLabel(category);
+      const name = document.createElement("span");
+      name.className = "result-title-text";
+      paintMatches(name, item.title || slug, [activeTerm]);
+      title.append(label, name);
+      card.append(title);
+      const tags = item.tags?.filter((tag) => containsExactSearchText(tag, activeTerm)) ?? [];
+      if (tags.length) {
+        const list = document.createElement("ul");
+        list.className = "tags";
+        for (const tag of tags) {
+          const item = document.createElement("li");
+          const text = document.createElement("p");
+          paintMatches(text, tag, [activeTerm]);
+          item.append(text);
+          list.append(item);
+        }
+        card.append(list);
+      }
+      const snippet = buildSnippetHtml(item.content || "", activeTerm, { title: item.title });
+      if (snippet) {
+        const text = document.createElement("p");
+        text.className = "card-description";
+        text.innerHTML = snippet;
+        card.append(text);
+      }
+      return card;
+    };
+
+    const appendNextPage = (focusNext = false) => {
+      const previousCount = rendered;
+      results.querySelector(".search-more-btn")?.remove();
+      if (mode === "verse") {
+        const page = verseHits.slice(rendered, rendered + RESULT_RENDER_LIMIT);
+        results.append(...page.map(makeVerseCard));
+        rendered += page.length;
+        updateVerseToggles();
+      } else {
+        const page = knowledgeHits.slice(rendered, rendered + RESULT_RENDER_LIMIT);
+        results.append(...page.map(makeKnowledgeCard));
+        rendered += page.length;
+      }
+      const total = mode === "verse" ? verseHits.length : knowledgeHits.length;
+      if (rendered < total) {
+        results.append(
+          makeSearchButton(
+            "search-more-btn",
+            "再顯示 " + Math.min(RESULT_RENDER_LIMIT, total - rendered) + " 筆",
+          ),
+        );
+      }
+      if (focusNext) links()[previousCount]?.focus();
+    };
+
+    const showResultMessage = (message: string, className = "search-index-note") => {
+      const note = document.createElement("p");
+      note.className = className;
+      note.textContent = message;
+      results.append(note);
+      announce(message);
+    };
+
+    const showCount = (total: number, unit: string) => {
+      count.hidden = false;
+      count.textContent = "找到 " + total + " " + unit;
+      announce(count.textContent);
+    };
+
+    const resetResults = () => {
+      results.replaceChildren();
+      results.scrollTop = 0;
+      count.hidden = true;
+      rendered = 0;
+      status.textContent = "";
+      previewRequest++;
+      clearTimeout(previewTimer);
+      if (preview) {
+        delete preview.dataset.slug;
+        preview.replaceChildren();
+      }
+    };
+
+    const performSearch = async (token: number, query: string) => {
+      if (mode === "verse") {
+        if (parseScriptureRef(query)) {
+          showResultMessage("經文參照載入中…");
+          const known = await getKnownSlugs();
+          if (token !== request) return;
+          resetResults();
+          if (!known) {
+            showResultMessage("經文參照暫時無法載入，請重試。");
+            return;
+          }
+          const card = buildScriptureCard(query, (slug) => known.has(slug));
+          if (card) {
+            results.append(makeScriptureCard(card));
+            announce(card.title);
+          }
+          return;
+        }
+        if (!verses) {
+          showResultMessage("經文索引載入中…");
+          const loaded = await ensureVerseIndex();
+          if (token !== request) return;
+          resetResults();
+          if (!loaded || !verses) {
+            showResultMessage("經文索引暫時無法載入，請重試。");
+            return;
+          }
+        }
+        activeTerms = [query, ...verseDraft.refinements];
+        verseHits = searchVerses(verses, activeTerms, verseDraft.matchVariants);
+        showCount(verseHits.length, "節經文");
+        appendNextPage();
+      } else {
+        if ((knowledgeSelection?.size ?? 1) === 0) {
+          showResultMessage("請至少勾選一個知識類型。");
+          return;
+        }
+        if (!shouldRunExactSearch(query)) {
+          showResultMessage("請輸入至少兩個字搜尋知識庫。");
+          return;
+        }
+        if (!contentData) {
+          showResultMessage("知識庫索引載入中…");
+          const loaded = await ensureIndex();
+          if (token !== request) return;
+          resetResults();
+          if (!loaded || !contentData) {
+            showResultMessage("知識庫索引暫時無法載入，請重試。");
+            return;
+          }
+        }
+        paintCategoryFilters(getKnowledgeSearchCategories(Object.keys(contentData)));
+        activeTerm = query;
+        knowledgeHits = findKnowledgeMatchSlugs(
+          contentData,
+          query,
+          knowledgeSelection ?? new Set(categoryKeys),
+        );
+        showCount(knowledgeHits.length, "筆知識資料");
+        appendNextPage();
+      }
+    };
+
+    const refresh = (debounce = false) => {
+      const token = ++request;
+      clearTimeout(searchTimer);
+      resetResults();
+      const query = verseDraft.query.trim();
+      layout.classList.toggle("display-results", query.length > 0);
+      if (!query) return;
+      if (debounce) searchTimer = setTimeout(() => void performSearch(token, query), 60);
+      else void performSearch(token, query);
+    };
+
+    const setMode = (next: SearchMode) => {
+      mode = next;
+      layout.dataset.mode = mode;
+      const label = mode === "verse" ? "搜尋經文或輸入經文出處" : "搜尋知識庫關鍵字";
+      searchBar.placeholder = label;
+      searchBar.setAttribute("aria-label", label);
+      controls.hidden = mode !== "verse";
+      knowledgeControls.hidden = mode !== "knowledge";
+      for (const button of modes)
+        button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+      if (mode === "verse") {
+        paintVerseControls();
+        paintShortlist();
+      } else {
+        paintCategoryFilters(getKnowledgeSearchCategories(Object.keys(contentData ?? {})));
+      }
+      refresh();
+    };
+
+    const showSearch = (next: SearchMode = "verse", trigger: HTMLElement = searchButton) => {
+      opener = trigger;
       if (sidebar) sidebar.style.zIndex = "9999";
       container.classList.add("active");
       searchButton.setAttribute("aria-expanded", "true");
+      searchBar.value = verseDraft.query;
+      setMode(next);
       searchBar.focus();
     };
 
-    const getResultElements = (): HTMLElement[] => {
-      return Array.from(
-        results.querySelectorAll<HTMLElement>(
-          ".result-card[role='option']:not(.no-match):not(.scripture-missing):not([hidden])",
-        ),
-      );
+    const hideSearch = (returnFocus = true) => {
+      container.classList.remove("active");
+      if (sidebar) sidebar.style.zIndex = "";
+      searchButton.setAttribute("aria-expanded", "false");
+      layout.classList.remove("display-results");
+      searchComposing = false;
+      refineComposing = false;
+      request++;
+      clearTimeout(searchTimer);
+      resetResults();
+      if (returnFocus) (opener.isConnected ? opener : searchButton).focus();
     };
 
-    const updateComboboxState = () => {
-      const visibleResults = getResultElements();
-      const selected = currentHover && visibleResults.includes(currentHover) ? currentHover : null;
-      for (const option of Array.from(
-        results.querySelectorAll<HTMLElement>(".result-card[role='option']"),
-      )) {
-        option.setAttribute("aria-selected", String(option === selected));
+    const changeQuery = () => {
+      if (verseDraft.query.trim() !== searchBar.value.trim()) {
+        verseDraft.refinements = [];
+        refineInput.value = "";
       }
-      if (selected?.id) {
-        searchBar.setAttribute("aria-activedescendant", selected.id);
-      } else {
-        searchBar.removeAttribute("aria-activedescendant");
-      }
-      searchBar.setAttribute("aria-expanded", String(visibleResults.length > 0));
+      verseDraft.query = searchBar.value;
+      if (mode === "verse") paintVerseControls();
+      refresh(true);
     };
 
-    const createResultCardElement = (item: SearchDisplayResult): HTMLElement => {
-      const view = item.getView();
-      const itemTile = document.createElement("a");
-      itemTile.className = "result-card";
-      itemTile.id = `search-opt-${++resultOptionSequence}`;
-      itemTile.dataset.slug = item.slug;
-      itemTile.setAttribute("role", "option");
-      itemTile.setAttribute("aria-selected", "false");
-      itemTile.href = resolveSearchPath(item.slug);
-
-      const category = getResultCategory(item.slug);
-      itemTile.dataset.category = category;
-
-      const titleEl = document.createElement("h3");
-      titleEl.className = "card-title";
-
-      const categoryTag = document.createElement("span");
-      categoryTag.className = "result-category";
-      categoryTag.dataset.category = category;
-      categoryTag.textContent = category;
-      titleEl.appendChild(categoryTag);
-
-      const titleText = document.createElement("span");
-      titleText.className = "result-title-text";
-      // 書卷名只加在章節前面；條目的 link_folder 資料夾名稱已由類型標籤顯示
-      const bookName = category === CATEGORY_CHAPTER ? getBookNameFromSlug(item.slug) : "";
-      const plainTitle = view.title.replace(/<[^>]*>/g, "");
-      const bookPrefix =
-        bookName && !plainTitle.includes(bookName) ? escapeHTML(bookName) + " " : "";
-      titleText.innerHTML = bookPrefix + view.title.replace(/<(?!\/?span\b)[^>]*>/gi, "");
-      titleEl.appendChild(titleText);
-
-      // 比對方式徽章：樣式由 CSS class 控制，視覺上比類型標籤次要
-      if (item.type === "semantic" || item.type === "keyword") {
-        const badge = document.createElement("span");
-        badge.className = `result-match-badge result-match-${item.type}`;
-        badge.textContent = item.type === "semantic" ? "語意相關" : "完全相符";
-        titleEl.appendChild(badge);
-      }
-
-      itemTile.appendChild(titleEl);
-
-      if (item.tags.length > 0) {
-        const tagList = document.createElement("ul");
-        tagList.className = "tags";
-        // 每個標籤包在 <li> 裡（axe：<ul> 只能直接包 <li>）
-        tagList.innerHTML = item.tags
-          .map((tag: string) => `<li><p>${escapeHTML(String(tag))}</p></li>`)
-          .join("");
-        itemTile.appendChild(tagList);
-      }
-
-      // 一行摘要（含命中字的片段）；內容是空的就不顯示摘要列
-      const snippetHtml = String(view.content ?? "").replace(/<(?!\/?span\b)[^>]*>/gi, "");
-      if (snippetHtml.replace(/<[^>]*>/g, "").trim() !== "") {
-        const descEl = document.createElement("p");
-        descEl.className = "card-description";
-        descEl.innerHTML = snippetHtml;
-        itemTile.appendChild(descEl);
-      }
-
-      return itemTile;
-    };
-
-    const appendNextResults = (focusFirst = false) => {
-      const previousOptionCount = getResultElements().length;
-      results.querySelector(".search-more-note")?.remove();
-      results.querySelector(".search-more-btn")?.remove();
-
-      const page = pageResults(
-        currentResults,
-        activeCategory,
-        (item) => getResultCategory(item.slug),
-        renderedResultCount,
-        RESULT_RENDER_LIMIT,
-      );
-      for (const item of page.items) {
-        const card = createResultCardElement(item);
-        const footer = results.querySelector(".search-index-note, .search-semantic-note");
-        if (footer) {
-          results.insertBefore(card, footer);
-        } else {
-          results.appendChild(card);
+    const showPreview = (card: HTMLAnchorElement) => {
+      if (mode !== "knowledge" || !preview || !card.dataset.slug) return;
+      const slug = card.dataset.slug;
+      if (preview.dataset.slug === slug) return;
+      preview.dataset.slug = slug;
+      const token = ++previewRequest;
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(async () => {
+        const contents = await fetchContent(slug);
+        if (token !== previewRequest) return;
+        const inner = document.createElement("div");
+        inner.className = "preview-inner";
+        for (const element of contents) {
+          const clone = element.cloneNode(true) as HTMLElement;
+          clone.innerHTML = highlightHTML(activeTerm, clone);
+          inner.append(clone);
         }
-      }
-      renderedResultCount += page.items.length;
-
-      if (page.remaining > 0) {
-        const moreNote = document.createElement("p");
-        moreNote.className = "search-more-note";
-        moreNote.textContent = `還有 ${page.remaining} 筆結果，可以用上方的類型篩選或加長關鍵字。`;
-        results.appendChild(moreNote);
-
-        const moreButton = document.createElement("button");
-        moreButton.type = "button";
-        moreButton.className = "search-more-btn";
-        // 它放在 listbox 裡，axe 要求 listbox 的子元素是 option；方向鍵只走 .result-card，所以不影響鍵盤選取
-        moreButton.setAttribute("role", "option");
-        moreButton.setAttribute("aria-selected", "false");
-        moreButton.textContent = `再顯示 ${RESULT_RENDER_LIMIT} 筆`;
-        results.appendChild(moreButton);
-      }
-
-      if (focusFirst) {
-        const options = getResultElements();
-        setFocus(options[previousOptionCount] ?? null);
-      } else {
-        updateComboboxState();
-      }
+        preview.replaceChildren(inner);
+        preview.querySelector<HTMLElement>(".highlight")?.scrollIntoView({ block: "nearest" });
+      }, 150);
     };
 
-    const displayResults = (
-      finalResults: SearchDisplayResult[],
-      options: DisplayResultsOptions = {},
-    ) => {
-      const previousFocus = options.preserveFocus && selectionTouched ? currentHover : null;
-      const previousFocusSlug = previousFocus?.dataset.slug;
-      const previousToolbarScroll =
-        searchLayout.querySelector<HTMLElement>(".result-filters")?.scrollLeft ?? 0;
-      const previousRenderedCount = renderedResultCount;
-      const targetRenderedCount = options.preserveRenderedCount
-        ? Math.max(RESULT_RENDER_LIMIT, previousRenderedCount)
-        : RESULT_RENDER_LIMIT;
-      currentResults = finalResults;
-      currentDisplayOptions = { ...options };
-      removeAllChildren(results);
-      renderedResultCount = 0;
-      currentHover = null;
-      searchBar.removeAttribute("aria-activedescendant");
-      renderFilterToolbar(finalResults.map((item) => getResultCategory(item.slug)));
-
-      if (scriptureCard) results.appendChild(createScriptureCardElement(scriptureCard));
-
-      if (finalResults.length === 0) {
-        if (options.pending) {
-          if (options.indexNote !== "index-loading" && options.indexNote !== "exact-loading") {
-            const pendingNote = document.createElement("p");
-            pendingNote.className = "search-pending-note";
-            pendingNote.textContent = "搜尋中…";
-            results.appendChild(pendingNote);
-          }
-        } else if (options.indexNote !== "search-unavailable" && !scriptureCard) {
-          const noMatch = document.createElement("a");
-          noMatch.className = "result-card no-match";
-          const noMatchTitle = document.createElement("h3");
-          noMatchTitle.textContent = "找不到相符的結果";
-          const noMatchHint = document.createElement("p");
-          noMatchHint.textContent =
-            searchLayout.getAttribute("data-no-results-hint") || "換個關鍵字試試看？";
-          noMatch.appendChild(noMatchTitle);
-          noMatch.appendChild(noMatchHint);
-          results.appendChild(noMatch);
-        }
-      } else {
-        appendNextResults();
-        while (
-          options.preserveRenderedCount &&
-          renderedResultCount < targetRenderedCount &&
-          results.querySelector(".search-more-btn")
-        ) {
-          appendNextResults();
-        }
-      }
-
-      if (options.indexNote) {
-        const indexNote = document.createElement("p");
-        indexNote.className = "search-index-note";
-        const indexNoteMessages: Record<Exclude<SearchViewNote, "semantic-unavailable">, string> = {
-          "index-loading": "搜尋資料載入中…",
-          "exact-loading": "正在尋找完全相符的結果…",
-          "index-unavailable": "完全相符的結果暫時無法載入，目前只顯示語意相關的結果。",
-          "search-unavailable": "搜尋暫時無法使用，請稍後再試。",
-        };
-        if (options.indexNote !== "semantic-unavailable") {
-          indexNote.textContent = indexNoteMessages[options.indexNote];
-          results.appendChild(indexNote);
-        }
-      }
-
-      if (options.semanticUnavailable) {
-        const semanticNote = document.createElement("p");
-        semanticNote.className = "search-semantic-note";
-        semanticNote.textContent = "語意搜尋暫時沒有回應，目前只顯示完全相符的結果。";
-        results.appendChild(semanticNote);
-      }
-
-      const moreNote = results.querySelector(".search-more-note");
-      const moreButton = results.querySelector(".search-more-btn");
-      if (moreNote) results.appendChild(moreNote);
-      if (moreButton) results.appendChild(moreButton);
-
-      applyCategoryFilter();
-      const toolbarEl = searchLayout.querySelector<HTMLElement>(".result-filters");
-      if (toolbarEl) toolbarEl.scrollLeft = previousToolbarScroll;
-      const resultElements = getResultElements();
-      if (resultElements.length === 0) {
-        setFocus(null);
-        if (preview) removeAllChildren(preview);
-      } else if (previousFocus && previousFocusSlug) {
-        const nextFocus = resultElements.find(
-          (element) => element.dataset.slug === previousFocusSlug,
-        );
-        if (nextFocus) {
-          setFocus(nextFocus);
-        } else {
-          setFocus(resultElements[0] ?? null);
-        }
-      } else {
-        setFocus(resultElements[0] ?? null);
-      }
-      updateComboboxState();
-    };
-    // 經文跳轉卡片不屬於任何類型：篩選時一直留在最上面。找不到內容的那一張（scripture-missing）不能被選到。
-    const createScriptureCardElement = (card: ScriptureCard): HTMLElement => {
-      const el = document.createElement(card.kind === "missing" ? "div" : "a");
-      el.className = "result-card scripture-jump";
-      if (card.kind === "missing") {
-        el.classList.add("scripture-missing");
-      } else {
-        el.id = `search-opt-${++resultOptionSequence}`;
-        el.dataset.slug = card.slug;
-        el.setAttribute("role", "option");
-        el.setAttribute("aria-selected", "false");
-        (el as HTMLAnchorElement).href = resolveSearchPath(card.slug);
-        if (card.kind === "chapter" && card.verse !== undefined) {
-          el.dataset.verse = String(card.verse);
-          if (card.verseEnd !== undefined) el.dataset.verseEnd = String(card.verseEnd);
-        }
-      }
-
-      const titleEl = document.createElement("h3");
-      titleEl.className = "card-title";
-      const tag = document.createElement("span");
-      tag.className = "result-category";
-      tag.dataset.category = "章節";
-      tag.textContent = "經文";
-      const titleText = document.createElement("span");
-      titleText.className = "result-title-text";
-      titleText.textContent = card.title;
-      titleEl.appendChild(tag);
-      titleEl.appendChild(titleText);
-      el.appendChild(titleEl);
-
-      const sub = document.createElement("p");
-      sub.className = "card-description";
-      sub.textContent = card.subtitle;
-      el.appendChild(sub);
-      return el;
-    };
-
-    // 結果清單上方的類型篩選列：只在結果有兩種以上類型時顯示
-    const renderFilterToolbar = (categories: string[]) => {
-      searchLayout.querySelector(".result-filters")?.remove();
-      const summary = summarizeCategories(categories);
-      if (summary.length < 2) {
-        activeCategory = null;
-        return;
-      }
-      // 保留使用者已選的篩選；若該類型已不在結果中才退回「全部」
-      if (activeCategory !== null && !summary.some((entry) => entry.name === activeCategory)) {
-        activeCategory = null;
-      }
-
-      const toolbar = document.createElement("div");
-      toolbar.className = "result-filters";
-      toolbar.setAttribute("role", "toolbar");
-      toolbar.setAttribute("aria-label", "依類型篩選");
-      // 篩選列是一行橫向捲動：滑鼠滾輪（上下）在它上面時改成左右捲；已經捲到盡頭就不攔截
-      toolbar.addEventListener(
-        "wheel",
-        (event) => {
-          if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-          const maxScroll = toolbar.scrollWidth - toolbar.clientWidth;
-          if (maxScroll <= 0) return;
-          if (event.deltaY > 0 ? toolbar.scrollLeft >= maxScroll - 1 : toolbar.scrollLeft <= 0) {
-            return;
-          }
-          toolbar.scrollLeft += event.deltaY;
-          event.preventDefault();
-        },
-        { passive: false },
-      );
-
-      const addButton = (label: string, count: number, value: string | null) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "result-filter";
-        button.dataset.filter = value ?? "";
-        button.setAttribute("aria-pressed", "false");
-        const labelEl = document.createElement("span");
-        labelEl.textContent = label;
-        const countEl = document.createElement("span");
-        countEl.className = "result-filter-count";
-        countEl.textContent = String(count);
-        button.appendChild(labelEl);
-        button.appendChild(countEl);
-        toolbar.appendChild(button);
-      };
-      addButton("全部", categories.length, null);
-      for (const entry of summary) addButton(entry.name, entry.count, entry.name);
-      searchLayout.insertBefore(toolbar, results);
-    };
-
-    // 依 activeCategory 更新篩選鈕的 aria-pressed；結果卡片已依類型重新分頁繪製
-    const applyCategoryFilter = () => {
-      for (const button of Array.from(
-        searchLayout.querySelectorAll<HTMLElement>(".result-filter"),
-      )) {
-        const value = button.dataset.filter ? button.dataset.filter : null;
-        button.setAttribute("aria-pressed", String(value === activeCategory));
-      }
-      updateComboboxState();
-    };
-
-    const highlightTerm = () => {
-      return currentSearchTerm.trim();
-    };
-
-    const updatePreview = async (el: HTMLElement | null) => {
-      if (!preview) return;
-      removeAllChildren(preview);
-      if (!el) return;
-      const slug = el.dataset.slug;
-      if (!slug) return;
-      const token = ++previewToken;
-      const contents = await fetchContent(slug);
-      if (token !== previewToken) return;
-      const term = highlightTerm();
-      const previewInner = document.createElement("div");
-      previewInner.className = "preview-inner";
-      for (const contentEl of contents) {
-        const cloned = contentEl.cloneNode(true) as HTMLElement;
-        if (term.trim() !== "") {
-          cloned.innerHTML = highlightHTML(term, cloned);
-        }
-        previewInner.appendChild(cloned);
-      }
-      preview.appendChild(previewInner);
-
-      requestAnimationFrame(() => {
-        const highlights = Array.from(preview!.getElementsByClassName("highlight"));
-        if (highlights.length === 0) return;
-        highlights.sort((a, b) => b.innerHTML.length - a.innerHTML.length);
-        const target = highlights[0] as HTMLElement;
-        let offset = 0;
-        let current: HTMLElement | null = target;
-        while (current && current !== preview) {
-          offset += current.offsetTop;
-          current = current.offsetParent as HTMLElement | null;
-        }
-        preview!.scrollTop = Math.max(0, offset - 50);
-      });
-    };
-
-    const setFocus = (el: HTMLElement | null) => {
-      if (currentHover) currentHover.classList.remove("focus");
-      currentHover = el;
-      if (currentHover) {
-        currentHover.classList.add("focus");
-        currentHover.scrollIntoView({ block: "nearest" });
-      }
-      updateComboboxState();
-      if (previewDebounceTimer) clearTimeout(previewDebounceTimer);
-      previewDebounceTimer = setTimeout(() => updatePreview(currentHover), 150);
-    };
-
-    const focusByDirection = (direction: -1 | 1) => {
-      const allOptions = Array.from(
-        results.querySelectorAll<HTMLElement>(".result-card[role='option']"),
-      );
-      const visibleOptions = allOptions.filter((option) => !option.hidden);
-      const currentIndex = currentHover ? allOptions.indexOf(currentHover) : -1;
-      if (
-        direction === 1 &&
-        currentHover &&
-        currentIndex === visibleOptions.length - 1 &&
-        results.querySelector(".search-more-btn")
-      ) {
-        selectionTouched = true;
-        appendNextResults(true);
-        return;
-      }
-      const nextIndex = getNextVisibleIndex(
-        currentIndex,
-        direction,
-        allOptions.map((option) => !option.hidden),
-      );
-      if (nextIndex >= 0) {
-        selectionTouched = true;
-        setFocus(allOptions[nextIndex] ?? null);
-      }
-    };
-
-    const onType = (e: Event) => {
-      const inputValue = (e.target as HTMLInputElement).value;
-      currentSearchTerm = inputValue;
-      const requestId = ++latestSearchRequest;
-      activeCategory = null;
-      scriptureCard = null;
-      selectionTouched = false;
-      announcedMessages.clear();
-      status!.textContent = "";
-      semanticRequestController?.abort();
-      semanticRequestController = null;
-      if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-
-      const parsed = parseSearchQuery(inputValue);
-      const hasContent = parsed.query !== "";
-      searchLayout.classList.toggle("display-results", hasContent);
-
-      if (currentHover) currentHover.classList.remove("focus");
-      currentHover = null;
-
-      if (!hasContent) {
-        removeAllChildren(results);
-        searchLayout.querySelector(".result-filters")?.remove();
-        if (preview) removeAllChildren(preview);
-        searchBar.setAttribute("aria-expanded", "false");
-        searchBar.removeAttribute("aria-activedescendant");
-        return;
-      }
-
-      searchDebounceTimer = setTimeout(() => {
-        if (requestId !== latestSearchRequest) return;
-        const displayTerm = parsed.query;
-        let indexState: SearchIndexState = contentData ? "ready" : "loading";
-        let semanticState: SemanticSearchState = "loading";
-        let exactResults: SearchDisplayResult[] = [];
-        let semanticResults: SearchDisplayResult[] = [];
-
-        const buildExactResults = () => {
-          const data = contentData ?? {};
-          const exactSlugs = shouldRunExactSearch(parsed.query)
-            ? rankExactMatches(data, findExactMatchSlugs(data, parsed.query), parsed.query)
-            : [];
-          return exactSlugs.flatMap((slug) => {
-            const doc = data[slug];
-            if (!doc) return [];
-            let view: SearchResultView | undefined;
-            return [
-              {
-                id: slug,
-                slug,
-                tags: doc.tags || [],
-                type: "keyword",
-                getView: () => {
-                  if (!view) {
-                    view = {
-                      title: highlight(displayTerm, doc.title || slug),
-                      content: buildSnippetHtml(doc.content || "", displayTerm, {
-                        title: doc.title,
-                      }),
-                    };
-                  }
-                  return view;
-                },
-              },
-            ];
-          });
-        };
-
-        const renderCurrentResults = () => {
-          const view = composeSearchView({
-            exact: exactResults,
-            semantic: semanticResults,
-            indexState,
-            semanticState,
-          });
-          displayResults(view.results, {
-            pending: view.pending,
-            semanticUnavailable: view.notes.includes("semantic-unavailable"),
-            indexNote: view.notes.find((note) => note !== "semantic-unavailable"),
-            preserveFocus: true,
-            preserveRenderedCount: true,
-          });
-          if (indexState === "ready") {
-            announce(getSearchAnnouncement("exact", exactResults.length));
-            // 精準與語意都沒有結果、也沒有經文卡片，才說找不到；語意還在路上時不能說
-            if (
-              exactResults.length === 0 &&
-              semanticState !== "loading" &&
-              semanticResults.length === 0 &&
-              !scriptureCard
-            ) {
-              announce(getSearchAnnouncement("none", 0));
-            }
-          }
-        };
-
-        if (contentData) exactResults = buildExactResults();
-        renderCurrentResults();
-
-        // 經文參照（出12:3）：用小索引（fetchData）的 key 判斷這一章／這一卷有沒有內容，不等完整內文索引
-        void getKnownSlugs().then((knownSlugs) => {
-          if (requestId !== latestSearchRequest) return;
-          scriptureCard = knownSlugs
-            ? buildScriptureCard(parsed.query, (slug) => knownSlugs.has(slug))
-            : null;
-          if (scriptureCard && scriptureCard.kind !== "missing") {
-            announce(
-              getSearchAnnouncement("scripture", scriptureCard.title.replace(/^跳到\s*/, "")),
-            );
-          } else if (scriptureCard) {
-            announce(getSearchAnnouncement("scripture-missing", scriptureCard.title));
-          }
-          renderCurrentResults();
-        });
-
-        if (indexState === "loading") {
-          void ensureIndex().then((loaded) => {
-            if (requestId !== latestSearchRequest) return;
-            indexState = loaded ? "ready" : "error";
-            if (loaded) exactResults = buildExactResults();
-            renderCurrentResults();
-          });
-        }
-
-        // Start semantic search immediately; index loading proceeds independently.
-        const controller = new AbortController();
-        semanticRequestController = controller;
-        void fetchJsonWithTimeout(getSearchApiUrl(parsed.query), {
-          timeoutMs: SEMANTIC_SEARCH_TIMEOUT_MS,
-          signal: controller.signal,
-        }).then((semanticResponse) => {
-          if (requestId !== latestSearchRequest) return;
-          if (semanticRequestController === controller) semanticRequestController = null;
-
-          if (semanticResponse.status !== "ok" || !isSemanticSearchPayload(semanticResponse.data)) {
-            semanticState = "error";
-            renderCurrentResults();
-            return;
-          }
-
-          const semanticAdditions = appendSemanticResults(
-            exactResults.map((result) => result.slug),
-            semanticResponse.data.results.filter(
-              (result): result is SemanticSearchResultData =>
-                typeof result === "object" && result !== null && typeof result.slug === "string",
-            ),
-            isSearchExcludedSlug,
-          );
-          semanticResults = semanticAdditions.map((result) => {
-            const title = typeof result.title === "string" ? result.title : result.slug;
-            const text = typeof result.text === "string" ? result.text : "";
-            let view: SearchResultView | undefined;
-            return {
-              id: result.slug,
-              slug: result.slug,
-              tags: [],
-              type: "semantic",
-              getView: () => {
-                if (!view) {
-                  view = {
-                    title: highlight(displayTerm, title),
-                    content: buildSnippetHtml(text, displayTerm, { title }),
-                  };
-                }
-                return view;
-              },
-            };
-          });
-          semanticState = "ready";
-          if (semanticAdditions.length > 0) {
-            announce(getSearchAnnouncement("semantic", semanticAdditions.length));
-          }
-          renderCurrentResults();
-        });
-        // 停止輸入 60 ms 後才搜尋：正式站量到含這段約 240–290 ms，餘裕太薄，所以由 100 ms 降到 60 ms（B4-1：300 ms 內）；舊的語意請求會被取消
-      }, 60);
-    };
-    const onButtonClick = (e: Event) => {
-      e.stopPropagation();
-      showSearch();
-    };
-    searchButton.addEventListener("click", onButtonClick);
-    addCleanup(() => searchButton.removeEventListener("click", onButtonClick));
-
-    searchButton.addEventListener("pointerenter", preloadIndex);
-    searchButton.addEventListener("focus", preloadIndex);
-    searchButton.addEventListener("touchstart", preloadIndex, { passive: true });
-    searchBar.addEventListener("focus", preloadIndex);
-    addCleanup(() => {
-      searchButton.removeEventListener("pointerenter", preloadIndex);
-      searchButton.removeEventListener("focus", preloadIndex);
-      searchButton.removeEventListener("touchstart", preloadIndex);
-      searchBar.removeEventListener("focus", preloadIndex);
-    });
-
-    searchBar.addEventListener("input", onType);
-    addCleanup(() => searchBar.removeEventListener("input", onType));
-
-    const onSearchBarKeydown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        focusByDirection(-1);
-        return;
-      }
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        focusByDirection(1);
-        return;
-      }
-      if (e.key === "Enter" && !e.isComposing) {
-        const visibleResults = getResultElements();
-        const focused =
-          currentHover && visibleResults.includes(currentHover)
-            ? currentHover
-            : (visibleResults[0] ?? null);
-        if (focused instanceof HTMLAnchorElement) {
-          e.preventDefault();
-          setFocus(focused);
-          storeNavigationHint(focused);
-          hideSearch();
-          focused.click();
-        }
-      }
-    };
-    searchBar.addEventListener("keydown", onSearchBarKeydown);
-    addCleanup(() => searchBar.removeEventListener("keydown", onSearchBarKeydown));
-
-    const onDialogKeydown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      const focusableSelector =
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-      const focusableElements = Array.from(
-        container.querySelectorAll<HTMLElement>(focusableSelector),
-      ).filter(
-        (element) =>
-          !element.hidden &&
-          element.getAttribute("aria-hidden") !== "true" &&
-          element.getClientRects().length > 0,
-      );
-      const lastFocusable = focusableElements[focusableElements.length - 1] ?? searchBar;
-
-      if (e.target === searchBar && e.shiftKey) {
-        e.preventDefault();
-        lastFocusable.focus();
-      } else if (e.target === lastFocusable && !e.shiftKey) {
-        e.preventDefault();
-        searchBar.focus();
-      }
-    };
-    container.addEventListener("keydown", onDialogKeydown);
-    addCleanup(() => container.removeEventListener("keydown", onDialogKeydown));
-
-    const onDocumentKeydown = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
-        e.preventDefault();
-        container.classList.contains("active") ? hideSearch() : showSearch();
-      }
-    };
-    document.addEventListener("keydown", onDocumentKeydown);
-    addCleanup(() => document.removeEventListener("keydown", onDocumentKeydown));
-
-    const storeSearchTerm = () => {
-      const term = currentSearchTerm.trim();
-      if (term) sessionStorage.setItem("search-term", term);
-    };
-
-    // 換頁後要捲到哪裡：經文跳轉卡片存 search-verse（章節 + 節數），其他結果存搜尋字
-    const storeNavigationHint = (card: HTMLElement) => {
+    const handleNavigate = (link: HTMLAnchorElement) => {
+      const slug = link.dataset.slug;
+      const verse = Number(link.dataset.verse);
       try {
-        if (!card.classList.contains("scripture-jump")) {
-          storeSearchTerm();
+        if (slug && Number.isInteger(verse) && verse > 0) {
+          sessionStorage.removeItem("search-term");
+          sessionStorage.setItem(
+            "search-verse",
+            JSON.stringify({
+              slug,
+              verse,
+              verseEnd: Number(link.dataset.verseEnd) || verse,
+            }),
+          );
+          if (slug === document.body.dataset.slug) queueMicrotask(scrollToSearchVerse);
+        } else if (slug && mode === "knowledge") {
+          sessionStorage.setItem("search-term", activeTerm);
+        }
+      } catch {
+        // The real chapter and verse links still work without session storage.
+      }
+      hideSearch(false);
+    };
+
+    searchButton.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+        showSearch();
+      },
+      { signal },
+    );
+    root.querySelector(".search-close")?.addEventListener("click", () => hideSearch(), { signal });
+    for (const button of modes) {
+      button.addEventListener(
+        "click",
+        () => setMode(button.dataset.mode === "knowledge" ? "knowledge" : "verse"),
+        { signal },
+      );
+    }
+    searchBar.addEventListener(
+      "compositionstart",
+      () => {
+        searchComposing = true;
+      },
+      { signal },
+    );
+    searchBar.addEventListener(
+      "compositionend",
+      () => {
+        searchComposing = false;
+        changeQuery();
+      },
+      { signal },
+    );
+    searchBar.addEventListener(
+      "input",
+      (event) => {
+        if (!searchComposing && !(event as InputEvent).isComposing) changeQuery();
+      },
+      { signal },
+    );
+    searchBar.addEventListener(
+      "keydown",
+      (event) => {
+        if (searchComposing || event.isComposing) return;
+        const resultLinks = links();
+        if (event.key === "ArrowDown" && resultLinks[0]) {
+          event.preventDefault();
+          resultLinks[0].focus();
+        } else if (event.key === "ArrowUp" && resultLinks.at(-1)) {
+          event.preventDefault();
+          resultLinks.at(-1)?.focus();
+        } else if (event.key === "Enter" && resultLinks[0]) {
+          event.preventDefault();
+          resultLinks[0].click();
+        }
+      },
+      { signal },
+    );
+
+    refineInput.addEventListener(
+      "compositionstart",
+      () => {
+        refineComposing = true;
+      },
+      { signal },
+    );
+    refineInput.addEventListener(
+      "compositionend",
+      () => {
+        refineComposing = false;
+      },
+      { signal },
+    );
+    refineInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter" && (refineComposing || event.isComposing)) event.preventDefault();
+      },
+      { signal },
+    );
+    refineForm.addEventListener(
+      "submit",
+      (event) => {
+        event.preventDefault();
+        if (refineComposing || refineInput.disabled) return;
+        const keyword = refineInput.value.trim();
+        const normalized = normalizeVerseSearchTerm(keyword);
+        if (
+          normalized &&
+          ![verseDraft.query, ...verseDraft.refinements].some(
+            (term) => normalizeVerseSearchTerm(term) === normalized,
+          )
+        ) {
+          verseDraft.refinements.push(keyword);
+          paintVerseControls();
+          refresh();
+        }
+        refineInput.value = "";
+        refineInput.focus();
+      },
+      { signal },
+    );
+    refinements.addEventListener(
+      "click",
+      (event) => {
+        const word = (event.target as HTMLElement).closest<HTMLElement>(".search-refinement")
+          ?.dataset.refine;
+        if (!word) return;
+        verseDraft.refinements = verseDraft.refinements.filter((refinement) => refinement !== word);
+        paintVerseControls();
+        refresh();
+        refineInput.focus();
+      },
+      { signal },
+    );
+    suggestions.addEventListener(
+      "click",
+      (event) => {
+        const word = (event.target as HTMLElement).closest<HTMLElement>(".search-suggestion")
+          ?.dataset.suggestion;
+        if (!word) return;
+        searchBar.value = word;
+        changeQuery();
+        searchBar.focus();
+      },
+      { signal },
+    );
+    variants.addEventListener(
+      "change",
+      () => {
+        verseDraft.matchVariants = variants.checked;
+        refresh();
+      },
+      { signal },
+    );
+    categoryList.addEventListener(
+      "change",
+      (event) => {
+        const checkbox = event.target as HTMLInputElement;
+        const category = checkbox.dataset.category;
+        if (!category) return;
+        knowledgeSelection ??= new Set(categoryKeys);
+        if (checkbox.checked) knowledgeSelection.add(category);
+        else knowledgeSelection.delete(category);
+        refresh();
+      },
+      { signal },
+    );
+    root.querySelector(".search-knowledge-all")?.addEventListener(
+      "click",
+      () => {
+        knowledgeSelection = null;
+        paintCategoryFilters(categoryKeys);
+        refresh();
+      },
+      { signal },
+    );
+    root.querySelector(".search-knowledge-clear")?.addEventListener(
+      "click",
+      () => {
+        knowledgeSelection = new Set();
+        paintCategoryFilters(categoryKeys);
+        refresh();
+      },
+      { signal },
+    );
+
+    results.addEventListener(
+      "click",
+      (event) => {
+        const target = event.target as HTMLElement;
+        if (target.closest(".search-more-btn")) {
+          appendNextPage(true);
           return;
         }
-        const verse = Number(card.dataset.verse);
-        if (!card.dataset.slug || !Number.isInteger(verse) || verse < 1) return;
-        const verseEnd = Number(card.dataset.verseEnd);
-        sessionStorage.setItem(
-          "search-verse",
-          JSON.stringify({
-            slug: card.dataset.slug,
-            verse,
-            verseEnd: Number.isInteger(verseEnd) && verseEnd >= verse ? verseEnd : verse,
-          }),
+        const verseId = target.closest<HTMLButtonElement>(".search-verse-add")?.dataset.verseId;
+        if (verseId) {
+          const verse = verseHits.find((hit) => hit.id === verseId);
+          if (!verse) return;
+          if (shortlist.has(verseId)) shortlist.delete(verseId);
+          else shortlist.set(verseId, verseReference(verse) + "\t" + verse.text);
+          saveShortlist();
+          updateVerseToggles();
+          paintShortlist();
+          announce("暫存經文 " + shortlist.size + " 節");
+          return;
+        }
+        const link = target.closest<HTMLAnchorElement>("a.result-card[href]");
+        if (link && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
+          handleNavigate(link);
+      },
+      { signal },
+    );
+    const previewEvent = (event: Event) => {
+      const card = (event.target as HTMLElement).closest<HTMLAnchorElement>("a.result-card[href]");
+      if (card) showPreview(card);
+    };
+    results.addEventListener("mouseover", previewEvent, { signal });
+    results.addEventListener("focusin", previewEvent, { signal });
+    results.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+        const focused = (event.target as HTMLElement).closest<HTMLAnchorElement>(
+          "a.result-card[href]",
         );
-      } catch {
-        // sessionStorage 不能用就算了，只是不會標示節數／捲到搜尋字
-      }
-    };
+        if (!focused) return;
+        const resultLinks = links();
+        const index = resultLinks.indexOf(focused);
+        if (index < 0) return;
+        event.preventDefault();
+        if (event.key === "ArrowUp") (resultLinks[index - 1] ?? searchBar).focus();
+        else
+          (
+            resultLinks[index + 1] ?? results.querySelector<HTMLButtonElement>(".search-more-btn")
+          )?.focus();
+      },
+      { signal },
+    );
 
-    const onResultsClick = (e: Event) => {
-      const moreButton = (e.target as HTMLElement).closest(".search-more-btn");
-      if (moreButton) {
-        e.preventDefault();
-        appendNextResults();
-        return;
-      }
-      const target = (e.target as HTMLElement).closest(".result-card") as HTMLAnchorElement | null;
-      if (!target || target.classList.contains("no-match")) return;
-      if (target.classList.contains("scripture-missing")) return;
-      if (e instanceof MouseEvent && (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) return;
-      storeNavigationHint(target);
-      hideSearch();
-    };
-    const onResultsMouseover = (e: Event) => {
-      const target = (e.target as HTMLElement).closest(".result-card") as HTMLElement | null;
-      if (!target || target.classList.contains("no-match")) return;
-      if (target.classList.contains("scripture-missing")) return;
-      selectionTouched = true;
-      setFocus(target);
-    };
-    const onResultsFocusIn = (e: Event) => {
-      const target = (e.target as HTMLElement).closest(
-        ".result-card[role='option']",
-      ) as HTMLElement | null;
-      if (!target || target.hidden) return;
-      selectionTouched = true;
-      setFocus(target);
-    };
-    const onFilterClick = (e: Event) => {
-      const button = (e.target as HTMLElement).closest(".result-filter") as HTMLElement | null;
-      if (!button) return;
-      activeCategory = button.dataset.filter ? button.dataset.filter : null;
-      displayResults(currentResults, {
-        ...currentDisplayOptions,
-        preserveFocus: true,
-        preserveRenderedCount: false,
-      });
-    };
-    // 按篩選鈕時不要讓搜尋框失去焦點（手機上才不會收起鍵盤、方向鍵也還能用）
-    const onFilterMousedown = (e: Event) => {
-      if ((e.target as HTMLElement).closest(".result-filters, .search-more-btn"))
-        e.preventDefault();
-    };
-    searchLayout.addEventListener("click", onFilterClick);
-    searchLayout.addEventListener("mousedown", onFilterMousedown);
-    results.addEventListener("click", onResultsClick);
-    results.addEventListener("mouseover", onResultsMouseover);
-    results.addEventListener("focusin", onResultsFocusIn);
+    shortlistBody.addEventListener(
+      "click",
+      (event) => {
+        const target = event.target as HTMLElement;
+        const link = target.closest<HTMLAnchorElement>("a[href]");
+        if (link && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
+          handleNavigate(link);
+        const verseId = target.closest<HTMLElement>(".search-verse-remove")?.dataset.verseId;
+        if (!verseId || !shortlist.delete(verseId)) return;
+        saveShortlist();
+        updateVerseToggles();
+        paintShortlist();
+        shortlistDetails.querySelector("summary")?.focus();
+        announce("暫存經文 " + shortlist.size + " 節");
+      },
+      { signal },
+    );
+    copyButton.addEventListener(
+      "click",
+      async () => {
+        const text = Array.from(shortlist.values()).join("\n");
+        try {
+          await navigator.clipboard.writeText(text);
+          announce("已複製暫存經文");
+          copyButton.textContent = "已複製";
+        } catch {
+          announce("無法存取剪貼簿，請從清單選取經文後複製。");
+          copyButton.textContent = "無法複製，請手動選取";
+        }
+      },
+      { signal },
+    );
+
+    container.addEventListener(
+      "click",
+      (event) => {
+        if (event.target === container) hideSearch();
+      },
+      { signal },
+    );
+    container.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "Tab") return;
+        const focusable = Array.from(
+          container.querySelectorAll<HTMLElement>(
+            "a[href], button:not([disabled]), input:not([disabled]), summary",
+          ),
+        ).filter((element) => element.getClientRects().length > 0);
+        const first = focusable[0] ?? searchBar;
+        const last = focusable.at(-1) ?? searchBar;
+        if (event.target === first && event.shiftKey) {
+          event.preventDefault();
+          last.focus();
+        } else if (event.target === last && !event.shiftKey) {
+          event.preventDefault();
+          first.focus();
+        }
+      },
+      { signal },
+    );
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.isComposing || searchComposing || refineComposing) return;
+        const open = container.classList.contains("active");
+        if (
+          event.key.toLowerCase() === "k" &&
+          (event.ctrlKey || event.metaKey) &&
+          !event.shiftKey
+        ) {
+          if (!open && root !== preferredRoot()) return;
+          event.preventDefault();
+          if (open) hideSearch();
+          else showSearch();
+        } else if (open && event.key === "Escape") {
+          event.preventDefault();
+          hideSearch();
+        }
+      },
+      { signal },
+    );
+    document.addEventListener(
+      "search:open",
+      (event) => {
+        if (event.defaultPrevented || root !== preferredRoot()) return;
+        const detail = (event as CustomEvent<{ mode?: SearchMode; opener?: HTMLElement }>).detail;
+        showSearch(detail?.mode, detail?.opener);
+      },
+      { signal },
+    );
+
     addCleanup(() => {
-      searchLayout.removeEventListener("click", onFilterClick);
-      searchLayout.removeEventListener("mousedown", onFilterMousedown);
-      results!.removeEventListener("click", onResultsClick);
-      results!.removeEventListener("mouseover", onResultsMouseover);
-      results!.removeEventListener("focusin", onResultsFocusIn);
+      controller.abort();
+      hideSearch(false);
+      preview?.remove();
     });
-
-    const cleanupEscapeHandler = registerEscapeHandler(container, hideSearch);
-    addCleanup(cleanupEscapeHandler);
   }
+}
+
+function makeScriptureCard(card: ScriptureCard) {
+  const element = document.createElement(card.kind === "missing" ? "div" : "a");
+  element.className = "result-card scripture-jump";
+  if (card.kind === "missing") element.classList.add("scripture-missing");
+  else {
+    element.dataset.slug = card.slug;
+    let path = resolveSearchPath(card.slug);
+    if (card.kind === "chapter" && card.verse !== undefined) {
+      element.dataset.verse = String(card.verse);
+      if (card.verseEnd !== undefined) element.dataset.verseEnd = String(card.verseEnd);
+      path += "#v" + card.verse;
+    }
+    (element as HTMLAnchorElement).href = path;
+  }
+  const title = document.createElement("h3");
+  title.textContent = card.title;
+  const subtitle = document.createElement("p");
+  subtitle.className = "card-description";
+  subtitle.textContent = card.subtitle;
+  element.append(title, subtitle);
+  return element;
 }
 
 function tokenizeTerm(term: string): string[] {
@@ -1091,26 +975,6 @@ function highlightHTML(searchTerm: string, el: HTMLElement): string {
     textNode.parentNode?.replaceChild(fragment, textNode);
   }
   return html.body.innerHTML;
-}
-
-/** 標題用：把搜尋詞標示出來（內文摘要見 snippet.ts）。 */
-function highlight(searchTerm: string, text: string): string {
-  const tokenizedTerms = tokenizeTerm(searchTerm);
-  return escapeHTML(text)
-    .split(/\s+/)
-    .filter((t) => t !== "")
-    .map((tok) => {
-      let result = tok;
-      for (const searchTok of tokenizedTerms) {
-        if (tok.toLowerCase().includes(searchTok.toLowerCase())) {
-          const regex = new RegExp(searchTok.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
-          result = tok.replace(regex, (match) => `<span class="highlight">${match}</span>`);
-          break;
-        }
-      }
-      return result;
-    })
-    .join(" ");
 }
 
 async function fetchContentIndex(): Promise<Record<string, Item>> {

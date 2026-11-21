@@ -106,9 +106,9 @@ check("首頁入口：按「繼續」回到約同一位置（±10%）", Math.abs
 // ---------- (3) 搜尋 ----------
 await ev(`document.querySelector('.search-button')?.click()`)
 check("搜尋：按鈕打開搜尋框", !!(await waitFor(`!!document.querySelector('.search-container.active')`, 8000)))
-await ev(`(() => { const i = document.querySelector('.search-bar'); i.value = '亞伯拉罕'; i.dispatchEvent(new Event('input', { bubbles: true })) })()`)
+await ev(`(() => { const i = document.querySelector('.search-bar'); i.value = '天地'; i.dispatchEvent(new Event('input', { bubbles: true })) })()`)
 const hits = await waitFor(`document.querySelectorAll('.result-card:not(.no-match)').length`, 15000)
-check("搜尋：輸入「亞伯拉罕」有結果", hits > 0, `${hits || 0} 筆`)
+check("搜尋：輸入「天地」有經文結果", hits > 0, `${hits || 0} 筆`)
 await ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))`)
 
 // ---------- (4) 個人筆記（本機模式、不登入） ----------

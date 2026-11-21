@@ -203,17 +203,19 @@ function bindHub(hub: HTMLElement) {
   const button = hub.querySelector<HTMLElement>("[data-kn-search]")
   if (!button) return
   const signal = rebind(button)
-  // 不重寫搜尋：直接按網站現有的搜尋鈕（手機上它在 ☰ 抽屜裡，程式點擊照樣有效）
   button.addEventListener(
     "click",
     () => {
-      document.querySelector<HTMLElement>(".search-button")?.click()
+      document.dispatchEvent(
+        new CustomEvent("search:open", {
+          cancelable: true,
+          detail: { mode: "knowledge", opener: button },
+        }),
+      )
     },
     { signal },
   )
   button.hidden = false
-  const hint = hub.querySelector<HTMLElement>("[data-kn-kbd]")
-  if (hint && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) hint.textContent = "⌘ K"
 }
 
 function mount() {

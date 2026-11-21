@@ -22,6 +22,7 @@ import { wrapStrongNumbers } from "../util/strongNumbers"
 import { applyInteractiveSites, HUB_SLUG as INTERACTIVE_HUB_SLUG } from "../util/interactiveHast"
 import { applyKnowledgeHub } from "../util/knowledgeHast"
 import { loadInteractiveRegistry } from "../util/interactiveSitesLoader"
+import { addVerseAnchors } from "../util/verseIndex"
 
 interface RenderComponents {
   head: QuartzComponent
@@ -321,6 +322,7 @@ export function renderPage(
   // make a deep copy of the tree so we don't remove the transclusion references
   // for the file cached in contentMap in build.ts
   const root = clone(componentData.tree) as Root
+  addVerseAnchors(root, slug)
   const visited = new Set<FullSlug>([slug])
   renderTranscludes(root, cfg, slug, componentData, visited)
 

@@ -10,6 +10,10 @@ import {
   getSlugKind,
   getResultCategory,
   summarizeCategories,
+  getKnowledgeSearchCategory,
+  getKnowledgeSearchCategories,
+  getKnowledgeSearchCategoryLabel,
+  findKnowledgeMatchSlugs,
 } from "../src/components/searchLogic";
 import {
   appendSemanticResults,
@@ -230,6 +234,54 @@ describe("Result category", () => {
       { name: "教學", count: 1 },
       { name: "章節", count: 2 },
     ]);
+  });
+});
+
+describe("Advanced knowledge search", () => {
+  const entries = {
+    "link_folder/地點/約念": { title: "約念", content: "一座古代城邑。" },
+    "link_folder/地點/書念": { title: "書念", content: "另一座城邑。" },
+    "link_folder/原文/貪戀": { title: "貪戀", content: "註釋提到意念。" },
+    "appendix/研經示例": { title: "研經示例", tags: ["意念"] },
+    "01-創世記/第6章": { title: "第6章", content: "本章整理也提到意念。" },
+    "link_folder/地點/index": { title: "意念" },
+  };
+
+  it("applies selected knowledge categories to literal matches", () => {
+    expect(findKnowledgeMatchSlugs(entries, "意念", new Set(["地點"]))).toEqual([]);
+    expect(findKnowledgeMatchSlugs(entries, "意念", new Set(["原文"]))).toEqual([
+      "link_folder/原文/貪戀",
+    ]);
+    expect(findKnowledgeMatchSlugs(entries, "意念", new Set(["原文", "附錄", "章節"]))).toEqual([
+      "link_folder/原文/貪戀",
+      "appendix/研經示例",
+    ]);
+    expect(findKnowledgeMatchSlugs(entries, "意念", new Set())).toEqual([]);
+  });
+
+  it("offers stable scope choices, including new knowledge categories", () => {
+    const categories = getKnowledgeSearchCategories([
+      ...Object.keys(entries),
+      "link_folder/考古/示例",
+    ]);
+    expect(categories).toEqual([
+      "人物",
+      "地點",
+      "事件",
+      "歷史",
+      "背景",
+      "文化",
+      "神學",
+      "主題",
+      "原文",
+      "互文",
+      "解經爭議",
+      "考古",
+      "附錄",
+    ]);
+    expect(getKnowledgeSearchCategory("01-創世記/第6章")).toBeNull();
+    expect(getKnowledgeSearchCategory("link_folder/地點/index")).toBeNull();
+    expect(getKnowledgeSearchCategoryLabel("原文")).toBe("原文詞義");
   });
 });
 

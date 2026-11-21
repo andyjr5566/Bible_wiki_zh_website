@@ -49,30 +49,86 @@ export default ((userOpts?: Partial<SearchOptions>) => {
         </button>
         <div class="search-container" role="dialog" aria-modal="true" aria-label="搜尋">
           <div class="search-space">
+            <div class="search-modes" role="group" aria-label="搜尋範圍">
+              <button type="button" class="search-mode" data-mode="verse" aria-pressed="true">
+                經文搜尋
+              </button>
+              <button type="button" class="search-mode" data-mode="knowledge" aria-pressed="false">
+                知識庫進階
+              </button>
+              <button type="button" class="search-close" aria-label="關閉搜尋">
+                ×
+              </button>
+            </div>
             <input
               autocomplete="off"
               class="search-bar"
               name="search"
               type="text"
-              role="combobox"
-              aria-autocomplete="list"
+              role="searchbox"
               aria-controls={resultsId}
-              aria-expanded="false"
               aria-label={searchPlaceholder}
               placeholder={searchPlaceholder}
             />
+            <section class="search-verse-controls" aria-label="經文搜尋條件與暫存清單">
+              <div class="search-verse-options">
+                <span class="search-scope">範圍為本站已收錄的經文</span>
+                <label class="search-check">
+                  <input type="checkbox" class="search-match-variants" />
+                  比對異體字
+                </label>
+              </div>
+              <form class="search-refine-form">
+                <input
+                  type="text"
+                  class="search-refine-input"
+                  autocomplete="off"
+                  placeholder="在結果中再查關鍵字"
+                  aria-label="在結果中再查關鍵字"
+                  disabled
+                />
+                <button type="submit" class="search-refine-add" disabled>
+                  加入條件
+                </button>
+              </form>
+              <div class="search-refinements" role="group" aria-label="已加入的條件" hidden></div>
+              <div class="search-suggestions" role="group" aria-label="關鍵字建議" hidden></div>
+              <details class="search-verse-list">
+                <summary>
+                  暫存經文 <span class="search-verse-list-count">0</span> 節
+                </summary>
+                <div class="search-verse-list-body"></div>
+                <button type="button" class="search-verse-copy" disabled>
+                  複製清單
+                </button>
+              </details>
+            </section>
+            <fieldset class="search-knowledge-controls" hidden>
+              <legend>知識類型</legend>
+              <div class="search-knowledge-actions">
+                <button type="button" class="search-knowledge-all">
+                  全選
+                </button>
+                <button type="button" class="search-knowledge-clear">
+                  清除
+                </button>
+              </div>
+              <div class="search-knowledge-categories"></div>
+            </fieldset>
             <div
               class="search-layout"
               data-preview={opts.enablePreview}
+              data-mode="verse"
               data-field-priority={JSON.stringify(opts.fieldPriority)}
               data-no-results={searchText.noResults}
               data-no-results-hint={searchText.noResultsHint}
               data-results-label="搜尋結果"
             >
+              <p class="search-result-count" hidden></p>
               <div
                 class="results-container"
                 id={resultsId}
-                role="listbox"
+                role="region"
                 aria-label="搜尋結果"
               ></div>
             </div>

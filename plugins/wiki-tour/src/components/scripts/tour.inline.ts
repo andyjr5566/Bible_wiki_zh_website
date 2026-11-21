@@ -216,7 +216,7 @@ const STEPS: Step[] = [
     skill: "搜尋",
     gate: true,
     targets: () => (searchOpen() ? $$(".search-container.active .search-bar") : $$(".search-button")),
-    title: () => "找一個主題",
+    title: () => "用關鍵字找經文",
     text: () =>
       searchOpen()
         ? "輸入「逾越節」。"
@@ -234,11 +234,11 @@ const STEPS: Step[] = [
       const layout = $(".search-container.active .search-layout.display-results")
       return layout ? [layout] : $$(".search-container.active .search-bar")
     },
-    title: () => "字面和語意，一次搜",
+    title: () => "從結果回到經文",
     text: () =>
       searchOpen()
-        ? "每筆結果前面是類型；標「完全相符」的是字面相符，「語意相關」是字面不同、意思相近的條目。按上方的「章節」只看章節，再點〈出埃及記 第12章〉。"
-        : "搜尋框關掉了。再打開一次，搜「逾越節」並點一個結果。",
+        ? "每筆結果顯示一節經文和它的出處。點出埃及記第 12 章的任一節，回到章頁看上下文。"
+        : "再打開搜尋，搜「逾越節」，並點出埃及記第 12 章的任一節。",
     done: () => navSinceStep,
   },
   {

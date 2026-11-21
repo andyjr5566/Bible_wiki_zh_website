@@ -28,9 +28,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../../site-ux/node_modules/inline-style-parser/cjs/index.js
+// ../../node_modules/inline-style-parser/cjs/index.js
 var require_cjs = __commonJS({
-  "../../../../site-ux/node_modules/inline-style-parser/cjs/index.js"(exports, module) {
+  "../../node_modules/inline-style-parser/cjs/index.js"(exports, module) {
     var COMMENT_REGEX = /\/\*[^*]*\*+([^/*][^*]*\*+)*\//g;
     var NEWLINE_REGEX = /\n/g;
     var WHITESPACE_REGEX = /^\s*/;
@@ -56,8 +56,8 @@ var require_cjs = __commonJS({
       function updatePosition(str) {
         var lines = str.match(NEWLINE_REGEX);
         if (lines) lineno += lines.length;
-        var i2 = str.lastIndexOf(NEWLINE);
-        column = ~i2 ? str.length - i2 : column + str.length;
+        var i3 = str.lastIndexOf(NEWLINE);
+        column = ~i3 ? str.length - i3 : column + str.length;
       }
       function position3() {
         var start2 = { line: lineno, column };
@@ -88,22 +88,22 @@ var require_cjs = __commonJS({
         }
       }
       function match(re2) {
-        var m2 = re2.exec(style);
-        if (!m2) return;
-        var str = m2[0];
+        var m3 = re2.exec(style);
+        if (!m3) return;
+        var str = m3[0];
         updatePosition(str);
         style = style.slice(str.length);
-        return m2;
+        return m3;
       }
       function whitespace2() {
         match(WHITESPACE_REGEX);
       }
       function comments(rules) {
-        var c2;
+        var c3;
         rules = rules || [];
-        while (c2 = comment()) {
-          if (c2 !== false) {
-            rules.push(c2);
+        while (c3 = comment()) {
+          if (c3 !== false) {
+            rules.push(c3);
           }
         }
         return rules;
@@ -111,18 +111,18 @@ var require_cjs = __commonJS({
       function comment() {
         var pos = position3();
         if (FORWARD_SLASH != style.charAt(0) || ASTERISK != style.charAt(1)) return;
-        var i2 = 2;
-        while (EMPTY_STRING != style.charAt(i2) && (ASTERISK != style.charAt(i2) || FORWARD_SLASH != style.charAt(i2 + 1))) {
-          ++i2;
+        var i3 = 2;
+        while (EMPTY_STRING != style.charAt(i3) && (ASTERISK != style.charAt(i3) || FORWARD_SLASH != style.charAt(i3 + 1))) {
+          ++i3;
         }
-        i2 += 2;
-        if (EMPTY_STRING === style.charAt(i2 - 1)) {
+        i3 += 2;
+        if (EMPTY_STRING === style.charAt(i3 - 1)) {
           return error("End of comment missing");
         }
-        var str = style.slice(2, i2 - 2);
+        var str = style.slice(2, i3 - 2);
         column += 2;
         updatePosition(str);
-        style = style.slice(i2);
+        style = style.slice(i3);
         column += 2;
         return pos({
           type: TYPE_COMMENT,
@@ -166,9 +166,9 @@ var require_cjs = __commonJS({
   }
 });
 
-// ../../../../site-ux/node_modules/style-to-object/cjs/index.js
+// ../../node_modules/style-to-object/cjs/index.js
 var require_cjs2 = __commonJS({
-  "../../../../site-ux/node_modules/style-to-object/cjs/index.js"(exports) {
+  "../../node_modules/style-to-object/cjs/index.js"(exports) {
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -199,9 +199,9 @@ var require_cjs2 = __commonJS({
   }
 });
 
-// ../../../../site-ux/node_modules/style-to-js/cjs/utilities.js
+// ../../node_modules/style-to-js/cjs/utilities.js
 var require_utilities = __commonJS({
-  "../../../../site-ux/node_modules/style-to-js/cjs/utilities.js"(exports) {
+  "../../node_modules/style-to-js/cjs/utilities.js"(exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.camelCase = void 0;
     var CUSTOM_PROPERTY_REGEX = /^--[a-zA-Z0-9_-]+$/;
@@ -237,9 +237,9 @@ var require_utilities = __commonJS({
   }
 });
 
-// ../../../../site-ux/node_modules/style-to-js/cjs/index.js
+// ../../node_modules/style-to-js/cjs/index.js
 var require_cjs3 = __commonJS({
-  "../../../../site-ux/node_modules/style-to-js/cjs/index.js"(exports, module) {
+  "../../node_modules/style-to-js/cjs/index.js"(exports, module) {
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -797,8 +797,8 @@ function decodePath(value) {
 function canonicalSlugPath(value) {
   return decodePath(value).replace(/\\/g, "/").replace(/^\/+|\/+$/g, "").replace(/\.html$/i, "").replace(/[\s]+/g, "-");
 }
-function bookByFolderSlug(s2) {
-  const canonical = canonicalSlugPath(s2);
+function bookByFolderSlug(s3) {
+  const canonical = canonicalSlugPath(s3);
   const folder = canonical.split("/").at(-1);
   return BIBLE_BOOKS.find((book) => folderSlug(book) === folder);
 }
@@ -841,15 +841,15 @@ function buildCatalog(slugs) {
     }
   }
   return BIBLE_BOOKS.map((book) => {
-    const foundChapters = [...chapters.get(book.num) ?? []].sort((a2, b2) => a2 - b2);
+    const foundChapters = [...chapters.get(book.num) ?? []].sort((a3, b2) => a3 - b2);
     const hasToc = toc.has(book.num);
     const hasIntro = intro.has(book.num);
     const status = foundChapters.length > 0 ? "ready" : hasToc || hasIntro ? "outline" : "empty";
     return { book, status, chapters: foundChapters, hasToc, hasIntro };
   });
 }
-function chapterSlug(book, n2) {
-  return folderSlug(book) + "/\u7B2C" + n2 + "\u7AE0";
+function chapterSlug(book, n3) {
+  return folderSlug(book) + "/\u7B2C" + n3 + "\u7AE0";
 }
 function tocSlug(book) {
   return folderSlug(book) + "/\u5168\u66F8\u76EE\u9304\u53CA\u7DB1\u8981";
@@ -869,7 +869,7 @@ function bookLinkSlug(entry) {
   return entry.hasIntro ? introSlug(entry.book) : void 0;
 }
 function openBooksSummary(catalog) {
-  const open = catalog.filter(isBookOpen).sort((a2, b2) => a2.book.num - b2.book.num);
+  const open = catalog.filter(isBookOpen).sort((a3, b2) => a3.book.num - b2.book.num);
   const runs = [];
   for (const entry of open) {
     const last = runs.at(-1);
@@ -883,43 +883,25 @@ function relativeHref(fromSlug, toSlug) {
   const prefix = depth <= 0 ? "." : Array.from({ length: depth }, () => "..").join("/");
   return `${prefix}/${toSlug}`;
 }
-
-// ../../../../site-ux/node_modules/preact/dist/preact.mjs
-var n;
 var l;
-var u;
-var w = [];
-function k(l2, u3, t2) {
-  var i2, r2, o2, e2 = {};
-  for (o2 in u3) "key" == o2 ? i2 = u3[o2] : "ref" == o2 ? r2 = u3[o2] : e2[o2] = u3[o2];
-  if (arguments.length > 2 && (e2.children = arguments.length > 3 ? n.call(arguments, 2) : t2), "function" == typeof l2 && null != l2.defaultProps) for (o2 in l2.defaultProps) void 0 === e2[o2] && (e2[o2] = l2.defaultProps[o2]);
-  return x(l2, e2, i2, r2, null);
-}
-function x(n2, t2, i2, r2, o2) {
-  var e2 = { type: n2, props: t2, key: i2, ref: r2, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: null == o2 ? ++u : o2, __i: -1, __u: 0 };
-  return null != l.vnode && l.vnode(e2), e2;
-}
-function S(n2) {
-  return n2.children;
-}
-n = w.slice, l = { __e: function(n2, l2, u3, t2) {
-  for (var i2, r2, o2; l2 = l2.__; ) if ((i2 = l2.__c) && !i2.__) try {
-    if ((r2 = i2.constructor) && null != r2.getDerivedStateFromError && (i2.setState(r2.getDerivedStateFromError(n2)), o2 = i2.__d), null != i2.componentDidCatch && (i2.componentDidCatch(n2, t2 || {}), o2 = i2.__d), o2) return i2.__E = i2;
-  } catch (l3) {
-    n2 = l3;
+l = { __e: function(n3, l3, u5, t3) {
+  for (var i3, r3, o3; l3 = l3.__; ) if ((i3 = l3.__c) && !i3.__) try {
+    if ((r3 = i3.constructor) && null != r3.getDerivedStateFromError && (i3.setState(r3.getDerivedStateFromError(n3)), o3 = i3.__d), null != i3.componentDidCatch && (i3.componentDidCatch(n3, t3 || {}), o3 = i3.__d), o3) return i3.__E = i3;
+  } catch (l4) {
+    n3 = l4;
   }
-  throw n2;
-} }, u = 0, "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Math.random().toString(8);
+  throw n3;
+} }, "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout;
 
-// ../../../../site-ux/node_modules/preact/jsx-runtime/dist/jsxRuntime.mjs
+// ../../node_modules/preact/jsx-runtime/dist/jsxRuntime.mjs
 var f2 = 0;
-function u2(e2, t2, n2, o2, i2, u3) {
-  t2 || (t2 = {});
-  var a2, c2, p2 = t2;
-  if ("ref" in p2) for (c2 in p2 = {}, t2) "ref" == c2 ? a2 = t2[c2] : p2[c2] = t2[c2];
-  var l2 = { type: e2, props: p2, key: n2, ref: a2, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f2, __i: -1, __u: 0, __source: i2, __self: u3 };
-  if ("function" == typeof e2 && (a2 = e2.defaultProps)) for (c2 in a2) void 0 === p2[c2] && (p2[c2] = a2[c2]);
-  return l.vnode && l.vnode(l2), l2;
+function u2(e3, t3, n3, o3, i3, u5) {
+  t3 || (t3 = {});
+  var a3, c3, p3 = t3;
+  if ("ref" in p3) for (c3 in p3 = {}, t3) "ref" == c3 ? a3 = t3[c3] : p3[c3] = t3[c3];
+  var l3 = { type: e3, props: p3, key: n3, ref: a3, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f2, __i: -1, __u: 0, __source: i3, __self: u5 };
+  if ("function" == typeof e3 && (a3 = e3.defaultProps)) for (c3 in a3) void 0 === p3[c3] && (p3[c3] = a3[c3]);
+  return l.vnode && l.vnode(l3), l3;
 }
 
 // ../book-picker/src/components/BookGrid.tsx
@@ -1047,7 +1029,7 @@ function extractMasthead(tree) {
 }
 var mastheadPattern = (masthead) => ["h1", masthead.hasIntro && "blockquote", masthead.hasRule && "hr"].filter(Boolean).join(" ");
 
-// ../../../../site-ux/node_modules/comma-separated-tokens/index.js
+// ../../node_modules/comma-separated-tokens/index.js
 function stringify(values, options) {
   const settings = {};
   const input = values[values.length - 1] === "" ? [...values, ""] : values;
@@ -1056,11 +1038,11 @@ function stringify(values, options) {
   ).trim();
 }
 
-// ../../../../site-ux/node_modules/devlop/lib/default.js
+// ../../node_modules/devlop/lib/default.js
 function ok() {
 }
 
-// ../../../../site-ux/node_modules/estree-util-is-identifier-name/lib/index.js
+// ../../node_modules/estree-util-is-identifier-name/lib/index.js
 var nameRe = /^[$_\p{ID_Start}][$_\u{200C}\u{200D}\p{ID_Continue}]*$/u;
 var nameReJsx = /^[$_\p{ID_Start}][-$_\u{200C}\u{200D}\p{ID_Continue}]*$/u;
 var emptyOptions = {};
@@ -1070,7 +1052,7 @@ function name(name2, options) {
   return re2.test(name2);
 }
 
-// ../../../../site-ux/node_modules/hast-util-whitespace/lib/index.js
+// ../../node_modules/hast-util-whitespace/lib/index.js
 var re = /[ \t\n\f\r]/g;
 function whitespace(thing) {
   return typeof thing === "object" ? thing.type === "text" ? empty(thing.value) : false : empty(thing);
@@ -1079,7 +1061,7 @@ function empty(value) {
   return value.replace(re, "") === "";
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/util/schema.js
+// ../../node_modules/property-information/lib/util/schema.js
 var Schema = class {
   /**
    * @param {SchemaType['property']} property
@@ -1103,7 +1085,7 @@ Schema.prototype.normal = {};
 Schema.prototype.property = {};
 Schema.prototype.space = void 0;
 
-// ../../../../site-ux/node_modules/property-information/lib/util/merge.js
+// ../../node_modules/property-information/lib/util/merge.js
 function merge(definitions, space) {
   const property = {};
   const normal = {};
@@ -1114,12 +1096,12 @@ function merge(definitions, space) {
   return new Schema(property, normal, space);
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/normalize.js
+// ../../node_modules/property-information/lib/normalize.js
 function normalize(value) {
   return value.toLowerCase();
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/util/info.js
+// ../../node_modules/property-information/lib/util/info.js
 var Info = class {
   /**
    * @param {string} property
@@ -1147,7 +1129,7 @@ Info.prototype.property = "";
 Info.prototype.spaceSeparated = false;
 Info.prototype.space = void 0;
 
-// ../../../../site-ux/node_modules/property-information/lib/util/types.js
+// ../../node_modules/property-information/lib/util/types.js
 var types_exports = {};
 __export(types_exports, {
   boolean: () => boolean,
@@ -1170,7 +1152,7 @@ function increment() {
   return 2 ** ++powers;
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/util/defined-info.js
+// ../../node_modules/property-information/lib/util/defined-info.js
 var checks = (
   /** @type {ReadonlyArray<keyof typeof types>} */
   Object.keys(types_exports)
@@ -1208,7 +1190,7 @@ function mark(values, key, value) {
   }
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/util/create.js
+// ../../node_modules/property-information/lib/util/create.js
 function create(definition) {
   const properties = {};
   const normals = {};
@@ -1229,7 +1211,7 @@ function create(definition) {
   return new Schema(properties, normals, definition.space);
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/aria.js
+// ../../node_modules/property-information/lib/aria.js
 var aria = create({
   properties: {
     ariaActiveDescendant: null,
@@ -1287,17 +1269,17 @@ var aria = create({
   }
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/util/case-sensitive-transform.js
+// ../../node_modules/property-information/lib/util/case-sensitive-transform.js
 function caseSensitiveTransform(attributes, attribute) {
   return attribute in attributes ? attributes[attribute] : attribute;
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/util/case-insensitive-transform.js
+// ../../node_modules/property-information/lib/util/case-insensitive-transform.js
 function caseInsensitiveTransform(attributes, property) {
   return caseSensitiveTransform(attributes, property.toLowerCase());
 }
 
-// ../../../../site-ux/node_modules/property-information/lib/html.js
+// ../../node_modules/property-information/lib/html.js
 var html = create({
   attributes: {
     acceptcharset: "accept-charset",
@@ -1317,7 +1299,6 @@ var html = create({
     allowFullScreen: boolean,
     allowPaymentRequest: boolean,
     allowUserMedia: boolean,
-    alpha: boolean,
     alt: null,
     as: null,
     async: boolean,
@@ -1331,12 +1312,8 @@ var html = create({
     checked: boolean,
     cite: null,
     className: spaceSeparated,
-    closedBy: null,
-    colorSpace: null,
     cols: number,
-    colSpan: number,
-    command: null,
-    commandFor: null,
+    colSpan: null,
     content: null,
     contentEditable: booleanish,
     controls: boolean,
@@ -1516,10 +1493,8 @@ var html = create({
     seamless: boolean,
     selected: boolean,
     shadowRootClonable: boolean,
-    shadowRootCustomElementRegistry: boolean,
     shadowRootDelegatesFocus: boolean,
     shadowRootMode: null,
-    shadowRootSerializable: boolean,
     shape: null,
     size: number,
     sizes: null,
@@ -1656,11 +1631,8 @@ var html = create({
     allowTransparency: null,
     autoCorrect: null,
     autoSave: null,
-    credentialless: boolean,
     disablePictureInPicture: boolean,
     disableRemotePlayback: boolean,
-    exportParts: commaSeparated,
-    part: spaceSeparated,
     prefix: null,
     property: null,
     results: number,
@@ -1671,7 +1643,7 @@ var html = create({
   transform: caseInsensitiveTransform
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/svg.js
+// ../../node_modules/property-information/lib/svg.js
 var svg = create({
   attributes: {
     accentHeight: "accent-height",
@@ -1714,7 +1686,6 @@ var svg = create({
     markerEnd: "marker-end",
     markerMid: "marker-mid",
     markerStart: "marker-start",
-    maskType: "mask-type",
     navDown: "nav-down",
     navDownLeft: "nav-down-left",
     navDownRight: "nav-down-right",
@@ -1985,7 +1956,6 @@ var svg = create({
     markerWidth: null,
     mask: null,
     maskContentUnits: null,
-    maskType: null,
     maskUnits: null,
     mathematical: null,
     max: null,
@@ -2235,7 +2205,7 @@ var svg = create({
   transform: caseSensitiveTransform
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/xlink.js
+// ../../node_modules/property-information/lib/xlink.js
 var xlink = create({
   properties: {
     xLinkActuate: null,
@@ -2252,7 +2222,7 @@ var xlink = create({
   }
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/xmlns.js
+// ../../node_modules/property-information/lib/xmlns.js
 var xmlns = create({
   attributes: { xmlnsxlink: "xmlns:xlink" },
   properties: { xmlnsXLink: null, xmlns: null },
@@ -2260,7 +2230,7 @@ var xmlns = create({
   transform: caseInsensitiveTransform
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/xml.js
+// ../../node_modules/property-information/lib/xml.js
 var xml = create({
   properties: { xmlBase: null, xmlLang: null, xmlSpace: null },
   space: "xml",
@@ -2269,7 +2239,7 @@ var xml = create({
   }
 });
 
-// ../../../../site-ux/node_modules/property-information/lib/hast-to-react.js
+// ../../node_modules/property-information/lib/hast-to-react.js
 var hastToReact = {
   classId: "classID",
   dataType: "datatype",
@@ -2290,7 +2260,7 @@ var hastToReact = {
   xmlnsXLink: "xmlnsXlink"
 };
 
-// ../../../../site-ux/node_modules/property-information/lib/find.js
+// ../../node_modules/property-information/lib/find.js
 var cap = /[A-Z]/g;
 var dash = /-[a-z]/g;
 var valid = /^data[-\w.:]+$/i;
@@ -2326,16 +2296,16 @@ function camelcase($0) {
   return $0.charAt(1).toUpperCase();
 }
 
-// ../../../../site-ux/node_modules/property-information/index.js
+// ../../node_modules/property-information/index.js
 var html2 = merge([aria, html, xlink, xmlns, xml], "html");
 var svg2 = merge([aria, svg, xlink, xmlns, xml], "svg");
 
-// ../../../../site-ux/node_modules/space-separated-tokens/index.js
+// ../../node_modules/space-separated-tokens/index.js
 function stringify2(values) {
   return values.join(" ").trim();
 }
 
-// ../../../../site-ux/node_modules/hast-util-to-jsx-runtime/lib/index.js
+// ../../node_modules/hast-util-to-jsx-runtime/lib/index.js
 var import_style_to_js = __toESM(require_cjs3());
 var pointStart = point("start");
 function point(type) {
@@ -2352,7 +2322,7 @@ function point(type) {
   }
 }
 
-// ../../../../site-ux/node_modules/unist-util-stringify-position/lib/index.js
+// ../../node_modules/unist-util-stringify-position/lib/index.js
 function stringifyPosition(value) {
   if (!value || typeof value !== "object") {
     return "";
@@ -2378,7 +2348,7 @@ function index(value) {
   return value && typeof value === "number" ? value : 1;
 }
 
-// ../../../../site-ux/node_modules/vfile-message/lib/index.js
+// ../../node_modules/vfile-message/lib/index.js
 var VFileMessage = class extends Error {
   /**
    * Create a message for `reason`.
@@ -2514,7 +2484,7 @@ VFileMessage.prototype.place = void 0;
 VFileMessage.prototype.ruleId = void 0;
 VFileMessage.prototype.source = void 0;
 
-// ../../../../site-ux/node_modules/hast-util-to-jsx-runtime/lib/index.js
+// ../../node_modules/hast-util-to-jsx-runtime/lib/index.js
 var own = {}.hasOwnProperty;
 var emptyMap = /* @__PURE__ */ new Map();
 var cap2 = /[A-Z]/g;
@@ -2892,22 +2862,60 @@ function toDash($0) {
   return "-" + $0.toLowerCase();
 }
 
-// ../../../../site-ux/node_modules/@quartz-community/utils/dist/jsx.js
+// node_modules/preact/dist/preact.mjs
+var n2;
+var l2;
+var u3;
+var w2 = [];
+function k2(l3, u5, t3) {
+  var i3, r3, o3, e3 = {};
+  for (o3 in u5) "key" == o3 ? i3 = u5[o3] : "ref" == o3 ? r3 = u5[o3] : e3[o3] = u5[o3];
+  if (arguments.length > 2 && (e3.children = arguments.length > 3 ? n2.call(arguments, 2) : t3), "function" == typeof l3 && null != l3.defaultProps) for (o3 in l3.defaultProps) void 0 === e3[o3] && (e3[o3] = l3.defaultProps[o3]);
+  return x2(l3, e3, i3, r3, null);
+}
+function x2(n3, t3, i3, r3, o3) {
+  var e3 = { type: n3, props: t3, key: i3, ref: r3, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: null == o3 ? ++u3 : o3, __i: -1, __u: 0 };
+  return null != l2.vnode && l2.vnode(e3), e3;
+}
+function S2(n3) {
+  return n3.children;
+}
+n2 = w2.slice, l2 = { __e: function(n3, l3, u5, t3) {
+  for (var i3, r3, o3; l3 = l3.__; ) if ((i3 = l3.__c) && !i3.__) try {
+    if ((r3 = i3.constructor) && null != r3.getDerivedStateFromError && (i3.setState(r3.getDerivedStateFromError(n3)), o3 = i3.__d), null != i3.componentDidCatch && (i3.componentDidCatch(n3, t3 || {}), o3 = i3.__d), o3) return i3.__E = i3;
+  } catch (l4) {
+    n3 = l4;
+  }
+  throw n3;
+} }, u3 = 0, "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Math.random().toString(8);
+
+// node_modules/preact/jsx-runtime/dist/jsxRuntime.mjs
+var f4 = 0;
+function u4(e3, t3, n3, o3, i3, u5) {
+  t3 || (t3 = {});
+  var a3, c3, p3 = t3;
+  if ("ref" in p3) for (c3 in p3 = {}, t3) "ref" == c3 ? a3 = t3[c3] : p3[c3] = t3[c3];
+  var l3 = { type: e3, props: p3, key: n3, ref: a3, __k: null, __: null, __b: 0, __e: null, __c: null, constructor: void 0, __v: --f4, __i: -1, __u: 0, __source: i3, __self: u5 };
+  if ("function" == typeof e3 && (a3 = e3.defaultProps)) for (c3 in a3) void 0 === p3[c3] && (p3[c3] = a3[c3]);
+  return l2.vnode && l2.vnode(l3), l3;
+}
+
+// node_modules/@quartz-community/utils/dist/jsx.js
 function childrenToString(children) {
   if (typeof children === "string") return children;
   if (Array.isArray(children)) return children.map(childrenToString).join("");
   return String(children ?? "");
 }
 var builtinComponents = {
-  table: (props) => /* @__PURE__ */ u2("div", { class: "table-container", children: /* @__PURE__ */ u2("table", { ...props }) }),
-  style: ({ children, ...rest }) => k("style", { ...rest, dangerouslySetInnerHTML: { __html: childrenToString(children) } }),
-  script: ({ children, ...rest }) => k("script", { ...rest, dangerouslySetInnerHTML: { __html: childrenToString(children) } })
+  table: (props) => /* @__PURE__ */ u4("div", { class: "table-container", children: /* @__PURE__ */ u4("table", { ...props }) }),
+  style: ({ children, ...rest }) => k2("style", { ...rest, dangerouslySetInnerHTML: { __html: childrenToString(children) } }),
+  script: ({ children, ...rest }) => k2("script", { ...rest, dangerouslySetInnerHTML: { __html: childrenToString(children) } })
 };
 function htmlToJsx(tree, components) {
   return toJsxRuntime(tree, {
-    Fragment: S,
-    jsx: u2,
-    jsxs: u2,
+    Fragment: S2,
+    jsx: u4,
+    jsxs: u4,
     elementAttributeNameCase: "html",
     components: { ...builtinComponents, ...components }
   });
@@ -2917,14 +2925,14 @@ function htmlToJsx(tree, components) {
 function Masthead({ masthead }) {
   const root2 = { type: "root", children: masthead.nodes };
   const attrs = { [MASTHEAD_ATTR]: mastheadPattern(masthead) };
-  return /* @__PURE__ */ u2("div", { class: "bwz-masthead", ...attrs, children: htmlToJsx(root2) });
+  return /* @__PURE__ */ u4("div", { class: "bwz-masthead", ...attrs, children: htmlToJsx(root2) });
 }
 
 // src/components/scripts/early.inline.ts
 var early_inline_default = 'var m={groups:[{id:"torah",name:"\\u6469\\u897F\\u4E94\\u7D93",testament:"ot"},{id:"history",name:"\\u6B77\\u53F2\\u66F8",testament:"ot"},{id:"wisdom",name:"\\u8A69\\u6B4C\\u667A\\u6167\\u66F8",testament:"ot"},{id:"prophets",name:"\\u5148\\u77E5\\u66F8",testament:"ot"},{id:"gospels",name:"\\u798F\\u97F3\\u66F8",testament:"nt"},{id:"acts",name:"\\u4F7F\\u5F92\\u884C\\u50B3",testament:"nt"},{id:"epistles",name:"\\u66F8\\u4FE1",testament:"nt"},{id:"revelation",name:"\\u555F\\u793A\\u9304",testament:"nt"}],books:[{num:1,name:"\\u5275\\u4E16\\u8A18",chapters:50,short:"\\u5275",group:"torah"},{num:2,name:"\\u51FA\\u57C3\\u53CA\\u8A18",chapters:40,short:"\\u51FA",group:"torah"},{num:3,name:"\\u5229\\u672A\\u8A18",chapters:27,short:"\\u5229",group:"torah"},{num:4,name:"\\u6C11\\u6578\\u8A18",chapters:36,short:"\\u6C11",group:"torah"},{num:5,name:"\\u7533\\u547D\\u8A18",chapters:34,short:"\\u7533",group:"torah"},{num:6,name:"\\u7D04\\u66F8\\u4E9E\\u8A18",chapters:24,short:"\\u66F8",group:"history"},{num:7,name:"\\u58EB\\u5E2B\\u8A18",chapters:21,short:"\\u58EB",group:"history"},{num:8,name:"\\u8DEF\\u5F97\\u8A18",chapters:4,short:"\\u5F97",group:"history"},{num:9,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0A",chapters:31,short:"\\u6492\\u4E0A",group:"history"},{num:10,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0B",chapters:24,short:"\\u6492\\u4E0B",group:"history"},{num:11,name:"\\u5217\\u738B\\u7D00\\u4E0A",chapters:22,short:"\\u738B\\u4E0A",group:"history"},{num:12,name:"\\u5217\\u738B\\u7D00\\u4E0B",chapters:25,short:"\\u738B\\u4E0B",group:"history"},{num:13,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0A",chapters:29,short:"\\u4EE3\\u4E0A",group:"history"},{num:14,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0B",chapters:36,short:"\\u4EE3\\u4E0B",group:"history"},{num:15,name:"\\u4EE5\\u65AF\\u62C9\\u8A18",chapters:10,short:"\\u62C9",group:"history"},{num:16,name:"\\u5C3C\\u5E0C\\u7C73\\u8A18",chapters:13,short:"\\u5C3C",group:"history"},{num:17,name:"\\u4EE5\\u65AF\\u5E16\\u8A18",chapters:10,short:"\\u65AF",group:"history"},{num:18,name:"\\u7D04\\u4F2F\\u8A18",chapters:42,short:"\\u4F2F",group:"wisdom"},{num:19,name:"\\u8A69\\u7BC7",chapters:150,short:"\\u8A69",group:"wisdom"},{num:20,name:"\\u7BB4\\u8A00",chapters:31,short:"\\u7BB4",group:"wisdom"},{num:21,name:"\\u50B3\\u9053\\u66F8",chapters:12,short:"\\u50B3",group:"wisdom"},{num:22,name:"\\u96C5\\u6B4C",chapters:8,short:"\\u6B4C",group:"wisdom"},{num:23,name:"\\u4EE5\\u8CFD\\u4E9E\\u66F8",chapters:66,short:"\\u8CFD",group:"prophets"},{num:24,name:"\\u8036\\u5229\\u7C73\\u66F8",chapters:52,short:"\\u8036",group:"prophets"},{num:25,name:"\\u8036\\u5229\\u7C73\\u54C0\\u6B4C",chapters:5,short:"\\u54C0",group:"prophets"},{num:26,name:"\\u4EE5\\u897F\\u7D50\\u66F8",chapters:48,short:"\\u7D50",group:"prophets"},{num:27,name:"\\u4F46\\u4EE5\\u7406\\u66F8",chapters:12,short:"\\u4F46",group:"prophets"},{num:28,name:"\\u4F55\\u897F\\u963F\\u66F8",chapters:14,short:"\\u4F55",group:"prophets"},{num:29,name:"\\u7D04\\u73E5\\u66F8",chapters:3,short:"\\u73E5",group:"prophets"},{num:30,name:"\\u963F\\u6469\\u53F8\\u66F8",chapters:9,short:"\\u6469",group:"prophets"},{num:31,name:"\\u4FC4\\u5DF4\\u5E95\\u4E9E\\u66F8",chapters:1,short:"\\u4FC4",group:"prophets"},{num:32,name:"\\u7D04\\u62FF\\u66F8",chapters:4,short:"\\u62FF",group:"prophets"},{num:33,name:"\\u5F4C\\u8FE6\\u66F8",chapters:7,short:"\\u5F4C",group:"prophets"},{num:34,name:"\\u90A3\\u9D3B\\u66F8",chapters:3,short:"\\u9D3B",group:"prophets"},{num:35,name:"\\u54C8\\u5DF4\\u8C37\\u66F8",chapters:3,short:"\\u54C8",group:"prophets"},{num:36,name:"\\u897F\\u756A\\u96C5\\u66F8",chapters:3,short:"\\u756A",group:"prophets"},{num:37,name:"\\u54C8\\u8A72\\u66F8",chapters:2,short:"\\u8A72",group:"prophets"},{num:38,name:"\\u6492\\u8FE6\\u5229\\u4E9E\\u66F8",chapters:14,short:"\\u4E9E",group:"prophets"},{num:39,name:"\\u746A\\u62C9\\u57FA\\u66F8",chapters:4,short:"\\u746A",group:"prophets"},{num:40,name:"\\u99AC\\u592A\\u798F\\u97F3",chapters:28,short:"\\u592A",group:"gospels"},{num:41,name:"\\u99AC\\u53EF\\u798F\\u97F3",chapters:16,short:"\\u53EF",group:"gospels"},{num:42,name:"\\u8DEF\\u52A0\\u798F\\u97F3",chapters:24,short:"\\u8DEF",group:"gospels"},{num:43,name:"\\u7D04\\u7FF0\\u798F\\u97F3",chapters:21,short:"\\u7D04",group:"gospels"},{num:44,name:"\\u4F7F\\u5F92\\u884C\\u50B3",chapters:28,short:"\\u5F92",group:"acts"},{num:45,name:"\\u7F85\\u99AC\\u66F8",chapters:16,short:"\\u7F85",group:"epistles"},{num:46,name:"\\u54E5\\u6797\\u591A\\u524D\\u66F8",chapters:16,short:"\\u6797\\u524D",group:"epistles"},{num:47,name:"\\u54E5\\u6797\\u591A\\u5F8C\\u66F8",chapters:13,short:"\\u6797\\u5F8C",group:"epistles"},{num:48,name:"\\u52A0\\u62C9\\u592A\\u66F8",chapters:6,short:"\\u52A0",group:"epistles"},{num:49,name:"\\u4EE5\\u5F17\\u6240\\u66F8",chapters:6,short:"\\u5F17",group:"epistles"},{num:50,name:"\\u8153\\u7ACB\\u6BD4\\u66F8",chapters:4,short:"\\u8153",group:"epistles"},{num:51,name:"\\u6B4C\\u7F85\\u897F\\u66F8",chapters:4,short:"\\u897F",group:"epistles"},{num:52,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u524D\\u66F8",chapters:5,short:"\\u5E16\\u524D",group:"epistles"},{num:53,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u5F8C\\u66F8",chapters:3,short:"\\u5E16\\u5F8C",group:"epistles"},{num:54,name:"\\u63D0\\u6469\\u592A\\u524D\\u66F8",chapters:6,short:"\\u63D0\\u524D",group:"epistles"},{num:55,name:"\\u63D0\\u6469\\u592A\\u5F8C\\u66F8",chapters:4,short:"\\u63D0\\u5F8C",group:"epistles"},{num:56,name:"\\u63D0\\u591A\\u66F8",chapters:3,short:"\\u591A",group:"epistles"},{num:57,name:"\\u8153\\u5229\\u9580\\u66F8",chapters:1,short:"\\u9580",group:"epistles"},{num:58,name:"\\u5E0C\\u4F2F\\u4F86\\u66F8",chapters:13,short:"\\u4F86",group:"epistles"},{num:59,name:"\\u96C5\\u5404\\u66F8",chapters:5,short:"\\u96C5",group:"epistles"},{num:60,name:"\\u5F7C\\u5F97\\u524D\\u66F8",chapters:5,short:"\\u5F7C\\u524D",group:"epistles"},{num:61,name:"\\u5F7C\\u5F97\\u5F8C\\u66F8",chapters:3,short:"\\u5F7C\\u5F8C",group:"epistles"},{num:62,name:"\\u7D04\\u7FF0\\u4E00\\u66F8",chapters:5,short:"\\u7D04\\u4E00",group:"epistles"},{num:63,name:"\\u7D04\\u7FF0\\u4E8C\\u66F8",chapters:1,short:"\\u7D04\\u4E8C",group:"epistles"},{num:64,name:"\\u7D04\\u7FF0\\u4E09\\u66F8",chapters:1,short:"\\u7D04\\u4E09",group:"epistles"},{num:65,name:"\\u7336\\u5927\\u66F8",chapters:1,short:"\\u7336",group:"epistles"},{num:66,name:"\\u555F\\u793A\\u9304",chapters:22,short:"\\u555F",group:"revelation"}]};var w=m.groups,l=m.books;function c(e){return String(e.num).padStart(2,"0")+"-"+e.name}function B(e){let t=e.trim().split(/[?#]/,1)[0];try{return decodeURIComponent(t)}catch{return t}}function h(e){return B(e).replace(/\\\\/g,"/").replace(/^\\/+|\\/+$/g,"").replace(/\\.html$/i,"").replace(/[\\s]+/g,"-")}function p(e){let o=h(e).split("/").at(-1);return l.find(s=>c(s)===o)}function I(e){return h(e).split("/")}function d(e){let t=I(e);if(t.length!==2)return null;let[o,s]=t,r=p(o);if(!r)return null;let a=/^\u7B2C(\\d+)\u7AE0$/.exec(s);if(a){let n=Number(a[1]);return!Number.isInteger(n)||n<1||n>r.chapters?null:{book:r,kind:"chapter",chapter:n}}return s==="\\u5168\\u66F8\\u76EE\\u9304\\u53CA\\u7DB1\\u8981"?{book:r,kind:"toc"}:s==="\\u66F8\\u5377\\u5C0E\\u8AD6"?{book:r,kind:"intro"}:null}var f="bwz-reading",u={v:1,books:{}};function g(e){return typeof e=="object"&&e!==null&&!Array.isArray(e)}function N(e){return Number.isNaN(e)?0:Math.min(1,Math.max(0,e))}function E(e){return e===Number.POSITIVE_INFINITY?e:Number.isFinite(e)?Math.max(0,Math.floor(e)):0}function b(e){if(e==null)return u;let t;try{t=JSON.parse(e)}catch{return u}if(!g(t)||t.v!==1||!g(t.books))return u;let o={};for(let[s,r]of Object.entries(t.books)){if(!g(r))continue;let{slug:a,ratio:n,t:i}=r;typeof a!="string"||typeof n!="number"||!Number.isFinite(n)||typeof i!="number"||!Number.isFinite(i)||(o[s]={slug:a,ratio:N(n),t:i})}return{v:1,books:o}}function R(e,t){let o=[];for(let[s,r]of Object.entries(e.books)){let a=p(s),n=d(r.slug);!a||!n||n.kind!=="chapter"||n.book.num!==a.num||o.push({...r,book:a,chapter:n.chapter})}return o.sort((s,r)=>r.t-s.t).slice(0,E(t))}function k(){try{return typeof localStorage>"u"?null:localStorage}catch{return null}}function O(e=k()){if(!e)return u;try{return b(e.getItem(f))}catch{return u}}function S(e=k()){return R(O(e),1).length>0}var A="data-bwz-reading";function v(e){return S(e)?"has":"none"}function y(e=document.documentElement,t){let o=v(t);return e.setAttribute(A,o),o}y();\n';
 
 // src/components/scripts/hub.inline.ts
-var hub_inline_default = 'var x={groups:[{id:"torah",name:"\\u6469\\u897F\\u4E94\\u7D93",testament:"ot"},{id:"history",name:"\\u6B77\\u53F2\\u66F8",testament:"ot"},{id:"wisdom",name:"\\u8A69\\u6B4C\\u667A\\u6167\\u66F8",testament:"ot"},{id:"prophets",name:"\\u5148\\u77E5\\u66F8",testament:"ot"},{id:"gospels",name:"\\u798F\\u97F3\\u66F8",testament:"nt"},{id:"acts",name:"\\u4F7F\\u5F92\\u884C\\u50B3",testament:"nt"},{id:"epistles",name:"\\u66F8\\u4FE1",testament:"nt"},{id:"revelation",name:"\\u555F\\u793A\\u9304",testament:"nt"}],books:[{num:1,name:"\\u5275\\u4E16\\u8A18",chapters:50,short:"\\u5275",group:"torah"},{num:2,name:"\\u51FA\\u57C3\\u53CA\\u8A18",chapters:40,short:"\\u51FA",group:"torah"},{num:3,name:"\\u5229\\u672A\\u8A18",chapters:27,short:"\\u5229",group:"torah"},{num:4,name:"\\u6C11\\u6578\\u8A18",chapters:36,short:"\\u6C11",group:"torah"},{num:5,name:"\\u7533\\u547D\\u8A18",chapters:34,short:"\\u7533",group:"torah"},{num:6,name:"\\u7D04\\u66F8\\u4E9E\\u8A18",chapters:24,short:"\\u66F8",group:"history"},{num:7,name:"\\u58EB\\u5E2B\\u8A18",chapters:21,short:"\\u58EB",group:"history"},{num:8,name:"\\u8DEF\\u5F97\\u8A18",chapters:4,short:"\\u5F97",group:"history"},{num:9,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0A",chapters:31,short:"\\u6492\\u4E0A",group:"history"},{num:10,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0B",chapters:24,short:"\\u6492\\u4E0B",group:"history"},{num:11,name:"\\u5217\\u738B\\u7D00\\u4E0A",chapters:22,short:"\\u738B\\u4E0A",group:"history"},{num:12,name:"\\u5217\\u738B\\u7D00\\u4E0B",chapters:25,short:"\\u738B\\u4E0B",group:"history"},{num:13,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0A",chapters:29,short:"\\u4EE3\\u4E0A",group:"history"},{num:14,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0B",chapters:36,short:"\\u4EE3\\u4E0B",group:"history"},{num:15,name:"\\u4EE5\\u65AF\\u62C9\\u8A18",chapters:10,short:"\\u62C9",group:"history"},{num:16,name:"\\u5C3C\\u5E0C\\u7C73\\u8A18",chapters:13,short:"\\u5C3C",group:"history"},{num:17,name:"\\u4EE5\\u65AF\\u5E16\\u8A18",chapters:10,short:"\\u65AF",group:"history"},{num:18,name:"\\u7D04\\u4F2F\\u8A18",chapters:42,short:"\\u4F2F",group:"wisdom"},{num:19,name:"\\u8A69\\u7BC7",chapters:150,short:"\\u8A69",group:"wisdom"},{num:20,name:"\\u7BB4\\u8A00",chapters:31,short:"\\u7BB4",group:"wisdom"},{num:21,name:"\\u50B3\\u9053\\u66F8",chapters:12,short:"\\u50B3",group:"wisdom"},{num:22,name:"\\u96C5\\u6B4C",chapters:8,short:"\\u6B4C",group:"wisdom"},{num:23,name:"\\u4EE5\\u8CFD\\u4E9E\\u66F8",chapters:66,short:"\\u8CFD",group:"prophets"},{num:24,name:"\\u8036\\u5229\\u7C73\\u66F8",chapters:52,short:"\\u8036",group:"prophets"},{num:25,name:"\\u8036\\u5229\\u7C73\\u54C0\\u6B4C",chapters:5,short:"\\u54C0",group:"prophets"},{num:26,name:"\\u4EE5\\u897F\\u7D50\\u66F8",chapters:48,short:"\\u7D50",group:"prophets"},{num:27,name:"\\u4F46\\u4EE5\\u7406\\u66F8",chapters:12,short:"\\u4F46",group:"prophets"},{num:28,name:"\\u4F55\\u897F\\u963F\\u66F8",chapters:14,short:"\\u4F55",group:"prophets"},{num:29,name:"\\u7D04\\u73E5\\u66F8",chapters:3,short:"\\u73E5",group:"prophets"},{num:30,name:"\\u963F\\u6469\\u53F8\\u66F8",chapters:9,short:"\\u6469",group:"prophets"},{num:31,name:"\\u4FC4\\u5DF4\\u5E95\\u4E9E\\u66F8",chapters:1,short:"\\u4FC4",group:"prophets"},{num:32,name:"\\u7D04\\u62FF\\u66F8",chapters:4,short:"\\u62FF",group:"prophets"},{num:33,name:"\\u5F4C\\u8FE6\\u66F8",chapters:7,short:"\\u5F4C",group:"prophets"},{num:34,name:"\\u90A3\\u9D3B\\u66F8",chapters:3,short:"\\u9D3B",group:"prophets"},{num:35,name:"\\u54C8\\u5DF4\\u8C37\\u66F8",chapters:3,short:"\\u54C8",group:"prophets"},{num:36,name:"\\u897F\\u756A\\u96C5\\u66F8",chapters:3,short:"\\u756A",group:"prophets"},{num:37,name:"\\u54C8\\u8A72\\u66F8",chapters:2,short:"\\u8A72",group:"prophets"},{num:38,name:"\\u6492\\u8FE6\\u5229\\u4E9E\\u66F8",chapters:14,short:"\\u4E9E",group:"prophets"},{num:39,name:"\\u746A\\u62C9\\u57FA\\u66F8",chapters:4,short:"\\u746A",group:"prophets"},{num:40,name:"\\u99AC\\u592A\\u798F\\u97F3",chapters:28,short:"\\u592A",group:"gospels"},{num:41,name:"\\u99AC\\u53EF\\u798F\\u97F3",chapters:16,short:"\\u53EF",group:"gospels"},{num:42,name:"\\u8DEF\\u52A0\\u798F\\u97F3",chapters:24,short:"\\u8DEF",group:"gospels"},{num:43,name:"\\u7D04\\u7FF0\\u798F\\u97F3",chapters:21,short:"\\u7D04",group:"gospels"},{num:44,name:"\\u4F7F\\u5F92\\u884C\\u50B3",chapters:28,short:"\\u5F92",group:"acts"},{num:45,name:"\\u7F85\\u99AC\\u66F8",chapters:16,short:"\\u7F85",group:"epistles"},{num:46,name:"\\u54E5\\u6797\\u591A\\u524D\\u66F8",chapters:16,short:"\\u6797\\u524D",group:"epistles"},{num:47,name:"\\u54E5\\u6797\\u591A\\u5F8C\\u66F8",chapters:13,short:"\\u6797\\u5F8C",group:"epistles"},{num:48,name:"\\u52A0\\u62C9\\u592A\\u66F8",chapters:6,short:"\\u52A0",group:"epistles"},{num:49,name:"\\u4EE5\\u5F17\\u6240\\u66F8",chapters:6,short:"\\u5F17",group:"epistles"},{num:50,name:"\\u8153\\u7ACB\\u6BD4\\u66F8",chapters:4,short:"\\u8153",group:"epistles"},{num:51,name:"\\u6B4C\\u7F85\\u897F\\u66F8",chapters:4,short:"\\u897F",group:"epistles"},{num:52,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u524D\\u66F8",chapters:5,short:"\\u5E16\\u524D",group:"epistles"},{num:53,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u5F8C\\u66F8",chapters:3,short:"\\u5E16\\u5F8C",group:"epistles"},{num:54,name:"\\u63D0\\u6469\\u592A\\u524D\\u66F8",chapters:6,short:"\\u63D0\\u524D",group:"epistles"},{num:55,name:"\\u63D0\\u6469\\u592A\\u5F8C\\u66F8",chapters:4,short:"\\u63D0\\u5F8C",group:"epistles"},{num:56,name:"\\u63D0\\u591A\\u66F8",chapters:3,short:"\\u591A",group:"epistles"},{num:57,name:"\\u8153\\u5229\\u9580\\u66F8",chapters:1,short:"\\u9580",group:"epistles"},{num:58,name:"\\u5E0C\\u4F2F\\u4F86\\u66F8",chapters:13,short:"\\u4F86",group:"epistles"},{num:59,name:"\\u96C5\\u5404\\u66F8",chapters:5,short:"\\u96C5",group:"epistles"},{num:60,name:"\\u5F7C\\u5F97\\u524D\\u66F8",chapters:5,short:"\\u5F7C\\u524D",group:"epistles"},{num:61,name:"\\u5F7C\\u5F97\\u5F8C\\u66F8",chapters:3,short:"\\u5F7C\\u5F8C",group:"epistles"},{num:62,name:"\\u7D04\\u7FF0\\u4E00\\u66F8",chapters:5,short:"\\u7D04\\u4E00",group:"epistles"},{num:63,name:"\\u7D04\\u7FF0\\u4E8C\\u66F8",chapters:1,short:"\\u7D04\\u4E8C",group:"epistles"},{num:64,name:"\\u7D04\\u7FF0\\u4E09\\u66F8",chapters:1,short:"\\u7D04\\u4E09",group:"epistles"},{num:65,name:"\\u7336\\u5927\\u66F8",chapters:1,short:"\\u7336",group:"epistles"},{num:66,name:"\\u555F\\u793A\\u9304",chapters:22,short:"\\u555F",group:"revelation"}]};var ye=x.groups,f=x.books;function g(e){return String(e.num).padStart(2,"0")+"-"+e.name}function re(e){let t=e.trim().split(/[?#]/,1)[0];try{return decodeURIComponent(t)}catch{return t}}function l(e){return re(e).replace(/\\\\/g,"/").replace(/^\\/+|\\/+$/g,"").replace(/\\.html$/i,"").replace(/[\\s]+/g,"-")}function b(e){let n=l(e).split("/").at(-1);return f.find(r=>g(r)===n)}function L(e){let t;try{t=JSON.parse(e??"")}catch{return[]}if(!Array.isArray(t))return[];let n=[];for(let r of t){if(!Array.isArray(r)||typeof r[0]!="number"||!Array.isArray(r[1]))continue;let o=f.find(p=>p.num===r[0]);if(!o)continue;let a=r[1].filter(p=>Number.isInteger(p)),s=r[2]===1,i=r[3]===1,u=a.length>0?"ready":s||i?"outline":"empty";n.push({book:o,status:u,chapters:a,hasToc:s,hasIntro:i})}return n}function oe(e){return l(e).split("/")}function h(e){let t=oe(e);if(t.length!==2)return null;let[n,r]=t,o=b(n);if(!o)return null;let a=/^\u7B2C(\\d+)\u7AE0$/.exec(r);if(a){let s=Number(a[1]);return!Number.isInteger(s)||s<1||s>o.chapters?null:{book:o,kind:"chapter",chapter:s}}return r==="\\u5168\\u66F8\\u76EE\\u9304\\u53CA\\u7DB1\\u8981"?{book:o,kind:"toc"}:r==="\\u66F8\\u5377\\u5C0E\\u8AD6"?{book:o,kind:"intro"}:null}function _(e){return g(e)+"/\\u5168\\u66F8\\u76EE\\u9304\\u53CA\\u7DB1\\u8981"}var w="bwz-reading",d={v:1,books:{}},ae=1e3,se=.02;function E(e){return typeof e=="object"&&e!==null&&!Array.isArray(e)}function R(e){return Number.isNaN(e)?0:Math.min(1,Math.max(0,e))}function I(e){return e===Number.POSITIVE_INFINITY?e:Number.isFinite(e)?Math.max(0,Math.floor(e)):0}function N(e){if(e==null)return d;let t;try{t=JSON.parse(e)}catch{return d}if(!E(t)||t.v!==1||!E(t.books))return d;let n={};for(let[r,o]of Object.entries(t.books)){if(!E(o))continue;let{slug:a,ratio:s,t:i}=o;typeof a!="string"||typeof s!="number"||!Number.isFinite(s)||typeof i!="number"||!Number.isFinite(i)||(n[r]={slug:a,ratio:R(s),t:i})}return{v:1,books:n}}function A(e){return JSON.stringify(e)}function M(e,t){let n=h(t.slug);if(!n||n.kind!=="chapter")return e;let r=g(n.book);return{v:1,books:{...e.books,[r]:{slug:t.slug,ratio:R(t.ratio),t:t.t}}}}function v(e,t){let n=[];for(let[r,o]of Object.entries(e.books)){let a=b(r),s=h(o.slug);!a||!s||s.kind!=="chapter"||s.book.num!==a.num||n.push({...o,book:a,chapter:s.chapter})}return n.sort((r,o)=>o.t-r.t).slice(0,I(t))}function P(e,t,n){let r=new Map(t.map(a=>[a.book.num,a])),o=[];for(let a of v(e,Number.POSITIVE_INFINITY)){let s=r.get(a.book.num);!s||s.status==="empty"||(s.chapters.includes(a.chapter)?o.push({book:a.book,slug:a.slug,chapter:a.chapter,ratio:a.ratio,t:a.t,kind:"chapter"}):o.push({book:a.book,slug:_(a.book),ratio:0,t:a.t,kind:"toc"}))}return o.slice(0,I(n))}function C(e,t,n){let r=Math.max(0,t-n);return!Number.isFinite(r)||r===0?0:R(e/r)}function D(e,t,n){let r=Math.max(0,t-n);return!Number.isFinite(r)||r===0?0:Math.min(r,Math.max(0,R(e)*r))}function F({prevRatio:e,ratio:t,now:n,lastSavedAt:r}){return e===void 0?!0:n-r>=ae&&Math.abs(t-e)>=se}function T(){try{return typeof localStorage>"u"?null:localStorage}catch{return null}}function S(e=T()){if(!e)return d;try{return N(e.getItem(w))}catch{return d}}function H(e=T()){return v(S(e),1).length>0}function z(e,t=T()){if(!t)return!1;try{let n=S(t),r=M(n,e);return r===n?!1:(t.setItem(w,A(r)),!0)}catch{return!1}}var ie="data-bwz-reading";function ue(e){return H(e)?"has":"none"}function k(e=document.documentElement,t){let n=ue(t);return e.setAttribute(ie,n),n}var O="bwz-resume-pending",G=60*1e3;function pe(e){if(!e)return null;try{let t=JSON.parse(e);return!t||typeof t.slug!="string"||typeof t.ratio!="number"||!Number.isFinite(t.ratio)||typeof t.t!="number"||!Number.isFinite(t.t)?null:{slug:t.slug,ratio:t.ratio,t:t.t}}catch{return null}}function ce(e,t,n){return!e||n-e.t>G||e.t-n>G?!1:l(e.slug)===l(t)}function $(){try{return typeof sessionStorage>"u"?null:sessionStorage}catch{return null}}function Y(e,t,n,r=$()){try{r?.setItem(O,JSON.stringify({slug:e,ratio:t,t:n}))}catch{}}function K(e,t,n=$()){if(!n)return null;let r=null;try{r=pe(n.getItem(O)),r&&n.removeItem(O)}catch{return null}return ce(r,e,t)?r:null}function U(e,t={}){if(h(e)?.kind!=="chapter")return()=>{};let n,r=0,o=p=>{if(t.suspended?.())return;let m=C(window.scrollY,document.documentElement.scrollHeight,window.innerHeight),y=Date.now();!p&&!F({prevRatio:n,ratio:m,now:y,lastSavedAt:r})||z({slug:e,ratio:m,t:y})&&(n=m,r=y,k())},a=()=>o(!1),s=()=>{document.visibilityState==="hidden"&&o(!0)},i=()=>o(!0);window.addEventListener("scroll",a,{passive:!0}),document.addEventListener("visibilitychange",s),window.addEventListener("pagehide",i),document.addEventListener("prenav",i);let u=()=>{window.removeEventListener("scroll",a),document.removeEventListener("visibilitychange",s),window.removeEventListener("pagehide",i),document.removeEventListener("prenav",i)};return window.addCleanup?.(u),u}function c(e,t,n){let r=document.createElement(e);return r.className=t,n!==void 0&&(r.textContent=n),r}function V(e){return`${document.body.dataset.basepath??""}/${e.split("/").map(encodeURIComponent).join("/")}`}function W(e,t){if(e.replaceChildren(),e.dataset.state=t?"ready":"empty",!t)return;let{main:n,recent:r}=t,o=c("div","bwz-resume");o.append(c("span","bwz-resume-kicker","\\u7E7C\\u7E8C\\u95B1\\u8B80")),o.append(c("span","bwz-resume-title",n.title)),o.append(c("span","bwz-resume-meta",n.meta));let a=c("a","bwz-resume-go","\\u7E7C\\u7E8C \\u203A");if(a.href=V(n.slug),a.setAttribute("aria-label",n.ariaLabel),n.restoreScroll&&a.addEventListener("click",()=>Y(n.slug,n.ratio,Date.now())),o.append(a),e.append(o),r.length===0)return;let s=c("p","bwz-resume-more","\\u6700\\u8FD1\\u4E5F\\u8B80\\u4E86\\uFF1A");for(let i of r){let u=c("a","bwz-resume-link",i.label);u.href=V(i.slug),s.append(u)}e.append(s)}function me(e){return e>=.1?e<.35?"\\u524D\\u6BB5":e<.65?"\\u4E2D\\u6BB5":"\\u5F8C\\u6BB5":"\\u958B\\u982D"}function q(e){let t=new Date(e);return new Date(t.getFullYear(),t.getMonth(),t.getDate()).getTime()}function le(e,t){let n=new Date(q(e)),r=new Date(q(t));return Math.round((Date.UTC(r.getFullYear(),r.getMonth(),r.getDate())-Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()))/864e5)}function J(e,t){if(!Number.isFinite(e)||t-e<3e5)return"\\u525B\\u525B";let n=le(e,t);if(n<=0)return"\\u4ECA\\u5929";if(n===1)return"\\u6628\\u5929";if(n<7)return`${n} \\u5929\\u524D`;let r=new Date(e);return`${r.getMonth()+1} \\u6708 ${r.getDate()} \\u65E5`}function j(e,t,n){return`\\u4E0A\\u6B21\\u8B80\\u5230\\u9019\\u4E00\\u7AE0\\u7684${me(e)} \\xB7 ${J(t,n)}`}function Q(e,t){return`\\u4E0A\\u6B21\\u8B80\\u904E\\u9019\\u4E00\\u5377 \\xB7 ${J(e,t)}`}var de=2;function B(e,t){return e.kind==="chapter"?t?`${e.book.name} \\u7B2C ${e.chapter} \\u7AE0`:`${e.book.name}\\u7B2C ${e.chapter} \\u7AE0`:e.book.name}function X(e,t,n){let r=P(e,t,1+de),[o,...a]=r;if(!o)return null;let s=o.kind==="chapter";return{main:{slug:o.slug,ratio:o.ratio,title:B(o,!0),meta:s?j(o.ratio,o.t,n):Q(o.t,n),ariaLabel:`\\u7E7C\\u7E8C\\u95B1\\u8B80${B(o,!1)}`,restoreScroll:s},recent:a.map(i=>({slug:i.slug,label:B(i,!0)}))}}function Z({now:e,startedAt:t,height:n,lastHeight:r,lastChangeAt:o}){return e-t>=3e3?"done":r===void 0||n!==r?"apply":e-o>=500?"done":"wait"}var ee=["wheel","touchstart","keydown","mousedown"];function te(e){let t=!1,n=0,r=Date.now(),o,a=r,s=()=>{if(!t){t=!0,window.clearTimeout(n);for(let u of ee)window.removeEventListener(u,s)}},i=()=>{if(t)return;let u=Date.now(),p=document.documentElement.scrollHeight,m=Z({now:u,startedAt:r,height:p,lastHeight:o,lastChangeAt:a});if(m==="done")return s();m==="apply"&&(p!==o&&(a=u),o=p,window.scrollTo({top:D(e,p,window.innerHeight),behavior:"instant"})),n=window.setTimeout(i,100)};for(let u of ee)window.addEventListener(u,s,{passive:!0});return i(),{active:()=>!t,cancel:s}}function he(){return document.body.dataset.slug??""}function fe(e){let t=e.querySelector("[data-hub-search]");if(!t||t.dataset.bound)return;t.dataset.bound="1",t.addEventListener("click",()=>{document.querySelector(".search-button")?.click()});let n=e.querySelector("[data-hub-kbd]");n&&/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)&&(n.textContent="\\u2318 K")}function be(){let e=document.querySelector(".bwz-hub");if(!e)return;fe(e);let t=e.querySelector("[data-hub-resume]");if(!t)return;let n=X(S(),L(e.dataset.catalog),Date.now());W(t,n)}function Re(){let e=he();k(),be();let t=K(e,Date.now()),n=t?te(t.ratio):null;U(e,{suspended:()=>n?.active()??!1})}document.addEventListener("nav",Re);\n';
+var hub_inline_default = 'var x={groups:[{id:"torah",name:"\\u6469\\u897F\\u4E94\\u7D93",testament:"ot"},{id:"history",name:"\\u6B77\\u53F2\\u66F8",testament:"ot"},{id:"wisdom",name:"\\u8A69\\u6B4C\\u667A\\u6167\\u66F8",testament:"ot"},{id:"prophets",name:"\\u5148\\u77E5\\u66F8",testament:"ot"},{id:"gospels",name:"\\u798F\\u97F3\\u66F8",testament:"nt"},{id:"acts",name:"\\u4F7F\\u5F92\\u884C\\u50B3",testament:"nt"},{id:"epistles",name:"\\u66F8\\u4FE1",testament:"nt"},{id:"revelation",name:"\\u555F\\u793A\\u9304",testament:"nt"}],books:[{num:1,name:"\\u5275\\u4E16\\u8A18",chapters:50,short:"\\u5275",group:"torah"},{num:2,name:"\\u51FA\\u57C3\\u53CA\\u8A18",chapters:40,short:"\\u51FA",group:"torah"},{num:3,name:"\\u5229\\u672A\\u8A18",chapters:27,short:"\\u5229",group:"torah"},{num:4,name:"\\u6C11\\u6578\\u8A18",chapters:36,short:"\\u6C11",group:"torah"},{num:5,name:"\\u7533\\u547D\\u8A18",chapters:34,short:"\\u7533",group:"torah"},{num:6,name:"\\u7D04\\u66F8\\u4E9E\\u8A18",chapters:24,short:"\\u66F8",group:"history"},{num:7,name:"\\u58EB\\u5E2B\\u8A18",chapters:21,short:"\\u58EB",group:"history"},{num:8,name:"\\u8DEF\\u5F97\\u8A18",chapters:4,short:"\\u5F97",group:"history"},{num:9,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0A",chapters:31,short:"\\u6492\\u4E0A",group:"history"},{num:10,name:"\\u6492\\u6BCD\\u8033\\u8A18\\u4E0B",chapters:24,short:"\\u6492\\u4E0B",group:"history"},{num:11,name:"\\u5217\\u738B\\u7D00\\u4E0A",chapters:22,short:"\\u738B\\u4E0A",group:"history"},{num:12,name:"\\u5217\\u738B\\u7D00\\u4E0B",chapters:25,short:"\\u738B\\u4E0B",group:"history"},{num:13,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0A",chapters:29,short:"\\u4EE3\\u4E0A",group:"history"},{num:14,name:"\\u6B77\\u4EE3\\u5FD7\\u4E0B",chapters:36,short:"\\u4EE3\\u4E0B",group:"history"},{num:15,name:"\\u4EE5\\u65AF\\u62C9\\u8A18",chapters:10,short:"\\u62C9",group:"history"},{num:16,name:"\\u5C3C\\u5E0C\\u7C73\\u8A18",chapters:13,short:"\\u5C3C",group:"history"},{num:17,name:"\\u4EE5\\u65AF\\u5E16\\u8A18",chapters:10,short:"\\u65AF",group:"history"},{num:18,name:"\\u7D04\\u4F2F\\u8A18",chapters:42,short:"\\u4F2F",group:"wisdom"},{num:19,name:"\\u8A69\\u7BC7",chapters:150,short:"\\u8A69",group:"wisdom"},{num:20,name:"\\u7BB4\\u8A00",chapters:31,short:"\\u7BB4",group:"wisdom"},{num:21,name:"\\u50B3\\u9053\\u66F8",chapters:12,short:"\\u50B3",group:"wisdom"},{num:22,name:"\\u96C5\\u6B4C",chapters:8,short:"\\u6B4C",group:"wisdom"},{num:23,name:"\\u4EE5\\u8CFD\\u4E9E\\u66F8",chapters:66,short:"\\u8CFD",group:"prophets"},{num:24,name:"\\u8036\\u5229\\u7C73\\u66F8",chapters:52,short:"\\u8036",group:"prophets"},{num:25,name:"\\u8036\\u5229\\u7C73\\u54C0\\u6B4C",chapters:5,short:"\\u54C0",group:"prophets"},{num:26,name:"\\u4EE5\\u897F\\u7D50\\u66F8",chapters:48,short:"\\u7D50",group:"prophets"},{num:27,name:"\\u4F46\\u4EE5\\u7406\\u66F8",chapters:12,short:"\\u4F46",group:"prophets"},{num:28,name:"\\u4F55\\u897F\\u963F\\u66F8",chapters:14,short:"\\u4F55",group:"prophets"},{num:29,name:"\\u7D04\\u73E5\\u66F8",chapters:3,short:"\\u73E5",group:"prophets"},{num:30,name:"\\u963F\\u6469\\u53F8\\u66F8",chapters:9,short:"\\u6469",group:"prophets"},{num:31,name:"\\u4FC4\\u5DF4\\u5E95\\u4E9E\\u66F8",chapters:1,short:"\\u4FC4",group:"prophets"},{num:32,name:"\\u7D04\\u62FF\\u66F8",chapters:4,short:"\\u62FF",group:"prophets"},{num:33,name:"\\u5F4C\\u8FE6\\u66F8",chapters:7,short:"\\u5F4C",group:"prophets"},{num:34,name:"\\u90A3\\u9D3B\\u66F8",chapters:3,short:"\\u9D3B",group:"prophets"},{num:35,name:"\\u54C8\\u5DF4\\u8C37\\u66F8",chapters:3,short:"\\u54C8",group:"prophets"},{num:36,name:"\\u897F\\u756A\\u96C5\\u66F8",chapters:3,short:"\\u756A",group:"prophets"},{num:37,name:"\\u54C8\\u8A72\\u66F8",chapters:2,short:"\\u8A72",group:"prophets"},{num:38,name:"\\u6492\\u8FE6\\u5229\\u4E9E\\u66F8",chapters:14,short:"\\u4E9E",group:"prophets"},{num:39,name:"\\u746A\\u62C9\\u57FA\\u66F8",chapters:4,short:"\\u746A",group:"prophets"},{num:40,name:"\\u99AC\\u592A\\u798F\\u97F3",chapters:28,short:"\\u592A",group:"gospels"},{num:41,name:"\\u99AC\\u53EF\\u798F\\u97F3",chapters:16,short:"\\u53EF",group:"gospels"},{num:42,name:"\\u8DEF\\u52A0\\u798F\\u97F3",chapters:24,short:"\\u8DEF",group:"gospels"},{num:43,name:"\\u7D04\\u7FF0\\u798F\\u97F3",chapters:21,short:"\\u7D04",group:"gospels"},{num:44,name:"\\u4F7F\\u5F92\\u884C\\u50B3",chapters:28,short:"\\u5F92",group:"acts"},{num:45,name:"\\u7F85\\u99AC\\u66F8",chapters:16,short:"\\u7F85",group:"epistles"},{num:46,name:"\\u54E5\\u6797\\u591A\\u524D\\u66F8",chapters:16,short:"\\u6797\\u524D",group:"epistles"},{num:47,name:"\\u54E5\\u6797\\u591A\\u5F8C\\u66F8",chapters:13,short:"\\u6797\\u5F8C",group:"epistles"},{num:48,name:"\\u52A0\\u62C9\\u592A\\u66F8",chapters:6,short:"\\u52A0",group:"epistles"},{num:49,name:"\\u4EE5\\u5F17\\u6240\\u66F8",chapters:6,short:"\\u5F17",group:"epistles"},{num:50,name:"\\u8153\\u7ACB\\u6BD4\\u66F8",chapters:4,short:"\\u8153",group:"epistles"},{num:51,name:"\\u6B4C\\u7F85\\u897F\\u66F8",chapters:4,short:"\\u897F",group:"epistles"},{num:52,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u524D\\u66F8",chapters:5,short:"\\u5E16\\u524D",group:"epistles"},{num:53,name:"\\u5E16\\u6492\\u7F85\\u5C3C\\u8FE6\\u5F8C\\u66F8",chapters:3,short:"\\u5E16\\u5F8C",group:"epistles"},{num:54,name:"\\u63D0\\u6469\\u592A\\u524D\\u66F8",chapters:6,short:"\\u63D0\\u524D",group:"epistles"},{num:55,name:"\\u63D0\\u6469\\u592A\\u5F8C\\u66F8",chapters:4,short:"\\u63D0\\u5F8C",group:"epistles"},{num:56,name:"\\u63D0\\u591A\\u66F8",chapters:3,short:"\\u591A",group:"epistles"},{num:57,name:"\\u8153\\u5229\\u9580\\u66F8",chapters:1,short:"\\u9580",group:"epistles"},{num:58,name:"\\u5E0C\\u4F2F\\u4F86\\u66F8",chapters:13,short:"\\u4F86",group:"epistles"},{num:59,name:"\\u96C5\\u5404\\u66F8",chapters:5,short:"\\u96C5",group:"epistles"},{num:60,name:"\\u5F7C\\u5F97\\u524D\\u66F8",chapters:5,short:"\\u5F7C\\u524D",group:"epistles"},{num:61,name:"\\u5F7C\\u5F97\\u5F8C\\u66F8",chapters:3,short:"\\u5F7C\\u5F8C",group:"epistles"},{num:62,name:"\\u7D04\\u7FF0\\u4E00\\u66F8",chapters:5,short:"\\u7D04\\u4E00",group:"epistles"},{num:63,name:"\\u7D04\\u7FF0\\u4E8C\\u66F8",chapters:1,short:"\\u7D04\\u4E8C",group:"epistles"},{num:64,name:"\\u7D04\\u7FF0\\u4E09\\u66F8",chapters:1,short:"\\u7D04\\u4E09",group:"epistles"},{num:65,name:"\\u7336\\u5927\\u66F8",chapters:1,short:"\\u7336",group:"epistles"},{num:66,name:"\\u555F\\u793A\\u9304",chapters:22,short:"\\u555F",group:"revelation"}]};var ye=x.groups,f=x.books;function g(e){return String(e.num).padStart(2,"0")+"-"+e.name}function re(e){let t=e.trim().split(/[?#]/,1)[0];try{return decodeURIComponent(t)}catch{return t}}function l(e){return re(e).replace(/\\\\/g,"/").replace(/^\\/+|\\/+$/g,"").replace(/\\.html$/i,"").replace(/[\\s]+/g,"-")}function b(e){let n=l(e).split("/").at(-1);return f.find(r=>g(r)===n)}function L(e){let t;try{t=JSON.parse(e??"")}catch{return[]}if(!Array.isArray(t))return[];let n=[];for(let r of t){if(!Array.isArray(r)||typeof r[0]!="number"||!Array.isArray(r[1]))continue;let o=f.find(p=>p.num===r[0]);if(!o)continue;let a=r[1].filter(p=>Number.isInteger(p)),s=r[2]===1,i=r[3]===1,u=a.length>0?"ready":s||i?"outline":"empty";n.push({book:o,status:u,chapters:a,hasToc:s,hasIntro:i})}return n}function oe(e){return l(e).split("/")}function h(e){let t=oe(e);if(t.length!==2)return null;let[n,r]=t,o=b(n);if(!o)return null;let a=/^\u7B2C(\\d+)\u7AE0$/.exec(r);if(a){let s=Number(a[1]);return!Number.isInteger(s)||s<1||s>o.chapters?null:{book:o,kind:"chapter",chapter:s}}return r==="\\u5168\\u66F8\\u76EE\\u9304\\u53CA\\u7DB1\\u8981"?{book:o,kind:"toc"}:r==="\\u66F8\\u5377\\u5C0E\\u8AD6"?{book:o,kind:"intro"}:null}function _(e){return g(e)+"/\\u5168\\u66F8\\u76EE\\u9304\\u53CA\\u7DB1\\u8981"}var w="bwz-reading",d={v:1,books:{}},ae=1e3,se=.02;function E(e){return typeof e=="object"&&e!==null&&!Array.isArray(e)}function R(e){return Number.isNaN(e)?0:Math.min(1,Math.max(0,e))}function I(e){return e===Number.POSITIVE_INFINITY?e:Number.isFinite(e)?Math.max(0,Math.floor(e)):0}function N(e){if(e==null)return d;let t;try{t=JSON.parse(e)}catch{return d}if(!E(t)||t.v!==1||!E(t.books))return d;let n={};for(let[r,o]of Object.entries(t.books)){if(!E(o))continue;let{slug:a,ratio:s,t:i}=o;typeof a!="string"||typeof s!="number"||!Number.isFinite(s)||typeof i!="number"||!Number.isFinite(i)||(n[r]={slug:a,ratio:R(s),t:i})}return{v:1,books:n}}function A(e){return JSON.stringify(e)}function M(e,t){let n=h(t.slug);if(!n||n.kind!=="chapter")return e;let r=g(n.book);return{v:1,books:{...e.books,[r]:{slug:t.slug,ratio:R(t.ratio),t:t.t}}}}function v(e,t){let n=[];for(let[r,o]of Object.entries(e.books)){let a=b(r),s=h(o.slug);!a||!s||s.kind!=="chapter"||s.book.num!==a.num||n.push({...o,book:a,chapter:s.chapter})}return n.sort((r,o)=>o.t-r.t).slice(0,I(t))}function C(e,t,n){let r=new Map(t.map(a=>[a.book.num,a])),o=[];for(let a of v(e,Number.POSITIVE_INFINITY)){let s=r.get(a.book.num);!s||s.status==="empty"||(s.chapters.includes(a.chapter)?o.push({book:a.book,slug:a.slug,chapter:a.chapter,ratio:a.ratio,t:a.t,kind:"chapter"}):o.push({book:a.book,slug:_(a.book),ratio:0,t:a.t,kind:"toc"}))}return o.slice(0,I(n))}function P(e,t,n){let r=Math.max(0,t-n);return!Number.isFinite(r)||r===0?0:R(e/r)}function D(e,t,n){let r=Math.max(0,t-n);return!Number.isFinite(r)||r===0?0:Math.min(r,Math.max(0,R(e)*r))}function F({prevRatio:e,ratio:t,now:n,lastSavedAt:r}){return e===void 0?!0:n-r>=ae&&Math.abs(t-e)>=se}function O(){try{return typeof localStorage>"u"?null:localStorage}catch{return null}}function S(e=O()){if(!e)return d;try{return N(e.getItem(w))}catch{return d}}function z(e=O()){return v(S(e),1).length>0}function H(e,t=O()){if(!t)return!1;try{let n=S(t),r=M(n,e);return r===n?!1:(t.setItem(w,A(r)),!0)}catch{return!1}}var ie="data-bwz-reading";function ue(e){return z(e)?"has":"none"}function k(e=document.documentElement,t){let n=ue(t);return e.setAttribute(ie,n),n}var T="bwz-resume-pending",G=60*1e3;function pe(e){if(!e)return null;try{let t=JSON.parse(e);return!t||typeof t.slug!="string"||typeof t.ratio!="number"||!Number.isFinite(t.ratio)||typeof t.t!="number"||!Number.isFinite(t.t)?null:{slug:t.slug,ratio:t.ratio,t:t.t}}catch{return null}}function ce(e,t,n){return!e||n-e.t>G||e.t-n>G?!1:l(e.slug)===l(t)}function $(){try{return typeof sessionStorage>"u"?null:sessionStorage}catch{return null}}function Y(e,t,n,r=$()){try{r?.setItem(T,JSON.stringify({slug:e,ratio:t,t:n}))}catch{}}function K(e,t,n=$()){if(!n)return null;let r=null;try{r=pe(n.getItem(T)),r&&n.removeItem(T)}catch{return null}return ce(r,e,t)?r:null}function U(e,t={}){if(h(e)?.kind!=="chapter")return()=>{};let n,r=0,o=p=>{if(t.suspended?.())return;let m=P(window.scrollY,document.documentElement.scrollHeight,window.innerHeight),y=Date.now();!p&&!F({prevRatio:n,ratio:m,now:y,lastSavedAt:r})||H({slug:e,ratio:m,t:y})&&(n=m,r=y,k())},a=()=>o(!1),s=()=>{document.visibilityState==="hidden"&&o(!0)},i=()=>o(!0);window.addEventListener("scroll",a,{passive:!0}),document.addEventListener("visibilitychange",s),window.addEventListener("pagehide",i),document.addEventListener("prenav",i);let u=()=>{window.removeEventListener("scroll",a),document.removeEventListener("visibilitychange",s),window.removeEventListener("pagehide",i),document.removeEventListener("prenav",i)};return window.addCleanup?.(u),u}function c(e,t,n){let r=document.createElement(e);return r.className=t,n!==void 0&&(r.textContent=n),r}function V(e){return`${document.body.dataset.basepath??""}/${e.split("/").map(encodeURIComponent).join("/")}`}function W(e,t){if(e.replaceChildren(),e.dataset.state=t?"ready":"empty",!t)return;let{main:n,recent:r}=t,o=c("div","bwz-resume");o.append(c("span","bwz-resume-kicker","\\u7E7C\\u7E8C\\u95B1\\u8B80")),o.append(c("span","bwz-resume-title",n.title)),o.append(c("span","bwz-resume-meta",n.meta));let a=c("a","bwz-resume-go","\\u7E7C\\u7E8C \\u203A");if(a.href=V(n.slug),a.setAttribute("aria-label",n.ariaLabel),n.restoreScroll&&a.addEventListener("click",()=>Y(n.slug,n.ratio,Date.now())),o.append(a),e.append(o),r.length===0)return;let s=c("p","bwz-resume-more","\\u6700\\u8FD1\\u4E5F\\u8B80\\u4E86\\uFF1A");for(let i of r){let u=c("a","bwz-resume-link",i.label);u.href=V(i.slug),s.append(u)}e.append(s)}function me(e){return e>=.1?e<.35?"\\u524D\\u6BB5":e<.65?"\\u4E2D\\u6BB5":"\\u5F8C\\u6BB5":"\\u958B\\u982D"}function J(e){let t=new Date(e);return new Date(t.getFullYear(),t.getMonth(),t.getDate()).getTime()}function le(e,t){let n=new Date(J(e)),r=new Date(J(t));return Math.round((Date.UTC(r.getFullYear(),r.getMonth(),r.getDate())-Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()))/864e5)}function q(e,t){if(!Number.isFinite(e)||t-e<3e5)return"\\u525B\\u525B";let n=le(e,t);if(n<=0)return"\\u4ECA\\u5929";if(n===1)return"\\u6628\\u5929";if(n<7)return`${n} \\u5929\\u524D`;let r=new Date(e);return`${r.getMonth()+1} \\u6708 ${r.getDate()} \\u65E5`}function j(e,t,n){return`\\u4E0A\\u6B21\\u8B80\\u5230\\u9019\\u4E00\\u7AE0\\u7684${me(e)} \\xB7 ${q(t,n)}`}function Q(e,t){return`\\u4E0A\\u6B21\\u8B80\\u904E\\u9019\\u4E00\\u5377 \\xB7 ${q(e,t)}`}var de=2;function B(e,t){return e.kind==="chapter"?t?`${e.book.name} \\u7B2C ${e.chapter} \\u7AE0`:`${e.book.name}\\u7B2C ${e.chapter} \\u7AE0`:e.book.name}function X(e,t,n){let r=C(e,t,1+de),[o,...a]=r;if(!o)return null;let s=o.kind==="chapter";return{main:{slug:o.slug,ratio:o.ratio,title:B(o,!0),meta:s?j(o.ratio,o.t,n):Q(o.t,n),ariaLabel:`\\u7E7C\\u7E8C\\u95B1\\u8B80${B(o,!1)}`,restoreScroll:s},recent:a.map(i=>({slug:i.slug,label:B(i,!0)}))}}function Z({now:e,startedAt:t,height:n,lastHeight:r,lastChangeAt:o}){return e-t>=3e3?"done":r===void 0||n!==r?"apply":e-o>=500?"done":"wait"}var ee=["wheel","touchstart","keydown","mousedown"];function te(e){let t=!1,n=0,r=Date.now(),o,a=r,s=()=>{if(!t){t=!0,window.clearTimeout(n);for(let u of ee)window.removeEventListener(u,s)}},i=()=>{if(t)return;let u=Date.now(),p=document.documentElement.scrollHeight,m=Z({now:u,startedAt:r,height:p,lastHeight:o,lastChangeAt:a});if(m==="done")return s();m==="apply"&&(p!==o&&(a=u),o=p,window.scrollTo({top:D(e,p,window.innerHeight),behavior:"instant"})),n=window.setTimeout(i,100)};for(let u of ee)window.addEventListener(u,s,{passive:!0});return i(),{active:()=>!t,cancel:s}}function he(){return document.body.dataset.slug??""}function fe(e){let t=e.querySelector("[data-hub-search]");if(!t||t.dataset.bound)return;t.dataset.bound="1",t.addEventListener("click",()=>{document.dispatchEvent(new CustomEvent("search:open",{cancelable:!0,detail:{mode:"verse",opener:t}}))});let n=e.querySelector("[data-hub-kbd]");n&&/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)&&(n.textContent="\\u2318 K")}function be(){let e=document.querySelector(".bwz-hub");if(!e)return;fe(e);let t=e.querySelector("[data-hub-resume]");if(!t)return;let n=X(S(),L(e.dataset.catalog),Date.now());W(t,n)}function Re(){let e=he();k(),be();let t=K(e,Date.now()),n=t?te(t.ratio):null;U(e,{suspended:()=>n?.active()??!1})}document.addEventListener("nav",Re);\n';
 
 // ../book-picker/src/components/styles/bookGrid.scss
 var bookGrid_default = '@charset "UTF-8";\n/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n   \u5171\u7528\u6A23\u5F0F\uFF1A\u66F8\u5377\u683C\u5B50\uFF08BookGrid\uFF09\u8207\u7AE0\u865F\u683C\uFF08ChapterGrid\uFF09\u3002\n   \u5DE6\u6B04\u9078\u64C7\u5668\u3001\u624B\u6A5F\u7AE0\u672B\u3001\u9996\u9801\u5165\u53E3\u90FD\u7528\u9019\u4E00\u4EFD\uFF0C\u4E0D\u8981\u5728\u5225\u8655\u8907\u88FD\u3002\n   \u53EA\u7528\u7DB2\u7AD9\u65E2\u6709\u7684\u984F\u8272\u8B8A\u6578\uFF1B\u5F37\u8ABF\u8272\u7528\u52A0\u6DF1\u904E\u7684 --bwz-accent-strong\uFF08\u6DF1\u8272\u6A21\u5F0F\u662F\u6DFA\u7D2B\uFF09\u3002\n   \u5916\u89C0\u5C6C\u6027\u5927\u591A\u5E36 !important\uFF1A\u5916\u639B\u7684 CSS \u5728\u6700\u4F4E\u7684 quartz-base \u5C64\uFF0C\u4E3B\u984C\u5916\u639B\uFF08\u8F03\u9AD8\u7684\u5C64\uFF09\u5C0D a\u3001li\u3001button\u3001h2 \u7684\n   \u9023\u7D50\u8272\u3001\u7C97\u9AD4\u3001\u5167\u8DDD\u6703\u84CB\u904E\u9019\u88E1\u7684\u4E00\u822C\u5BA3\u544A\uFF1B!important \u5728\u5C64\u88E1\u662F\u53CD\u904E\u4F86\u7684\uFF08\u6700\u4F4E\u5C64\u8D0F\uFF09\uFF0C\u6240\u4EE5\u9019\u6A23\u5BEB\u624D\u7A69\u3002\n   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */\n/* \u5BE6\u5FC3\u6309\u9215\u4E0A\u7684\u5B57\uFF1A\u6DFA\u8272\u6A21\u5F0F\u7528\u767D\uFF0C\u6DF1\u8272\u6A21\u5F0F\u7684\u5F37\u8ABF\u8272\u662F\u6DFA\u7D2B\uFF0C\u6539\u7528\u6DF1\u8272\u5B57\u624D\u6709\u8DB3\u5920\u5C0D\u6BD4 */\n/* \u7070\u8272\uFF08\u5C1A\u672A\u958B\u653E\uFF09\u7684\u5B57\uFF1A\u6BD4 --gray \u6DF1\uFF0C\u5C0D\u6BD4 \u2265 4.5:1\uFF1B\u9760\u865B\u7DDA\u6846\u548C\u300C\u7070\u300D\u611F\u5340\u5206\uFF0C\u4E0D\u9760\u8B8A\u6DE1 */\n/* \u683C\u5B50\u7684\u6846\u7DDA\uFF1A--lightgray \u5728\u6DFA\u8272\u7684\u62BD\u5C5C\u5E95\uFF08\u4E5F\u662F\u6DFA\u7070\uFF09\u4E0A\u5E7E\u4E4E\u770B\u4E0D\u898B\uFF0C\u6DF7\u4E00\u9EDE --gray \u8B93\u6BCF\u4E00\u683C\u90FD\u770B\u5F97\u51FA\u908A\u754C */\n.bwz-sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  margin: -1px;\n  padding: 0;\n  overflow: hidden;\n  clip: rect(0 0 0 0);\n  white-space: nowrap;\n  border: 0;\n}\n\n/* ---------- \u66F8\u5377\u683C\u5B50 ---------- */\n.bwz-bookgrid {\n  --bwz-bg-cell-h: 34px; /* \u684C\u6A5F\u5DE6\u6B04\uFF1B\u624B\u6A5F\u8207\u89F8\u63A7\u88DD\u7F6E\u5728\u4E0B\u9762\u6539\u6210 44px */\n  color: var(--dark) !important;\n  text-align: left;\n}\n.bwz-bookgrid .bwz-bg-tabs {\n  display: inline-flex;\n  gap: 0.25rem;\n  padding: 0.2rem !important;\n  margin-bottom: 0.25rem;\n  border-radius: 10px !important;\n  background: var(--lightgray) !important;\n}\n.bwz-bookgrid .bwz-bg-tab {\n  min-height: 32px;\n  margin: 0 !important;\n  padding: 0.2rem 0.7rem !important;\n  border: 0 !important;\n  border-radius: 8px !important;\n  background: transparent !important;\n  color: var(--darkgray) !important;\n  font: inherit !important;\n  font-size: 0.88rem !important;\n  white-space: nowrap;\n  cursor: pointer;\n}\n.bwz-bookgrid .bwz-bg-tab[aria-selected=true] {\n  background: var(--light) !important;\n  color: var(--dark) !important;\n  font-weight: 700 !important;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);\n}\n.bwz-bookgrid .bwz-bg-gh {\n  margin: 0.7rem 0 0.3rem !important;\n  color: var(--darkgray) !important;\n  font-size: 0.8rem !important;\n  font-weight: 600 !important;\n  letter-spacing: 0.04em;\n}\n.bwz-bookgrid .bwz-bg-books {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.3rem;\n}\n.bwz-bookgrid .bwz-bg-book {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  box-sizing: border-box;\n  min-height: var(--bwz-bg-cell-h);\n  margin: 0 !important;\n  padding: 0.1rem 0.5rem !important;\n  border: 1px solid color-mix(in srgb, var(--gray) 40%, var(--lightgray)) !important;\n  border-radius: 8px !important;\n  background: transparent !important;\n  font: inherit !important;\n  font-size: 0.88rem !important;\n  line-height: 1.2 !important;\n  text-align: center;\n  text-decoration: none !important;\n}\n.bwz-bookgrid {\n  /* \u5DF2\u958B\u653E\uFF1A\u53EF\u9EDE\u7684\u9023\u7D50\uFF0C\u7528\u5F37\u8ABF\u8272 */\n}\n.bwz-bookgrid a.bwz-bg-book {\n  border-color: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 50%, var(--lightgray)) !important;\n  background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 7%, transparent) !important;\n  color: var(--bwz-accent-strong, var(--secondary)) !important;\n  font-weight: 700 !important;\n}\n.bwz-bookgrid a.bwz-bg-book:hover {\n  background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 14%, transparent) !important;\n}\n.bwz-bookgrid a.bwz-bg-book[aria-current=true] {\n  border-color: transparent !important;\n  background: var(--bwz-accent-strong, var(--secondary)) !important;\n  color: #fff !important;\n}\n.bwz-bookgrid {\n  /* \u7070\u8272\uFF1A\u9084\u5728\u6574\u7406\u4E2D\u3002\u4ECD\u53EF\u805A\u7126\u3001\u53EF\u9EDE\uFF08\u9EDE\u4E86\u8DF3\u63D0\u793A\uFF09\uFF0C\u6240\u4EE5\u4E0D\u662F disabled \u800C\u662F aria-disabled */\n}\n.bwz-bookgrid .bwz-bg-book.is-locked {\n  border-style: dashed !important;\n  color: color-mix(in srgb, var(--darkgray) 70%, var(--light)) !important;\n  cursor: help;\n}\n.bwz-bookgrid .bwz-bg-book.is-locked:hover {\n  background: var(--lightgray) !important;\n}\n.bwz-bookgrid {\n  /* \u9996\u9801\u7528\u7684\u7B49\u5BEC\u683C\uFF1A\u6BCF\u683C\u540C\u5BEC\uFF0C\u6BD4\u5DE6\u6B04\u7684\u5C0F\u6A19\u7C64\u5927\u4E00\u9EDE */\n}\n.bwz-bookgrid.bwz-bookgrid--grid {\n  --bwz-bg-cell-h: 44px;\n}\n.bwz-bookgrid.bwz-bookgrid--grid .bwz-bg-books {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr));\n  gap: 0.4rem;\n}\n.bwz-bookgrid.bwz-bookgrid--grid .bwz-bg-book {\n  font-size: 0.92rem !important;\n}\n.bwz-bookgrid .bwz-bg-tab:focus-visible,\n.bwz-bookgrid .bwz-bg-book:focus-visible {\n  outline: 2px solid var(--secondary);\n  outline-offset: 2px;\n}\n\n/* ---------- \u7AE0\u865F\u683C ---------- */\n.bwz-chgrid-wrap {\n  --bwz-ch-h: 34px;\n  --bwz-ch-gap: 0.25rem;\n  /* \u7AE0\u6578\u5F88\u591A\uFF08\u8A69\u7BC7 150 \u7AE0\uFF09\u6642\u6700\u591A\u7D04 8 \u884C\u9AD8\uFF0C\u8D85\u904E\u5728\u6846\u5167\u6372\u52D5 */\n  max-height: calc(8 * var(--bwz-ch-h) + 7 * var(--bwz-ch-gap) + 4px);\n  overflow-y: auto;\n  overscroll-behavior: contain;\n  scrollbar-width: thin;\n  scrollbar-gutter: stable;\n  padding: 2px !important;\n}\n\n.bwz-chgrid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr));\n  gap: var(--bwz-ch-gap);\n  margin: 0 !important;\n  padding: 0 !important;\n  list-style: none;\n}\n.bwz-chgrid li {\n  margin: 0 !important;\n  padding: 0 !important;\n  list-style: none;\n}\n.bwz-chgrid .bwz-ch {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  box-sizing: border-box;\n  min-height: var(--bwz-ch-h);\n  border: 1px solid color-mix(in srgb, var(--gray) 40%, var(--lightgray)) !important;\n  border-radius: 8px !important;\n  background: transparent !important;\n  color: var(--dark) !important;\n  font-size: 0.9rem !important;\n  font-variant-numeric: tabular-nums;\n  text-decoration: none !important;\n}\n.bwz-chgrid a.bwz-ch:hover {\n  background: var(--lightgray) !important;\n}\n.bwz-chgrid a.bwz-ch[aria-current=page] {\n  border-color: transparent !important;\n  background: var(--bwz-accent-strong, var(--secondary)) !important;\n  color: #fff !important;\n  font-weight: 700 !important;\n}\n.bwz-chgrid .bwz-ch.is-missing {\n  border-style: dashed !important;\n  color: color-mix(in srgb, var(--darkgray) 70%, var(--light)) !important;\n}\n.bwz-chgrid a.bwz-ch:focus-visible {\n  outline: 2px solid var(--secondary);\n  outline-offset: 2px;\n}\n\n/* \u624B\u6A5F\u8207\u89F8\u63A7\u88DD\u7F6E\uFF1A\u89F8\u63A7\u76EE\u6A19 \u2265 44px */\n@media (max-width: 800px), (pointer: coarse) {\n  .bwz-bookgrid {\n    --bwz-bg-cell-h: 44px;\n  }\n  .bwz-bookgrid .bwz-bg-tab {\n    min-height: 40px;\n  }\n  .bwz-chgrid-wrap {\n    --bwz-ch-h: 44px;\n    --bwz-ch-gap: 0.35rem;\n  }\n  .bwz-chgrid {\n    grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));\n  }\n}\n/* \u6DF1\u8272\u6A21\u5F0F\u7684\u5F37\u8ABF\u8272\u662F\u6DFA\u7D2B\uFF0C\u5BE6\u5FC3\u5E95\u4E0A\u7684\u5B57\u6539\u6DF1\u8272\uFF08\u5C0D\u6BD4 \u2265 4.5:1\uFF09 */\nhtml[saved-theme=dark] .bwz-bookgrid a.bwz-bg-book[aria-current=true],\nhtml[saved-theme=dark] .bwz-chgrid a.bwz-ch[aria-current=page] {\n  color: #16121f !important;\n}';
@@ -2945,32 +2953,32 @@ var HomeHub = ({ fileData, allFiles, tree }) => {
   const catalog = buildCatalog(allFiles.map((file) => file.slug ?? ""));
   const link = (slug) => "./" + slug.split("/").map(encodeURIComponent).join("/");
   const masthead = extractMasthead(tree);
-  const hub = /* @__PURE__ */ u2("section", { class: "bwz-hub", "aria-label": "\u8B80\u7D93\u5165\u53E3", "data-catalog": JSON.stringify(compactCatalog(catalog)), children: [
-    /* @__PURE__ */ u2("button", { type: "button", class: "bwz-hub-search", "data-hub-search": true, children: [
-      /* @__PURE__ */ u2("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "aria-hidden": "true", children: [
-        /* @__PURE__ */ u2("circle", { cx: "11", cy: "11", r: "7" }),
-        /* @__PURE__ */ u2("path", { d: "m20 20-3.5-3.5" })
+  const hub = /* @__PURE__ */ u4("section", { class: "bwz-hub", "aria-label": "\u8B80\u7D93\u5165\u53E3", "data-catalog": JSON.stringify(compactCatalog(catalog)), children: [
+    /* @__PURE__ */ u4("button", { type: "button", class: "bwz-hub-search", "data-hub-search": true, children: [
+      /* @__PURE__ */ u4("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2", "aria-hidden": "true", children: [
+        /* @__PURE__ */ u4("circle", { cx: "11", cy: "11", r: "7" }),
+        /* @__PURE__ */ u4("path", { d: "m20 20-3.5-3.5" })
       ] }),
-      /* @__PURE__ */ u2("span", { class: "bwz-hub-search-text", children: [
-        "\u641C\u5C0B\u7D93\u6587\u3001\u4EBA\u7269\u3001\u4E3B\u984C",
-        /* @__PURE__ */ u2("span", { class: "bwz-hub-wide", children: "\uFF0C\u6216\u8F38\u5165\u300C\u51FA 12:3\u300D" })
+      /* @__PURE__ */ u4("span", { class: "bwz-hub-search-text", children: [
+        "\u641C\u5C0B\u7D93\u6587",
+        /* @__PURE__ */ u4("span", { class: "bwz-hub-wide", children: "\uFF0C\u6216\u8F38\u5165\u300C\u51FA 12:3\u300D" })
       ] }),
-      /* @__PURE__ */ u2("kbd", { "aria-hidden": "true", "data-hub-kbd": true, children: "Ctrl K" })
+      /* @__PURE__ */ u4("kbd", { "aria-hidden": "true", "data-hub-kbd": true, children: "Ctrl K" })
     ] }),
-    /* @__PURE__ */ u2("div", { class: "bwz-hub-resume", "data-hub-resume": true, "data-state": "pending" }),
-    /* @__PURE__ */ u2("div", { class: "bwz-hub-books", children: [
-      /* @__PURE__ */ u2("div", { class: "bwz-hub-h", role: "heading", "aria-level": 2, children: "\u6309\u66F8\u5377\u8B80\u7D93" }),
-      /* @__PURE__ */ u2(BookGrid, { catalog, fromSlug: "index", idPrefix: "bwz-hub", layout: "grid" }),
-      /* @__PURE__ */ u2("p", { class: "bwz-hub-note", children: "\u7070\u8272\u7684\u66F8\u5377\u7814\u8B80\u9801\u9084\u5728\u6574\u7406\u4E2D\uFF0C\u6703\u9678\u7E8C\u958B\u653E\u3002" })
+    /* @__PURE__ */ u4("div", { class: "bwz-hub-resume", "data-hub-resume": true, "data-state": "pending" }),
+    /* @__PURE__ */ u4("div", { class: "bwz-hub-books", children: [
+      /* @__PURE__ */ u4("div", { class: "bwz-hub-h", role: "heading", "aria-level": 2, children: "\u6309\u66F8\u5377\u8B80\u7D93" }),
+      /* @__PURE__ */ u4(BookGrid, { catalog, fromSlug: "index", idPrefix: "bwz-hub", layout: "grid" }),
+      /* @__PURE__ */ u4("p", { class: "bwz-hub-note", children: "\u7070\u8272\u7684\u66F8\u5377\u7814\u8B80\u9801\u9084\u5728\u6574\u7406\u4E2D\uFF0C\u6703\u9678\u7E8C\u958B\u653E\u3002" })
     ] }),
-    /* @__PURE__ */ u2("div", { class: "bwz-hub-links", children: [
-      /* @__PURE__ */ u2("a", { href: link(QUICK_START), children: "\u5FEB\u901F\u5165\u9580" }),
-      /* @__PURE__ */ u2("a", { href: link(WEBSITE_HUB), children: "\u4E92\u52D5\u7DB2\u7AD9" }),
-      /* @__PURE__ */ u2("a", { href: link(APPENDIX_INDEX), children: "\u9644\u9304" })
+    /* @__PURE__ */ u4("div", { class: "bwz-hub-links", children: [
+      /* @__PURE__ */ u4("a", { href: link(QUICK_START), children: "\u5FEB\u901F\u5165\u9580" }),
+      /* @__PURE__ */ u4("a", { href: link(WEBSITE_HUB), children: "\u4E92\u52D5\u7DB2\u7AD9" }),
+      /* @__PURE__ */ u4("a", { href: link(APPENDIX_INDEX), children: "\u9644\u9304" })
     ] })
   ] });
-  return /* @__PURE__ */ u2(S, { children: [
-    masthead && /* @__PURE__ */ u2(Masthead, { masthead }),
+  return /* @__PURE__ */ u4(S2, { children: [
+    masthead && /* @__PURE__ */ u4(Masthead, { masthead }),
     hub
   ] });
 };

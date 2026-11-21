@@ -257,3 +257,35 @@ export function summarizeCategories(
     return aGroup - bGroup || aSeen - bSeen;
   });
 }
+
+export function getKnowledgeSearchCategory(slug: string): string | null {
+  if (isSearchExcludedSlug(slug)) return null;
+  const category = getResultCategory(slug);
+  return category === CATEGORY_CHAPTER ? null : category;
+}
+
+export function getKnowledgeSearchCategories(slugs: readonly string[]): string[] {
+  const categories: string[] = [...LINK_FOLDER_CATEGORY_ORDER, CATEGORY_APPENDIX];
+  for (const slug of slugs) {
+    const category = getKnowledgeSearchCategory(slug);
+    if (category !== null) categories.push(category);
+  }
+  return summarizeCategories(categories).map(({ name }) => name);
+}
+
+export function getKnowledgeSearchCategoryLabel(category: string): string {
+  return category === "原文" ? "原文詞義" : category;
+}
+
+export function findKnowledgeMatchSlugs(
+  items: Record<string, ExactSearchItem>,
+  query: string,
+  selectedCategories: ReadonlySet<string>,
+): string[] {
+  if (selectedCategories.size === 0) return [];
+  const matches = findExactMatchSlugs(items, query).filter((slug) => {
+    const category = getKnowledgeSearchCategory(slug);
+    return category !== null && selectedCategories.has(category);
+  });
+  return rankExactMatches(items, matches, query);
+}

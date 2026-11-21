@@ -1,16 +1,16 @@
 # @quartz-community/search
 
-The Search component for Quartz - full-text and semantic search for your content.
+The search component for the Bible study site.
 
 ## Features
 
-- 🔍 **Full-Text Search** - Search across all your content instantly
-- ⚡ **Fast Exact Matching** - Searches the content index only when needed
+- **Verse Search** - Search published Bible text one verse at a time and follow a link to the chapter.
+- **Refinement and Shortlist** - Add terms that must occur in the same verse or save verses from separate queries in the current tab.
+- **Knowledge Search** - Search entries and appendices by text, with multiple selectable categories.
 - 📱 **Mobile Responsive** - Works great on all devices
 - 🎯 **Search Preview** - Optional content preview panel
 - 🌐 **Multi-Language** - Supports 30+ locales
 - ⌨️ **Keyboard Shortcuts** - `Ctrl/Cmd + K` to open, `Escape` to close
-- 🏷️ **Tag Search** - Search by tags with special syntax
 
 ## Installation
 
@@ -63,23 +63,22 @@ By default, the search component:
 
 - Displays as a button with a search icon
 - Opens a fullscreen search modal when clicked
-- Shows up to 8 search results
+- Shows the total and renders results one page at a time
 - Enables content preview on desktop (can be disabled)
 - Supports keyboard navigation (arrow keys, Enter, Escape)
-- Loads the full content index when you start using search
+- Loads the index for the active mode as needed
 
 ## How It Works
 
 The Search component:
 
-1. Uses the small global fetchData index for page metadata, such as slugs, titles, links, and tags.
-2. Downloads the full content index only after a search intent: hovering over or activating the search button, focusing the search field, or pressing Ctrl/Cmd + K. With navigator.connection.saveData enabled, it waits until you start typing.
-3. Runs exact matching against the downloaded content index; it does not build or query a FlexSearch index.
-4. Starts semantic search as you type and combines its results after exact matches, removing duplicates.
-5. Fetches page HTML separately when it needs to show a search preview.
+1. Looks up direct Scripture references with the site's slim page index.
+2. Matches text and refinement conditions in `static/verseIndex.json`, generated from published chapter pages.
+3. Loads the full content index for knowledge search and filters matches by the selected categories.
+4. Fetches page HTML separately for knowledge result previews.
 
 > [!info]
-> Search requires the ContentIndex emitter plugin to be present in your Quartz configuration.
+> Knowledge search requires the ContentIndex emitter. Verse search uses the site's VerseIndex emitter.
 
 ## Keyboard Shortcuts
 

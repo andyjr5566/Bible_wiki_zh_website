@@ -45,7 +45,7 @@ const HomeHub: QuartzComponent = ({ fileData, allFiles, tree }: QuartzComponentP
           <path d="m20 20-3.5-3.5" />
         </svg>
         <span class="bwz-hub-search-text">
-          搜尋經文、人物、主題<span class="bwz-hub-wide">，或輸入「出 12:3」</span>
+          搜尋經文<span class="bwz-hub-wide">，或輸入「出 12:3」</span>
         </span>
         <kbd aria-hidden="true" data-hub-kbd>
           Ctrl K

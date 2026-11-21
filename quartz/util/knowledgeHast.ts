@@ -30,7 +30,7 @@ export interface KnowledgeHastContext {
 
 const WORDS = {
   lead: "讀經時點到的人物、地點、原文和主題，都收在這裡。每一條會隨著讀過的章節逐章累積，也可以直接從這裡查。",
-  searchButton: "搜尋所有條目",
+  searchButton: "搜尋知識庫條目",
   searchHint: "例如「逾越節」「摩西」「亞伯拉罕之約」",
   helpPrefix: "不知道怎麼找？看",
   helpSecond: "也可以學",
@@ -198,7 +198,6 @@ function buildHub(slug: string, files: readonly KnowledgeFile[]): Element {
         WORDS.searchButton,
         el("span", { className: ["bwz-kn-search-hint"] }, [`　${WORDS.searchHint}`]),
       ]),
-      el("kbd", { ariaHidden: "true", dataKnKbd: "" }, ["Ctrl K"]),
     ]),
   ]
 

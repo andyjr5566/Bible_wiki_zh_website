@@ -1,0 +1,588 @@
+/* ==========================================================================
+   章節頁「分層閱讀」正文樣式（Stage A）
+   搭配：
+     - 建置時轉換：quartz/util/readingLayers.ts
+     - 互動腳本：quartz/components/scripts/readingLayers.inline.ts
+   class 一律以 bwz-rl- 開頭，由 custom.scss 最上面 @use 進來（不在 cascade layer 裡）。
+   注意：@use 位於 custom.scss 頂端，所以覆蓋 article blockquote / article a.internal-link 時
+   選擇器權重必須明確高過 custom.scss 後段的規則，不能只靠檔案順序。
+   ========================================================================== */
+
+$rl-sans: var(--headerFont), "Noto Sans TC", "PingFang TC", sans-serif;
+$rl-serif: var(--bodyFont), "LXGW WenKai TC", "BiauKai", serif;
+$rl-hebrew: "SBL Hebrew", "Ezra SIL", "Times New Roman", serif;
+$rl-accent: var(--bwz-accent-strong, var(--secondary));
+$rl-muted: color-mix(in srgb, var(--darkgray) 78%, var(--gray));
+
+/* 共用色彩變數：集中定義一次，淺色與深色都確保文字對比 ≥ 4.5:1 */
+:root {
+  /* 經文原句（深褐色）與經節小標籤 */
+  --bwz-rl-quote: #703710;
+  --bwz-rl-vref-fg: #6c340e;
+  --bwz-rl-vref-bg: #f4e4d1;
+  --bwz-rl-vref-border: #d9b896;
+  --bwz-rl-vref-hover-bg: #ebd3b8;
+
+  /* 來源名稱（與全站紫色協調的深紫灰＋虛線底線） */
+  --bwz-rl-src-fg: #523d86;
+  --bwz-rl-src-line: #8a7bb8;
+  --bwz-rl-src-hover-bg: rgba(112, 72, 232, 0.08);
+
+  /* 三種分層卡片：原文（藍綠）、背景（土黃）、應用（綠） */
+  --bwz-rl-orig-accent: #1b5e78;
+  --bwz-rl-orig-badge-fg: #ffffff;
+  --bwz-rl-orig-bg: color-mix(in srgb, #1b5e78 6%, var(--light));
+  --bwz-rl-orig-border: color-mix(in srgb, #1b5e78 36%, var(--lightgray));
+
+  --bwz-rl-bg-accent: #7d510d;
+  --bwz-rl-bg-badge-fg: #ffffff;
+  --bwz-rl-bg-bg: color-mix(in srgb, #946414 7%, var(--light));
+  --bwz-rl-bg-border: color-mix(in srgb, #946414 36%, var(--lightgray));
+
+  --bwz-rl-app-accent: #2d6a44;
+  --bwz-rl-app-badge-fg: #ffffff;
+  --bwz-rl-app-bg: color-mix(in srgb, #2d6a44 6%, var(--light));
+  --bwz-rl-app-border: color-mix(in srgb, #2d6a44 36%, var(--lightgray));
+
+  /* 舊格式「原文」小標籤 */
+  --bwz-rl-chip-fg: #17526a;
+  --bwz-rl-chip-bg: #e2f0f5;
+  --bwz-rl-chip-border: #8fbdd0;
+  --bwz-rl-chip-open-bg: #1b5e78;
+  --bwz-rl-chip-open-fg: #ffffff;
+
+  /* 說明卡與原文小卡底色 */
+  --bwz-rl-pop-bg: #fffdf9;
+  --bwz-rl-pop-border: #cbbfe6;
+  --bwz-rl-pop-orig-border: #8fbdd0;
+  --bwz-rl-pop-shadow: 0 12px 28px rgba(40, 24, 72, 0.16);
+  --bwz-rl-q-badge-bg: #efe9fb;
+}
+
+:root[saved-theme="dark"] {
+  --bwz-rl-quote: #eab98a;
+  --bwz-rl-vref-fg: #f4cda4;
+  --bwz-rl-vref-bg: #3b2818;
+  --bwz-rl-vref-border: #785334;
+  --bwz-rl-vref-hover-bg: #4c331e;
+
+  --bwz-rl-src-fg: #c9bcff;
+  --bwz-rl-src-line: #9a86e2;
+  --bwz-rl-src-hover-bg: rgba(166, 138, 249, 0.16);
+
+  /* 深色模式：標籤用亮調色底配極深色字（對比 8–10:1），左色條與展開字沿用亮調色 */
+  --bwz-rl-orig-accent: #68c5e3;
+  --bwz-rl-orig-badge-fg: #0c1920;
+  --bwz-rl-orig-bg: #152127;
+  --bwz-rl-orig-border: #2c4c5c;
+
+  --bwz-rl-bg-accent: #e7b55e;
+  --bwz-rl-bg-badge-fg: #1c1408;
+  --bwz-rl-bg-bg: #241e14;
+  --bwz-rl-bg-border: #5a4726;
+
+  --bwz-rl-app-accent: #72cf91;
+  --bwz-rl-app-badge-fg: #0d1d13;
+  --bwz-rl-app-bg: #16241b;
+  --bwz-rl-app-border: #2f553d;
+
+  --bwz-rl-chip-fg: #8dd6ee;
+  --bwz-rl-chip-bg: #162b35;
+  --bwz-rl-chip-border: #3d7d98;
+  --bwz-rl-chip-open-bg: #68c5e3;
+  --bwz-rl-chip-open-fg: #0c1920;
+
+  --bwz-rl-pop-bg: #1f1c1a;
+  --bwz-rl-pop-border: #564a78;
+  --bwz-rl-pop-orig-border: #3d7d98;
+  --bwz-rl-pop-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+  --bwz-rl-q-badge-bg: rgba(166, 138, 249, 0.18);
+}
+
+/* ---------- 1. 經文原句與經節小標籤 ---------- */
+
+.bwz-rl-quote {
+  color: var(--bwz-rl-quote);
+}
+
+/* 權重刻意高過 custom.scss 的 [saved-theme] article a.internal-link */
+html[saved-theme] article a.bwz-rl-vref,
+article .bwz-rl-vref {
+  display: inline-block;
+  margin: 0 0.2em 0 0.12em;
+  padding: 0.05em 0.48em;
+  border: 1px solid var(--bwz-rl-vref-border);
+  border-radius: 999px;
+  background-color: var(--bwz-rl-vref-bg);
+  color: var(--bwz-rl-vref-fg);
+  font-family: $rl-sans;
+  font-size: 0.72em;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: none;
+  vertical-align: 0.12em;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+html[saved-theme] article a.bwz-rl-vref:hover,
+html[saved-theme] article a.bwz-rl-vref:focus-visible {
+  background-color: var(--bwz-rl-vref-hover-bg);
+  color: var(--bwz-rl-vref-fg);
+  border-color: var(--bwz-rl-vref-fg);
+}
+
+html[saved-theme] article a.bwz-rl-vref:focus-visible {
+  outline: 2px solid $rl-accent;
+  outline-offset: 2px;
+}
+
+article .bwz-rl-vref-static {
+  cursor: default;
+}
+
+/* 跳到經節後的短暫標示（對齊 verse-return 的樣式） */
+.bwz-rl-vflash {
+  animation: bwz-rl-vflash 2.4s ease-out;
+  border-radius: 4px;
+}
+
+@keyframes bwz-rl-vflash {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px var(--secondary);
+    background-color: color-mix(in srgb, var(--secondary) 14%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background-color: transparent;
+  }
+}
+
+/* ---------- 2. 來源名稱（點狀底線） ---------- */
+
+.bwz-rl-src {
+  color: var(--bwz-rl-src-fg);
+  border-bottom: 1.5px dotted var(--bwz-rl-src-line);
+  border-radius: 3px 3px 0 0;
+  padding: 0 0.04em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-bottom-color 0.15s ease;
+
+  &:hover,
+  &.is-open {
+    background-color: var(--bwz-rl-src-hover-bg);
+    border-bottom-color: var(--bwz-rl-src-fg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $rl-accent;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+/* ---------- 3. 問題式 h4 小標 ---------- */
+
+article h4.bwz-rl-q {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+  color: var(--dark);
+  font-size: 1.12rem;
+
+  &::before {
+    content: "？";
+    display: inline-flex;
+    flex: 0 0 1.45rem;
+    align-items: center;
+    justify-content: center;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 50%;
+    background: var(--bwz-rl-q-badge-bg);
+    color: $rl-accent;
+    font-family: $rl-sans;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transform: translateY(-0.06em);
+  }
+}
+
+/* ---------- 4. 三種分層卡片（原文／背景／應用） ---------- */
+
+article blockquote.callout.bwz-rl-card {
+  --rl-accent: var(--bwz-rl-orig-accent);
+  --rl-badge-fg: var(--bwz-rl-orig-badge-fg);
+  --rl-bg: var(--bwz-rl-orig-bg);
+  --rl-border: var(--bwz-rl-orig-border);
+
+  margin: 1rem 0 1.25rem;
+  padding: 0;
+  border: 1px solid var(--rl-border);
+  border-left: 4px solid var(--rl-accent);
+  border-radius: 10px;
+  background: var(--rl-bg);
+  overflow: hidden;
+  font-size: inherit;
+  line-height: inherit;
+
+  &.bwz-rl-card-original {
+    --rl-accent: var(--bwz-rl-orig-accent);
+    --rl-badge-fg: var(--bwz-rl-orig-badge-fg);
+    --rl-bg: var(--bwz-rl-orig-bg);
+    --rl-border: var(--bwz-rl-orig-border);
+  }
+
+  &.bwz-rl-card-background {
+    --rl-accent: var(--bwz-rl-bg-accent);
+    --rl-badge-fg: var(--bwz-rl-bg-badge-fg);
+    --rl-bg: var(--bwz-rl-bg-bg);
+    --rl-border: var(--bwz-rl-bg-border);
+  }
+
+  &.bwz-rl-card-application {
+    --rl-accent: var(--bwz-rl-app-accent);
+    --rl-badge-fg: var(--bwz-rl-app-badge-fg);
+    --rl-bg: var(--bwz-rl-app-bg);
+    --rl-border: var(--bwz-rl-app-border);
+  }
+
+  & > .callout-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding: 0.6rem 0.9rem;
+    color: var(--dark);
+    font-family: $rl-sans;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--rl-accent) 7%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--rl-accent);
+      outline-offset: -2px;
+      border-radius: 8px;
+    }
+  }
+
+  .bwz-rl-card-badge {
+    flex: 0 0 auto;
+    padding: 0.14rem 0.6rem;
+    border-radius: 999px;
+    background: var(--rl-accent);
+    color: var(--rl-badge-fg);
+    font-family: $rl-sans;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+
+  .bwz-rl-card-title {
+    flex: 0 1 auto;
+    min-width: 0;
+    color: var(--dark);
+    font-family: $rl-sans;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .bwz-rl-card-summary {
+    flex: 1 1 8rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $rl-muted;
+    font-family: $rl-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .bwz-rl-card-toggle {
+    flex: 0 0 auto;
+    margin-left: auto;
+    color: var(--rl-accent);
+    font-family: $rl-sans;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* 展開時隱藏摘要與「展開」，只留「收起」；收起時反過來 */
+  &:not(.is-collapsed) {
+    .bwz-rl-card-summary,
+    .bwz-rl-toggle-open {
+      display: none;
+    }
+  }
+
+  &.is-collapsed {
+    .bwz-rl-toggle-close {
+      display: none;
+    }
+
+    /* 徹底隱藏收合內容：鍵盤 Tab 不會落進看不見的連結，也不殘留 callouts.scss 的負 margin */
+    & > .callout-content {
+      display: none;
+    }
+  }
+
+  & > .callout-content {
+    display: grid;
+    padding: 0;
+
+    & > .bwz-rl-card-body {
+      min-height: 0;
+      overflow: hidden;
+      padding: 0.15rem 1rem 0.9rem;
+      border-top: 1px dashed color-mix(in srgb, var(--rl-border) 70%, transparent);
+
+      & > p,
+      & > ul,
+      & > ol {
+        margin-top: 0.65rem;
+        margin-bottom: 0.55rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .bwz-rl-card-attrib {
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px dotted var(--rl-border);
+    color: $rl-muted;
+    font-family: $rl-sans;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+}
+
+/* 窄螢幕下讓摘要換到標題下方單行截斷，確保徽章、標題與「展開」不互擠 */
+@media (max-width: 600px) {
+  article blockquote.callout.bwz-rl-card {
+    & > .callout-title {
+      flex-wrap: wrap;
+      row-gap: 0.3rem;
+      padding: 0.55rem 0.75rem;
+    }
+
+    .bwz-rl-card-title {
+      flex: 1 1 auto;
+    }
+
+    .bwz-rl-card-summary {
+      order: 4;
+      flex: 1 0 100%;
+    }
+  }
+}
+
+/* ---------- 5. 舊格式「原文」小標籤 ---------- */
+
+button.bwz-rl-orig-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.22em;
+  padding: 0.05em 0.55em;
+  border: 1px solid var(--bwz-rl-chip-border);
+  border-radius: 999px;
+  background: var(--bwz-rl-chip-bg);
+  color: var(--bwz-rl-chip-fg);
+  font-family: $rl-sans;
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1.45;
+  vertical-align: 0.12em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+  &:hover,
+  &.is-open {
+    background: var(--bwz-rl-chip-open-bg);
+    color: var(--bwz-rl-chip-open-fg);
+    border-color: var(--bwz-rl-chip-open-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $rl-accent;
+    outline-offset: 2px;
+  }
+}
+
+/* ---------- 6. 來源說明卡與原文小卡（浮動 dialog） ---------- */
+
+.bwz-rl-popover {
+  position: absolute;
+  z-index: 890;
+  box-sizing: border-box;
+  width: min(336px, calc(100vw - 24px));
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--bwz-rl-pop-border);
+  border-radius: 12px;
+  background: var(--bwz-rl-pop-bg);
+  box-shadow: var(--bwz-rl-pop-shadow);
+  color: var(--dark);
+  font-family: $rl-serif;
+  font-size: 0.94rem;
+  line-height: 1.6;
+
+  &.bwz-rl-popover-orig {
+    border-color: var(--bwz-rl-pop-orig-border);
+  }
+}
+
+.bwz-rl-pop-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.bwz-rl-pop-title {
+  color: var(--dark);
+  font-family: $rl-sans;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.bwz-rl-pop-close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: -0.2rem -0.25rem 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: $rl-muted;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--darkgray) 10%, transparent);
+    color: var(--dark);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $rl-accent;
+    outline-offset: 1px;
+  }
+}
+
+.bwz-rl-pop-sub {
+  margin-bottom: 0.35rem;
+  color: $rl-muted;
+  font-family: $rl-sans;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.bwz-rl-pop-note {
+  color: var(--darkgray);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.bwz-rl-pop-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 0.9rem;
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px dotted var(--lightgray);
+  font-family: $rl-sans;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+a.bwz-rl-pop-link {
+  color: $rl-accent;
+  background: transparent;
+  padding: 0.1rem 0;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: $rl-accent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $rl-accent;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+.bwz-rl-orig-script {
+  margin: 0.25rem 0 0.45rem;
+  color: var(--bwz-rl-orig-accent);
+  font-family: $rl-hebrew;
+  font-size: 1.32rem;
+  line-height: 1.45;
+
+  &[dir="rtl"] {
+    text-align: right;
+  }
+}
+
+.bwz-rl-orig-detail {
+  color: var(--dark);
+  font-size: 0.94rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+.bwz-rl-orig-attrib {
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px dotted var(--lightgray);
+  color: $rl-muted;
+  font-family: $rl-sans;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* ---------- 減少動態效果與列印 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-rl-vflash {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--secondary);
+  }
+}
+
+@media print {
+  .bwz-rl-popover {
+    display: none !important;
+  }
+
+  article blockquote.callout.bwz-rl-card.is-collapsed > .callout-content {
+    display: block;
+  }
+}

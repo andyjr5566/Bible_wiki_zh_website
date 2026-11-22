@@ -1,0 +1,119 @@
+# 本章整理與條目正文裡的「來源名稱」清單（2026-11-22 定案的分層寫法）。
+#
+# 用途（唯一真相，三處共用）：
+#   1. 寫作：正文不寫代號 CT／GT／KC／BH，改寫 collections 的 name；拾穗收錄的各家寫 works 的 name。
+#   2. 閘門：util/check_layers.py 用 patterns 認來源名稱，正文出現代號或沒登記的註釋書名會報出來。
+#   3. 網站：sync_content.ps1 把本檔複製到網站 repo 的 config/source-names.yaml，
+#      網站把正文出現的名稱做成可點的說明卡，並在「本章導覽」列出本章引用的資料。
+#
+# 規則：
+#   - 只寫可查證的事實：title 取自 raw_data 的出處標記（「── 作者《書名》」）或來源網站本身。
+#   - patterns 是 Python 與 JavaScript 共通的正規式（不用 lookbehind 以外的特殊語法），
+#     第一個 pattern 要能比對 name 本身。比對時長的優先（《丁道爾聖經註釋》先於《丁道爾》）。
+#   - 新書卷出現沒登記的註釋書名時，check_layers 會警告；照 raw 的出處標記補進 works。
+#   - note 是給一般讀者看的說明，會出現在網站上：不寫檔名、欄位名或流程用語。
+version: 1
+
+# 四套註釋與原文資料（代號只在程式與工作紀錄裡用，正文寫 name）
+collections:
+  - code: CT
+    name: 黃迦勒
+    title: 黃迦勒《基督徒文摘解經系列》逐節註解
+    note: ccbiblestudy 網站上的逐節註解，常附〔話中之光〕等屬靈應用段落。
+    legend: 黃迦勒《基督徒文摘解經系列》逐節註解（ccbiblestudy）
+    url_hint: "/\\d+CT\\d+\\.htm"
+    patterns: ["黃迦勒"]
+  - code: GT
+    name: 拾穗
+    title: ccbiblestudy《拾穗》
+    note: 彙集多本中文註釋的逐節摘錄。正文寫出書名或作者的（例如《丁道爾》、丁良才），都摘自這裡；只寫『拾穗』的，是原文沒有標明出自哪一本的段落。
+    legend: ccbiblestudy《拾穗》，彙集多本中文註釋；正文寫『拾穗』或寫出書名、作者的（如《丁道爾》、丁良才），都摘自這裡
+    url_hint: "/\\d+GT\\d+\\.htm"
+    patterns: ["拾穗"]
+  - code: KC
+    name: KingComments
+    title: KingComments 研經註解
+    note: 英文研經註解。引用時英文原句後面附中文翻譯。
+    legend: KingComments 研經註解（英文）
+    url_hint: "kingcomments\\.com"
+    patterns: ["KingComments"]
+  - code: BH
+    name: BibleHub
+    title: BibleHub 研讀註釋
+    note: 英文研讀註釋。引用時英文原句後面附中文翻譯。
+    legend: BibleHub 研讀註釋（英文）
+    url_hint: "biblehub\\.com"
+    patterns: ["BibleHub"]
+  - code: STEP
+    name: STEP Bible
+    title: STEP Bible 原文資料
+    note: 希伯來文、希臘文的字形、字典與詞形資料，依 CC BY 4.0 授權使用。
+    legend: STEP Bible 原文資料（CC BY 4.0）
+    url_hint: "STEPBible"
+    patterns: ["STEP Bible", "STEP"]
+
+# 拾穗收錄的各家（正文寫 name；第一次可寫 title 全名）
+works:
+  - name: 《丁道爾》
+    title: 《丁道爾聖經註釋》
+    patterns: ["《丁道爾聖經[註注]釋》", "《丁道爾》"]
+  - name: 《精讀本》
+    title: 《聖經精讀本》
+    patterns: ["《聖經精讀本(?:──[^》]{1,12})?》", "《精讀本》"]
+  - name: 《串珠》
+    title: 《串珠聖經註釋》
+    patterns: ["《[一-鿿]{0,5}串珠(?:聖經[註注]釋)?》"]
+  - name: 《啟導本》
+    title: 《啟導本聖經註釋》
+    patterns: ["《啟導本(?:聖經)?[一-鿿]{0,5}(?:[註注]釋|腳[註注])?》", "《啟導本》"]
+  - name: 《雷氏研讀本》
+    title: 《雷氏研讀本》
+    patterns: ["《[一-鿿]{0,5}雷氏研讀本》", "《雷氏》"]
+  - name: 《舊約背景註釋》
+    title: 《舊約聖經背景注釋》
+    patterns: ["《(?:舊約聖經|舊約|[一-鿿]{2,8})?背景[註注]釋》"]
+  - name: 《中文聖經註釋》
+    title: 《中文聖經註釋》
+    patterns: ["《中文聖經[註注]釋》"]
+  - name: 《綜合解讀》
+    title: 《聖經綜合解讀》
+    patterns: ["《[一-鿿]{0,7}綜合解讀》"]
+  - name: 《研經資料》
+    title: 蔡哲民等《研經資料》
+    patterns: ["《[一-鿿]{0,5}研經資料》", "《[一-鿿]{0,5}查經資料》"]
+  - name: 《靈修版聖經註釋》
+    title: 《靈修版聖經註釋》
+    patterns: ["《靈修版聖經[註注]釋》", "《靈修版》"]
+  - name: 《每日研經叢書》
+    title: 《每日研經叢書》
+    patterns: ["《每日研經叢書》"]
+  - name: 《SDA聖經註釋》
+    title: 《SDA聖經註釋》
+    patterns: ["《SDA聖經[註注]釋》"]
+  - name: 丁良才
+    title: 丁良才的舊約各卷註釋（例如《創世紀註釋》）
+    patterns: ["丁良才(?:《[^》]{1,20}》)?", "《丁良才註釋》", "《(?:創世紀|創世記|出埃及記|利未記|民數記)註釋》"]
+  - name: 李道生
+    title: 李道生《舊約聖經問題總解》
+    patterns: ["李道生(?:《[^》]{1,20}》)?", "《舊約聖經問題總解(?:[（(]上[）)])?》"]
+  - name: 倪柝聲
+    title: 倪柝聲的著作（例如《聖經問答》）
+    patterns: ["倪柝聲(?:《[^》]{1,20}》)?", "《聖經問答》"]
+  - name: 艾基斯
+    title: 艾基斯《舊約聖經難題彙編》
+    patterns: ["艾基斯(?:《[^》]{1,20}》)?", "《[舊新]約聖經難題彙編》"]
+  - name: 賈斯樂郝威
+    title: 賈斯樂、郝威《聖經難解經文詮釋手冊》
+    patterns: ["賈斯樂(?:郝威|與郝威)?(?:《[^》]{1,20}》)?", "《聖經難解經文詮釋手冊》"]
+  - name: 華爾頓
+    title: 華爾頓的舊約背景注釋（例如《創世記背景註釋》）
+    patterns: ["華爾頓(?:《[^》]{1,20}》)?"]
+  - name: 唐佑之
+    title: 唐佑之《天道聖經註釋》
+    patterns: ["唐佑之(?:《[^》]{1,24}》)?"]
+  - name: 陳則信
+    title: 陳則信的默想系列（例如《默想撒母耳記上》）
+    patterns: ["陳則信(?:《[^》]{1,20}》)?"]
+  - name: 康來昌
+    title: 康來昌
+    patterns: ["康來昌"]

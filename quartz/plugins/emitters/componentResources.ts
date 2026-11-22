@@ -27,6 +27,8 @@ import backButtonScript from "../../components/scripts/backButton.inline"
 import knowledgeHubScript from "../../components/scripts/knowledgeHub.inline"
 // @ts-ignore
 import interactiveRailScript from "../../components/scripts/interactiveRail.inline"
+// @ts-ignore
+import readingLayersScript from "../../components/scripts/readingLayers.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -140,6 +142,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Interactive hub book rail (互動網站總入口的書卷列：點書卷跳到位置、捲動高亮)
   componentResources.afterDOMLoaded.push(interactiveRailScript)
+
+  // Reading layers (章節頁「本章整理」的來源說明卡、舊格式原文小卡、卡片鍵盤操作與經節跳轉)
+  componentResources.afterDOMLoaded.push(readingLayersScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

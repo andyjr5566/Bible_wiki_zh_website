@@ -22,7 +22,20 @@ import { wrapStrongNumbers } from "../util/strongNumbers"
 import { applyInteractiveSites, HUB_SLUG as INTERACTIVE_HUB_SLUG } from "../util/interactiveHast"
 import { applyKnowledgeHub } from "../util/knowledgeHast"
 import { loadInteractiveRegistry } from "../util/interactiveSitesLoader"
+import { applyReadingLayers } from "../util/readingLayers"
+import { loadSourceNames } from "../util/sourceNamesLoader"
 import { addVerseAnchors } from "../util/verseIndex"
+import { parseBookSlug } from "../util/bookCatalog"
+
+const allSlugsCache = new WeakMap<object, ReadonlySet<string>>()
+
+function slugsForBuild(allFiles: QuartzComponentProps["allFiles"]): ReadonlySet<string> {
+  const cached = allSlugsCache.get(allFiles)
+  if (cached) return cached
+  const set = new Set(allFiles.map((file) => file.slug ?? ""))
+  allSlugsCache.set(allFiles, set)
+  return set
+}
 
 interface RenderComponents {
   head: QuartzComponent
@@ -334,19 +347,23 @@ export function renderPage(
   }
 
   root.children = transformYoutubeEmbeds(root).children
+  const needsAllSlugs = slug === INTERACTIVE_HUB_SLUG || parseBookSlug(slug)?.kind === "chapter"
+  const existingSlugs = needsAllSlugs ? slugsForBuild(componentData.allFiles) : new Set<string>()
   // 互動網站（U-24）：章節頁插入上方一行與最下面的小卡，總入口頁換成經卷長軸。
-  // 「哪些章節頁存在」只有總入口用得到，所以只在那一頁建這個集合（每頁都建太浪費）。
   applyInteractiveSites(root, {
     slug,
     registry: loadInteractiveRegistry(),
-    existingSlugs:
-      slug === INTERACTIVE_HUB_SLUG
-        ? new Set(componentData.allFiles.map((file) => file.slug ?? ""))
-        : new Set<string>(),
+    existingSlugs,
   })
   // 知識節點（link_folder）：總入口與各類別頁在建置時產生分類卡、篩選工具與條目清單。其他頁面不動。
   applyKnowledgeHub(root, { slug, files: componentData.allFiles })
   root.children = wrapStrongNumbers(root).children
+  // 分層閱讀（Stage A）：章節頁「本章整理」的經文原句、來源名稱、分層卡片與舊格式原文標籤。
+  applyReadingLayers(root, {
+    slug,
+    registry: loadSourceNames(),
+    existingSlugs,
+  })
 
   // set componentData.tree to the edited html that has transclusions rendered
   componentData.tree = root

@@ -17,9 +17,9 @@ source_scope: collected_only
 | 項目 | 原文（STEP） | 換算 |
 |---|---|---|
 | 床 | e.re.s（H6210，這一節出現兩次，其中一次後加『他的』字尾） | 字典的意思是「bed」（床）；這一節譯作「sarcophagus」（石棺） |
-| 鐵 | bar.Zel（H1270） | — |
-| 長九肘 | Te.sha' 'a.Mot（H8672＋H520A） | CT：約折合四公尺長 |
-| 寬四肘 | 'ar.Ba' 'a.Mot（H702＋H520A） | CT：約折合一點八公尺寬 |
+| 鐵 | bar.zel（H1270） | — |
+| 長九肘 | te.sah am.mah（H8672＋H520A） | CT：約折合四公尺長 |
+| 寬四肘 | ar.ba am.mah（H702＋H520A） | CT：約折合一點八公尺寬 |
 
 BH 用英制換算：「a cubit is approximately 18 inches, making the bed about 13.5 feet long and 6 feet wide」（一肘約十八英吋，所以這張床大約長十三點五英尺、寬六英尺。）
 

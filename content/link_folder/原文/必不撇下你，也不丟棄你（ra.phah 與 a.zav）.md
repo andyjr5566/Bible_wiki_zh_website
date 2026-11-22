@@ -14,7 +14,7 @@ source_scope: collected_only
 
 ### 兩個動詞
 
-STEP 顯示這是兩個不同的字。「撇下」是 lo ra.phah（H7503，Hiphil，字典的意思是「to slacken」（鬆開），本節譯義 he will abandon you），字根的方向是鬆手。「丟棄」是 lo 加 a.zav（H5800A，字典的意思是「to leave: forsake」（離開；離棄））。
+STEP 顯示這是兩個不同的字。「撇下」是 lo ra.phah（H7503，Hiphil（使役或宣告式），字典的意思是「to slacken」（鬆開），本節譯義 he will abandon you），字根的方向是鬆手。「丟棄」是 lo 加 a.zav（H5800A，字典的意思是「to leave: forsake」（離開；離棄））。
 
 CT 的文意註解把兩個中文詞分開講：不撇下重在指必要成就他的應許，不丟棄重在指始終堅定他的同在。
 

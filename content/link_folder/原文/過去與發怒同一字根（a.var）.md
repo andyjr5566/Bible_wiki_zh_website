@@ -12,19 +12,19 @@ source_scope: collected_only
 
 申命記第3章後半反覆在講一件事：誰可以過河。原文用的字根也一直是同一個。
 
-**六處「過」。** STEP 顯示以下各處都是 H5674A（a.var），字典的意思是「to pass」（經過、過去）：
+**五處「過」。** STEP 顯示以下各處都是 H5674A（a.var），字典的意思是「to pass」（經過、過去）：
 
 | 節 | 經文 | 原文（STEP） |
 |---|---|---|
-| 18 | 在你們的弟兄以色列人前面過去 | ta.'av.Ru |
-| 21 | 耶和華也必向你所要去的各國照樣行 | 'o.Ver |
-| 25 | 求你容我過去 | 'e'.be.rah |
-| 27 | 你必不能過這約但河 | ta.'a.Vor |
-| 28 | 他必在這百姓前面過去 | ya.'a.Vor |
+| 18 | 在你們的弟兄以色列人前面過去 | a.var |
+| 21 | 耶和華也必向你所要去的各國照樣行 | a.var |
+| 25 | 求你容我過去 | a.var |
+| 27 | 你必不能過這約但河 | a.var |
+| 28 | 他必在這百姓前面過去 | a.var |
 
 申3:20、25 的「約但河那邊」則是同字根的名詞 e.ver（H5676H，前面接介詞），字典的意思是「side: beyond」（那邊、對岸）。
 
-**申3:26 的「發怒」。** STEP 顯示是 a.var（H5674B，前面接連接詞，Hithpael 語態），字典的意思是「be angry」（發怒）；它與上表各處的 base Strong 同為 H5674，只是 Strong 編號 分成 A 與 B。CT 原文字義給申3:26「發怒」的是：離開，消逝。
+**申3:26 的「發怒」。** STEP 顯示是 a.var（H5674B，前面接連接詞，Hithpael（加強反身）語態），字典的意思是「be angry」（發怒）；它與上表各處的 base Strong 同為 H5674，只是 Strong 編號 分成 A 與 B。CT 原文字義給申3:26「發怒」的是：離開，消逝。
 
 **神為什麼發怒。** CT：「『因你們的緣故』表面是因以色列人爭鬧求水喝，實際是因摩西違背神的命令，用杖擊打磐石兩下(參民二十11~13)。」KC 讀的角度不同：「The LORD had become angry with Moses, but it was on account of the people's past deportment. His deed was the result of the sin of the people (Psa 106:32-33).」（耶和華向摩西發怒，但那是因為百姓過去的行徑。他的作為是百姓犯罪的結果（詩106:32-33）。）
 

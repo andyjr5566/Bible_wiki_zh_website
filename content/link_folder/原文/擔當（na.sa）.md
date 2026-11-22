@@ -17,16 +17,16 @@ source_scope: collected_only
 
 | 節次 | 和合本 | 原文 | Strong 編號 | 形態 | STEP 本節譯義 |
 |---|---|---|---|---|---|
-| 9 | 擔當 | se.'Et | H5375H | Qal 不定詞 | to bear |
-| 12 | 擔當 | 'e.Sa' | H5375H | Qal 未完成 1cs | will I bear |
+| 9 | 擔當 | na.sa | H5375H | Qal（簡單主動）不定詞 | to bear |
+| 12 | 擔當 | na.sa | H5375H | Qal 未完成 1cs | will I bear |
 | 31 | 撫養（你們） | na.sa（加『你』字尾） | H5375H | Qal 完成 3ms＋2ms | he carried you |
-| 31 | 撫養（兒子） | yi.sa'- | H5375H | Qal 未完成 3ms | he carries |
+| 31 | 撫養（兒子） | na.sa | H5375H | Qal 未完成 3ms | he carries |
 
 原形是 na.sa，字典的意思是「to lift: bear」——舉起、背負。
 
 **CT 兩處給的中文字義相同。** 申1:9「擔當」CT 註「舉起，承擔」；申1:31「撫養」CT 也註「舉起，承擔」。同一份註釋在兩個不同的中文詞底下給了同一個原文字義。
 
-**KC 把這兩處接在一起讀。** KC 在申1:31 說：摩西做不到的事（民11:14），神做了——祂像人抱著自己的孩子那樣背負他們。KC 並引使徒行傳13:18 保羅在彼西底安提阿會堂的講論，說神以乳養之人的溫柔看顧了他們約四十年。
+**KC 把申1:31 與民11:14 接在一起讀。** KC 在申1:31 說：摩西做不到的事（民11:14），神做了——祂像人抱著自己的孩子那樣背負他們。KC 並引使徒行傳13:18 保羅在彼西底安提阿會堂的講論，說神以乳養之人的溫柔看顧了他們約四十年。
 
 **兩處的分量不同。** 申1:9、12 是摩西講自己的極限：「管理你們的重任，我獨自擔當不起」「我獨自一人怎能擔當得起呢？」申1:12 同時列出三樣東西——STEP 顯示是 to.rach（H2960，字典的意思是「burden」，重擔）、mas.sa（H4853A，字典的意思是「burden」，負擔）、riv（H7379，字典的意思是「strife」，爭端），CT 原文字義分別作「麻煩」＝重擔、「重任」＝負擔承受、「爭訟」＝爭端爭論。申1:31 則是同一個動作換了主詞。
 
@@ -38,7 +38,7 @@ source_scope: collected_only
 
 <!-- accumulation:申命記:1:start -->
 #### [[05 申命記/第1章|第1章]]
-- 本章重點：第9、12節「擔當不起」與第31節「撫養」在原文同為 H5375H（na.sa，字典的意思是「to lift: bear」）：v9 se.'Et、v12 'e.Sa'、v31 na.sa 與 yi.sa'-。CT 在「擔當」與「撫養」兩處都給「舉起，承擔」的原文字義。KC：「What Moses was not able to do (Num 11:14), God did: He carried them like a man carries his child.」第12節的三樣重擔是 to.rach（H2960）、mas.sa（H4853A）、riv（H7379）。
+- 本章重點：第9、12節「擔當不起」與第31節「撫養」在原文同為 H5375H（na.sa，字典的意思是「to lift: bear」）。CT 在「擔當」與「撫養」兩處都給「舉起，承擔」的原文字義。KC：「What Moses was not able to do (Num 11:14), God did: He carried them like a man carries his child.」STEP 顯示第12節的三樣重擔是 to.rach（H2960）、mas.sa（H4853A）、riv（H7379）。
 - 與本章關聯：摩西在第9-12節說自己背不動，第31節說神背得動——中文分成「擔當」與「撫養」兩個詞，原文是同一個動作。這條線把本章前半的行政難題與後半的曠野回顧接在一起。
 <!-- accumulation:申命記:1:end -->
 

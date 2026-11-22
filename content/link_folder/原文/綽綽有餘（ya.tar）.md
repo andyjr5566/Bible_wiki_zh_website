@@ -12,7 +12,7 @@ source_scope: collected_only
 
 申30:9 說神要使百姓「手裡所辦的一切事，並你身所生的，牲畜所下的，地土所產的，都綽綽有餘」。
 
-STEP 顯示動詞是 ya.tar（H3498，Hiphil，字典的意思是「to remain」（留下），本節譯義 he will make abound you），後面跟著 to.vah（H2896C，字典的意思是「welfare」（平安））。字面的方向是使你有剩，加上一個往好處走的介詞短語。
+STEP 顯示動詞是 ya.tar（H3498，Hiphil（使役或宣告式），字典的意思是「to remain」（留下），本節譯義 he will make abound you），後面跟著 to.vah（H2896C，字典的意思是「welfare」（平安））。字面的方向是使你有剩，加上一個往好處走的介詞短語。
 
 CT 的原文字義把中文的兩個字拆開來給：綽綽是好的、令人愉悅的，有餘是剩下、多餘的；他並說綽綽有餘意指超過人所求所想的。
 

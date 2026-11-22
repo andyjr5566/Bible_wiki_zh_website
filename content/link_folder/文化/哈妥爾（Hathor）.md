@@ -9,7 +9,7 @@ source_scope: collected_only
 # 哈妥爾（Hathor）
 
 ## 定義
-哈妥爾（Hathor）是埃及的愛神。GT《舊約聖經背景註釋》記其形象：「埃及愛神哈妥爾（Hathor）以母牛的形式出現」；BH 也把「Apis, the bull god, and Hathor, the cow goddess」（公牛神亞皮斯與母牛女神哈妥爾）並列，指出第五災擊打牲畜正是對這兩位神祇的直接挑戰。CT 的靈訓要義把本災的對象定為「埃及的牛神」。
+哈妥爾（Hathor）是埃及的愛神。GT《舊約聖經背景註釋》記其形象：「埃及愛神哈妥爾（Hathor）以母牛的形式出現」；BH 也把「Apis, the bull god, and Hathor, the cow goddess」（公牛神亞皮斯與母牛女神哈妥爾）並列，並指出第五災是對埃及神祇亞皮斯的直接挑戰。CT 的靈訓要義把本災的對象定為「埃及的牛神」。
 
 ## 按書卷累積
 
@@ -17,7 +17,7 @@ source_scope: collected_only
 <!-- accumulation:出埃及記:9:start -->
 #### [[02 出埃及記/第9章|第9章]]
 - 本章重點：本章第五災擊打埃及田間牲畜（3-6）；GT 並引《舊約聖經背景註釋》明指哈妥爾以母牛形象出現。
-- 與本章關聯：本章為「哈妥爾」首次與第五災明確連結之記載；與亞皮斯(Apis)同為第九章攻擊之牛系神祇。
+- 與本章關聯：GT《舊約聖經背景註釋》指出哈妥爾以母牛形象出現；BH 在出9:4將哈妥爾與亞皮斯並列為埃及人的神明。
 <!-- accumulation:出埃及記:9:end -->
 
 <!-- accumulation:出埃及記:14:start -->

@@ -24,9 +24,9 @@ source_scope: collected_only
 | GT《聖經精讀本》 | 一針見血地指出了以色列百姓在埃及所度過的400年的奴隸生活 |
 | BH | 「In ancient Near Eastern culture, furnaces were used for refining metals, symbolizing purification and transformation.」（在古代近東文化裡，爐是用來煉金屬的，象徵潔淨與轉化。） |
 
-**KC 把爐的用途說得最具體。** 「An iron furnace is fired as hot as possible in order to process the metal afterwards. For Israel, Egypt had been a place of great distress and misery, where the fire of the trial had burned hot.」（鐵爐要燒到最熱，才能接著加工金屬。對以色列來說，埃及曾是極大苦難與愁苦之地，試煉的火在那裡燒得熾烈。）
+「An iron furnace is fired as hot as possible in order to process the metal afterwards. For Israel, Egypt had been a place of great distress and misery, where the fire of the trial had burned hot.」（鐵爐要燒到最熱，才能接著加工金屬。對以色列來說，埃及曾是極大苦難與愁苦之地，試煉的火在那裡燒得熾烈。）
 
-**它與申4:24 的「烈火」不是同一個字。** 申4:20 的火是人受的熬煉（kur），申4:24 說神自己「乃是烈火」用的是 'esh 'o.khe.Lah（H784＋H398）。申4 前後兩處火，一處是以色列被煉的地方，一處是神的性情。
+**它與申4:24 的「烈火」不是同一個字。** 申4:20 的火是人受的熬煉（kur），申4:24 說神自己「乃是烈火」用的是 'esh a.khal（H784＋H398）。申4 前後兩處火，一處是以色列被煉的地方，一處是神的性情。
 
 ## 按書卷累積
 

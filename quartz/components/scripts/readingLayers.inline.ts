@@ -5,9 +5,12 @@
 //   3. 分層卡片（.bwz-rl-card）補上鍵盤操作（Enter／Space）並維持 aria-expanded 同步。
 //   4. 同章經節小標籤（.bwz-rl-vref[data-rl-verse]）單次捲動到該節並短暫標示（保留 bwz:verse-jump 供 B 階段分頁接手）。
 // SPA 換頁時比照 knowledgeHub.inline.ts 用 AbortController 拆掉舊監聽器重綁，並在 prenav 時關閉已開的浮動卡片。
+import { readChapterDom, verseElementByNumber, type ChapterDom } from "../../util/chapterDom"
+import { selectStudyRegion } from "../../util/chapterRegions"
 import {
   computePopoverPlacement,
   formatSourceCardHeading,
+  parseHeadingVerseRange,
   parseOriginalContent,
   type PageSourcesPayload,
   type SourceCardEntry,
@@ -257,12 +260,118 @@ function bindCards(article: HTMLElement, signal: AbortSignal): void {
   }
 }
 
+function extractCleanVerseText(li: HTMLLIElement): string {
+  const clone = li.cloneNode(true) as HTMLLIElement
+  for (const el of clone.querySelectorAll(".bwz-v-ui, [hidden], script, style, sup[data-footnote-ref]")) {
+    el.remove()
+  }
+  return (clone.textContent ?? "").replace(/\s+/gu, " ").trim()
+}
+
+function makeInlineBookIcon(): SVGSVGElement {
+  const ns = "http://www.w3.org/2000/svg"
+  const svg = document.createElementNS(ns, "svg")
+  svg.setAttribute("viewBox", "0 0 20 20")
+  svg.setAttribute("width", "14")
+  svg.setAttribute("height", "14")
+  svg.setAttribute("fill", "none")
+  svg.setAttribute("stroke", "currentColor")
+  svg.setAttribute("stroke-width", "1.8")
+  svg.setAttribute("stroke-linecap", "round")
+  svg.setAttribute("stroke-linejoin", "round")
+  svg.setAttribute("aria-hidden", "true")
+  const p1 = document.createElementNS(ns, "path")
+  p1.setAttribute("d", "M2.5 4.5h5a2.5 2.5 0 0 1 2.5 2.5v9a2 2 0 0 0-2-2h-5.5z")
+  const p2 = document.createElementNS(ns, "path")
+  p2.setAttribute("d", "M17.5 4.5h-5A2.5 2.5 0 0 0 10 7v9a2 2 0 0 1 2-2h5.5z")
+  svg.append(p1, p2)
+  return svg
+}
+
+function mountVerseBoxes(dom: ChapterDom, signal: AbortSignal): void {
+  const region = selectStudyRegion(dom.descriptions)
+  if (!region) return
+
+  for (let i = region.start + 1; i < region.end; i += 1) {
+    const el = dom.children[i]
+    if (!el || el.tagName.toLowerCase() !== "h3") continue
+    const verses = parseHeadingVerseRange(el.textContent ?? "")
+    if (!verses) continue
+
+    const availableVerses = verses.filter((v) => verseElementByNumber(dom, v) !== null)
+    if (availableVerses.length === 0) continue
+
+    const wrap = document.createElement("div")
+    wrap.className = "bwz-rl-vx"
+
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.className = "bwz-rl-vx-btn"
+    btn.setAttribute("aria-expanded", "false")
+    const labelSpan = document.createElement("span")
+    labelSpan.textContent = "看這段經文"
+    const arrowSpan = document.createElement("span")
+    arrowSpan.className = "bwz-rl-vx-arrow"
+    arrowSpan.setAttribute("aria-hidden", "true")
+    arrowSpan.textContent = "▾"
+    btn.append(makeInlineBookIcon(), labelSpan, arrowSpan)
+
+    const box = document.createElement("div")
+    box.className = "bwz-rl-vx-box"
+    box.setAttribute("role", "region")
+    box.setAttribute("aria-label", `${(el.textContent ?? "").trim()} 經文內容`)
+    box.hidden = true
+
+    const list = document.createElement("ul")
+    list.className = "bwz-rl-vx-list"
+    box.appendChild(list)
+
+    let populated = false
+    btn.addEventListener(
+      "click",
+      () => {
+        if (!populated) {
+          const freshDom = readChapterDom() ?? dom
+          for (const v of availableVerses) {
+            const li = verseElementByNumber(freshDom, v)
+            if (!li) continue
+            const text = extractCleanVerseText(li)
+            if (!text) continue
+            const item = document.createElement("li")
+            item.className = "bwz-rl-vx-item"
+            const num = document.createElement("span")
+            num.className = "bwz-rl-vx-num"
+            num.textContent = String(v)
+            const txt = document.createElement("span")
+            txt.className = "bwz-rl-vx-txt"
+            txt.textContent = text
+            item.append(num, txt)
+            list.appendChild(item)
+          }
+          populated = true
+        }
+        const open = box.hidden
+        box.hidden = !open
+        btn.setAttribute("aria-expanded", String(open))
+        wrap.classList.toggle("is-open", open)
+        labelSpan.textContent = open ? "收起這段經文" : "看這段經文"
+        arrowSpan.textContent = open ? "▴" : "▾"
+      },
+      { signal },
+    )
+
+    wrap.append(btn, box)
+    el.after(wrap)
+  }
+}
+
 function cleanup(): void {
   closePopover(false)
   mountController?.abort()
   mountController = null
   for (const observer of cardObservers) observer.disconnect()
   cardObservers = []
+  for (const old of document.querySelectorAll(".bwz-rl-vx")) old.remove()
 }
 
 function mount(): void {
@@ -271,8 +380,11 @@ function mount(): void {
   const article = document.querySelector<HTMLElement>("article")
   if (!article) return
 
+  const dom = readChapterDom()
+  const hasStudy = dom ? selectStudyRegion(dom.descriptions) !== null : false
   const hasLayerFeatures = Boolean(
-    article.querySelector(".bwz-rl-src, .bwz-rl-orig-chip, .bwz-rl-card, .bwz-rl-vref[data-rl-verse]"),
+    hasStudy ||
+      article.querySelector(".bwz-rl-src, .bwz-rl-orig-chip, .bwz-rl-card, .bwz-rl-vref[data-rl-verse]"),
   )
   if (!hasLayerFeatures) return
 
@@ -281,6 +393,9 @@ function mount(): void {
   const { signal } = controller
   const payload = readPageSources()
 
+  if (dom && hasStudy) {
+    mountVerseBoxes(dom, signal)
+  }
   bindCards(article, signal)
 
   const activateTrigger = (target: HTMLElement): boolean => {

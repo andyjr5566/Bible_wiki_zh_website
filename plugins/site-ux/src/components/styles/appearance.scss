@@ -311,18 +311,13 @@
 /* ---------- 5. 章節頁「經文｜研讀」分頁（<html data-ux-view="text"|"study" data-ux-tabs>） ---------- */
 /* 外掛的 CSS 在 @layer quartz-base 裡，要蓋過 custom.scss 的 display／margin／color 一律用 !important（理由見上面字級那一節） */
 
-/* 經文分頁：隱藏知識節點、本章整理、附錄（除非因點擊錨點暫時顯示 .bwz-ux-reveal） */
+/* 經文分頁：隱藏知識節點、本章整理、附錄（除非因點擊錨點暫時顯示 .bwz-ux-reveal）；
+   研讀分頁為完整一整頁，什麼都不藏。 */
 :root[data-ux-view="text"][data-ux-tabs] .bwz-ux-hide:not(.bwz-ux-reveal) {
   display: none !important;
 }
 
-/* 研讀分頁：隱藏經文清單、朗讀列與緊貼經文後的分隔線 */
-:root[data-ux-view="study"][data-ux-tabs] .bwz-ux-text-only:not(.bwz-ux-reveal),
-:root[data-ux-view="study"][data-ux-tabs] .bwz-ra:not(.bwz-ux-reveal) {
-  display: none !important;
-}
-
-/* 第一次繪製前腳本還沒標記，先把非當前分頁的區域遮住（保留版面、避免閃爍），
+/* 第一次繪製前腳本還沒標記，在經文分頁先把第一個 hr 之後的區域遮住（保留版面、避免閃爍），
    標好之後腳本設 data-ux-marked 就解除；萬一腳本沒跑，3 秒後自動解除，不會一直空白。
    只針對章節頁（網址形如 …/第N章）；前後章表格不遮。 */
 :root[data-ux-view="text"]:not([data-ux-marked])
@@ -330,15 +325,6 @@
   article
   .markdown-preview-view
   > :is(hr, hr ~ *:not(.table-container)) {
-  visibility: hidden;
-  animation: site-ux-unhide 0s linear 3s forwards;
-}
-
-:root[data-ux-view="study"]:not([data-ux-marked])
-  body[data-slug*="/第"][data-slug$="章"]
-  article
-  .markdown-preview-view
-  > :is(ol, .bwz-ra) {
   visibility: hidden;
   animation: site-ux-unhide 0s linear 3s forwards;
 }
@@ -447,6 +433,59 @@
   pointer-events: none !important;
 }
 
+button.bwz-tabs-jump {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  min-height: 38px !important;
+  margin: 0 !important;
+  padding: 0.35rem 0.9rem !important;
+  border: 1.5px solid color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 55%, var(--lightgray)) !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 9%, var(--light)) !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font-family: var(--headerFont), "Noto Sans TC", "PingFang TC", sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background-color 0.14s ease, border-color 0.14s ease !important;
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 17%, var(--light)) !important;
+    border-color: var(--bwz-accent-strong, var(--secondary)) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-accent-strong, var(--secondary)) !important;
+    outline-offset: 2px !important;
+  }
+
+  &[hidden] {
+    display: none !important;
+  }
+}
+
+:root[saved-theme="dark"] button.bwz-tabs-jump {
+  border-color: color-mix(in srgb, var(--secondary) 60%, var(--lightgray)) !important;
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light)) !important;
+  color: var(--secondary) !important;
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--secondary) 24%, var(--light)) !important;
+    border-color: var(--secondary) !important;
+  }
+
+  &:focus-visible {
+    outline-color: var(--dark) !important;
+  }
+}
+
 .bwz-tabs-hint {
   font-family: var(--bodyFont), "LXGW WenKai TC", sans-serif !important;
   font-size: 0.88rem !important;
@@ -476,6 +515,11 @@
   .bwz-tab {
     min-height: 44px !important;
     padding: 0.4rem 1.1rem !important;
+  }
+
+  button.bwz-tabs-jump {
+    min-height: 44px !important;
+    padding: 0.4rem 0.95rem !important;
   }
 
   .bwz-tabs-hint {

@@ -175,7 +175,7 @@ test("recognises a study section wrapped in details and ignores a missing one", 
   assert.equal(selectStudyRegion([node("h1"), node("h2", { headingText: "本章整理" })]), null)
 })
 
-test("selectChapterTabRegions splits verse-only and study nodes and keeps interactive line visible", () => {
+test("selectChapterTabRegions marks study regions only (study page keeps verses) and locates study heading", () => {
   const nodes = [
     node("h1"),
     node("div", { className: "table-container", text: "前一章 下一章" }),
@@ -193,7 +193,7 @@ test("selectChapterTabRegions splits verse-only and study nodes and keeps intera
   const regions = selectChapterTabRegions(nodes)
   assert.equal(regions.hasStudyContent, true)
   assert.equal(regions.verseListIndex, 5)
-  assert.deepEqual(regions.textOnlyIndices, [3, 5, 6])
+  assert.equal(regions.studyHeadingIndex, 9)
   assert.deepEqual(regions.studyIndices, [6, 7, 8, 9, 10])
   assert.deepEqual(tabBarAnchorIndex(nodes), { index: 1, position: "after" })
 })
@@ -208,8 +208,8 @@ test("selectChapterTabRegions keeps verses visible when a chapter has no study s
   ]
   const regions = selectChapterTabRegions(nodes)
   assert.equal(regions.hasStudyContent, false)
+  assert.equal(regions.studyHeadingIndex, null)
   assert.deepEqual(regions.studyIndices, [])
-  assert.deepEqual(regions.textOnlyIndices, [])
   assert.equal(tabBarAnchorIndex(nodes), null)
 })
 

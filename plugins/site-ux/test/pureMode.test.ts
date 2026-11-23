@@ -10,8 +10,8 @@ import {
 } from "../../../quartz/util/readingTabEvent"
 import {
   FLASH_CLASS,
+  JUMP_STUDY_CLASS,
   MARKED_ATTR,
-  TEXT_ONLY_CLASS,
   applyMarks,
   computeHeadingScrollTop,
   computeVerseScrollTop,
@@ -19,6 +19,7 @@ import {
   isPureAvailable,
   prepareForNav,
   revealTarget,
+  scrollToStudyHeading,
   setReadingView,
   tabHintText,
 } from "../src/lib/pureMode"
@@ -50,7 +51,6 @@ const VERSES_ONLY_HTML = `
 
 const root = document.documentElement
 const hidden = () => Array.from(document.querySelectorAll(".bwz-ux-hide")).map((e) => e.id || e.tagName.toLowerCase())
-const textOnly = () => Array.from(document.querySelectorAll(`.${TEXT_ONLY_CLASS}`)).map((e) => e.id || e.tagName.toLowerCase())
 const shown = () => Array.from(document.querySelectorAll(".bwz-ux-reveal")).map((e) => e.id || e.tagName.toLowerCase())
 
 beforeEach(() => {
@@ -102,25 +102,22 @@ describe("純函式計算", () => {
 })
 
 describe("applyMarks 與分頁範圍", () => {
-  it("分別標出研讀區與經文專屬區；保留標題、導覽表格與互動網站提示", () => {
+  it("標出研讀區；保留標題、導覽表格、朗讀列、經文清單與互動網站提示（研讀頁不藏經文）", () => {
     expect(applyMarks()).toBe(true)
     expect(hidden()).toEqual(
       expect.arrayContaining(["hr1", "nodes", "n1", "hr2", "study", "s1", "p1", "hr3", "app", "互動網站", "pa"]),
     )
-    expect(textOnly()).toEqual(["ra", "verses", "hr1"])
-    for (const keep of ["t", "top-nav", "ia", "foot"]) {
+    for (const keep of ["t", "top-nav", "ra", "ia", "verses", "foot"]) {
       expect(hidden()).not.toContain(keep)
-      expect(textOnly()).not.toContain(keep)
     }
     expect(root.hasAttribute(TABS_ATTR)).toBe(true)
     expect(root.hasAttribute(MARKED_ATTR)).toBe(true)
   })
 
-  it("沒有研讀區塊的章節頁不顯示分頁，也不把經文標為可隱藏", () => {
+  it("沒有研讀區塊的章節頁不顯示分頁", () => {
     document.body.innerHTML = VERSES_ONLY_HTML
     expect(applyMarks()).toBe(false)
     expect(hidden()).toEqual([])
-    expect(textOnly()).toEqual([])
     expect(isPureAvailable()).toBe(false)
     expect(root.hasAttribute(TABS_ATTR)).toBe(false)
     expect(root.hasAttribute(MARKED_ATTR)).toBe(true)
@@ -130,14 +127,13 @@ describe("applyMarks 與分頁範圍", () => {
     document.body.dataset.slug = "link_folder/主題/安息"
     initPureMode()
     expect(hidden()).toEqual([])
-    expect(textOnly()).toEqual([])
     expect(document.querySelector(".bwz-tabs")).toBeNull()
     expect(isPureAvailable()).toBe(false)
   })
 })
 
-describe("分頁列掛載、記憶與事件同步", () => {
-  it("掛載在頁首導覽表之後，點擊切換並存進 localStorage、發出 bwz:tab-change", () => {
+describe("分頁列掛載、跳到本章整理、記憶與事件同步", () => {
+  it("掛載在頁首導覽表之後，點擊切換並存進 localStorage、顯示「跳到本章整理」並發出 bwz:tab-change", () => {
     const events: TabChangeDetail[] = []
     const onTab = (e: Event) => events.push((e as CustomEvent<TabChangeDetail>).detail)
     document.addEventListener(TAB_CHANGE_EVENT, onTab)
@@ -148,23 +144,36 @@ describe("分頁列掛載、記憶與事件同步", () => {
     expect(document.getElementById("top-nav")?.nextElementSibling).toBe(bar)
     expect(events[events.length - 1]).toEqual({ view: "text", available: true })
 
+    const jumpBtn = bar!.querySelector<HTMLButtonElement>(`.${JUMP_STUDY_CLASS}`)!
+    expect(jumpBtn).not.toBeNull()
+    expect(jumpBtn.hidden).toBe(true)
+
     const studyBtn = bar!.querySelector<HTMLButtonElement>('[data-tab="study"]')!
     studyBtn.click()
     expect(root.getAttribute(VIEW_ATTR)).toBe("study")
     expect(localStorage.getItem(VIEW_STORAGE_KEY)).toBe("study")
     expect(sessionStorage.getItem(VIEW_STORAGE_KEY)).toBeNull()
     expect(studyBtn.getAttribute("aria-selected")).toBe("true")
+    expect(jumpBtn.hidden).toBe(false)
     expect(events[events.length - 1]).toEqual({ view: "study", available: true })
 
-    // 鍵盤左鍵切回經文
+    // 點「跳到本章整理」只捲一次且停在研讀頁
+    ;(window.scrollTo as ReturnType<typeof vi.fn>).mockClear()
+    jumpBtn.click()
+    expect(window.scrollTo).toHaveBeenCalledTimes(1)
+    expect(scrollToStudyHeading()).toBe(true)
+
+    // 鍵盤左鍵切回經文，「跳到本章整理」跟著隱藏
     studyBtn.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }))
     expect(root.getAttribute(VIEW_ATTR)).toBe("text")
     expect(localStorage.getItem(VIEW_STORAGE_KEY)).toBe("text")
+    expect(jumpBtn.hidden).toBe(true)
 
     // 外部（手機快捷列）透過 bwz:tab-request 要求切換
     requestTabSwitch("study")
     expect(root.getAttribute(VIEW_ATTR)).toBe("study")
     expect(studyBtn.getAttribute("aria-selected")).toBe("true")
+    expect(jumpBtn.hidden).toBe(false)
 
     // prepareForNav 只移除 data-ux-marked，保留 data-ux-tabs 以維持舊頁高度（供繼續閱讀記錄）
     prepareForNav()
@@ -181,20 +190,21 @@ describe("分頁列掛載、記憶與事件同步", () => {
 })
 
 describe("經節小標籤跳轉（bwz:verse-jump）", () => {
-  it("研讀分頁下觸發 bwz:verse-jump：切到經文分頁、單次捲動並以 bwz-vr-flash 標示", () => {
+  it("研讀分頁下觸發 bwz:verse-jump：留在研讀頁直接單次捲動到該節並以 bwz-vr-flash 標示", () => {
     setReadingView("study")
     initPureMode()
+    ;(window.scrollTo as ReturnType<typeof vi.fn>).mockClear()
     const ev = new CustomEvent(VERSE_JUMP_EVENT, { cancelable: true, detail: { verse: 2 } })
     document.dispatchEvent(ev)
     expect(ev.defaultPrevented).toBe(true)
-    expect(root.getAttribute(VIEW_ATTR)).toBe("text")
-    expect(localStorage.getItem(VIEW_STORAGE_KEY)).toBe("text")
+    expect(root.getAttribute(VIEW_ATTR)).toBe("study")
+    expect(localStorage.getItem(VIEW_STORAGE_KEY)).toBe("study")
     expect(window.scrollTo).toHaveBeenCalledTimes(1)
     expect(document.getElementById("v2")?.classList.contains(FLASH_CLASS)).toBe(true)
   })
 })
 
-describe("revealTarget 與 REVEAL_EVENT（雙向暫時顯示）", () => {
+describe("revealTarget 與 REVEAL_EVENT（經文分頁暫時顯示）", () => {
   it("經文分頁：只暫時顯示目標所在的那一個研讀區塊，換分頁後恢復", () => {
     setReadingView("text")
     initPureMode()
@@ -208,11 +218,11 @@ describe("revealTarget 與 REVEAL_EVENT（雙向暫時顯示）", () => {
     expect(shown()).toEqual([])
   })
 
-  it("研讀分頁：收到指向經文節的 reveal 時暫時顯示經文清單，不改變偏好", () => {
+  it("研讀分頁：經文與整理都在同一頁，reveal 不必再隱藏／顯示任何區段", () => {
     setReadingView("study")
     initPureMode()
-    expect(requestReveal("v2")).toBe(true)
-    expect(shown()).toContain("verses")
+    expect(requestReveal("v2")).toBe(false)
+    expect(shown()).toEqual([])
     expect(root.getAttribute(VIEW_ATTR)).toBe("study")
     expect(REVEAL_EVENT).toBe("bwz:reveal")
   })

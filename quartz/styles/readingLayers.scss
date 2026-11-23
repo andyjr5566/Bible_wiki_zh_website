@@ -289,25 +289,12 @@ article blockquote.callout.bwz-rl-card {
   }
 
   .bwz-rl-card-title {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
     color: var(--dark);
     font-family: $rl-sans;
     font-size: 0.98rem;
     font-weight: 700;
-    line-height: 1.4;
-  }
-
-  .bwz-rl-card-summary {
-    flex: 1 1 8rem;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: $rl-muted;
-    font-family: $rl-serif;
-    font-size: 0.88rem;
-    font-weight: 400;
     line-height: 1.4;
   }
 
@@ -321,9 +308,8 @@ article blockquote.callout.bwz-rl-card {
     white-space: nowrap;
   }
 
-  /* 展開時隱藏摘要與「展開」，只留「收起」；收起時反過來 */
+  /* 展開時隱藏「展開」，只留「收起」；收起時反過來 */
   &:not(.is-collapsed) {
-    .bwz-rl-card-summary,
     .bwz-rl-toggle-open {
       display: none;
     }
@@ -374,7 +360,6 @@ article blockquote.callout.bwz-rl-card {
   }
 }
 
-/* 窄螢幕下讓摘要換到標題下方單行截斷，確保徽章、標題與「展開」不互擠 */
 @media (max-width: 600px) {
   article blockquote.callout.bwz-rl-card {
     & > .callout-title {
@@ -386,11 +371,105 @@ article blockquote.callout.bwz-rl-card {
     .bwz-rl-card-title {
       flex: 1 1 auto;
     }
+  }
+}
 
-    .bwz-rl-card-summary {
-      order: 4;
-      flex: 1 0 100%;
-    }
+/* ---------- 4b. 本章整理小節「看這段經文」原地展開框（B2） ---------- */
+
+.bwz-rl-vx {
+  margin: 0.25rem 0 0.85rem;
+}
+
+button.bwz-rl-vx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  padding: 0.28rem 0.85rem;
+  border: 1px solid var(--bwz-rl-vref-border);
+  border-radius: 999px;
+  background: var(--bwz-rl-vref-bg);
+  color: var(--bwz-rl-vref-fg);
+  font-family: $rl-sans;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background-color 0.14s ease, border-color 0.14s ease;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--bwz-rl-vref-hover-bg);
+    border-color: var(--bwz-rl-vref-fg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $rl-accent;
+    outline-offset: 2px;
+  }
+}
+
+.bwz-rl-vx.is-open button.bwz-rl-vx-btn {
+  border-color: var(--bwz-rl-vref-fg);
+}
+
+.bwz-rl-vx-box {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--bwz-rl-vref-border);
+  border-left: 3px solid var(--bwz-rl-vref-fg);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bwz-rl-vref-bg) 42%, var(--light));
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+:root[saved-theme="dark"] .bwz-rl-vx-box {
+  background: color-mix(in srgb, var(--bwz-rl-vref-bg) 32%, var(--light));
+}
+
+ul.bwz-rl-vx-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+li.bwz-rl-vx-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0;
+  color: var(--dark);
+  font-family: $rl-serif;
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.bwz-rl-vx-num {
+  flex: 0 0 auto;
+  min-width: 1.35em;
+  text-align: right;
+  color: var(--bwz-rl-vref-fg);
+  font-family: $rl-sans;
+  font-size: 0.82em;
+  font-weight: 700;
+  user-select: none;
+}
+
+.bwz-rl-vx-txt {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  button.bwz-rl-vx-btn {
+    min-height: 44px;
+    padding: 0.35rem 0.95rem;
   }
 }
 
@@ -578,7 +657,8 @@ a.bwz-rl-pop-link {
 }
 
 @media print {
-  .bwz-rl-popover {
+  .bwz-rl-popover,
+  button.bwz-rl-vx-btn {
     display: none !important;
   }
 

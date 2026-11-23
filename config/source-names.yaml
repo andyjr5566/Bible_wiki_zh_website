@@ -23,6 +23,18 @@ collections:
     legend: 黃迦勒《基督徒文摘解經系列》逐節註解（ccbiblestudy）
     url_hint: "/\\d+CT\\d+\\.htm"
     patterns: ["黃迦勒"]
+    # 同一個代號在不同書卷由不同作者撰寫：程式讀本章 CT 原檔的署名（檔尾最後出現的 signed）決定正文名稱；
+    # 都沒有署名時用第一個（黃迦勒）。實測：創–書、撒母耳記、列王紀、詩篇等是黃迦勒，以賽亞書、耶利米書、
+    # 以西結書1–24章是周安娜。
+    signed: "黃迦勒"
+  - code: CT
+    name: 周安娜
+    title: 周安娜 逐節註解
+    note: ccbiblestudy 網站上的逐節註解；以賽亞書、耶利米書與以西結書前半由周安娜撰寫。
+    legend: 周安娜 逐節註解（ccbiblestudy）
+    url_hint: "/\\d+CT\\d+\\.htm"
+    patterns: ["周安娜"]
+    signed: "周安娜|Anna M\\. Zhou"
   - code: GT
     name: 拾穗
     title: ccbiblestudy《拾穗》

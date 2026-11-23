@@ -1,9 +1,9 @@
-// 建置時的章節正文處理（分層閱讀 Stage A）：
+// 建置時的章節正文處理（分層閱讀 Stage A / B2）：
 // 只在章節頁的「## 本章整理」範圍內執行，不碰經文清單、知識節點、附錄與任何非章節頁。
 // 處理四件事：
-//   1. 分層卡片（[!original] / [!background] / [!application]）：類別標籤、收起摘要、原文出處頁尾、無障礙按鈕屬性。
+//   1. 分層卡片（[!original] / [!background] / [!application]）：類別標籤、原文出處頁尾、無障礙按鈕屬性（收起時不顯示第一句摘要）。
 //   2. 經文原句（「…」緊接經節括號）：深褐色引文＋經節小標籤（同章跳 #vN，他卷已有頁連去該章，原有 wikilink 保留）。
-//   3. 舊格式原文括號備援：卡片外含希伯來／希臘字或 Strong 編號的括號收成「原文」按鈕（卡片內不收）。
+//   3. 舊格式原文括號備援：卡片外含希伯來／希臘字或 Strong 編號的括號（含緊接在括號前面的希伯來／希臘字）收成「原文」按鈕（卡片內不收）。
 //   4. 來源名稱：照 config/source-names.yaml 標成點狀底線按鈕，附本頁用到的來源說明與參考網址給前端說明卡。
 import type { Element, ElementContent, Root, RootContent } from "hast"
 import { BIBLE_BOOKS, type BibleBook } from "./bibleBooks"
@@ -44,7 +44,6 @@ const LAYER_CARDS: Readonly<Record<LayerCardKind, { label: string }>> = {
 
 const STEP_ATTRIBUTION = "出處：STEP Bible（CC BY 4.0）"
 const SOURCES_PAGE_SLUG = "資料來源"
-const SUMMARY_MAX_CHARS = 34
 const LEGACY_ORIG_MAX_CHARS = 120
 
 const SKIPPED_SOURCE_TAGS = new Set([
@@ -198,47 +197,6 @@ function isMermaidElement(node: Element): boolean {
   return false
 }
 
-/** 從分層卡片內容擷取一句簡短摘要供收起狀態單行顯示。 */
-export function extractCardSummary(contentNode: Element, maxChars = SUMMARY_MAX_CHARS): string {
-  const parts: string[] = []
-  for (const child of contentNode.children) {
-    if (child.type !== "element") continue
-    if (hasClass(child, "bwz-rl-card-attrib")) continue
-    if (child.tagName === "p") {
-      const text = nodeText(child).replace(/\s+/gu, " ").trim()
-      if (text) parts.push(text)
-      // 若第一段只是冒號開頭導言（例如「下面照……的分法：」），順便帶入後面清單第一點讓摘要有實質內容
-      if (parts.length === 1 && !/[：:]$/u.test(text)) break
-    } else if ((child.tagName === "ul" || child.tagName === "ol") && parts.length <= 1) {
-      const firstLi = child.children.find(
-        (item): item is Element => item.type === "element" && item.tagName === "li",
-      )
-      if (firstLi) {
-        const liText = nodeText(firstLi).replace(/\s+/gu, " ").trim()
-        if (liText) parts.push(liText)
-      }
-      break
-    }
-  }
-
-  const combined = parts.join(" ").replace(/\s+/gu, " ").trim()
-  if (!combined) return ""
-
-  // 優先停在第一個句號（若長度合適），否則截斷到 maxChars 加刪節號
-  const chars = [...combined]
-  const periodIdx = chars.findIndex((ch) => ch === "。" || ch === "！" || ch === "？")
-  if (periodIdx > 0 && periodIdx + 1 <= maxChars + 4) {
-    return chars.slice(0, periodIdx + 1).join("")
-  }
-  if (chars.length <= maxChars) return combined
-
-  const sliced = chars
-    .slice(0, maxChars)
-    .join("")
-    .replace(/[，、；：（「『\s]+$/u, "")
-  return `${sliced}…`
-}
-
 /* ---------------------- 參考資料偵測與網址提取 ---------------------- */
 
 function isReferenceParagraph(node: Element): boolean {
@@ -344,7 +302,6 @@ function transformLayerCard(card: Element, kind: LayerCardKind): void {
   )
   if (!titleDiv || !contentDiv) return
 
-  const summary = extractCardSummary(contentDiv)
   const titleNodes = extractCalloutTitleChildren(titleDiv)
   const collapsed = hasClass(card, "is-collapsed")
   const collapsible = hasClass(card, "is-collapsible")
@@ -364,9 +321,6 @@ function transformLayerCard(card: Element, kind: LayerCardKind): void {
     el("span", { className: ["bwz-rl-card-badge"] }, [meta.label]),
     el("span", { className: ["bwz-rl-card-title"] }, titleNodes.length ? titleNodes : [meta.label]),
   ]
-  if (summary && collapsible) {
-    titleChildren.push(el("span", { className: ["bwz-rl-card-summary"] }, [summary]))
-  }
   if (collapsible) {
     titleChildren.push(
       el("span", { className: ["bwz-rl-card-toggle"], ariaHidden: "true" }, [
@@ -760,6 +714,54 @@ function findLegacyOriginalParens(
   return null
 }
 
+const SCRIPT_WORD_SRC =
+  "(?:[\\u0590-\\u05FF\\u0370-\\u03FF\\u1F00-\\u1FFF]+(?:[־\\-·'’][\\u0590-\\u05FF\\u0370-\\u03FF\\u1F00-\\u1FFF]+)*)"
+const SCRIPT_PHRASE_BODY_SRC = `${SCRIPT_WORD_SRC}(?:[ \\t]+(?:\\.{2,3}|…)?[ \\t]*${SCRIPT_WORD_SRC})*`
+const TRAILING_SCRIPT_RE = new RegExp(`(${SCRIPT_PHRASE_BODY_SRC})[ \\t]*$`, "u")
+const ONLY_SCRIPT_PHRASE_RE = new RegExp(`^${SCRIPT_PHRASE_BODY_SRC}$`, "u")
+
+/** 檢查緊接在「（」前面的緊鄰希伯來／希臘字片語，一併收進原文小標籤，避免希伯來字散在中文句子裡。 */
+function findPrecedingOriginalScript(
+  children: readonly ElementContent[],
+  emitIdx: number,
+  emitOff: number,
+  openIdx: number,
+  openOff: number,
+): { startIdx: number; startOff: number; plain: string } | null {
+  const openNode = children[openIdx]
+  if (openNode?.type !== "text") return null
+  const minOff = openIdx === emitIdx ? emitOff : 0
+  const prefix = openNode.value.slice(minOff, openOff)
+
+  if (prefix.trim().length > 0) {
+    const match = TRAILING_SCRIPT_RE.exec(prefix)
+    if (!match) return null
+    return {
+      startIdx: openIdx,
+      startOff: minOff + match.index,
+      plain: match[1].trim(),
+    }
+  }
+
+  // 若開括號緊接在行內包裝標籤（例如 <em>בָּרָא</em>）之後，只收純希伯來／希臘字且不含連結的包裝節點
+  const prevIdx = openIdx - 1
+  if (prevIdx >= emitIdx && !(prevIdx === emitIdx && emitOff > 0)) {
+    const prev = children[prevIdx]
+    if (
+      prev?.type === "element" &&
+      SAFE_ORIG_INLINE_TAGS.has(prev.tagName) &&
+      !hasClass(prev, "strong-no")
+    ) {
+      const text = nodeText(prev).trim()
+      if (text && ONLY_SCRIPT_PHRASE_RE.test(text)) {
+        return { startIdx: prevIdx, startOff: 0, plain: text }
+      }
+    }
+  }
+
+  return null
+}
+
 function transformLegacyOriginalsInChildren(children: readonly ElementContent[]): ElementContent[] {
   const out: ElementContent[] = []
   let emitIdx = 0
@@ -786,14 +788,16 @@ function transformLegacyOriginalsInChildren(children: readonly ElementContent[])
         const plain = inside.map(nodeText).join("").replace(/\s+/gu, " ").trim()
         if (!isLegacyOriginalContent(plain, containsStrongSpan(inside))) continue
 
-        flushUpTo(idx, k)
+        const preceding = findPrecedingOriginalScript(children, emitIdx, emitOff, idx, k)
+        const combined = preceding ? `${preceding.plain}（${plain}）` : plain
+        flushUpTo(preceding ? preceding.startIdx : idx, preceding ? preceding.startOff : k)
         out.push(
           el(
             "button",
             {
               type: "button",
               className: ["bwz-rl-orig-chip"],
-              dataRlOrig: plain,
+              dataRlOrig: combined,
               ariaHaspopup: "dialog",
               ariaExpanded: "false",
               ariaLabel: "原文（查看原文與編號）",

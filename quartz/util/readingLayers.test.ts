@@ -4,13 +4,13 @@ import type { Element, ElementContent, Root, RootContent } from "hast"
 import { el } from "./interactiveHast"
 import {
   applyReadingLayers,
-  extractCardSummary,
   isLegacyOriginalContent,
   parseVerseReference,
 } from "./readingLayers"
 import {
   computePopoverPlacement,
   formatSourceCardHeading,
+  parseHeadingVerseRange,
   parseOriginalContent,
 } from "./readingLayersClient"
 import { loadSourceNames } from "./sourceNamesLoader"
@@ -233,9 +233,9 @@ test("transforms scripture quotes (including nested links and 另見), sources, 
   assert.equal(attribs.length, 1)
   assert.equal(textOf(attribs[0]), "出處：STEP Bible（CC BY 4.0）")
 
+  // B2 修正：卡片收起時只顯示標籤＋標題，不顯示第一句摘要
   const summaries = collectElements(root, (n) => hasClass(n, "bwz-rl-card-summary"))
-  assert.equal(summaries.length, 3)
-  assert.ok(textOf(summaries[2]).includes("第一天"))
+  assert.equal(summaries.length, 0)
 
   // 來源名稱：不含 th、mermaid、參考資料、附錄
   const srcs = collectElements(root, (n) => hasClass(n, "bwz-rl-src"))
@@ -304,11 +304,13 @@ test("handles legacy format: original chips, legacy codes, cross-book pills, and
     ],
   )
 
-  // 兩個舊格式原文括號收成「原文」按鈕
+  // 原文小標籤：緊接在括號前面的希伯來字一併收進標籤，段落裡不再留裸希伯來字
   const chips = collectElements(root, (n) => hasClass(n, "bwz-rl-orig-chip"))
   assert.equal(chips.length, 2)
   assert.equal(chips[0].properties.dataRlOrig, "שַׁלַּח אֶת־עַמִּי，H7971 搭配 H5647")
-  assert.equal(chips[1].properties.dataRlOrig, "na.gaph，H5062")
+  assert.equal(chips[1].properties.dataRlOrig, "נָגַף（na.gaph，H5062）")
+  const firstLegacyP = collectElements(root, (n) => n.tagName === "p")[1]
+  assert.equal(/[\u0590-\u05FF]/u.test(textOf(firstLegacyP)), false)
 
   // 他卷經文：出12:13,23 有頁面成連結，賽19:22、詩8:3 無頁面成靜態標籤不生死連結
   const vrefs = collectElements(root, (n) => hasClass(n, "bwz-rl-vref"))
@@ -385,6 +387,66 @@ test("parseOriginalContent splits leading Hebrew/Greek cleanly without mangling 
     { kind: "text", value: "na.gaph，" },
     { kind: "strong", value: "H5062" },
   ])
+
+  const d = parseOriginalContent("בָּרָא（H1254A）")
+  assert.deepEqual(d.script, { text: "בָּרָא", dir: "rtl", lang: "he" })
+  assert.deepEqual(d.detailTokens, [{ kind: "strong", value: "H1254A" }])
+
+  const e = parseOriginalContent("שִׂכֵּל（字根 שָׂכַל H7919B）")
+  assert.deepEqual(e.script, { text: "שִׂכֵּל", dir: "rtl", lang: "he" })
+  assert.deepEqual(e.detailTokens, [
+    { kind: "text", value: "字根 שָׂכַל " },
+    { kind: "strong", value: "H7919B" },
+  ])
+})
+
+test("absorbs preceding Hebrew/Greek phrases cleanly across multi-word and multi-chip sentences without eating Chinese", () => {
+  const root = makeChapterRoot([
+    el("p", {}, [
+      "「一分」的原文使用 שְׁכֶם（H7926，STEP 詞典列義為肩膀），而雙字 שַׁלַּח אֶת־עַמִּי וְיַעַבְדֻנִי（",
+      el("span", { className: ["strong-no"] }, ["H7971"]),
+      "）或「知道」（",
+      el("span", { className: ["strong-no"] }, ["H3045"]),
+      "）也應區分。",
+    ]),
+  ])
+  const applied = applyReadingLayers(root, {
+    slug: "01-創世記/第48章",
+    registry,
+    existingSlugs: new Set(["01-創世記/第48章"]),
+  })
+  assert.equal(applied, true)
+  const chips = collectElements(root, (n) => hasClass(n, "bwz-rl-orig-chip"))
+  assert.deepEqual(
+    chips.map((c) => c.properties.dataRlOrig),
+    [
+      "שְׁכֶם（H7926，STEP 詞典列義為肩膀）",
+      "שַׁלַּח אֶת־עַמִּי וְיַעַבְדֻנִי（H7971）",
+      "H3045",
+    ],
+  )
+  const p = collectElements(root, (n) => n.tagName === "p")[0]
+  assert.equal(textOf(p), "「一分」的原文使用 原文，而雙字 原文或「知道」原文也應區分。")
+})
+
+test("parseHeadingVerseRange parses v-ranges and 節-ranges while excluding （全章） and non-range headings", () => {
+  assert.deepEqual(parseHeadingVerseRange("起初的創造與未成形的地（v1-2）"), [1, 2])
+  assert.deepEqual(parseHeadingVerseRange("前三天：神用話語帶來秩序與界線（v3-13）"), [
+    3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+  ])
+  assert.deepEqual(parseHeadingVerseRange("「創造」動詞的三處飛躍（v1, 21, 27）"), [1, 21, 27])
+  assert.deepEqual(parseHeadingVerseRange("六天的一天有多長？（v5、8、13、19、23、31）"), [
+    5, 8, 13, 19, 23, 31,
+  ])
+  assert.deepEqual(parseHeadingVerseRange("一、從伯特利的應許說起（1-7節）"), [1, 2, 3, 4, 5, 6, 7])
+  assert.deepEqual(parseHeadingVerseRange("二、我的靈不永遠與人相爭（3節）"), [3])
+  assert.deepEqual(parseHeadingVerseRange("（v1-2, v5）"), [1, 2, 5])
+  assert.equal(parseHeadingVerseRange("從病榻到多得的一分（全章）"), null)
+  assert.equal(parseHeadingVerseRange("經文大綱"), null)
+  assert.equal(parseHeadingVerseRange("原文層：兩個字撐起「潔淨」與「任職」"), null)
+  assert.equal(parseHeadingVerseRange("平行經文（太12:1-8）"), null)
+  assert.equal(parseHeadingVerseRange("以色列史（主前930-722）"), null)
+  assert.equal(parseHeadingVerseRange("錯誤範圍（v10-5）"), null)
 })
 
 test("formatSourceCardHeading and computePopoverPlacement cover code titles and viewport clamping", () => {
@@ -425,18 +487,4 @@ test("formatSourceCardHeading and computePopoverPlacement cover code titles and 
   })
   assert.equal(above.placedAbove, true)
   assert.equal(above.top, 632) // 720 - 8 - 180 + 100
-})
-
-test("extractCardSummary keeps short first sentence intact and truncates long paragraphs cleanly", () => {
-  const shortContent = el("div", {}, [el("p", {}, ["「運行」的原文是 מְרַחֶפֶת，意思是盤旋。"])])
-  assert.equal(extractCardSummary(shortContent), "「運行」的原文是 מְרַחֶפֶת，意思是盤旋。")
-
-  const longContent = el("div", {}, [
-    el("p", {}, [
-      "這是一段非常長非常長而且遠超過摘要上限字數的歷史文化背景說明，後面還有許多細節與古代近東文獻比較。",
-    ]),
-  ])
-  const summary = extractCardSummary(longContent, 20)
-  assert.ok(summary.endsWith("…"))
-  assert.ok([...summary].length <= 21)
 })

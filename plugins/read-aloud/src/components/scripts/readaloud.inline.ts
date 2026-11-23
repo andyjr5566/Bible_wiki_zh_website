@@ -4,7 +4,6 @@ import { createPlayer } from "../../lib/player"
 import type { Player } from "../../lib/player"
 import { findScriptureVerses } from "../../lib/verses"
 import type { Verse } from "../../lib/verses"
-import { TAB_CHANGE_EVENT, type TabChangeDetail } from "../../../../../quartz/util/readingTabEvent"
 
 interface ReadAloudWindow extends Window {
   __bwzReadAloudBound?: boolean
@@ -236,13 +235,6 @@ if (!readAloudWindow.__bwzReadAloudBound) {
 
   document.addEventListener("nav", () => void mount())
   document.addEventListener("prenav", teardown)
-  // 切到「研讀」分頁時朗讀列會隱藏，順手停止播放，避免藏起來還在念並反覆捲動
-  document.addEventListener(TAB_CHANGE_EVENT, (event) => {
-    const detail = (event as CustomEvent<TabChangeDetail>).detail
-    if (detail?.view === "study" && player?.playing()) {
-      player.stop()
-    }
-  })
   window.addEventListener("pagehide", teardown)
   // 從瀏覽器的上一頁快取還原時不會再收到 nav，要自己重建朗讀列
   window.addEventListener("pageshow", (event) => {

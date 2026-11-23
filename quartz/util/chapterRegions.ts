@@ -143,11 +143,11 @@ export function studyAnchorIndex(
 
 export interface ChapterTabRegions {
   verseListIndex: number | null
-  /** 經文分頁要藏的節點索引（知識節點、本章整理、附錄與分隔線） */
+  /** 經文分頁要藏的節點索引（知識節點、本章整理、附錄與分隔線）；研讀分頁顯示完整一整頁，不隱藏經文 */
   studyIndices: number[]
-  /** 研讀分頁要藏的節點索引（經文清單、朗讀列，以及緊接經文清單後的分隔線） */
-  textOnlyIndices: number[]
-  /** 同時具備經文與研讀內容時才顯示「經文｜研讀」分頁；沒有研讀內容的章節不隱藏經文 */
+  /** 「## 本章整理」標題節點索引（供研讀頁「跳到本章整理」按鈕定位；沒有整理時為 null） */
+  studyHeadingIndex: number | null
+  /** 同時具備經文與研讀內容時才顯示「經文｜研讀」分頁；沒有研讀內容的章節不隱藏任何內容 */
   hasStudyContent: boolean
 }
 
@@ -169,32 +169,18 @@ function isInteractiveLine(node: ChapterNodeDescription): boolean {
   return hasClassToken(node, "bwz-ia-line")
 }
 
-/** 計算「經文｜研讀」分頁各自要隱藏的節點範圍。 */
+/** 計算「經文｜研讀」分頁各自要隱藏／定位的節點範圍（B2 修正：研讀頁為完整一整頁，不藏經文與朗讀列）。 */
 export function selectChapterTabRegions(nodes: readonly ChapterNodeDescription[]): ChapterTabRegions {
   const { verseListIndex, hide: studyIndices } = selectChapterRegions(nodes)
-  if (verseListIndex === null) {
-    return { verseListIndex: null, studyIndices: [], textOnlyIndices: [], hasStudyContent: false }
+  if (verseListIndex === null || studyIndices.length === 0) {
+    return { verseListIndex, studyIndices: [], studyHeadingIndex: null, hasStudyContent: false }
   }
 
-  const hasStudyContent = studyIndices.length > 0
-  if (!hasStudyContent) {
-    return { verseListIndex, studyIndices: [], textOnlyIndices: [], hasStudyContent: false }
-  }
-
-  const textOnly = new Set<number>([verseListIndex])
-  // 朗讀列只搭配經文，研讀分頁一併隱藏
-  for (let i = 0; i < nodes.length; i += 1) {
-    if (isReadAloudBar(nodes[i])) textOnly.add(i)
-  }
-  // 經文清單緊接著的第一條分隔線在研讀分頁會浮在分頁列正下方，一併隱藏
-  if (verseListIndex + 1 < nodes.length && tagOf(nodes[verseListIndex + 1]) === "hr") {
-    textOnly.add(verseListIndex + 1)
-  }
-
+  const studyRegion = selectStudyRegion(nodes)
   return {
     verseListIndex,
     studyIndices,
-    textOnlyIndices: [...textOnly].sort((a, b) => a - b),
+    studyHeadingIndex: studyRegion?.start ?? null,
     hasStudyContent: true,
   }
 }

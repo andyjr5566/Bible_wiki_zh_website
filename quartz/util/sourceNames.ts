@@ -10,6 +10,7 @@ export interface SourceCollection {
   readonly note: string
   readonly urlHint?: string
   readonly patterns: readonly string[]
+  readonly signed?: string
 }
 
 export interface SourceWork {
@@ -170,6 +171,7 @@ export function parseSourceNamesYaml(rawYaml: string): SourceNamesRegistry {
       note: requireString(item, "note", ctx),
       urlHint: validateUrlHint(optionalString(item, "url_hint", ctx), ctx),
       patterns: requirePatterns(item, ctx),
+      signed: optionalString(item, "signed", ctx),
     }
   })
 
@@ -192,6 +194,7 @@ export function parseSourceNamesYaml(rawYaml: string): SourceNamesRegistry {
 
   const entries = new Map<string, SourceEntry>()
   const rules: CompiledRule[] = []
+  const seenCodes = new Set<string>()
 
   for (const col of collections) {
     if (entries.has(col.name)) {
@@ -220,8 +223,11 @@ export function parseSourceNamesYaml(rawYaml: string): SourceNamesRegistry {
       })
     }
 
-    // 舊章節正文仍會出現代號（CT／GT／KC／BH），由同一份 yaml 的 code 欄位自動支援
-    if (!col.patterns.includes(col.code)) {
+    // 舊章節正文仍會出現代號（CT／GT／KC／BH），由同一份 yaml 的 code 欄位自動支援；
+    // 同一個 code 有多筆作者（例如 CT 的黃迦勒、周安娜）時，舊代號備援只用第一筆，避免重複規則或搶奪結果。
+    const isFirstForCode = !seenCodes.has(col.code)
+    seenCodes.add(col.code)
+    if (isFirstForCode && !col.patterns.includes(col.code)) {
       rules.push({
         entry,
         regex: compilePattern(escapeRegExp(col.code), `collections(${col.name}).code`),

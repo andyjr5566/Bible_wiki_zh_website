@@ -15,10 +15,28 @@ test("loads and validates the real config/source-names.yaml", () => {
   clearSourceNamesCache()
   const registry = loadSourceNames()
   assert.equal(registry.version, 1)
-  assert.ok(registry.collections.length >= 5)
+  assert.ok(registry.collections.length >= 6)
   assert.ok(registry.works.length >= 15)
   assert.ok(registry.entries.has("黃迦勒"))
+  assert.ok(registry.entries.has("周安娜"))
   assert.ok(registry.entries.has("《丁道爾》"))
+})
+
+test("supports duplicate code collections: both names get cards, code fallback uses the first entry only", () => {
+  const registry = parseSourceNamesYaml(fs.readFileSync(realYamlPath, "utf8"))
+  const ctRules = registry.rules.filter((r) => r.entry.code === "CT" && r.isCode)
+  assert.equal(ctRules.length, 1)
+  assert.equal(ctRules[0].entry.id, "黃迦勒")
+
+  const matches = matchSourceNames("CT 與周安娜及黃迦勒都指出這點。", registry)
+  assert.deepEqual(
+    matches.map((m) => ({ matched: m.matched, id: m.entry.id, isCode: m.isCode })),
+    [
+      { matched: "CT", id: "黃迦勒", isCode: true },
+      { matched: "周安娜", id: "周安娜", isCode: false },
+      { matched: "黃迦勒", id: "黃迦勒", isCode: false },
+    ],
+  )
 })
 
 test("matches longer names before shorter names and distinguishes legacy codes", () => {

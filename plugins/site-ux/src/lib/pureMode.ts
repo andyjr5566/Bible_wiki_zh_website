@@ -1,9 +1,10 @@
-// 章節頁「經文｜研讀」分頁的 DOM 層：
-//   1. 依據 quartz/util/chapterRegions.ts 標記研讀區（.bwz-ux-hide）與經文區（.bwz-ux-text-only）。
-//   2. 在章節標題／導覽表下方掛載「經文｜研讀」分頁列（桌機、平板黏在頂端；手機在頁首流內，捲動後由快捷列接手）。
-//   3. 點擊研讀頁的經節小標籤（bwz:verse-jump）→ 切回經文頁、單次捲到該節並短暫標示（沿用 verse-return 樣式）。
-//   4. 保留原純經文模式的暫時顯示（點到指向被藏內容的錨點、URL hash、verse-return 的 bwz:reveal），換頁後清除。
-//   5. 透過 bwz:tab-change／bwz:tab-request 與手機快捷列、朗讀外掛同步，不直接 import 別的外掛。
+// 章節頁「經文｜研讀」分頁的 DOM 層（B2 修正）：
+//   1. 依據 quartz/util/chapterRegions.ts 標記研讀區（.bwz-ux-hide）：經文分頁隱藏研讀區，只看經文；
+//      研讀分頁呈現完整一整頁（經文、知識節點、本章整理、附錄都在，什麼都不藏）。
+//   2. 在章節標題／導覽表下方掛載「經文｜研讀」分頁列；切到研讀分頁時在旁邊顯示「跳到本章整理」按鈕。
+//   3. 點擊研讀頁的經節小標籤（bwz:verse-jump）→ 不切分頁，直接在同頁單次捲到該節並短暫標示（沿用 verse-return 樣式）。
+//   4. 保留原純經文模式的暫時顯示（經文頁點指向被藏內容的錨點、URL hash、verse-return 的 bwz:reveal），換頁後清除。
+//   5. 透過 bwz:tab-change／bwz:tab-request 與手機快捷列同步，不直接 import 別的外掛。
 import {
   chapterTabElements,
   readChapterDom,
@@ -23,11 +24,11 @@ import {
 import { applyView, currentView, writeView, type ReadingView } from "./readingView"
 
 export const HIDE_CLASS = "bwz-ux-hide"
-export const TEXT_ONLY_CLASS = "bwz-ux-text-only"
 export const REVEAL_CLASS = "bwz-ux-reveal"
 /** 標好之後才出現的 <html> 屬性；標好之前 CSS 先把非當下分頁的內容遮住，避免第一次繪製閃爍。 */
 export const MARKED_ATTR = "data-ux-marked"
 export const TABS_CLASS = "bwz-tabs"
+export const JUMP_STUDY_CLASS = "bwz-tabs-jump"
 /** 沿用 verse-return 的短暫標示樣式 */
 export const FLASH_CLASS = "bwz-vr-flash"
 
@@ -62,7 +63,6 @@ export interface HeadingScrollInput {
 // 暫時顯示中的研讀區塊用標題文字記：折疊腳本把 h2 換成 details 後，元素會換但標題文字不變。
 // 每次換頁（nav）與主動切分頁都會重設。
 let revealed = new Set<string>()
-let verseRevealed = false
 let observer: MutationObserver | null = null
 let controller: AbortController | null = null
 let flashTimer: number | null = null
@@ -70,8 +70,8 @@ let flashTimer: number | null = null
 /** 桌機與平板分頁列旁邊的簡短說明文字。 */
 export function tabHintText(view: ReadingView): string {
   return view === "text"
-    ? "只看經文；按「研讀」直接看本章整理"
-    : "本章整理與知識節點；按「經文」回到經文"
+    ? "只看經文；按「研讀」看完整章節與整理"
+    : "完整經文與整理；按「經文」只看經文"
 }
 
 /** 計算跳到單一經節時的目標 scrollY：在未被頂端遮住的可見區置中；經節較高則對齊上緣。 */
@@ -88,8 +88,8 @@ export function computeHeadingScrollTop(input: HeadingScrollInput): number {
 }
 
 function clearMarks(): void {
-  for (const el of Array.from(document.querySelectorAll(`.${HIDE_CLASS}, .${TEXT_ONLY_CLASS}`))) {
-    el.classList.remove(HIDE_CLASS, TEXT_ONLY_CLASS, REVEAL_CLASS)
+  for (const el of Array.from(document.querySelectorAll(`.${HIDE_CLASS}`))) {
+    el.classList.remove(HIDE_CLASS, REVEAL_CLASS)
   }
 }
 
@@ -97,7 +97,12 @@ function removeTabBar(): void {
   for (const el of Array.from(document.querySelectorAll(`.${TABS_CLASS}`))) el.remove()
 }
 
-function syncTabBarUi(view: ReadingView): void {
+function hasStudySection(): boolean {
+  const dom = readChapterDom()
+  return dom ? chapterTabElements(dom).studyHeading !== null : false
+}
+
+function syncTabBarUi(view: ReadingView, hasStudyHeading = hasStudySection()): void {
   const bar = document.querySelector<HTMLElement>(`.${TABS_CLASS}`)
   if (!bar) return
   for (const btn of Array.from(bar.querySelectorAll<HTMLButtonElement>("[role='tab']"))) {
@@ -105,6 +110,8 @@ function syncTabBarUi(view: ReadingView): void {
     btn.setAttribute("aria-selected", active ? "true" : "false")
     btn.tabIndex = active ? 0 : -1
   }
+  const jumpBtn = bar.querySelector<HTMLButtonElement>(`.${JUMP_STUDY_CLASS}`)
+  if (jumpBtn) jumpBtn.hidden = view !== "study" || !hasStudyHeading
   const hint = bar.querySelector<HTMLElement>(".bwz-tabs-hint")
   if (hint) hint.textContent = tabHintText(view)
 }
@@ -197,7 +204,22 @@ function makeTabIcon(kind: ReadingView): SVGSVGElement {
   return svg
 }
 
-function buildTabBar(view: ReadingView, signal: AbortSignal): HTMLElement {
+/** 研讀頁點「跳到本章整理」：單次捲到 ## 本章整理 標題並讓出頂端黏頂列，不用 scrollIntoView。 */
+export function scrollToStudyHeading(): boolean {
+  const dom = readChapterDom()
+  if (!dom) return false
+  const target = chapterTabElements(dom).studyHeading
+  if (!target) return false
+  const top = computeHeadingScrollTop({
+    rectTop: target.getBoundingClientRect().top,
+    scrollY: window.scrollY,
+    topObstruction: stickyObstructionHeight(),
+  })
+  window.scrollTo({ top, behavior: "instant" })
+  return true
+}
+
+function buildTabBar(view: ReadingView, hasStudyHeading: boolean, signal: AbortSignal): HTMLElement {
   const wrap = document.createElement("div")
   wrap.className = TABS_CLASS
 
@@ -258,11 +280,25 @@ function buildTabBar(view: ReadingView, signal: AbortSignal): HTMLElement {
     { signal },
   )
 
+  const jumpBtn = document.createElement("button")
+  jumpBtn.type = "button"
+  jumpBtn.className = JUMP_STUDY_CLASS
+  jumpBtn.textContent = "↓ 跳到本章整理"
+  jumpBtn.setAttribute("aria-label", "跳到本章整理")
+  jumpBtn.hidden = view !== "study" || !hasStudyHeading
+  jumpBtn.addEventListener(
+    "click",
+    () => {
+      scrollToStudyHeading()
+    },
+    { signal },
+  )
+
   const hint = document.createElement("span")
   hint.className = "bwz-tabs-hint"
   hint.textContent = tabHintText(view)
 
-  wrap.append(seg, hint)
+  wrap.append(seg, jumpBtn, hint)
   return wrap
 }
 
@@ -270,7 +306,7 @@ function mountTabBar(dom: ChapterDom, view: ReadingView, signal: AbortSignal): b
   removeTabBar()
   const info = chapterTabElements(dom)
   if (!info.hasStudyContent || !info.tabAnchor) return false
-  const bar = buildTabBar(view, signal)
+  const bar = buildTabBar(view, info.studyHeading !== null, signal)
   if (info.tabAnchor.position === "after") info.tabAnchor.element.after(bar)
   else info.tabAnchor.element.before(bar)
   return true
@@ -295,10 +331,6 @@ export function applyMarks(): boolean {
           if (revealed.has(section.title)) shown.add(el)
         }
       }
-      for (const el of info.textOnlyElements) {
-        el.classList.add(TEXT_ONLY_CLASS)
-        if (verseRevealed && el === dom.verseList) shown.add(el)
-      }
       for (const el of shown) el.classList.add(REVEAL_CLASS)
     }
   }
@@ -321,7 +353,6 @@ export function setReadingView(view: ReadingView, options: SetViewOptions = {}):
   writeView(view)
   applyView(view)
   revealed = new Set()
-  verseRevealed = false
   const available = applyMarks()
   syncTabBarUi(view)
   dispatchTabChange({ view, available })
@@ -331,8 +362,8 @@ export function setReadingView(view: ReadingView, options: SetViewOptions = {}):
 }
 
 /**
- * 要看到 id 這個元素；它在目前被隱藏的分頁區塊裡就暫時顯示那個區塊（不改使用者偏好）。
- * 回傳「元素原本被隱藏、已暫時顯示」與否。
+ * 要看到 id 這個元素；經文分頁藏住該區塊時暫時顯示那一段（不改使用者偏好）。
+ * 研讀分頁顯示完整一整頁，沒有藏任何東西，因此回傳 false。
  */
 export function revealTarget(id: string): boolean {
   const el = id ? document.getElementById(id) : null
@@ -341,29 +372,17 @@ export function revealTarget(id: string): boolean {
   const info = chapterTabElements(dom)
   if (!info.hasStudyContent) return false
 
-  const view = currentView()
-  if (view === "text") {
-    const index = topLevelIndex(dom, el)
-    if (index === -1) return false
-    const top = dom.children[index]
-    const section = info.sections.find((s) => s.elements.includes(top))
-    if (!section) return false
-    if (!revealed.has(section.title)) {
-      revealed.add(section.title)
-      applyMarks()
-    }
-    return true
+  if (currentView() !== "text") return false
+  const index = topLevelIndex(dom, el)
+  if (index === -1) return false
+  const top = dom.children[index]
+  const section = info.sections.find((s) => s.elements.includes(top))
+  if (!section) return false
+  if (!revealed.has(section.title)) {
+    revealed.add(section.title)
+    applyMarks()
   }
-
-  // 研讀分頁下，若目標在經文清單裡（例如 verse-return 回到經節或重點列表點進 #vN），暫時顯示經文清單
-  if (dom.verseList.contains(el)) {
-    if (!verseRevealed) {
-      verseRevealed = true
-      applyMarks()
-    }
-    return true
-  }
-  return false
+  return true
 }
 
 function idFromHash(hash: string): string {
@@ -404,13 +423,10 @@ function flashElement(target: HTMLElement): void {
   }, FLASH_MS)
 }
 
-/** 點研讀頁裡的經節小標籤：切到經文分頁、單次捲到那一節並短暫標示。 */
+/** 點研讀頁裡的經節小標籤：直接單次捲到同頁那一節並短暫標示，不切換分頁（B2 修正）。 */
 export function jumpToVerseOnTab(verse: number): boolean {
   const dom = readChapterDom()
   if (!dom) return false
-  if (currentView() !== "text") {
-    setReadingView("text", { scrollIfPastBar: false })
-  }
   const target = verseElementByNumber(dom, verse)
   if (!target) return false
   const rect = target.getBoundingClientRect()
@@ -421,7 +437,7 @@ export function jumpToVerseOnTab(verse: number): boolean {
     viewportHeight: window.innerHeight,
     topObstruction: stickyObstructionHeight(),
   })
-  // 剛切換分頁時整頁高度改變，比照 verse-return 用瞬間定位避免捲動動畫落後或被中斷
+  // 只捲一次、用 instant 避免平滑捲動被黏頂計算打斷
   window.scrollTo({ top, behavior: "instant" })
   flashElement(target)
   return true
@@ -443,7 +459,6 @@ export function initPureMode(): void {
   const win = window as CleanupWindow
   teardown()
   revealed = new Set()
-  verseRevealed = false
 
   const abort = new AbortController()
   controller = abort

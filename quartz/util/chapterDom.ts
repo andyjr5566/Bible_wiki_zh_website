@@ -107,7 +107,7 @@ export function studyHeadingIdOf(dom: ChapterDom, node: Node): string | null {
 export interface ChapterTabElements {
   hasStudyContent: boolean
   sections: HiddenSectionElements[]
-  textOnlyElements: Element[]
+  studyHeading: Element | null
   tabAnchor: { element: Element; position: "before" | "after" } | null
 }
 
@@ -118,7 +118,7 @@ export function chapterTabElements(dom: ChapterDom): ChapterTabElements {
   return {
     hasStudyContent: regions.hasStudyContent,
     sections: hiddenSectionElements(dom),
-    textOnlyElements: regions.textOnlyIndices.map((index) => dom.children[index]),
+    studyHeading: regions.studyHeadingIndex !== null ? dom.children[regions.studyHeadingIndex] ?? null : null,
     tabAnchor: anchor ? { element: dom.children[anchor.index], position: anchor.position } : null,
   }
 }

@@ -8,12 +8,18 @@ const { ev, check, go, shot, errors, setViewport, sleep, finish } = s
 const J = async (expr) => JSON.parse(await ev(`JSON.stringify(${expr})`))
 const abraham = "/" + encodeURI("link_folder/人物/亞伯拉罕")
 
-// 選取經文以外、文章裡第一段夠長的文字（跳過經文清單、我們自己的元素、收合區塊）
+// 選取經文以外、研讀分頁「本章整理」裡第一段夠長的文字（保留經文標記段落 .bwz-ux-hide / .bwz-rl-quote / .bwz-rl-src 可被選取）
+const switchToStudy = `(() => {
+  const b = document.querySelector('.bwz-tabs button[data-tab="study"]')
+  if (b && b.getAttribute('aria-selected') !== 'true') b.click()
+  return document.documentElement.getAttribute('data-ux-tab') || ''
+})()`
 const selectCommentary = `(() => {
   const art = document.querySelector('article')
   const list = document.querySelector('ol.bwz-verses')
-  const ps = [...art.querySelectorAll('p, li')].filter(p => !p.closest('li[data-v]') && !p.closest('[class*="bwz-"]') && !p.closest('details:not([open])') && (!list || !list.contains(p)) && p.textContent.trim().length > 12 && p.getBoundingClientRect().height > 0)
-  const p = ps[0]; if (!p) return null
+  const ps = [...art.querySelectorAll('p, li')].filter(p => !p.closest('li[data-v]') && !p.closest('.bwz-notes, .bwz-v-ui, .bwz-ra, .bwz-tabs, .bwz-rl-vx, .bwz-rl-popover, .bwz-rl-card-head') && !p.closest('details:not([open])') && (!list || !list.contains(p)) && p.textContent.trim().length > 12 && p.getBoundingClientRect().height > 0)
+  const p = ps.find(el => el.closest('.bwz-ux-hide') || el.querySelector('.bwz-rl-quote, .bwz-rl-src')) || ps[0]
+  if (!p) return null
   p.scrollIntoView({ block: 'center' })
   const w = document.createTreeWalker(p, NodeFilter.SHOW_TEXT); let n = w.nextNode(); while (n && n.data.trim().length < 6) n = w.nextNode()
   if (!n) return null
@@ -22,8 +28,10 @@ const selectCommentary = `(() => {
 })()`
 const toolbars = `({ quote: (() => { const t = document.querySelector('.bwz-q-toolbar'); return !!t && !t.hidden && t.getBoundingClientRect().height > 0 })(), verse: (() => { const t = document.querySelector('.bwz-h-toolbar:not(.bwz-q-toolbar)'); return !!t && !t.hidden && t.getBoundingClientRect().height > 0 })() })`
 
-// 1. 章節頁註釋區選字 → 只出現引用工具列
+// 1. 章節頁切到「研讀」分頁 → 本章整理註釋區選字 → 只出現引用工具列
 await go(ch1 + "?skip=1")
+await ev(switchToStudy)
+await sleep(300)
 const picked = await ev(selectCommentary)
 await sleep(700)
 let tb = await J(toolbars)

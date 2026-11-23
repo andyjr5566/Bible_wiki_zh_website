@@ -24,6 +24,7 @@
 @use "./interactive.scss";
 @use "./knowledge.scss";
 @use "./readingLayers.scss";
+@use "./chapterGuide.scss";
 
 /* ==========================================================================
    1. 共用變數、Mermaid 色彩修正
@@ -1172,7 +1173,7 @@ details.collapsible-subheading {
     justify-content: center;
     gap: 2px;
     box-sizing: border-box;
-    min-width: 40px;
+    min-width: 34px;
     min-height: 44px;
     margin: 0;
     padding: 0 4px;
@@ -1181,7 +1182,7 @@ details.collapsible-subheading {
     background: transparent;
     color: var(--bwz-accent-strong);
     font-family: inherit;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
@@ -1231,15 +1232,15 @@ details.collapsible-subheading {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    min-width: 44px;
+    min-width: 36px;
     min-height: 34px;
     margin: 0;
-    padding: 0 10px;
+    padding: 0 7px;
     border: 0;
     background: transparent;
     color: var(--bwz-accent-strong);
     font-family: var(--headerFont), "Noto Sans TC", sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     font-weight: 700;
     line-height: 1;
     white-space: nowrap;

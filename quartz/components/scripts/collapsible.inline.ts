@@ -73,6 +73,12 @@ function processCollapsibleSections() {
     // 建立外層 <details>
     const details = document.createElement("details")
     details.className = "collapsible-section"
+    if (h2.id) {
+      details.id = h2.id
+    }
+    if (h2.classList.contains("bwz-ux-hide")) {
+      details.classList.add("bwz-ux-hide")
+    }
     if (matchedRule.subheadings) {
       details.classList.add("collapsible-nested")
     }

@@ -24,12 +24,30 @@ interface Pending {
   rect: DOMRect
 }
 
+/** 明確的工具與筆記 UI class 前綴／名稱（不排除內文標記 class 如 .bwz-ux-hide、.bwz-rl-quote、.bwz-rl-src）。 */
+const OWN_UI_PREFIXES = ["bwz-n-", "bwz-h-", "bwz-q-", "bwz-guide"]
+const OWN_UI_CLASSES = new Set([
+  "bwz-notes",
+  "bwz-v-ui",
+  "bwz-fab",
+  "bwz-ra",
+  "bwz-tabs",
+  "bwz-cqb",
+  "bwz-bb",
+  "bwz-rl-vx",
+  "bwz-rl-popover",
+  "bwz-rl-card-head",
+  "bwz-rl-orig-chip",
+])
+
 /** 本外掛自己的畫面、輸入框與浮出預覽：從 article 往上找，遇到就不引用。 */
 function inOwnUi(node: Node, article: Element): boolean {
   for (let el: Element | null = node.nodeType === 1 ? (node as Element) : node.parentElement; el && el !== article; el = el.parentElement) {
     if (el.tagName === "TEXTAREA" || el.tagName === "INPUT" || (el as HTMLElement).isContentEditable) return true
     if (el.classList.contains("popover")) return true
-    for (const c of Array.from(el.classList)) if (c.startsWith("bwz-")) return true
+    for (const c of Array.from(el.classList)) {
+      if (OWN_UI_CLASSES.has(c) || OWN_UI_PREFIXES.some((p) => c.startsWith(p))) return true
+    }
   }
   return false
 }

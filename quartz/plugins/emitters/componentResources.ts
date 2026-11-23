@@ -29,6 +29,8 @@ import knowledgeHubScript from "../../components/scripts/knowledgeHub.inline"
 import interactiveRailScript from "../../components/scripts/interactiveRail.inline"
 // @ts-ignore
 import readingLayersScript from "../../components/scripts/readingLayers.inline"
+// @ts-ignore
+import chapterGuideScript from "../../components/scripts/chapterGuide.inline"
 import baseStyles from "../../styles/base.scss"
 import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
@@ -145,6 +147,9 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
 
   // Reading layers (章節頁「本章整理」的來源說明卡、舊格式原文小卡、卡片鍵盤操作與經節跳轉)
   componentResources.afterDOMLoaded.push(readingLayersScript)
+
+  // Chapter guide (Stage C：本章導覽面板 — 圖例、依分頁切換的目錄與捲動標亮、引用來源、相關資源)
+  componentResources.afterDOMLoaded.push(chapterGuideScript)
 
   if (cfg.analytics?.provider === "google") {
     const tagId = cfg.analytics.tagId

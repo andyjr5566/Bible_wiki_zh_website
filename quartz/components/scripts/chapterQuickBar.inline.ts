@@ -8,9 +8,13 @@
 // 書卷章名是可以點的按鈕：打開 ☰ 抽屜，最上面就是書卷章節選擇器（book-picker 外掛）。
 // 分頁鈕透過 bwz:tab-request／bwz:tab-change 與 site-ux 同步，不直接 import 外掛。
 import {
+  GUIDE_ATTR,
+  GUIDE_STATE_EVENT,
+  requestGuideToggle,
   TABS_ATTR,
   TAB_CHANGE_EVENT,
   requestTabSwitch,
+  type GuideStateDetail,
   type ReadingTab,
   type TabChangeDetail,
 } from "../../util/readingTabEvent"
@@ -197,9 +201,18 @@ function setupBar() {
   const tabs = makeTabSwitcher(signal)
   tabs.sync(currentTabFromDom(), document.documentElement.hasAttribute(TABS_ATTR))
 
+  const guideBtn = makeButton(`${BAR_CLASS}-guide`, "目錄", "開啟本章導覽")
+  guideBtn.setAttribute("aria-controls", "bwz-guide")
+  guideBtn.setAttribute(
+    "aria-expanded",
+    document.documentElement.getAttribute(GUIDE_ATTR) === "open" ? "true" : "false",
+  )
+  guideBtn.hidden = !document.documentElement.hasAttribute(GUIDE_ATTR)
+  guideBtn.addEventListener("click", () => requestGuideToggle(), { signal })
+
   const topBtn = makeButton(`${BAR_CLASS}-top`, "↑", "回到頂端")
   topBtn.title = "回到頂端"
-  bar.append(tabs.container, topBtn)
+  bar.append(tabs.container, guideBtn, topBtn)
   document.body.append(bar)
 
   const mql = window.matchMedia(MOBILE_QUERY)
@@ -212,6 +225,17 @@ function setupBar() {
       const detail = (event as CustomEvent<TabChangeDetail>).detail
       if (!detail) return
       tabs.sync(detail.view, detail.available)
+    },
+    { signal },
+  )
+
+  document.addEventListener(
+    GUIDE_STATE_EVENT,
+    (event) => {
+      const detail = (event as CustomEvent<GuideStateDetail>).detail
+      if (!detail) return
+      guideBtn.hidden = !detail.available
+      guideBtn.setAttribute("aria-expanded", String(detail.open))
     },
     { signal },
   )

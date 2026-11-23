@@ -1,0 +1,522 @@
+/* ==========================================================================
+   Stage C：章節頁「本章導覽」面板（桌機右欄 / 平板右側讓寬度抽屜 / 手機底部抽屜）
+   由 custom.scss 最頂端 @use 引入；高對比淺深雙色，不覆蓋非章節頁的 .toc。
+   ========================================================================== */
+
+$guide-sans: var(--headerFont), "Noto Sans TC", "PingFang TC", sans-serif;
+$guide-serif: var(--bodyFont), "LXGW WenKai TC", "BiauKai", serif;
+
+:root {
+  --bwz-guide-bg: color-mix(in srgb, var(--light) 92%, #fffcf5);
+  --bwz-guide-border: #d9d0c1;
+  --bwz-guide-head-bg: color-mix(in srgb, var(--lightgray) 68%, var(--light));
+  --bwz-guide-fg: var(--dark);
+  --bwz-guide-muted: #44403c;
+  --bwz-guide-accent: var(--bwz-accent-strong, #533399);
+  --bwz-guide-active-bg: color-mix(in srgb, var(--bwz-accent-strong, #533399) 11%, var(--light));
+  --bwz-guide-shadow: 0 8px 24px rgba(28, 25, 23, 0.14);
+}
+
+:root[saved-theme="dark"] {
+  --bwz-guide-bg: #221f1d;
+  --bwz-guide-border: #44403c;
+  --bwz-guide-head-bg: #2c2825;
+  --bwz-guide-fg: #f5f5f4;
+  --bwz-guide-muted: #d6d3d1;
+  --bwz-guide-accent: #c4b5fd;
+  --bwz-guide-active-bg: rgba(196, 181, 253, 0.16);
+  --bwz-guide-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* 章節頁啟用導覽面板時隱藏原 Quartz 右欄 .toc，保留 .graph；非章節頁完全不受影響 */
+html[data-bwz-guide] .sidebar.right > .toc {
+  display: none;
+}
+
+/* 導覽跳轉經節後的短暫高亮標示 */
+@keyframes bwzGuideVerseFlash {
+  0% {
+    background-color: color-mix(in srgb, var(--tertiary) 26%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tertiary) 28%, transparent);
+  }
+  70% {
+    background-color: color-mix(in srgb, var(--tertiary) 18%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tertiary) 18%, transparent);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+.bwz-guide-verse-flash {
+  border-radius: 6px;
+  animation: bwzGuideVerseFlash 1.6s ease-out;
+}
+
+/* ---------- 導覽面板主容器 ---------- */
+.bwz-guide {
+  order: -1;
+  box-sizing: border-box;
+  border: 1px solid var(--bwz-guide-border);
+  border-radius: 12px;
+  background: var(--bwz-guide-bg);
+  color: var(--bwz-guide-fg);
+  font-family: $guide-sans;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bwz-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--bwz-guide-head-bg);
+  border-bottom: 1px solid var(--bwz-guide-border);
+}
+
+.bwz-guide.is-collapsed .bwz-guide-head {
+  border-bottom-color: transparent;
+}
+
+.bwz-guide-title {
+  margin: 0;
+  font-family: $guide-sans;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--bwz-guide-fg);
+  line-height: 1.3;
+}
+
+.bwz-guide-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-sizing: border-box;
+  min-height: 32px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--bwz-guide-border);
+  border-radius: 999px;
+  background: var(--bwz-guide-bg);
+  color: var(--bwz-guide-fg);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--bwz-guide-accent);
+    color: var(--bwz-guide-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-guide-accent);
+    outline-offset: 2px;
+  }
+}
+
+.bwz-guide-body {
+  padding: 0.65rem 0.75rem 0.85rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.bwz-guide.is-collapsed .bwz-guide-body {
+  display: none;
+}
+
+.bwz-guide-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  & + & {
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--bwz-guide-border);
+  }
+}
+
+.bwz-guide-sec-title {
+  margin: 0 0 0.1rem;
+  font-family: $guide-sans;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--bwz-guide-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ① 怎麼看這一頁（圖例） */
+.bwz-guide-legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bwz-guide-legend-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--bwz-guide-fg);
+}
+
+.bwz-guide-swatch {
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  line-height: 1.25;
+  white-space: nowrap;
+
+  &.is-quote {
+    color: var(--bwz-rl-quote, #703710);
+    font-weight: 600;
+    font-family: $guide-serif;
+  }
+
+  &.is-src {
+    color: var(--bwz-rl-src-fg, #523d86);
+    border-bottom: 1.5px dashed var(--bwz-rl-src-line, #8a7bb8);
+  }
+
+  &.is-orig {
+    padding: 0.05rem 0.38rem;
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--bwz-rl-chip-fg, #17526a);
+    background: var(--bwz-rl-chip-bg, #e2f0f5);
+    border: 1px solid var(--bwz-rl-chip-border, #8fbdd0);
+  }
+
+  &.is-card {
+    padding: 0.05rem 0.38rem;
+    border-radius: 5px;
+    font-weight: 600;
+    color: var(--bwz-rl-bg-accent, #7d510d);
+    background: var(--bwz-rl-bg-bg, #f7efe2);
+    border: 1px solid var(--bwz-rl-bg-border, #d8bc93);
+  }
+}
+
+/* ② 本章目錄 */
+.bwz-guide-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.bwz-guide-toc-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.3rem 0.5rem;
+  border: 0;
+  border-left: 2.5px solid transparent;
+  border-radius: 0 6px 6px 0;
+  background: transparent;
+  color: var(--bwz-guide-fg);
+  font-family: $guide-sans;
+  font-size: 0.84rem;
+  font-weight: 500;
+  line-height: 1.38;
+  text-align: left;
+  cursor: pointer;
+
+  &.is-lvl-2 {
+    font-weight: 700;
+  }
+
+  &.is-lvl-3 {
+    padding-left: 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  &.is-lvl-4 {
+    padding-left: 1.45rem;
+    font-size: 0.78rem;
+    color: var(--bwz-guide-muted);
+  }
+
+  &:hover {
+    background: var(--bwz-guide-active-bg);
+    color: var(--bwz-guide-accent);
+  }
+
+  &.is-active {
+    border-left-color: var(--bwz-guide-accent);
+    background: var(--bwz-guide-active-bg);
+    color: var(--bwz-guide-accent);
+    font-weight: 700;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-guide-accent);
+    outline-offset: -2px;
+  }
+}
+
+/* ③ 本章引用的資料 */
+.bwz-guide-src-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.bwz-guide-src-item {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--bwz-guide-fg);
+}
+
+.bwz-guide-src-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.4rem;
+}
+
+.bwz-guide-src-name {
+  font-weight: 700;
+  color: var(--bwz-guide-fg);
+}
+
+.bwz-guide-src-title {
+  color: var(--bwz-guide-muted);
+  font-size: 0.78rem;
+}
+
+.bwz-guide-src-note {
+  margin-top: 0.1rem;
+  font-size: 0.76rem;
+  color: var(--bwz-guide-muted);
+  font-family: $guide-serif;
+}
+
+.bwz-guide-src-ext {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-family: $guide-sans;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--bwz-guide-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-guide-accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+/* ④ 相關資源 */
+.bwz-guide-res-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.bwz-guide-res-btn,
+.bwz-guide-res-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.34rem 0.5rem;
+  border: 1px solid var(--bwz-guide-border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--bwz-guide-fg);
+  font-family: $guide-sans;
+  font-size: 0.81rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--bwz-guide-accent);
+    color: var(--bwz-guide-accent);
+    background: var(--bwz-guide-active-bg);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-guide-accent);
+    outline-offset: 2px;
+  }
+}
+
+.bwz-guide-res-count {
+  flex: 0 0 auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--bwz-guide-muted);
+}
+
+/* 平板右側浮動按鈕（收起時右上角入口） */
+.bwz-guide-fab {
+  display: none;
+}
+
+.bwz-guide-backdrop {
+  display: none;
+}
+
+/* ---------- 桌機（> 1200px）：固定在右欄上方（在 .graph 上面） ---------- */
+@media all and (min-width: 1201px) {
+  .sidebar.right > .bwz-guide:not(.is-collapsed) > .bwz-guide-body {
+    max-height: clamp(14rem, calc(100vh - 26rem), 34rem);
+  }
+}
+
+/* ---------- 平板（801px – 1200px）：右側抽屜讓出 grid 寬度，不蓋住正文 ---------- */
+@media all and (min-width: 801px) and (max-width: 1200px) {
+  html[data-bwz-guide="open"] .page > #quartz-body {
+    grid-template-columns: var(--bwz-left-sidebar-width, 320px) minmax(0, 1fr) 310px;
+    grid-template-areas:
+      "grid-sidebar-left grid-header grid-guide"
+      "grid-sidebar-left grid-center grid-guide"
+      "grid-sidebar-left grid-sidebar-right grid-guide"
+      "grid-sidebar-left grid-footer grid-guide";
+  }
+
+  .page > #quartz-body > .bwz-guide {
+    grid-area: grid-guide;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    margin-top: 0;
+    border-radius: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    box-shadow: var(--bwz-guide-shadow);
+    z-index: 25;
+  }
+
+  html[data-bwz-guide="collapsed"] .page > #quartz-body > .bwz-guide {
+    display: none;
+  }
+
+  .page > #quartz-body > .bwz-guide > .bwz-guide-body {
+    flex: 1 1 auto;
+    max-height: none;
+  }
+
+  html[data-bwz-guide="collapsed"] .bwz-guide-fab {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 480;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0 0.9rem;
+    border: 1px solid var(--bwz-guide-border);
+    border-radius: 999px;
+    background: var(--bwz-guide-bg);
+    color: var(--bwz-guide-fg);
+    font-family: $guide-sans;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: var(--bwz-guide-shadow);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--bwz-guide-accent);
+      color: var(--bwz-guide-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--bwz-guide-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* ---------- 手機（<= 800px）：從章節快捷列點「目錄」開底部抽屜 ---------- */
+@media all and (max-width: 800px) {
+  .bwz-guide {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 905;
+    max-height: 76vh;
+    border-radius: 16px 16px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html[data-bwz-guide="collapsed"] .bwz-guide {
+    display: none;
+  }
+
+  html[data-bwz-guide="open"] .bwz-guide-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 904;
+    background: rgba(0, 0, 0, 0.38);
+  }
+
+  .bwz-guide-head {
+    padding: 0.65rem 0.9rem;
+  }
+
+  .bwz-guide-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.85rem;
+  }
+
+  .bwz-guide-body {
+    padding: 0.75rem 0.95rem 1.25rem;
+  }
+
+  .bwz-guide-toc-btn,
+  .bwz-guide-res-btn,
+  .bwz-guide-res-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media print {
+  .bwz-guide,
+  .bwz-guide-fab,
+  .bwz-guide-backdrop {
+    display: none !important;
+  }
+}

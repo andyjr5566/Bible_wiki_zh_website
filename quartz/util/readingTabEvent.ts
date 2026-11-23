@@ -16,6 +16,17 @@ export const VERSE_JUMP_EVENT = "bwz:verse-jump"
 /** 本頁有啟用「經文｜研讀」分頁時，site-ux 標在 <html> 上的屬性；沒有研讀內容或非章節頁不標。 */
 export const TABS_ATTR = "data-ux-tabs"
 
+/** 本章導覽面板開合狀態（"open" | "collapsed"），由 chapterGuide.inline.ts 標在 <html> 上；非章節頁不標。 */
+export const GUIDE_ATTR = "data-bwz-guide"
+
+/** 手機快捷列或浮動鈕點擊「目錄／本章導覽」時發出，由 chapterGuide.inline.ts 接手開合。 */
+export const GUIDE_TOGGLE_EVENT = "bwz:guide-toggle"
+
+/** 本章導覽面板開合或可用狀態改變時由 chapterGuide.inline.ts 發出。 */
+export const GUIDE_STATE_EVENT = "bwz:guide-state"
+
+export type GuideViewport = "desktop" | "tablet" | "mobile"
+
 export interface TabChangeDetail {
   view: ReadingTab
   available: boolean
@@ -27,6 +38,12 @@ export interface TabRequestDetail {
 
 export interface VerseJumpDetail {
   verse: number
+}
+
+export interface GuideStateDetail {
+  open: boolean
+  viewport: GuideViewport
+  available: boolean
 }
 
 export function dispatchTabChange(
@@ -41,4 +58,19 @@ export function requestTabSwitch(
   target: Pick<Document, "dispatchEvent"> = document,
 ): void {
   target.dispatchEvent(new CustomEvent<TabRequestDetail>(TAB_REQUEST_EVENT, { detail: { view } }))
+}
+
+export function requestGuideToggle(
+  target: Pick<Document, "dispatchEvent"> = document,
+): void {
+  target.dispatchEvent(new CustomEvent<{}>(GUIDE_TOGGLE_EVENT, { detail: {} }))
+}
+
+export function dispatchGuideState(
+  detail: GuideStateDetail,
+  target: Pick<Document, "dispatchEvent"> = document,
+): void {
+  target.dispatchEvent(
+    new CustomEvent<GuideStateDetail>(GUIDE_STATE_EVENT, { detail }) as unknown as CustomEvent<{}>,
+  )
 }

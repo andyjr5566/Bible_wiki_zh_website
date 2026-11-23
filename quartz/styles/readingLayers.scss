@@ -107,7 +107,7 @@ $rl-muted: color-mix(in srgb, var(--darkgray) 78%, var(--gray));
 
 /* 權重刻意高過 custom.scss 的 [saved-theme] article a.internal-link */
 html[saved-theme] article a.bwz-rl-vref,
-article .bwz-rl-vref {
+.bwz-rl-vref {
   display: inline-block;
   margin: 0 0.2em 0 0.12em;
   padding: 0.05em 0.48em;
@@ -137,7 +137,7 @@ html[saved-theme] article a.bwz-rl-vref:focus-visible {
   outline-offset: 2px;
 }
 
-article .bwz-rl-vref-static {
+.bwz-rl-vref-static {
   cursor: default;
 }
 
@@ -184,7 +184,7 @@ article .bwz-rl-vref-static {
 
 /* ---------- 3. 問題式 h4 小標 ---------- */
 
-article h4.bwz-rl-q {
+h4.bwz-rl-q {
   display: flex;
   align-items: baseline;
   gap: 0.45rem;
@@ -212,8 +212,9 @@ article h4.bwz-rl-q {
 }
 
 /* ---------- 4. 三種分層卡片（原文／背景／應用） ---------- */
+/* 不限定在 article 底下：滑過連結的預覽小窗、手機的條目預覽裡也是同一種卡片，少了樣式會變成一行藍字、「展開」「收起」都露出來 */
 
-article blockquote.callout.bwz-rl-card {
+blockquote.callout.bwz-rl-card {
   --rl-accent: var(--bwz-rl-orig-accent);
   --rl-badge-fg: var(--bwz-rl-orig-badge-fg);
   --rl-bg: var(--bwz-rl-orig-bg);
@@ -361,7 +362,7 @@ article blockquote.callout.bwz-rl-card {
 }
 
 @media (max-width: 600px) {
-  article blockquote.callout.bwz-rl-card {
+  blockquote.callout.bwz-rl-card {
     & > .callout-title {
       flex-wrap: wrap;
       row-gap: 0.3rem;
@@ -662,7 +663,7 @@ a.bwz-rl-pop-link {
     display: none !important;
   }
 
-  article blockquote.callout.bwz-rl-card.is-collapsed > .callout-content {
+  blockquote.callout.bwz-rl-card.is-collapsed > .callout-content {
     display: block;
   }
 }

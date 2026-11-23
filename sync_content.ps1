@@ -2,9 +2,10 @@
 # Use it to review what would be published before pushing for real.
 param([switch]$NoPush)
 
-$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
+# The repo is wherever this script lives (also works from a git worktree of the repo).
+$repoPath = $PSScriptRoot
 $source = 'C:\Obsidian\Hermes\scripture'
-$target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
+$target = Join-Path $repoPath 'content'
 
 # The commit step below runs `git add -A`, then pushes `main`. On any other branch that would
 # sweep in-progress feature work into a "sync" commit on the wrong branch while the content
@@ -187,7 +188,7 @@ function Add-WebsiteTitles {
 
 New-Item -ItemType Directory -Path $target -Force | Out-Null
 
-$items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md','專案流程說明.md')
+$items = @('appendix', 'link_folder', 'INSTALL_COMPUTER.md', 'INSTALL_MOBILE.md', 'README.md', 'index.md','專案流程說明.md', '資料來源.md')
 foreach ($item in $items) {
     $itemPath = Join-Path $source $item
     if (Test-Path $itemPath) {
@@ -253,6 +254,14 @@ Get-ChildItem -Path $source -Directory | Where-Object { $_.Name -match '^[0-9]' 
 }
 
 Write-Host 'Content sync completed.'
+
+# ── Source-name list: the vault's _config/source_names.yaml is the only copy anyone edits ──
+# The site turns every registered name in the chapter text into an explanation card.
+$sourceNamesSrc = Join-Path $source '_config\source_names.yaml'
+if (Test-Path -LiteralPath $sourceNamesSrc) {
+    Copy-Item -LiteralPath $sourceNamesSrc -Destination (Join-Path $repoPath 'config\source-names.yaml') -Force
+    Write-Host 'Copied _config/source_names.yaml to config/source-names.yaml.'
+}
 
 
 # ── Compile config/collapse-rules.txt to quartz/static/collapse-rules.json ──
@@ -550,7 +559,6 @@ if ($NoPush) {
 }
 
 # ── Git commit & push ──────────────────────────────────────────
-$repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 Push-Location $repoPath
 
 try {

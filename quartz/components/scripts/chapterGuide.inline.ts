@@ -140,6 +140,8 @@ function collectTextOutline(dom: ChapterDom): VerseOutlineItem[] {
   let inOutlineSub = false
   for (let i = studyRegion.start + 1; i <= studyRegion.end; i += 1) {
     const el = dom.children[i]
+    // 區段的索引是在知識節點被收進 <details> 之前算的，之後子元素變少，索引可能超出範圍（出33 實例：整個面板沒掛上）
+    if (!el) continue
     const tag = el.tagName.toLowerCase()
     if (tag === "h3" || tag === "h4") {
       const text = cleanHeadingText(el)
@@ -213,13 +215,15 @@ function collectStudyOutline(dom: ChapterDom): StudyOutlineItem[] {
       })
     }
 
-    // 展開收合節點時不深入內部清單標題；本章整理與附錄則納入 ### 與 ####
-    if (headingEl.tagName.toLowerCase() === "details") continue
+    // 本章知識節點在頁面上是收合的，裡面的分類小標（人物、地點……）讀者看不到，不列進目錄。
+    // 面板可能在知識節點還沒被收進 <details> 前就建好，所以也用標題字判斷，不只看是不是 details。
+    if (headingEl.tagName.toLowerCase() === "details" || headingLabel.includes("本章知識節點")) continue
 
     const isAppendix = headingLabel.includes("附錄")
     for (const idx of sec.indices) {
       if (idx === sec.start) continue
       const child = dom.children[idx]
+      if (!child) continue
       const tag = child.tagName.toLowerCase()
       if (tag === "h3") {
         const subText = cleanHeadingText(child)
@@ -285,7 +289,7 @@ function collectResources(dom: ChapterDom, sourcesHref: string): ResourceLinkIte
   // 附錄子項：相關地圖、互動網站
   for (let i = 0; i < dom.children.length; i += 1) {
     const el = dom.children[i]
-    if (el.tagName.toLowerCase() !== "h3") continue
+    if (!el || el.tagName.toLowerCase() !== "h3") continue
     const label = cleanHeadingText(el)
     if (label === "相關地圖") {
       let count = 0

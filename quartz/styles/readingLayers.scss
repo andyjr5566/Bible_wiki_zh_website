@@ -212,9 +212,9 @@ h4.bwz-rl-q {
 }
 
 /* ---------- 4. 三種分層卡片（原文／背景／應用） ---------- */
-/* 不限定在 article 底下：滑過連結的預覽小窗、手機的條目預覽裡也是同一種卡片，少了樣式會變成一行藍字、「展開」「收起」都露出來 */
+/* 不限定在 article 底下（預覽小窗裡也是同一種卡片），也不限定元素：本機建置把 callout 產成 <blockquote>，正式站的建置產成 <div>，只寫 blockquote 時正式站的卡片會變成一行藍字、「展開」「收起」都露出來 */
 
-blockquote.callout.bwz-rl-card {
+:is(div, blockquote).callout.bwz-rl-card {
   --rl-accent: var(--bwz-rl-orig-accent);
   --rl-badge-fg: var(--bwz-rl-orig-badge-fg);
   --rl-bg: var(--bwz-rl-orig-bg);
@@ -362,7 +362,7 @@ blockquote.callout.bwz-rl-card {
 }
 
 @media (max-width: 600px) {
-  blockquote.callout.bwz-rl-card {
+  :is(div, blockquote).callout.bwz-rl-card {
     & > .callout-title {
       flex-wrap: wrap;
       row-gap: 0.3rem;
@@ -663,7 +663,7 @@ a.bwz-rl-pop-link {
     display: none !important;
   }
 
-  blockquote.callout.bwz-rl-card.is-collapsed > .callout-content {
+  :is(div, blockquote).callout.bwz-rl-card.is-collapsed > .callout-content {
     display: block;
   }
 }

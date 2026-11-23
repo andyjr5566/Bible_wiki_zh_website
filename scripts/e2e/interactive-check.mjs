@@ -252,29 +252,33 @@ async function inspectPureView(s) {
   await s.go(chapter6, 4500)
   await waitFor(s, `!!document.querySelector(".bwz-ia-line")`, 6000)
 
-  await s.ev(`sessionStorage.setItem("bwz-ux-view", "pure")`)
+  // 預設在「經文」分頁：上方一行可見、附錄小卡隱藏（點擊上方一行會暫時顯示）
+  await s.ev(`localStorage.setItem("bwz-ux-view", "text")`)
   await s.ev("location.reload()")
-  await sleep(4500)
-  await waitFor(s, `!!document.querySelector(".bwz-ia-line")`, 6000)
+  await sleep(3500)
+  await waitFor(s, `!!document.querySelector(".bwz-ia-line") && document.documentElement.hasAttribute("data-ux-marked")`, 6000)
 
-  const hidden = await s.ev(`(() => {
+  const textState = await s.ev(`(() => {
     const line = document.querySelector(".bwz-ia-line")
     const card = document.querySelector(".bwz-ia-chapter")
-    return Boolean(line && card && line.offsetParent === null && card.offsetParent === null)
+    return Boolean(line && card && line.offsetParent !== null && card.offsetParent === null)
   })()`)
-  check(s, "純經文模式隱藏上方一行與互動網站小卡", hidden)
+  check(s, "經文分頁顯示上方一行、預設隱藏附錄小卡", textState)
 
-  await s.ev(`sessionStorage.removeItem("bwz-ux-view")`)
+  // 切到「研讀」分頁：上方一行與小卡都可見
+  await s.ev(`localStorage.setItem("bwz-ux-view", "study")`)
   await s.ev("location.reload()")
-  await sleep(4500)
-  await waitFor(s, `!!document.querySelector(".bwz-ia-chapter")`, 6000)
+  await sleep(3500)
+  await waitFor(s, `!!document.querySelector(".bwz-ia-chapter") && document.documentElement.hasAttribute("data-ux-marked")`, 6000)
 
-  const shown = await s.ev(`(() => {
+  const studyState = await s.ev(`(() => {
     const line = document.querySelector(".bwz-ia-line")
     const card = document.querySelector(".bwz-ia-chapter")
     return Boolean(line && card && line.offsetParent !== null && card.offsetParent !== null)
   })()`)
-  check(s, "移除純經文模式後重新顯示上方一行與小卡", shown)
+  check(s, "研讀分頁同時顯示上方一行與互動網站小卡", studyState)
+
+  await s.ev(`localStorage.removeItem("bwz-ux-view")`)
 }
 
 async function inspectHome(s) {

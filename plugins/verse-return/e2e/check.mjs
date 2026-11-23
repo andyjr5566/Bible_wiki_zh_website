@@ -194,6 +194,9 @@ for (const theme of ["light", "dark"]) {
   const s = await mk({ theme, width: 1440, height: 900 })
   const { check } = s
   await s.go(chapterPath(2), 3500)
+  // 預設在「經文」分頁，先切到「研讀」分頁再點本章整理裡的連結
+  await clickSel(s, '.bwz-tabs [data-tab="study"]')
+  await sleep(300)
   // 第三段（三、…）裡的「四河」連結
   const info = await s.ev(`(() => {
     const h2 = document.querySelector('#本章整理'); if (!h2) return 'noh2'
@@ -214,7 +217,8 @@ for (const theme of ["light", "dark"]) {
   await waitFor(s, `location.pathname.endsWith('${encodeURI("第2章")}')`, 6000)
   await sleep(2500)
   const top = (await rectOf(s, `[id="${info}"]`))?.top
-  check(`[${theme}] 回到整理第三段的小標題（離視窗上緣 0–40px）`, top >= 0 && top <= 40, `top=${Math.round(top)}`)
+  const tabsBottom = (await rectOf(s, ".bwz-tabs"))?.bottom ?? 0
+  check(`[${theme}] 回到整理第三段的小標題（在黏頂分頁列下方 0–40px）`, top >= tabsBottom - 1 && top <= tabsBottom + 40, `top=${Math.round(top)} tabsBottom=${Math.round(tabsBottom)}`)
   check(`[${theme}] 按鈕消失`, !(await hasBtn(s)))
   close(s)
 }
@@ -317,6 +321,8 @@ for (const [w, h] of [[390, 844], [375, 667]]) {
   const s = await mk({ width: 390, height: 844, mobile: true })
   const { check } = s
   await s.go(chapterPath(2), 3500)
+  await s.ev(`document.querySelector('.bwz-tabs [data-tab="study"]')?.click()`)
+  await sleep(300)
   await s.ev(`(() => { const h2 = document.querySelector('#本章整理'); const a = [...document.querySelectorAll('article a.internal')].find((x) => (h2.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING) && !x.getAttribute('href').includes('#')); a.id = 'e2e-study-link' })()`)
   const hid = await s.ev(`(() => { const a = document.getElementById('e2e-study-link'); let h = null; for (const e of document.querySelectorAll('article h3, article h2')) if (e.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING) h = e; return h.id })()`)
   await s.ev(`document.getElementById('e2e-study-link').click()`)

@@ -1,11 +1,18 @@
-// 純經文模式的無頭 Chrome 檢查；用法：node plugins/site-ux/e2e/purecheck.mjs <siteRoot> <profileRoot> [shotDir]
+// 「經文｜研讀」分頁的無頭 Chrome 檢查（B 階段，取代原純經文模式檢查）；
+// 用法：node plugins/site-ux/e2e/purecheck.mjs <siteRoot> <profileRoot> [shotDir]
 // siteRoot 不加結尾斜線；Chrome 設定檔與可選截圖都放在命令列指定的資料夾。
-// 依附檔的選擇器：.site-ux-btn、#site-ux-panel、[data-name="view"]、#site-ux-note-view、
-// html[data-ux-view]、html[data-ux-marked]、.bwz-ux-hide、.bwz-ux-reveal、.bwz-cqb-summary。
-// 區塊依 article 內文第一層標題辨認；前後章導覽依 .table-container 的文字辨認。
-// 附檔定義的事件有 nav、prenav、hashchange、bwz:reveal；此檢查以換頁及錨點行為驗證其效果。
-// 條件式項目：內容區塊、導覽表格、朗讀列、筆記區、快捷列、整理小標題 id、首頁 link_folder 連結。
-// 這些項目依測試站實際 DOM 判定；找不到時會記為條件式略過並說明原因。
+// 驗證項目：
+//   1. 首次造訪預設「經文」分頁（藏知識節點、本章整理、附錄；保留經文、朗讀列、上下導覽、筆記區、互動提示）
+//   2. Aa 面板已拿掉「閱讀模式（研讀｜純經文）」，其餘四組設定照常運作
+//   3. 切換「研讀」分頁（藏經文清單與朗讀列，直接從知識節點與本章整理開始；桌機／平板捲動黏頂）
+//   4. localStorage 全站記憶：SPA 換頁、重新整理（首次繪製不閃爍）、新分頁皆延續上次選擇
+//   5. 研讀頁點擊同章經節小標籤（.bwz-rl-vref[data-rl-verse]）→ 切回經文分頁、捲到該節並以 .bwz-vr-flash 短暫標示
+//   6. 手機 390×844：頁首流內分頁列、捲動後快捷列以 .bwz-cqb-tabs 取代原「本章整理」鈕且可切換、無橫向捲動
+//   7. 經文分頁點指向被藏區塊的錨點／URL hash／互動網站提示 → 暫時顯示該段，換頁後清除
+//   8. 鍵盤操作（ArrowRight／ArrowLeft）與淺深色對比實測（≥ 4.5:1）
+//   9. 非章節頁（首頁、條目頁、全書目錄）不受影響
+//  10. localStorage 被封鎖時不丟例外、本頁仍可切換
+//  11. 截圖（1440、1180×820、390 × 淺深色 × 經文／研讀，涵蓋創世記第 1 章與出埃及記第 8 章）
 
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
@@ -22,13 +29,16 @@ mkdirSync(PROFILE_ROOT, { recursive: true })
 if (SHOT_DIR) mkdirSync(SHOT_DIR, { recursive: true })
 
 const SECTION_LABELS = ["本章知識節點", "本章整理", "附錄"]
-const NOTE_TEXT = "只看經文，暫時隱藏本章知識節點、本章整理和附錄；只在這個分頁有效，關掉就恢復研讀。"
-const CHROME_PROFILE = join(PROFILE_ROOT, `purecheck-${Date.now()}-${Math.floor(Math.random() * 100000)}`)
-const RELEVANT_URL = /site-ux|verse-return|appearance\.inline|early\.inline|pureMode|readingView|verseReturn/i
+const EXO8 = "/" + encodeURI("02-出埃及記/第8章")
+const GEN6 = "/" + encodeURI("01-創世記/第6章")
+const TOC = "/" + encodeURI("01-創世記/全書目錄及綱要")
+const CHROME_PROFILE = join(PROFILE_ROOT, `tabcheck-${Date.now()}-${Math.floor(Math.random() * 100000)}`)
+const RELEVANT_URL = /site-ux|verse-return|appearance\.inline|early\.inline|pureMode|readingView|chapterQuickBar|readingLayers/i
 
 let s
 const conditionalItems = []
 const pluginExceptions = []
+const contrastReport = []
 
 function skip(name, reason) {
   conditionalItems.push(`${name}：${reason}`)
@@ -37,8 +47,8 @@ function skip(name, reason) {
 
 function visibleExpression(element) {
   return `(() => {
-    if (!${element}) return false
     const e = ${element}
+    if (!e) return false
     const cs = getComputedStyle(e)
     return cs.display !== "none" && cs.visibility !== "hidden" &&
       Number(cs.opacity || "1") > 0 && (e.offsetWidth > 0 || e.offsetHeight > 0 || e.getClientRects().length > 0)
@@ -55,19 +65,39 @@ async function waitFor(expression, ms = 6000) {
   return value
 }
 
-async function go(path, wait = 3500) {
+async function go(path, wait = 3000) {
   await s.send("Page.navigate", { url: ROOT + path })
   await sleep(wait)
 }
 
-async function goUrl(url, wait = 3500) {
+async function goUrl(url, wait = 3000) {
   await s.send("Page.navigate", { url })
   await sleep(wait)
 }
 
+async function waitChapter() {
+  await waitFor(`!!document.querySelector("article ol") && document.documentElement.hasAttribute("data-ux-marked")`, 8000)
+  await sleep(250)
+}
+
+async function waitDocument() {
+  await waitFor(`document.readyState === "complete"`, 8000)
+  await sleep(400)
+}
+
+async function clickTab(tab) {
+  const ok = await s.ev(`(() => {
+    const btn = document.querySelector('.bwz-tabs [data-tab="${tab}"]')
+    if (!btn) return false
+    btn.click()
+    return true
+  })()`)
+  await sleep(250)
+  return !!ok
+}
+
 async function openPanel() {
-  const button = await s.ev(`document.querySelector(".site-ux-btn")`)
-  if (!button) return false
+  if (!(await s.ev(`!!document.querySelector(".site-ux-btn")`))) return false
   if (!(await s.ev(`!!document.querySelector("#site-ux-panel")`))) {
     await s.ev(`document.querySelector(".site-ux-btn")?.click()`)
   }
@@ -81,22 +111,11 @@ async function closePanel() {
   }
 }
 
-async function choose(name, value) {
-  if (!(await openPanel())) return false
-  // 選擇器本身含雙引號，所以用 JSON.stringify 包成字串常值，不能直接嵌進另一對雙引號
-  const selector = JSON.stringify(`#site-ux-panel [data-name="${name}"][data-value="${value}"]`)
-  const exists = await s.ev(`!!document.querySelector(${selector})`)
-  if (!exists) return false
-  await s.ev(`document.querySelector(${selector})?.click()`)
-  await sleep(250)
-  return true
-}
-
-function sectionSnapshotExpression() {
-  return `(() => {
+async function sectionSnapshot() {
+  const raw = await s.ev(`(() => {
     const article = document.querySelector("article")
     const root = article?.querySelector(":scope > .markdown-preview-view") || article
-    if (!root) return JSON.stringify({ sections: {}, hidden: [], hrs: [] })
+    if (!root) return JSON.stringify({ sections: {}, olVisible: false, raVisible: null, iaVisible: null })
     const children = [...root.children]
     const labels = ${JSON.stringify(SECTION_LABELS)}
     const norm = (v) => (v || "").replace(/\\s+/g, "").trim()
@@ -107,6 +126,7 @@ function sectionSnapshotExpression() {
       return ""
     }
     const shown = (el) => {
+      if (!el) return false
       const cs = getComputedStyle(el)
       return cs.display !== "none" && cs.visibility !== "hidden" &&
         Number(cs.opacity || "1") > 0 && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0)
@@ -119,174 +139,50 @@ function sectionSnapshotExpression() {
         found: true,
         visible: shown(el),
         display: getComputedStyle(el).display,
-        tag: el.tagName.toLowerCase(),
-        hiddenClass: el.classList.contains("bwz-ux-hide"),
-        revealClass: el.classList.contains("bwz-ux-reveal"),
+        top: Math.round(el.getBoundingClientRect().top),
       } : { found: false }
     }
-    const hidden = [...document.querySelectorAll(".bwz-ux-hide")].map((el) => ({
-      tag: el.tagName.toLowerCase(),
-      display: getComputedStyle(el).display,
-      reveal: el.classList.contains("bwz-ux-reveal"),
-      text: (el.textContent || "").trim().slice(0, 60),
-    }))
-    const hrs = [...document.querySelectorAll(".bwz-ux-hide hr, hr.bwz-ux-hide")].map((el) => ({
-      display: getComputedStyle(el).display,
-      reveal: el.classList.contains("bwz-ux-reveal"),
-    }))
-    return JSON.stringify({ sections, hidden, hrs })
-  })()`
+    const ol = root.querySelector(":scope > ol")
+    const ra = root.querySelector(":scope > .bwz-ra")
+    const ia = root.querySelector(":scope > .bwz-ia-line")
+    return JSON.stringify({
+      view: document.documentElement.getAttribute("data-ux-view"),
+      hasTabsAttr: document.documentElement.hasAttribute("data-ux-tabs"),
+      sections,
+      olVisible: shown(ol),
+      raFound: !!ra,
+      raVisible: ra ? shown(ra) : null,
+      iaFound: !!ia,
+      iaVisible: ia ? shown(ia) : null,
+    })
+  })()`)
+  return raw ? JSON.parse(raw) : { sections: {}, olVisible: false }
 }
 
-async function sectionSnapshot() {
-  const value = await s.ev(sectionSnapshotExpression())
-  return value ? JSON.parse(value) : { sections: {}, hidden: [], hrs: [] }
-}
-
-function chapterReadyExpression() {
-  return `!!document.querySelector("article ol")`
-}
-
-async function waitChapter() {
-  await waitFor(chapterReadyExpression(), 8000)
-  // 只有純經文才會有 data-ux-marked（研讀模式不在 <html> 留屬性）
-  await waitFor(`document.documentElement.getAttribute("data-ux-view") !== "pure" || document.documentElement.hasAttribute("data-ux-marked")`, 6000)
-  await sleep(250)
-}
-
-async function checkSections(mode, snapshot) {
+async function checkSections(expectedVisible, labelPrefix, snap) {
   for (const label of SECTION_LABELS) {
-    const state = snapshot.sections[label]
+    const state = snap.sections[label]
     if (!state?.found) {
-      skip(`${mode}：${label}`, "這個章節頁沒有找到對應區塊")
+      skip(`${labelPrefix}：${label}`, "此章節沒有該區塊")
       continue
     }
     s.check(
-      `${mode}：${label}${mode === "純經文" ? " 隱藏" : " 看得到"}`,
-      mode === "純經文" ? state.display === "none" : state.visible,
+      `${labelPrefix}：${label}${expectedVisible ? " 看得到" : " 隱藏"}`,
+      expectedVisible ? state.visible : state.display === "none",
       JSON.stringify(state),
     )
   }
 }
 
-async function checkChapterParts(mode) {
-  const verse = await s.ev(`(() => {
-    const e = document.querySelector("article ol")
-    if (!e) return { found: false }
-    const cs = getComputedStyle(e)
-    return { found: true, visible: cs.display !== "none" && cs.visibility !== "hidden" && e.getClientRects().length > 0 }
-  })()`)
-  if (!verse?.found) skip(`${mode}：經文清單仍看得到`, "頁面沒有 article ol")
-  else s.check(`${mode}：經文清單仍看得到`, verse.visible, JSON.stringify(verse))
-
-  const navTables = await s.ev(`(() => {
-    const shown = (e) => {
-      const cs = getComputedStyle(e)
-      return cs.display !== "none" && cs.visibility !== "hidden" && e.getClientRects().length > 0
-    }
-    return JSON.stringify([...document.querySelectorAll("article .table-container")]
-      .filter((e) => /前一章/.test(e.textContent) && /下一章/.test(e.textContent))
-      .map((e) => ({ visible: shown(e), display: getComputedStyle(e).display })))
-  })()`).then((v) => v ? JSON.parse(v) : [])
-  if (navTables.length < 2) {
-    skip(`${mode}：上下兩份前一章／下一章表格仍看得到`, `找到 ${navTables.length} 份同時含前一章與下一章的表格`)
-  } else {
-    s.check(`${mode}：上下兩份前一章／下一章表格仍看得到`, navTables.every((x) => x.visible), JSON.stringify(navTables))
-  }
-
-  const readingBar = await s.ev(`(() => {
-    const visible = (e) => {
-      const cs = getComputedStyle(e)
-      return cs.display !== "none" && cs.visibility !== "hidden" && Number(cs.opacity || "1") > 0 &&
-        (e.offsetWidth > 0 || e.offsetHeight > 0 || e.getClientRects().length > 0)
-    }
-    const selectors = ".bwz-reading-bar, .bwz-reader-bar, .bwz-audio-player, .bwz-read-aloud, [data-reading-bar]"
-    const known = [...document.querySelectorAll(selectors)]
-    const labelled = [...document.querySelectorAll("button, [role=button], audio")]
-      .filter((e) => /朗讀|播放經文|停止朗讀/.test((e.textContent || "") + " " + (e.getAttribute("aria-label") || "")))
-    const e = known[0] || labelled[0]
-    return e ? JSON.stringify({ found: true, visible: visible(e), tag: e.tagName.toLowerCase(), className: String(e.className || "") }) :
-      JSON.stringify({ found: false })
-  })()`).then((v) => v ? JSON.parse(v) : { found: false })
-  if (!readingBar.found) skip(`${mode}：朗讀列仍看得到`, "頁面沒有找到已知朗讀列選擇器或朗讀控制")
-  else s.check(`${mode}：朗讀列仍看得到`, readingBar.visible, JSON.stringify(readingBar))
-
-  const notes = await s.ev(`(() => {
-    const e = document.querySelector(".bwz-notes, #after-body, .after-body")
-    if (!e) return JSON.stringify({ found: false })
-    const cs = getComputedStyle(e)
-    return JSON.stringify({ found: true, visible: cs.display !== "none" && cs.visibility !== "hidden" &&
-      (e.offsetWidth > 0 || e.offsetHeight > 0 || e.getClientRects().length > 0), selector: e.className || e.id })
-  })()`).then((v) => v ? JSON.parse(v) : { found: false })
-  if (!notes.found) skip(`${mode}：筆記區仍看得到`, "afterBody 沒有 .bwz-notes、#after-body 或 .after-body")
-  else s.check(`${mode}：筆記區仍看得到`, notes.visible, JSON.stringify(notes))
-}
-
-async function findNextChapterTarget(chapterNumber) {
-  const value = await s.ev(`(() => {
-    const links = [...document.querySelectorAll(".table-container a[href], article a[href]")]
-    const target = links.find((a) => {
-      let decoded = a.href
-      try { decoded = decodeURIComponent(a.href) } catch {}
-      const label = (a.textContent || "").trim()
-      const context = a.closest(".table-container")?.textContent || ""
-      return decoded.includes("第${chapterNumber}章") && (/下一章/.test(label) || /下一章/.test(context))
-    })
-    if (!target) return null
-    // 暫時顯示後頁面已捲到本章整理，連結可能在畫面外；用座標點擊前先捲進畫面
-    // 網站預設是平滑捲動：不指定 instant 的話，量到的座標是捲動途中的位置，點下去會點空
-    target.scrollIntoView({ block: "center", behavior: "instant" })
-    const r = target.getBoundingClientRect()
-    return JSON.stringify({ href: target.href, x: r.left + r.width / 2, y: r.top + r.height / 2, label: target.textContent.trim() })
-  })()`)
-  return value ? JSON.parse(value) : null
-}
-
-async function clickNextChapter(chapterNumber) {
-  const target = await findNextChapterTarget(chapterNumber)
-  if (!target) return false
-  await mouse(s, target.x, target.y)
-  return !!(await waitFor(`location.pathname.endsWith(${JSON.stringify(encodeURI(`第${chapterNumber}章`))})`, 8000))
-}
-
-async function testNonChapter(pageName) {
-  await waitChapterOrDocument()
-  const count = await s.ev(`document.querySelectorAll(".bwz-ux-hide").length`)
-  s.check(`${pageName}：沒有 .bwz-ux-hide`, count === 0, count)
-
-  if (!(await openPanel())) {
-    skip(`${pageName}：Aa 沒有閱讀模式選項`, "頁面沒有 .site-ux-btn，無法開啟 Aa 面板")
-    return
-  }
-  const state = await s.ev(`(() => {
-    const radios = [...document.querySelectorAll('#site-ux-panel [data-name="view"]')]
-    return JSON.stringify({
-      offered: radios.length > 0,
-      disabled: radios.length > 0 && radios.every((e) => e.disabled || e.getAttribute("aria-disabled") === "true"),
-      count: radios.length,
-    })
-  })()`).then((v) => v ? JSON.parse(v) : { offered: false, disabled: false, count: 0 })
-  s.check(`${pageName}：Aa 沒有閱讀模式選項或選項停用`, !state.offered || state.disabled, JSON.stringify(state))
-  await closePanel()
-}
-
-async function waitChapterOrDocument() {
-  await waitFor(`document.readyState === "complete"`, 8000)
-  await sleep(500)
-}
-
 async function setTheme(theme) {
-  await s.ev(`try { localStorage.setItem("theme", ${JSON.stringify(theme)}) } catch (e) {}`)
-  await s.send("Emulation.setEmulatedMedia", {
-    features: [{ name: "prefers-color-scheme", value: theme }],
-  })
-}
-
-async function setModeAndClose(mode) {
-  const value = mode === "純經文" ? "pure" : "study"
-  const selected = await choose("view", value)
-  await closePanel()
-  return selected
+  // 直接透過 Quartz darkmode 使用的 localStorage("theme") 與 saved-theme 切換主題，
+  // 避免 CDP Emulation.setEmulatedMedia 在換頁時觸發 prefers-color-scheme change 事件把 theme 寫回系統深色。
+  await s.ev(`(() => {
+    try { localStorage.setItem("theme", ${JSON.stringify(theme)}) } catch (e) {}
+    document.documentElement.setAttribute("saved-theme", ${JSON.stringify(theme)})
+    document.body?.classList.remove("theme-light", "theme-dark")
+    document.body?.classList.add("theme-" + ${JSON.stringify(theme)})
+  })()`)
 }
 
 async function saveShot(name) {
@@ -300,230 +196,102 @@ async function saveShot(name) {
   s.check(`截圖：${name}`, true)
 }
 
-async function testMobileQuickbar() {
-  console.log("\n== 5. 手機 390：純經文隱藏快捷列整理鈕 ==")
-  await s.setViewport(390, 844, { dpr: 2, mobile: true, touch: true })
-  await go(chapterPath(1))
-  await waitChapter()
-
-  const exists = await s.ev(`!!document.querySelector(".bwz-cqb-summary")`)
-  if (!exists) {
-    skip("手機：.bwz-cqb-summary", "第 1 章沒有快捷列整理鈕")
-    return
-  }
-
-  await setModeAndClose("純經文")
-  await s.ev(`window.scrollTo(0, Math.max(800, document.documentElement.scrollHeight * 0.65))`)
-  await sleep(700)
-  const pure = await s.ev(`(() => {
-    const e = document.querySelector(".bwz-cqb-summary")
-    const cs = e && getComputedStyle(e)
-    return !!e && cs.display === "none"
-  })()`)
-  s.check("手機純經文：快捷列整理鈕 display:none", pure)
-
-  await setModeAndClose("研讀")
-  await s.ev(`window.scrollTo(0, Math.max(800, document.documentElement.scrollHeight * 0.65))`)
-  await sleep(900)
-  const study = await s.ev(visibleExpression(`document.querySelector(".bwz-cqb-summary")`))
-  s.check("手機研讀：捲動後快捷列整理鈕看得到", study)
+function srgbContrastExpr(fgSel, bgSel) {
+  return `(() => {
+    const parse = (c) => {
+      const nums = (c.match(/[\\d.]+/g) || []).map(Number)
+      if (/^color\\(\\s*srgb/i.test(c)) return [nums[0] * 255, nums[1] * 255, nums[2] * 255]
+      return [nums[0], nums[1], nums[2]]
+    }
+    const lum = ([r, g, b]) => {
+      const f = (v) => {
+        v /= 255
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+      }
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+    }
+    const fg = parse(getComputedStyle(document.querySelector(${JSON.stringify(fgSel)})).color)
+    const bg = parse(getComputedStyle(document.querySelector(${JSON.stringify(bgSel)})).backgroundColor)
+    const a = lum(fg), b = lum(bg)
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+  })()`
 }
 
-async function testReveal() {
-  console.log("\n== 6. 純經文錨點：暫時顯示整理區塊，換頁後恢復 ==")
-  await s.setViewport(1440, 900)
-  await go(chapterPath(1))
-  await waitChapter()
-  await setModeAndClose("純經文")
-
-  const id = await s.ev(`(() => {
-    const article = document.querySelector("article")
-    const root = article?.querySelector(":scope > .markdown-preview-view") || article
-    if (!root) return null
-    const children = [...root.children]
-    const norm = (v) => (v || "").replace(/\\s+/g, "").trim()
-    const titleOf = (el) => el.matches("h2") ? el.textContent :
-      el.matches("details") ? (el.querySelector(":scope > summary .collapsible-title")?.textContent ||
-        el.querySelector(":scope > summary")?.textContent || "") : ""
-    const index = children.findIndex((e) => norm(titleOf(e)).includes("本章整理"))
-    if (index < 0) return null
-    for (let i = index + 1; i < children.length; i++) {
-      const node = children[i]
-      if (node.matches("h2, details")) break
-      const heading = node.matches("h3") ? node : node.querySelector("h3")
-      if (heading?.id) return heading.id
-    }
-    return null
-  })()`)
-
-  if (!id) {
-    skip("純經文錨點暫時顯示", "本章整理沒有帶 id 的 h3 小標題")
-    return
-  }
-
-  await go(chapterPath(1) + "#" + encodeURIComponent(id), 4000)
-  await waitChapter()
-  await waitFor(`!!document.querySelector(".bwz-ux-reveal")`, 3000)
-  const revealed = await s.ev(`(() => {
-    const target = document.getElementById(${JSON.stringify(id)})
-    if (!target) return { found: false }
-    const root = target.closest(".bwz-ux-reveal")
-    const cs = root && getComputedStyle(root)
-    return {
-      found: true,
-      revealClass: !!root,
-      visible: !!root && cs.display !== "none" && cs.visibility !== "hidden" && root.getClientRects().length > 0,
-      id: target.id,
-    }
-  })()`)
-  s.check("純經文：直接開本章整理 h3 錨點會暫時顯示該區塊", revealed?.found && revealed.revealClass && revealed.visible, JSON.stringify(revealed))
-
-  const otherHidden = await s.ev(`(() => {
-    const rest = [...document.querySelectorAll(".bwz-ux-hide:not(.bwz-ux-reveal)")]
-    return JSON.stringify({ count: rest.length, allHidden: rest.every((e) => getComputedStyle(e).display === "none") })
-  })()`).then((v) => v ? JSON.parse(v) : { count: 0, allHidden: false })
-  if (!otherHidden.count) skip("純經文：其他被藏區塊仍藏著", "頁面沒有其他未 reveal 的 .bwz-ux-hide")
-  else s.check("純經文：其他被藏區塊仍藏著", otherHidden.allHidden, JSON.stringify(otherHidden))
-
-  const navigated = await clickNextChapter(2)
-  s.check("暫時顯示後以 SPA 換到第 2 章", navigated, await s.ev(`location.pathname`))
-  if (navigated) {
-    await waitChapter()
-    const reset = await s.ev(`(() => ({
-      pure: document.documentElement.getAttribute("data-ux-view") === "pure",
-      reveals: document.querySelectorAll(".bwz-ux-reveal").length,
-      hiddenVisible: [...document.querySelectorAll(".bwz-ux-hide:not(.bwz-ux-reveal)")]
-        .some((e) => getComputedStyle(e).display !== "none")
-    }))()`)
-    s.check("SPA 換頁後仍是純經文、暫時顯示已清除", reset?.pure && reset.reveals === 0 && !reset.hiddenVisible, JSON.stringify(reset))
-  }
+async function measureContrast(themeLabel) {
+  const activeSel = '.bwz-tabs [role="tab"][aria-selected="true"]'
+  const inactiveSel = '.bwz-tabs [role="tab"][aria-selected="false"]'
+  const hintSel = ".bwz-tabs-hint"
+  const dbg = await s.ev(`JSON.stringify({ attr: document.documentElement.getAttribute("saved-theme"), ls: localStorage.getItem("theme"), mqDark: matchMedia("(prefers-color-scheme: dark)").matches, href: location.pathname })`).then(JSON.parse)
+  const actualTheme = dbg.attr
+  const activeRatio = await s.ev(srgbContrastExpr(activeSel, activeSel))
+  const inactiveRatio = await s.ev(srgbContrastExpr(inactiveSel, ".bwz-tabs-seg"))
+  const hintRatio = await s.ev(srgbContrastExpr(hintSel, ".bwz-tabs"))
+  contrastReport.push(
+    `${themeLabel} (saved-theme=${actualTheme}): active=${Number(activeRatio).toFixed(2)}:1, inactive=${Number(inactiveRatio).toFixed(2)}:1, hint=${Number(hintRatio).toFixed(2)}:1`,
+  )
+  s.check(`[${themeLabel}] 頁面主題確實為 ${themeLabel.endsWith("dark") ? "dark" : "light"}`, actualTheme === (themeLabel.endsWith("dark") ? "dark" : "light"), JSON.stringify(dbg))
+  s.check(`[${themeLabel}] 分頁選中按鈕文字對比 ≥ 4.5:1`, activeRatio >= 4.5, `${Number(activeRatio).toFixed(2)}:1`)
+  s.check(`[${themeLabel}] 分頁未選中按鈕文字對比 ≥ 4.5:1`, inactiveRatio >= 4.5, `${Number(inactiveRatio).toFixed(2)}:1`)
+  s.check(`[${themeLabel}] 分頁列說明文字對比 ≥ 4.5:1`, hintRatio >= 4.5, `${Number(hintRatio).toFixed(2)}:1`)
 }
 
-async function testSettingsCombination() {
-  console.log("\n== 7. Aa 字級與經文連結設定在兩種閱讀模式一致 ==")
-  await s.setViewport(1440, 900)
-  await go(chapterPath(1))
-  await waitChapter()
-  await setModeAndClose("研讀")
-
-  const hasLink = await s.ev(`!!(document.querySelector("article ol")?.querySelector("a"))`)
-  if (!hasLink) {
-    skip("Aa 設定組合比較", "第 1 章經文清單沒有可比較的連結")
-    return
-  }
-
-  const measure = async () => {
-    const raw = await s.ev(`(() => {
-      const list = document.querySelector("article ol.bwz-ux-verses") || document.querySelector("article ol")
-      const link = list?.querySelector("a")
-      if (!list || !link) return null
-      const ls = getComputedStyle(list)
-      const as = getComputedStyle(link)
-      return JSON.stringify({
-        fontSize: ls.fontSize,
-        link: {
-          color: as.color,
-          fontSize: as.fontSize,
-          textDecorationLine: as.textDecorationLine,
-          opacity: as.opacity,
-          visibility: as.visibility,
-          display: as.display,
-        },
-      })
-    })()`)
-    return raw ? JSON.parse(raw) : null
-  }
-
-  for (const fontSize of ["s", "m", "l"]) {
-    for (const links of ["normal", "quiet", "hidden"]) {
-      const fontOk = await choose("fontSize", fontSize)
-      const linksOk = await choose("links", links)
-      const studyModeOk = await choose("view", "study")
-      const study = await measure()
-      const pureModeOk = await choose("view", "pure")
-      const pure = await measure()
-      const ok = fontOk && linksOk && studyModeOk && pureModeOk && !!study && !!pure &&
-        JSON.stringify(study) === JSON.stringify(pure)
-      s.check(
-        `字級 ${fontSize}／經文連結 ${links}：純經文與研讀的計算樣式一致`,
-        ok,
-        JSON.stringify({ study, pure, choices: { fontOk, linksOk, studyModeOk, pureModeOk } }),
-      )
-    }
-  }
-  await setModeAndClose("研讀")
-}
-
-async function testNonChapterPages() {
-  console.log("\n== 8. 首頁與 link_folder 條目頁不提供純經文 ==")
-  await s.setViewport(1440, 900)
-  await setModeAndClose("研讀")
-  await go("/", 3500)
-  await waitChapterOrDocument()
-  await testNonChapter("首頁")
-
-  const entry = await s.ev(`(() => {
-    const links = [...document.querySelectorAll("a[href]")]
-    const decodedPath = (a) => {
-      try { return decodeURIComponent(new URL(a.href, location.href).pathname) }
-      catch { return a.href }
-    }
-    const target = links.find((a) => {
-      const path = decodedPath(a)
-      return /(?:^|\\/)link_folder\\//i.test(path) && new URL(a.href, location.href).origin === location.origin
+async function clickNextChapter(chapterNumber) {
+  const target = await s.ev(`(() => {
+    const links = [...document.querySelectorAll(".table-container a[href], article a[href]")]
+    const el = links.find((a) => {
+      let decoded = a.href
+      try { decoded = decodeURIComponent(a.href) } catch {}
+      const label = (a.textContent || "").trim()
+      const context = a.closest(".table-container")?.textContent || ""
+      return decoded.includes("第${chapterNumber}章") && (/下一章/.test(label) || /下一章/.test(context))
     })
-    return target ? JSON.stringify({ href: target.href, text: target.textContent.trim() }) : null
-  })()`)
-
-  if (!entry) {
-    skip("link_folder 條目頁 Aa 與隱藏標記檢查", "首頁沒有找到同站的 link_folder/ 連結")
-    return
-  }
-
-  const target = JSON.parse(entry)
-  await goUrl(target.href, 3500)
-  await waitChapterOrDocument()
-  const slug = await s.ev(`document.body?.dataset.slug || ""`)
-  const isChapter = await s.ev(`document.body?.dataset.slug?.includes("/第") && document.body?.dataset.slug?.endsWith("章")`)
-  if (isChapter) {
-    skip("link_folder 條目頁 Aa 與隱藏標記檢查", `連結目標看起來是章節頁：${slug}`)
-    return
-  }
-  await testNonChapter("link_folder 條目頁")
+    if (!el) return null
+    el.scrollIntoView({ block: "center", behavior: "instant" })
+    const r = el.getBoundingClientRect()
+    return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 })
+  })()`).then((v) => (v ? JSON.parse(v) : null))
+  if (!target) return false
+  await mouse(s, target.x, target.y)
+  return !!(await waitFor(`location.pathname.endsWith(${JSON.stringify(encodeURI(`第${chapterNumber}章`))})`, 8000))
 }
 
-async function testBlockedSessionStorage() {
-  console.log("\n== 9. sessionStorage 被封鎖時頁面仍可操作 ==")
-  await s.setViewport(1440, 900)
-  await setModeAndClose("研讀")
-  const blocked = `Object.defineProperty(window, "sessionStorage", {
-    configurable: true,
-    get() { throw new DOMException("blocked", "SecurityError") }
-  });`
-  const installed = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: blocked })
+async function testPersistenceAndNewTab() {
+  console.log("\n== 3. SPA 換頁、重新整理（不閃爍）與新分頁（localStorage 記憶） ==")
+  const moved = await clickNextChapter(2)
+  s.check("研讀分頁下以 SPA 換到第 2 章", moved, await s.ev(`location.pathname`))
+  if (moved) {
+    await waitChapter()
+    const snap2 = await sectionSnapshot()
+    s.check("SPA 換到第 2 章仍維持研讀分頁（藏經文、顯示本章整理）", snap2.view === "study" && !snap2.olVisible && snap2.sections["本章整理"]?.visible, JSON.stringify(snap2))
+  }
+
+  // 重新整理：驗證 DOMContentLoaded 第一次繪製前就已是 study、經文清單不可見
+  const captureFirstPaint = `(() => {
+    window.__tabFirstPaint = null
+    document.addEventListener("DOMContentLoaded", () => {
+      const ol = document.querySelector("article .markdown-preview-view > ol") || document.querySelector("article ol")
+      let olVisible = null
+      if (ol) {
+        const cs = getComputedStyle(ol)
+        olVisible = cs.display !== "none" && cs.visibility !== "hidden"
+      }
+      window.__tabFirstPaint = {
+        view: document.documentElement.getAttribute("data-ux-view"),
+        olVisible,
+      }
+    }, { once: true })
+  })()`
+  const fpScript = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: captureFirstPaint })
   await s.send("Page.reload", { ignoreCache: true })
   await waitChapter()
-  await sleep(350)
-  const available = await s.ev(`!!document.querySelector('#site-ux-panel [data-name="view"][data-value="pure"]')`)
-    .then((v) => !!v)
-  if (available) {
-    await setModeAndClose("純經文")
-    const applied = await waitFor(`document.documentElement.getAttribute("data-ux-view") === "pure"`, 2500)
-    s.check("sessionStorage 被封鎖：仍可在本頁切換純經文", !!applied)
-  } else {
-    s.check("sessionStorage 被封鎖：頁面可用且閱讀模式選項優雅不提供", true)
+  await waitFor(`!!window.__tabFirstPaint`, 6000)
+  const fp = await s.ev(`window.__tabFirstPaint || null`)
+  s.check("重新整理第一次 DOMContentLoaded 已是 study 且經文不可見", fp?.view === "study" && fp?.olVisible === false, JSON.stringify(fp))
+  if (fpScript?.identifier) {
+    await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: fpScript.identifier })
   }
 
-  await sleep(700)
-  const relevant = pluginExceptions.filter((x) => RELEVANT_URL.test(x.url))
-  s.check("sessionStorage 被封鎖：site-ux／verse-return 沒有可辨識來源的 JS 例外", relevant.length === 0, JSON.stringify(relevant))
-  if (installed?.identifier) {
-    await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: installed.identifier })
-  }
-}
-
-async function testFreshTab() {
-  console.log("\n== 4. 新分頁回到研讀 ==")
+  // 同一瀏覽器開新分頁：localStorage 記憶應延續 "study"
   const browser = await s.openBrowserSocket()
   const created = await browser.send("Target.createTarget", { url: "about:blank" })
   const attached = await browser.send("Target.attachToTarget", { targetId: created.targetId, flatten: true })
@@ -533,32 +301,21 @@ async function testFreshTab() {
   await browser.send("Page.navigate", { url: ROOT + chapterPath(1) }, sessionId)
 
   const evaluate = async (expression) => {
-    const result = await browser.send("Runtime.evaluate", {
-      expression,
-      returnByValue: true,
-      awaitPromise: true,
-    }, sessionId)
+    const result = await browser.send(
+      "Runtime.evaluate",
+      { expression, returnByValue: true, awaitPromise: true },
+      sessionId,
+    )
     return result?.result?.value
   }
   let state
   for (let i = 0; i < 60; i++) {
     const raw = await evaluate(`(() => {
-      const ready = !!document.querySelector("article ol") && (document.documentElement.getAttribute("data-ux-view") !== "pure" || document.documentElement.hasAttribute("data-ux-marked"))
+      const ready = !!document.querySelector(".bwz-tabs") && document.documentElement.hasAttribute("data-ux-marked")
       return ready ? JSON.stringify({
-        attr: document.documentElement.getAttribute("data-ux-view"),
-        storage: (() => { try { return sessionStorage.getItem("bwz-ux-view") } catch { return "ERR" } })(),
-        studyVisible: (() => {
-          const article = document.querySelector("article")
-          const root = article?.querySelector(":scope > .markdown-preview-view") || article
-          const children = [...(root?.children || [])]
-          const title = (e) => e.matches("h2") ? e.textContent :
-            e.matches("details") ? (e.querySelector(":scope > summary .collapsible-title")?.textContent ||
-              e.querySelector(":scope > summary")?.textContent || "") : ""
-          const e = children.find((x) => (title(x) || "").replace(/\\s+/g, "").includes("本章整理"))
-          if (!e) return null
-          const cs = getComputedStyle(e)
-          return cs.display !== "none" && cs.visibility !== "hidden" && e.getClientRects().length > 0
-        })()
+        view: document.documentElement.getAttribute("data-ux-view"),
+        ls: (() => { try { return localStorage.getItem("bwz-ux-view") } catch { return "ERR" } })(),
+        olDisplay: getComputedStyle(document.querySelector("article ol")).display,
       }) : null
     })()`)
     if (raw) {
@@ -567,72 +324,316 @@ async function testFreshTab() {
     }
     await sleep(150)
   }
-  s.check("同一 Chrome 新分頁沒有繼承純經文，回到研讀", !!state && state.attr === null && state.storage === null && state.studyVisible === true, JSON.stringify(state))
-
+  s.check("新分頁延續 localStorage 上次選擇的「研讀」分頁", !!state && state.view === "study" && state.ls === "study" && state.olDisplay === "none", JSON.stringify(state))
   await browser.send("Target.closeTarget", { targetId: created.targetId })
 }
 
-async function testFirstPaintAndNavigation() {
-  console.log("\n== 3. SPA 換頁、重新整理與第一次繪製 ==")
-  const moved = await clickNextChapter(2)
-  s.check("純經文時以 SPA 連到第 2 章", moved, await s.ev(`location.pathname`))
-  if (!moved) return
+async function testVerseTagJump() {
+  console.log("\n== 4. 研讀頁點擊經節小標籤 → 切回經文頁、捲到該節並短暫標示 ==")
+  await s.setViewport(1440, 900)
+  await go(chapterPath(1))
   await waitChapter()
-  s.check("SPA 換到第 2 章仍是純經文", await s.ev(`document.documentElement.getAttribute("data-ux-view") === "pure"`))
+  await clickTab("study")
+  await sleep(300)
 
-  const captureFirstPaint = `(() => {
-    window.__purecheckFirstPaint = null
-    document.addEventListener("DOMContentLoaded", () => {
-      const article = document.querySelector("article")
-      const root = article?.querySelector(":scope > .markdown-preview-view") || article
-      const children = [...(root?.children || [])]
-      const title = (e) => e.matches("h2") ? e.textContent :
-        e.matches("details") ? (e.querySelector(":scope > summary .collapsible-title")?.textContent ||
-          e.querySelector(":scope > summary")?.textContent || "") : ""
-      const study = children.find((e) => (title(e) || "").replace(/\\s+/g, "").includes("本章整理"))
-      let studyVisible = null
-      if (study) {
-        const cs = getComputedStyle(study)
-        studyVisible = cs.display !== "none" && cs.visibility !== "hidden" &&
-          (study.offsetWidth > 0 || study.offsetHeight > 0 || study.getClientRects().length > 0)
-      }
-      window.__purecheckFirstPaint = {
-        view: document.documentElement.getAttribute("data-ux-view"),
-        studyFound: !!study,
-        studyVisible,
-      }
-    }, { once: true })
-  })()`
-  await s.send("Page.addScriptToEvaluateOnNewDocument", { source: captureFirstPaint })
-  await s.send("Page.reload", { ignoreCache: true })
-  await waitChapter()
-  await waitFor(`!!window.__purecheckFirstPaint`, 6000)
-  const snapshot = await s.ev(`window.__purecheckFirstPaint || null`)
-  s.check("重新整理第一次 DOMContentLoaded 已是 pure", snapshot?.view === "pure", JSON.stringify(snapshot))
-  if (!snapshot?.studyFound) skip("第一次繪製：本章整理不可見", "DOM 上沒有找到本章整理標題")
-  else s.check("重新整理第一次 DOMContentLoaded 本章整理不可見", snapshot.studyVisible === false, JSON.stringify(snapshot))
+  const vrefInfo = await s.ev(`(() => {
+    const el = [...document.querySelectorAll('.bwz-rl-vref[data-rl-verse]')].find((a) => Number(a.dataset.rlVerse) >= 3)
+      || document.querySelector('.bwz-rl-vref[data-rl-verse]')
+    if (!el) return null
+    const verse = Number(el.dataset.rlVerse)
+    el.click()
+    return JSON.stringify({ verse, text: (el.textContent || "").trim() })
+  })()`).then((v) => (v ? JSON.parse(v) : null))
+
+  if (!vrefInfo) {
+    skip("研讀頁經節小標籤跳轉", "第 1 章沒有帶 data-rl-verse 的 .bwz-rl-vref")
+    return
+  }
+
+  await sleep(300)
+  const after = await s.ev(`(() => {
+    const li = document.getElementById("v${vrefInfo.verse}")
+    const r = li?.getBoundingClientRect()
+    const tabs = document.querySelector(".bwz-tabs")?.getBoundingClientRect()
+    return JSON.stringify({
+      view: document.documentElement.getAttribute("data-ux-view"),
+      flashed: !!li?.classList.contains("bwz-vr-flash"),
+      belowTabs: !!r && r.top >= (tabs?.bottom ?? 0) - 2 && r.bottom <= window.innerHeight,
+      top: r ? Math.round(r.top) : null,
+      tabsBottom: tabs ? Math.round(tabs.bottom) : 0,
+    })
+  })()`).then((v) => (v ? JSON.parse(v) : null))
+
+  s.check(
+    `點研讀頁經節標籤「${vrefInfo.text}」（第 ${vrefInfo.verse} 節）→ 切回經文、捲到該節且不被分頁列遮住並標示 .bwz-vr-flash`,
+    !!after && after.view === "text" && after.flashed && after.belowTabs,
+    JSON.stringify(after),
+  )
 }
 
-async function testScreenshots() {
-  if (!SHOT_DIR) return
-  console.log("\n== 截圖：研讀與純經文 × 1440／390 × 淺深 ==")
-  for (const [width, height, mobile] of [[1440, 900, false], [390, 844, true]]) {
-    await s.setViewport(width, height, { dpr: mobile ? 2 : 1, mobile, touch: mobile })
-    for (const theme of ["light", "dark"]) {
-      await setTheme(theme)
-      await go(chapterPath(1), 3500)
+async function testMobileQuickbarAndTabs() {
+  console.log("\n== 5. 手機 390×844：頁首分頁列 ＋ 捲動後快捷列分頁取代「本章整理」 ==")
+  await s.setViewport(390, 844, { dpr: 2, mobile: true, touch: true })
+  await go(chapterPath(1))
+  await waitChapter()
+  await clickTab("text")
+  await sleep(250)
+
+  const topState = await s.ev(`(() => ({
+    hasOldSummaryBtn: !!document.querySelector(".bwz-cqb-summary"),
+    tabsVisible: ${visibleExpression('document.querySelector(".bwz-tabs")')},
+    tabsPos: getComputedStyle(document.querySelector(".bwz-tabs")).position,
+    noOverflow: document.documentElement.scrollWidth <= window.innerWidth,
+  }))()`)
+  s.check(
+    "手機頁首：無舊 .bwz-cqb-summary、頁首流內分頁列可見、無橫向捲動",
+    !!topState && !topState.hasOldSummaryBtn && topState.tabsVisible && topState.tabsPos === "static" && topState.noOverflow,
+    JSON.stringify(topState),
+  )
+
+  await s.ev(`window.scrollTo(0, Math.max(700, document.documentElement.scrollHeight * 0.55))`)
+  await sleep(600)
+  const barState = await s.ev(`(() => {
+    const bar = document.querySelector(".bwz-cqb")
+    const tabs = bar?.querySelector(".bwz-cqb-tabs")
+    const br = bar?.getBoundingClientRect()
+    return JSON.stringify({
+      shown: !!bar?.classList.contains("is-shown"),
+      tabsVisible: ${visibleExpression('document.querySelector(".bwz-cqb .bwz-cqb-tabs")')},
+      barRight: br ? Math.round(br.right) : 9999,
+      innerW: window.innerWidth,
+      noOverflow: document.documentElement.scrollWidth <= window.innerWidth,
+    })
+  })()`).then((v) => (v ? JSON.parse(v) : null))
+  s.check(
+    "手機捲動後：快捷列浮出並內含「經文｜研讀」分頁、無橫向溢出",
+    !!barState && barState.shown && barState.tabsVisible && barState.barRight <= barState.innerW + 1 && barState.noOverflow,
+    JSON.stringify(barState),
+  )
+
+  await s.ev(`document.querySelector('.bwz-cqb [data-tab="study"]')?.click()`)
+  await sleep(350)
+  const switched = await s.ev(`(() => ({
+    view: document.documentElement.getAttribute("data-ux-view"),
+    cqbStudy: document.querySelector('.bwz-cqb [data-tab="study"]')?.getAttribute("aria-selected"),
+    topStudy: document.querySelector('.bwz-tabs [data-tab="study"]')?.getAttribute("aria-selected"),
+  }))()`)
+  s.check(
+    "手機點快捷列「研讀」：切換分頁並同步頁首與快捷列狀態",
+    switched?.view === "study" && switched.cqbStudy === "true" && switched.topStudy === "true",
+    JSON.stringify(switched),
+  )
+
+  await s.ev(`document.querySelector('.bwz-cqb [data-tab="text"]')?.click()`)
+  await sleep(250)
+}
+
+async function testRevealAndInteractiveLine() {
+  console.log("\n== 6. 經文分頁：錨點暫時顯示與互動網站提示 ==")
+  await s.setViewport(1440, 900)
+  await go(chapterPath(1))
+  await waitChapter()
+  await clickTab("text")
+
+  const headingId = await s.ev(`(() => {
+    const article = document.querySelector("article")
+    const root = article?.querySelector(":scope > .markdown-preview-view") || article
+    const children = [...(root?.children || [])]
+    const norm = (v) => (v || "").replace(/\\s+/g, "").trim()
+    const idx = children.findIndex((e) => e.matches("h2") && norm(e.textContent).includes("本章整理"))
+    if (idx < 0) return null
+    for (let i = idx + 1; i < children.length; i++) {
+      if (children[i].matches("h2, details")) break
+      if (children[i].matches("h3") && children[i].id) return children[i].id
+    }
+    return null
+  })()`)
+
+  if (!headingId) {
+    skip("經文分頁錨點暫時顯示", "第 1 章沒有帶 id 的本章整理 h3")
+  } else {
+    await go(chapterPath(1) + "#" + encodeURIComponent(headingId), 3500)
+    await waitChapter()
+    const rev = await s.ev(`(() => {
+      const target = document.getElementById(${JSON.stringify(headingId)})
+      const box = target?.closest(".bwz-ux-reveal")
+      const others = [...document.querySelectorAll(".bwz-ux-hide:not(.bwz-ux-reveal)")]
+      return JSON.stringify({
+        view: document.documentElement.getAttribute("data-ux-view"),
+        revealed: !!box && getComputedStyle(box).display !== "none",
+        otherHiddenCount: others.length,
+        othersHidden: others.every((e) => getComputedStyle(e).display === "none"),
+      })
+    })()`).then((v) => (v ? JSON.parse(v) : null))
+    s.check(
+      "經文分頁直接開本章整理錨點：暫時顯示該段、其他段仍藏著、不改變分頁偏好",
+      !!rev && rev.view === "text" && rev.revealed && rev.othersHidden,
+      JSON.stringify(rev),
+    )
+
+    const moved = await clickNextChapter(2)
+    if (moved) {
       await waitChapter()
-      for (const mode of ["研讀", "純經文"]) {
-        const selected = await setModeAndClose(mode)
-        await sleep(400)
-        if (!selected) {
-          s.check(`截圖前選取 ${mode}（${width} ${theme}）`, false, "Aa 面板沒有對應選項")
-          continue
+      const cleared = await s.ev(`document.querySelectorAll(".bwz-ux-reveal").length === 0`)
+      s.check("SPA 換頁後暫時顯示自動清除", !!cleared)
+    }
+  }
+
+  // 創世記第 6 章：經文分頁點互動網站提示（.bwz-ia-line）→ 暫時顯示附錄並看得到小卡
+  await go(GEN6)
+  await waitChapter()
+  const iaOk = await s.ev(`(() => {
+    const line = document.querySelector(".bwz-ia-line")
+    if (!line || getComputedStyle(line).display === "none") return false
+    line.click()
+    return true
+  })()`)
+  await sleep(400)
+  const iaAfter = await s.ev(`(() => {
+    const h = document.querySelector('h3[id="互動網站"]')
+    const card = document.querySelector(".bwz-ia-chapter")
+    return JSON.stringify({
+      clicked: ${Boolean(iaOk)},
+      headingVisible: !!h && getComputedStyle(h).display !== "none" && h.getClientRects().length > 0,
+      cardVisible: !!card && getComputedStyle(card).display !== "none" && card.getClientRects().length > 0,
+    })
+  })()`).then((v) => (v ? JSON.parse(v) : null))
+  s.check("經文分頁點互動網站提示（.bwz-ia-line）：暫時顯示附錄與互動網站小卡", !!iaAfter && iaAfter.clicked && iaAfter.headingVisible && iaAfter.cardVisible, JSON.stringify(iaAfter))
+}
+
+async function testKeyboardAndContrast() {
+  console.log("\n== 7. 鍵盤操作、平板 1180 黏頂與淺深色對比實測 ==")
+  await s.setViewport(1180, 820)
+  for (const theme of ["light", "dark"]) {
+    await setTheme(theme)
+    await go(chapterPath(1))
+    await waitChapter()
+    await clickTab("text")
+    await sleep(250)
+    await measureContrast(`1180-${theme}`)
+
+    // 捲動確認分頁列黏在頂端
+    await s.ev(`window.scrollTo(0, 700)`)
+    await sleep(300)
+    const sticky = await s.ev(`(() => {
+      const bar = document.querySelector(".bwz-tabs")
+      const r = bar?.getBoundingClientRect()
+      return JSON.stringify({ pos: bar ? getComputedStyle(bar).position : null, top: r ? Math.round(r.top) : null })
+    })()`).then((v) => (v ? JSON.parse(v) : null))
+    s.check(`[1180 ${theme}] 平板捲動時分頁列黏在視窗頂端`, sticky?.pos === "sticky" && sticky.top >= -1 && sticky.top <= 2, JSON.stringify(sticky))
+    await s.ev(`window.scrollTo(0, 0)`)
+  }
+
+  // 鍵盤 ArrowRight / ArrowLeft
+  await s.setViewport(1440, 900)
+  await setTheme("light")
+  await go(chapterPath(1))
+  await waitChapter()
+  await clickTab("text")
+  await s.ev(`document.querySelector('.bwz-tabs [data-tab="text"]').focus()`)
+  await s.send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "ArrowRight", code: "ArrowRight", windowsVirtualKeyCode: 39 })
+  await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: "ArrowRight", code: "ArrowRight", windowsVirtualKeyCode: 39 })
+  await sleep(250)
+  const kbStudy = await s.ev(`document.documentElement.getAttribute("data-ux-view") === "study" && document.activeElement?.dataset?.tab === "study"`)
+  await s.send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "ArrowLeft", code: "ArrowLeft", windowsVirtualKeyCode: 37 })
+  await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: "ArrowLeft", code: "ArrowLeft", windowsVirtualKeyCode: 37 })
+  await sleep(250)
+  const kbText = await s.ev(`document.documentElement.getAttribute("data-ux-view") === "text" && document.activeElement?.dataset?.tab === "text"`)
+  s.check("鍵盤方向鍵（ArrowRight／ArrowLeft）可切換分頁並移動焦點", !!kbStudy && !!kbText, `kbStudy=${kbStudy} kbText=${kbText}`)
+}
+
+async function testNonChapterPages() {
+  console.log("\n== 8. 首頁、全書目錄與條目頁不顯示分頁且不隱藏內容 ==")
+  await s.setViewport(1440, 900)
+  const pages = [
+    ["首頁", "/?skip=1"],
+    ["全書目錄及綱要", TOC],
+    ["條目頁（亞伯拉罕）", "/" + encodeURI("link_folder/人物/亞伯拉罕")],
+  ]
+  for (const [label, path] of pages) {
+    await go(path, 2500)
+    await waitDocument()
+    const st = await s.ev(`(() => ({
+      tabs: document.querySelectorAll(".bwz-tabs").length,
+      hide: document.querySelectorAll(".bwz-ux-hide, .bwz-ux-text-only").length,
+      hasAttr: document.documentElement.hasAttribute("data-ux-tabs"),
+    }))()`)
+    s.check(`${label}：沒有分頁列與隱藏標記`, st?.tabs === 0 && st.hide === 0 && !st.hasAttr, JSON.stringify(st))
+  }
+}
+
+async function testBlockedLocalStorage() {
+  console.log("\n== 9. localStorage 被封鎖時不出錯且本頁仍可切換分頁 ==")
+  await s.setViewport(1440, 900)
+  const blocked = `Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    get() { throw new DOMException("blocked", "SecurityError") }
+  });`
+  const installed = await s.send("Page.addScriptToEvaluateOnNewDocument", { source: blocked })
+  await go(chapterPath(1), 3000)
+  await waitChapter()
+  const initView = await s.ev(`document.documentElement.getAttribute("data-ux-view")`)
+  await clickTab("study")
+  const afterClick = await s.ev(`document.documentElement.getAttribute("data-ux-view")`)
+  s.check("localStorage 被封鎖：預設經文，且本頁仍可點擊切到研讀", initView === "text" && afterClick === "study", `init=${initView} after=${afterClick}`)
+  if (installed?.identifier) {
+    await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: installed.identifier })
+  }
+  // 離開被封鎖 localStorage 的文件，讓後續截圖能正常切換主題
+  await go("/?skip=1", 1500)
+}
+
+async function captureScreenshots() {
+  if (!SHOT_DIR) return
+  console.log("\n== 10. 截圖（1440、1180×820、390 × 淺深色 × 經文／研讀） ==")
+  const viewports = [
+    { name: "1440", w: 1440, h: 900, mobile: false },
+    { name: "1180", w: 1180, h: 820, mobile: false },
+    { name: "390", w: 390, h: 844, mobile: true },
+  ]
+  const chapters = [
+    { prefix: "gen1", path: chapterPath(1) },
+    { prefix: "exo8", path: EXO8 },
+  ]
+  for (const ch of chapters) {
+    for (const vp of viewports) {
+      await s.setViewport(vp.w, vp.h, { dpr: vp.mobile ? 2 : 1, mobile: vp.mobile, touch: vp.mobile })
+      for (const theme of ["light", "dark"]) {
+        await setTheme(theme)
+        await go(ch.path, 3000)
+        await waitChapter()
+        for (const tab of ["text", "study"]) {
+          await clickTab(tab)
+          await s.ev(`window.scrollTo(0, 0)`)
+          await sleep(300)
+          await saveShot(`${ch.prefix}-${tab}-${vp.name}-${theme}`)
         }
-        await saveShot(`${mode === "研讀" ? "study" : "pure"}-${width}-${theme}`)
       }
     }
   }
+
+  // 額外拍手機捲動後的快捷列（淺色與深色，創世記第 1 章研讀分頁）
+  await s.setViewport(390, 844, { dpr: 2, mobile: true, touch: true })
+  for (const theme of ["light", "dark"]) {
+    await setTheme(theme)
+    await go(chapterPath(1), 3000)
+    await waitChapter()
+    await clickTab("study")
+    await s.ev(`window.scrollTo(0, 750)`)
+    await sleep(500)
+    await saveShot(`gen1-quickbar-390-${theme}`)
+  }
+
+  // 額外拍桌機經節跳轉標示（創世記第 1 章，點 11-12節讓第 11 節置中並顯示標示框）
+  await s.setViewport(1440, 900)
+  await setTheme("light")
+  await go(chapterPath(1), 3000)
+  await waitChapter()
+  await clickTab("study")
+  await sleep(250)
+  await s.ev(`([...document.querySelectorAll('.bwz-rl-vref[data-rl-verse]')].find((a) => Number(a.dataset.rlVerse) >= 3) || document.querySelector('.bwz-rl-vref[data-rl-verse]'))?.click()`)
+  await sleep(250)
+  await saveShot(`gen1-versejump-1440-light`)
 }
 
 async function main() {
@@ -658,66 +659,60 @@ async function main() {
   })
   await s.send("Page.addScriptToEvaluateOnNewDocument", {
     source: `try {
-      localStorage.setItem("theme", "light")
+      if (!localStorage.getItem("theme")) localStorage.setItem("theme", "light")
       localStorage.wikiTourCompleted = "1"
       localStorage.setItem("bwz-tour-v2", JSON.stringify({ v: 2, status: "dismissed", step: 0, skills: [], skipped: [] }))
       localStorage.setItem("pwa_install_guide_dismissed_v1", "1")
     } catch (e) {}`,
   })
-  await s.send("Emulation.setEmulatedMedia", {
-    features: [{ name: "prefers-color-scheme", value: "light" }],
-  })
 
-  console.log("\n== 1–2. 研讀預設、Aa 切純經文與保留可見內容 ==")
+  console.log("\n== 1. 首次造訪預設為「經文」分頁，Aa 面板已拿掉純經文切換 ==")
   await go(chapterPath(1))
   await waitChapter()
-  s.check("第 1 章預設為研讀", !(await s.ev(`document.documentElement.hasAttribute("data-ux-view")`)))
+  const textSnap = await sectionSnapshot()
+  s.check("首次造訪預設 data-ux-view=text 且有分頁標記", textSnap.view === "text" && textSnap.hasTabsAttr, JSON.stringify(textSnap))
+  s.check("經文分頁：經文清單可見", textSnap.olVisible, JSON.stringify(textSnap))
+  if (textSnap.raFound) s.check("經文分頁：朗讀列可見", textSnap.raVisible === true, JSON.stringify(textSnap))
+  if (textSnap.iaFound) s.check("經文分頁：互動網站提示可見", textSnap.iaVisible === true, JSON.stringify(textSnap))
+  await checkSections(false, "經文分頁", textSnap)
 
-  const studySnapshot = await sectionSnapshot()
-  await checkSections("研讀", studySnapshot)
+  const notesVisible = await s.ev(visibleExpression('document.querySelector(".bwz-notes, #after-body, .after-body")'))
+  s.check("經文分頁：筆記區仍看得到", !!notesVisible)
 
-  const panelOpened = await openPanel()
-  s.check("章節頁 Aa 面板可開啟", panelOpened)
-  if (!panelOpened) {
-    s.check("Aa 提供「閱讀模式：純經文」", false, "找不到 Aa 面板")
-  } else {
-    const radio = await s.ev(`!!document.querySelector('#site-ux-panel [data-name="view"][data-value="pure"]')`)
-    s.check("Aa 提供「閱讀模式：純經文」", radio)
-    const note = await s.ev(`document.querySelector("#site-ux-note-view")?.textContent ?? null`)
-    s.check("閱讀模式說明文字是定稿", note === NOTE_TEXT, note)
+  const aaOpened = await openPanel()
+  s.check("Aa 面板可開啟", aaOpened)
+  if (aaOpened) {
+    const hasViewRow = await s.ev(`!!document.querySelector('#site-ux-panel [data-name="view"]')`)
+    const groupsCount = await s.ev(`document.querySelectorAll('#site-ux-panel .site-ux-group').length`)
+    s.check("Aa 面板已拿掉「研讀｜純經文」那一列，保留其餘 4 組外觀設定", !hasViewRow && groupsCount === 4, `hasViewRow=${hasViewRow} groups=${groupsCount}`)
+    await closePanel()
   }
 
-  const selectedPure = await choose("view", "pure")
-  await closePanel()
-  s.check("選取純經文後套用到 html", selectedPure && await s.ev(`document.documentElement.getAttribute("data-ux-view") === "pure"`))
-  await waitChapter()
-  const pureSnapshot = await sectionSnapshot()
-  await checkSections("純經文", pureSnapshot)
+  console.log("\n== 2. 切到「研讀」分頁：藏經文清單與朗讀列，直接看知識節點與本章整理 ==")
+  await clickTab("study")
+  const studySnap = await sectionSnapshot()
+  s.check("切到研讀：data-ux-view=study 且寫入 localStorage", studySnap.view === "study" && (await s.ev(`localStorage.getItem("bwz-ux-view") === "study"`)), JSON.stringify(studySnap))
+  s.check("研讀分頁：經文清單隱藏", !studySnap.olVisible, JSON.stringify(studySnap))
+  if (studySnap.raFound) s.check("研讀分頁：朗讀列隱藏", studySnap.raVisible === false, JSON.stringify(studySnap))
+  await checkSections(true, "研讀分頁", studySnap)
+  s.check("研讀分頁：本章知識節點／本章整理直接出現在首屏上方（不需下捲）", (studySnap.sections["本章知識節點"]?.top ?? 9999) < 600, JSON.stringify(studySnap.sections))
 
-  const hidden = pureSnapshot.hidden.filter((item) => !item.reveal)
-  s.check(
-    "純經文：所有未暫時顯示的 .bwz-ux-hide 都是 display:none",
-    hidden.length > 0 && hidden.every((item) => item.display === "none"),
-    JSON.stringify(hidden),
-  )
-  const hiddenHrs = pureSnapshot.hrs.filter((item) => !item.reveal)
-  if (!hiddenHrs.length) skip("純經文：區塊之間的 hr 隱藏", "這個章節沒有被標記為隱藏的 hr")
-  else s.check("純經文：區塊之間的 hr 是 display:none", hiddenHrs.every((item) => item.display === "none"), JSON.stringify(hiddenHrs))
-
-  await checkChapterParts("純經文")
-
-  await testFirstPaintAndNavigation()
-  await testFreshTab()
-  await testMobileQuickbar()
-  await testReveal()
-  await testSettingsCombination()
+  await testPersistenceAndNewTab()
+  await testVerseTagJump()
+  await testMobileQuickbarAndTabs()
+  await testRevealAndInteractiveLine()
+  await testKeyboardAndContrast()
   await testNonChapterPages()
-  await testBlockedSessionStorage()
-  await testScreenshots()
+  await testBlockedLocalStorage()
+  await captureScreenshots()
 
   const relevant = pluginExceptions.filter((x) => RELEVANT_URL.test(x.url))
-  s.check("全程沒有 site-ux／verse-return 可辨識來源的 JS 例外", relevant.length === 0, JSON.stringify(relevant))
+  s.check("全程沒有 site-ux／verse-return／chapterQuickBar 可辨識來源的 JS 例外", relevant.length === 0, JSON.stringify(relevant))
 
+  if (contrastReport.length) {
+    console.log("\n對比實測：")
+    for (const line of contrastReport) console.log(`- ${line}`)
+  }
   if (conditionalItems.length) {
     console.log("\n條件式略過項目：")
     for (const item of conditionalItems) console.log(`- ${item}`)

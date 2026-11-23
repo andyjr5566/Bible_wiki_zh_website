@@ -6,6 +6,16 @@ $repoPath = 'C:\Obsidian\Bible_wiki_zh_website_quartz'
 $source = 'C:\Obsidian\Hermes\scripture'
 $target = 'C:\Obsidian\Bible_wiki_zh_website_quartz\content'
 
+# The commit step below runs `git add -A`, then pushes `main`. On any other branch that would
+# sweep in-progress feature work into a "sync" commit on the wrong branch while the content
+# never reaches the published site, so refuse before touching anything.
+if (-not $NoPush) {
+    $branch = (git -C $repoPath branch --show-current).Trim()
+    if ($branch -ne 'main') {
+        throw "The website repo is on branch '$branch', not 'main'. Switch back first (git -C $repoPath switch main), then run the sync again. Nothing was copied."
+    }
+}
+
 function Sync-WithRobocopy {
     param(
         [Parameter(Mandatory = $true)]

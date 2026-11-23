@@ -20,9 +20,15 @@ export interface JumpHandle {
 // 若也量它的下緣會得到「整個視窗都被遮住」，目標就永遠算成捲到 0。章節快捷列同樣只在手機出現（見 chapterQuickBar.inline.ts）。
 const MOBILE_QUERY = "(max-width: 800px)"
 
-/** 手機黏在頂端的工具列與章節快捷列佔掉的高度（桌機沒有，回傳 0）。 */
+/** 黏在頂端的列佔掉的高度：手機是工具列與章節快捷列，桌機／平板是黏頂的「經文｜研讀」分頁列。 */
 export function topObstruction(): number {
-  if (!window.matchMedia(MOBILE_QUERY).matches) return 0
+  if (!window.matchMedia(MOBILE_QUERY).matches) {
+    const tabs = document.querySelector<HTMLElement>(".bwz-tabs")
+    if (tabs && getComputedStyle(tabs).position === "sticky") {
+      return Math.max(0, Math.round(tabs.getBoundingClientRect().height))
+    }
+    return 0
+  }
   let total = 0
   const toolbar = document.querySelector<HTMLElement>(".sidebar.left")
   if (toolbar) {
@@ -58,10 +64,12 @@ function resolveTarget(point: ReturnPoint): Target | null {
   if (point.kind === "verse") {
     const el = verseElement(point.verse)
     if (!el) return null
+    // 若目前停在研讀分頁（經文清單被隱藏），先請 site-ux 暫時顯示，再量位置
+    requestReveal(el.id || `v${point.verse}`)
     const rect = el.getBoundingClientRect()
     return { el, scrollTop: centerScrollTop({ top: rect.top, height: rect.height }, context()) }
   }
-  // 純經文模式把整理藏起來時，請 site-ux 先暫時顯示（沒人處理就是本來就看得到）
+  // 經文分頁把整理藏起來時，請 site-ux 先暫時顯示（沒人處理就是本來就看得到）
   requestReveal(point.headingId)
   const el = document.getElementById(point.headingId)
   if (!el) return null

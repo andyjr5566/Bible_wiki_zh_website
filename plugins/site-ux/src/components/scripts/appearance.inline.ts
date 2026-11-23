@@ -10,8 +10,7 @@ import {
 } from "../../lib/settings"
 import { syncReadingFont } from "../../lib/readingFont"
 import { markVerseList } from "../../lib/verses"
-import { currentView, type ReadingView } from "../../lib/readingView"
-import { initPureMode, isPureAvailable, prepareForNav, setReadingView } from "../../lib/pureMode"
+import { initPureMode, prepareForNav } from "../../lib/pureMode"
 import { applyA11yPatches, applyScrollableRegions } from "../../lib/a11yPatches"
 
 interface GroupSpec {
@@ -57,18 +56,6 @@ const GROUPS: GroupSpec[] = [
     ],
   },
 ]
-
-// 閱讀模式不屬於 Aa 的外觀設定（只在這個分頁有效、不存 localStorage），所以不放在 GROUPS 裡，由 buildViewGroup 另外建。
-// 只在認得出經文清單的章節頁顯示（其他頁沒有可藏的東西，選項會讓人以為壞了）。
-const VIEW_NAME = "view"
-const VIEW_GROUP = {
-  label: "閱讀模式",
-  options: [
-    ["study", "研讀"],
-    ["pure", "純經文"],
-  ] as ReadonlyArray<readonly [ReadingView, string]>,
-  note: "只看經文，暫時隱藏本章知識節點、本章整理和附錄；只在這個分頁有效，關掉就恢復研讀。",
-}
 
 const PANEL_ID = "site-ux-panel"
 
@@ -124,46 +111,12 @@ function currentSettings(): Settings {
 
 function syncChecked(panel: HTMLElement): void {
   const settings = currentSettings()
-  const view = currentView()
   for (const radio of Array.from(panel.querySelectorAll<HTMLElement>("[role=radio]"))) {
-    const name = radio.dataset.name as SettingName | typeof VIEW_NAME
-    const chosen = name === VIEW_NAME ? view : settings[name]
-    const on = String(chosen) === radio.dataset.value
+    const name = radio.dataset.name as SettingName
+    const on = String(settings[name]) === radio.dataset.value
     radio.setAttribute("aria-checked", on ? "true" : "false")
     radio.tabIndex = on ? 0 : -1
   }
-}
-
-function buildViewGroup(): HTMLElement {
-  const wrap = document.createElement("div")
-  wrap.className = "site-ux-group"
-  const labelId = "site-ux-label-view"
-  const noteId = "site-ux-note-view"
-  const label = document.createElement("div")
-  label.className = "site-ux-label"
-  label.id = labelId
-  label.textContent = VIEW_GROUP.label
-  const seg = document.createElement("div")
-  seg.className = "site-ux-seg"
-  seg.setAttribute("role", "radiogroup")
-  seg.setAttribute("aria-labelledby", labelId)
-  seg.setAttribute("aria-describedby", noteId)
-  for (const [value, text] of VIEW_GROUP.options) {
-    const radio = document.createElement("button")
-    radio.type = "button"
-    radio.className = "site-ux-opt"
-    radio.setAttribute("role", "radio")
-    radio.dataset.name = VIEW_NAME
-    radio.dataset.value = value
-    radio.textContent = text
-    seg.append(radio)
-  }
-  const note = document.createElement("p")
-  note.className = "site-ux-note"
-  note.id = noteId
-  note.textContent = VIEW_GROUP.note
-  wrap.append(label, seg, note)
-  return wrap
 }
 
 function buildPanel(): HTMLElement {
@@ -212,8 +165,6 @@ function buildPanel(): HTMLElement {
     wrap.append(label, seg)
     panel.append(wrap)
   }
-
-  if (isPureAvailable()) panel.append(buildViewGroup())
 
   const reset = document.createElement("button")
   reset.type = "button"
@@ -280,8 +231,7 @@ function openPanel(button: HTMLElement): void {
       return
     }
     if (target.getAttribute("role") === "radio") {
-      if (target.dataset.name === VIEW_NAME) setReadingView(target.dataset.value as ReadingView)
-      else change(target.dataset.name as SettingName, target.dataset.value as string)
+      change(target.dataset.name as SettingName, target.dataset.value as string)
       syncChecked(panel)
     }
   }

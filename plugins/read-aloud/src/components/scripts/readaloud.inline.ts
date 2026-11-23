@@ -4,6 +4,7 @@ import { createPlayer } from "../../lib/player"
 import type { Player } from "../../lib/player"
 import { findScriptureVerses } from "../../lib/verses"
 import type { Verse } from "../../lib/verses"
+import { TAB_CHANGE_EVENT, type TabChangeDetail } from "../../../../../quartz/util/readingTabEvent"
 
 interface ReadAloudWindow extends Window {
   __bwzReadAloudBound?: boolean
@@ -51,13 +52,19 @@ function teardown(): void {
   activeVerses = []
 }
 
-// 手機版站上的頂端列（.left.sidebar）是 sticky 貼頂的；朗讀列貼頂時要排在它下面，不能蓋住它。
-// 桌面版左欄是獨立的一欄，朗讀列貼在視窗最上面即可。
+// 手機版站上的頂端列（.left.sidebar）是 sticky 貼頂的；桌機與平板則是章節分頁列（.bwz-tabs）貼頂。
+// 朗讀列播放貼頂時要排在它們下面，不能互相蓋住。
 function stickyTop(): number {
-  if (!window.matchMedia("(max-width: 800px)").matches) return 0
-  const header = document.querySelector<HTMLElement>(".left.sidebar")
-  if (!header || getComputedStyle(header).position !== "sticky") return 0
-  return Math.max(0, Math.round(header.getBoundingClientRect().height))
+  if (window.matchMedia("(max-width: 800px)").matches) {
+    const header = document.querySelector<HTMLElement>(".left.sidebar")
+    if (!header || getComputedStyle(header).position !== "sticky") return 0
+    return Math.max(0, Math.round(header.getBoundingClientRect().height))
+  }
+  const tabs = document.querySelector<HTMLElement>(".bwz-tabs")
+  if (tabs && getComputedStyle(tabs).position === "sticky") {
+    return Math.max(0, Math.round(tabs.getBoundingClientRect().height))
+  }
+  return 0
 }
 
 function readSavedRate(): number {
@@ -229,6 +236,13 @@ if (!readAloudWindow.__bwzReadAloudBound) {
 
   document.addEventListener("nav", () => void mount())
   document.addEventListener("prenav", teardown)
+  // 切到「研讀」分頁時朗讀列會隱藏，順手停止播放，避免藏起來還在念並反覆捲動
+  document.addEventListener(TAB_CHANGE_EVENT, (event) => {
+    const detail = (event as CustomEvent<TabChangeDetail>).detail
+    if (detail?.view === "study" && player?.playing()) {
+      player.stop()
+    }
+  })
   window.addEventListener("pagehide", teardown)
   // 從瀏覽器的上一頁快取還原時不會再收到 nav，要自己重建朗讀列
   window.addEventListener("pageshow", (event) => {

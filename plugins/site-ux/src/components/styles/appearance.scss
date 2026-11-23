@@ -308,33 +308,195 @@
   display: none;
 }
 
-/* ---------- 5. 閱讀模式：純經文（<html data-ux-view="pure">，腳本在要藏的區塊上標 .bwz-ux-hide） ---------- */
-/* 外掛的 CSS 在 @layer quartz-base 裡，要蓋過 custom.scss 的 display 設定一律用 !important（理由見上面字級那一節） */
-:root[data-ux-view="pure"] .bwz-ux-hide:not(.bwz-ux-reveal) {
+/* ---------- 5. 章節頁「經文｜研讀」分頁（<html data-ux-view="text"|"study" data-ux-tabs>） ---------- */
+/* 外掛的 CSS 在 @layer quartz-base 裡，要蓋過 custom.scss 的 display／margin／color 一律用 !important（理由見上面字級那一節） */
+
+/* 經文分頁：隱藏知識節點、本章整理、附錄（除非因點擊錨點暫時顯示 .bwz-ux-reveal） */
+:root[data-ux-view="text"][data-ux-tabs] .bwz-ux-hide:not(.bwz-ux-reveal) {
   display: none !important;
 }
 
-/* 手機章節快捷列的「本章整理」鈕：整理被藏起來時按下去沒有地方可去 */
-:root[data-ux-view="pure"] .bwz-cqb-summary {
+/* 研讀分頁：隱藏經文清單、朗讀列與緊貼經文後的分隔線 */
+:root[data-ux-view="study"][data-ux-tabs] .bwz-ux-text-only:not(.bwz-ux-reveal),
+:root[data-ux-view="study"][data-ux-tabs] .bwz-ra:not(.bwz-ux-reveal) {
   display: none !important;
 }
 
-/* 第一次繪製前腳本還沒標記，先把第一條分隔線之後的內容遮住（保留版面、只是看不見），
-   標好之後腳本設 data-ux-marked 就解除；腳本萬一沒跑，3 秒後也會自動解除，不會一直空白。
+/* 第一次繪製前腳本還沒標記，先把非當前分頁的區域遮住（保留版面、避免閃爍），
+   標好之後腳本設 data-ux-marked 就解除；萬一腳本沒跑，3 秒後自動解除，不會一直空白。
    只針對章節頁（網址形如 …/第N章）；前後章表格不遮。 */
-:root[data-ux-view="pure"]:not([data-ux-marked]) body[data-slug*="/第"][data-slug$="章"] article .markdown-preview-view > hr ~ *:not(.table-container) {
+:root[data-ux-view="text"]:not([data-ux-marked])
+  body[data-slug*="/第"][data-slug$="章"]
+  article
+  .markdown-preview-view
+  > :is(hr, hr ~ *:not(.table-container)) {
   visibility: hidden;
   animation: site-ux-unhide 0s linear 3s forwards;
 }
+
+:root[data-ux-view="study"]:not([data-ux-marked])
+  body[data-slug*="/第"][data-slug$="章"]
+  article
+  .markdown-preview-view
+  > :is(ol, .bwz-ra) {
+  visibility: hidden;
+  animation: site-ux-unhide 0s linear 3s forwards;
+}
+
 @keyframes site-ux-unhide {
   to {
     visibility: visible;
   }
 }
 
+/* 頂端「經文｜研讀」分頁列：桌機與平板捲動時黏在頂端；手機在頁首流內，捲動後由章節快捷列接手。 */
+.bwz-tabs {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.45rem 0.8rem !important;
+  box-sizing: border-box !important;
+  margin: 0.25rem -0.75rem 1.15rem !important;
+  padding: 0.55rem 0.75rem !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 45 !important;
+  background: color-mix(in srgb, var(--light) 95%, transparent) !important;
+  backdrop-filter: blur(8px) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--lightgray) 90%, transparent) !important;
+  box-shadow: 0 6px 12px -10px rgba(45, 32, 16, 0.28) !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+:root[saved-theme="dark"] .bwz-tabs {
+  background: color-mix(in srgb, var(--light) 95%, transparent) !important;
+  box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.65) !important;
+}
+
+.bwz-tabs-seg {
+  display: inline-flex !important;
+  align-items: stretch !important;
+  flex-shrink: 0 !important;
+  border: 1.5px solid var(--bwz-accent-strong, var(--secondary)) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  background: var(--light) !important;
+}
+
+:root[saved-theme="dark"] .bwz-tabs-seg {
+  border-color: var(--secondary) !important;
+}
+
+.bwz-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  box-sizing: border-box !important;
+  min-height: 38px !important;
+  min-width: 86px !important;
+  margin: 0 !important;
+  padding: 0.35rem 1.15rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--bwz-accent-strong, var(--secondary)) !important;
+  font-family: var(--headerFont), "Noto Sans TC", "PingFang TC", sans-serif !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background-color 0.14s ease, color 0.14s ease !important;
+
+  &:hover:not([aria-selected="true"]) {
+    background: color-mix(in srgb, var(--bwz-accent-strong, var(--secondary)) 10%, transparent) !important;
+  }
+
+  &[aria-selected="true"] {
+    background: var(--bwz-accent-strong, var(--secondary)) !important;
+    color: #ffffff !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--bwz-accent-strong, var(--secondary)) !important;
+    outline-offset: -3px !important;
+  }
+}
+
+/* 深色模式：實心強調色為亮紫，改用深色字確保對比 ≥ 4.5:1（同 verse-return 規範） */
+:root[saved-theme="dark"] .bwz-tab {
+  color: var(--secondary) !important;
+
+  &:hover:not([aria-selected="true"]) {
+    background: color-mix(in srgb, var(--secondary) 16%, transparent) !important;
+  }
+
+  &[aria-selected="true"] {
+    background: var(--secondary) !important;
+    color: #14111f !important;
+  }
+
+  &:focus-visible {
+    outline-color: var(--dark) !important;
+  }
+}
+
+.bwz-tab-icon {
+  flex-shrink: 0 !important;
+  pointer-events: none !important;
+}
+
+.bwz-tabs-hint {
+  font-family: var(--bodyFont), "LXGW WenKai TC", sans-serif !important;
+  font-size: 0.88rem !important;
+  line-height: 1.4 !important;
+  /* 不用純 --gray（淺色底對比不足 4.5:1），改混高比重 --darkgray */
+  color: color-mix(in srgb, var(--darkgray) 82%, var(--gray)) !important;
+}
+
+/* 錨點跳轉到標題時留出黏頂分頁列的高度，避免標題被蓋住 */
+:root[data-ux-tabs] article :is(h2, h3, h4, details.collapsible-section) {
+  scroll-margin-top: 72px;
+}
+
+/* 手機（<= 800px）：頂端分頁列放在頁首流內（不 sticky），捲過後由 .bwz-cqb 快捷列裡的精簡分頁鈕接手 */
+@media (max-width: 800px) {
+  .bwz-tabs,
+  :root[saved-theme="dark"] .bwz-tabs {
+    position: static !important;
+    margin: 0.25rem 0 0.9rem !important;
+    padding: 0.2rem 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .bwz-tab {
+    min-height: 44px !important;
+    padding: 0.4rem 1.1rem !important;
+  }
+
+  .bwz-tabs-hint {
+    display: none !important;
+  }
+
+  :root[data-ux-tabs] article :is(h2, h3, h4, details.collapsible-section) {
+    scroll-margin-top: 112px;
+  }
+}
+
+@media print {
+  .bwz-tabs {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-ux-btn,
   .site-ux-panel .site-ux-opt,
+  .bwz-tab,
   :root[data-ux-links] ol.bwz-ux-verses a {
     transition: none !important;
   }

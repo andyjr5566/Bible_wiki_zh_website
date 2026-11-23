@@ -1103,14 +1103,14 @@ details.collapsible-subheading {
   .bwz-cqb {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     box-sizing: border-box;
     position: fixed;
     top: var(--bwz-cqb-top, 0px); /* 排在 sticky 工具列下面（由腳本設定） */
     left: 0;
     right: 0;
     z-index: 600; /* 在搜尋（999）、導覽（900）、浮動按鈕（890）、筆記視窗之下 */
-    padding: env(safe-area-inset-top, 0px) 8px 0;
+    padding: env(safe-area-inset-top, 0px) 6px 0;
     background: var(--light);
     color: var(--dark);
     border-bottom: 1px solid var(--lightgray);
@@ -1172,10 +1172,10 @@ details.collapsible-subheading {
     justify-content: center;
     gap: 2px;
     box-sizing: border-box;
-    min-width: 44px;
+    min-width: 40px;
     min-height: 44px;
     margin: 0;
-    padding: 0 6px;
+    padding: 0 4px;
     border: 0;
     border-radius: 8px;
     background: transparent;
@@ -1207,6 +1207,66 @@ details.collapsible-subheading {
     span {
       font-size: 1.1rem;
       line-height: 1;
+    }
+  }
+
+  /* 手機快捷列裡的精簡「經文｜研讀」分頁切換（取代原「本章整理」按鈕） */
+  .bwz-cqb-tabs {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: stretch;
+    border: 1.5px solid var(--bwz-accent-strong);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--light);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .bwz-cqb-tab {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 44px;
+    min-height: 34px;
+    margin: 0;
+    padding: 0 10px;
+    border: 0;
+    background: transparent;
+    color: var(--bwz-accent-strong);
+    font-family: var(--headerFont), "Noto Sans TC", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &[aria-selected="true"] {
+      background: var(--bwz-accent-strong);
+      color: #ffffff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: -2px;
+    }
+  }
+
+  :root[saved-theme="dark"] .bwz-cqb-tabs {
+    border-color: var(--secondary);
+  }
+
+  :root[saved-theme="dark"] .bwz-cqb-tab {
+    color: var(--secondary);
+
+    &[aria-selected="true"] {
+      background: var(--secondary);
+      color: #14111f;
     }
   }
 

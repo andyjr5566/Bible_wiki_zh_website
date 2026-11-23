@@ -12,6 +12,7 @@ import {
   type PageSourcesPayload,
   type SourceCardEntry,
 } from "../../util/readingLayersClient"
+import { VERSE_JUMP_EVENT, type VerseJumpDetail } from "../../util/readingTabEvent"
 
 interface ActivePopover {
   trigger: HTMLElement
@@ -207,8 +208,11 @@ function openOriginalPopover(trigger: HTMLElement, raw: string): void {
 }
 
 function jumpToVerse(verse: number): void {
-  // 預留可取消事件給 B 階段的「經文｜研讀」分頁接手切換
-  const event = new CustomEvent("bwz:verse-jump", { cancelable: true, detail: { verse } })
+  // 預留可取消事件給「經文｜研讀」分頁接手切換與捲動
+  const event = new CustomEvent<VerseJumpDetail>(VERSE_JUMP_EVENT, {
+    cancelable: true,
+    detail: { verse },
+  })
   document.dispatchEvent(event)
   if (event.defaultPrevented) return
 
@@ -311,6 +315,8 @@ function mount(): void {
         const verse = Number(vref.dataset.rlVerse)
         if (Number.isInteger(verse) && verse > 0) {
           event.preventDefault()
+          // 阻止冒泡到 Quartz 的 spa.inline.ts（它不看 defaultPrevented，會對同頁 #vN 跑 scrollIntoView 把經節推到黏頂分頁列後面）
+          event.stopPropagation()
           closePopover(false)
           jumpToVerse(verse)
         }

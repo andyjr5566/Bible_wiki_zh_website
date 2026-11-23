@@ -111,11 +111,6 @@ $bwz-ia-motion: "(hover: hover) and (prefers-reduced-motion: no-preference)";
   color: var(--bwz-accent-strong, var(--secondary));
 }
 
-/* 純經文模式：只留經文，這一行也藏起來（最下面的小卡在附錄裡，已經由純經文的規則藏起來） */
-html[data-ux-view="pure"] .bwz-ia-line {
-  display: none;
-}
-
 @media print {
   .bwz-ia-line {
     display: none;

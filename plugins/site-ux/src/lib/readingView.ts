@@ -1,9 +1,10 @@
-// 閱讀模式：研讀（預設，全部內容）｜純經文（只看經文，暫時隱藏本章知識節點、本章整理、附錄）。
-// 和 Aa 的其他設定不同：只在「這個分頁」有效（sessionStorage，不是 localStorage），關掉分頁就回到研讀，
-// 所以另外放一個檔案、不混進 settings.ts。套用方式一樣是在 <html> 加屬性，early 腳本在第一次繪製前套用。
+// 章節頁「經文｜研讀」分頁的狀態儲存與套用：
+// 改由頂端分頁列（與手機快捷列）切換，全站共用一個 localStorage 值，第一次造訪預設看「經文」。
+// 套用方式是在 <html> 加上 data-ux-view="text" | "study"，early 腳本在第一次繪製前即寫入，避免閃爍。
+import type { ReadingTab } from "../../../../quartz/util/readingTabEvent"
 import type { RootLike } from "./settings"
 
-export type ReadingView = "study" | "pure"
+export type ReadingView = ReadingTab
 
 export const VIEW_STORAGE_KEY = "bwz-ux-view"
 export const VIEW_ATTR = "data-ux-view"
@@ -13,29 +14,30 @@ export interface ViewStorageLike {
   setItem(key: string, value: string): void
 }
 
+/** 只有 "study" 才是研讀分頁，其餘（含首次造訪、舊版 "pure" 或壞資料）一律預設為 "text"（經文）。 */
 export function normalizeView(value: unknown): ReadingView {
-  return value === "pure" ? "pure" : "study"
+  return value === "study" ? "study" : "text"
 }
 
-function sessionStore(): ViewStorageLike | null {
+function localStore(): ViewStorageLike | null {
   try {
-    return typeof sessionStorage === "undefined" ? null : sessionStorage
+    return typeof localStorage === "undefined" ? null : localStorage
   } catch {
     return null
   }
 }
 
-/** 讀取這個分頁的閱讀模式；儲存被封鎖或讀不到時回到研讀。 */
-export function readView(storage: ViewStorageLike | null = sessionStore()): ReadingView {
+/** 讀取全站共用的閱讀分頁偏好；儲存被封鎖或讀不到時退回經文。 */
+export function readView(storage: ViewStorageLike | null = localStore()): ReadingView {
   try {
     return normalizeView(storage?.getItem(VIEW_STORAGE_KEY))
   } catch {
-    return "study"
+    return "text"
   }
 }
 
-/** 寫入；回傳是否成功（失敗時畫面仍會套用，只是換章後不會記住）。 */
-export function writeView(view: ReadingView, storage: ViewStorageLike | null = sessionStore()): boolean {
+/** 寫入全站共用的閱讀分頁偏好；回傳是否成功（失敗時畫面仍會套用，只是不記住）。 */
+export function writeView(view: ReadingView, storage: ViewStorageLike | null = localStore()): boolean {
   try {
     if (!storage) return false
     storage.setItem(VIEW_STORAGE_KEY, normalizeView(view))
@@ -45,20 +47,19 @@ export function writeView(view: ReadingView, storage: ViewStorageLike | null = s
   }
 }
 
-/** 研讀是預設，不留屬性，所以預設外觀不會被任何 CSS 影響。 */
+/** 兩種分頁都需要 CSS 在章節頁套用對應的隱藏規則，所以一律顯式寫出 data-ux-view（無腳本時則全部顯示）。 */
 export function applyView(view: ReadingView, root: RootLike = document.documentElement): void {
-  if (view === "pure") root.setAttribute(VIEW_ATTR, "pure")
-  else root.removeAttribute(VIEW_ATTR)
+  root.setAttribute(VIEW_ATTR, normalizeView(view))
 }
 
-/** 目前畫面上實際套用的模式（讀 <html> 屬性，所以儲存失敗時也和畫面一致）。 */
+/** 目前畫面上實際套用的分頁（讀 <html> 屬性，儲存失敗時也能與畫面一致）。 */
 export function currentView(root: RootLike = document.documentElement): ReadingView {
   return normalizeView(root.getAttribute(VIEW_ATTR))
 }
 
-/** 讀取並套用（頁面載入最早期呼叫，避免閃一下完整內容）。 */
+/** 讀取並套用（頁面載入最早期呼叫，避免第一次繪製閃爍）。 */
 export function applyStoredView(
-  storage: ViewStorageLike | null = sessionStore(),
+  storage: ViewStorageLike | null = localStore(),
   root: RootLike = document.documentElement,
 ): ReadingView {
   const view = readView(storage)

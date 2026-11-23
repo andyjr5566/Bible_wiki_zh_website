@@ -3,9 +3,11 @@ import test from "node:test"
 import {
   ChapterNodeDescription,
   selectChapterRegions,
+  selectChapterTabRegions,
   selectHiddenSections,
   selectStudyRegion,
   studyAnchorIndex,
+  tabBarAnchorIndex,
 } from "./chapterRegions"
 
 const node = (tag: string, fields: Omit<ChapterNodeDescription, "tag"> = {}): ChapterNodeDescription => ({
@@ -171,4 +173,65 @@ test("recognises a study section wrapped in details and ignores a missing one", 
   assert.deepEqual(selectStudyRegion(spaced), { start: 2, end: 4 })
   assert.equal(selectStudyRegion([node("ol"), node("hr"), node("h2", { headingText: "附錄" })]), null)
   assert.equal(selectStudyRegion([node("h1"), node("h2", { headingText: "本章整理" })]), null)
+})
+
+test("selectChapterTabRegions splits verse-only and study nodes and keeps interactive line visible", () => {
+  const nodes = [
+    node("h1"),
+    node("div", { className: "table-container", text: "前一章 下一章" }),
+    node("div", { className: "bwz-tabs" }),
+    node("div", { className: "bwz-ra" }),
+    node("a", { className: "bwz-ia-line" }),
+    node("ol"),
+    node("hr"),
+    node("details", { headingText: "本章知識節點", className: "collapsible-section" }),
+    node("hr"),
+    node("h2", { headingText: "本章整理" }),
+    node("p"),
+    node("div", { className: "table-container", text: "前一章 下一章" }),
+  ]
+  const regions = selectChapterTabRegions(nodes)
+  assert.equal(regions.hasStudyContent, true)
+  assert.equal(regions.verseListIndex, 5)
+  assert.deepEqual(regions.textOnlyIndices, [3, 5, 6])
+  assert.deepEqual(regions.studyIndices, [6, 7, 8, 9, 10])
+  assert.deepEqual(tabBarAnchorIndex(nodes), { index: 1, position: "after" })
+})
+
+test("selectChapterTabRegions keeps verses visible when a chapter has no study sections", () => {
+  const nodes = [
+    node("h1"),
+    node("div", { className: "table-container", text: "前一章 下一章" }),
+    node("div", { className: "bwz-ra" }),
+    node("ol"),
+    node("div", { className: "table-container", text: "前一章 下一章" }),
+  ]
+  const regions = selectChapterTabRegions(nodes)
+  assert.equal(regions.hasStudyContent, false)
+  assert.deepEqual(regions.studyIndices, [])
+  assert.deepEqual(regions.textOnlyIndices, [])
+  assert.equal(tabBarAnchorIndex(nodes), null)
+})
+
+test("tabBarAnchorIndex falls back to after h1 or before verse area when nav table is absent", () => {
+  const withH1 = [
+    node("h1"),
+    node("div", { className: "bwz-ra" }),
+    node("a", { className: "bwz-ia-line" }),
+    node("ol"),
+    node("hr"),
+    node("h2", { headingText: "本章整理" }),
+    node("p"),
+  ]
+  assert.deepEqual(tabBarAnchorIndex(withH1), { index: 0, position: "after" })
+
+  const withoutH1 = [
+    node("div", { className: "bwz-ra" }),
+    node("a", { className: "bwz-ia-line" }),
+    node("ol"),
+    node("hr"),
+    node("h2", { headingText: "本章整理" }),
+    node("p"),
+  ]
+  assert.deepEqual(tabBarAnchorIndex(withoutH1), { index: 0, position: "before" })
 })

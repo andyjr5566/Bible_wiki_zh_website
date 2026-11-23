@@ -5,9 +5,11 @@ import { parseBookSlug } from "./bookCatalog"
 import {
   ChapterNodeDescription,
   selectChapterRegions,
+  selectChapterTabRegions,
   selectHiddenSections,
   selectStudyRegion,
   studyAnchorIndex,
+  tabBarAnchorIndex,
 } from "./chapterRegions"
 
 export interface ChapterDom {
@@ -100,4 +102,35 @@ export function studyHeadingIdOf(dom: ChapterDom, node: Node): string | null {
   const anchor = studyAnchorIndex(dom.descriptions, region, index)
   if (anchor === null) return null
   return dom.children[anchor].id || null
+}
+
+export interface ChapterTabElements {
+  hasStudyContent: boolean
+  sections: HiddenSectionElements[]
+  textOnlyElements: Element[]
+  tabAnchor: { element: Element; position: "before" | "after" } | null
+}
+
+/** 一次算出「經文｜研讀」分頁需要的所有 DOM 參照，規則全由 chapterRegions.ts 決定。 */
+export function chapterTabElements(dom: ChapterDom): ChapterTabElements {
+  const regions = selectChapterTabRegions(dom.descriptions)
+  const anchor = tabBarAnchorIndex(dom.descriptions)
+  return {
+    hasStudyContent: regions.hasStudyContent,
+    sections: hiddenSectionElements(dom),
+    textOnlyElements: regions.textOnlyIndices.map((index) => dom.children[index]),
+    tabAnchor: anchor ? { element: dom.children[anchor.index], position: anchor.position } : null,
+  }
+}
+
+/** 依節數取得經文清單裡對應的 <li>（先用 ol 的 start 偏移，避免還沒跑 addVerseAnchors 的情境）。 */
+export function verseElementByNumber(dom: ChapterDom, verse: number): HTMLLIElement | null {
+  if (!Number.isInteger(verse) || verse < 1) return null
+  const byId = dom.verseList.querySelector<HTMLLIElement>(`:scope > li#v${verse}`)
+  if (byId) return byId
+  const items = Array.from(dom.verseList.children).filter(
+    (c): c is HTMLLIElement => c.tagName.toLowerCase() === "li",
+  )
+  const start = Number.isInteger(dom.verseList.start) ? dom.verseList.start : 1
+  return items[verse - start] ?? null
 }

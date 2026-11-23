@@ -1,14 +1,19 @@
 // chapterQuickBar.inline.ts
-// 聖經研讀知識庫 - 手機版章節快捷列（B3-4）
+// 聖經研讀知識庫 - 手機版章節快捷列（B3-4，B 階段改為內含「經文｜研讀」分頁切換）
 //
-// 章節頁（slug 形如 01-創世記/第2章）往下捲過頁首的「前一章｜回目錄｜下一章」表格後，
-// 畫面頂端浮出一條細快捷列：書卷章名、上一章、下一章、本章整理、回到頂端。捲回頂端就收起。
-// 只在手機寬度（<= 800px）出現；桌機有左側目錄與右側目錄，不需要。
-// 其他頁面不做任何事；找不到表格或「本章整理」時，對應的按鈕就不顯示。
+// 章節頁（slug 形如 01-創世記/第2章）往下捲過頁首的分頁列（或「前一章｜回目錄｜下一章」表格）後，
+// 畫面頂端浮出一條細快捷列：書卷章名、上一章、下一章、「經文｜研讀」分頁、回到頂端。捲回頂端就收起。
+// 只在手機寬度（<= 800px）出現；桌機與平板由頁首黏頂分頁列與側欄負責。
 //
 // 書卷章名是可以點的按鈕：打開 ☰ 抽屜，最上面就是書卷章節選擇器（book-picker 外掛）。
-// 這裡只發 bwz:open-picker 事件，不知道選擇器長什麼樣；沒有人處理（外掛關掉）就退回直接點開抽屜。
-// （抽屜打開時捲到最上面、露出目前章，也是 book-picker 的事；書卷已不在探索選單裡。）
+// 分頁鈕透過 bwz:tab-request／bwz:tab-change 與 site-ux 同步，不直接 import 外掛。
+import {
+  TABS_ATTR,
+  TAB_CHANGE_EVENT,
+  requestTabSwitch,
+  type ReadingTab,
+  type TabChangeDetail,
+} from "../../util/readingTabEvent"
 
 const CHAPTER_SLUG = /^\d+-[^/]+\/第\d+章$/
 const MOBILE_QUERY = "(max-width: 800px)"
@@ -50,16 +55,8 @@ function findNavTable(article: Element): { table: Element; prev?: string; next?:
   return null
 }
 
-/** 「本章整理」：先找 h2，再找已被折疊成 <details> 的區塊標題 */
-function findSummaryTarget(article: Element): HTMLElement | null {
-  const h2 = Array.from(article.querySelectorAll<HTMLElement>("h2")).find((h) =>
-    (h.textContent ?? "").trim().startsWith("本章整理"),
-  )
-  if (h2) return h2
-  const title = Array.from(
-    article.querySelectorAll<HTMLElement>("details.collapsible-section > summary .collapsible-title"),
-  ).find((t) => (t.textContent ?? "").trim().startsWith("本章整理"))
-  return (title?.closest("summary") as HTMLElement | null) ?? null
+function currentTabFromDom(): ReadingTab {
+  return document.documentElement.getAttribute("data-ux-view") === "study" ? "study" : "text"
 }
 
 function removeBar() {
@@ -100,6 +97,72 @@ function makeButton(cls: string, label: string, aria?: string): HTMLButtonElemen
   return b
 }
 
+function makeTabSwitcher(signal: AbortSignal): {
+  container: HTMLDivElement
+  sync: (view: ReadingTab, available: boolean) => void
+} {
+  const container = document.createElement("div")
+  container.className = `${BAR_CLASS}-tabs`
+  container.setAttribute("role", "tablist")
+  container.setAttribute("aria-label", "閱讀分頁")
+
+  const specs: ReadonlyArray<readonly [ReadingTab, string]> = [
+    ["text", "經文"],
+    ["study", "研讀"],
+  ]
+  const buttons: HTMLButtonElement[] = []
+  for (const [tab, label] of specs) {
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.className = `${BAR_CLASS}-tab`
+    btn.setAttribute("role", "tab")
+    btn.dataset.tab = tab
+    btn.textContent = label
+    btn.addEventListener(
+      "click",
+      () => {
+        requestTabSwitch(tab)
+      },
+      { signal },
+    )
+    buttons.push(btn)
+    container.append(btn)
+  }
+
+  container.addEventListener(
+    "keydown",
+    (event) => {
+      const target = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>("[role='tab']")
+      if (!target) return
+      const idx = buttons.indexOf(target)
+      if (idx === -1) return
+      let nextIdx: number | null = null
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIdx = (idx + 1) % buttons.length
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        nextIdx = (idx - 1 + buttons.length) % buttons.length
+      } else if (event.key === "Home") nextIdx = 0
+      else if (event.key === "End") nextIdx = buttons.length - 1
+      if (nextIdx === null) return
+      event.preventDefault()
+      const next = buttons[nextIdx]
+      next.focus()
+      requestTabSwitch(next.dataset.tab as ReadingTab)
+    },
+    { signal },
+  )
+
+  const sync = (view: ReadingTab, available: boolean) => {
+    container.hidden = !available
+    for (const btn of buttons) {
+      const active = btn.dataset.tab === view
+      btn.setAttribute("aria-selected", active ? "true" : "false")
+      btn.tabIndex = active ? 0 : -1
+    }
+  }
+
+  return { container, sync }
+}
+
 function setupBar() {
   removeBar()
 
@@ -109,9 +172,12 @@ function setupBar() {
   if (!article) return
 
   const nav = findNavTable(article)
-  // 判斷「已經捲過頁首」的參考點：上一章／下一章表格；沒有表格就用章節標題
-  const anchor: Element | null = nav?.table ?? article.querySelector("h1")
-  if (!anchor) return
+  // 判斷「已經捲過頁首」的參考點：優先看頁首流內的分頁列，其次上一章／下一章表格，最後退回章節標題
+  const fallbackAnchor: Element | null = nav?.table ?? article.querySelector("h1")
+  if (!fallbackAnchor) return
+
+  const abort = new AbortController()
+  const { signal } = abort
 
   const bar = document.createElement("nav")
   bar.className = BAR_CLASS
@@ -122,44 +188,46 @@ function setupBar() {
   title.className = `${BAR_CLASS}-title`
   title.textContent = chapterTitle(slug)
   title.setAttribute("aria-label", `${chapterTitle(slug)}，開啟書卷章節選單`)
-  title.addEventListener("click", openPicker)
+  title.addEventListener("click", openPicker, { signal })
   bar.append(title)
 
   if (nav?.prev) bar.append(makeLink(`${BAR_CLASS}-prev`, "上一章", nav.prev, "‹"))
   if (nav?.next) bar.append(makeLink(`${BAR_CLASS}-next`, "下一章", nav.next, "›"))
 
-  const summaryBtn = makeButton(`${BAR_CLASS}-summary`, "本章整理")
+  const tabs = makeTabSwitcher(signal)
+  tabs.sync(currentTabFromDom(), document.documentElement.hasAttribute(TABS_ATTR))
+
   const topBtn = makeButton(`${BAR_CLASS}-top`, "↑", "回到頂端")
   topBtn.title = "回到頂端"
-  bar.append(summaryBtn, topBtn)
+  bar.append(tabs.container, topBtn)
   document.body.append(bar)
 
   const mql = window.matchMedia(MOBILE_QUERY)
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)")
   const behavior = (): ScrollBehavior => ((reduce.matches ? "instant" : "smooth") as ScrollBehavior)
 
-  const refreshSummaryButton = () => {
-    summaryBtn.hidden = !findSummaryTarget(article)
-  }
-  refreshSummaryButton()
-  // 折疊區塊是 nav 之後才在用戶端建起來的，稍後再確認一次
-  const timers = [setTimeout(refreshSummaryButton, 500), setTimeout(refreshSummaryButton, 1800)]
+  document.addEventListener(
+    TAB_CHANGE_EVENT,
+    (event) => {
+      const detail = (event as CustomEvent<TabChangeDetail>).detail
+      if (!detail) return
+      tabs.sync(detail.view, detail.available)
+    },
+    { signal },
+  )
 
-  summaryBtn.addEventListener("click", () => {
-    const target = findSummaryTarget(article)
-    if (!target) return
-    const details = target.closest("details")
-    if (details) details.open = true
-    const top = target.getBoundingClientRect().top + window.scrollY - stickyToolbarBottom() - bar.offsetHeight - 12
-    window.scrollTo({ top: Math.max(0, top), behavior: behavior() })
-  })
-  topBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: behavior() })
-  })
+  topBtn.addEventListener(
+    "click",
+    () => {
+      window.scrollTo({ top: 0, behavior: behavior() })
+    },
+    { signal },
+  )
 
   let shown = false
   const update = () => {
-    const want = mql.matches && anchor.getBoundingClientRect().bottom < 0
+    const anchor = article.querySelector(".bwz-tabs") ?? fallbackAnchor
+    const want = mql.matches && anchor.getBoundingClientRect().bottom < stickyToolbarBottom()
     // 手機的工具列（選單、搜尋、Aa、深色）是 sticky 貼頂的；快捷列要排在它下面，不能蓋住它。
     // 朗讀列貼頂時再讓到兩者下面（custom.scss 用這兩個變數）。
     // 顯示期間每次捲動都重新量：視窗大小改變或字型晚載入時，工具列高度會變
@@ -189,16 +257,13 @@ function setupBar() {
       update()
     })
   }
-  window.addEventListener("scroll", onScroll, { passive: true })
-  window.addEventListener("resize", onScroll, { passive: true })
-  mql.addEventListener("change", update)
+  window.addEventListener("scroll", onScroll, { passive: true, signal })
+  window.addEventListener("resize", onScroll, { passive: true, signal })
+  mql.addEventListener("change", update, { signal })
   update()
 
   window.addCleanup?.(() => {
-    window.removeEventListener("scroll", onScroll)
-    window.removeEventListener("resize", onScroll)
-    mql.removeEventListener("change", update)
-    timers.forEach(clearTimeout)
+    abort.abort()
     removeBar()
   })
 }

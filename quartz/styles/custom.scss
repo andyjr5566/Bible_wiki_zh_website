@@ -1540,11 +1540,56 @@ html:has(.search > .search-container.active) {
   background-color: rgba(0, 0, 0, 0.35);
 }
 
+.search > .search-container > .search-space {
+  margin-top: 5vh;
+}
+
 .search > .search-container > .search-space > .search-layout.display-results,
 .search > .search-container > .search-space >
   :is(.search-modes, .search-verse-controls, .search-knowledge-controls) {
   background-color: var(--light);
   box-shadow: 0 14px 50px rgba(27, 33, 48, 0.2);
+}
+
+/* 主題外掛（obsidian-theme 層）把 .search-space 子元素的 margin-bottom 設成 0，且把全站 checkbox 設成負左邊距，
+   會讓知識類型標籤與「比對異體字」的勾選框往左蓋住前面的文字、也讓 <legend> 頂到搜尋框。在這裡重置。 */
+.search
+  > .search-container
+  > .search-space
+  > :is(.search-modes, .search-bar, .search-verse-controls, .search-knowledge-controls) {
+  margin: 0 0 0.55rem;
+}
+
+.search .search-knowledge-controls > legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 0.45rem;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--darkgray);
+}
+
+.search .search-knowledge-actions {
+  clear: left;
+}
+
+.search .search-knowledge-categories {
+  gap: 0.45rem 0.9rem;
+}
+
+.search .search-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.search .search-check input[type="checkbox"] {
+  flex: none;
+  margin: 0;
+  margin-inline: 0;
+  transform: none;
 }
 /* 深色模式的命中字：主題的黃底是 #776411 左右，配淺灰字對比只有 4.15（axe），字改成白色（約 5:1） */
 html[saved-theme="dark"] .search .search-layout .highlight {

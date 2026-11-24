@@ -779,12 +779,32 @@
 .search .search-refine-form,
 .search .search-refinements,
 .search .search-suggestions,
-.search .search-knowledge-actions,
-.search .search-knowledge-categories {
+.search .search-knowledge-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.4rem 0.65rem;
+}
+
+.search .search-knowledge-categories {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.9rem;
+}
+
+.search .search-knowledge-controls > legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 0.45rem;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--darkgray);
+}
+
+.search .search-knowledge-actions {
+  clear: left;
 }
 
 .search .search-verse-controls > * + *,
@@ -851,13 +871,17 @@
 .search .search-check {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
   min-height: 2rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .search .search-check input {
+  flex: none;
   margin: 0;
+  margin-inline: 0;
+  transform: none;
   accent-color: var(--secondary);
 }
 

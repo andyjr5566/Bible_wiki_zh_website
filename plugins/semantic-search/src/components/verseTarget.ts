@@ -21,8 +21,28 @@ export function buildScriptureCard(
   query: string,
   hasSlug: (slug: string) => boolean,
 ): ScriptureCard | null {
-  const ref = parseScriptureRef(query);
-  if (!ref) return null;
+  const parsed = parseScriptureRef(query);
+  if (!parsed) return null;
+
+  let ref = parsed;
+  let mergedSubtitle: string | null = null;
+  if (
+    parsed.book.number === 43 &&
+    parsed.chapter === 7 &&
+    parsed.verse === 53 &&
+    parsed.verseEnd === undefined
+  ) {
+    ref = { book: parsed.book, chapter: 8, verse: 1 };
+    mergedSubtitle = "和合本將 7:53 併入 8:1 開頭，第 1 節會標示出來";
+  } else if (
+    parsed.book.number === 66 &&
+    parsed.chapter === 12 &&
+    parsed.verse === 18 &&
+    parsed.verseEnd === undefined
+  ) {
+    ref = { book: parsed.book, chapter: 12, verse: 17 };
+    mergedSubtitle = "和合本將 12:18 併入第 17 節，第 17 節會標示出來";
+  }
 
   const target = resolveScriptureTarget(ref, hasSlug);
   if (target.kind === "chapter") {
@@ -38,7 +58,8 @@ export function buildScriptureCard(
       ...(target.verse === undefined ? {} : { verse: target.verse }),
       ...(target.verseEnd === undefined ? {} : { verseEnd: target.verseEnd }),
       title: `跳到 ${formatScriptureRef(ref)}`,
-      subtitle: verseText === null ? "閱讀這一章" : `第 ${verseText} 節會標示出來`,
+      subtitle:
+        mergedSubtitle ?? (verseText === null ? "閱讀這一章" : `第 ${verseText} 節會標示出來`),
     };
   }
   if (target.kind === "book-only") {
@@ -61,6 +82,7 @@ export interface VerseNode {
   tagName: string;
   children: ArrayLike<VerseNode>;
   getAttribute(name: string): string | null;
+  readonly textContent?: string | null;
 }
 
 export interface VerseList<N extends VerseNode = VerseNode> {
@@ -109,5 +131,9 @@ export function pickVerseItems<N extends VerseNode>(
   if (!Number.isInteger(first) || first < 0 || first >= found.items.length) return null;
   const lastVerse = verseEnd !== undefined && verseEnd >= verse ? verseEnd : verse;
   const last = Math.min(lastVerse - found.start, found.items.length - 1);
-  return found.items.slice(first, last + 1);
+  const effectiveFirst =
+    first > 0 && (found.items[first]?.textContent ?? "").trim().startsWith("併於上節")
+      ? first - 1
+      : first;
+  return found.items.slice(effectiveFirst, last + 1);
 }

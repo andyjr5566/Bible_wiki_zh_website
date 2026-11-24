@@ -1,3 +1,5 @@
+import { findTextMatchRanges } from "./textMatcher";
+
 /**
  * 搜尋結果的一行摘要。
  * 先在全文找到搜尋詞實際出現的位置（中文沒有空白，命中多半在詞的中間，不能用「以搜尋詞開頭的詞」判斷），
@@ -46,16 +48,6 @@ function decodeBasicEntities(value: string): string {
     .replace(/&amp;/g, "&");
 }
 
-/** 轉成小寫但長度不變，命中的位置才能對回原文。 */
-function foldCase(value: string): string {
-  let folded = "";
-  for (const char of value) {
-    const lower = char.toLowerCase();
-    folded += lower.length === char.length ? lower : char;
-  }
-  return folded;
-}
-
 function splitLines(text: string, title: string | undefined): TextLine[] {
   const cleaned = decodeBasicEntities(text.normalize("NFC"))
     .replace(/<br\s*\/?>/gi, " ")
@@ -85,23 +77,25 @@ function findFirstHit(
   source: string,
   candidates: readonly string[],
 ): { index: number; length: number } | null {
-  const folded = foldCase(source);
+  // 候選詞由長到短：先找完整查詢，找不到才退到各個詞
   for (const candidate of candidates) {
-    const index = folded.indexOf(foldCase(candidate));
-    if (index !== -1) return { index, length: candidate.length };
+    const [range] = findTextMatchRanges(source, [candidate], false);
+    if (range) return { index: range.start, length: range.end - range.start };
   }
   return null;
 }
 
 function highlightText(window: string, candidates: readonly string[]): string {
   if (candidates.length === 0) return escapeHtml(window);
-  const pattern = candidates.map((candidate) => candidate.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  const parts = window.split(new RegExp(`(${pattern.join("|")})`, "gi"));
-  return parts
-    .map((part, index) =>
-      index % 2 === 1 ? `<span class="highlight">${escapeHtml(part)}</span>` : escapeHtml(part),
-    )
-    .join("");
+  const ranges = findTextMatchRanges(window, candidates, false);
+  let html = "";
+  let cursor = 0;
+  for (const { start, end } of ranges) {
+    html += escapeHtml(window.slice(cursor, start));
+    html += `<span class="highlight">${escapeHtml(window.slice(start, end))}</span>`;
+    cursor = end;
+  }
+  return html + escapeHtml(window.slice(cursor));
 }
 
 /** 回傳可以放進 innerHTML 的摘要（只有 <span class="highlight">）；沒有內文時回傳空字串。 */

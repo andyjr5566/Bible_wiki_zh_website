@@ -1,6 +1,6 @@
 import type { QuartzEmitterPlugin } from "../types"
 import type { FullSlug } from "../../util/path"
-import { buildVerseIndex } from "../../util/verseIndex"
+import { buildVerseIndex, buildVerseOriginalIndex } from "../../util/verseIndex"
 import { write } from "./helpers"
 
 export const VerseIndex: QuartzEmitterPlugin = () => {
@@ -9,12 +9,21 @@ export const VerseIndex: QuartzEmitterPlugin = () => {
     for (const slug of malformed) {
       console.warn(`[verse-index] 未索引 ${slug}：找不到完整的經文清單`)
     }
+    const indexedSlugs = new Set(index.chapters.map((chapter) => chapter.slug))
+    const originalIndex = buildVerseOriginalIndex(content, indexedSlugs)
+
     return [
       await write({
         ctx,
         slug: "static/verseIndex" as FullSlug,
         ext: ".json",
         content: JSON.stringify(index),
+      }),
+      await write({
+        ctx,
+        slug: "static/verseOriginalIndex" as FullSlug,
+        ext: ".json",
+        content: JSON.stringify(originalIndex),
       }),
     ]
   }

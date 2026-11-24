@@ -14,6 +14,7 @@ import {
   getKnowledgeSearchCategories,
   getKnowledgeSearchCategoryLabel,
   findKnowledgeMatchSlugs,
+  warmExactSearchIndex,
 } from "../src/components/searchLogic";
 import {
   appendSemanticResults,
@@ -476,5 +477,101 @@ describe("Index loader", () => {
     await expect(ensureIndex()).resolves.toBe(false);
     await expect(ensureIndex()).resolves.toBe(true);
     expect(calls).toBe(2);
+  });
+});
+
+describe("compatible knowledge search", () => {
+  const items = {
+    "link_folder/人物/流便": { title: "流便", content: "雅各的長子，後裔分得約旦河東的地。" },
+    "link_folder/地點/西乃山": { title: "西乃山", content: "摩西在西乃山領受律法。" },
+    "link_folder/主題/葱": { title: "葱", content: "以色列人思念埃及的葱菜。" },
+    "link_folder/主題/聖靈": { title: "聖靈", content: "聖靈的工作。" },
+  };
+
+  it("matches proper-name, edition, variant and simplified forms", () => {
+    expect(findExactMatchSlugs(items, "呂便")).toEqual(["link_folder/人物/流便"]);
+    expect(findExactMatchSlugs(items, "西奈山")).toEqual(["link_folder/地點/西乃山"]);
+    expect(findExactMatchSlugs(items, "蔥菜")).toEqual(["link_folder/主題/葱"]);
+    expect(findExactMatchSlugs(items, "后裔")).toEqual(["link_folder/人物/流便"]);
+    expect(containsExactSearchText("摩西在西乃山", "西奈山")).toBe(true);
+  });
+
+  it("keeps whole-phrase semantics and the minimum length", () => {
+    expect(findExactMatchSlugs(items, "聖靈哈哈")).toEqual([]);
+    expect(findExactMatchSlugs(items, "蔥")).toEqual([]);
+    expect(rankExactMatches(items, Object.keys(items), "呂便")[0]).toBe("link_folder/人物/流便");
+  });
+});
+
+describe("knowledge search boundaries", () => {
+  const items = {
+    "link_folder/人物/摩西": { title: "摩西", content: "利未人的後裔。", tags: ["人物", "先知"] },
+    "link_folder/主題/愛": { title: "愛", content: "約翰福音的結尾是神\n\n愛世人" },
+    "link_folder/主題/行": { title: "行", content: "他說：神， 愛世人。" },
+  };
+
+  it("does not match across title, content and tag boundaries", () => {
+    expect(findExactMatchSlugs(items, "摩西利未")).toEqual([]);
+    expect(findExactMatchSlugs(items, "人物先知")).toEqual([]);
+    expect(findExactMatchSlugs(items, "利未人")).toEqual(["link_folder/人物/摩西"]);
+    expect(findExactMatchSlugs(items, "先知")).toEqual(["link_folder/人物/摩西"]);
+  });
+
+  it("does not match across a line break in content", () => {
+    expect(findExactMatchSlugs(items, "神愛世人")).toEqual(["link_folder/主題/行"]);
+    expect(containsExactSearchText("結尾是神\n\n愛世人", "神愛世人")).toBe(false);
+    expect(rankExactMatches(items, ["link_folder/主題/愛"], "神愛世人")).toEqual([
+      "link_folder/主題/愛",
+    ]);
+  });
+
+  it("still ignores spaces and punctuation within one line", () => {
+    expect(containsExactSearchText("神， 愛世人", "神愛世人")).toBe(true);
+    expect(containsExactSearchText("神\u3000愛世人", "神愛世人")).toBe(true);
+  });
+});
+
+describe("warmExactSearchIndex", () => {
+  const makeItems = (n: number) =>
+    Object.fromEntries(
+      Array.from({ length: n }, (_, i) => [
+        `link_folder/主題/條目${i}`,
+        { title: `條目${i}`, content: `內文 圣灵 ${i}\n第二行` },
+      ]),
+    );
+
+  it("warms in batches, yields between them, and keeps results identical", async () => {
+    const items = makeItems(25);
+    const batches: number[] = [];
+    await warmExactSearchIndex(items, { chunkSize: 10, onBatch: (b) => batches.push(b.processed) });
+    expect(batches).toEqual([10, 10, 5]);
+    const slugs = findExactMatchSlugs(items, "聖靈");
+    expect(slugs).toHaveLength(25);
+  });
+
+  it("returns the same promise for the same items (no duplicate warm-up)", async () => {
+    const items = makeItems(5);
+    const first = warmExactSearchIndex(items, { chunkSize: 2 });
+    expect(warmExactSearchIndex(items)).toBe(first);
+    await first;
+  });
+
+  it("searching mid-warm-up still gives correct results", async () => {
+    const items = makeItems(30);
+    const warm = warmExactSearchIndex(items, { chunkSize: 5 });
+    expect(findExactMatchSlugs(items, "圣灵 7")).toHaveLength(1);
+    await warm;
+    expect(findExactMatchSlugs(items, "圣灵 7")).toHaveLength(1);
+  });
+
+  it("stops when cancelled", async () => {
+    const items = makeItems(30);
+    const batches: number[] = [];
+    await warmExactSearchIndex(items, {
+      chunkSize: 5,
+      isCancelled: () => batches.length >= 2,
+      onBatch: (b) => batches.push(b.processed),
+    });
+    expect(batches).toEqual([5, 5]);
   });
 });

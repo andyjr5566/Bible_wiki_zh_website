@@ -100,3 +100,14 @@ describe("buildSnippetHtml", () => {
     expect(buildSnippetHtml("  \n  ", "守約")).toBe("");
   });
 });
+
+describe("buildSnippetHtml compatible matching", () => {
+  it.each([
+    ["呂便", "雅各的長子流便領受了應許。", "流便"],
+    ["西奈山", "摩西在西乃山領受律法。", "西乃山"],
+    ["蔥", "以色列人思念埃及的葱。", "葱"],
+  ])("finds and highlights %s", (query, text, shown) => {
+    const html = buildSnippetHtml(text, query);
+    expect(html).toContain(`<span class="highlight">${shown}</span>`);
+  });
+});

@@ -72,10 +72,10 @@ export default ((userOpts?: Partial<SearchOptions>) => {
             />
             <section class="search-verse-controls" aria-label="經文搜尋條件與暫存清單">
               <div class="search-verse-options">
-                <span class="search-scope">範圍為本站已收錄的經文</span>
+                <span class="search-scope">傳統和合本・本站已收錄的經文</span>
                 <label class="search-check">
-                  <input type="checkbox" class="search-match-variants" />
-                  比對異體字
+                  <input type="checkbox" class="search-strict-literal" />
+                  嚴格字面比對
                 </label>
               </div>
               <form class="search-refine-form">

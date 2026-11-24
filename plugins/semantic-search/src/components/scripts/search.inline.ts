@@ -6,18 +6,23 @@ import {
   getKnowledgeSearchCategory,
   getKnowledgeSearchCategoryLabel,
   shouldRunExactSearch,
-  warmExactSearchCache,
+  warmExactSearchIndex,
 } from "../searchLogic";
 import { createIndexLoader } from "../searchFlow";
 import { parseScriptureRef } from "../scriptureRef";
 import {
+  ORIGINAL_STUDY_ATTRIBUTION,
+  findOriginalLanguageStudyGroups,
   getVerseMatchRanges,
-  getVerseSearchSuggestions,
   normalizeVerseSearchTerm,
   prepareVerseIndex,
-  searchVerses,
+  searchVersesWithRewrite,
+  type OriginalStudyGroup,
   type PreparedVerse,
+  type VerseOriginalIndex,
 } from "../verseSearch";
+import { findTextMatchRanges } from "../textMatcher";
+import { firstHitRanges } from "../termFocus";
 import {
   buildScriptureCard,
   findVerseItems,
@@ -51,7 +56,8 @@ const pendingContentIndexUpdates = new Set<string>();
 const ensureIndex = createIndexLoader(fetchContentIndex, async (data) => {
   contentData = data;
   await applyPendingContentIndexUpdates();
-  warmExactSearchCache(data);
+  // 分批在閒置時預熱，不阻塞載入與輸入；搜尋時若還沒跑完會等它（見 performSearch）
+  void warmExactSearchIndex(data);
 });
 const fetchContentCache = new Map<string, Element[]>();
 const parser = new DOMParser();
@@ -88,7 +94,7 @@ function runCleanups() {
 
 type SearchMode = "verse" | "knowledge";
 
-const verseDraft = { query: "", refinements: [] as string[], matchVariants: false };
+const verseDraft = { query: "", refinements: [] as string[], strictLiteral: false };
 let knowledgeSelection: Set<string> | null = null;
 const shortlistKey = "search-verse-shortlist-v1";
 const shortlist = new Map<string, string>();
@@ -130,12 +136,32 @@ const ensureVerseIndex = createIndexLoader(
   },
 );
 
+/** 原文索引只在需要時才讀；缺檔（精簡環境）或格式不對時當作沒有，不影響經文搜尋。 */
+let originalIndex: VerseOriginalIndex | null = null;
+const ensureOriginalIndex = createIndexLoader(
+  async (): Promise<VerseOriginalIndex | null> => {
+    try {
+      const response = await fetch(resolveSearchPath("static/verseOriginalIndex.json"));
+      if (!response.ok) return null;
+      const data = (await response.json()) as Partial<VerseOriginalIndex> | null;
+      return data && data.version === 1 && data.lexicon && data.chapters
+        ? (data as VerseOriginalIndex)
+        : null;
+    } catch {
+      return null;
+    }
+  },
+  (data) => {
+    originalIndex = data;
+  },
+);
+
 const verseReference = (verse: PreparedVerse) =>
   verse.book + " " + verse.chapter + ":" + verse.verse;
 
-function paintMatches(parent: HTMLElement, text: string, terms: string[], matchVariants = false) {
+function paintMatches(parent: HTMLElement, text: string, terms: string[], strictLiteral = false) {
   let offset = 0;
-  for (const { start, end } of getVerseMatchRanges(text, terms, matchVariants)) {
+  for (const { start, end } of getVerseMatchRanges(text, terms, strictLiteral)) {
     parent.append(text.slice(offset, start));
     const match = document.createElement("span");
     match.className = "highlight";
@@ -175,7 +201,7 @@ function setupSearch() {
     const refineInput = root.querySelector<HTMLInputElement>(".search-refine-input")!;
     const refineAdd = root.querySelector<HTMLButtonElement>(".search-refine-add")!;
     const refinements = root.querySelector<HTMLElement>(".search-refinements")!;
-    const variants = root.querySelector<HTMLInputElement>(".search-match-variants")!;
+    const strictToggle = root.querySelector<HTMLInputElement>(".search-strict-literal")!;
     const suggestions = root.querySelector<HTMLElement>(".search-suggestions")!;
     const shortlistDetails = root.querySelector<HTMLDetailsElement>(".search-verse-list")!;
     const shortlistBody = root.querySelector<HTMLElement>(".search-verse-list-body")!;
@@ -204,13 +230,21 @@ function setupSearch() {
     let knowledgeHits: string[] = [];
     let rendered = 0;
     let activeTerms: string[] = [];
+    let verseSuggestions: string[] = [];
+    let studyElement: HTMLElement | null = null;
+    const studyVerses = new Map<string, PreparedVerse>();
     let activeTerm = "";
 
     const announce = (message: string) => {
       status.textContent = message;
     };
     const links = () =>
-      Array.from(results.querySelectorAll<HTMLAnchorElement>("a.result-card[href]"));
+      Array.from(results.querySelectorAll<HTMLAnchorElement>("a.result-card[href]")).filter(
+        (link) => {
+          const details = link.closest("details");
+          return !details || details.open;
+        },
+      );
 
     const paintCategoryFilters = (categories: string[]) => {
       if (categories.join("\n") !== categoryKeys.join("\n")) {
@@ -274,7 +308,7 @@ function setupSearch() {
       const isReference = parseScriptureRef(query) !== null;
       refineInput.disabled = !query || isReference;
       refineAdd.disabled = refineInput.disabled;
-      variants.checked = verseDraft.matchVariants;
+      strictToggle.checked = verseDraft.strictLiteral;
       refinements.replaceChildren(
         ...verseDraft.refinements.map((word) => {
           const button = makeSearchButton("search-refinement", word + " ×");
@@ -285,7 +319,7 @@ function setupSearch() {
       );
       refinements.hidden = refinements.childElementCount === 0;
       suggestions.replaceChildren(
-        ...getVerseSearchSuggestions(query).map((word) => {
+        ...verseSuggestions.map((word) => {
           const button = makeSearchButton("search-suggestion", "也可查「" + word + "」");
           button.dataset.suggestion = word;
           return button;
@@ -294,7 +328,7 @@ function setupSearch() {
       suggestions.hidden = suggestions.childElementCount === 0;
     };
 
-    const makeVerseCard = (verse: PreparedVerse) => {
+    const makeVerseCard = (verse: PreparedVerse, rendering?: string) => {
       const row = document.createElement("div");
       row.className = "search-verse-row";
       const card = document.createElement("a");
@@ -304,9 +338,20 @@ function setupSearch() {
       card.href = resolveSearchPath(verse.slug) + "#v" + verse.verse;
       const title = document.createElement("h3");
       title.textContent = verseReference(verse);
+      if (rendering) {
+        const badge = document.createElement("span");
+        badge.className = "search-original-rendering";
+        badge.textContent = "譯作「" + rendering + "」";
+        title.append(" ", badge);
+      }
       const text = document.createElement("p");
       text.className = "search-verse-text";
-      paintMatches(text, verse.text, activeTerms, verseDraft.matchVariants);
+      paintMatches(
+        text,
+        verse.text,
+        rendering ? [rendering] : activeTerms,
+        rendering ? false : verseDraft.strictLiteral,
+      );
       card.append(title, text);
 
       const toggle = makeSearchButton("search-verse-add", "");
@@ -363,7 +408,9 @@ function setupSearch() {
       results.querySelector(".search-more-btn")?.remove();
       if (mode === "verse") {
         const page = verseHits.slice(rendered, rendered + RESULT_RENDER_LIMIT);
-        results.append(...page.map(makeVerseCard));
+        const nodes = page.map((verse) => makeVerseCard(verse));
+        if (studyElement?.isConnected) studyElement.before(...nodes);
+        else results.append(...nodes);
         rendered += page.length;
         updateVerseToggles();
       } else {
@@ -373,12 +420,12 @@ function setupSearch() {
       }
       const total = mode === "verse" ? verseHits.length : knowledgeHits.length;
       if (rendered < total) {
-        results.append(
-          makeSearchButton(
-            "search-more-btn",
-            "再顯示 " + Math.min(RESULT_RENDER_LIMIT, total - rendered) + " 筆",
-          ),
+        const more = makeSearchButton(
+          "search-more-btn",
+          "再顯示 " + Math.min(RESULT_RENDER_LIMIT, total - rendered) + " 筆",
         );
+        if (mode === "verse" && studyElement?.isConnected) studyElement.before(more);
+        else results.append(more);
       }
       if (focusNext) links()[previousCount]?.focus();
     };
@@ -402,6 +449,8 @@ function setupSearch() {
       results.scrollTop = 0;
       count.hidden = true;
       rendered = 0;
+      studyElement = null;
+      studyVerses.clear();
       status.textContent = "";
       previewRequest++;
       clearTimeout(previewTimer);
@@ -409,6 +458,92 @@ function setupSearch() {
         delete preview.dataset.slug;
         preview.replaceChildren();
       }
+    };
+
+    const makeOriginalGroup = (group: OriginalStudyGroup, hasDirectHits: boolean) => {
+      const details = document.createElement("details");
+      details.className = "search-original-group";
+      details.open = group.autoOpen;
+      const summary = document.createElement("summary");
+      const renderings = group.distinctRenderings.slice(0, 4).join("、");
+      summary.textContent = hasDirectHits
+        ? `同一原文詞在本站其他譯法：${group.lemma}（${group.translit}）— 另有 ${group.hits.length} 節（${renderings}）`
+        : `對應原文詞在本站譯法：${group.lemma}（${group.translit}）— ${group.hits.length} 節（${renderings}）`;
+      // 詞義說明暫不顯示：目前的資料是和合本譯法統計，夾雜斷詞雜訊，整理好再補。
+      details.append(summary);
+      if (group.entryLink) {
+        const link = document.createElement("a");
+        link.className = "search-original-entry-link";
+        link.dataset.slug = group.entryLink.slug;
+        link.href = resolveSearchPath(group.entryLink.slug);
+        link.textContent =
+          (group.entryLink.isOriginalEntry ? "深入閱讀原文條目：" : "相關研經條目：") +
+          group.entryLink.title +
+          " →";
+        details.append(link);
+      }
+      for (const { verse, rendering } of group.hits.slice(0, RESULT_RENDER_LIMIT)) {
+        studyVerses.set(verse.id, verse);
+        details.append(makeVerseCard(verse, rendering));
+      }
+      if (group.hits.length > RESULT_RENDER_LIMIT) {
+        const more = document.createElement("p");
+        more.className = "search-original-more";
+        more.textContent = `僅列出前 ${RESULT_RENDER_LIMIT} 節，共 ${group.hits.length} 節`;
+        details.append(more);
+      }
+      const credit = document.createElement("p");
+      credit.className = "search-original-credit";
+      credit.textContent = ORIGINAL_STUDY_ATTRIBUTION;
+      details.append(credit);
+      return details;
+    };
+
+    /** 非阻塞：原文索引缺檔時什麼都不顯示，經文結果不受影響。 */
+    const showOriginalStudy = async (
+      token: number,
+      query: string,
+      hits: PreparedVerse[],
+      corpus: PreparedVerse[],
+    ) => {
+      const optionsOn = verseDraft.refinements.length > 0 || verseDraft.strictLiteral;
+      if (optionsOn && query.length < 2) return;
+      if (!originalIndex) {
+        await ensureOriginalIndex();
+        if (token !== request || mode !== "verse") return;
+      }
+      if (optionsOn) {
+        if (!originalIndex) return;
+        const note = document.createElement("p");
+        note.className = "search-index-note search-original-skipped";
+        note.textContent = "加上再查條件或嚴格字面比對時，不列出同一原文詞的其他譯法。";
+        const moreButton = results.querySelector(".search-more-btn");
+        if (moreButton) moreButton.before(note);
+        else results.append(note);
+        return;
+      }
+      const groups = findOriginalLanguageStudyGroups(
+        corpus,
+        originalIndex,
+        query,
+        new Set(hits.map((hit) => hit.id)),
+      );
+      if (groups.length === 0) return;
+      const section = document.createElement("section");
+      section.className = "search-original-study";
+      section.setAttribute("aria-label", "原文其他譯法");
+      section.append(...groups.map((group) => makeOriginalGroup(group, hits.length > 0)));
+      studyElement = section;
+      const moreButton = results.querySelector(".search-more-btn");
+      if (moreButton) moreButton.before(section);
+      else results.append(section);
+      if (hits.length === 0) {
+        const message = "字面無直接相符經文，以下顯示同原文詞在本站已收錄的經文";
+        count.hidden = false;
+        count.textContent = message;
+        announce(message);
+      }
+      updateVerseToggles();
     };
 
     const performSearch = async (token: number, query: string) => {
@@ -439,10 +574,25 @@ function setupSearch() {
             return;
           }
         }
-        activeTerms = [query, ...verseDraft.refinements];
-        verseHits = searchVerses(verses, activeTerms, verseDraft.matchVariants);
+        const execution = searchVersesWithRewrite(
+          verses,
+          [query, ...verseDraft.refinements],
+          verseDraft.strictLiteral,
+        );
+        activeTerms = execution.effectiveTerms;
+        verseHits = execution.hits;
+        // 建議詞只依主查詢算出，加了再查條件或嚴格比對後就不再適用，不顯示。
+        verseSuggestions = verseDraft.refinements.length > 0 ? [] : execution.suggestions;
+        paintVerseControls();
+        if (execution.autoRewrite) {
+          const notice = document.createElement("p");
+          notice.className = "search-rewrite-notice";
+          notice.textContent = execution.autoRewrite.message;
+          results.append(notice);
+        }
         showCount(verseHits.length, "節經文");
         appendNextPage();
+        void showOriginalStudy(token, query, execution.hits, verses);
       } else {
         if ((knowledgeSelection?.size ?? 1) === 0) {
           showResultMessage("請至少勾選一個知識類型。");
@@ -462,6 +612,9 @@ function setupSearch() {
             return;
           }
         }
+        // 預熱還在跑就等它跑完（已算好的項目會略過），不要在這裡同步算完全部而凍結畫面
+        await warmExactSearchIndex(contentData);
+        if (token !== request) return;
         paintCategoryFilters(getKnowledgeSearchCategories(Object.keys(contentData)));
         activeTerm = query;
         knowledgeHits = findKnowledgeMatchSlugs(
@@ -478,6 +631,8 @@ function setupSearch() {
       const token = ++request;
       clearTimeout(searchTimer);
       resetResults();
+      verseSuggestions = [];
+      if (mode === "verse") paintVerseControls();
       const query = verseDraft.query.trim();
       layout.classList.toggle("display-results", query.length > 0);
       if (!query) return;
@@ -533,6 +688,7 @@ function setupSearch() {
         refineInput.value = "";
       }
       verseDraft.query = searchBar.value;
+      verseSuggestions = [];
       if (mode === "verse") paintVerseControls();
       refresh(true);
     };
@@ -708,10 +864,10 @@ function setupSearch() {
       },
       { signal },
     );
-    variants.addEventListener(
+    strictToggle.addEventListener(
       "change",
       () => {
-        verseDraft.matchVariants = variants.checked;
+        verseDraft.strictLiteral = strictToggle.checked;
         refresh();
       },
       { signal },
@@ -758,7 +914,7 @@ function setupSearch() {
         }
         const verseId = target.closest<HTMLButtonElement>(".search-verse-add")?.dataset.verseId;
         if (verseId) {
-          const verse = verseHits.find((hit) => hit.id === verseId);
+          const verse = verseHits.find((hit) => hit.id === verseId) ?? studyVerses.get(verseId);
           if (!verse) return;
           if (shortlist.has(verseId)) shortlist.delete(verseId);
           else shortlist.set(verseId, verseReference(verse) + "\t" + verse.text);
@@ -768,7 +924,9 @@ function setupSearch() {
           announce("暫存經文 " + shortlist.size + " 節");
           return;
         }
-        const link = target.closest<HTMLAnchorElement>("a.result-card[href]");
+        const link = target.closest<HTMLAnchorElement>(
+          "a.result-card[href], a.search-original-entry-link[href]",
+        );
         if (link && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
           handleNavigate(link);
       },
@@ -924,26 +1082,9 @@ function makeScriptureCard(card: ScriptureCard) {
   return element;
 }
 
-function tokenizeTerm(term: string): string[] {
-  const tokens = term.split(/\s+/).filter((t) => t.trim() !== "");
-  const tokenLen = tokens.length;
-  if (tokenLen > 1) {
-    for (let i = 1; i < tokenLen; i++) {
-      tokens.push(tokens.slice(0, i + 1).join(" "));
-    }
-  }
-  return tokens.sort((a, b) => b.length - a.length);
-}
-
 function highlightHTML(searchTerm: string, el: HTMLElement): string {
-  const tokenizedTerms = tokenizeTerm(searchTerm).filter((term) => term.trim() !== "");
-  if (tokenizedTerms.length === 0) return el.innerHTML;
+  if (searchTerm.trim() === "") return el.innerHTML;
   const html = parser.parseFromString(el.innerHTML, "text/html");
-  const combined = tokenizedTerms
-    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("|");
-  if (combined === "") return el.innerHTML;
-  const regex = new RegExp(combined, "gi");
   const walker = html.createTreeWalker(html.body, NodeFilter.SHOW_TEXT);
   const nodes: Text[] = [];
   let node: Text | null = walker.nextNode() as Text | null;
@@ -953,21 +1094,19 @@ function highlightHTML(searchTerm: string, el: HTMLElement): string {
   }
   for (const textNode of nodes) {
     const text = textNode.nodeValue ?? "";
-    regex.lastIndex = 0;
-    if (!regex.test(text)) continue;
-    regex.lastIndex = 0;
+    const ranges = findTextMatchRanges(text, [searchTerm], false);
+    if (ranges.length === 0) continue;
     const fragment = html.createDocumentFragment();
     let lastIndex = 0;
-    let match: RegExpExecArray | null;
-    while ((match = regex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        fragment.appendChild(html.createTextNode(text.slice(lastIndex, match.index)));
+    for (const { start, end } of ranges) {
+      if (start > lastIndex) {
+        fragment.appendChild(html.createTextNode(text.slice(lastIndex, start)));
       }
       const span = html.createElement("span");
       span.className = "highlight";
-      span.textContent = match[0];
+      span.textContent = text.slice(start, end);
       fragment.appendChild(span);
-      lastIndex = match.index + match[0].length;
+      lastIndex = end;
     }
     if (lastIndex < text.length) {
       fragment.appendChild(html.createTextNode(text.slice(lastIndex)));
@@ -1071,52 +1210,89 @@ function scrollToSearchTerm() {
 
     for (const el of candidates) {
       const text = el.textContent ?? "";
-      const idx = text.toLowerCase().indexOf(term.toLowerCase());
-      if (idx === -1) continue;
+      const ranges = findTextMatchRanges(text, [term], false);
+      if (ranges.length === 0) continue;
 
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const textNodes: Array<{ node: Text; start: number; end: number }> = [];
       let charCount = 0;
-      let node: Text | null;
-      let startNode: Text | null = null;
-      let startOffset = 0;
-      let endNode: Text | null = null;
-      let endOffset = 0;
-
-      while ((node = walker.nextNode() as Text | null)) {
-        const len = node.nodeValue?.length ?? 0;
-        if (!startNode && charCount + len > idx) {
-          startNode = node;
-          startOffset = idx - charCount;
-        }
-        if (startNode && charCount + len >= idx + term.length) {
-          endNode = node;
-          endOffset = idx + term.length - charCount;
-          break;
-        }
+      let current: Text | null;
+      while ((current = walker.nextNode() as Text | null)) {
+        const len = current.nodeValue?.length ?? 0;
+        if (len > 0) textNodes.push({ node: current, start: charCount, end: charCount + len });
         charCount += len;
       }
 
-      if (!startNode || !endNode) continue;
+      // 找出第一個命中區段（含跨譯註切開的相鄰片段）所涵蓋的文字節點切片，不破壞內部連結或標籤
+      const activeRanges = firstHitRanges(text, ranges);
+      const slices: Array<{ node: Text; localStart: number; localEnd: number }> = [];
+      for (const r of activeRanges) {
+        for (const tn of textNodes) {
+          const overlapStart = Math.max(r.start, tn.start);
+          const overlapEnd = Math.min(r.end, tn.end);
+          if (overlapStart < overlapEnd) {
+            slices.push({
+              node: tn.node,
+              localStart: overlapStart - tn.start,
+              localEnd: overlapEnd - tn.start,
+            });
+          }
+        }
+      }
 
-      try {
-        const range = document.createRange();
-        range.setStart(startNode, startOffset);
-        range.setEnd(endNode, endOffset);
-        const span = document.createElement("span");
-        span.className = "search-scroll-target";
-        range.surroundContents(span);
-        span.scrollIntoView({ block: "center", behavior: "smooth" });
+      if (slices.length === 0) continue;
+
+      // 同一個文字節點可能有好幾段命中（例如被譯註隔開的「他（原文是我）必按時」），
+      // 一個節點只能被取代一次，所以先依節點分組，再一次切成多個標示片段。
+      const byNode = new Map<Text, Array<{ localStart: number; localEnd: number }>>();
+      for (const { node, localStart, localEnd } of slices) {
+        const list = byNode.get(node);
+        if (list) list.push({ localStart, localEnd });
+        else byNode.set(node, [{ localStart, localEnd }]);
+      }
+
+      const createdSpans: HTMLSpanElement[] = [];
+      for (const [node, parts] of byNode) {
+        const parent = node.parentNode;
+        if (!parent) continue;
+        const value = node.nodeValue ?? "";
+        parts.sort((a, b) => a.localStart - b.localStart);
+
+        const frag = document.createDocumentFragment();
+        let cursor = 0;
+        for (const { localStart, localEnd } of parts) {
+          if (localStart < cursor) continue;
+          if (localStart > cursor)
+            frag.appendChild(document.createTextNode(value.slice(cursor, localStart)));
+          const span = document.createElement("span");
+          span.className = "search-scroll-target";
+          span.textContent = value.slice(localStart, localEnd);
+          frag.appendChild(span);
+          createdSpans.push(span);
+          cursor = localEnd;
+        }
+        if (cursor < value.length) frag.appendChild(document.createTextNode(value.slice(cursor)));
+        parent.replaceChild(frag, node);
+      }
+
+      const anchorSpan = createdSpans[0];
+      if (anchorSpan) {
+        anchorSpan.scrollIntoView({ block: "center", behavior: "smooth" });
         setTimeout(() => {
-          span.classList.add("fade-out");
+          for (const span of createdSpans) span.classList.add("fade-out");
           setTimeout(() => {
-            const parent = span.parentNode;
-            if (parent) {
-              parent.replaceChild(document.createTextNode(span.textContent || ""), span);
-              parent.normalize();
+            const parents = new Set<Node>();
+            for (const span of createdSpans) {
+              const parent = span.parentNode;
+              if (!parent) continue;
+              parents.add(parent);
+              while (span.firstChild) parent.insertBefore(span.firstChild, span);
+              parent.removeChild(span);
             }
+            for (const parent of parents) parent.normalize();
           }, 1000);
         }, 2000);
-      } catch {
+      } else {
         el.scrollIntoView({ block: "center", behavior: "smooth" });
       }
       break;

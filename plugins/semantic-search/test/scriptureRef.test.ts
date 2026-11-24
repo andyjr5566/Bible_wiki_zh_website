@@ -37,9 +37,7 @@ describe("BIBLE_BOOKS", () => {
       expect(book.zh.length).toBeGreaterThan(0);
       expect(book.zhAbbr.length).toBeGreaterThan(0);
       expect(book.en.length).toBeGreaterThan(0);
-      expect(book.slugFolder).toBe(
-        `${String(index + 1).padStart(2, "0")}-${book.zh}`,
-      );
+      expect(book.slugFolder).toBe(`${String(index + 1).padStart(2, "0")}-${book.zh}`);
     });
   });
 
@@ -83,6 +81,24 @@ describe("parseScriptureRef", () => {
       ["約1:1", 43, 1, 1],
       ["創 2:7", 1, 2, 7],
       ["民數記 3:5-7", 4, 3, 5, 7],
+      // Input-method homophones / common variants
+      ["創世紀 1:1", 1, 1, 1],
+      ["创世纪 1:1", 1, 1, 1],
+      ["列王記上 18:21", 11, 18, 21],
+      ["列王記下 5:14", 12, 5, 14],
+      ["歷代誌上 28:9", 13, 28, 9],
+      ["歷代誌下 7:14", 14, 7, 14],
+      ["啓示錄 21:4", 66, 21, 4],
+      // Psalms 篇 unit & Chinese numerals
+      ["詩篇 23篇", 19, 23],
+      ["詩 23篇1節", 19, 23, 1],
+      ["詩篇 第23篇 1-6節", 19, 23, 1, 6],
+      ["詩篇二十三篇", 19, 23],
+      ["詩一百一十九篇105節", 19, 119, 105],
+      ["創世記第一章", 1, 1],
+      ["創世記一章一節", 1, 1, 1],
+      ["創六5", 1, 6, 5],
+      ["申十一18-20", 5, 11, 18, 20],
     ];
 
     for (const [input, number, chapter, verse, verseEnd] of examples) {
@@ -112,6 +128,9 @@ describe("parseScriptureRef", () => {
       "出12:0",
       "出12:201",
       "出12:5-3",
+      "約一百",
+      "多一",
+      "來一趟",
     ];
 
     for (const input of invalidInputs) {
@@ -120,7 +139,22 @@ describe("parseScriptureRef", () => {
   });
 
   it("requires a number after a one-character Chinese abbreviation", () => {
-    for (const input of ["約", "亞", "歌", "哈", "但", "多", "門", "來", "雅", "書", "加", "西", "可", "路"]) {
+    for (const input of [
+      "約",
+      "亞",
+      "歌",
+      "哈",
+      "但",
+      "多",
+      "門",
+      "來",
+      "雅",
+      "書",
+      "加",
+      "西",
+      "可",
+      "路",
+    ]) {
       expect(parseScriptureRef(input)).toBeNull();
     }
   });
@@ -137,9 +171,7 @@ describe("chapterSlug, resolveScriptureTarget, and formatScriptureRef", () => {
   it("builds chapter slugs and formatted references", () => {
     expect(chapterSlug(ref)).toBe("02-出埃及記/第12章");
     expect(formatScriptureRef(ref)).toBe("出埃及記 12:3–5");
-    expect(formatScriptureRef({ book: bookAt(2), chapter: 12, verse: 3 })).toBe(
-      "出埃及記 12:3",
-    );
+    expect(formatScriptureRef({ book: bookAt(2), chapter: 12, verse: 3 })).toBe("出埃及記 12:3");
     expect(formatScriptureRef({ book: bookAt(2), chapter: 12 })).toBe("出埃及記 12");
   });
 

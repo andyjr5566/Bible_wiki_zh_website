@@ -1,3 +1,5 @@
+import { buildProjection, expandCompatibleTerms } from "./textMatcher";
+
 /** Exact matching is intentionally skipped for one-character queries. */
 export const MIN_EXACT_QUERY_LENGTH = 2;
 
@@ -43,42 +45,134 @@ export function normalizeExactSearchText(value: string): string {
   return value.normalize("NFC").toLocaleLowerCase();
 }
 
-export function containsExactSearchText(value: string, query: string): boolean {
-  const normalizedQuery = normalizeExactSearchText(query.trim());
-  if (normalizedQuery.length < MIN_EXACT_QUERY_LENGTH) return false;
-  return normalizeExactSearchText(value).includes(normalizedQuery);
+/** 相容比對用的查詢寫法（簡繁、異體字、專有名詞／版本差異）；查詢太短或全是標點時為空。 */
+function exactQueryVariants(query: string): string[] {
+  if (query.trim().length < MIN_EXACT_QUERY_LENGTH) return [];
+  return expandCompatibleTerms(query.trim(), false);
 }
 
-// 每筆內容正規化後的全文快取：完整站約 3,800 筆、20 MB，每次查詢都重新 normalize 會拖慢精準結果（B4-1 要求 300 ms 內出現）
-const normalizedTextCache = new WeakMap<ExactSearchItem, string>();
+function includesAnyVariant(text: string, variants: readonly string[]): boolean {
+  return variants.some((variant) => variant !== "" && text.includes(variant));
+}
+
+/** 知識庫搜尋用的正規化：換行是硬邊界（哨兵 "\n"），行內空白與標點照舊忽略。 */
+function projectField(value: string): string {
+  return buildProjection(value, false, { lineBreaks: true }).norm;
+}
+
+export function containsExactSearchText(value: string, query: string): boolean {
+  const variants = exactQueryVariants(query);
+  if (variants.length === 0) return false;
+  return includesAnyVariant(projectField(value), variants);
+}
+
+interface NormalizedItem {
+  title: string;
+  content: string;
+  /** 標題、內文、每個標籤以 "\n" 隔開，比對不會跨欄位。 */
+  searchable: string;
+}
+
+// 每筆內容正規化後的快取：完整站約 3,800 筆、20 MB，每次查詢都重新 normalize 會拖慢精準結果（B4-1 要求 300 ms 內出現）
+const normalizedCache = new WeakMap<ExactSearchItem, NormalizedItem>();
+
+function normalizedItem(item: ExactSearchItem): NormalizedItem {
+  let cached = normalizedCache.get(item);
+  if (cached === undefined) {
+    const title = projectField(item.title ?? "");
+    const content = projectField(item.content ?? "");
+    const tags = (item.tags ?? []).map(projectField);
+    cached = { title, content, searchable: [title, content, ...tags].join("\n") };
+    normalizedCache.set(item, cached);
+  }
+  return cached;
+}
 
 function normalizedSearchableText(item: ExactSearchItem): string {
-  let text = normalizedTextCache.get(item);
-  if (text === undefined) {
-    text = normalizeExactSearchText(
-      [item.title ?? "", item.content ?? "", ...(item.tags ?? [])].join("\n"),
-    );
-    normalizedTextCache.set(item, text);
-  }
-  return text;
+  return normalizedItem(item).searchable;
 }
 
-/** 先把每筆的正規化全文算好放進快取（完整索引載入後呼叫）。 */
+/** 先把每筆的正規化全文算好放進快取（同步版；測試或小資料用）。 */
 export function warmExactSearchCache(items: Record<string, ExactSearchItem>): void {
   for (const item of Object.values(items)) {
     if (item && typeof item === "object") normalizedSearchableText(item);
   }
 }
 
+export interface WarmOptions {
+  /** 回傳 true 就停止（下一批不再處理）。 */
+  isCancelled?: () => boolean;
+  /** 每批最多處理幾筆。 */
+  chunkSize?: number;
+  /** 每批的時間預算（毫秒）；超過就讓出主執行緒。 */
+  budgetMs?: number;
+  /** 每批結束後呼叫（測量用）。 */
+  onBatch?: (info: { processed: number; ms: number }) => void;
+}
+
+const DEFAULT_WARM_CHUNK = 300;
+const DEFAULT_WARM_BUDGET_MS = 8;
+
+const nowMs = (): number => (typeof performance !== "undefined" ? performance.now() : Date.now());
+
+/** 讓出主執行緒：瀏覽器用 requestIdleCallback（有逾時），否則 setTimeout(0)。 */
+function yieldToMain(): Promise<void> {
+  return new Promise((resolve) => {
+    const idle = (globalThis as { requestIdleCallback?: typeof requestIdleCallback })
+      .requestIdleCallback;
+    if (typeof idle === "function") idle(() => resolve(), { timeout: 100 });
+    else setTimeout(resolve, 0);
+  });
+}
+
+const warmInFlight = new WeakMap<object, Promise<void>>();
+
+/**
+ * 分批預熱正規化快取，批與批之間讓出主執行緒，避免第一次知識搜尋凍結畫面。
+ * 以 items 物件為 key 只跑一次（SPA 換頁重複呼叫會拿到同一個 Promise）；已快取的項目直接略過，
+ * 所以搜尋途中才補進來的項目、或搜尋已先算過的項目都不會重複處理。
+ */
+export function warmExactSearchIndex(
+  items: Record<string, ExactSearchItem>,
+  options: WarmOptions = {},
+): Promise<void> {
+  const existing = warmInFlight.get(items);
+  if (existing) return existing;
+  const chunkSize = options.chunkSize ?? DEFAULT_WARM_CHUNK;
+  const budgetMs = options.budgetMs ?? DEFAULT_WARM_BUDGET_MS;
+  const run = async (): Promise<void> => {
+    const list = Object.values(items);
+    let index = 0;
+    while (index < list.length) {
+      if (options.isCancelled?.()) return;
+      const startedAt = nowMs();
+      const startIndex = index;
+      while (index < list.length && index - startIndex < chunkSize) {
+        const item = list[index++];
+        if (item && typeof item === "object") normalizedSearchableText(item);
+        if (nowMs() - startedAt >= budgetMs) break;
+      }
+      options.onBatch?.({ processed: index - startIndex, ms: nowMs() - startedAt });
+      if (index < list.length) await yieldToMain();
+    }
+  };
+  const promise = run().finally(() => {
+    // 被取消而沒跑完的話，下次可以重新開始
+    if (options.isCancelled?.()) warmInFlight.delete(items);
+  });
+  warmInFlight.set(items, promise);
+  return promise;
+}
+
 export function findExactMatchSlugs(
   items: Record<string, ExactSearchItem>,
   query: string,
 ): string[] {
-  const normalizedQuery = normalizeExactSearchText(query.trim());
-  if (normalizedQuery.length < MIN_EXACT_QUERY_LENGTH) return [];
+  const variants = exactQueryVariants(query);
+  if (variants.length === 0) return [];
   return Object.entries(items)
     .filter(([slug]) => !isSearchExcludedSlug(slug))
-    .filter(([, item]) => normalizedSearchableText(item).includes(normalizedQuery))
+    .filter(([, item]) => includesAnyVariant(normalizedSearchableText(item), variants))
     .map(([slug]) => slug);
 }
 
@@ -90,16 +184,17 @@ export function getSlugKind(slug: string): SlugKind {
   return "other";
 }
 
-function countNonOverlappingOccurrences(text: string, query: string): number {
-  if (query.length === 0) return 0;
-
-  let count = 0;
-  let index = text.indexOf(query);
-  while (index !== -1) {
-    count++;
-    index = text.indexOf(query, index + query.length);
+function countNonOverlappingOccurrences(text: string, queries: readonly string[]): number {
+  let total = 0;
+  for (const query of queries) {
+    if (query.length === 0) continue;
+    let index = text.indexOf(query);
+    while (index !== -1) {
+      total++;
+      index = text.indexOf(query, index + query.length);
+    }
   }
-  return count;
+  return total;
 }
 
 interface RankedExactMatch {
@@ -125,22 +220,20 @@ export function rankExactMatches(
   slugs: readonly string[],
   query: string,
 ): string[] {
-  const normalizedQuery = normalizeExactSearchText(query.trim());
+  const variants = exactQueryVariants(query);
   const ranked = slugs.map((slug): RankedExactMatch => {
     const item = items[slug] ?? {};
-    const title = normalizeExactSearchText(item.title ?? "");
-    const content = normalizeExactSearchText(item.content ?? "");
-    const tier: RankedExactMatch["tier"] =
-      normalizedQuery.length > 0 && title === normalizedQuery
-        ? 0
-        : normalizedQuery.length > 0 && title.includes(normalizedQuery)
-          ? 1
-          : 2;
+    const { title, content } = normalizedItem(item);
+    const tier: RankedExactMatch["tier"] = variants.includes(title)
+      ? 0
+      : includesAnyVariant(title, variants)
+        ? 1
+        : 2;
 
     return {
       slug,
       tier,
-      count: countNonOverlappingOccurrences(title + "\n" + content, normalizedQuery),
+      count: countNonOverlappingOccurrences(title + "\n" + content, variants),
       kind: getSlugKind(slug),
     };
   });

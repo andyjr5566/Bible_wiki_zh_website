@@ -6,8 +6,18 @@ import {
   type VerseNode,
 } from "../src/components/verseTarget";
 
-function node(tagName: string, children: VerseNode[] = [], attrs: Record<string, string> = {}) {
-  return { tagName, children, getAttribute: (name: string) => attrs[name] ?? null } as VerseNode;
+function node(
+  tagName: string,
+  children: VerseNode[] = [],
+  attrs: Record<string, string> = {},
+  textContent?: string,
+) {
+  return {
+    tagName,
+    children,
+    getAttribute: (name: string) => attrs[name] ?? null,
+    ...(textContent === undefined ? {} : { textContent }),
+  } as VerseNode;
 }
 function ol(count: number, attrs: Record<string, string> = {}) {
   return node(
@@ -67,6 +77,25 @@ describe("buildScriptureCard", () => {
     expect(buildScriptureCard("逾越節", hasSlug)).toBeNull();
     expect(buildScriptureCard("但以理", hasSlug)).toBeNull();
   });
+
+  it("redirects cross-edition merged verses John 7:53 -> 8:1 and Rev 12:18 -> 12:17", () => {
+    const ntKnown = new Set(["43-約翰福音/第8章", "66-啟示錄/第12章"]);
+    const hasNt = (slug: string) => ntKnown.has(slug);
+    expect(buildScriptureCard("約 7:53", hasNt)).toEqual({
+      kind: "chapter",
+      slug: "43-約翰福音/第8章",
+      verse: 1,
+      title: "跳到 約翰福音 8:1",
+      subtitle: "和合本將 7:53 併入 8:1 開頭，第 1 節會標示出來",
+    });
+    expect(buildScriptureCard("啟 12:18", hasNt)).toEqual({
+      kind: "chapter",
+      slug: "66-啟示錄/第12章",
+      verse: 17,
+      title: "跳到 啟示錄 12:17",
+      subtitle: "和合本將 12:18 併入第 17 節，第 17 節會標示出來",
+    });
+  });
 });
 
 describe("findVerseItems / pickVerseItems", () => {
@@ -101,5 +130,16 @@ describe("findVerseItems / pickVerseItems", () => {
     expect(pickVerseItems(found, 6)).toBeNull();
     expect(pickVerseItems(found, 0)).toBeNull();
     expect(pickVerseItems(found, 4, 99)).toEqual(found.items.slice(3, 5));
+  });
+
+  it("includes the preceding verse when the target verse is 併於上節。", () => {
+    const list = node("OL", [
+      node("LI", [], {}, "利未支派的數點在這裡。"),
+      node("LI", [], {}, "併於上節。"),
+      node("LI", [], {}, "下一節經文。"),
+    ]);
+    const found = findVerseItems(node("DIV", [list]))!;
+    expect(pickVerseItems(found, 2)).toEqual([found.items[0], found.items[1]]);
+    expect(pickVerseItems(found, 3)).toEqual([found.items[2]]);
   });
 });

@@ -476,6 +476,12 @@
   font-size: 0.85em;
 }
 
+.search .search-original-skipped {
+  padding: 0.5em 1em;
+  font-size: 0.8em;
+  opacity: 0.85;
+}
+
 .search-sr-only {
   position: absolute !important;
   width: 1px;
@@ -976,5 +982,100 @@
   .search .search-space .search-verse-add {
     max-width: 5rem;
     font-size: 0.85rem;
+  }
+}
+
+/* 自動改寫提示：溫和的左邊線，不像錯誤訊息 */
+.search .search-rewrite-notice {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--lightgray);
+  border-inline-start: 3px solid var(--tertiary);
+  background: color-mix(in srgb, var(--tertiary) 8%, var(--light));
+  color: var(--darkgray);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* 原文研讀區塊：附在經文結果之後 */
+.search .search-original-study {
+  margin: 0.6rem 0 0.4rem;
+  padding: 0 0.4rem;
+}
+
+.search .search-original-group {
+  margin: 0.5rem 0;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  background: var(--light);
+  overflow: hidden;
+}
+
+.search .search-original-group > summary {
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  color: var(--dark);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.search .search-original-group[open] > summary {
+  border-bottom: 1px solid var(--lightgray);
+  background: color-mix(in srgb, var(--secondary) 6%, var(--light));
+}
+
+
+.search .search-original-entry-link {
+  display: inline-block;
+  margin: 0.2rem 0.8rem 0.4rem;
+  color: var(--secondary);
+  font-size: 0.88rem;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.search .search-original-entry-link:hover,
+.search .search-original-entry-link:focus-visible {
+  color: var(--tertiary);
+  text-decoration: underline;
+}
+
+.search .search-original-rendering {
+  display: inline-block;
+  margin-inline-start: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 999px;
+  color: var(--darkgray);
+  font-size: 0.75rem;
+  font-weight: 400;
+  vertical-align: middle;
+}
+
+.search .search-original-more,
+.search .search-original-credit {
+  margin: 0;
+  padding: 0.4rem 0.8rem;
+  color: var(--gray);
+  font-size: 0.78rem;
+}
+
+.search .search-original-credit {
+  border-top: 1px solid var(--lightgray);
+}
+
+@media all and (max-width: 800px) {
+  .search .search-original-study {
+    padding: 0;
+  }
+
+  .search .search-original-group > summary {
+    padding: 0.75rem 0.6rem;
+  }
+
+  .search .search-original-entry-link {
+    margin-inline: 0.6rem;
+    padding: 0.4rem 0;
   }
 }

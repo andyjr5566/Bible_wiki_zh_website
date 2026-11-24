@@ -1,3 +1,14 @@
+import { BRIDGE_TERMS, PROTECTED_TA_PROPER_NAMES } from "../data/compatData";
+import {
+  buildSearchNorms,
+  cleanSearchQuery,
+  expandCompatibleTerms,
+  findTextMatchRanges,
+  normalizeStrict,
+  textIncludesAny,
+  type TextRange,
+} from "./textMatcher";
+
 export interface PreparedVerse {
   readonly id: string;
   readonly slug: string;
@@ -6,25 +17,6 @@ export interface PreparedVerse {
   readonly verse: number;
   readonly text: string;
 }
-
-interface VerseMatchRange {
-  start: number;
-  end: number;
-}
-
-const searchableText = new WeakMap<PreparedVerse, string>();
-const searchableVariantText = new WeakMap<PreparedVerse, string>();
-
-const searchSuggestions = new Map<string, readonly string[]>([
-  ["妳", ["你"]],
-  ["您", ["你"]],
-  ["她", ["他"]],
-  ["祂", ["他"]],
-  ["它", ["他"]],
-  ["牠", ["他"]],
-  ["意念", ["思想"]],
-  ["思想", ["意念"]],
-]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -71,100 +63,422 @@ export function prepareVerseIndex(payload: unknown): PreparedVerse[] {
   return rows;
 }
 
-function normalizeVerseText(text: string): string {
-  return text.normalize("NFC").toLowerCase();
-}
-
 export function normalizeVerseSearchTerm(term: string): string {
-  return normalizeVerseText(term.trim());
+  return normalizeStrict(term.trim());
 }
 
-function foldVerseVariants(text: string): string {
-  return text.replaceAll("裏", "裡");
+const CJK_CHAR = /[㐀-鿿\u{20000}-\u{2fa1f}]/u;
+const CJK_SPLIT = /[^㐀-鿿\u{20000}-\u{2fa1f}]+/u;
+
+/** 每個輸入詞先清理，再依空白拆成各自獨立的條件（同一節要全部出現）。 */
+function splitWords(terms: readonly string[]): string[] {
+  return terms.flatMap((term) => cleanSearchQuery(term).split(/\s+/).filter(Boolean));
 }
 
-export function getVerseSearchSuggestions(term: string): string[] {
-  return [...(searchSuggestions.get(normalizeVerseSearchTerm(term)) ?? [])];
-}
+/** 每一節預先算好的比對全文；31,102 節只算一次。 */
+const compatNorms = new WeakMap<PreparedVerse, string[]>();
+const strictNorms = new WeakMap<PreparedVerse, string>();
 
-function normalizeTerms(terms: readonly string[], matchVariants: boolean): string[] {
-  const normalized = terms.map(normalizeVerseSearchTerm).filter(Boolean);
-  return [...new Set(matchVariants ? normalized.map(foldVerseVariants) : normalized)];
-}
-
-function getSearchableVerse(verse: PreparedVerse, matchVariants: boolean): string {
-  let text = searchableText.get(verse);
-  if (text === undefined) {
-    text = normalizeVerseText(verse.text);
-    searchableText.set(verse, text);
+function getCompatNorms(verse: PreparedVerse): string[] {
+  let norms = compatNorms.get(verse);
+  if (!norms) {
+    norms = buildSearchNorms(verse.text, false);
+    compatNorms.set(verse, norms);
   }
-  if (!matchVariants) return text;
-
-  let variantText = searchableVariantText.get(verse);
-  if (variantText === undefined) {
-    variantText = foldVerseVariants(text);
-    searchableVariantText.set(verse, variantText);
-  }
-  return variantText;
+  return norms;
 }
 
-/** Every active condition must occur in the same verse. */
+function getStrictNorm(verse: PreparedVerse): string {
+  let norm = strictNorms.get(verse);
+  if (norm === undefined) {
+    norm = normalizeStrict(verse.text);
+    strictNorms.set(verse, norm);
+  }
+  return norm;
+}
+
+/** Every active condition must occur in the same verse. 預設為相容比對；strictLiteral 為嚴格字面。 */
 export function searchVerses(
   verses: readonly PreparedVerse[],
   terms: readonly string[],
-  matchVariants = false,
+  strictLiteral = false,
 ): PreparedVerse[] {
-  const conditions = normalizeTerms(terms, matchVariants);
+  const conditions: string[][] = [];
+  const seen = new Set<string>();
+  for (const word of splitWords(terms)) {
+    const variants = expandCompatibleTerms(word, strictLiteral);
+    const key = variants.join("\u0000");
+    if (variants.length === 0 || seen.has(key)) continue;
+    seen.add(key);
+    conditions.push(variants);
+  }
   if (conditions.length === 0) return [];
   return verses.filter((verse) => {
-    const text = getSearchableVerse(verse, matchVariants);
-    return conditions.every((term) => text.includes(term));
+    const norms = strictLiteral ? [getStrictNorm(verse)] : getCompatNorms(verse);
+    return conditions.every((variants) => textIncludesAny(norms, variants));
   });
-}
-
-/** Map normalized offsets back to original graphemes if NFC or case conversion changes length. */
-function getOriginalOffsets(text: string): VerseMatchRange[] {
-  const offsets: VerseMatchRange[] = [];
-  const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
-  for (const { segment, index } of segmenter.segment(text)) {
-    const range = { start: index, end: index + segment.length };
-    for (let index = 0; index < normalizeVerseText(segment).length; index++) offsets.push(range);
-  }
-  return offsets;
 }
 
 /** Return ordered, nonoverlapping UTF-16 ranges for the original display text. */
 export function getVerseMatchRanges(
   text: string,
   terms: readonly string[],
-  matchVariants = false,
-): VerseMatchRange[] {
-  const normalized = normalizeVerseText(text);
-  const searchable = matchVariants ? foldVerseVariants(normalized) : normalized;
-  const offsets =
-    text.length !== normalized.length || text !== text.normalize("NFC")
-      ? getOriginalOffsets(text)
-      : undefined;
-  const ranges: VerseMatchRange[] = [];
+  strictLiteral = false,
+): TextRange[] {
+  return findTextMatchRanges(text, splitWords(terms), strictLiteral);
+}
 
-  for (const term of normalizeTerms(terms, matchVariants)) {
-    let start = searchable.indexOf(term);
-    while (start !== -1) {
-      const end = start + term.length;
-      ranges.push({ start: offsets?.[start]?.start ?? start, end: offsets?.[end - 1]?.end ?? end });
-      start = searchable.indexOf(term, start + 1);
+// ---------------------------------------------------------------------------
+// Layer 2：零命中時自動改寫
+// ---------------------------------------------------------------------------
+
+export interface AutoRewriteNotice {
+  readonly originalQuery: string;
+  readonly rewrittenQuery: string;
+  readonly message: string;
+}
+
+export interface VerseSearchExecution {
+  readonly hits: PreparedVerse[];
+  readonly effectiveTerms: string[];
+  readonly autoRewrite: AutoRewriteNotice | null;
+  readonly suggestions: string[];
+}
+
+const protectedNamePattern = new RegExp(`(${PROTECTED_TA_PROPER_NAMES.join("|")})`);
+
+function rewriteTerm(term: string): { text: string; god: boolean } {
+  let text = term;
+  let god = false;
+  if (text.includes("上帝")) {
+    text = text.replaceAll("上帝", "神");
+    god = true;
+  }
+  if (Array.from(text).length >= 2) {
+    text = text
+      .split(protectedNamePattern)
+      .map((part, index) =>
+        index % 2 === 1 ? part : part.replace(/[祂她牠它]/g, "他").replace(/[妳您祢袮]/g, "你"),
+      )
+      .join("");
+  }
+  return { text, god };
+}
+
+export function searchVersesWithRewrite(
+  verses: readonly PreparedVerse[],
+  rawTerms: readonly string[],
+  strictLiteral = false,
+): VerseSearchExecution {
+  const hits = searchVerses(verses, rawTerms, strictLiteral);
+  const direct: VerseSearchExecution = {
+    hits,
+    effectiveTerms: [...rawTerms],
+    autoRewrite: null,
+    suggestions: getVerseSearchSuggestions(rawTerms[0] ?? "", verses, strictLiteral, hits.length),
+  };
+  if (hits.length > 0 || strictLiteral) return direct;
+
+  const cleaned = splitWords(rawTerms);
+  const rewritten = cleaned.map(rewriteTerm);
+  const rewrittenTerms = rewritten.map(({ text }) => text);
+  if (rewrittenTerms.every((text, index) => text === cleaned[index])) return direct;
+
+  const rewrittenHits = searchVerses(verses, rewrittenTerms, false);
+  if (rewrittenHits.length === 0) return direct;
+
+  const display = rewrittenTerms.join(" ");
+  const usedGod = rewritten.some(({ god }) => god);
+  return {
+    hits: rewrittenHits,
+    effectiveTerms: rewrittenTerms,
+    autoRewrite: {
+      originalQuery: cleaned.join(" "),
+      rewrittenQuery: display,
+      message: usedGod
+        ? `本站為和合本神版，以下顯示「${display}」的對應經文`
+        : `本站和合本寫作「${display}」，以下顯示對應經文`,
+    },
+    suggestions: [],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 建議詞
+// ---------------------------------------------------------------------------
+
+const STATIC_SUGGESTIONS = new Map<string, readonly string[]>([
+  ["祂", ["他"]],
+  ["她", ["他"]],
+  ["牠", ["他"]],
+  ["它", ["他"]],
+  ["妳", ["你"]],
+  ["您", ["你"]],
+  ["祢", ["你"]],
+  ["袮", ["你"]],
+  ["哪裡", ["那裡"]],
+  ["哪裏", ["那裡"]],
+  ["那裡", ["哪裡"]],
+  ["那裏", ["哪裡"]],
+  ["意念", ["思想"]],
+  ["思想", ["意念"]],
+]);
+
+const MAX_RETRY_CHIPS = 3;
+const LONG_QUERY_LENGTH = 9;
+
+function splitIntoShortPhrases(query: string): string[] {
+  const phrases: string[] = [];
+  for (const piece of query.split(CJK_SPLIT)) {
+    const chars = Array.from(piece);
+    if (chars.length < 2) continue;
+    if (chars.length <= 4) {
+      phrases.push(piece);
+      continue;
+    }
+    for (let i = 0; i < chars.length; i += 4) {
+      const chunk = chars.slice(i, i + 4);
+      if (chunk.length >= 2) phrases.push(chunk.join(""));
+    }
+  }
+  return phrases;
+}
+
+export function getVerseSearchSuggestions(
+  query: string,
+  verses?: readonly PreparedVerse[],
+  strictLiteral = false,
+  knownHitCount?: number,
+): string[] {
+  const cleaned = cleanSearchQuery(query);
+  const suggestions = new Set<string>();
+  const hasHits = (term: string) =>
+    !verses || searchVerses(verses, [term], strictLiteral).length > 0;
+
+  for (const word of STATIC_SUGGESTIONS.get(normalizeVerseSearchTerm(cleaned)) ?? []) {
+    if (hasHits(word)) suggestions.add(word);
+  }
+
+  const folded = expandCompatibleTerms(cleaned, false)[0];
+  if (folded) {
+    for (const rule of BRIDGE_TERMS) {
+      if (expandCompatibleTerms(rule.query, false)[0] !== folded) continue;
+      for (const term of rule.cuvTerms) {
+        if (term !== cleaned && hasHits(term)) suggestions.add(term);
+      }
     }
   }
 
-  ranges.sort((a, b) => a.start - b.start || a.end - b.end);
-  const merged: VerseMatchRange[] = [];
-  for (const range of ranges) {
-    const last = merged.at(-1);
-    if (last && range.start < last.end) {
-      last.end = Math.max(last.end, range.end);
-    } else {
-      merged.push(range);
+  if (
+    verses &&
+    Array.from(cleaned).filter((char) => CJK_CHAR.test(char)).length >= LONG_QUERY_LENGTH
+  ) {
+    const hitCount = knownHitCount ?? searchVerses(verses, [cleaned], strictLiteral).length;
+    if (hitCount === 0) {
+      const chips: string[] = [];
+      for (const phrase of splitIntoShortPhrases(cleaned)) {
+        if (chips.length >= MAX_RETRY_CHIPS) break;
+        if (!chips.includes(phrase) && searchVerses(verses, [phrase], strictLiteral).length > 0) {
+          chips.push(phrase);
+        }
+      }
+      for (const chip of chips) suggestions.add(chip);
     }
   }
-  return merged;
+
+  suggestions.delete(cleaned);
+  return [...suggestions];
+}
+
+// ---------------------------------------------------------------------------
+// Layer 3：原文研讀區塊
+// ---------------------------------------------------------------------------
+
+export interface VerseOriginalEntryLink {
+  readonly slug: string;
+  readonly title: string;
+  readonly isOriginalEntry: boolean;
+}
+
+export interface VerseOriginalIndex {
+  readonly version: 1;
+  readonly attribution: string;
+  readonly lexicon: Readonly<
+    Record<
+      string,
+      readonly [lemma: string, translit: string, zhGloss: string, topRenderings: readonly string[]]
+    >
+  >;
+  readonly chapters: Readonly<
+    Record<
+      string,
+      Readonly<Record<string, ReadonlyArray<readonly [strongId: string, rendering: string]>>>
+    >
+  >;
+  readonly entries?: Readonly<Record<string, VerseOriginalEntryLink>>;
+  readonly entryAliases?: Readonly<Record<string, readonly string[]>>;
+}
+
+export interface OriginalStudyVerseHit {
+  readonly verse: PreparedVerse;
+  readonly rendering: string;
+}
+
+export interface OriginalStudyGroup {
+  readonly lemma: string;
+  readonly translit: string;
+  readonly zhGloss: string;
+  readonly distinctRenderings: string[];
+  readonly hits: OriginalStudyVerseHit[];
+  readonly entryLink: VerseOriginalEntryLink | null;
+  readonly autoOpen: boolean;
+}
+
+export const ORIGINAL_STUDY_ATTRIBUTION = "原文資料：STEP Bible（CC BY 4.0）";
+const MAX_ORIGINAL_QUERY_LENGTH = 8;
+const MAX_ORIGINAL_GROUPS = 3;
+
+interface StrongOccurrence {
+  slug: string;
+  verse: number;
+  rendering: string;
+}
+
+interface OriginalIndexLookup {
+  byStrong: Map<string, StrongOccurrence[]>;
+  byRendering: Map<string, Set<string>>;
+}
+
+const lookupCache = new WeakMap<VerseOriginalIndex, OriginalIndexLookup>();
+const verseMapCache = new WeakMap<readonly PreparedVerse[], Map<string, PreparedVerse>>();
+
+function foldOne(text: string): string {
+  return expandCompatibleTerms(text, false)[0] ?? "";
+}
+
+function getLookup(index: VerseOriginalIndex): OriginalIndexLookup {
+  let lookup = lookupCache.get(index);
+  if (lookup) return lookup;
+  const byStrong = new Map<string, StrongOccurrence[]>();
+  const byRendering = new Map<string, Set<string>>();
+  const addRendering = (rendering: string, strongId: string) => {
+    const key = foldOne(rendering);
+    if (!key) return;
+    let ids = byRendering.get(key);
+    if (!ids) byRendering.set(key, (ids = new Set()));
+    ids.add(strongId);
+  };
+  for (const [strongId, row] of Object.entries(index.lexicon)) {
+    for (const rendering of row[3] ?? []) addRendering(rendering, strongId);
+  }
+  for (const [slug, verseMap] of Object.entries(index.chapters)) {
+    for (const [verseKey, words] of Object.entries(verseMap)) {
+      const verse = Number(verseKey);
+      for (const [strongId, rendering] of words) {
+        if (!(strongId in index.lexicon)) continue;
+        let list = byStrong.get(strongId);
+        if (!list) byStrong.set(strongId, (list = []));
+        list.push({ slug, verse, rendering });
+        addRendering(rendering, strongId);
+      }
+    }
+  }
+  lookup = { byStrong, byRendering };
+  lookupCache.set(index, lookup);
+  return lookup;
+}
+
+function getVerseMap(verses: readonly PreparedVerse[]): Map<string, PreparedVerse> {
+  let map = verseMapCache.get(verses);
+  if (!map) {
+    map = new Map(verses.map((verse) => [verse.id, verse]));
+    verseMapCache.set(verses, map);
+  }
+  return map;
+}
+
+/**
+ * 以原文詞為單位，找出同一個原文詞在本站其他經文中的譯法。
+ * 單字查詢（例如「愛」）只在橋接詞／別名命中時才展開，避免一個詞帶出上千節。
+ */
+export function findOriginalLanguageStudyGroups(
+  verses: readonly PreparedVerse[],
+  originalIndex: VerseOriginalIndex | null,
+  rawQuery: string,
+  directHitIds: ReadonlySet<string>,
+): OriginalStudyGroup[] {
+  if (!originalIndex) return [];
+  const query = cleanSearchQuery(rawQuery);
+  const foldedQuery = query ? foldOne(query) : "";
+  if (!foldedQuery) return [];
+
+  const exact = new Set<string>();
+  const byRenderingMatch = new Set<string>();
+  const targets = new Set([foldedQuery]);
+  for (const bridge of BRIDGE_TERMS) {
+    if (foldOne(bridge.query) !== foldedQuery) continue;
+    for (const id of bridge.strongIds) if (id in originalIndex.lexicon) exact.add(id);
+    for (const term of bridge.cuvTerms) targets.add(foldOne(term));
+  }
+  for (const value of originalIndex.entryAliases?.[query.toLowerCase()] ?? []) {
+    if (value in originalIndex.lexicon) exact.add(value);
+    for (const [id, link] of Object.entries(originalIndex.entries ?? {})) {
+      if (link.slug === value && id in originalIndex.lexicon) exact.add(id);
+    }
+  }
+
+  const lookup = getLookup(originalIndex);
+  if (exact.size === 0) {
+    const length = Array.from(query).length;
+    if (length > MAX_ORIGINAL_QUERY_LENGTH || length < 2) return [];
+    for (const id of lookup.byRendering.get(foldedQuery) ?? []) byRenderingMatch.add(id);
+  }
+
+  const verseMap = getVerseMap(verses);
+  const groups: Array<{ group: OriginalStudyGroup; isExact: boolean; ratio: number }> = [];
+  for (const strongId of new Set([...exact, ...byRenderingMatch])) {
+    const row = originalIndex.lexicon[strongId];
+    const occurrences = lookup.byStrong.get(strongId) ?? [];
+    if (!row || occurrences.length === 0) continue;
+
+    const seenVerses = new Set<string>();
+    const hits: OriginalStudyVerseHit[] = [];
+    let matching = 0;
+    for (const { slug, verse, rendering } of occurrences) {
+      if (targets.has(foldOne(rendering))) matching++;
+      const id = `${slug}#v${verse}`;
+      const prepared = verseMap.get(id);
+      if (!prepared || seenVerses.has(id)) continue;
+      if (directHitIds.size > 0 && directHitIds.has(id)) continue;
+      seenVerses.add(id);
+      hits.push({ verse: prepared, rendering });
+    }
+    if (hits.length === 0) continue;
+
+    const counts = new Map<string, number>();
+    for (const { rendering } of hits) counts.set(rendering, (counts.get(rendering) ?? 0) + 1);
+    groups.push({
+      group: {
+        lemma: row[0],
+        translit: row[1],
+        zhGloss: row[2],
+        distinctRenderings: [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([r]) => r),
+        hits,
+        entryLink: originalIndex.entries?.[strongId] ?? null,
+        autoOpen: directHitIds.size === 0,
+      },
+      isExact: exact.has(strongId),
+      ratio: matching / occurrences.length,
+    });
+  }
+
+  return groups
+    .sort(
+      (a, b) =>
+        Number(b.isExact) - Number(a.isExact) ||
+        b.ratio - a.ratio ||
+        b.group.hits.length - a.group.hits.length,
+    )
+    .slice(0, MAX_ORIGINAL_GROUPS)
+    .map(({ group }) => group);
 }

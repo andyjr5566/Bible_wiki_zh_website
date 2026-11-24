@@ -27,7 +27,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 1,
     zh: "創世記",
     zhSimplified: "创世记",
-    zhAbbr: ["創"],
+    zhAbbr: ["創", "創世紀", "创世纪"],
     en: ["Genesis", "Gen", "Gn"],
     slugFolder: "01-創世記",
   },
@@ -83,7 +83,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 8,
     zh: "路得記",
     zhSimplified: "路得记",
-    zhAbbr: ["得"],
+    zhAbbr: ["得", "路得紀"],
     en: ["Ruth", "Ru"],
     slugFolder: "08-路得記",
   },
@@ -107,7 +107,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 11,
     zh: "列王紀上",
     zhSimplified: "列王纪上",
-    zhAbbr: ["王上"],
+    zhAbbr: ["王上", "列王記上", "列王记上"],
     en: ["1 Kings", "1Kgs", "1 Kgs", "I Kings", "1st Kings"],
     slugFolder: "11-列王紀上",
   },
@@ -115,7 +115,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 12,
     zh: "列王紀下",
     zhSimplified: "列王纪下",
-    zhAbbr: ["王下"],
+    zhAbbr: ["王下", "列王記下", "列王记下"],
     en: ["2 Kings", "2Kgs", "2 Kgs", "II Kings", "2nd Kings"],
     slugFolder: "12-列王紀下",
   },
@@ -123,7 +123,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 13,
     zh: "歷代志上",
     zhSimplified: "历代志上",
-    zhAbbr: ["代上"],
+    zhAbbr: ["代上", "歷代誌上", "历代誌上"],
     en: ["1 Chronicles", "1Chr", "1 Chr", "I Chronicles", "1st Chronicles"],
     slugFolder: "13-歷代志上",
   },
@@ -131,7 +131,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 14,
     zh: "歷代志下",
     zhSimplified: "历代志下",
-    zhAbbr: ["代下"],
+    zhAbbr: ["代下", "歷代誌下", "历代誌下"],
     en: ["2 Chronicles", "2Chr", "2 Chr", "II Chronicles", "2nd Chronicles"],
     slugFolder: "14-歷代志下",
   },
@@ -155,7 +155,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 17,
     zh: "以斯帖記",
     zhSimplified: "以斯帖记",
-    zhAbbr: ["斯"],
+    zhAbbr: ["斯", "以斯帖紀"],
     en: ["Esther", "Est"],
     slugFolder: "17-以斯帖記",
   },
@@ -515,7 +515,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 62,
     zh: "約翰一書",
     zhSimplified: "约翰一书",
-    zhAbbr: ["約壹", "約一", "约壹", "约一"],
+    zhAbbr: ["約壹", "約一", "约壹", "约一", "約翰壹書", "约翰壹书"],
     en: ["1 John", "1Jn", "1 Jn", "I John", "1st John"],
     slugFolder: "62-約翰一書",
   },
@@ -523,7 +523,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 63,
     zh: "約翰二書",
     zhSimplified: "约翰二书",
-    zhAbbr: ["約貳", "約二", "约貳", "约二"],
+    zhAbbr: ["約貳", "約二", "约貳", "约二", "約翰貳書", "约翰贰书"],
     en: ["2 John", "2Jn", "2 Jn", "II John", "2nd John"],
     slugFolder: "63-約翰二書",
   },
@@ -531,7 +531,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 64,
     zh: "約翰三書",
     zhSimplified: "约翰三书",
-    zhAbbr: ["約參", "約三", "约參", "约三"],
+    zhAbbr: ["約參", "約三", "约參", "约三", "約翰參書", "约翰参书"],
     en: ["3 John", "3Jn", "3 Jn", "III John", "3rd John"],
     slugFolder: "64-約翰三書",
   },
@@ -547,7 +547,7 @@ export const BIBLE_BOOKS: readonly BibleBook[] = [
     number: 66,
     zh: "啟示錄",
     zhSimplified: "启示录",
-    zhAbbr: ["啟", "启"],
+    zhAbbr: ["啟", "启", "啓", "啓示錄"],
     en: ["Revelation", "Rev", "Rv"],
     slugFolder: "66-啟示錄",
   },
@@ -564,6 +564,50 @@ interface ParsedTail {
   verseEnd?: number;
 }
 
+const ZH_DIGITS: Readonly<Record<string, number>> = {
+  零: 0,
+  〇: 0,
+  一: 1,
+  二: 2,
+  兩: 2,
+  三: 3,
+  四: 4,
+  五: 5,
+  六: 6,
+  七: 7,
+  八: 8,
+  九: 9,
+};
+
+function parsePositiveNumber(token: string): number | null {
+  const trimmed = token.trim();
+  if (!trimmed) return null;
+  if (/^\d+$/.test(trimmed)) {
+    const n = Number(trimmed);
+    return Number.isInteger(n) && n > 0 ? n : null;
+  }
+  if (!/^[零〇一二兩三四五六七八九十百]+$/.test(trimmed)) return null;
+
+  let total = 0;
+  let current = 0;
+  for (const ch of trimmed) {
+    if (ch === "百") {
+      if (current === 0) return null;
+      total += current * 100;
+      current = 0;
+    } else if (ch === "十") {
+      total += (current || 1) * 10;
+      current = 0;
+    } else {
+      const digit = ZH_DIGITS[ch];
+      if (digit === undefined) return null;
+      current = digit;
+    }
+  }
+  const value = total + current;
+  return Number.isInteger(value) && value > 0 ? value : null;
+}
+
 const BOOK_ALIASES: BookAlias[] = [];
 for (const book of BIBLE_BOOKS) {
   const seen = new Set<string>();
@@ -577,57 +621,86 @@ for (const book of BIBLE_BOOKS) {
 }
 BOOK_ALIASES.sort((a, b) => b.alias.length - a.alias.length);
 
+const NUM_TOKEN = "(?:\\d+|[零〇一二兩三四五六七八九十百]+)";
+
 function parseReferenceTail(tail: string): ParsedTail | null {
-  const chapterMatch = tail.match(/^\s*第?\s*(\d+)([\s\S]*)$/);
+  const chapterMatch = tail.match(new RegExp(`^\\s*(第)?\\s*(${NUM_TOKEN})([\\s\\S]*)$`));
   if (!chapterMatch) return null;
 
-  const chapter = Number(chapterMatch[1]);
-  if (!Number.isInteger(chapter) || chapter < 1 || chapter > 150) return null;
+  const hasDiPrefix = Boolean(chapterMatch[1]);
+  const rawChapter = chapterMatch[2]!;
+  const isChineseChapter = !/^\d+$/.test(rawChapter);
+  const chapter = parsePositiveNumber(rawChapter);
+  if (chapter === null || chapter < 1 || chapter > 150) return null;
 
-  const suffix = (chapterMatch[2] ?? "").trim();
-  if (suffix.length === 0) return { chapter };
+  const suffix = (chapterMatch[3] ?? "").trim();
+  if (suffix.length === 0) {
+    // Guard against prose like "約一百" / "多一":
+    // bare Chinese numerals without "章"/"篇" or verse numbers require "第".
+    if (isChineseChapter && !hasDiPrefix) return null;
+    return { chapter };
+  }
 
   const chineseChapterMatch = suffix.match(
-    /^章(?:\s*(\d+)(?:\s*[-–—~～至]\s*(\d+))?\s*(?:節|节)?)?$/,
+    new RegExp(
+      `^(?:章|篇)(?:\\s*(${NUM_TOKEN})(?:\\s*[-–—~～至]\\s*(${NUM_TOKEN}))?\\s*(?:節|节)?)?$`,
+    ),
   );
   if (chineseChapterMatch) {
     const verseText = chineseChapterMatch[1];
     if (verseText === undefined) return { chapter };
 
-    const verse = Number(verseText);
+    const verse = parsePositiveNumber(verseText);
+    if (verse === null || verse < 1 || verse > 200) return null;
+
     const verseEndText = chineseChapterMatch[2];
-    const verseEnd = verseEndText === undefined ? undefined : Number(verseEndText);
-    if (
-      !Number.isInteger(verse) ||
-      verse < 1 ||
-      verse > 200 ||
-      (verseEnd !== undefined &&
-        (!Number.isInteger(verseEnd) || verseEnd < verse || verseEnd > 200))
-    ) {
-      return null;
+    if (verseEndText !== undefined) {
+      const verseEnd = parsePositiveNumber(verseEndText);
+      if (verseEnd === null || verseEnd < verse || verseEnd > 200) return null;
+      return { chapter, verse, verseEnd };
     }
 
-    return verseEnd === undefined ? { chapter, verse } : { chapter, verse, verseEnd };
+    return { chapter, verse };
+  }
+
+  // Compact Chinese chapter + Arabic/Chinese verse shorthand like "創六5" or "申十一18-20"
+  if (isChineseChapter) {
+    const compactMatch = suffix.match(
+      new RegExp(`^(${NUM_TOKEN})(?:\\s*[-–—~～至]\\s*(${NUM_TOKEN}))?\\s*(?:節|节)?$`),
+    );
+    if (compactMatch) {
+      const verse = parsePositiveNumber(compactMatch[1]!);
+      if (verse !== null && verse >= 1 && verse <= 200) {
+        const verseEndText = compactMatch[2];
+        if (verseEndText === undefined) return { chapter, verse };
+        const verseEnd = parsePositiveNumber(verseEndText);
+        if (verseEnd !== null && verseEnd >= verse && verseEnd <= 200) {
+          return { chapter, verse, verseEnd };
+        }
+      }
+    }
   }
 
   const colonMatch = suffix.match(
-    /^:\s*(\d+)(?:\s*[-–—~～至]\s*(\d+)(?:\s*:\s*(\d+))?)?\s*(?:節|节)?$/,
+    new RegExp(
+      `^:\\s*(${NUM_TOKEN})(?:\\s*[-–—~～至]\\s*(${NUM_TOKEN})(?:\\s*:\\s*(${NUM_TOKEN}))?)?\\s*(?:節|节)?$`,
+    ),
   );
   if (!colonMatch) return null;
 
-  const verse = Number(colonMatch[1]);
+  const verse = parsePositiveNumber(colonMatch[1]!);
   const rangePartText = colonMatch[2];
   const rangeChapterText = colonMatch[3];
-  if (!Number.isInteger(verse) || verse < 1 || verse > 200) return null;
+  if (verse === null || verse < 1 || verse > 200) return null;
 
   if (rangeChapterText !== undefined) {
-    const rangeChapter = Number(rangePartText);
-    const rangeVerse = Number(rangeChapterText);
+    const rangeChapter = parsePositiveNumber(rangePartText!);
+    const rangeVerse = parsePositiveNumber(rangeChapterText);
     if (
-      !Number.isInteger(rangeChapter) ||
+      rangeChapter === null ||
       rangeChapter < 1 ||
       rangeChapter > 150 ||
-      !Number.isInteger(rangeVerse) ||
+      rangeVerse === null ||
       rangeVerse < 1 ||
       rangeVerse > 200
     ) {
@@ -643,8 +716,8 @@ function parseReferenceTail(tail: string): ParsedTail | null {
   }
 
   if (rangePartText !== undefined) {
-    const verseEnd = Number(rangePartText);
-    if (!Number.isInteger(verseEnd) || verseEnd < verse || verseEnd > 200) return null;
+    const verseEnd = parsePositiveNumber(rangePartText);
+    if (verseEnd === null || verseEnd < verse || verseEnd > 200) return null;
     return { chapter, verse, verseEnd };
   }
 
@@ -706,7 +779,6 @@ export function formatScriptureRef(ref: ScriptureRef): string {
   const chapter = `${ref.book.zh} ${ref.chapter}`;
   if (ref.verse === undefined) return chapter;
 
-  const range =
-    ref.verseEnd === undefined ? "" : `–${ref.verseEnd}`;
+  const range = ref.verseEnd === undefined ? "" : `–${ref.verseEnd}`;
   return `${chapter}:${ref.verse}${range}`;
 }

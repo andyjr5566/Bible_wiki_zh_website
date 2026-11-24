@@ -34,6 +34,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check plugin dist is rebuilt
+        run: bash .github/scripts/check-plugin-dist.sh "${{ github.event.before }}" "${{ github.sha }}"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

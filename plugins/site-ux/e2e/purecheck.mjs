@@ -2,7 +2,7 @@
 // 用法：node plugins/site-ux/e2e/purecheck.mjs <siteRoot> <profileRoot> [shotDir]
 // siteRoot 不加結尾斜線；Chrome 設定檔與可選截圖都放在命令列指定的資料夾。
 // 驗證項目：
-//   1. 首次造訪預設「經文」分頁（藏知識節點、本章整理、附錄；保留經文、朗讀列、上下導覽、筆記區、互動提示）；Aa 面板已拿掉純經文一列
+//   1. 首次造訪預設「研讀」分頁（完整一整頁）；切到「經文」才藏知識節點、本章整理、附錄（保留經文、朗讀列、上下導覽、筆記區、互動提示）並記住選擇；Aa 面板已拿掉純經文一列
 //   2. 切換「研讀」分頁：完整一整頁（經文、朗讀列、知識節點、本章整理、附錄全部都在）；旁有「↓ 跳到本章整理」鈕，點了單次捲到 ## 本章整理
 //   3. localStorage 全站記憶：SPA 換頁、重新整理（不閃爍）、新分頁皆延續上次選擇
 //   4. 研讀頁點擊同章經節小標籤（.bwz-rl-vref[data-rl-verse]）→ 留在研讀頁直接單次捲到該節並以 .bwz-vr-flash 短暫標示
@@ -736,9 +736,9 @@ async function testBlockedLocalStorage() {
   await go(GEN48, 3000)
   await waitChapter()
   const initView = await s.ev(`document.documentElement.getAttribute("data-ux-view")`)
-  await clickTab("study")
+  await clickTab("text")
   const afterClick = await s.ev(`document.documentElement.getAttribute("data-ux-view")`)
-  s.check("localStorage 被封鎖：預設經文，且本頁仍可點擊切到研讀", initView === "text" && afterClick === "study", `init=${initView} after=${afterClick}`)
+  s.check("localStorage 被封鎖：預設研讀，且本頁仍可點擊切到經文", initView === "study" && afterClick === "text", `init=${initView} after=${afterClick}`)
   if (installed?.identifier) {
     await s.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: installed.identifier })
   }
@@ -884,18 +884,15 @@ async function main() {
     } catch (e) {}`,
   })
 
-  console.log("\n== 1. 首次造訪預設為「經文」分頁，Aa 面板已拿掉純經文切換 ==")
+  console.log("\n== 1. 首次造訪預設為「研讀」分頁，Aa 面板已拿掉純經文切換 ==")
   await go(GEN48)
   await waitChapter()
-  const textSnap = await sectionSnapshot()
-  s.check("首次造訪預設 data-ux-view=text 且有分頁標記", textSnap.view === "text" && textSnap.hasTabsAttr, JSON.stringify(textSnap))
-  s.check("經文分頁：經文清單可見", textSnap.olVisible, JSON.stringify(textSnap))
-  if (textSnap.raFound) s.check("經文分頁：朗讀列可見", textSnap.raVisible === true, JSON.stringify(textSnap))
-  s.check("經文分頁：不顯示「跳到本章整理」按鈕", textSnap.jumpVisible === false, JSON.stringify(textSnap))
-  await checkSections(false, "經文分頁", textSnap)
-
-  const notesVisible = await s.ev(visibleExpression('document.querySelector(".bwz-notes, #after-body, .after-body")'))
-  s.check("經文分頁：筆記區仍看得到", !!notesVisible)
+  const studySnap = await sectionSnapshot()
+  s.check("首次造訪預設 data-ux-view=study 且有分頁標記、沒有寫入 localStorage", studySnap.view === "study" && studySnap.hasTabsAttr && (await s.ev(`localStorage.getItem("bwz-ux-view") === null`)), JSON.stringify(studySnap))
+  s.check("研讀分頁：經文清單仍可見（完整一整頁）", studySnap.olVisible, JSON.stringify(studySnap))
+  if (studySnap.raFound) s.check("研讀分頁：朗讀列仍可見（完整一整頁）", studySnap.raVisible === true, JSON.stringify(studySnap))
+  s.check("研讀分頁：分頁旁顯示「↓ 跳到本章整理」按鈕", studySnap.jumpVisible === true, JSON.stringify(studySnap))
+  await checkSections(true, "研讀分頁", studySnap)
 
   const aaOpened = await openPanel()
   s.check("Aa 面板可開啟", aaOpened)
@@ -906,14 +903,26 @@ async function main() {
     await closePanel()
   }
 
-  console.log("\n== 2. 切到「研讀」分頁：完整一整頁（經文、朗讀列、知識節點、本章整理、附錄全都在） ==")
+  console.log("\n== 2. 切到「經文」分頁：藏知識節點、本章整理、附錄，保留經文、朗讀列、筆記區 ==")
+  await clickTab("text")
+  const textSnap = await sectionSnapshot()
+  s.check("切到經文：data-ux-view=text 且寫入 localStorage", textSnap.view === "text" && (await s.ev(`localStorage.getItem("bwz-ux-view") === "text"`)), JSON.stringify(textSnap))
+  s.check("經文分頁：經文清單可見", textSnap.olVisible, JSON.stringify(textSnap))
+  if (textSnap.raFound) s.check("經文分頁：朗讀列可見", textSnap.raVisible === true, JSON.stringify(textSnap))
+  s.check("經文分頁：不顯示「跳到本章整理」按鈕", textSnap.jumpVisible === false, JSON.stringify(textSnap))
+  await checkSections(false, "經文分頁", textSnap)
+
+  const notesVisible = await s.ev(visibleExpression('document.querySelector(".bwz-notes, #after-body, .after-body")'))
+  s.check("經文分頁：筆記區仍看得到", !!notesVisible)
+
+  // 讀者選過經文就要記住：重新整理後仍是經文
+  await s.send("Page.reload", { ignoreCache: true })
+  await waitChapter()
+  const afterReload = await sectionSnapshot()
+  s.check("選過經文後重新整理仍是經文（記住選擇）", afterReload.view === "text", JSON.stringify(afterReload))
+
+  // 還原成研讀，後面的測試（例如第 3 節）預期從研讀開始
   await clickTab("study")
-  const studySnap = await sectionSnapshot()
-  s.check("切到研讀：data-ux-view=study 且寫入 localStorage", studySnap.view === "study" && (await s.ev(`localStorage.getItem("bwz-ux-view") === "study"`)), JSON.stringify(studySnap))
-  s.check("研讀分頁：經文清單仍可見（完整一整頁）", studySnap.olVisible, JSON.stringify(studySnap))
-  if (studySnap.raFound) s.check("研讀分頁：朗讀列仍可見（完整一整頁）", studySnap.raVisible === true, JSON.stringify(studySnap))
-  s.check("研讀分頁：分頁旁顯示「↓ 跳到本章整理」按鈕", studySnap.jumpVisible === true, JSON.stringify(studySnap))
-  await checkSections(true, "研讀分頁", studySnap)
 
   await testPersistenceAndNewTab()
   await testVerseTagJumpAndJumpToStudy()

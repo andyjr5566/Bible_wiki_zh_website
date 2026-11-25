@@ -180,10 +180,10 @@ describe("分頁列掛載、跳到本章整理、記憶與事件同步", () => {
     expect(root.hasAttribute(MARKED_ATTR)).toBe(false)
     expect(root.hasAttribute(TABS_ATTR)).toBe(true)
 
-    // 即使 prescript 未能寫入 data-ux-view（例如 localStorage 被封鎖），initPureMode 仍補上預設 text
+    // 即使 prescript 未能寫入 data-ux-view（例如 localStorage 被封鎖），initPureMode 仍補上預設 study
     root.removeAttribute(VIEW_ATTR)
     initPureMode()
-    expect(root.getAttribute(VIEW_ATTR)).toBe("text")
+    expect(root.getAttribute(VIEW_ATTR)).toBe("study")
 
     document.removeEventListener(TAB_CHANGE_EVENT, onTab)
   })

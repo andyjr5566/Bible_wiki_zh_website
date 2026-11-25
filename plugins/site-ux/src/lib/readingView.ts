@@ -1,5 +1,5 @@
 // 章節頁「經文｜研讀」分頁的狀態儲存與套用：
-// 改由頂端分頁列（與手機快捷列）切換，全站共用一個 localStorage 值，第一次造訪預設看「經文」。
+// 改由頂端分頁列（與手機快捷列）切換，全站共用一個 localStorage 值，第一次造訪預設看「研讀」。
 // 套用方式是在 <html> 加上 data-ux-view="text" | "study"，early 腳本在第一次繪製前即寫入，避免閃爍。
 import type { ReadingTab } from "../../../../quartz/util/readingTabEvent"
 import type { RootLike } from "./settings"
@@ -14,9 +14,12 @@ export interface ViewStorageLike {
   setItem(key: string, value: string): void
 }
 
-/** 只有 "study" 才是研讀分頁，其餘（含首次造訪、舊版 "pure" 或壞資料）一律預設為 "text"（經文）。 */
+/**
+ * 預設為 "study"（研讀）：首次造訪、讀不到儲存值或壞資料都看研讀。
+ * 讀者明確選過的 "text"（經文）要尊重；舊版 "pure"（純經文）當年也是明確選擇，視同 "text"。
+ */
 export function normalizeView(value: unknown): ReadingView {
-  return value === "study" ? "study" : "text"
+  return value === "text" || value === "pure" ? "text" : "study"
 }
 
 function localStore(): ViewStorageLike | null {
@@ -27,12 +30,12 @@ function localStore(): ViewStorageLike | null {
   }
 }
 
-/** 讀取全站共用的閱讀分頁偏好；儲存被封鎖或讀不到時退回經文。 */
+/** 讀取全站共用的閱讀分頁偏好；儲存被封鎖或讀不到時退回研讀。 */
 export function readView(storage: ViewStorageLike | null = localStore()): ReadingView {
   try {
     return normalizeView(storage?.getItem(VIEW_STORAGE_KEY))
   } catch {
-    return "text"
+    return "study"
   }
 }
 

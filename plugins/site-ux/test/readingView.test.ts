@@ -38,35 +38,35 @@ const blocked: ViewStorageLike = {
 }
 
 describe("normalizeView", () => {
-  it("只有 study 才是研讀，其他（含首次造訪與舊版 pure）一律經文", () => {
+  it("預設研讀；只有明確選過的 text 與舊版 pure 才是經文", () => {
     expect(normalizeView("study")).toBe("study")
     expect(normalizeView("text")).toBe("text")
     expect(normalizeView("pure")).toBe("text")
-    expect(normalizeView("anything")).toBe("text")
-    expect(normalizeView(null)).toBe("text")
-    expect(normalizeView(undefined)).toBe("text")
+    expect(normalizeView("anything")).toBe("study")
+    expect(normalizeView(null)).toBe("study")
+    expect(normalizeView(undefined)).toBe("study")
   })
 })
 
 describe("讀寫（localStorage）", () => {
-  it("首次讀取為經文，寫入後可讀回", () => {
+  it("首次讀取為研讀，寫入後可讀回", () => {
     const s = fakeStorage()
-    expect(readView(s)).toBe("text")
-    expect(writeView("study", s)).toBe(true)
     expect(readView(s)).toBe("study")
     expect(writeView("text", s)).toBe(true)
     expect(readView(s)).toBe("text")
+    expect(writeView("study", s)).toBe(true)
+    expect(readView(s)).toBe("study")
   })
 
-  it("儲存被封鎖時不丟錯：退回經文，寫入回傳 false", () => {
-    expect(readView(blocked)).toBe("text")
+  it("儲存被封鎖時不丟錯：退回研讀，寫入回傳 false", () => {
+    expect(readView(blocked)).toBe("study")
     expect(writeView("study", blocked)).toBe(false)
-    expect(readView(null)).toBe("text")
+    expect(readView(null)).toBe("study")
     expect(writeView("study", null)).toBe(false)
   })
 
-  it("壞資料或舊版 pure 當作經文", () => {
-    expect(readView(fakeStorage("???"))).toBe("text")
+  it("壞資料當作研讀；舊版 pure 當作經文", () => {
+    expect(readView(fakeStorage("???"))).toBe("study")
     expect(readView(fakeStorage("pure"))).toBe("text")
   })
 })
@@ -82,12 +82,12 @@ describe("套用到 <html>", () => {
     expect(currentView(root)).toBe("study")
   })
 
-  it("applyStoredView 讀取後套用，預設為經文", () => {
+  it("applyStoredView 讀取後套用，預設為研讀", () => {
     const root = fakeRoot()
     expect(applyStoredView(fakeStorage("study"), root)).toBe("study")
     expect(root.attrs.get(VIEW_ATTR)).toBe("study")
     const root2 = fakeRoot()
-    expect(applyStoredView(blocked, root2)).toBe("text")
-    expect(root2.attrs.get(VIEW_ATTR)).toBe("text")
+    expect(applyStoredView(blocked, root2)).toBe("study")
+    expect(root2.attrs.get(VIEW_ATTR)).toBe("study")
   })
 })

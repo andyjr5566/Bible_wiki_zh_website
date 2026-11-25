@@ -60,7 +60,7 @@ function findNavTable(article: Element): { table: Element; prev?: string; next?:
 }
 
 function currentTabFromDom(): ReadingTab {
-  return document.documentElement.getAttribute("data-ux-view") === "study" ? "study" : "text"
+  return document.documentElement.getAttribute("data-ux-view") === "text" ? "text" : "study"
 }
 
 function removeBar() {

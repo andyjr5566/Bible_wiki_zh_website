@@ -53,7 +53,7 @@ function getViewport(): GuideViewport {
 }
 
 function currentTab(): ReadingTab {
-  return document.documentElement.getAttribute("data-ux-view") === "study" ? "study" : "text"
+  return document.documentElement.getAttribute("data-ux-view") === "text" ? "text" : "study"
 }
 
 /** 讀標題純文字（略過右側錨點連結與外掛動態按鈕的字）。 */

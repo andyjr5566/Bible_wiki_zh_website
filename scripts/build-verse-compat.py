@@ -60,8 +60,13 @@ Inputs and how to obtain them
 
   names.tsv  (<cache-dir>)
       BibleNLP aligned biblical proper names (CU2010T column, with Macula WLC/GNT).
-      Source: the script records no URL; it names BibleNLP only. Look up the BibleNLP project page (URL not recorded here, verify).
-      License: CC-BY-SA / open data (verify against the source).
+      Source: https://github.com/BibleNLP/biblical-names-data (raw file: .../main/names.tsv).
+      License: none declared (no LICENSE file, README states no terms; checked 2026-11-25).
+          The data combines Macula Greek/Hebrew (CC BY 4.0, Clear-Bible) with UBS-provided alignments;
+          the CU2010T/CU2010S columns are name spellings from the Chinese Union Version 2010
+          (text copyright Hong Kong Bible Society). Only short proper-name spelling pairs derived from it
+          ship in compatData.ts (PROPER_AND_EDITION_EQUIVALENTS); no verse text from it is published.
+          Do not redistribute names.tsv itself.
 
   Unihan.zip  (<cache-dir>)
       Unicode Unihan database; the script reads Unihan_Variants.txt from inside the zip.
@@ -2018,7 +2023,7 @@ def write_markdown_reports(
         f"| `ChiUnL.zip` | CrossWire SWORD `{conf_chiunl.get('Description', '')}` (`Lang={conf_chiunl.get('Lang', '')}`, Classical Wenli CUV 1919–1934) | `{conf_chiunl.get('DistributionLicense', '')}` | Verified Public Domain; decoded for zText sanity check, **excluded from Mandarin lexical diff** (`Lang=lzh` Classical Chinese) |",
         "| `chi-cuv.usfx.xml` | `seven1m/open-bibles` Traditional Mandarin CUV (USFX) | Public Domain | Mandarin CUV context-anchored lexical & orthographic diff |",
         "| `chi-cuv-simp.usfx.xml` | `seven1m/open-bibles` Simplified Mandarin CUV (USFX) | Public Domain | Empirical Simplified↔Traditional character mapping |",
-        "| `names.tsv` | BibleNLP Aligned Biblical Proper Names (`CU2010T` / `CU2010S` + Macula WLC/GNT) | CC-BY-SA / Open Data (derived stats & zero-hit proper-name mapping) | Cross-version proper-name candidate discovery |",
+        "| `names.tsv` | BibleNLP Aligned Biblical Proper Names (`CU2010T` / `CU2010S` + Macula WLC/GNT) | No license declared (https://github.com/BibleNLP/biblical-names-data); only derived proper-name spelling pairs are shipped | Cross-version proper-name candidate discovery |",
         "| `Unihan.zip` | Unicode `Unihan_Variants.txt` | Unicode License v3 | Orthographic & Simplified/Traditional folding classification |",
         "| `.stepbible_data/` | STEP Bible `TBESH`, `TBESG`, `TAHOT`, `TAGNT` | CC BY 4.0 (Tyndale House / STEPBible.org) | Authoritative Hebrew/Greek lemma, transliteration, POS, MT↔Eng versification, homograph disambiguation |",
         "",

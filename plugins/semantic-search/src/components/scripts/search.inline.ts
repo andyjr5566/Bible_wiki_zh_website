@@ -203,9 +203,13 @@ function setupSearch() {
     const refinements = root.querySelector<HTMLElement>(".search-refinements")!;
     const strictToggle = root.querySelector<HTMLInputElement>(".search-strict-literal")!;
     const suggestions = root.querySelector<HTMLElement>(".search-suggestions")!;
+    const shortlistToggle = root.querySelector<HTMLButtonElement>(".search-shortlist-toggle")!;
+    const advancedToggle = root.querySelector<HTMLButtonElement>(".search-advanced-toggle")!;
+    const advancedPanel = root.querySelector<HTMLElement>(".search-verse-advanced")!;
+    const advancedCount = root.querySelector<HTMLElement>(".search-advanced-count")!;
     const shortlistDetails = root.querySelector<HTMLDetailsElement>(".search-verse-list")!;
     const shortlistBody = root.querySelector<HTMLElement>(".search-verse-list-body")!;
-    const shortlistCount = root.querySelector<HTMLElement>(".search-verse-list-count")!;
+    const shortlistCounts = Array.from(root.querySelectorAll<HTMLElement>(".search-verse-list-count"));
     const copyButton = root.querySelector<HTMLButtonElement>(".search-verse-copy")!;
     const sidebar = container.closest<HTMLElement>(".sidebar");
     const modes = Array.from(root.querySelectorAll<HTMLButtonElement>(".search-mode"));
@@ -273,12 +277,12 @@ function setupSearch() {
       )) {
         const selected = shortlist.has(toggle.dataset.verseId!);
         toggle.setAttribute("aria-pressed", String(selected));
-        toggle.textContent = selected ? "已加入" : "加入清單";
+        toggle.textContent = selected ? "✓ 已暫存" : "+ 暫存";
       }
     };
 
     const paintShortlist = () => {
-      shortlistCount.textContent = String(shortlist.size);
+      for (const countEl of shortlistCounts) countEl.textContent = String(shortlist.size);
       copyButton.disabled = shortlist.size === 0;
       copyButton.textContent = "複製清單";
       if (shortlist.size === 0) {
@@ -309,6 +313,9 @@ function setupSearch() {
       refineInput.disabled = !query || isReference;
       refineAdd.disabled = refineInput.disabled;
       strictToggle.checked = verseDraft.strictLiteral;
+      const activeFilters = verseDraft.refinements.length + (verseDraft.strictLiteral ? 1 : 0);
+      advancedCount.textContent = String(activeFilters);
+      advancedCount.hidden = activeFilters === 0;
       refinements.replaceChildren(
         ...verseDraft.refinements.map((word) => {
           const button = makeSearchButton("search-refinement", word + " ×");
@@ -318,14 +325,23 @@ function setupSearch() {
         }),
       );
       refinements.hidden = refinements.childElementCount === 0;
-      suggestions.replaceChildren(
-        ...verseSuggestions.map((word) => {
-          const button = makeSearchButton("search-suggestion", "也可查「" + word + "」");
-          button.dataset.suggestion = word;
-          return button;
-        }),
-      );
-      suggestions.hidden = suggestions.childElementCount === 0;
+      if (verseSuggestions.length > 0) {
+        const label = document.createElement("span");
+        label.className = "search-suggestions-label";
+        label.textContent = "相關詞：";
+        suggestions.replaceChildren(
+          label,
+          ...verseSuggestions.map((word) => {
+            const button = makeSearchButton("search-suggestion", "「" + word + "」");
+            button.dataset.suggestion = word;
+            button.setAttribute("aria-label", "改查「" + word + "」");
+            return button;
+          }),
+        );
+      } else {
+        suggestions.replaceChildren();
+      }
+      suggestions.hidden = verseSuggestions.length === 0;
     };
 
     const makeVerseCard = (verse: PreparedVerse, rendering?: string) => {
@@ -440,8 +456,18 @@ function setupSearch() {
 
     const showCount = (total: number, unit: string) => {
       count.hidden = false;
-      count.textContent = "找到 " + total + " " + unit;
-      announce(count.textContent);
+      if (mode === "verse" && unit === "節經文") {
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "search-section-title";
+        titleSpan.textContent = `① 直接符合「${verseDraft.query.trim()}」`;
+        const metaSpan = document.createElement("span");
+        metaSpan.className = "search-section-meta";
+        metaSpan.textContent = `${total} ${unit}`;
+        count.replaceChildren(titleSpan, metaSpan);
+      } else {
+        count.textContent = "找到 " + total + " " + unit;
+      }
+      announce("找到 " + total + " " + unit);
     };
 
     const resetResults = () => {
@@ -460,42 +486,53 @@ function setupSearch() {
       }
     };
 
-    const makeOriginalGroup = (group: OriginalStudyGroup, hasDirectHits: boolean) => {
+    const makeOriginalGroup = (group: OriginalStudyGroup) => {
       const details = document.createElement("details");
       details.className = "search-original-group";
       details.open = group.autoOpen;
       const summary = document.createElement("summary");
-      const renderings = group.distinctRenderings.slice(0, 4).join("、");
-      summary.textContent = hasDirectHits
-        ? `同一原文詞在本站其他譯法：${group.lemma}（${group.translit}）— 另有 ${group.hits.length} 節（${renderings}）`
-        : `對應原文詞在本站譯法：${group.lemma}（${group.translit}）— ${group.hits.length} 節（${renderings}）`;
+      const summaryMain = document.createElement("span");
+      summaryMain.className = "search-original-summary-main";
+      const lemma = document.createElement("span");
+      lemma.className = "search-original-lemma";
+      lemma.textContent = group.lemma;
+      const translit = document.createElement("span");
+      translit.className = "search-original-translit";
+      translit.textContent = `(${group.translit})`;
+      const renderingsPill = document.createElement("span");
+      renderingsPill.className = "search-original-renderings";
+      renderingsPill.textContent = `另譯作：${group.distinctRenderings.slice(0, 4).join("、")}`;
+      const hitCount = document.createElement("span");
+      hitCount.className = "search-original-count";
+      hitCount.textContent = `・${group.hits.length} 節`;
+      summaryMain.append(lemma, translit, renderingsPill, hitCount);
+      summary.append(summaryMain);
       // 詞義說明暫不顯示：目前的資料是和合本譯法統計，夾雜斷詞雜訊，整理好再補。
-      details.append(summary);
       if (group.entryLink) {
         const link = document.createElement("a");
         link.className = "search-original-entry-link";
         link.dataset.slug = group.entryLink.slug;
         link.href = resolveSearchPath(group.entryLink.slug);
         link.textContent =
-          (group.entryLink.isOriginalEntry ? "深入閱讀原文條目：" : "相關研經條目：") +
+          (group.entryLink.isOriginalEntry ? "原文條目：" : "相關條目：") +
           group.entryLink.title +
           " →";
-        details.append(link);
+        summary.append(link);
       }
+      details.append(summary);
+      const body = document.createElement("div");
+      body.className = "search-original-body";
       for (const { verse, rendering } of group.hits.slice(0, RESULT_RENDER_LIMIT)) {
         studyVerses.set(verse.id, verse);
-        details.append(makeVerseCard(verse, rendering));
+        body.append(makeVerseCard(verse, rendering));
       }
       if (group.hits.length > RESULT_RENDER_LIMIT) {
         const more = document.createElement("p");
         more.className = "search-original-more";
         more.textContent = `僅列出前 ${RESULT_RENDER_LIMIT} 節，共 ${group.hits.length} 節`;
-        details.append(more);
+        body.append(more);
       }
-      const credit = document.createElement("p");
-      credit.className = "search-original-credit";
-      credit.textContent = ORIGINAL_STUDY_ATTRIBUTION;
-      details.append(credit);
+      details.append(body);
       return details;
     };
 
@@ -532,7 +569,27 @@ function setupSearch() {
       const section = document.createElement("section");
       section.className = "search-original-study";
       section.setAttribute("aria-label", "原文其他譯法");
-      section.append(...groups.map((group) => makeOriginalGroup(group, hits.length > 0)));
+      const header = document.createElement("div");
+      header.className = "search-section-header is-study";
+      const headerLeft = document.createElement("span");
+      headerLeft.className = "search-section-header-left";
+      const headerTitle = document.createElement("span");
+      headerTitle.className = "search-section-title";
+      headerTitle.textContent =
+        hits.length > 0 ? "② 同一原文詞在本站的其他譯法" : "對應原文詞在本站譯法";
+      const headerBadge = document.createElement("span");
+      headerBadge.className = "search-section-badge";
+      headerBadge.textContent = `延伸研讀・${groups.length} 個詞根`;
+      headerLeft.append(headerTitle, headerBadge);
+      const headerHint = document.createElement("span");
+      headerHint.className = "search-section-meta";
+      headerHint.textContent = "點擊可展開／收合";
+      header.append(headerLeft, headerHint);
+      section.append(header, ...groups.map((group) => makeOriginalGroup(group)));
+      const credit = document.createElement("p");
+      credit.className = "search-original-credit";
+      credit.textContent = ORIGINAL_STUDY_ATTRIBUTION;
+      section.append(credit);
       studyElement = section;
       const moreButton = results.querySelector(".search-more-btn");
       if (moreButton) moreButton.before(section);
@@ -647,6 +704,8 @@ function setupSearch() {
       searchBar.placeholder = label;
       searchBar.setAttribute("aria-label", label);
       controls.hidden = mode !== "verse";
+      shortlistToggle.hidden = mode !== "verse";
+      if (mode !== "verse") shortlistDetails.open = false;
       knowledgeControls.hidden = mode !== "knowledge";
       for (const button of modes)
         button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
@@ -738,6 +797,34 @@ function setupSearch() {
       }
       hideSearch(false);
     };
+
+    const syncShortlistButton = () => {
+      const open = shortlistDetails.open;
+      shortlistToggle.setAttribute("aria-expanded", String(open));
+      shortlistToggle.setAttribute("aria-pressed", String(open));
+    };
+    shortlistToggle.addEventListener(
+      "click",
+      () => {
+        shortlistDetails.open = !shortlistDetails.open;
+        syncShortlistButton();
+      },
+      { signal },
+    );
+    shortlistDetails.addEventListener("toggle", syncShortlistButton, { signal });
+
+    advancedToggle.addEventListener(
+      "click",
+      () => {
+        const open = advancedPanel.hidden;
+        advancedPanel.hidden = !open;
+        advancedToggle.setAttribute("aria-expanded", String(open));
+        advancedToggle.setAttribute("aria-pressed", String(open));
+        const caret = advancedToggle.querySelector(".search-caret");
+        if (caret) caret.textContent = open ? "▲" : "▾";
+      },
+      { signal },
+    );
 
     searchButton.addEventListener(
       "click",
@@ -868,6 +955,7 @@ function setupSearch() {
       "change",
       () => {
         verseDraft.strictLiteral = strictToggle.checked;
+        paintVerseControls();
         refresh();
       },
       { signal },
@@ -927,8 +1015,11 @@ function setupSearch() {
         const link = target.closest<HTMLAnchorElement>(
           "a.result-card[href], a.search-original-entry-link[href]",
         );
-        if (link && !event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
-          handleNavigate(link);
+        if (link) {
+          if (link.classList.contains("search-original-entry-link")) event.stopPropagation();
+          if (!event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
+            handleNavigate(link);
+        }
       },
       { signal },
     );
@@ -971,7 +1062,7 @@ function setupSearch() {
         saveShortlist();
         updateVerseToggles();
         paintShortlist();
-        shortlistDetails.querySelector("summary")?.focus();
+        shortlistToggle.focus();
         announce("暫存經文 " + shortlist.size + " 節");
       },
       { signal },

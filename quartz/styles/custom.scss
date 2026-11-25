@@ -1591,6 +1591,58 @@ html:has(.search > .search-container.active) {
   margin-inline: 0;
   transform: none;
 }
+
+/* 主題外掛（obsidian-theme 層）把 .result-card 的 padding 歸零、且把按鈕／分頁設成透明，
+   在這裡補回經文搜尋卡片與頂部膠囊按鈕的間距與層次。 */
+.search .search-mode-tabs {
+  background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
+}
+
+.search .search-mode-tabs .search-mode {
+  background: transparent;
+  color: var(--dark);
+  border: 0;
+}
+
+.search .search-mode-tabs .search-mode[aria-pressed="true"],
+.search .search-verse-row .search-verse-add[aria-pressed="true"] {
+  background: var(--secondary);
+  color: var(--light);
+}
+
+.search .search-verse-row .search-verse-add[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--secondary) 15%, var(--light));
+  color: var(--secondary);
+}
+
+.search > .search-container > .search-space > .search-layout > .results-container .search-verse-row .result-card {
+  padding: 0.7rem 0.9rem;
+}
+
+.search .search-verse-row .result-card > h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.search .search-verse-row .result-card:hover {
+  background: color-mix(in srgb, var(--lightgray) 45%, transparent);
+}
+
+.search .search-original-group {
+  margin: 0 0.75rem 0.65rem;
+}
+
+@media (max-width: 800px) {
+  .search .search-original-group {
+    margin: 0 0.5rem 0.6rem;
+  }
+
+  .search > .search-container > .search-space > .search-layout > .results-container .search-verse-row .result-card {
+    padding: 0.7rem 0.65rem;
+  }
+}
 /* 深色模式的命中字：主題的黃底是 #776411 左右，配淺灰字對比只有 4.15（axe），字改成白色（約 5:1） */
 html[saved-theme="dark"] .search .search-layout .highlight {
   color: #fff;

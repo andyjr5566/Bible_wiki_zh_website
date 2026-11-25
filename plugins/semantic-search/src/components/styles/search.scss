@@ -780,7 +780,55 @@
   color: var(--dark);
 }
 
-.search .search-modes,
+.search .search-modes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+}
+
+.search .search-mode-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
+}
+
+.search .search-mode-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-inline-start: auto;
+}
+
+.search .search-verse-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+}
+
+.search .search-verse-toolbar-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  min-width: 0;
+}
+
+.search .search-verse-advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--lightgray);
+}
+
 .search .search-verse-options,
 .search .search-refine-form,
 .search .search-refinements,
@@ -844,16 +892,65 @@
   border-color: var(--secondary);
 }
 
+.search .search-mode-tabs .search-mode {
+  border: 0;
+  background: transparent;
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.search .search-mode-tabs .search-mode[aria-pressed="true"] {
+  background: var(--secondary);
+  color: var(--light);
+}
+
+.search .search-shortlist-toggle,
+.search .search-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.85rem;
+  border-radius: 7px;
+}
+
+.search .search-shortlist-toggle[aria-pressed="true"],
+.search .search-advanced-toggle[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light));
+  color: var(--secondary);
+  border-color: color-mix(in srgb, var(--secondary) 45%, transparent);
+}
+
+.search .search-verse-list-count,
+.search .search-advanced-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  padding: 0 0.38rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--secondary) 16%, transparent);
+  color: var(--secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
 .search .search-space :is(button, a, input, summary):focus-visible {
   outline: 2px solid var(--secondary);
   outline-offset: 2px;
 }
 
-.search .search-modes .search-close {
-  margin-inline-start: auto;
-  min-width: 2.25rem;
+.search .search-mode-actions .search-close {
+  min-width: 2rem;
+  min-height: 2rem;
   padding: 0 0.35rem;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .search .search-verse-options {
@@ -870,8 +967,18 @@
   font-size: 0.9rem;
 }
 
-.search .search-scope {
+.search .search-scope,
+.search .search-scope-note,
+.search .search-suggestions-label {
   color: var(--gray);
+  font-size: 0.82rem;
+}
+
+.search .search-suggestions .search-suggestion {
+  min-height: 1.75rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
 }
 
 .search .search-check {
@@ -912,10 +1019,17 @@
   flex: none;
 }
 
+.search .search-verse-list:not([open]) {
+  display: none;
+}
+
+.search .search-verse-list[open] {
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--lightgray);
+}
+
 .search .search-verse-list > summary {
-  width: fit-content;
-  cursor: pointer;
-  padding-block: 0.25rem;
+  display: none;
 }
 
 .search .search-verse-list-body {
@@ -936,7 +1050,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.55rem;
-  padding-inline-end: 0.65rem;
+  padding-inline-end: 0.8rem;
   border-bottom: 1px solid var(--lightgray);
 }
 
@@ -945,24 +1059,94 @@
   overflow-wrap: anywhere;
 }
 
+.search .search-result-count,
+.search .search-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--lightgray);
+  background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
+  color: var(--dark);
+  font-size: 0.86rem;
+}
+
 .search .search-result-count {
   grid-column: 1;
   grid-row: 1;
-  margin: 0;
-  padding: 0.55rem 0.8rem;
-  border-bottom: 1px solid var(--lightgray);
+}
+
+.search .search-section-header-left {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.55rem;
+}
+
+.search .search-section-title {
+  font-weight: 700;
   color: var(--dark);
-  font-size: 0.9rem;
+}
+
+.search .search-section-badge {
+  display: inline-block;
+  padding: 0.08rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--secondary) 14%, transparent);
+  color: var(--secondary);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.search .search-section-meta {
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+.search .search-section-header.is-study {
+  border-top: 1px solid var(--lightgray);
+  margin-bottom: 0.65rem;
 }
 
 .search .search-verse-row .result-card {
   border: 0 !important;
+  padding: 0.7rem 0.9rem;
+}
+
+.search .search-verse-row .result-card > h3 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .search .search-verse-row .result-card > .search-verse-text {
+  margin: 0.28rem 0 0;
   color: var(--dark);
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.6;
   overflow-wrap: anywhere;
+}
+
+.search .search-verse-row .search-verse-add {
+  min-height: 1.9rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.search .search-verse-row .search-verse-add[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--secondary) 15%, var(--light));
+  color: var(--secondary);
+  border-color: color-mix(in srgb, var(--secondary) 45%, transparent);
+  font-weight: 600;
 }
 
 .search .search-layout[data-mode="verse"] > .preview-container {
@@ -999,25 +1183,80 @@
 
 /* 原文研讀區塊：附在經文結果之後 */
 .search .search-original-study {
-  margin: 0.6rem 0 0.4rem;
-  padding: 0 0.4rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
 }
 
 .search .search-original-group {
-  margin: 0.5rem 0;
+  margin: 0 0.75rem 0.65rem;
   border: 1px solid var(--lightgray);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--light);
   overflow: hidden;
 }
 
 .search .search-original-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
   padding: 0.6rem 0.8rem;
   cursor: pointer;
   color: var(--dark);
-  font-size: 0.92rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  list-style: none;
+}
+
+.search .search-original-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.search .search-original-summary-main {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
+}
+
+.search .search-original-summary-main::before {
+  content: "▸";
+  display: inline-block;
+  color: var(--gray);
+  font-size: 0.95em;
+  transition: transform 0.15s ease;
+}
+
+.search .search-original-group[open] > summary .search-original-summary-main::before {
+  transform: rotate(90deg);
+}
+
+.search .search-original-lemma {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--dark);
+}
+
+.search .search-original-translit {
+  color: var(--gray);
+  font-size: 0.84rem;
+}
+
+.search .search-original-renderings {
+  display: inline-block;
+  padding: 0.08rem 0.55rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 999px;
+  background: var(--light);
+  color: var(--darkgray);
+  font-size: 0.78rem;
+}
+
+.search .search-original-count {
+  color: var(--gray);
+  font-size: 0.82rem;
 }
 
 .search .search-original-group[open] > summary {
@@ -1025,12 +1264,16 @@
   background: color-mix(in srgb, var(--secondary) 6%, var(--light));
 }
 
+.search .search-original-body {
+  border-inline-start: 3px solid var(--secondary);
+}
 
 .search .search-original-entry-link {
   display: inline-block;
-  margin: 0.2rem 0.8rem 0.4rem;
+  margin: 0;
   color: var(--secondary);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
+  font-weight: 600;
   text-decoration: none;
   overflow-wrap: anywhere;
 }

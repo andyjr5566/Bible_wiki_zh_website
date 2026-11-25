@@ -30,6 +30,8 @@ export default ((userOpts?: Partial<SearchOptions>) => {
     const searchText = i18n(locale).components.search;
     const searchPlaceholder = searchText.searchBarPlaceholder;
     const resultsId = `search-results-${++searchResultsSequence}`;
+    const shortlistId = `search-shortlist-${searchResultsSequence}`;
+    const advancedId = `search-advanced-${searchResultsSequence}`;
 
     return (
       <div class={classNames(displayClass, "search")}>
@@ -50,15 +52,27 @@ export default ((userOpts?: Partial<SearchOptions>) => {
         <div class="search-container" role="dialog" aria-modal="true" aria-label="搜尋">
           <div class="search-space">
             <div class="search-modes" role="group" aria-label="搜尋範圍">
-              <button type="button" class="search-mode" data-mode="verse" aria-pressed="true">
-                經文搜尋
-              </button>
-              <button type="button" class="search-mode" data-mode="knowledge" aria-pressed="false">
-                知識庫進階
-              </button>
-              <button type="button" class="search-close" aria-label="關閉搜尋">
-                ×
-              </button>
+              <div class="search-mode-tabs">
+                <button type="button" class="search-mode" data-mode="verse" aria-pressed="true">
+                  經文搜尋
+                </button>
+                <button type="button" class="search-mode" data-mode="knowledge" aria-pressed="false">
+                  知識庫進階
+                </button>
+              </div>
+              <div class="search-mode-actions">
+                <button
+                  type="button"
+                  class="search-shortlist-toggle"
+                  aria-expanded="false"
+                  aria-controls={shortlistId}
+                >
+                  暫存清單 <span class="search-verse-list-count">0</span>
+                </button>
+                <button type="button" class="search-close" aria-label="關閉搜尋">
+                  ×
+                </button>
+              </div>
             </div>
             <input
               autocomplete="off"
@@ -71,29 +85,47 @@ export default ((userOpts?: Partial<SearchOptions>) => {
               placeholder={searchPlaceholder}
             />
             <section class="search-verse-controls" aria-label="經文搜尋條件與暫存清單">
-              <div class="search-verse-options">
-                <span class="search-scope">傳統和合本・本站已收錄的經文</span>
-                <label class="search-check">
-                  <input type="checkbox" class="search-strict-literal" />
-                  嚴格字面比對
-                </label>
-              </div>
-              <form class="search-refine-form">
-                <input
-                  type="text"
-                  class="search-refine-input"
-                  autocomplete="off"
-                  placeholder="在結果中再查關鍵字"
-                  aria-label="在結果中再查關鍵字"
-                  disabled
-                />
-                <button type="submit" class="search-refine-add" disabled>
-                  加入條件
+              <div class="search-verse-toolbar">
+                <div class="search-verse-toolbar-left">
+                  <span class="search-scope">傳統和合本</span>
+                  <div class="search-suggestions" role="group" aria-label="關鍵字建議" hidden></div>
+                </div>
+                <button
+                  type="button"
+                  class="search-advanced-toggle"
+                  aria-expanded="false"
+                  aria-controls={advancedId}
+                >
+                  進階條件 <span class="search-advanced-count" hidden>0</span>
+                  <span class="search-caret" aria-hidden="true">
+                    ▾
+                  </span>
                 </button>
-              </form>
+              </div>
               <div class="search-refinements" role="group" aria-label="已加入的條件" hidden></div>
-              <div class="search-suggestions" role="group" aria-label="關鍵字建議" hidden></div>
-              <details class="search-verse-list">
+              <div class="search-verse-advanced" id={advancedId} hidden>
+                <form class="search-refine-form">
+                  <input
+                    type="text"
+                    class="search-refine-input"
+                    autocomplete="off"
+                    placeholder="在結果中再查關鍵字"
+                    aria-label="在結果中再查關鍵字"
+                    disabled
+                  />
+                  <button type="submit" class="search-refine-add" disabled>
+                    加入條件
+                  </button>
+                </form>
+                <div class="search-verse-options">
+                  <span class="search-scope-note">範圍為傳統和合本・本站已收錄的經文</span>
+                  <label class="search-check">
+                    <input type="checkbox" class="search-strict-literal" />
+                    嚴格字面比對
+                  </label>
+                </div>
+              </div>
+              <details class="search-verse-list" id={shortlistId}>
                 <summary>
                   暫存經文 <span class="search-verse-list-count">0</span> 節
                 </summary>

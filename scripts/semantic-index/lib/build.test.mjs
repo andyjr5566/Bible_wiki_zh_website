@@ -9,17 +9,48 @@ import { clusterOrder, makeRng } from "./cluster.mjs"
 
 test("selectPages 只收 isIncluded 的頁面，依 slug 排序並算文字與鍵", () => {
   const index = {
-    b: { title: "B", content: "x\ny" },
-    a: { title: "A", content: "z" },
-    skip: { title: "S", content: "" },
+    "link_folder/人物/b": { title: "B", content: "一二三四五\n六七八九十" },
+    "appendix/a": { title: "A", content: "甲乙丙丁戊己庚辛壬癸" },
+    "link_folder/人物/skip": { title: "S", content: "甲乙丙丁戊己庚辛壬癸" },
   }
-  const pages = selectPages(index, (s) => s !== "skip", MODEL_ID)
+  const pages = selectPages(index, (s) => !s.endsWith("skip"), MODEL_ID)
   assert.deepEqual(
     pages.map((p) => p.slug),
-    ["a", "b"],
+    ["appendix/a", "link_folder/人物/b"],
   )
-  assert.equal(pages[1].text, "B\nx y")
+  assert.equal(pages[1].text, "B\n一二三四五 六七八九十")
   assert.match(pages[0].key, /^[0-9a-f]{64}$/)
+})
+
+test("selectPages 只收知識庫（link_folder、appendix）：標籤頁、我的筆記、教學、說明頁不收", () => {
+  const body = "一二三四五 六七八九十"
+  const index = {
+    "tags/搜尋": { title: "搜尋", content: body },
+    "my-notes": { title: "我的筆記", content: body },
+    "教學/快速入門": { title: "快速入門", content: body },
+    資料來源: { title: "資料來源", content: body },
+    "link_folder/新資料夾/條目": { title: "條目", content: body },
+    "link_folder/%E4%BA%BA%E7%89%A9/x": { title: "編碼過的", content: body },
+    "appendix/fhl_maps/maps/203": { title: "民表一c", content: body },
+  }
+  const pages = selectPages(index, () => true, MODEL_ID)
+  assert.deepEqual(
+    pages.map((p) => p.slug),
+    ["appendix/fhl_maps/maps/203", "link_folder/%E4%BA%BA%E7%89%A9/x", "link_folder/新資料夾/條目"],
+  )
+})
+
+test("selectPages 略過內文是空的或太短的知識條目", () => {
+  const index = {
+    "link_folder/人物/空": { title: "空", content: "  \n " },
+    "link_folder/人物/短": { title: "短", content: "一二三四五六七八九" },
+    "link_folder/人物/夠長": { title: "夠長", content: "一二三四五 六七八九十" },
+  }
+  const pages = selectPages(index, () => true, MODEL_ID)
+  assert.deepEqual(
+    pages.map((p) => p.slug),
+    ["link_folder/人物/夠長"],
+  )
 })
 
 test("assemble：bits 每頁 64 bytes、rows 每頁 512 bytes，順序與 ids 一致，檔名帶雜湊", () => {

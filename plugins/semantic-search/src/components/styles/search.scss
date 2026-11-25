@@ -511,6 +511,12 @@
   min-width: 0;
 }
 
+/* 知識結果卡片的左右留白，和計數列（0.9rem）對齊。
+   外掛樣式在 @layer 裡，普通的 padding 會輸給主題沒分層的 button/a 規則（歸零），所以用 !important */
+.search .search-layout[data-mode="knowledge"] .results-container .result-card:not(.no-match) {
+  padding: 0.7rem 0.9rem !important;
+}
+
 .search .results-container .result-card > h3.card-title {
   display: flex;
   flex-wrap: wrap;
@@ -924,7 +930,7 @@
 
 .search .search-semantic-divider {
   margin: 0;
-  padding: 0.7rem 1rem 0.35rem;
+  padding: 0.7rem 0.9rem 0.35rem;
   border-top: 1px solid var(--lightgray);
   color: var(--darkgray);
   font-size: 0.85rem;
@@ -939,7 +945,7 @@
    外掛樣式在 @layer 裡，普通宣告會輸給主題沒分層的 h2 規則（1.4rem 加上虛線底線），所以用 !important */
 .search .results-container .search-semantic-section > h2.search-semantic-divider {
   margin: 0 !important;
-  padding: 0.7rem 1rem 0.35rem !important;
+  padding: 0.7rem 0.9rem 0.35rem !important;
   border-bottom: 0 !important;
   font-size: 0.85rem !important;
   line-height: 1.4 !important;
@@ -947,7 +953,6 @@
 
 /* 手機窄畫面：標題列允許折行，「意思相近」徽章靠右留在可視範圍內，不被結果區右緣（含捲軸）切掉 */
 .search .results-container .result-card.is-semantic > h3.card-title {
-  padding-right: 0.9rem !important;
   box-sizing: border-box;
   max-width: 100%;
 }

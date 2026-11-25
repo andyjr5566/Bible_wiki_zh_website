@@ -10,7 +10,8 @@
 npx tsx scripts/semantic-index/buildIndex.mjs [--out public] [--cache .semantic-cache] [--cluster] [--no-prune]
 ```
 
-- 一定要用 `tsx`：收錄規則直接 import `plugins/semantic-search/src/components/searchLogic.ts` 的 `getKnowledgeSearchCategory`，不另寫一套。
+- 一定要用 `tsx`：排除規則直接 import `plugins/semantic-search/src/components/searchLogic.ts` 的 `getKnowledgeSearchCategory`，不另寫一套。
+- 只收知識庫本身（`link_folder/`、`appendix/`），內文少於 10 字的條目略過；規則在 `lib/pages.mjs`。
 - `--out`：建置輸出資料夾，讀 `<out>/static/contentIndex.json`，寫 `<out>/static/semantic/`。
 - `--cache`：向量快取資料夾（預設 `.semantic-cache/`，已列入 `.gitignore`）。以 `sha256(模型 + "\n" + 文字)` 為鍵，每筆 576 bytes（64 位元 + 512 int8）。結束時會刪掉這次沒用到的項目（`--no-prune` 關掉）。
 - 環境變數 `SEMANTIC_MODEL_CACHE`：Transformers.js 下載模型的資料夾（預設 `.semantic-model-cache/`，已列入 `.gitignore`）。CI 用 `actions/cache` 快取它。模型不在時會從 Hugging Face 下載。

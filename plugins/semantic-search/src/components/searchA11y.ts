@@ -69,3 +69,11 @@ export function shouldAnnounce(announcedMessages: Set<string>, message: string |
   announcedMessages.add(message);
   return true;
 }
+
+/**
+ * 知識搜尋的計數列文字。語意搜尋開著、字面結果是 0 筆時，下面會接「意思相近的內容」，
+ * 這時「找到 0 筆知識資料」讀起來像整體找不到，改說「沒有完全相符的內容」。
+ */
+export function getKnowledgeCountText(total: number, semanticOn: boolean): string {
+  return semanticOn && total === 0 ? "沒有完全相符的內容" : `找到 ${total} 筆知識資料`;
+}

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  getKnowledgeCountText,
   getNextVisibleIndex,
   getSearchAnnouncement,
   shouldAnnounce,
@@ -50,5 +51,17 @@ describe("search announcements", () => {
     expect(shouldAnnounce(announced, message)).toBe(true);
     expect(shouldAnnounce(announced, message)).toBe(false);
     expect(shouldAnnounce(announced, null)).toBe(false);
+  });
+});
+
+describe("getKnowledgeCountText", () => {
+  it("keeps the literal count when semantic search is off", () => {
+    expect(getKnowledgeCountText(0, false)).toBe("找到 0 筆知識資料");
+    expect(getKnowledgeCountText(3, false)).toBe("找到 3 筆知識資料");
+  });
+
+  it("says nothing matched exactly only when semantic search is on and there are 0 hits", () => {
+    expect(getKnowledgeCountText(0, true)).toBe("沒有完全相符的內容");
+    expect(getKnowledgeCountText(2, true)).toBe("找到 2 筆知識資料");
   });
 });

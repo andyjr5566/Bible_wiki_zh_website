@@ -8,7 +8,7 @@
 |---|---|---|
 | S-1 | 只用在「知識庫進階」分頁；經文搜尋不做語意比對。 | 經文已有字面＋相容規則；使用者要求。 |
 | S-2 | 模型 `Xenova/bge-small-zh-v1.5`（q8 ONNX，約 23 MB），CLS pooling、normalize，**查詢與頁面都不加前綴**。 | 2026-11-25 實驗：13 題 hit@1 8、hit@5 10；`multilingual-e5-small` 5/9 且模型 113 MB。 |
-| S-3 | 每頁一個向量：`title + "\n" + 內文前 400 字`（換行改空白）。 | 切段只多中 1 題，檔案大 4 倍。 |
+| S-3 | 每頁一個向量：`title + "\n" + 內文前 400 字`（換行改空白）。內文去掉空白後少於 10 字的條目不收（保險用，知識庫還在寫）。 | 切段只多中 1 題，檔案大 4 倍。沒有內文的頁面只剩標題，短查詢會把它們排到前面、點進去卻是空的（2026-11-25 正式站「我是誰」）。 |
 | S-4 | 模型在讀者瀏覽器跑（Transformers.js + onnxruntime-web WASM），所有檔案放本站 GitHub Pages，`allowRemoteModels = false`。不送查詢字到任何外部服務。 | 只靠 GitHub Pages；隱私；不需金鑰。 |
 | S-5 | 索引格式：二元向量（每頁 64 bytes）一次下載＋漢明距離取前 100 名，再用 HTTP Range 只抓這 100 頁的 int8 向量重新計分。**不用 IVF 分群。** | 規模實驗：IVF 在這份資料分群不明顯，recall 0.77–0.92 且要下載數 MB；二元＋int8 重算 recall@10 0.93–0.95。4 萬頁時二元檔 2.56 MB（< 服務工作者 3 MB 上限），每次查詢約 51 KB。GitHub Pages 對 `.bin` 支援 Range（已驗證 206）。 |
 | S-6 | 規模目標：全本聖經 1,189 章，估 2–4 萬頁。發布時向量要**增量計算**（以內容雜湊快取）。 | 現在 3,520 頁約 75 秒；4 萬頁全算約 15 分鐘。 |
@@ -38,7 +38,7 @@ manifest.json
 - **二元位元：** 第 j 維 `v[j] > 0` 為 1；第 j 位放在 byte `j >> 3` 的 bit `j & 7`（LSB first）。
 - **id 順序：** 寫檔前用便宜的分群（例如 k-means 64 群，固定種子）把相近頁面排在一起，讓重算時要抓的列比較集中、Range 可以合併。這是可選的最佳化，要量過合併後請求數才保留。
 - **檔名帶內容雜湊：** manifest 一律走網路，`.bin` 與 ids 可以長期快取。
-- **哪些頁面收錄：** 只收 `getKnowledgeSearchCategory(slug) !== null` 的頁面。這個函式在 `plugins/semantic-search/src/components/searchLogic.ts`，是唯一的判斷來源，建置端直接 import，不要另寫一套規則。
+- **哪些頁面收錄：** 只收知識庫本身，也就是 `link_folder/`（含日後新增的資料夾）與 `appendix/`，並且要 `getKnowledgeSearchCategory(slug) !== null`（排除規則沿用 `searchLogic.ts`）。標籤索引頁、「我的筆記」、教學與網站說明頁不收，字面搜尋照舊找得到它們。規則在 `scripts/semantic-index/lib/pages.mjs` 的 `isKnowledgeContentSlug`。2026-11-25 改：原本收全部知識搜尋頁面，正式站查「我是誰」時排上了沒有內文的標籤頁。
 
 ### 查詢流程（瀏覽器）
 

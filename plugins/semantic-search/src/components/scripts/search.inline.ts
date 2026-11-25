@@ -37,7 +37,7 @@ import {
 import { buildSnippetHtml } from "../snippet";
 import { createSemanticEngine } from "../semanticModel";
 import { formatMegabytes, mergeSemanticResults } from "../semanticIndex";
-import { getSearchAnnouncement } from "../searchA11y";
+import { getKnowledgeCountText, getSearchAnnouncement } from "../searchA11y";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -516,7 +516,7 @@ function setupSearch() {
       announce(message);
     };
 
-    const showCount = (total: number, unit: string) => {
+    const showCount = (total: number, unit: string, text?: string) => {
       count.hidden = false;
       if (mode === "verse" && unit === "節經文") {
         const titleSpan = document.createElement("span");
@@ -527,9 +527,9 @@ function setupSearch() {
         metaSpan.textContent = `${total} ${unit}`;
         count.replaceChildren(titleSpan, metaSpan);
       } else {
-        count.textContent = "找到 " + total + " " + unit;
+        count.textContent = text ?? "找到 " + total + " " + unit;
       }
-      announce("找到 " + total + " " + unit);
+      announce(text ?? "找到 " + total + " " + unit);
     };
 
     const resetResults = () => {
@@ -802,6 +802,12 @@ function setupSearch() {
       announce(text.textContent);
     };
 
+    /** 語意區塊沒有出現（沒開成、失敗、沒結果）時，計數列退回一般的「找到 N 筆知識資料」。 */
+    const restoreLiteralCount = () => {
+      if (count.hidden) return;
+      count.textContent = getKnowledgeCountText(knowledgeHits.length, false);
+    };
+
     /** 字面結果之後接「意思相近的內容」。任何一步發現查詢已換掉就直接放棄。 */
     const showSemanticResults = async (token: number, query: string) => {
       const pending = document.createElement("p");
@@ -814,6 +820,7 @@ function setupSearch() {
       if (token !== request) return;
       if (!ready) {
         pending.remove();
+        restoreLiteralCount();
         return;
       }
       pending.textContent = "正在找意思相近的內容…";
@@ -827,6 +834,7 @@ function setupSearch() {
       if (token !== request) return;
       pending.remove();
       if (failed) {
+        restoreLiteralCount();
         showResultMessage(SEMANTIC_UNAVAILABLE);
         return;
       }
@@ -837,8 +845,9 @@ function setupSearch() {
         knowledgeSelection ?? new Set(categoryKeys),
         SEMANTIC_LIMIT,
       );
-      const literal = "找到 " + knowledgeHits.length + " 筆知識資料";
+      const literal = getKnowledgeCountText(knowledgeHits.length, false);
       if (merged.length === 0) {
+        restoreLiteralCount();
         const note = document.createElement("p");
         note.className = "search-index-note search-semantic-empty";
         note.textContent = "沒有找到意思相近的內容。";
@@ -955,7 +964,11 @@ function setupSearch() {
           query,
           knowledgeSelection ?? new Set(categoryKeys),
         );
-        showCount(knowledgeHits.length, "筆知識資料");
+        showCount(
+          knowledgeHits.length,
+          "筆知識資料",
+          getKnowledgeCountText(knowledgeHits.length, semanticOn),
+        );
         appendNextPage();
         if (semanticOn) await showSemanticResults(token, query);
         else if (knowledgeHits.length === 0 && !semanticManifestMissing) {

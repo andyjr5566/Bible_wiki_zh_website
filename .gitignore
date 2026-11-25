@@ -17,3 +17,7 @@ quartz/cli/tui/dist/
 api_test.json
 actions.log
 test_public/
+
+# 語意搜尋索引建置的快取（scripts/semantic-index）
+.semantic-cache/
+.semantic-model-cache/

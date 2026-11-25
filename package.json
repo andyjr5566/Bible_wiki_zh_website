@@ -71,6 +71,7 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
+    "@huggingface/transformers": "4.3.2",
     "@pinecone-database/pinecone": "^8.2.0",
     "@quartz-community/types": "github:quartz-community/types",
     "@quartz-community/utils": "github:quartz-community/utils",

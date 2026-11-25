@@ -15,12 +15,17 @@ import {
   findOriginalLanguageStudyGroups,
   getVerseMatchRanges,
   normalizeVerseSearchTerm,
+  parseVerseSearchHints,
   prepareVerseIndex,
   searchVersesWithRewrite,
+  selectPinnedVerses,
   type OriginalStudyGroup,
+  type PinnedVerse,
   type PreparedVerse,
   type VerseOriginalIndex,
+  type VerseSearchHints,
 } from "../verseSearch";
+import { buildFeedbackFormUrl, parseFeedbackFormConfig } from "../feedbackForm";
 import { findTextMatchRanges } from "../textMatcher";
 import { firstHitRanges } from "../termFocus";
 import {
@@ -30,6 +35,9 @@ import {
   type ScriptureCard,
 } from "../verseTarget";
 import { buildSnippetHtml } from "../snippet";
+import { createSemanticEngine } from "../semanticModel";
+import { formatMegabytes, mergeSemanticResults } from "../semanticIndex";
+import { getSearchAnnouncement } from "../searchA11y";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
 const GITHUB_PAGES_BASE_PATH = "/Bible_wiki_zh_website";
@@ -96,6 +104,14 @@ type SearchMode = "verse" | "knowledge";
 
 const verseDraft = { query: "", refinements: [] as string[], strictLiteral: false };
 let knowledgeSelection: Set<string> | null = null;
+/** 語意搜尋預設關，只在這個分頁的執行期間記住（SPA 換頁不丟），不寫進任何儲存空間。 */
+let semanticOn = false;
+/** manifest 讀不到時記下來，不要每次查詢都再試。 */
+let semanticManifestMissing = false;
+const SEMANTIC_LIMIT = 20;
+const semanticEngine = createSemanticEngine({
+  resolvePath: (path) => resolveSearchPath(path),
+});
 const shortlistKey = "search-verse-shortlist-v1";
 const shortlist = new Map<string, string>();
 try {
@@ -156,6 +172,22 @@ const ensureOriginalIndex = createIndexLoader(
   },
 );
 
+/** 相關詞與單節釘選是加分資料：缺檔或格式不對就當作沒有，經文搜尋照常運作。 */
+let verseHints: VerseSearchHints | null = null;
+const ensureVerseHints = createIndexLoader(
+  async (): Promise<VerseSearchHints | null> => {
+    try {
+      const response = await fetch(resolveSearchPath("static/verseSearchHints.json"));
+      return response.ok ? parseVerseSearchHints(await response.json()) : null;
+    } catch {
+      return null;
+    }
+  },
+  (data) => {
+    verseHints = data;
+  },
+);
+
 const verseReference = (verse: PreparedVerse) =>
   verse.book + " " + verse.chapter + ":" + verse.verse;
 
@@ -197,6 +229,9 @@ function setupSearch() {
       ".search-knowledge-controls",
     )!;
     const categoryList = root.querySelector<HTMLElement>(".search-knowledge-categories")!;
+    const semanticToggle = root.querySelector<HTMLElement>(".search-semantic-toggle")!;
+    const semanticCheckbox = root.querySelector<HTMLInputElement>(".search-semantic-checkbox")!;
+    const semanticStatus = root.querySelector<HTMLElement>(".search-semantic-status")!;
     const refineForm = root.querySelector<HTMLFormElement>(".search-refine-form")!;
     const refineInput = root.querySelector<HTMLInputElement>(".search-refine-input")!;
     const refineAdd = root.querySelector<HTMLButtonElement>(".search-refine-add")!;
@@ -209,7 +244,9 @@ function setupSearch() {
     const advancedCount = root.querySelector<HTMLElement>(".search-advanced-count")!;
     const shortlistDetails = root.querySelector<HTMLDetailsElement>(".search-verse-list")!;
     const shortlistBody = root.querySelector<HTMLElement>(".search-verse-list-body")!;
-    const shortlistCounts = Array.from(root.querySelectorAll<HTMLElement>(".search-verse-list-count"));
+    const shortlistCounts = Array.from(
+      root.querySelectorAll<HTMLElement>(".search-verse-list-count"),
+    );
     const copyButton = root.querySelector<HTMLButtonElement>(".search-verse-copy")!;
     const sidebar = container.closest<HTMLElement>(".sidebar");
     const modes = Array.from(root.querySelectorAll<HTMLButtonElement>(".search-mode"));
@@ -236,8 +273,16 @@ function setupSearch() {
     let activeTerms: string[] = [];
     let verseSuggestions: string[] = [];
     let studyElement: HTMLElement | null = null;
+    let pinElement: HTMLElement | null = null;
+    let feedbackElement: HTMLElement | null = null;
+    const feedbackConfig = parseFeedbackFormConfig(layout.dataset.feedbackForm);
     const studyVerses = new Map<string, PreparedVerse>();
     let activeTerm = "";
+    let semanticSection: HTMLElement | null = null;
+    /** 語意搜尋的狀態：off 未開、preparing 下載中、ready 可用、unavailable 暫時無法使用。 */
+    let semanticState: "off" | "preparing" | "ready" | "unavailable" = "off";
+    let semanticPercent = 0;
+    let semanticMegabytes = 0;
 
     const announce = (message: string) => {
       status.textContent = message;
@@ -344,7 +389,7 @@ function setupSearch() {
       suggestions.hidden = verseSuggestions.length === 0;
     };
 
-    const makeVerseCard = (verse: PreparedVerse, rendering?: string) => {
+    const makeVerseCard = (verse: PreparedVerse, rendering?: string, highlight?: string) => {
       const row = document.createElement("div");
       row.className = "search-verse-row";
       const card = document.createElement("a");
@@ -365,8 +410,8 @@ function setupSearch() {
       paintMatches(
         text,
         verse.text,
-        rendering ? [rendering] : activeTerms,
-        rendering ? false : verseDraft.strictLiteral,
+        rendering ? [rendering] : highlight ? [highlight] : activeTerms,
+        rendering || highlight ? false : verseDraft.strictLiteral,
       );
       card.append(title, text);
 
@@ -377,7 +422,7 @@ function setupSearch() {
       return row;
     };
 
-    const makeKnowledgeCard = (slug: string) => {
+    const makeKnowledgeCard = (slug: string, semantic = false) => {
       const item = contentData![slug]!;
       const card = document.createElement("a");
       card.className = "result-card";
@@ -395,6 +440,13 @@ function setupSearch() {
       name.className = "result-title-text";
       paintMatches(name, item.title || slug, [activeTerm]);
       title.append(label, name);
+      if (semantic) {
+        const badge = document.createElement("span");
+        badge.className = "result-match-badge result-match-semantic";
+        badge.textContent = "意思相近";
+        title.append(badge);
+        card.classList.add("is-semantic");
+      }
       card.append(title);
       const tags = item.tags?.filter((tag) => containsExactSearchText(tag, activeTerm)) ?? [];
       if (tags.length) {
@@ -419,19 +471,27 @@ function setupSearch() {
       return card;
     };
 
+    /** 直接命中之後依序是：其他譯本釘選、原文研讀、問卷提示；新增的經文卡片要插在它們前面。 */
+    const tailAnchor = () =>
+      [pinElement, studyElement, feedbackElement].find((element) => element?.isConnected) ?? null;
+
     const appendNextPage = (focusNext = false) => {
       const previousCount = rendered;
       results.querySelector(".search-more-btn")?.remove();
       if (mode === "verse") {
         const page = verseHits.slice(rendered, rendered + RESULT_RENDER_LIMIT);
         const nodes = page.map((verse) => makeVerseCard(verse));
-        if (studyElement?.isConnected) studyElement.before(...nodes);
+        const anchor = tailAnchor();
+        if (anchor) anchor.before(...nodes);
         else results.append(...nodes);
         rendered += page.length;
         updateVerseToggles();
       } else {
         const page = knowledgeHits.slice(rendered, rendered + RESULT_RENDER_LIMIT);
-        results.append(...page.map(makeKnowledgeCard));
+        const nodes = page.map((slug) => makeKnowledgeCard(slug));
+        // 語意區塊永遠在字面結果之後：再顯示更多字面結果時插在它前面
+        if (semanticSection?.isConnected) semanticSection.before(...nodes);
+        else results.append(...nodes);
         rendered += page.length;
       }
       const total = mode === "verse" ? verseHits.length : knowledgeHits.length;
@@ -440,7 +500,9 @@ function setupSearch() {
           "search-more-btn",
           "再顯示 " + Math.min(RESULT_RENDER_LIMIT, total - rendered) + " 筆",
         );
-        if (mode === "verse" && studyElement?.isConnected) studyElement.before(more);
+        const anchor =
+          mode === "verse" ? tailAnchor() : semanticSection?.isConnected ? semanticSection : null;
+        if (anchor) anchor.before(more);
         else results.append(more);
       }
       if (focusNext) links()[previousCount]?.focus();
@@ -476,6 +538,9 @@ function setupSearch() {
       count.hidden = true;
       rendered = 0;
       studyElement = null;
+      semanticSection = null;
+      pinElement = null;
+      feedbackElement = null;
       studyVerses.clear();
       status.textContent = "";
       previewRequest++;
@@ -536,6 +601,50 @@ function setupSearch() {
       return details;
     };
 
+    const placeBeforeFeedback = (node: HTMLElement) => {
+      if (feedbackElement?.isConnected) feedbackElement.before(node);
+      else results.append(node);
+    };
+
+    /** 其他譯本用字對不上時，人工釘選的經節；樣式沿用原文研讀區塊的標題列。 */
+    const showPinnedVerses = (pinned: PinnedVerse[], query: string) => {
+      if (pinned.length === 0) return;
+      const section = document.createElement("section");
+      section.className = "search-pinned";
+      section.setAttribute("aria-label", "其他譯本用字");
+      const header = document.createElement("div");
+      header.className = "search-section-header is-study";
+      const title = document.createElement("span");
+      title.className = "search-section-title";
+      title.textContent = "其他譯本作「" + query + "」";
+      const meta = document.createElement("span");
+      meta.className = "search-section-meta";
+      meta.textContent = pinned.length + " 節經文";
+      header.append(title, meta);
+      section.append(header);
+      for (const { verse, cuv } of pinned) {
+        studyVerses.set(verse.id, verse);
+        section.append(makeVerseCard(verse, undefined, cuv));
+      }
+      pinElement = section;
+      placeBeforeFeedback(section);
+      updateVerseToggles();
+    };
+
+    const showFeedbackHint = (query: string) => {
+      if (!feedbackConfig) return;
+      const hint = document.createElement("p");
+      hint.className = "search-feedback-hint";
+      const link = document.createElement("a");
+      link.href = buildFeedbackFormUrl(feedbackConfig, query);
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "填寫問卷";
+      hint.append("找不到你要的經文嗎？歡迎", link, "告訴我們。");
+      feedbackElement = hint;
+      results.append(hint);
+    };
+
     /** 非阻塞：原文索引缺檔時什麼都不顯示，經文結果不受影響。 */
     const showOriginalStudy = async (
       token: number,
@@ -554,9 +663,7 @@ function setupSearch() {
         const note = document.createElement("p");
         note.className = "search-index-note search-original-skipped";
         note.textContent = "加上再查條件或嚴格字面比對時，不列出同一原文詞的其他譯法。";
-        const moreButton = results.querySelector(".search-more-btn");
-        if (moreButton) moreButton.before(note);
-        else results.append(note);
+        placeBeforeFeedback(note);
         return;
       }
       const groups = findOriginalLanguageStudyGroups(
@@ -591,9 +698,8 @@ function setupSearch() {
       credit.textContent = ORIGINAL_STUDY_ATTRIBUTION;
       section.append(credit);
       studyElement = section;
-      const moreButton = results.querySelector(".search-more-btn");
-      if (moreButton) moreButton.before(section);
-      else results.append(section);
+      if (pinElement?.isConnected) pinElement.after(section);
+      else placeBeforeFeedback(section);
       if (hits.length === 0) {
         const message = "字面無直接相符經文，以下顯示同原文詞在本站已收錄的經文";
         count.hidden = false;
@@ -601,6 +707,157 @@ function setupSearch() {
         announce(message);
       }
       updateVerseToggles();
+    };
+
+    const SEMANTIC_HINT = "找意思相近的內容，不必完全相同的字";
+    const SEMANTIC_UNAVAILABLE = "語意搜尋暫時無法使用，目前只顯示完全相符的結果。";
+    const semanticProgressText = () =>
+      (semanticMegabytes > 0 && !semanticEngine.isReady()
+        ? `第一次使用需要下載約 ${semanticMegabytes} MB，之後會留在這個瀏覽器裡。`
+        : "") + `正在準備語意搜尋…${semanticPercent}%`;
+
+    const paintSemanticStatus = () => {
+      if (semanticState === "preparing") semanticStatus.textContent = semanticProgressText();
+      else if (semanticState === "unavailable") semanticStatus.textContent = SEMANTIC_UNAVAILABLE;
+      else semanticStatus.textContent = SEMANTIC_HINT;
+      const pending = results.querySelector(".search-semantic-pending");
+      if (pending && semanticState === "preparing") pending.textContent = semanticProgressText();
+    };
+
+    let semanticStart: Promise<boolean> | null = null;
+    /** 第一次開啟才下載；同時被呼叫多次時共用同一個等待。失敗就關回去並說明。 */
+    const startSemantic = (): Promise<boolean> => {
+      if (semanticEngine.isReady()) {
+        semanticState = "ready";
+        paintSemanticStatus();
+        return Promise.resolve(true);
+      }
+      if (!semanticStart) {
+        semanticStart = (async () => {
+          semanticState = "preparing";
+          semanticPercent = 0;
+          paintSemanticStatus();
+          const manifest = await semanticEngine.loadManifest();
+          if (manifest) {
+            semanticMegabytes = formatMegabytes(manifest.assetBytes);
+            paintSemanticStatus();
+            announce(semanticProgressText());
+          }
+          const ok =
+            manifest !== null &&
+            (await semanticEngine.prepare((percent) => {
+              semanticPercent = percent;
+              paintSemanticStatus();
+            }));
+          semanticManifestMissing = !ok;
+          if (ok) semanticState = semanticOn ? "ready" : "off";
+          else {
+            semanticState = "unavailable";
+            semanticOn = false;
+            semanticCheckbox.checked = false;
+            announce(SEMANTIC_UNAVAILABLE);
+          }
+          semanticStart = null;
+          paintSemanticStatus();
+          return ok;
+        })();
+      }
+      return semanticStart;
+    };
+
+    const setSemantic = (on: boolean) => {
+      semanticOn = on;
+      semanticCheckbox.checked = on;
+      semanticToggle.classList.remove("is-suggested");
+      if (on) {
+        semanticManifestMissing = false;
+        void startSemantic();
+      } else {
+        semanticState = "off";
+        paintSemanticStatus();
+      }
+      refresh();
+    };
+
+    /** 切到知識庫分頁時，把畫面同步成目前的語意搜尋狀態。 */
+    const syncSemanticControls = () => {
+      semanticCheckbox.checked = semanticOn;
+      semanticToggle.classList.remove("is-suggested");
+      if (semanticOn && semanticState !== "preparing") semanticState = "ready";
+      else if (!semanticOn && semanticState !== "unavailable") semanticState = "off";
+      paintSemanticStatus();
+      if (semanticOn && !semanticEngine.isReady()) void startSemantic();
+    };
+
+    /** 字面結果 0 筆而且沒開語意搜尋：高亮勾選並在結果區問一句。 */
+    const showSemanticPrompt = () => {
+      semanticToggle.classList.add("is-suggested");
+      const prompt = document.createElement("div");
+      prompt.className = "search-semantic-prompt";
+      const text = document.createElement("p");
+      text.textContent = "找不到完全相符的內容。要開啟語意搜尋，找意思相近的內容嗎？";
+      const button = makeSearchButton("search-semantic-enable", "開啟語意搜尋");
+      prompt.append(text, button);
+      results.append(prompt);
+      announce(text.textContent);
+    };
+
+    /** 字面結果之後接「意思相近的內容」。任何一步發現查詢已換掉就直接放棄。 */
+    const showSemanticResults = async (token: number, query: string) => {
+      const pending = document.createElement("p");
+      pending.className = "search-pending-note search-semantic-pending";
+      pending.textContent = semanticEngine.isReady()
+        ? "正在找意思相近的內容…"
+        : semanticProgressText();
+      results.append(pending);
+      const ready = await startSemantic();
+      if (token !== request) return;
+      if (!ready) {
+        pending.remove();
+        return;
+      }
+      pending.textContent = "正在找意思相近的內容…";
+      let hits: Awaited<ReturnType<typeof semanticEngine.search>> = null;
+      let failed = false;
+      try {
+        hits = await semanticEngine.search(query, () => token !== request);
+      } catch {
+        failed = true;
+      }
+      if (token !== request) return;
+      pending.remove();
+      if (failed) {
+        showResultMessage(SEMANTIC_UNAVAILABLE);
+        return;
+      }
+      if (hits === null || !contentData) return;
+      const merged = mergeSemanticResults(
+        hits.filter((hit) => contentData![hit.slug]),
+        knowledgeHits,
+        knowledgeSelection ?? new Set(categoryKeys),
+        SEMANTIC_LIMIT,
+      );
+      const literal = "找到 " + knowledgeHits.length + " 筆知識資料";
+      if (merged.length === 0) {
+        const note = document.createElement("p");
+        note.className = "search-index-note search-semantic-empty";
+        note.textContent = "沒有找到意思相近的內容。";
+        results.append(note);
+        announce(
+          knowledgeHits.length > 0 ? literal : (getSearchAnnouncement("none", 0) ?? literal),
+        );
+        return;
+      }
+      const section = document.createElement("section");
+      section.className = "search-semantic-section";
+      section.setAttribute("aria-label", "意思相近的內容");
+      const heading = document.createElement("h2");
+      heading.className = "search-semantic-divider";
+      heading.textContent = "意思相近的內容";
+      section.append(heading, ...merged.map((hit) => makeKnowledgeCard(hit.slug, true)));
+      semanticSection = section;
+      results.append(section);
+      announce(literal + "；" + getSearchAnnouncement("semantic", merged.length));
     };
 
     const performSearch = async (token: number, query: string) => {
@@ -631,10 +888,15 @@ function setupSearch() {
             return;
           }
         }
+        if (verseHints === null) {
+          await ensureVerseHints();
+          if (token !== request) return;
+        }
         const execution = searchVersesWithRewrite(
           verses,
           [query, ...verseDraft.refinements],
           verseDraft.strictLiteral,
+          verseHints?.related,
         );
         activeTerms = execution.effectiveTerms;
         verseHits = execution.hits;
@@ -649,6 +911,20 @@ function setupSearch() {
         }
         showCount(verseHits.length, "節經文");
         appendNextPage();
+        showFeedbackHint(query);
+        showPinnedVerses(
+          selectPinnedVerses(
+            verses,
+            verseHints?.pins ?? [],
+            query,
+            new Set(execution.hits.map((hit) => hit.id)),
+            {
+              strictLiteral: verseDraft.strictLiteral,
+              hasRefinements: verseDraft.refinements.length > 0,
+            },
+          ),
+          query,
+        );
         void showOriginalStudy(token, query, execution.hits, verses);
       } else {
         if ((knowledgeSelection?.size ?? 1) === 0) {
@@ -681,6 +957,14 @@ function setupSearch() {
         );
         showCount(knowledgeHits.length, "筆知識資料");
         appendNextPage();
+        if (semanticOn) await showSemanticResults(token, query);
+        else if (knowledgeHits.length === 0 && !semanticManifestMissing) {
+          // 沒有語意索引的環境不要提議，先確認 manifest 在（只讀一個小檔，不下載模型）
+          const available = (await semanticEngine.loadManifest()) !== null;
+          if (token !== request) return;
+          semanticManifestMissing = !available;
+          if (available) showSemanticPrompt();
+        }
       }
     };
 
@@ -688,6 +972,7 @@ function setupSearch() {
       const token = ++request;
       clearTimeout(searchTimer);
       resetResults();
+      semanticToggle.classList.remove("is-suggested");
       verseSuggestions = [];
       if (mode === "verse") paintVerseControls();
       const query = verseDraft.query.trim();
@@ -714,6 +999,7 @@ function setupSearch() {
         paintShortlist();
       } else {
         paintCategoryFilters(getKnowledgeSearchCategories(Object.keys(contentData ?? {})));
+        syncSemanticControls();
       }
       refresh();
     };
@@ -973,6 +1259,9 @@ function setupSearch() {
       },
       { signal },
     );
+    semanticCheckbox.addEventListener("change", () => setSemantic(semanticCheckbox.checked), {
+      signal,
+    });
     root.querySelector(".search-knowledge-all")?.addEventListener(
       "click",
       () => {
@@ -998,6 +1287,10 @@ function setupSearch() {
         const target = event.target as HTMLElement;
         if (target.closest(".search-more-btn")) {
           appendNextPage(true);
+          return;
+        }
+        if (target.closest(".search-semantic-enable")) {
+          setSemantic(true);
           return;
         }
         const verseId = target.closest<HTMLButtonElement>(".search-verse-add")?.dataset.verseId;

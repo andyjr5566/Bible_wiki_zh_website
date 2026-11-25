@@ -266,6 +266,14 @@ plugins:
       priority: 20
   - source: ./plugins/semantic-search
     enabled: true
+    options:
+      # 經文結果底部「找不到經文？」的問卷連結。表單網址只在這裡寫一次（YAML 錨點），
+      # footer 的「讀者意見回饋」沿用同一個。choiceEntry／queryEntry 是問卷題目的 entry 代碼。
+      feedbackForm:
+        url: &feedbackFormUrl https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform
+        choiceEntry: entry.936146144
+        choiceValue: 我想在搜尋框提議，不同版本查的字
+        queryEntry: entry.573148805
     layout:
       position: left
       priority: 20
@@ -339,7 +347,7 @@ plugins:
     enabled: true
     options:
       links:
-        讀者意見回饋: https://docs.google.com/forms/d/e/1FAIpQLSflHkD1jUCct87qDcPrI07PrAgzIWmxqbC4RiPQIuWyNbo5AQ/viewform
+        讀者意見回饋: *feedbackFormUrl
         隱私權政策: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/隱私權政策
         快速入門: https://andyjr5566.github.io/Bible_wiki_zh_website/教學/快速入門
   - source: github:quartz-community/recent-notes

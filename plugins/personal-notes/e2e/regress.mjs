@@ -98,6 +98,28 @@ await ev(`document.querySelector('.search-knowledge-category[data-category="人�
 check("知識庫進階：只勾人物後找回該分類", await waitSearch(`[...document.querySelectorAll('.result-card[data-category]')].length > 0 && [...document.querySelectorAll('.result-card[data-category]')].every(hit => hit.dataset.category === '人物')`))
 check("搜尋：經文與進階字詞查詢都只用本站索引", !urls.some((url) => url.includes("/api/search?")))
 await shot("04-search")
+
+// 語意搜尋：預設關閉；字面查無結果時提示開啟；開啟後出現「意思相近的內容」（需要先用 buildIndex 產生索引；首次下載模型最多等 90 秒）
+const hasSemantic = await ev(`fetch(${JSON.stringify(base)} + '/static/semantic/manifest.json').then(r => r.ok).catch(() => false)`)
+if (hasSemantic) {
+  check("語意搜尋：知識庫進階有「語意搜尋」勾選且預設未勾", await ev(`(() => { const c = document.querySelector('.search-semantic-checkbox'); return !!c && c.type === 'checkbox' && !c.checked && document.querySelector('.search-semantic-toggle').textContent.includes('語意搜尋') })()`))
+  await ev(`(() => { const b = document.querySelector('.search-knowledge-category[data-category="人物"]'); if (b && !b.checked && b.getAttribute('aria-pressed') !== 'true') b.click() })()`)
+  await ev(setVal(".search-bar", "怎樣原諒傷害我的人"))
+  check("語意搜尋：字面無結果時提示「找不到完全相符的內容」與「開啟語意搜尋」按鈕", await waitSearch(`document.querySelector('.results-container').innerText.includes('找不到完全相符的內容') && [...document.querySelectorAll('.search-semantic-enable')].some(b => b.textContent.includes('開啟語意搜尋'))`))
+  await ev(`document.querySelector('.search-semantic-enable').click()`)
+  let semanticOk = false
+  for (let i = 0; i < 90 && !semanticOk; i++) {
+    semanticOk = await ev(`(() => { const sec = document.querySelector('.search-semantic-section'); return !!sec && sec.innerText.includes('意思相近的內容') && sec.querySelectorAll('.result-card').length >= 1 })()`)
+    if (!semanticOk) await sleep(1000)
+  }
+  check("語意搜尋：開啟後出現「意思相近的內容」且至少一張卡片", semanticOk, await ev(`document.querySelector('.search-semantic-status')?.innerText ?? ''`))
+  await shot("04b-semantic")
+  await ev(`document.querySelector(".search-mode[data-mode='verse']").click()`)
+  await sleep(400)
+  check("語意搜尋：經文搜尋分頁沒有語意搜尋勾選", await ev(`(() => { const t = document.querySelector('.search-semantic-toggle'); return !t || t.getClientRects().length === 0 })()`))
+} else {
+  console.log("略過語意搜尋檢查：站台沒有語意搜尋索引")
+}
 await ev(`document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))`)
 await sleep(500)
 

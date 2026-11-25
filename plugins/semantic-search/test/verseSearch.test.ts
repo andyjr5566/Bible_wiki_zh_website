@@ -3,9 +3,12 @@ import {
   findOriginalLanguageStudyGroups,
   getVerseMatchRanges,
   getVerseSearchSuggestions,
+  parseVerseSearchHints,
   prepareVerseIndex,
   searchVerses,
   searchVersesWithRewrite,
+  selectPinnedVerses,
+  type RelatedWordTable,
   type VerseOriginalIndex,
 } from "../src/components/verseSearch";
 
@@ -26,6 +29,14 @@ const deuteronomy = {
 };
 
 const corpus = prepareVerseIndex({ version: 1, chapters: [genesis, deuteronomy] });
+
+// 與建置產物 static/verseSearchHints.json 的 related 同形，這裡只放測試要用的幾筆。
+const related: RelatedWordTable = {
+  意念: ["思想", "心思"],
+  思想: ["意念"],
+  哪裡: ["那裡"],
+  那裏: ["哪裡"],
+};
 
 describe("Verse index", () => {
   it("keeps canonical chapter order, text, and real verse numbering", () => {
@@ -54,7 +65,11 @@ describe("Verse index", () => {
 describe("Verse search", () => {
   it("finds literal verse text and keeps suggested wording as its own search", () => {
     expect(searchVerses(corpus, [" 意念 "]).map(({ id }) => id)).toEqual(["05-申命記/第31章#v21"]);
-    expect(getVerseSearchSuggestions("意念")).toEqual(["思想"]);
+    expect(getVerseSearchSuggestions("意念", undefined, false, undefined, related)).toEqual([
+      "思想",
+      "心思",
+    ]);
+    expect(getVerseSearchSuggestions("意念")).toEqual([]);
     expect(searchVerses(corpus, ["思想"]).map(({ id }) => id)).toEqual(["01-創世記/第6章#v5"]);
     expect(searchVerses(corpus, ["懷意念"])).toEqual([]);
   });
@@ -78,8 +93,12 @@ describe("Verse search", () => {
     expect(searchVerses(corpus, ["祂"])).toEqual([]);
     expect(searchVerses(corpus, ["「他們在那裡吃得飽足」"])).toHaveLength(1);
     expect(getVerseSearchSuggestions("妳")).toEqual(["你"]);
-    expect(getVerseSearchSuggestions("哪裡")).toEqual(["那裡"]);
-    expect(getVerseSearchSuggestions("那裏")).toEqual(["哪裡"]);
+    expect(getVerseSearchSuggestions("哪裡", undefined, false, undefined, related)).toEqual([
+      "那裡",
+    ]);
+    expect(getVerseSearchSuggestions("那裏", undefined, false, undefined, related)).toEqual([
+      "哪裡",
+    ]);
   });
 
   it("splits whitespace into same-verse conditions", () => {
@@ -157,6 +176,79 @@ describe("Zero-hit rewrite", () => {
     const suggestions = getVerseSearchSuggestions("起初神創造天地並且完全不存在的句子", rows);
     expect(suggestions.length).toBeGreaterThan(0);
     expect(suggestions.length).toBeLessThanOrEqual(3);
+  });
+});
+
+describe("Related-word chips", () => {
+  it("only offers related words that hit published verses", () => {
+    // 「心思」在本站經文裡沒有出現，所以不會變成提示。
+    expect(getVerseSearchSuggestions("意念", corpus, false, undefined, related)).toEqual(["思想"]);
+    expect(getVerseSearchSuggestions("思想", corpus, false, undefined, related)).toEqual(["意念"]);
+  });
+
+  it("looks keys up with the same normalization as the query", () => {
+    const table: RelatedWordTable = { ABC: ["思想"] };
+    expect(getVerseSearchSuggestions(" abc ", corpus, false, undefined, table)).toEqual(["思想"]);
+    expect(getVerseSearchSuggestions("「ABC」", corpus, false, undefined, table)).toEqual(["思想"]);
+  });
+
+  it("never suggests the query itself and passes related words through the search", () => {
+    const table: RelatedWordTable = { 思想: ["思想", "意念"] };
+    expect(getVerseSearchSuggestions("思想", corpus, false, undefined, table)).toEqual(["意念"]);
+    expect(searchVersesWithRewrite(corpus, ["意念"], false, related).suggestions).toEqual(["思想"]);
+    expect(searchVersesWithRewrite(corpus, ["意念"]).suggestions).toEqual([]);
+  });
+
+  it("keeps the pronoun rules in code", () => {
+    expect(getVerseSearchSuggestions("妳", undefined, false, undefined, related)).toEqual(["你"]);
+  });
+});
+
+describe("Pinned verses", () => {
+  const pins = [
+    { query: "意念", id: "01-創世記/第6章#v5", cuv: "思想" },
+    { query: "意念", id: "05-申命記/第31章#v21", cuv: "意念" },
+    { query: "意念", id: "09-撒母耳記上/第1章#v1", cuv: "未發布" },
+    { query: "別的詞", id: "01-創世記/第6章#v6", cuv: "後悔" },
+  ];
+
+  it("returns pinned verses for the query with the highlight word", () => {
+    const pinned = selectPinnedVerses(corpus, pins, " 意念 ", new Set());
+    expect(pinned.map(({ verse, cuv }) => [verse.id, cuv])).toEqual([
+      ["01-創世記/第6章#v5", "思想"],
+      ["05-申命記/第31章#v21", "意念"],
+    ]);
+  });
+
+  it("skips verses that are already direct hits and unknown verse ids", () => {
+    const pinned = selectPinnedVerses(corpus, pins, "意念", new Set(["05-申命記/第31章#v21"]));
+    expect(pinned.map(({ verse }) => verse.id)).toEqual(["01-創世記/第6章#v5"]);
+  });
+
+  it("is off for strict literal matching, extra conditions and unrelated queries", () => {
+    expect(selectPinnedVerses(corpus, pins, "意念", new Set(), { strictLiteral: true })).toEqual(
+      [],
+    );
+    expect(selectPinnedVerses(corpus, pins, "意念", new Set(), { hasRefinements: true })).toEqual(
+      [],
+    );
+    expect(selectPinnedVerses(corpus, pins, "思想", new Set())).toEqual([]);
+    expect(selectPinnedVerses(corpus, pins, "  ", new Set())).toEqual([]);
+  });
+
+  it("parses the shipped payload and ignores broken rows", () => {
+    expect(parseVerseSearchHints(null)).toBeNull();
+    expect(parseVerseSearchHints({ version: 2 })).toBeNull();
+    expect(
+      parseVerseSearchHints({
+        version: 1,
+        related: { 意念: ["意中", 5], 壞: "x" },
+        pins: [{ query: "意念", id: "a#v1", cuv: "意中" }, { query: "x" }],
+      }),
+    ).toEqual({
+      related: { 意念: ["意中"] },
+      pins: [{ query: "意念", id: "a#v1", cuv: "意中" }],
+    });
   });
 });
 

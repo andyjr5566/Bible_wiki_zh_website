@@ -849,7 +849,6 @@
 
 .search .search-knowledge-controls > legend {
   float: left;
-  width: 100%;
   margin: 0 0 0.45rem;
   padding: 0;
   font-size: 0.85rem;
@@ -858,7 +857,103 @@
 }
 
 .search .search-knowledge-actions {
-  clear: left;
+  clear: both;
+}
+
+/* ---- 語意搜尋：勾選在面板右上角、與「知識類型」同一列 ---- */
+
+.search .search-semantic-toggle {
+  float: right;
+  min-height: 1.6rem;
+  margin: -0.1rem 0 0.35rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--darkgray);
+}
+
+.search .search-semantic-toggle.is-suggested {
+  border-color: var(--secondary);
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light));
+  color: var(--secondary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--secondary) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search .search-semantic-toggle.is-suggested {
+    animation: search-semantic-pulse 1.6s ease-in-out 3;
+  }
+}
+
+@keyframes search-semantic-pulse {
+  50% {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--secondary) 12%, transparent);
+  }
+}
+
+.search .search-semantic-status {
+  clear: both;
+  margin: 0.45rem 0 0;
+  color: var(--gray);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.search .search-semantic-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+}
+
+.search .search-semantic-prompt p {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+
+.search .search-semantic-prompt .search-semantic-enable {
+  background: var(--secondary);
+  color: var(--light);
+  border-color: var(--secondary);
+}
+
+.search .search-semantic-divider {
+  margin: 0;
+  padding: 0.7rem 1rem 0.35rem;
+  border-top: 1px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.search .search-semantic-section {
+  margin-top: 0.4rem;
+}
+
+/* 區塊標題只是分隔用的標籤，不能比卡片標題大。
+   外掛樣式在 @layer 裡，普通宣告會輸給主題沒分層的 h2 規則（1.4rem 加上虛線底線），所以用 !important */
+.search .results-container .search-semantic-section > h2.search-semantic-divider {
+  margin: 0 !important;
+  padding: 0.7rem 1rem 0.35rem !important;
+  border-bottom: 0 !important;
+  font-size: 0.85rem !important;
+  line-height: 1.4 !important;
+}
+
+/* 手機窄畫面：標題列允許折行，「意思相近」徽章靠右留在可視範圍內，不被結果區右緣（含捲軸）切掉 */
+.search .results-container .result-card.is-semantic > h3.card-title {
+  padding-right: 0.9rem !important;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.search .results-container .result-card.is-semantic .result-title-text {
+  flex: 1 1 8rem;
 }
 
 .search .search-verse-controls > * + *,
@@ -1306,6 +1401,21 @@
 
 .search .search-original-credit {
   border-top: 1px solid var(--lightgray);
+}
+
+/* 其他譯本釘選的經節：與原文研讀區塊同樣接在直接命中之後 */
+.search .search-pinned {
+  margin: 0.25rem 0 0;
+  padding: 0;
+}
+
+/* 結果底部的問卷提示：低調一行 */
+.search .search-feedback-hint {
+  margin: 0;
+  padding: 0.9rem 1rem 0.5rem;
+  color: var(--gray);
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 @media all and (max-width: 800px) {

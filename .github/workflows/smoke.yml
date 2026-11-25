@@ -18,6 +18,7 @@ name: Smoke test (test_content)
       - "quartz.config.yaml"
       - "quartz.lock.json"
       - "test_content/**"
+      - "scripts/semantic-index/**"
       - ".github/workflows/deploy.yml"
       - ".github/workflows/smoke.yml"
   pull_request:
@@ -29,6 +30,7 @@ name: Smoke test (test_content)
       - "quartz.config.yaml"
       - "quartz.lock.json"
       - "test_content/**"
+      - "scripts/semantic-index/**"
       - ".github/workflows/deploy.yml"
       - ".github/workflows/smoke.yml"
   workflow_dispatch:
@@ -48,6 +50,8 @@ jobs:
     # 只警告、不擋部署：整個 job 失敗也不算紅燈
     continue-on-error: true
     env:
+      # onnxruntime-node 在 Linux 預設會多下載 CUDA 檔（數百 MB）；建置端只用 CPU，跳過
+      ONNXRUNTIME_NODE_INSTALL: skip
       SITE_PORT: "8090"
       SITE_ROOT: http://localhost:8090/Bible_wiki_zh_website
 
@@ -76,6 +80,19 @@ jobs:
           sed -i 's|baseUrl: andyjr5566.github.io/Bible_wiki_zh_website|baseUrl: localhost:8090/Bible_wiki_zh_website|' quartz.config.yaml
           grep -n "baseUrl" quartz.config.yaml
           npx quartz build -d test_content -o test_public
+
+      - name: Restore semantic search model cache
+        uses: actions/cache@v4
+        with:
+          path: .semantic-model-cache
+          key: semantic-model-bge-small-zh-v1.5-q8-v1
+
+      - name: Build semantic search index (test_content)
+        # 讓前端的語意搜尋可以被測；失敗只是少了這個功能，不影響其他測試
+        continue-on-error: true
+        env:
+          SEMANTIC_MODEL_CACHE: .semantic-model-cache
+        run: npx tsx scripts/semantic-index/buildIndex.mjs --out test_public --cache .semantic-cache
 
       - name: Start test site server
         run: |

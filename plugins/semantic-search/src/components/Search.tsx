@@ -5,6 +5,7 @@ import type {
 } from "@quartz-community/types";
 import { classNames } from "../util/lang";
 import { i18n } from "../i18n";
+import { parseFeedbackFormConfig, type FeedbackFormConfig } from "./feedbackForm";
 import style from "./styles/search.scss";
 // @ts-expect-error - inline script imported as string by esbuild loader
 import script from "./scripts/search.inline.ts";
@@ -14,6 +15,8 @@ export type SearchField = "title" | "content" | "tags";
 export interface SearchOptions {
   enablePreview: boolean;
   fieldPriority: SearchField[];
+  /** 經文結果底部的「找不到經文？」問卷提示；不設定就不顯示。 */
+  feedbackForm?: FeedbackFormConfig;
 }
 
 const defaultOptions: SearchOptions = {
@@ -26,12 +29,14 @@ let searchResultsSequence = 0;
 export default ((userOpts?: Partial<SearchOptions>) => {
   const Search: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const opts = { ...defaultOptions, ...userOpts };
+    const feedbackForm = parseFeedbackFormConfig(opts.feedbackForm);
     const locale = cfg.locale ?? "en-US";
     const searchText = i18n(locale).components.search;
     const searchPlaceholder = searchText.searchBarPlaceholder;
     const resultsId = `search-results-${++searchResultsSequence}`;
     const shortlistId = `search-shortlist-${searchResultsSequence}`;
     const advancedId = `search-advanced-${searchResultsSequence}`;
+    const semanticStatusId = `search-semantic-status-${searchResultsSequence}`;
 
     return (
       <div class={classNames(displayClass, "search")}>
@@ -56,7 +61,12 @@ export default ((userOpts?: Partial<SearchOptions>) => {
                 <button type="button" class="search-mode" data-mode="verse" aria-pressed="true">
                   經文搜尋
                 </button>
-                <button type="button" class="search-mode" data-mode="knowledge" aria-pressed="false">
+                <button
+                  type="button"
+                  class="search-mode"
+                  data-mode="knowledge"
+                  aria-pressed="false"
+                >
                   知識庫進階
                 </button>
               </div>
@@ -96,7 +106,10 @@ export default ((userOpts?: Partial<SearchOptions>) => {
                   aria-expanded="false"
                   aria-controls={advancedId}
                 >
-                  進階條件 <span class="search-advanced-count" hidden>0</span>
+                  進階條件{" "}
+                  <span class="search-advanced-count" hidden>
+                    0
+                  </span>
                   <span class="search-caret" aria-hidden="true">
                     ▾
                   </span>
@@ -137,6 +150,17 @@ export default ((userOpts?: Partial<SearchOptions>) => {
             </section>
             <fieldset class="search-knowledge-controls" hidden>
               <legend>知識類型</legend>
+              <label
+                class="search-check search-semantic-toggle"
+                title="找意思相近的內容，不必完全相同的字"
+              >
+                <input
+                  type="checkbox"
+                  class="search-semantic-checkbox"
+                  aria-describedby={semanticStatusId}
+                />
+                語意搜尋
+              </label>
               <div class="search-knowledge-actions">
                 <button type="button" class="search-knowledge-all">
                   全選
@@ -146,12 +170,16 @@ export default ((userOpts?: Partial<SearchOptions>) => {
                 </button>
               </div>
               <div class="search-knowledge-categories"></div>
+              <p class="search-semantic-status" id={semanticStatusId}>
+                找意思相近的內容，不必完全相同的字
+              </p>
             </fieldset>
             <div
               class="search-layout"
               data-preview={opts.enablePreview}
               data-mode="verse"
               data-field-priority={JSON.stringify(opts.fieldPriority)}
+              data-feedback-form={feedbackForm ? JSON.stringify(feedbackForm) : undefined}
               data-no-results={searchText.noResults}
               data-no-results-hint={searchText.noResultsHint}
               data-results-label="搜尋結果"

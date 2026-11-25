@@ -30,6 +30,11 @@ async function setOffline(offline) {
 // 除了 JavaScript 例外，console.error 也算錯誤（Service Worker 的錯誤多半只出現在 console）
 s.on("Runtime.consoleAPICalled", (m) => { if (m.params.type === "error") errors.push(m.params.args.map((a) => a.value ?? a.description).join(" ")) })
 
+// 快取名稱直接從建置出來的 sw.js 讀，之後改版本號不用再改這支腳本
+const swSource = await (await fetch(root + "/sw.js")).text()
+const CACHE_NAME = /const CACHE_NAME = "([^"]+)"/.exec(swSource)?.[1]
+if (!CACHE_NAME) { console.error("讀不到 sw.js 的 CACHE_NAME"); process.exit(1) }
+
 const url1 = root + ch1
 const url2 = root + "/" + encodeURI("01-創世記/第2章")
 // 「沒看過的頁面」要真的不在快取裡：網站會預先抓連結頁（第 6 章就常被抓進快取），離線前再挑一頁確認沒存過
@@ -56,7 +61,7 @@ await ev(`[...document.querySelectorAll('.bwz-n-card.editing button')].find(b =>
 await sleep(800)
 
 const cacheNames = JSON.parse(await ev(`caches.keys().then(ns => JSON.stringify(ns))`))
-check("快取名稱只有 bible-wiki-zh-v4", cacheNames.length === 1 && cacheNames[0] === "bible-wiki-zh-v4", JSON.stringify(cacheNames))
+check(`快取名稱只有 ${CACHE_NAME}`, cacheNames.length === 1 && cacheNames[0] === CACHE_NAME, JSON.stringify(cacheNames))
 const keys = JSON.parse(await ev(`caches.keys().then(async ns => { const out = []; for (const n of ns) { const c = await caches.open(n); for (const r of await c.keys()) out.push(r.url) } return JSON.stringify(out) })`))
 check("快取裡有看過的頁面與筆記 App", keys.some((u) => u.includes(encodeURI("第2章"))) && keys.some((u) => u.includes("/static/personal-notes/app.js")), `${keys.length} 筆`)
 // 第 1 批把羊皮紙背景壓到 0.4 MB 以下，現在會進快取；檢查的是「超過 3 MB 的檔案不進快取」這條規則
@@ -64,6 +69,29 @@ const bigCached = JSON.parse(await ev(`caches.keys().then(async ns => { const ou
 check("快取裡沒有超過 3 MB 的大檔", bigCached.length === 0, bigCached.join(","))
 check("其他網域（Google 字型等）沒有進快取", keys.every((u) => u.startsWith(new URL(root).origin)))
 check("個人筆記設定檔 config.json 沒有進快取", !keys.some((u) => u.includes("personal-notes/config.json")))
+
+// 語意搜尋檔案的快取規則（站台有索引才測）：Range 請求與 206 不存；模型與執行環境交給 Transformers.js 自己快取
+const sem = JSON.parse(await ev(`(async () => {
+  const base = ${JSON.stringify(root)} + "/static/semantic/"
+  const m = await fetch(base + "manifest.json").then((r) => r.ok ? r.json() : null).catch(() => null)
+  if (!m) return JSON.stringify(null)
+  const rowsUrl = base + m.rows
+  const part = await fetch(rowsUrl, { headers: { Range: "bytes=0-1023" } })
+  await part.arrayBuffer()
+  // 模型設定檔與執行環境檔：用一般 GET 抓，確認回應成功但沒有被存進快取
+  const modelUrl = base + (m.modelPath ?? "model/") + m.model + "/config.json"
+  const model = await fetch(modelUrl).catch(() => null)
+  await model?.arrayBuffer()
+  return JSON.stringify({ rowsUrl, status: part.status, modelUrl, modelOk: !!model?.ok })
+})()`))
+if (sem) {
+  await sleep(500)
+  const allKeys = JSON.parse(await ev(`caches.keys().then(async ns => { const out = []; for (const n of ns) { const c = await caches.open(n); for (const r of await c.keys()) out.push(r.url) } return JSON.stringify(out) })`))
+  check("語意搜尋：Range 請求回 206 且沒有進快取", sem.status === 206 && !allKeys.some((u) => u === sem.rowsUrl), `status=${sem.status}`)
+  check("語意搜尋：model／vendor 底下的檔案沒有進快取", sem.modelOk && !allKeys.some((u) => /\/static\/semantic\/(model|vendor)\//.test(u)), sem.modelUrl.split("/static/")[1])
+} else {
+  console.log("略過語意搜尋快取檢查：站台沒有語意搜尋索引")
+}
 
 // 離線
 await setOffline(true)

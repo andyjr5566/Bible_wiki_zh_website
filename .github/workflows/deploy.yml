@@ -11,6 +11,7 @@ name: Deploy Quartz to GitHub Pages
       - "quartz.ts"
       - "quartz.config.yaml"
       - "quartz.lock.json"
+      - "scripts/semantic-index/**"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
@@ -27,6 +28,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # onnxruntime-node 在 Linux 預設會多下載 CUDA 檔（數百 MB）；建置端只用 CPU，跳過
+      ONNXRUNTIME_NODE_INSTALL: skip
 
     steps:
       - name: Checkout
@@ -118,7 +122,6 @@ jobs:
           path: public
           key: quartz-public-${{ github.sha }}
 
-
       - name: Copy interactive website dist to public
         run: |
           # Only each app's own dist/ (website/<book>/<app>/dist). A bare `-name dist`
@@ -134,6 +137,39 @@ jobs:
         # 互動網站（U-24）：列出缺封面、缺類型、缺 dist 的網站，寫進步驟摘要。只警告不擋部署（U-11）
         continue-on-error: true
         run: npx tsx quartz/util/checkInteractiveSites.ts
+
+      - name: Restore semantic search model cache
+        # 模型檔（約 23 MB）只在第一次從 Hugging Face 下載，之後從快取還原
+        id: semantic-model-cache
+        uses: actions/cache@v4
+        with:
+          path: .semantic-model-cache
+          key: semantic-model-bge-small-zh-v1.5-q8-v1
+
+      - name: Restore semantic search vector cache
+        # 增量：以「模型＋頁面文字」的雜湊為鍵，沒改過的頁面不重算
+        id: semantic-vectors
+        uses: actions/cache/restore@v4
+        with:
+          path: .semantic-cache
+          key: semantic-vectors-${{ github.sha }}
+          restore-keys: |
+            semantic-vectors-
+
+      - name: Build semantic search index
+        # 失敗不擋部署：網站照常上線，只是沒有語意搜尋（前端會處理 manifest 不存在）
+        continue-on-error: true
+        env:
+          SEMANTIC_MODEL_CACHE: .semantic-model-cache
+        run: npx tsx scripts/semantic-index/buildIndex.mjs --out public --cache .semantic-cache
+
+      - name: Save semantic search vector cache
+        uses: actions/cache/save@v4
+        if: always() && steps.semantic-vectors.outputs.cache-hit != 'true'
+        continue-on-error: true
+        with:
+          path: .semantic-cache
+          key: semantic-vectors-${{ github.sha }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

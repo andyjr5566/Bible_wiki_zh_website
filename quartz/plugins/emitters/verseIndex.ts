@@ -1,6 +1,7 @@
 import type { QuartzEmitterPlugin } from "../types"
 import type { FullSlug } from "../../util/path"
 import { buildVerseIndex, buildVerseOriginalIndex } from "../../util/verseIndex"
+import { buildVerseSearchHints, loadVerseSearchHintsSource } from "../../util/verseSearchHints"
 import { write } from "./helpers"
 
 export const VerseIndex: QuartzEmitterPlugin = () => {
@@ -11,6 +12,9 @@ export const VerseIndex: QuartzEmitterPlugin = () => {
     }
     const indexedSlugs = new Set(index.chapters.map((chapter) => chapter.slug))
     const originalIndex = buildVerseOriginalIndex(content, indexedSlugs)
+
+    const hintsSource = loadVerseSearchHintsSource()
+    const hints = buildVerseSearchHints(index.chapters, hintsSource.related, hintsSource.pins)
 
     return [
       await write({
@@ -24,6 +28,12 @@ export const VerseIndex: QuartzEmitterPlugin = () => {
         slug: "static/verseOriginalIndex" as FullSlug,
         ext: ".json",
         content: JSON.stringify(originalIndex),
+      }),
+      await write({
+        ctx,
+        slug: "static/verseSearchHints" as FullSlug,
+        ext: ".json",
+        content: JSON.stringify(hints),
       }),
     ]
   }

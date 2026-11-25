@@ -54,8 +54,26 @@ interface SearchOptions {
   placeholder?: string;
   /** Custom title for the search button */
   title?: string;
+  /** Feedback-form link shown under verse results; omitted = no hint. */
+  feedbackForm?: {
+    url: string; // https form URL
+    choiceEntry: string; // entry.NNN of the routing question
+    choiceValue: string; // option prefilled for that question
+    queryEntry: string; // entry.NNN that receives the reader's query
+  };
 }
 ```
+
+### Verse-search hints (build-time data)
+
+Two hand-maintained tables in `quartz/data/` feed `static/verseSearchHints.json` (emitted next to
+`verseIndex.json`; no plugin rebuild needed to edit them):
+
+- `verse-search-related.json`: `{ "query word": ["wording used by the 1919 text", ...] }`. Shown as
+  related-word chips; words with no hit in the published verses are dropped at build time.
+- `verse-search-pins.json`: `[{ "query": "...", "ref": "申命記 11:18", "cuv": "word in that verse" }]`.
+  The verse appears after the direct hits with `cuv` highlighted. Entries for unpublished chapters are
+  skipped silently; a missing verse or `cuv` word logs a warning and is dropped.
 
 ## Default Behavior
 

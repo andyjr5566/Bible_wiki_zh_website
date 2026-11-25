@@ -169,13 +169,20 @@ export function searchVersesWithRewrite(
   verses: readonly PreparedVerse[],
   rawTerms: readonly string[],
   strictLiteral = false,
+  related?: RelatedWordTable,
 ): VerseSearchExecution {
   const hits = searchVerses(verses, rawTerms, strictLiteral);
   const direct: VerseSearchExecution = {
     hits,
     effectiveTerms: [...rawTerms],
     autoRewrite: null,
-    suggestions: getVerseSearchSuggestions(rawTerms[0] ?? "", verses, strictLiteral, hits.length),
+    suggestions: getVerseSearchSuggestions(
+      rawTerms[0] ?? "",
+      verses,
+      strictLiteral,
+      hits.length,
+      related,
+    ),
   };
   if (hits.length > 0 || strictLiteral) return direct;
 
@@ -207,6 +214,8 @@ export function searchVersesWithRewrite(
 // 建議詞
 // ---------------------------------------------------------------------------
 
+// 代名詞是規則（本站和合本一律寫「他」「你」），留在程式裡；
+// 詞彙對照（意念↔思想…）是資料，放在 quartz/data/verse-search-related.json，建置時隨 hints 送來。
 const STATIC_SUGGESTIONS = new Map<string, readonly string[]>([
   ["祂", ["他"]],
   ["她", ["他"]],
@@ -216,13 +225,26 @@ const STATIC_SUGGESTIONS = new Map<string, readonly string[]>([
   ["您", ["你"]],
   ["祢", ["你"]],
   ["袮", ["你"]],
-  ["哪裡", ["那裡"]],
-  ["哪裏", ["那裡"]],
-  ["那裡", ["哪裡"]],
-  ["那裏", ["哪裡"]],
-  ["意念", ["思想"]],
-  ["思想", ["意念"]],
 ]);
+
+/** 詞 → 本站和合本（1919）的寫法。 */
+export type RelatedWordTable = Readonly<Record<string, readonly string[]>>;
+
+const relatedLookups = new WeakMap<RelatedWordTable, Map<string, readonly string[]>>();
+
+/** 鍵一律用和查詢相同的正規化，這樣大小寫、全半形等差異不會讓詞表查不到。 */
+function lookupRelated(related: RelatedWordTable, normalizedQuery: string): readonly string[] {
+  let lookup = relatedLookups.get(related);
+  if (!lookup) {
+    lookup = new Map();
+    for (const [key, words] of Object.entries(related)) {
+      const normalized = normalizeVerseSearchTerm(key);
+      lookup.set(normalized, [...(lookup.get(normalized) ?? []), ...words]);
+    }
+    relatedLookups.set(related, lookup);
+  }
+  return lookup.get(normalizedQuery) ?? [];
+}
 
 const MAX_RETRY_CHIPS = 3;
 const LONG_QUERY_LENGTH = 9;
@@ -249,13 +271,19 @@ export function getVerseSearchSuggestions(
   verses?: readonly PreparedVerse[],
   strictLiteral = false,
   knownHitCount?: number,
+  related?: RelatedWordTable,
 ): string[] {
   const cleaned = cleanSearchQuery(query);
   const suggestions = new Set<string>();
   const hasHits = (term: string) =>
     !verses || searchVerses(verses, [term], strictLiteral).length > 0;
+  const normalizedQuery = normalizeVerseSearchTerm(cleaned);
 
-  for (const word of STATIC_SUGGESTIONS.get(normalizeVerseSearchTerm(cleaned)) ?? []) {
+  const candidates = [
+    ...(STATIC_SUGGESTIONS.get(normalizedQuery) ?? []),
+    ...(related ? lookupRelated(related, normalizedQuery) : []),
+  ];
+  for (const word of candidates) {
     if (hasHits(word)) suggestions.add(word);
   }
 
@@ -288,6 +316,87 @@ export function getVerseSearchSuggestions(
 
   suggestions.delete(cleaned);
   return [...suggestions];
+}
+
+// ---------------------------------------------------------------------------
+// 單節釘選：其他譯本的用字在本站和合本裡對不上時，人工指出「這一節就是你要找的」
+// ---------------------------------------------------------------------------
+
+export interface VersePin {
+  readonly query: string;
+  readonly id: string;
+  readonly cuv: string;
+}
+
+export interface VerseSearchHints {
+  readonly related: RelatedWordTable;
+  readonly pins: readonly VersePin[];
+}
+
+/** 建置產物的格式檢查；格式不對就當作沒有提示，經文搜尋照常運作。 */
+export function parseVerseSearchHints(payload: unknown): VerseSearchHints | null {
+  if (!isRecord(payload) || payload.version !== 1) return null;
+  const related: Record<string, string[]> = {};
+  if (isRecord(payload.related)) {
+    for (const [key, words] of Object.entries(payload.related)) {
+      if (!Array.isArray(words)) continue;
+      const list = words.filter((word): word is string => typeof word === "string" && !!word);
+      if (list.length > 0) related[key] = list;
+    }
+  }
+  const pins: VersePin[] = [];
+  if (Array.isArray(payload.pins)) {
+    for (const pin of payload.pins as unknown[]) {
+      if (
+        isRecord(pin) &&
+        typeof pin.query === "string" &&
+        typeof pin.id === "string" &&
+        typeof pin.cuv === "string" &&
+        pin.query &&
+        pin.cuv
+      ) {
+        pins.push({ query: pin.query, id: pin.id, cuv: pin.cuv });
+      }
+    }
+  }
+  return { related, pins };
+}
+
+export interface PinnedVerse {
+  readonly verse: PreparedVerse;
+  readonly cuv: string;
+}
+
+export interface PinSelectionOptions {
+  readonly strictLiteral?: boolean;
+  readonly hasRefinements?: boolean;
+}
+
+/**
+ * 查詢詞有釘選的經節、而且還不在直接命中裡，就回傳那些經節。
+ * 嚴格字面比對或加了再查條件時不使用釘選（使用者要的是精確結果）。
+ */
+export function selectPinnedVerses(
+  verses: readonly PreparedVerse[],
+  pins: readonly VersePin[],
+  rawQuery: string,
+  directHitIds: ReadonlySet<string>,
+  { strictLiteral = false, hasRefinements = false }: PinSelectionOptions = {},
+): PinnedVerse[] {
+  if (strictLiteral || hasRefinements || pins.length === 0) return [];
+  const query = normalizeVerseSearchTerm(cleanSearchQuery(rawQuery));
+  if (!query) return [];
+  const verseMap = getVerseMap(verses);
+  const seen = new Set<string>();
+  const selected: PinnedVerse[] = [];
+  for (const pin of pins) {
+    if (normalizeVerseSearchTerm(pin.query) !== query) continue;
+    const verse = verseMap.get(pin.id);
+    if (!verse || directHitIds.has(pin.id) || seen.has(pin.id)) continue;
+    seen.add(pin.id);
+    selected.push({ verse, cuv: pin.cuv });
+  }
+  return selected;
 }
 
 // ---------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 // （只刪 bible-wiki-zh- 開頭的，同一個 github.io 網域下的其他網站不受影響）：
 //   self.addEventListener("install", () => self.skipWaiting())
 //   self.addEventListener("activate", (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith("bible-wiki-zh-")).map((k) => caches.delete(k)))).then(() => self.registration.unregister())))
-const CACHE_NAME = "bible-wiki-zh-v4"
+const CACHE_NAME = "bible-wiki-zh-v5"
 // 快取筆數上限：快取無限增長時，瀏覽器在空間不足會「整個網域」一起清除，
 // 連 IndexedDB 裡尚未同步的個人筆記也會被清掉（dev-notes/personal-notes 03 §4.7）。
 const MAX_ENTRIES = 400
@@ -17,6 +17,8 @@ const OVER_BUDGET_TRIM = 50
 // 不快取的大檔（羊皮紙背景約 7–9 MB、互動網站的 3D 模型約 10 MB）：省下訪客的儲存空間
 const MAX_CACHE_BYTES = 3 * 1024 * 1024
 const NO_CACHE_EXT = /\.(glb|gltf|mp4|webm|mov|zip)$/i
+// 語意搜尋的模型與執行環境（約 38 MB）：不經過這裡，交給 Transformers.js 自己的 Cache API 快取
+const PASS_THROUGH_PATH = /\/static\/semantic\/(model|vendor)\//
 
 // 以這個檔案所在位置（網站根目錄）為準，網站放在子路徑（GitHub Pages）也正確
 const ROOT_URL = new URL("./", self.location).href
@@ -66,6 +68,8 @@ function trimCache(cache) {
 
 function cacheable(url, response) {
   if (!response.ok || response.type === "opaque") return false
+  // 206（部分內容）不能存：cache.put 會丟錯，而且存下來的也只是一小段
+  if (response.status === 206) return false
   if (NO_CACHE_EXT.test(url.pathname)) return false
   const size = Number(response.headers.get("content-length"))
   return !(size > MAX_CACHE_BYTES)
@@ -135,6 +139,10 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return
   // 個人筆記的設定檔（含緊急開關）一律走網路、不快取
   if (url.pathname.endsWith("/static/personal-notes/config.json")) return
+  // 帶 Range 標頭的請求（語意搜尋只抓部分列）一律放行：回應是 206，不能存，也不該被離線快取蓋掉
+  if (request.headers.has("range")) return
+  // 語意搜尋的模型與執行環境：放行不快取
+  if (PASS_THROUGH_PATH.test(url.pathname)) return
 
   if (request.mode === "navigate") {
     event.respondWith(

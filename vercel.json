@@ -1,10 +1,10 @@
 {
-  "buildCommand": "node -e \"console.log('網站只在 GitHub Pages 建置（D-43）；Vercel 只提供 /api')\"",
+  "buildCommand": "node -e \"console.log('網站只在 GitHub Pages 建置（D-43）；Vercel 只負責轉址')\"",
   "outputDirectory": "vercel-static",
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/:path((?!api/|sw\\.js$|static/sw\\.js$).*)",
+      "source": "/:path((?!sw\\.js$|static/sw\\.js$).*)",
       "destination": "https://andyjr5566.github.io/Bible_wiki_zh_website/:path",
       "permanent": false
     }

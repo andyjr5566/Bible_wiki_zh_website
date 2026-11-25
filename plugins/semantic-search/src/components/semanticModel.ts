@@ -19,7 +19,7 @@ import {
 export const DEFAULT_VENDOR_ENTRY = "transformers.min.js";
 export const CANDIDATE_COUNT = 100;
 export const MAX_GAP_ROWS = 8;
-export const MAX_CONCURRENT_RANGES = 6;
+export const MAX_CONCURRENT_RANGES = 24;
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -44,19 +44,23 @@ export async function runLimited<T, R>(
 /**
  * 用 HTTP Range 抓區間；伺服器若忽略 Range 回 200 整個檔案，就自己切。
  * 回傳每個區間的位元組內容（與 ranges 同順序）。fullFile 可傳回已抓到的整檔以供重用。
+ * 每個區間失敗會重試一次；仍失敗的區間回傳 null（讓呼叫端只用抓得到的列）；全部都失敗才丟錯。
+ * 用 cache: "no-store" 跳過瀏覽器 HTTP 快取：區間很小、列已在記憶體快取，
+ * 而 Chrome 對舊工作階段快取的 Range 項目偶爾會回 ERR_CACHE_OPERATION_NOT_SUPPORTED。
  */
 export async function fetchByteRanges(
   url: string,
   ranges: readonly RowRange[],
   fetchImpl: FetchLike,
   cache: { full: Uint8Array | null } = { full: null },
-): Promise<Uint8Array[]> {
+): Promise<(Uint8Array | null)[]> {
   const slice = (full: Uint8Array, range: RowRange) => full.subarray(range.start, range.end + 1);
   if (cache.full) return ranges.map((range) => slice(cache.full!, range));
-  return runLimited(ranges, MAX_CONCURRENT_RANGES, async (range) => {
+  const attempt = async (range: RowRange): Promise<Uint8Array> => {
     if (cache.full) return slice(cache.full, range);
     const response = await fetchImpl(url, {
       headers: { Range: `bytes=${range.start}-${range.end}` },
+      cache: "no-store",
     });
     if (response.status === 206) {
       const bytes = new Uint8Array(await response.arrayBuffer());
@@ -68,7 +72,21 @@ export async function fetchByteRanges(
       return slice(cache.full, range);
     }
     throw new Error("range request failed: " + response.status);
+  };
+  const results = await runLimited(ranges, MAX_CONCURRENT_RANGES, async (range) => {
+    for (let tries = 0; tries < 2; tries++) {
+      try {
+        return await attempt(range);
+      } catch {
+        // 重試一次；仍失敗就當作這個區間缺資料
+      }
+    }
+    return null;
   });
+  if (ranges.length > 0 && results.every((part) => part === null)) {
+    throw new Error("all range requests failed");
+  }
+  return results;
 }
 
 type Extractor = (
@@ -264,7 +282,8 @@ export function createSemanticEngine(options: SemanticEngineOptions): SemanticEn
         const buffers = await fetchByteRanges(fileUrl(manifest.rows), ranges, fetchImpl, fullRows);
         if (isStale()) return null;
         ranges.forEach((range, index) => {
-          const buffer = buffers[index]!;
+          const buffer = buffers[index];
+          if (!buffer) return; // 這段抓不到：略過，那些候選不參與重新計分
           for (let row = range.firstRow; row <= range.lastRow; row++) {
             const offset = (row - range.firstRow) * rowBytes;
             // 複製一份，不要讓小列拖住整個下載緩衝
@@ -276,6 +295,7 @@ export function createSemanticEngine(options: SemanticEngineOptions): SemanticEn
         });
       }
       return candidates
+        .filter((hit) => rowCache.has(hit.id))
         .map((hit) => ({ slug: ids[hit.id]!, score: rescoreRow(rowCache.get(hit.id)!, vector) }))
         .filter((hit) => hit.slug)
         .sort((a, b) => b.score - a.score);

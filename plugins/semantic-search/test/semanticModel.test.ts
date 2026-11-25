@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { coalesceRanges } from "../src/components/semanticIndex";
-import { createSemanticEngine, fetchByteRanges, runLimited } from "../src/components/semanticModel";
+import {
+  MAX_CONCURRENT_RANGES,
+  createSemanticEngine,
+  fetchByteRanges,
+  runLimited,
+} from "../src/components/semanticModel";
 
 const makeFile = (size: number) => Uint8Array.from({ length: size }, (_, i) => i % 251);
 
@@ -34,6 +39,72 @@ describe("fetchByteRanges", () => {
     const parts = await fetchByteRanges("u", ranges, fetchImpl);
     expect(Array.from(parts[1]!)).toEqual(Array.from(file.slice(120, 124)));
     expect(calls.length).toBeLessThanOrEqual(2);
+  });
+
+  it("bypasses the HTTP cache with no-store", async () => {
+    const inits: (RequestInit | undefined)[] = [];
+    const { fetchImpl } = rangeFetch(file, true);
+    await fetchByteRanges("u", ranges, async (u, init) => {
+      inits.push(init);
+      return fetchImpl(u, init);
+    });
+    expect(inits.length).toBe(2);
+    expect(inits.every((init) => init?.cache === "no-store")).toBe(true);
+  });
+
+  it("retries a failed range once", async () => {
+    const { fetchImpl } = rangeFetch(file, true);
+    let failed = false;
+    const flaky = async (u: string, init?: RequestInit) => {
+      if (!failed) {
+        failed = true;
+        throw new TypeError("net::ERR_CACHE_OPERATION_NOT_SUPPORTED");
+      }
+      return fetchImpl(u, init);
+    };
+    const parts = await fetchByteRanges("u", ranges, flaky);
+    expect(parts.every((part) => part !== null)).toBe(true);
+    expect(Array.from(parts[0]!)).toEqual(Array.from(file.slice(4, 12)));
+  });
+
+  it("returns null for a permanently failing range but keeps the others", async () => {
+    const { fetchImpl } = rangeFetch(file, true);
+    const picky = async (u: string, init?: RequestInit) => {
+      const header = (init?.headers as Record<string, string>).Range;
+      if (header === "bytes=4-11") throw new TypeError("boom");
+      return fetchImpl(u, init);
+    };
+    const parts = await fetchByteRanges("u", ranges, picky);
+    expect(parts[0]).toBeNull();
+    expect(Array.from(parts[1]!)).toEqual(Array.from(file.slice(120, 124)));
+  });
+
+  it("throws when every range fails", async () => {
+    const dead = async () => new Response("no", { status: 500 });
+    await expect(fetchByteRanges("u", ranges, dead)).rejects.toThrow();
+  });
+
+  it("caps concurrent range requests", async () => {
+    let active = 0;
+    let peak = 0;
+    const many = coalesceRanges(
+      Array.from({ length: 60 }, (_, i) => i * 100),
+      4,
+      8,
+    );
+    const slow = async (_u: string, init?: RequestInit) => {
+      active++;
+      peak = Math.max(peak, active);
+      await new Promise((r) => setTimeout(r, 2));
+      active--;
+      const [a, b] = (init?.headers as Record<string, string>).Range!.replace("bytes=", "")
+        .split("-")
+        .map(Number) as [number, number];
+      return new Response(new Uint8Array(b - a + 1), { status: 206 });
+    };
+    await fetchByteRanges("u", many, slow);
+    expect(MAX_CONCURRENT_RANGES).toBe(24);
+    expect(peak).toBe(24);
   });
 
   it("limits concurrency", async () => {

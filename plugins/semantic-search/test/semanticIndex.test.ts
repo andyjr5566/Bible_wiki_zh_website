@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   binarize,
+  SEMANTIC_MIN_SCORE,
   coalesceRanges,
+  filterByRelevance,
   formatMegabytes,
   hamming,
   mergeSemanticResults,
@@ -152,6 +154,37 @@ describe("mergeSemanticResults", () => {
     ).toEqual(["地點/a"]);
     expect(mergeSemanticResults(hits, [], null, 1, category)).toHaveLength(1);
     expect(mergeSemanticResults(hits, [], new Set(), 20, category)).toEqual([]);
+  });
+});
+
+describe("filterByRelevance", () => {
+  // 分數取自 2026-11-25 正式站索引的真實查詢結果
+  it("uses 0.60 as the default threshold", () => {
+    expect(SEMANTIC_MIN_SCORE).toBe(0.6);
+  });
+
+  it("empties a query the knowledge base cannot answer (我是誰, best 0.585)", () => {
+    const hits = [
+      { slug: "主題/我豈是看守我兄弟的麼", score: 0.585 },
+      { slug: "原文/除了我以外", score: 0.5436 },
+      { slug: "神學/我的靈不永遠與人相爭", score: 0.5419 },
+    ];
+    expect(filterByRelevance(hits)).toEqual([]);
+  });
+
+  it("keeps good matches in order and drops the loose tail (曠野中天上降下的食物)", () => {
+    const hits = [
+      { slug: "事件/天降嗎哪", score: 0.6243 },
+      { slug: "主題/野味", score: 0.6121 },
+      { slug: "地點/曠野", score: 0.5916 },
+    ];
+    expect(filterByRelevance(hits).map((h) => h.slug)).toEqual(["事件/天降嗎哪", "主題/野味"]);
+  });
+
+  it("keeps a score equal to the threshold and accepts a custom threshold", () => {
+    const hits = [{ slug: "a", score: 0.6 }, { slug: "b", score: 0.55 }];
+    expect(filterByRelevance(hits)).toHaveLength(1);
+    expect(filterByRelevance(hits, 0.5)).toHaveLength(2);
   });
 });
 

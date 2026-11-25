@@ -36,7 +36,7 @@ import {
 } from "../verseTarget";
 import { buildSnippetHtml } from "../snippet";
 import { createSemanticEngine } from "../semanticModel";
-import { formatMegabytes, mergeSemanticResults } from "../semanticIndex";
+import { filterByRelevance, formatMegabytes, mergeSemanticResults } from "../semanticIndex";
 import { getKnowledgeCountText, getSearchAnnouncement } from "../searchA11y";
 
 const GITHUB_PAGES_HOST = "andyjr5566.github.io";
@@ -840,7 +840,7 @@ function setupSearch() {
       }
       if (hits === null || !contentData) return;
       const merged = mergeSemanticResults(
-        hits.filter((hit) => contentData![hit.slug]),
+        filterByRelevance(hits).filter((hit) => contentData![hit.slug]),
         knowledgeHits,
         knowledgeSelection ?? new Set(categoryKeys),
         SEMANTIC_LIMIT,

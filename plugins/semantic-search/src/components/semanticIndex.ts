@@ -199,6 +199,22 @@ export interface SemanticHit {
   score: number;
 }
 
+/**
+ * 語意分數（內積，0..1）低於此值的結果不顯示。
+ * 依據：2026-11-25 用 155 題（答案存在、答不出、模糊短查詢）與 Codex／Gemini 兩位評審標註前 10 名，
+ * 0.60 時有相關結果的 65 題全部仍顯示至少一筆相關，答不出的 45 題有 29 題變成 0 筆。
+ * 詳見 dev-notes/semantic-search/README.md S-10。
+ */
+export const SEMANTIC_MIN_SCORE = 0.6;
+
+/** 只留分數 >= minScore 的結果，順序不變。要在取前 limit 名之前呼叫。 */
+export function filterByRelevance<T extends { score: number }>(
+  hits: readonly T[],
+  minScore: number = SEMANTIC_MIN_SCORE,
+): T[] {
+  return hits.filter((hit) => hit.score >= minScore);
+}
+
 export interface MergedSemanticResult extends SemanticHit {
   category: string;
 }

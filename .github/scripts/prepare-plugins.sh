@@ -19,10 +19,28 @@ for name in "${LOCAL_PLUGINS[@]}"; do
   rm -rf ".quartz/plugins/$name/node_modules"
 done
 
-# 照 quartz.lock.json 鎖定的版本安裝（--from-config 會抓上游最新版：2026-11-26 上游 obsidian-flavored-markdown
-# 改成每個區塊包 div.el-*、標題插摺疊箭頭，正式站和本機產出的 HTML 不同，分層呈現整頁失效）。
+# 社群外掛要用 quartz.lock.json 鎖定的版本：--from-config 會抓上游最新版（2026-11-26 上游 obsidian-flavored-markdown
+# 改成每個區塊包 div.el-*、標題插摺疊箭頭，正式站和本機產出的 HTML 不同，分層呈現整頁失效），
+# 而不加 --from-config 的 lockfile 安裝先 clone --depth 1 再 checkout 舊 commit，舊 commit 不在淺層 clone 裡會失敗。
+# 所以先照 config 安裝，再把每個和鎖定 commit 不同的外掛換回鎖定版本並重建。
 # 要升級社群外掛：本機 npx quartz plugin update、確認 test_content 建置與 e2e 都過，再提交 quartz.lock.json。
-npx quartz plugin install
+cp quartz.lock.json /tmp/quartz.lock.pinned.json
+npx quartz plugin install --from-config
+cp /tmp/quartz.lock.pinned.json quartz.lock.json
+
+node -e '
+const lock = require("/tmp/quartz.lock.pinned.json").plugins
+for (const [name, e] of Object.entries(lock)) if (e.commit && e.commit !== "local") console.log(name + " " + e.commit)
+' | while read -r name commit; do
+  dir=".quartz/plugins/$name"
+  [ -d "$dir/.git" ] || continue
+  head=$(git -C "$dir" rev-parse HEAD)
+  [ "$head" = "$commit" ] && continue
+  echo "→ $name: ${head:0:7} → 鎖定版 ${commit:0:7}"
+  git -C "$dir" fetch -q --depth 1 origin "$commit"
+  git -C "$dir" checkout -q "$commit"
+  (cd "$dir" && npm install --ignore-scripts --no-audit --no-fund >/dev/null     && if node -e "process.exit(require('./package.json').scripts?.build ? 0 : 1)"; then npm run build >/dev/null; fi     && npm prune --omit=dev >/dev/null)
+done
 
 for name in "${PATCHED_PLUGINS[@]}"; do
   mkdir -p ".quartz/plugins/$name/dist"

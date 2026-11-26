@@ -52,9 +52,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .quartz-cache
-          key: quartz-build-${{ hashFiles('quartz.config.yaml', 'plugins/**', 'quartz/**') }}
+          key: quartz-build-v2-${{ hashFiles('quartz.config.yaml', 'quartz.lock.json', 'plugins/**', 'quartz/**', '.github/scripts/**') }}
           restore-keys: |
-            quartz-build-
+            quartz-build-v2-
 
       - name: Install dependencies
         run: npm ci

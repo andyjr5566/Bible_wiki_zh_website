@@ -19,27 +19,7 @@ for name in "${LOCAL_PLUGINS[@]}"; do
   rm -rf ".quartz/plugins/$name/node_modules"
 done
 
-# 會改變頁面 HTML 結構的社群外掛，鎖在 quartz.lock.json 的版本（PINNED_PLUGINS）。
-# 原因：--from-config 會抓上游最新版；2026-11-26 上游 obsidian-flavored-markdown 改成每個區塊包 div.el-*、
-# 標題插摺疊箭頭，正式站跟本機產出的 HTML 不同，創1、創2 的分層呈現整頁失效。
-# 不用 quartz 的 lockfile 安裝：它 clone --depth 1 後 checkout 舊 commit，舊 commit 不在淺層 clone 裡會失敗。
-# 要升級這些外掛：本機 npx quartz plugin update、確認 test_content 建置與 e2e 都過，再提交 quartz.lock.json。
-PINNED_PLUGINS=(obsidian-flavored-markdown)
-cp quartz.lock.json /tmp/quartz.lock.pinned.json
 npx quartz plugin install --from-config
-cp /tmp/quartz.lock.pinned.json quartz.lock.json
-
-for name in "${PINNED_PLUGINS[@]}"; do
-  dir=".quartz/plugins/$name"
-  commit=$(node -e "console.log(require('/tmp/quartz.lock.pinned.json').plugins['$name'].commit)")
-  head=$(git -C "$dir" rev-parse HEAD)
-  if [ "$head" != "$commit" ]; then
-    echo "→ $name: ${head:0:7} → 鎖定版 ${commit:0:7}"
-    git -C "$dir" fetch -q --depth 1 origin "$commit"
-    git -C "$dir" checkout -q "$commit"
-    (cd "$dir" && npm install --ignore-scripts --no-audit --no-fund && npm run build && npm prune --omit=dev)
-  fi
-done
 
 for name in "${PATCHED_PLUGINS[@]}"; do
   mkdir -p ".quartz/plugins/$name/dist"

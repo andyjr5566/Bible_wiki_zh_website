@@ -19,7 +19,10 @@ for name in "${LOCAL_PLUGINS[@]}"; do
   rm -rf ".quartz/plugins/$name/node_modules"
 done
 
-npx quartz plugin install --from-config
+# 照 quartz.lock.json 鎖定的版本安裝（--from-config 會抓上游最新版：2026-11-26 上游 obsidian-flavored-markdown
+# 改成每個區塊包 div.el-*、標題插摺疊箭頭，正式站和本機產出的 HTML 不同，分層呈現整頁失效）。
+# 要升級社群外掛：本機 npx quartz plugin update、確認 test_content 建置與 e2e 都過，再提交 quartz.lock.json。
+npx quartz plugin install
 
 for name in "${PATCHED_PLUGINS[@]}"; do
   mkdir -p ".quartz/plugins/$name/dist"

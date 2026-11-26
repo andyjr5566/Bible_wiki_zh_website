@@ -397,7 +397,8 @@ function setupChapterGuide() {
     ul.className = "bwz-guide-legend-list"
     for (const item of legendItems) {
       const li = document.createElement("li")
-      li.className = "bwz-guide-legend-item"
+      li.className = `bwz-guide-legend-item is-${item.key}`
+      li.dataset.legendKey = item.key
       const swatch = document.createElement("span")
       swatch.className = `bwz-guide-swatch is-${item.sampleKind}`
       swatch.setAttribute("aria-hidden", "true")
@@ -697,10 +698,22 @@ function setupChapterGuide() {
     })
   }
 
+  function syncLegendVisibility() {
+    const hideQuotes = rootEl.getAttribute("data-ux-qcolor") === "off"
+    let visibleCount = 0
+    for (const li of Array.from(legendSec.querySelectorAll<HTMLElement>(".bwz-guide-legend-item"))) {
+      const key = li.dataset.legendKey
+      const hideItem = hideQuotes && (key === "quote" || key === "cquote")
+      li.hidden = hideItem
+      if (!hideItem) visibleCount += 1
+    }
+    legendSec.hidden = view !== "study" || visibleCount === 0
+  }
+
   function renderOutline() {
     tocList.replaceChildren()
     tocButtons = []
-    legendSec.hidden = view !== "study" || legendItems.length === 0
+    syncLegendVisibility()
 
     if (view === "text") {
       if (verseOutline.length === 0) {
@@ -854,9 +867,15 @@ function setupChapterGuide() {
   tabletMql.addEventListener("change", handleViewportChange, { signal })
   window.addEventListener("resize", handleViewportChange, { passive: true, signal })
 
+  const qcolorObserver = new MutationObserver(() => {
+    syncLegendVisibility()
+  })
+  qcolorObserver.observe(rootEl, { attributes: true, attributeFilter: ["data-ux-qcolor"] })
+
   window.addCleanup?.(() => {
     abort.abort()
     sidebarObserver.disconnect()
+    qcolorObserver.disconnect()
     restoreLeftIfAutoCollapsed()
     removeExistingGuide()
   })

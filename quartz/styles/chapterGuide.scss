@@ -174,6 +174,10 @@ html[data-bwz-guide] .sidebar.right > .toc {
   color: var(--bwz-guide-fg);
 }
 
+:root[data-ux-qcolor="off"] .bwz-guide-legend-item:is(.is-quote, .is-cquote) {
+  display: none;
+}
+
 .bwz-guide-swatch {
   flex: 0 0 auto;
   font-size: 0.74rem;

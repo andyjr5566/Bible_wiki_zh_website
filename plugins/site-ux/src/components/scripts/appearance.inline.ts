@@ -91,7 +91,9 @@ function change(name: SettingName, selected: string): void {
 }
 
 function resetAll(): void {
-  for (const group of GROUPS) writeSetting(group.name, DEFAULTS[group.name] as never)
+  for (const name of Object.keys(DEFAULTS) as SettingName[]) {
+    writeSetting(name, DEFAULTS[name] as never)
+  }
   applyAll({ ...DEFAULTS })
   announceBg(DEFAULTS.bg)
 }
@@ -106,6 +108,7 @@ function currentSettings(): Settings {
     fontSize: fs === "s" || fs === "l" ? fs : "m",
     fontFamily: normalize("fontFamily", root.getAttribute("data-ux-font")),
     links: links === "quiet" || links === "hidden" ? links : "normal",
+    quoteColor: root.getAttribute("data-ux-qcolor") === "off" ? "off" : "on",
   }
 }
 
@@ -116,6 +119,11 @@ function syncChecked(panel: HTMLElement): void {
     const on = String(settings[name]) === radio.dataset.value
     radio.setAttribute("aria-checked", on ? "true" : "false")
     radio.tabIndex = on ? 0 : -1
+  }
+  for (const sw of Array.from(panel.querySelectorAll<HTMLElement>("[role=switch]"))) {
+    const name = sw.dataset.name as SettingName
+    const on = settings[name] !== "off"
+    sw.setAttribute("aria-checked", on ? "true" : "false")
   }
 }
 
@@ -165,6 +173,46 @@ function buildPanel(): HTMLElement {
     wrap.append(label, seg)
     panel.append(wrap)
   }
+
+  const switchRow = document.createElement("div")
+  switchRow.className = "site-ux-switch-row"
+  const colorSwitch = document.createElement("button")
+  colorSwitch.type = "button"
+  colorSwitch.className = "site-ux-switch"
+  colorSwitch.setAttribute("role", "switch")
+  colorSwitch.dataset.name = "quoteColor"
+
+  const swInfo = document.createElement("span")
+  swInfo.className = "site-ux-switch-info"
+  const swTitle = document.createElement("span")
+  swTitle.className = "site-ux-switch-title"
+  swTitle.textContent = "原句上色"
+  const swHint = document.createElement("span")
+  swHint.className = "site-ux-switch-hint"
+  const dotQuote = document.createElement("span")
+  dotQuote.className = "site-ux-dot is-quote"
+  dotQuote.setAttribute("aria-hidden", "true")
+  const dotCquote = document.createElement("span")
+  dotCquote.className = "site-ux-dot is-cquote"
+  dotCquote.setAttribute("aria-hidden", "true")
+  swHint.append(
+    dotQuote,
+    document.createTextNode("聖經原句　"),
+    dotCquote,
+    document.createTextNode("註釋原話"),
+  )
+  swInfo.append(swTitle, swHint)
+
+  const swTrack = document.createElement("span")
+  swTrack.className = "site-ux-switch-track"
+  swTrack.setAttribute("aria-hidden", "true")
+  const swThumb = document.createElement("span")
+  swThumb.className = "site-ux-switch-thumb"
+  swTrack.append(swThumb)
+
+  colorSwitch.append(swInfo, swTrack)
+  switchRow.append(colorSwitch)
+  panel.append(switchRow)
 
   const reset = document.createElement("button")
   reset.type = "button"
@@ -232,6 +280,12 @@ function openPanel(button: HTMLElement): void {
     }
     if (target.getAttribute("role") === "radio") {
       change(target.dataset.name as SettingName, target.dataset.value as string)
+      syncChecked(panel)
+      return
+    }
+    if (target.getAttribute("role") === "switch") {
+      const next = target.getAttribute("aria-checked") === "true" ? "off" : "on"
+      change(target.dataset.name as SettingName, next)
       syncChecked(panel)
     }
   }

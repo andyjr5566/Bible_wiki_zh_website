@@ -129,6 +129,23 @@ mark .bwz-rl-cquote {
   background-color: transparent;
 }
 
+/* 原句上色關閉（Stage E2：經文原句與註釋原話一起改回一般內文，經節標籤／說明卡／連結維持正常） */
+:root[data-ux-qcolor="off"] .bwz-rl-quote {
+  color: inherit;
+  background-color: transparent;
+  border-bottom: 0;
+  text-decoration: none;
+}
+
+:root[data-ux-qcolor="off"] .bwz-rl-cquote {
+  color: inherit;
+  background-color: transparent;
+  border-bottom: 0;
+  border-radius: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
 /* 權重刻意高過 custom.scss 的 [saved-theme] article a.internal-link */
 html[saved-theme] article a.bwz-rl-vref,
 .bwz-rl-vref {
@@ -687,11 +704,25 @@ a.bwz-rl-pop-link {
     display: none !important;
   }
 
+  :root:not([data-ux-qcolor="off"]) .bwz-rl-quote {
+    color: #703710;
+  }
+
   .bwz-rl-cquote {
     color: #0f4c5c;
     background: transparent;
     border-bottom: 1pt solid #475569;
     padding: 0;
+  }
+
+  :root[data-ux-qcolor="off"] .bwz-rl-quote,
+  :root[data-ux-qcolor="off"] .bwz-rl-cquote {
+    color: inherit;
+    background: transparent;
+    border-bottom: 0;
+    border-radius: 0;
+    padding: 0;
+    text-decoration: none;
   }
 
   :is(div, blockquote).callout.bwz-rl-card.is-collapsed > .callout-content {

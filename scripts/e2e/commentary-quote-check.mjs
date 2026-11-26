@@ -140,7 +140,7 @@ try {
       const qs = [...document.querySelectorAll('article .bwz-rl-quote')].map(e => e.textContent)
       const overlap = document.querySelectorAll('article .bwz-rl-quote .bwz-rl-cquote, article .bwz-rl-cquote .bwz-rl-quote, article .bwz-rl-cquote .bwz-rl-src, article .bwz-rl-src .bwz-rl-cquote').length
       const hasShortTerm = cqs.some(t => t === '「是」' || t === '「創造」')
-      const hasEnglishPaired = cqs.some(t => t.includes('sovereign over chaos') && t.includes('聖經的記述獨特地呈現'))
+      const hasEnglishPaired = cqs.some(t => t.includes('sovereign over chaos')) && !cqs.some(t => t.includes('聖經的記述獨特地呈現'))
       const hasChained = cqs.some(t => t.includes('在聖經裡面，整個宇宙都是為人類而造'))
       const qColor = getComputedStyle(document.querySelector('article .bwz-rl-quote')).color
       const cColor = getComputedStyle(document.querySelector('article .bwz-rl-cquote')).color

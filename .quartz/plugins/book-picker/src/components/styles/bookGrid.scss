@@ -1,0 +1,239 @@
+/* ══════════════════════════════════════════════════════════════
+   共用樣式：書卷格子（BookGrid）與章號格（ChapterGrid）。
+   左欄選擇器、手機章末、首頁入口都用這一份，不要在別處複製。
+   只用網站既有的顏色變數；強調色用加深過的 --bwz-accent-strong（深色模式是淺紫）。
+   外觀屬性大多帶 !important：外掛的 CSS 在最低的 quartz-base 層，主題外掛（較高的層）對 a、li、button、h2 的
+   連結色、粗體、內距會蓋過這裡的一般宣告；!important 在層裡是反過來的（最低層贏），所以這樣寫才穩。
+   ══════════════════════════════════════════════════════════════ */
+
+$accent: var(--bwz-accent-strong, var(--secondary));
+/* 實心按鈕上的字：淺色模式用白，深色模式的強調色是淺紫，改用深色字才有足夠對比 */
+$on-accent: #fff;
+$on-accent-dark: #16121f;
+/* 灰色（尚未開放）的字：比 --gray 深，對比 ≥ 4.5:1；靠虛線框和「灰」感區分，不靠變淡 */
+$muted: color-mix(in srgb, var(--darkgray) 70%, var(--light));
+/* 格子的框線：--lightgray 在淺色的抽屜底（也是淺灰）上幾乎看不見，混一點 --gray 讓每一格都看得出邊界 */
+$cell-border: color-mix(in srgb, var(--gray) 40%, var(--lightgray));
+
+.bwz-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- 書卷格子 ---------- */
+.bwz-bookgrid {
+  --bwz-bg-cell-h: 34px; /* 桌機左欄；手機與觸控裝置在下面改成 44px */
+  color: var(--dark) !important;
+  text-align: left;
+
+  .bwz-bg-tabs {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.2rem !important;
+    margin-bottom: 0.25rem;
+    border-radius: 10px !important;
+    background: var(--lightgray) !important;
+  }
+
+  .bwz-bg-tab {
+    min-height: 32px;
+    margin: 0 !important;
+    padding: 0.2rem 0.7rem !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: var(--darkgray) !important;
+    font: inherit !important;
+    font-size: 0.88rem !important;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &[aria-selected="true"] {
+      background: var(--light) !important;
+      color: var(--dark) !important;
+      font-weight: 700 !important;
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.18);
+    }
+  }
+
+  .bwz-bg-gh {
+    margin: 0.7rem 0 0.3rem !important;
+    color: var(--darkgray) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em;
+  }
+
+  .bwz-bg-books {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .bwz-bg-book {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: var(--bwz-bg-cell-h);
+    margin: 0 !important;
+    padding: 0.1rem 0.5rem !important;
+    border: 1px solid $cell-border !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    font: inherit !important;
+    font-size: 0.88rem !important;
+    line-height: 1.2 !important;
+    text-align: center;
+    text-decoration: none !important;
+  }
+
+  /* 已開放：可點的連結，用強調色 */
+  a.bwz-bg-book {
+    border-color: color-mix(in srgb, #{$accent} 50%, var(--lightgray)) !important;
+    background: color-mix(in srgb, #{$accent} 7%, transparent) !important;
+    color: $accent !important;
+    font-weight: 700 !important;
+
+    &:hover {
+      background: color-mix(in srgb, #{$accent} 14%, transparent) !important;
+    }
+
+    &[aria-current="true"] {
+      border-color: transparent !important;
+      background: $accent !important;
+      color: $on-accent !important;
+    }
+  }
+
+  /* 灰色：還在整理中。仍可聚焦、可點（點了跳提示），所以不是 disabled 而是 aria-disabled */
+  .bwz-bg-book.is-locked {
+    border-style: dashed !important;
+    color: $muted !important;
+    cursor: help;
+
+    &:hover {
+      background: var(--lightgray) !important;
+    }
+  }
+
+  /* 首頁用的等寬格：每格同寬，比左欄的小標籤大一點 */
+  &.bwz-bookgrid--grid {
+    --bwz-bg-cell-h: 44px;
+
+    .bwz-bg-books {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr));
+      gap: 0.4rem;
+    }
+
+    .bwz-bg-book {
+      font-size: 0.92rem !important;
+    }
+  }
+
+  .bwz-bg-tab:focus-visible,
+  .bwz-bg-book:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------- 章號格 ---------- */
+.bwz-chgrid-wrap {
+  --bwz-ch-h: 34px;
+  --bwz-ch-gap: 0.25rem;
+  /* 章數很多（詩篇 150 章）時最多約 8 行高，超過在框內捲動 */
+  max-height: calc(8 * var(--bwz-ch-h) + 7 * var(--bwz-ch-gap) + 4px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  padding: 2px !important;
+}
+
+.bwz-chgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr));
+  gap: var(--bwz-ch-gap);
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+
+  li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+  }
+
+  .bwz-ch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: var(--bwz-ch-h);
+    border: 1px solid $cell-border !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: var(--dark) !important;
+    font-size: 0.9rem !important;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none !important;
+  }
+
+  a.bwz-ch:hover {
+    background: var(--lightgray) !important;
+  }
+
+  a.bwz-ch[aria-current="page"] {
+    border-color: transparent !important;
+    background: $accent !important;
+    color: $on-accent !important;
+    font-weight: 700 !important;
+  }
+
+  .bwz-ch.is-missing {
+    border-style: dashed !important;
+    color: $muted !important;
+  }
+
+  a.bwz-ch:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+}
+
+/* 手機與觸控裝置：觸控目標 ≥ 44px */
+@media (max-width: 800px), (pointer: coarse) {
+  .bwz-bookgrid {
+    --bwz-bg-cell-h: 44px;
+
+    .bwz-bg-tab {
+      min-height: 40px;
+    }
+  }
+
+  .bwz-chgrid-wrap {
+    --bwz-ch-h: 44px;
+    --bwz-ch-gap: 0.35rem;
+  }
+
+  .bwz-chgrid {
+    grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+  }
+}
+
+/* 深色模式的強調色是淺紫，實心底上的字改深色（對比 ≥ 4.5:1） */
+html[saved-theme="dark"] {
+  .bwz-bookgrid a.bwz-bg-book[aria-current="true"],
+  .bwz-chgrid a.bwz-ch[aria-current="page"] {
+    color: $on-accent-dark !important;
+  }
+}

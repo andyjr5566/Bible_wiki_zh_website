@@ -1,0 +1,225 @@
+/* ══════════════════════════════════════════════════════════════
+   左欄書卷選擇器（BookPicker）本身的版面、手機抽屜、手機章末、灰色書卷提示。
+   書卷格子與章號格的樣式在 bookGrid.scss（共用）。
+   外觀屬性大多帶 !important：外掛的 CSS 在最低的 quartz-base 層，主題外掛（較高的層）對 a、li、button、h2 的
+   連結色、粗體、內距會蓋過這裡的一般宣告；!important 在層裡是反過來的（最低層贏），所以這樣寫才穩。
+   ══════════════════════════════════════════════════════════════ */
+
+$accent: var(--bwz-accent-strong, var(--secondary));
+$on-accent: #fff;
+$on-accent-dark: #16121f;
+
+.bwz-picker {
+  margin: 0.1rem 0 0.8rem !important;
+  text-align: left;
+
+  .bwz-pk-title {
+    margin: 0 !important;
+    color: var(--dark) !important;
+    font-family: var(--headerFont) !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+  }
+
+  .bwz-pk-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .bwz-pk-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    min-height: 36px;
+    margin: 0 !important;
+    padding: 0.2rem 0.7rem !important;
+    border: 1px solid color-mix(in srgb, #{$accent} 50%, var(--lightgray)) !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: $accent !important;
+    font: inherit !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .bwz-pk-link {
+    display: inline-block;
+    margin: 0 0.8rem 0.5rem 0 !important;
+    color: $accent !important;
+    font-size: 0.85rem !important;
+    text-decoration: underline !important;
+    background: none !important;
+  }
+
+  /* 首頁收成一行：整列都是按鈕 */
+  .bwz-pk-collapse {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    width: 100%;
+    min-height: 40px;
+    margin: 0 !important;
+    padding: 0.3rem 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--dark) !important;
+    font: inherit !important;
+    cursor: pointer;
+  }
+
+  .bwz-pk-arrow {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  .bwz-pk-collapse[aria-expanded="true"] .bwz-pk-arrow {
+    transform: rotate(90deg);
+  }
+
+  .bwz-pk-switch[aria-expanded="true"] .bwz-pk-arrow {
+    transform: rotate(180deg);
+  }
+
+  /* 換卷展開時只看書卷格子，本卷章號先收起來（再按一次換回來） */
+  &.is-books-open .bwz-pk-current {
+    display: none;
+  }
+
+  .bwz-pk-switch:focus-visible,
+  .bwz-pk-collapse:focus-visible,
+  .bwz-pk-link:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bwz-picker .bwz-pk-arrow {
+    transition: none;
+  }
+}
+
+/* ---------- 手機：選擇器搬進 ☰ 抽屜最上面 ---------- */
+@media (max-width: 800px) {
+  /* 抽屜原本只放一份會自己捲動的探索清單；現在最上面多了選擇器，整個抽屜改成一起捲，
+     否則展開 66 卷的格子後，下面的探索清單會被擠出畫面 */
+  .explorer-content.bwz-pk-in-drawer {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    & > ul.explorer-ul {
+      max-height: none;
+      overflow: visible;
+      mask-image: none;
+    }
+  }
+
+  /* 抽屜本身已有左右 1rem 內距，選擇器不再加 */
+  .explorer-content > .bwz-picker {
+    margin: 0 0 0.75rem !important;
+    padding: 0.25rem 0 0.75rem !important;
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  .bwz-picker .bwz-pk-switch {
+    min-height: 44px;
+  }
+
+  .bwz-picker .bwz-pk-collapse {
+    min-height: 44px;
+  }
+}
+
+/* ---------- 手機章末：「出埃及記・本卷章節」 ---------- */
+.bwz-chend {
+  margin: 2rem 0 1rem !important;
+  padding: 1rem !important;
+  border: 1px solid var(--lightgray) !important;
+  border-radius: 12px !important;
+  background: var(--light) !important;
+
+  .bwz-chend-title {
+    margin: 0 0 0.6rem !important;
+    color: var(--dark) !important;
+    font-family: var(--headerFont) !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+  }
+
+  .bwz-chend-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .bwz-chend-change,
+  .bwz-chend-toc {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.4rem 1rem !important;
+    border-radius: 999px !important;
+    font: inherit !important;
+    font-size: 0.92rem !important;
+    text-decoration: none !important;
+    cursor: pointer;
+  }
+
+  .bwz-chend-change {
+    border: 0 !important;
+    background: $accent !important;
+    color: $on-accent !important;
+    font-weight: 700 !important;
+  }
+
+  .bwz-chend-toc {
+    border: 1px solid var(--lightgray) !important;
+    background: transparent !important;
+    color: var(--darkgray) !important;
+  }
+
+  .bwz-chend-change:focus-visible,
+  .bwz-chend-toc:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
+}
+
+html[saved-theme="dark"] .bwz-chend .bwz-chend-change {
+  color: $on-accent-dark !important;
+}
+
+/* 桌機的左欄一直留在畫面上，章末不重複 */
+@media (min-width: 801px) {
+  .bwz-chend {
+    display: none;
+  }
+}
+
+/* ---------- 點到灰色書卷的短暫提示 ---------- */
+.bwz-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  z-index: 905; /* 在導覽卡（900）之上、搜尋視窗（999）之下 */
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(92vw, 28rem);
+  padding: 0.7rem 1rem !important;
+  border-radius: 10px !important;
+  background: var(--dark) !important;
+  color: var(--light) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.5 !important;
+  text-align: center;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.3);
+  transform: translateX(-50%);
+  pointer-events: none;
+}

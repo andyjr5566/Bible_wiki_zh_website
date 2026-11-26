@@ -180,7 +180,11 @@ export const PageTypeDispatcher: QuartzEmitterPlugin<Partial<DispatcherOptions>>
       }> = []
       for (const pt of pageTypes) {
         if (!pt.generate) continue
-        const virtualPages = pt.generate({ content, cfg, ctx })
+        // 社群頁面外掛的 generate 可能改成非同步或回傳空值（2026-11-26 正式站建置：virtualPages is not iterable），
+        // 等它完成；不是陣列就記一筆警告、當成沒有虛擬頁，不讓整站建置失敗。
+        const generated: unknown = await pt.generate({ content, cfg, ctx })
+        const virtualPages = (Array.isArray(generated) ? generated : []) as ReturnType<NonNullable<typeof pt.generate>> & unknown[]
+        if (!Array.isArray(generated)) console.warn(`[page-types] ${pt.name ?? "(unnamed)"} generate() 回傳的不是陣列（${typeof generated}），略過`)
         const layout = resolveLayout(pt, defaults, byPageType)
         for (const vp of virtualPages) {
           const vpSlug = vp.slug as FullSlug
@@ -274,7 +278,11 @@ export const PageTypeDispatcher: QuartzEmitterPlugin<Partial<DispatcherOptions>>
       }> = []
       for (const pt of pageTypes) {
         if (!pt.generate) continue
-        const virtualPages = pt.generate({ content, cfg, ctx })
+        // 社群頁面外掛的 generate 可能改成非同步或回傳空值（2026-11-26 正式站建置：virtualPages is not iterable），
+        // 等它完成；不是陣列就記一筆警告、當成沒有虛擬頁，不讓整站建置失敗。
+        const generated: unknown = await pt.generate({ content, cfg, ctx })
+        const virtualPages = (Array.isArray(generated) ? generated : []) as ReturnType<NonNullable<typeof pt.generate>> & unknown[]
+        if (!Array.isArray(generated)) console.warn(`[page-types] ${pt.name ?? "(unnamed)"} generate() 回傳的不是陣列（${typeof generated}），略過`)
         const layout = resolveLayout(pt, defaults, byPageType)
         for (const vp of virtualPages) {
           const vpSlug = vp.slug as FullSlug

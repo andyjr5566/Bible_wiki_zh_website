@@ -488,3 +488,198 @@ test("formatSourceCardHeading and computePopoverPlacement cover code titles and 
   assert.equal(above.placedAbove, true)
   assert.equal(above.top, 632) // 720 - 8 - 180 + 100
 })
+
+/* ---------------- Stage E：註釋原話標記（章節頁與條目頁） ---------------- */
+
+test("marks commentary verbatim quotes (Chinese, English+translation, chained 又說) while skipping verse quotes, short terms, and sentence breaks", () => {
+  const root = makeChapterRoot([
+    el("p", {}, [
+      "《舊約背景註釋》說：「創世記的記述，則描繪神的創造與敵對勢力的爭戰無關，反而是個安詳而有條不紊的過程。」又說：「在聖經裡面，整個宇宙都是為人類而造。」",
+    ]),
+    el("p", {}, [
+      "KingComments 說：「Four times he proposes a compromise (verses 25,28; Exo 10:7-9,24). He will dispute every centimeter of space.」（他四次提出",
+      el("a", { href: "../法老四次妥協", className: ["internal"] }, ["妥協"]),
+      "（出8:25、28；10:7-9、24），要為每一寸空間爭辯。）",
+    ]),
+    el("p", {}, [
+      "《民數記串珠》為這個安排下了一句重話：",
+      el("mark", {}, ["「這是舊約聖經中唯一奉獻人為祭物的例子」"]),
+      "，並說明「所謂『當作搖祭』是比喻的語法」。",
+    ]),
+    el("p", {}, [
+      "黃迦勒的原文字義說，「地是空虛混沌」（2節）的「是」有意思；「創造」的意思是「使無變為有(羅四17；來十一3)的嶄新創造」。",
+    ]),
+    el("p", {}, [
+      "這是黃迦勒的看法。下一句獨立討論「法老心剛硬的真正原因」不應標成原話。",
+    ]),
+    el("p", {}, [
+      "「按猶太人的遺傳說，火是從祭壇上取來的」（丁良才）。「另一件事」（黃迦勒），之後又談到「水池的作用」也不標。",
+    ]),
+  ])
+
+  const applied = applyReadingLayers(root, {
+    slug: "02-出埃及記/第8章",
+    registry,
+    existingSlugs: new Set(["02-出埃及記/第8章"]),
+  })
+  assert.equal(applied, true)
+
+  const cquotes = collectElements(root, (n) => hasClass(n, "bwz-rl-cquote"))
+  assert.deepEqual(cquotes.map(textOf), [
+    "「創世記的記述，則描繪神的創造與敵對勢力的爭戰無關，反而是個安詳而有條不紊的過程。」",
+    "「在聖經裡面，整個宇宙都是為人類而造。」",
+    "「Four times he proposes a compromise (verses 25,28; Exo 10:7-9,24). He will dispute every centimeter of space.」（他四次提出妥協（出8:25、28；10:7-9、24），要為每一寸空間爭辯。）",
+    "「這是舊約聖經中唯一奉獻人為祭物的例子」",
+    "「所謂『當作搖祭』是比喻的語法」",
+    "「使無變為有(羅四17；來十一3)的嶄新創造」",
+    "「按猶太人的遺傳說，火是從祭壇上取來的」",
+    "「另一件事」",
+  ])
+
+  // 經文原句「地是空虛混沌」只標成 bwz-rl-quote，不重複成 bwz-rl-cquote
+  const quotes = collectElements(root, (n) => hasClass(n, "bwz-rl-quote"))
+  assert.deepEqual(quotes.map(textOf), ["「地是空虛混沌」"])
+
+  // 英文＋中譯內的 wikilink 完整保留
+  assert.ok(collectElements(cquotes[2], (n) => n.tagName === "a").length === 1)
+})
+
+test("marks commentary verbatim quotes in entry page ## 定義 and ## 主題發展 only, keeping ## 按書卷累積 and ## 來源依據 untouched", () => {
+  const entryPage: Root = {
+    type: "root",
+    children: [
+      el("h1", {}, ["一家一隻"]),
+      el("h2", { id: "定義" }, ["定義"]),
+      el("p", {}, ["黃迦勒說：「這件事代表神為全家預備救恩。」"]),
+      el("h2", { id: "按書卷累積" }, ["按書卷累積"]),
+      el("p", {}, ["CT 指出：「按書卷累積裡不處理。」"]),
+      el("h2", { id: "主題發展" }, ["主題發展"]),
+      el("p", {}, [
+        "GT《中文聖經註釋》指出「按父家」有兩層含義：二是「這節期乃家庭節期，而不像申命記所說的為聖殿節期」。",
+      ]),
+      el("p", {}, [
+        "GT 丁良才引用經文「你必倚靠刀劍度日」（創27:40），並補一句：「這話預期以掃一系繼續存在。」",
+      ]),
+      el("h2", { id: "來源依據" }, ["來源依據"]),
+      el("p", {}, ["CT：「來源依據也不處理。」"]),
+    ],
+  }
+
+  const applied = applyReadingLayers(entryPage, {
+    slug: "link_folder/主題/一家一隻",
+    registry,
+    existingSlugs: new Set(),
+  })
+  assert.equal(applied, true)
+
+  const cquotes = collectElements(entryPage, (n) => hasClass(n, "bwz-rl-cquote"))
+  assert.deepEqual(cquotes.map(textOf), [
+    "「這件事代表神為全家預備救恩。」",
+    "「這節期乃家庭節期，而不像申命記所說的為聖殿節期」",
+    "「這話預期以掃一系繼續存在。」",
+  ])
+  // 條目頁不新增 .bwz-rl-src 或 .bwz-rl-meta
+  assert.equal(collectElements(entryPage, (n) => hasClass(n, "bwz-rl-src")).length, 0)
+  assert.equal(collectElements(entryPage, (n) => hasClass(n, "bwz-rl-meta")).length, 0)
+})
+
+test("2026-11-26 補充：原話在前、來源在句尾括號（含英文＋名稱冒號中譯與並列原話，參考創2）", () => {
+  const root = makeChapterRoot([
+    el("p", {}, ["人的肉身出於塵土，死時「也要歸於塵土」（黃迦勒；創3:19）。"]),
+    el("p", {}, [
+      "『人』（אָדָם）跟『土地』（אֲדָמָה）原文相近：「希伯來語『亞當』(人)和『adamah』(地)是同音詞」（《聖經精讀本──創世記註解》）。",
+    ]),
+    el("p", {}, [
+      "KingComments 把它讀成藝術家的手藝：「The word ‘formed’ describes the work of an artist.」（KingComments：『塑造』這個字描寫的是藝術家的工作。）",
+    ]),
+    el("p", {}, [
+      "「They have nothing to hide from each other.」（KingComments：他們彼此沒有什麼需要隱藏。）",
+    ]),
+    el("p", {}, [
+      "這表明：「男女的人格平等(肋骨非腳骨)」、「女人當受男人的保護(肋骨位於臂下)」、「女人當為男人所親愛(肋骨挨著心旁)」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "點燈有一個猶太傳統：「按猶太人的遺傳說，火是從祭壇上取來的」（丁良才）。「另一件事」（未列來源的括號），之後不誤標。",
+    ]),
+  ])
+
+  const applied = applyReadingLayers(root, {
+    slug: "01-創世記/第2章",
+    registry,
+    existingSlugs: new Set(["01-創世記/第2章"]),
+  })
+  assert.equal(applied, true)
+
+  const cquotes = collectElements(root, (n) => hasClass(n, "bwz-rl-cquote"))
+  assert.deepEqual(cquotes.map(textOf), [
+    "「也要歸於塵土」",
+    "「希伯來語『亞當』(人)和『adamah』(地)是同音詞」",
+    "「The word ‘formed’ describes the work of an artist.」",
+    "「They have nothing to hide from each other.」",
+    "「男女的人格平等(肋骨非腳骨)」",
+    "「女人當受男人的保護(肋骨位於臂下)」",
+    "「女人當為男人所親愛(肋骨挨著心旁)」",
+    "「按猶太人的遺傳說，火是從祭壇上取來的」",
+  ])
+
+  // （KingComments：中譯）作為附屬不另上色；來源名稱本身仍保留 .bwz-rl-src
+  assert.equal(
+    cquotes.some((el) => textOf(el).includes("『塑造』這個字描寫的是藝術家的工作")),
+    false,
+  )
+  assert.equal(collectElements(root, (n) => hasClass(n, "bwz-rl-cquote-pending")).length, 0)
+  assert.ok(
+    collectElements(root, (n) => hasClass(n, "bwz-rl-src")).some(
+      (el) => textOf(el) === "KingComments",
+    ),
+  )
+})
+
+test("同一句裡被散文隔開的多個「…」在句尾括號來源前且中間無別的來源時一併標記", () => {
+  const root = makeChapterRoot([
+    el("p", {}, [
+      "神『吹』氣的動作「表明神心的親切、體貼」，人的尊貴「乃在於人有靈」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "『隨意吃』「表明神給予人有自由自主的權利」；人不吃分別善惡樹上的果子，則「表明順服神」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "他提到「三個字」或「字」和神的話「這是完整的一句引文」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "前面提到「不屬於後面來源的引句」（丁良才）之後，才又指出「只屬於黃迦勒的這句」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "「前面這句講完並無來源」（丁良才）；「這句有未列名的補充」（參考比較），這是（丁良才）的見解，「後面這句才給黃迦勒」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "前一句講「這句與後面無關」（沒有來源），中間隔著「也不算」。下一句才說「只有這句給黃迦勒」（黃迦勒）。",
+    ]),
+    el("p", {}, [
+      "這裡先說「不該算在黃迦勒頭上的話」，中間穿插（丁良才）的意見，最後收在「只算黃迦勒的話」（黃迦勒）。",
+    ]),
+  ])
+
+  const applied = applyReadingLayers(root, {
+    slug: "01-創世記/第2章",
+    registry,
+    existingSlugs: new Set(["01-創世記/第2章"]),
+  })
+  assert.equal(applied, true)
+
+  const cquotes = collectElements(root, (n) => hasClass(n, "bwz-rl-cquote"))
+  assert.deepEqual(cquotes.map(textOf), [
+    "「表明神心的親切、體貼」",
+    "「乃在於人有靈」",
+    "「表明神給予人有自由自主的權利」",
+    "「表明順服神」",
+    "「這是完整的一句引文」",
+    "「不屬於後面來源的引句」",
+    "「只屬於黃迦勒的這句」",
+    "「前面這句講完並無來源」",
+    "「後面這句才給黃迦勒」",
+    "「只有這句給黃迦勒」",
+    "「只算黃迦勒的話」",
+  ])
+  assert.equal(collectElements(root, (n) => hasClass(n, "bwz-rl-cquote-pending")).length, 0)
+})

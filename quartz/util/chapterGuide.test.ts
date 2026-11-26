@@ -34,12 +34,15 @@ test("buildLegendItems：沒有的項目不列，完全無標記時回傳空陣�
 
   const withCards = buildLegendItems({
     hasQuotes: true,
+    hasCommentaryQuotes: true,
     hasSources: true,
     hasOrigChips: true,
     hasCards: true,
   })
-  assert.equal(withCards.length, 4)
-  assert.equal(withCards[3].text, "原文／背景／應用卡片＝想深入再點開")
+  assert.equal(withCards.length, 5)
+  assert.equal(withCards[1].key, "cquote")
+  assert.equal(withCards[1].text, "青色字＝註釋書的原話（後面括號是哪一本）")
+  assert.equal(withCards[4].text, "原文／背景／應用卡片＝想深入再點開")
 })
 
 test("parseVerseOutlineLine 與 parseOutlineFromTableRows：解析清單與表格經節範圍", () => {

@@ -197,28 +197,45 @@ for (const theme of ["light", "dark"]) {
   // 預設在「經文」分頁，先切到「研讀」分頁再點本章整理裡的連結
   await clickSel(s, '.bwz-tabs [data-tab="study"]')
   await sleep(300)
-  // 第三段（三、…）裡的「四河」連結
+  // 第一個含直屬段落連結的整理小節（h3 或 h4 底下皆可；對應 studyAnchorIndex 回傳的 h3 id）
   const info = await s.ev(`(() => {
     const h2 = document.querySelector('#本章整理'); if (!h2) return 'noh2'
-    const h3s = [...document.querySelectorAll('article h3')].filter((h) => h2.compareDocumentPosition(h) & Node.DOCUMENT_POSITION_FOLLOWING)
-    const third = h3s.find((h) => h.textContent.trim().startsWith('三、')); if (!third) return 'noh3'
-    const a = [...document.querySelectorAll('article a.internal')].find((x) => x.getAttribute('href').includes('伊甸園四河') && (third.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING) && !(h3s[3] && (h3s[3].compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING)))
-    if (!a) return 'noa'
-    a.id = 'e2e-study-link'; return third.id
+    const root = h2.parentElement; if (!root) return 'noroot'
+    const children = [...root.children]
+    const startIdx = children.indexOf(h2)
+    let endIdx = children.length
+    for (let i = startIdx + 1; i < children.length; i += 1) {
+      if (children[i].tagName === 'H2') { endIdx = i; break }
+    }
+    let currentH3 = null
+    for (let i = startIdx + 1; i < endIdx; i += 1) {
+      const node = children[i]
+      if (node.tagName === 'H3') { currentH3 = node; continue }
+      if (!currentH3 || !currentH3.id || node.tagName !== 'P') continue
+      const a = [...node.querySelectorAll('a.internal[href]:not(.broken):not(.bwz-rl-vref)')].find((x) => {
+        const href = x.getAttribute('href') || ''
+        return !href.startsWith('#') && !href.includes('%E7%AC%AC')
+      })
+      if (a) {
+        a.id = 'e2e-study-link'
+        return currentH3.id
+      }
+    }
+    return 'noa'
   })()`)
-  check(`[${theme}] 找得到整理第三段的連結`, typeof info === "string" && !info.startsWith("no"), info)
+  check(`[${theme}] 找得到第一個含直屬段落連結的整理小節`, typeof info === "string" && !info.startsWith("no"), info)
   await clickSel(s, "#e2e-study-link")
   await waitFor(s, `!!document.querySelector('${BTN}')`, 6000)
   check(`[${theme}] 按鈕文字是「↩ 返回 創世記 2 章整理」`, (await labelOf(s)) === "↩ 返回 創世記 2 章整理", await labelOf(s))
   check(`[${theme}] 螢幕閱讀器文字：回到創世記第 2 章的本章整理`, (await ariaOf(s)) === "回到創世記第 2 章的本章整理", await ariaOf(s))
   const stored = JSON.parse((await storedPoint(s)) ?? "null")
-  check(`[${theme}] 返回點記的是整理第三段的小標題`, stored?.kind === "study" && stored.headingId === info, JSON.stringify(stored))
+  check(`[${theme}] 返回點記的是該整理小節的標題`, stored?.kind === "study" && stored.headingId === info, JSON.stringify(stored))
   await clickSel(s, ".bwz-vr-go", { scroll: false })
   await waitFor(s, `location.pathname.endsWith('${encodeURI("第2章")}')`, 6000)
   await sleep(2500)
   const top = (await rectOf(s, `[id="${info}"]`))?.top
   const tabsBottom = (await rectOf(s, ".bwz-tabs"))?.bottom ?? 0
-  check(`[${theme}] 回到整理第三段的小標題（在黏頂分頁列下方 0–40px）`, top >= tabsBottom - 1 && top <= tabsBottom + 40, `top=${Math.round(top)} tabsBottom=${Math.round(tabsBottom)}`)
+  check(`[${theme}] 回到該整理小節的標題（在黏頂分頁列下方 0–40px）`, top >= tabsBottom - 1 && top <= tabsBottom + 40, `top=${Math.round(top)} tabsBottom=${Math.round(tabsBottom)}`)
   check(`[${theme}] 按鈕消失`, !(await hasBtn(s)))
   close(s)
 }

@@ -7,6 +7,7 @@ import { parseHeadingVerseRange, type PageSourcesPayload, type SourceCardEntry }
 
 export interface LegendFlags {
   readonly hasQuotes: boolean
+  readonly hasCommentaryQuotes?: boolean
   readonly hasSources: boolean
   readonly hasOrigChips: boolean
   readonly hasCards: boolean
@@ -15,9 +16,9 @@ export interface LegendFlags {
 }
 
 export interface LegendItem {
-  readonly key: "quote" | "src" | "orig" | "card"
+  readonly key: "quote" | "cquote" | "src" | "orig" | "card"
   readonly sample: string
-  readonly sampleKind: "quote" | "src" | "orig" | "card"
+  readonly sampleKind: "quote" | "cquote" | "src" | "orig" | "card"
   readonly text: string
 }
 
@@ -64,6 +65,14 @@ export function buildLegendItems(flags: LegendFlags): LegendItem[] {
       sample: "聖經原句",
       sampleKind: "quote",
       text: "褐色字＝聖經原句（後面的小標籤是節數）",
+    })
+  }
+  if (flags.hasCommentaryQuotes) {
+    items.push({
+      key: "cquote",
+      sample: "註釋原話",
+      sampleKind: "cquote",
+      text: "青色字＝註釋書的原話（後面括號是哪一本）",
     })
   }
   if (flags.hasSources) {

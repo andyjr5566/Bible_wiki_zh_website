@@ -57,6 +57,11 @@ $rl-muted: color-mix(in srgb, var(--darkgray) 78%, var(--gray));
   --bwz-rl-pop-orig-border: #8fbdd0;
   --bwz-rl-pop-shadow: 0 12px 28px rgba(40, 24, 72, 0.16);
   --bwz-rl-q-badge-bg: #efe9fb;
+
+  /* 註釋原話（Stage E：沈穩石板青墨＋極淡襯底與細實底線，與褐色經文原句、一般黑字明顯區別但不搶眼） */
+  --bwz-rl-cquote-fg: #15525c;
+  --bwz-rl-cquote-bg: rgba(21, 82, 92, 0.055);
+  --bwz-rl-cquote-line: rgba(21, 82, 92, 0.28);
 }
 
 :root[saved-theme="dark"] {
@@ -97,12 +102,31 @@ $rl-muted: color-mix(in srgb, var(--darkgray) 78%, var(--gray));
   --bwz-rl-pop-orig-border: #3d7d98;
   --bwz-rl-pop-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
   --bwz-rl-q-badge-bg: rgba(166, 138, 249, 0.18);
+
+  --bwz-rl-cquote-fg: #9cd9e4;
+  --bwz-rl-cquote-bg: rgba(156, 217, 228, 0.08);
+  --bwz-rl-cquote-line: rgba(156, 217, 228, 0.34);
 }
 
 /* ---------- 1. 經文原句與經節小標籤 ---------- */
 
 .bwz-rl-quote {
   color: var(--bwz-rl-quote);
+}
+
+/* ---------- 1b. 註釋原話（Stage E） ---------- */
+.bwz-rl-cquote {
+  color: var(--bwz-rl-cquote-fg);
+  background-color: var(--bwz-rl-cquote-bg);
+  border-bottom: 1px solid var(--bwz-rl-cquote-line);
+  border-radius: 3px;
+  padding: 0.02em 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+mark .bwz-rl-cquote {
+  background-color: transparent;
 }
 
 /* 權重刻意高過 custom.scss 的 [saved-theme] article a.internal-link */
@@ -661,6 +685,13 @@ a.bwz-rl-pop-link {
   .bwz-rl-popover,
   button.bwz-rl-vx-btn {
     display: none !important;
+  }
+
+  .bwz-rl-cquote {
+    color: #0f4c5c;
+    background: transparent;
+    border-bottom: 1pt solid #475569;
+    padding: 0;
   }
 
   :is(div, blockquote).callout.bwz-rl-card.is-collapsed > .callout-content {

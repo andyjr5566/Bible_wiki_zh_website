@@ -84,12 +84,19 @@ const SKIPPED_INLINE_TAGS = new Set([
 ])
 
 const INLINE_CONTAINER_TAGS = new Set(["p", "li", "td"])
+const BLOCK_CHILD_TAGS = new Set(["p", "ul", "ol", "li", "blockquote", "div", "table", "section"])
+const ENTRY_COMMENTARY_HEADINGS = new Set(["定義", "主題發展"])
 const SAFE_QUOTE_INLINE_TAGS = new Set(["a", "em", "strong", "span", "b", "i", "sup", "sub", "mark"])
 const SAFE_ORIG_INLINE_TAGS = new Set(["em", "strong", "span", "code", "b", "i", "sup", "sub"])
+const SAFE_CQUOTE_DESCENT_TAGS = new Set(["em", "strong", "span", "b", "i", "sup", "sub", "mark"])
 
 const HEBREW_RE = /[\u0590-\u05FF]/u
 const GREEK_RE = /[\u0370-\u03FF\u1F00-\u1FFF]/u
 const STRONG_RE = /(?<![A-Za-z0-9])[HG]\d{1,4}[A-Z]?(?![A-Za-z0-9])/u
+const HANZI_RE = /[\u4E00-\u9FFF]/gu
+const LATIN_VERBATIM_RE = /[A-Za-z]{3,}/u
+const CLAUSE_PUNCT_RE = /[，、；：。！？…,.!?;:]/u
+const TERM_FOLLOW_RE = /^\s*(?:的(?:意思|原文字義|原文|含義|用法|重點|區別|譯法)|[這此]個?[詞字])/u
 
 // 依縮寫長度由長到短排序，避免「約」搶先吃掉「約一」「約二」「約三」
 const BOOK_TOKENS = [...BIBLE_BOOKS]
@@ -909,6 +916,512 @@ function transformSourcesInNode(
   return [{ ...node, children: nextChildren }]
 }
 
+/* ---------------------- 5. 註釋原話標記（Stage E） ---------------------- */
+
+interface CommentaryQuoteState {
+  seenSource: boolean
+  parenDepth: number
+  onResetPending?: () => void
+}
+
+function hasAnyReadingLayerClass(node: Element): boolean {
+  return (
+    hasClass(node, "bwz-rl-quote") ||
+    hasClass(node, "bwz-rl-vref") ||
+    hasClass(node, "bwz-rl-orig-chip") ||
+    hasClass(node, "bwz-rl-src") ||
+    hasClass(node, "bwz-rl-cquote") ||
+    hasClass(node, "strong-no")
+  )
+}
+
+function countHanziChars(text: string): number {
+  const m = text.match(HANZI_RE)
+  return m ? m.length : 0
+}
+
+function isPureEnglishVerbatim(text: string): boolean {
+  return LATIN_VERBATIM_RE.test(text) && !/[\u4E00-\u9FFF]/u.test(text)
+}
+
+function isShortTermMention(
+  plain: string,
+  hasPairedTranslation: boolean,
+  followingText: string,
+): boolean {
+  if (hasPairedTranslation || isPureEnglishVerbatim(plain)) return false
+  const trimmed = plain.trim()
+  if (!trimmed) return true
+  if ([...trimmed].length <= 3 && !CLAUSE_PUNCT_RE.test(trimmed)) return true
+  if (countHanziChars(trimmed) <= 4 && TERM_FOLLOW_RE.test(followingText)) return true
+  return false
+}
+
+function textStartsWithSentenceBreak(
+  text: string,
+  pos: number,
+): boolean {
+  const ch = text[pos]
+  return ch === "。" || ch === "！" || ch === "？" || ch === "!" || ch === "?"
+}
+
+/** 掃描「外面的純文字切片」：依句界重置，並在括號外命中來源名稱時標記 seenSource；若出現來源或句界亦通知重置待定引句。 */
+function updateStateFromOutsideText(
+  slice: string,
+  registry: SourceNamesRegistry,
+  state: CommentaryQuoteState,
+): void {
+  if (!slice) return
+  let segStart = 0
+  let i = 0
+  while (i < slice.length) {
+    const ch = slice[i]
+    if (ch === "（" || ch === "(") {
+      if (i > segStart) {
+        if (matchSourceNames(slice.slice(segStart, i), registry).length > 0) {
+          if (state.parenDepth === 0) state.seenSource = true
+          state.onResetPending?.()
+        }
+      }
+      state.parenDepth += 1
+      segStart = i + 1
+    } else if (ch === "）" || ch === ")") {
+      if (i > segStart) {
+        if (matchSourceNames(slice.slice(segStart, i), registry).length > 0) {
+          if (state.parenDepth === 0) state.seenSource = true
+          state.onResetPending?.()
+        }
+      }
+      state.parenDepth = Math.max(0, state.parenDepth - 1)
+      segStart = i + 1
+    } else if (state.parenDepth === 0 && textStartsWithSentenceBreak(slice, i)) {
+      state.seenSource = false
+      state.onResetPending?.()
+      segStart = i + 1
+    }
+    i += 1
+  }
+  if (slice.length > segStart) {
+    if (matchSourceNames(slice.slice(segStart), registry).length > 0) {
+      if (state.parenDepth === 0) state.seenSource = true
+      state.onResetPending?.()
+    }
+  }
+}
+
+/** 從「後面找成對的 」；若遇到未閉合的內部 「 或不安全元素就放棄。 */
+function findClosingCornerQuote(
+  children: readonly ElementContent[],
+  openIdx: number,
+  openOff: number,
+): InlinePosition | null {
+  let scanIdx = openIdx
+  let scanOff = openOff + 1
+  while (scanIdx < children.length) {
+    const node = children[scanIdx]
+    if (node.type === "text") {
+      for (let k = scanOff; k < node.value.length; k += 1) {
+        const ch = node.value[k]
+        if (ch === "「") return null
+        if (ch === "」") return { idx: scanIdx, off: k }
+      }
+    } else if (node.type === "element") {
+      if (
+        SKIPPED_INLINE_TAGS.has(node.tagName) ||
+        isMermaidElement(node) ||
+        hasClass(node, "bwz-rl-quote") ||
+        hasClass(node, "bwz-rl-vref") ||
+        hasClass(node, "bwz-rl-cquote") ||
+        !SAFE_QUOTE_INLINE_TAGS.has(node.tagName)
+      ) {
+        return null
+      }
+    } else {
+      return null
+    }
+    scanIdx += 1
+    scanOff = 0
+  }
+  return null
+}
+
+/** 從給定位置往後找成對的 （…），支援內部巢狀括號（如（出8:25、28））與連結。 */
+function findBalancedFullwidthParens(
+  children: readonly ElementContent[],
+  startIdx: number,
+  startOff: number,
+): { open: InlinePosition; close: InlinePosition } | null {
+  let idx = startIdx
+  let off = startOff
+
+  while (idx < children.length) {
+    const node = children[idx]
+    if (node.type !== "text") return null
+    while (off < node.value.length && (node.value[off] === " " || node.value[off] === "\t")) {
+      off += 1
+    }
+    if (off < node.value.length) break
+    idx += 1
+    off = 0
+  }
+
+  if (idx >= children.length) return null
+  const openNode = children[idx]
+  if (openNode.type !== "text" || openNode.value[off] !== "（") return null
+  const open: InlinePosition = { idx, off }
+
+  let depth = 1
+  let scanIdx = idx
+  let scanOff = off + 1
+  while (scanIdx < children.length) {
+    const node = children[scanIdx]
+    if (node.type === "text") {
+      for (let k = scanOff; k < node.value.length; k += 1) {
+        const ch = node.value[k]
+        if (ch === "（" || ch === "(") depth += 1
+        else if (ch === "）" || ch === ")") {
+          depth -= 1
+          if (depth === 0) return { open, close: { idx: scanIdx, off: k } }
+        }
+      }
+    } else if (node.type === "element") {
+      if (!SAFE_QUOTE_INLINE_TAGS.has(node.tagName) && !hasClass(node, "strong-no")) return null
+    } else {
+      return null
+    }
+    scanIdx += 1
+    scanOff = 0
+  }
+  return null
+}
+
+function collectFollowingText(
+  children: readonly ElementContent[],
+  idx: number,
+  off: number,
+): string {
+  let acc = ""
+  for (let i = idx; i < children.length && acc.length < 32; i += 1) {
+    const n = children[i]
+    if (n.type === "text") {
+      acc += i === idx ? n.value.slice(off) : n.value
+    } else if (n.type === "element") {
+      acc += nodeText(n)
+    }
+  }
+  return acc
+}
+
+/** 判斷句尾括號 （...） 裡第一個名稱是否為 yaml 來源名稱（含 .bwz-rl-src 或未標記原文案字）。 */
+function startsWithSourceInParens(
+  parenNodes: readonly ElementContent[],
+  registry: SourceNamesRegistry,
+): boolean {
+  for (const node of parenNodes) {
+    if (node.type === "text") {
+      const trimmed = node.value.trimStart()
+      if (!trimmed) continue
+      const matches = matchSourceNames(trimmed, registry)
+      return matches.some((m) => m.start === 0)
+    }
+    if (node.type === "element") {
+      if (hasClass(node, "bwz-rl-src")) return true
+      return false
+    }
+    return false
+  }
+  return false
+}
+
+/** 把同一句內、句尾括號來源之前且中間沒出現其他來源名稱的候選「…」一併標成註釋原話。 */
+function promotePrecedingSentenceQuotes(
+  out: ElementContent[],
+  pendingQuoteIndices: number[],
+): void {
+  if (pendingQuoteIndices.length === 0) return
+  for (const qIdx of pendingQuoteIndices) {
+    const existing = out[qIdx]
+    if (existing?.type === "element" && hasClass(existing, "bwz-rl-cquote-pending")) {
+      out[qIdx] = el("span", { className: ["bwz-rl-cquote"] }, existing.children)
+    }
+  }
+  pendingQuoteIndices.length = 0
+}
+
+function stripPendingQuotes(out: ElementContent[], pendingQuoteIndices: number[]): void {
+  for (let i = pendingQuoteIndices.length - 1; i >= 0; i -= 1) {
+    const qIdx = pendingQuoteIndices[i]
+    const n = out[qIdx]
+    if (n?.type === "element" && hasClass(n, "bwz-rl-cquote-pending")) {
+      // 由後往前還原成未包裹的原始子節點，避免 splice 位移影響前面索引
+      out.splice(qIdx, 1, ...n.children)
+    }
+  }
+  pendingQuoteIndices.length = 0
+}
+
+function transformCommentaryQuotesInChildren(
+  children: readonly ElementContent[],
+  registry: SourceNamesRegistry,
+  parentState?: CommentaryQuoteState,
+): ElementContent[] {
+  const out: ElementContent[] = []
+  const pendingQuoteIndices: number[] = []
+  const resetPending = () => stripPendingQuotes(out, pendingQuoteIndices)
+  const state: CommentaryQuoteState = parentState ?? {
+    seenSource: false,
+    parenDepth: 0,
+    onResetPending: resetPending,
+  }
+  const prevOnReset = parentState?.onResetPending
+  if (parentState) {
+    parentState.onResetPending = () => {
+      prevOnReset?.()
+      resetPending()
+    }
+  }
+  let emitIdx = 0
+  let emitOff = 0
+
+  const flushRawUpTo = (targetIdx: number, targetOff: number) => {
+    if (targetIdx < emitIdx || (targetIdx === emitIdx && targetOff <= emitOff)) return
+    let endIdx = targetIdx
+    let endOff = targetOff
+    if (endOff === 0) {
+      endIdx = targetIdx - 1
+      if (endIdx < emitIdx) return
+      const prevNode = children[endIdx]
+      endOff = prevNode.type === "text" ? prevNode.value.length : 1
+    }
+    const sliced = sliceInlineChildren(children, emitIdx, emitOff, endIdx, endOff)
+    for (const part of sliced) {
+      if (part.type === "text") {
+        updateStateFromOutsideText(part.value, registry, state)
+        out.push(part)
+      } else {
+        out.push(part)
+      }
+    }
+    emitIdx = targetIdx
+    emitOff = targetOff
+  }
+
+  let idx = 0
+  let off = 0
+  while (idx < children.length) {
+    const node = children[idx]
+    if (node.type === "text") {
+      let handled = false
+      for (let k = off; k < node.value.length; k += 1) {
+        if (node.value[k] !== "「") continue
+        // 先結算開引號之前的文字狀態，確認句中前面是否真有來源名稱
+        flushRawUpTo(idx, k)
+        const close = findClosingCornerQuote(children, idx, k)
+        if (!close) continue
+
+        const innerPlain = sliceInlineChildren(
+          children,
+          idx,
+          k + 1,
+          close.idx,
+          close.off,
+        )
+          .map(nodeText)
+          .join("")
+
+        let wrapEnd: InlinePosition = { idx: close.idx, off: close.off + 1 }
+        let hasPairedTranslation = false
+        let isScriptureRef = false
+        let trailingStartsWithSource = false
+
+        const trailingParens = findBalancedFullwidthParens(children, close.idx, close.off + 1)
+        if (trailingParens) {
+          const parenNodes = sliceInlineChildren(
+            children,
+            trailingParens.open.idx,
+            trailingParens.open.off + 1,
+            trailingParens.close.idx,
+            trailingParens.close.off,
+          )
+          const parenPlain = parenNodes.map(nodeText).join("")
+          if (startsWithSourceInParens(parenNodes, registry)) {
+            trailingStartsWithSource = true
+          } else if (
+            state.seenSource &&
+            isPureEnglishVerbatim(innerPlain) &&
+            /[\u4E00-\u9FFF]/u.test(parenPlain) &&
+            parseVerseReference(parenPlain) === null
+          ) {
+            wrapEnd = { idx: trailingParens.close.idx, off: trailingParens.close.off + 1 }
+            hasPairedTranslation = true
+          } else if (parseVerseReference(parenPlain) !== null) {
+            isScriptureRef = true
+          }
+        }
+
+        const shouldMark = state.parenDepth === 0 && (state.seenSource || trailingStartsWithSource)
+        const afterText = collectFollowingText(children, wrapEnd.idx, wrapEnd.off)
+        const invalidQuote =
+          isScriptureRef || isShortTermMention(innerPlain, hasPairedTranslation, afterText)
+        const qualifiesRetroactive = !invalidQuote && [...innerPlain.trim()].length >= 4
+
+        if (!shouldMark) {
+          const rawSlice = sliceInlineChildren(children, idx, k, close.idx, close.off + 1)
+          if (qualifiesRetroactive && state.parenDepth === 0) {
+            // 暫存同句候選（含散文隔開的多個「…」），若句尾括號出現來源且中間無別的來源才一併標記
+            pendingQuoteIndices.push(out.length)
+            out.push(el("span", { className: ["bwz-rl-cquote-pending"] }, rawSlice))
+          } else {
+            out.push(...rawSlice)
+          }
+          emitIdx = close.idx
+          emitOff = close.off + 1
+          idx = close.idx
+          off = close.off + 1
+          handled = true
+          break
+        }
+
+        if (invalidQuote) {
+          const skipped = sliceInlineChildren(children, idx, k, wrapEnd.idx, wrapEnd.off)
+          out.push(...skipped)
+          emitIdx = wrapEnd.idx
+          emitOff = wrapEnd.off
+          idx = wrapEnd.idx
+          off = wrapEnd.off
+          handled = true
+          break
+        }
+
+        if (trailingStartsWithSource) {
+          promotePrecedingSentenceQuotes(out, pendingQuoteIndices)
+        } else {
+          resetPending()
+        }
+
+        const wrappedNodes = sliceInlineChildren(children, idx, k, wrapEnd.idx, wrapEnd.off)
+        out.push(el("span", { className: ["bwz-rl-cquote"] }, wrappedNodes))
+        emitIdx = wrapEnd.idx
+        emitOff = wrapEnd.off
+        idx = wrapEnd.idx
+        off = wrapEnd.off
+        handled = true
+        break
+      }
+      if (!handled) {
+        idx += 1
+        off = 0
+      }
+    } else if (node.type === "element") {
+      flushRawUpTo(idx, 0)
+      if (hasClass(node, "bwz-rl-src")) {
+        if (state.parenDepth === 0) state.seenSource = true
+        // 中間出現來源名稱 → 清除前面的待定引句，避免跨來源誤認
+        state.onResetPending?.()
+        out.push(node)
+      } else if (
+        SKIPPED_INLINE_TAGS.has(node.tagName) ||
+        node.tagName === "a" ||
+        isMermaidElement(node) ||
+        hasAnyReadingLayerClass(node)
+      ) {
+        out.push(node)
+      } else if (BLOCK_CHILD_TAGS.has(node.tagName)) {
+        resetPending()
+        // 鬆散清單 <li> 底下的巢狀區塊獨立一句狀態，不跨越 <p>/<ul>
+        out.push({
+          ...node,
+          children: transformCommentaryQuotesInChildren(node.children, registry),
+        })
+      } else if (SAFE_CQUOTE_DESCENT_TAGS.has(node.tagName)) {
+        out.push({
+          ...node,
+          children: transformCommentaryQuotesInChildren(node.children, registry, state),
+        })
+      } else {
+        out.push(node)
+      }
+      idx += 1
+      off = 0
+      emitIdx = idx
+      emitOff = 0
+    } else {
+      flushRawUpTo(idx, 0)
+      out.push(node)
+      idx += 1
+      off = 0
+      emitIdx = idx
+      emitOff = 0
+    }
+  }
+
+  resetPending()
+  if (parentState) {
+    parentState.onResetPending = prevOnReset
+  }
+  for (let i = emitIdx; i < children.length; i += 1) {
+    const restNode = children[i]
+    if (restNode.type === "text") {
+      const from = i === emitIdx ? emitOff : 0
+      if (from < restNode.value.length) {
+        const tailText = restNode.value.slice(from)
+        updateStateFromOutsideText(tailText, registry, state)
+        out.push({ type: "text", value: tailText })
+      }
+    } else {
+      out.push(restNode)
+    }
+  }
+
+  return out
+}
+
+/** 條目頁只有「## 定義」與「## 主題發展」兩個段落適用註釋原話標記。 */
+export function selectEntryCommentaryRegions(root: Root): { start: number; end: number }[] {
+  const regions: { start: number; end: number }[] = []
+  let activeStart: number | null = null
+
+  for (let i = 0; i < root.children.length; i += 1) {
+    const node = root.children[i]
+    if (node?.type !== "element") continue
+    if (node.tagName === "h2") {
+      if (activeStart !== null) {
+        regions.push({ start: activeStart, end: i })
+        activeStart = null
+      }
+      const title = nodeText(node).replace(/\s+/gu, "").trim()
+      if (ENTRY_COMMENTARY_HEADINGS.has(title)) {
+        activeStart = i
+      }
+    } else if (node.tagName === "hr" && activeStart !== null) {
+      regions.push({ start: activeStart, end: i })
+      activeStart = null
+    }
+  }
+
+  if (activeStart !== null) {
+    regions.push({ start: activeStart, end: root.children.length })
+  }
+  return regions
+}
+
+function transformEntryCommentaryBlock(node: Element, registry: SourceNamesRegistry): Element {
+  if (isMermaidElement(node) || SKIPPED_INLINE_TAGS.has(node.tagName)) {
+    return node
+  }
+  if (INLINE_CONTAINER_TAGS.has(node.tagName)) {
+    return {
+      ...node,
+      children: transformCommentaryQuotesInChildren(node.children, registry),
+    }
+  }
+  const nextChildren = node.children.map((child) => {
+    if (child.type !== "element" || hasClass(child, "callout-title")) return child
+    return transformEntryCommentaryBlock(child, registry)
+  })
+  return { ...node, children: nextChildren }
+}
+
 /* ---------------------- 樹走訪整合 ---------------------- */
 
 function transformStudyBlock(
@@ -949,7 +1462,8 @@ function transformStudyBlock(
     for (const child of children) {
       withSources.push(...transformSourcesInNode(child, ctx.registry, usedEntries))
     }
-    return { ...node, children: withSources }
+    const withCommentaryQuotes = transformCommentaryQuotesInChildren(withSources, ctx.registry)
+    return { ...node, children: withCommentaryQuotes }
   }
 
   const nextChildren = node.children.map((child) => {
@@ -992,11 +1506,22 @@ function buildSourcesMetaElement(
 }
 
 /**
- * 對章節頁的「## 本章整理」執行建置時分層正文處理。
- * 非章節頁、沒有經文清單或沒有「本章整理」的頁面完全不動，回傳 false。
+ * 對章節頁的「## 本章整理」執行建置時分層正文處理，並對條目頁的「## 定義／## 主題發展」標記註釋原話。
+ * 其餘頁面或沒有對應段落的頁面完全不動，回傳 false。
  */
 export function applyReadingLayers(root: Root, ctx: ReadingLayersContext): boolean {
-  if (parseBookSlug(ctx.slug)?.kind !== "chapter") return false
+  if (parseBookSlug(ctx.slug)?.kind !== "chapter") {
+    const entryRegions = selectEntryCommentaryRegions(root)
+    if (entryRegions.length === 0) return false
+    for (const region of entryRegions) {
+      for (let i = region.start + 1; i < region.end; i += 1) {
+        const node = root.children[i]
+        if (node?.type !== "element") continue
+        root.children[i] = transformEntryCommentaryBlock(node, ctx.registry)
+      }
+    }
+    return true
+  }
 
   const { descriptions, rootIndices } = describeChapterNodes(root)
   const region = selectStudyRegion(descriptions)

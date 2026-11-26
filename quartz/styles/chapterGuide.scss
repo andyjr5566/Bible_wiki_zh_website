@@ -186,6 +186,15 @@ html[data-bwz-guide] .sidebar.right > .toc {
     font-family: $guide-serif;
   }
 
+  &.is-cquote {
+    color: var(--bwz-rl-cquote-fg, #15525c);
+    background: var(--bwz-rl-cquote-bg, rgba(21, 82, 92, 0.055));
+    border-bottom: 1px solid var(--bwz-rl-cquote-line, rgba(21, 82, 92, 0.28));
+    border-radius: 3px;
+    padding: 0.02rem 0.25rem;
+    font-family: $guide-serif;
+  }
+
   &.is-src {
     color: var(--bwz-rl-src-fg, #523d86);
     border-bottom: 1.5px dashed var(--bwz-rl-src-line, #8a7bb8);

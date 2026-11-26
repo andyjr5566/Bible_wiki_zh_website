@@ -121,6 +121,7 @@ function collectLegendFlags(dom: ChapterDom): LegendFlags {
 
   return {
     hasQuotes: Boolean(scope.querySelector(".bwz-rl-quote, .bwz-rl-vref")),
+    hasCommentaryQuotes: Boolean(scope.querySelector(".bwz-rl-cquote")),
     hasSources: Boolean(scope.querySelector(".bwz-rl-src")),
     hasOrigChips: origChips.length > 0,
     hasCards: Boolean(scope.querySelector(".bwz-rl-card")),

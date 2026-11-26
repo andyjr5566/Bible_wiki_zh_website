@@ -13,6 +13,7 @@ name: Deploy Quartz to GitHub Pages
       - "quartz.lock.json"
       - "scripts/semantic-index/**"
       - ".github/workflows/deploy.yml"
+      - ".github/scripts/**"
   workflow_dispatch:
 
 permissions:

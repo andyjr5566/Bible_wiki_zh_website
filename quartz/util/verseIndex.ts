@@ -16,33 +16,91 @@ interface VerseIndex {
   chapters: IndexedChapter[]
 }
 
-export type OriginalLexiconTuple = [
-  lemma: string,
-  translit: string,
-  zhGloss: string,
-  topRenderings: string[],
-]
+/** [lemma, translit]（中文意思不放在資料裡，由前端用譯法統計組）。 */
+export type OriginalLexiconTuple = [lemma: string, translit: string]
 
 export interface VerseOriginalEntryLink {
   slug: string
   title: string
-  isOriginalEntry: boolean
+  /** 條目的主詞就是這個原文字（tier 1、2）：標「原文條目」；否則標「相關條目」。 */
+  isHeadword: boolean
 }
 
+/**
+ * [總處數（含和合本未直接譯出）, 未直接譯出的處數, 譯法 [[譯法, 處數], …]]
+ * 譯法依處數由多到少，同處數依第一次出現的順序。Strong 編號是字義鍵「.」之前的部分。
+ */
+export type VerseOriginalSense = [
+  total: number,
+  none: number,
+  renderings: Array<[rendering: string, count: number]>,
+]
+
+/** static/verseOriginal/index.json */
 export interface VerseOriginalIndex {
-  version: 1
+  version: 2
   attribution: string
+  shards: number
+  senses: Record<string, VerseOriginalSense>
   lexicon: Record<string, OriginalLexiconTuple>
-  chapters: Record<string, Record<string, Array<[strongId: string, rendering: string]>>>
   entries: Record<string, VerseOriginalEntryLink>
   entryAliases: Record<string, string[]>
 }
 
-interface RawOriginalSource {
-  version: 1
+/** static/verseOriginal/s-<n>.json：只含有譯法的處（空譯法的處數記在 index 的 none）。 */
+export type VerseOriginalShard = Record<
+  string,
+  Array<[slug: string, verse: number, rendering: string]>
+>
+
+export interface VerseOriginalBuild {
+  index: VerseOriginalIndex
+  shards: VerseOriginalShard[]
+}
+
+export interface RawOriginalSource {
+  version: 2
   attribution: string
   lexicon: Record<string, OriginalLexiconTuple>
-  chapters: Record<string, Record<string, Array<[string, string]>>>
+  chapters: Record<
+    string,
+    Record<string, Array<[sid: string, rendering: string, senseKey: string]>>
+  >
+}
+
+export const SHARD_TARGET_BYTES = 150 * 1024
+const MAX_SHARDS = 4096
+
+/**
+ * FNV-1a 32 位元，對字串的 UTF-16 code unit 逐個計算。前端分片必須用完全相同的函式。
+ */
+export function fnv1a32(text: string): number {
+  let hash = 2166136261
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i)
+    hash = Math.imul(hash, 16777619) >>> 0
+  }
+  return hash >>> 0
+}
+
+export function shardOf(senseKey: string, shards: number): number {
+  return fnv1a32(senseKey) % shards
+}
+
+/** 由內容大小決定分片數：先用總大小估，再增加到每片都不超過目標。 */
+export function chooseShardCount(
+  senseBytes: ReadonlyMap<string, number>,
+  targetBytes = SHARD_TARGET_BYTES,
+): number {
+  let total = 0
+  for (const n of senseBytes.values()) total += n
+  let shards = Math.max(1, Math.ceil(total / targetBytes))
+  for (; shards < MAX_SHARDS; shards++) {
+    const sizes = new Array<number>(shards).fill(2)
+    for (const [key, n] of senseBytes) sizes[shardOf(key, shards)]! += n + 1
+    if (Math.max(...sizes) <= targetBytes) return shards
+  }
+  return MAX_SHARDS
 }
 
 const MAX_VERSE_ITEMS = 200
@@ -188,28 +246,77 @@ export function buildVerseIndex(content: readonly ProcessedContent[]): {
   return { index: { version: 1, chapters: sorted.map(({ row }) => row) }, malformed }
 }
 
+function chapterOrder(slug: string): [number, number] {
+  const ref = parseBookSlug(slug)
+  return [ref?.book.num ?? 999, ref?.chapter ?? 0]
+}
+
 /**
- * Crop the 66-book original-language index strictly to published chapters and
- * attach any already-published `link_folder` original-language / study entries.
+ * Crop the original-language data strictly to published chapters, group it by
+ * sense, shard it, and attach already-published `link_folder` entries.
  */
 export function buildVerseOriginalIndex(
   content: readonly ProcessedContent[],
   indexedChapterSlugs: ReadonlySet<string>,
   sourceOverride?: RawOriginalSource,
-): VerseOriginalIndex {
+): VerseOriginalBuild {
   const source = sourceOverride ?? loadOriginalSource()
-  const chapters: Record<string, Record<string, Array<[string, string]>>> = {}
   const activeStrongs = new Set<string>()
+  interface SenseAcc {
+    sid: string
+    none: number
+    total: number
+    counts: Map<string, number>
+    verses: Array<[string, number, string]>
+  }
+  const acc = new Map<string, SenseAcc>()
 
-  for (const slug of Array.from(indexedChapterSlugs).sort()) {
+  const slugs = Array.from(indexedChapterSlugs).sort((a, b) => {
+    const [ab, ac] = chapterOrder(a)
+    const [bb, bc] = chapterOrder(b)
+    return ab - bb || ac - bc || a.localeCompare(b)
+  })
+  for (const slug of slugs) {
     const chData = source.chapters[slug]
     if (!chData) continue
-    chapters[slug] = chData
-    for (const pairs of Object.values(chData)) {
-      for (const [sid] of pairs) {
+    const verseNumbers = Object.keys(chData)
+      .map(Number)
+      .sort((a, b) => a - b)
+    for (const verse of verseNumbers) {
+      for (const [sid, rendering, senseKey] of chData[String(verse)]!) {
         activeStrongs.add(sid)
+        let row = acc.get(senseKey)
+        if (!row) {
+          row = { sid, none: 0, total: 0, counts: new Map(), verses: [] }
+          acc.set(senseKey, row)
+        }
+        row.total += 1
+        if (!rendering) {
+          row.none += 1
+          continue
+        }
+        row.counts.set(rendering, (row.counts.get(rendering) ?? 0) + 1)
+        row.verses.push([slug, verse, rendering])
       }
     }
+  }
+
+  const senses: Record<string, VerseOriginalSense> = {}
+  const senseBytes = new Map<string, number>()
+  const senseKeys = Array.from(acc.keys()).sort()
+  for (const key of senseKeys) {
+    const row = acc.get(key)!
+    // Map 保留第一次出現的順序；Array.sort 是穩定排序，同處數維持該順序
+    const renderings = Array.from(row.counts.entries()).sort((x, y) => y[1] - x[1])
+    senses[key] = [row.total, row.none, renderings]
+    senseBytes.set(key, Buffer.byteLength(JSON.stringify([key, row.verses])))
+  }
+
+  const shardCount = chooseShardCount(senseBytes)
+  const shards: VerseOriginalShard[] = Array.from({ length: shardCount }, () => ({}))
+  for (const key of senseKeys) {
+    const row = acc.get(key)!
+    if (row.verses.length > 0) shards[shardOf(key, shardCount)]![key] = row.verses
   }
 
   const lexicon: Record<string, OriginalLexiconTuple> = {}
@@ -310,7 +417,7 @@ export function buildVerseOriginalIndex(
     entries[sid] = {
       slug: best.slug,
       title: best.title,
-      isOriginalEntry: best.isOriginalEntry,
+      isHeadword: best.tier <= 2,
     }
   }
 
@@ -320,12 +427,16 @@ export function buildVerseOriginalIndex(
   }
 
   return {
-    version: 1,
-    attribution: source.attribution,
-    lexicon,
-    chapters,
-    entries,
-    entryAliases,
+    index: {
+      version: 2,
+      attribution: source.attribution,
+      shards: shardCount,
+      senses,
+      lexicon,
+      entries,
+      entryAliases,
+    },
+    shards,
   }
 }
 

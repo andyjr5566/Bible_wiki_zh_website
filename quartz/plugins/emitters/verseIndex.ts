@@ -11,7 +11,7 @@ export const VerseIndex: QuartzEmitterPlugin = () => {
       console.warn(`[verse-index] 未索引 ${slug}：找不到完整的經文清單`)
     }
     const indexedSlugs = new Set(index.chapters.map((chapter) => chapter.slug))
-    const originalIndex = buildVerseOriginalIndex(content, indexedSlugs)
+    const original = buildVerseOriginalIndex(content, indexedSlugs)
 
     const hintsSource = loadVerseSearchHintsSource()
     const hints = buildVerseSearchHints(index.chapters, hintsSource.related, hintsSource.pins)
@@ -25,10 +25,20 @@ export const VerseIndex: QuartzEmitterPlugin = () => {
       }),
       await write({
         ctx,
-        slug: "static/verseOriginalIndex" as FullSlug,
+        slug: "static/verseOriginal/index" as FullSlug,
         ext: ".json",
-        content: JSON.stringify(originalIndex),
+        content: JSON.stringify(original.index),
       }),
+      ...(await Promise.all(
+        original.shards.map((shard, n) =>
+          write({
+            ctx,
+            slug: `static/verseOriginal/s-${n}` as FullSlug,
+            ext: ".json",
+            content: JSON.stringify(shard),
+          }),
+        ),
+      )),
       await write({
         ctx,
         slug: "static/verseSearchHints" as FullSlug,

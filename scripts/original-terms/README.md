@@ -60,4 +60,4 @@ python -m unittest discover scripts/original-terms
 - `--emit-site-data` 會把 `verse-original-terms.json`（`version: 2`）寫到 `quartz/data/`：`lexicon` 是 `{Strong: [lemma, 音譯]}`、`chapters` 是 `{章 slug: {節: [[Strong, 譯法, 字義鍵], …]}}`，譯法可為 `""`（和合本未直接譯出）。
 - AI 判讀的採用結果存在 `data/ai-decisions.jsonl`（鍵是 MACULA 的 `xml:id`，值是和合本原字；每筆仍會在重建時驗證是經文中未被用掉的連續原字）。有模型輸出（`--ai-dir`）時由模型結果重寫這個檔；沒有時直接用它重建，**不需呼叫模型**：重跑同一指令（不給 `--ai-dir` 的批次結果）會得到相同的資料。
 - 網站輸出由 `quartz/util/verseIndex.ts` 與 `quartz/plugins/emitters/verseIndex.ts` 產生：`static/verseOriginal/index.json` 與分片 `static/verseOriginal/s-<n>.json`（FNV-1a 32 位元雜湊，見該檔的 `fnv1a32`／`shardOf`）。
-- `scripts/build-verse-compat.py` 的 emit 模式仍會寫出舊格式（v1）的同名檔案，**不要再用它覆蓋 `quartz/data/verse-original-terms.json`**。
+- `scripts/build-verse-compat.py` 的 emit 模式已停用舊格式原文資料的輸出（2026-11-28），只寫 `compatData.ts`；`quartz/data/verse-original-terms.json` 只由這裡產生。

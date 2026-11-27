@@ -4,8 +4,10 @@ audit.py - step 2 of the verse-compat pipeline (candidates -> audit -> emit).
 
 Reads the candidate JSONs written by `build-verse-compat.py --mode candidates`, the Unihan
 cache, the read-only raw_scripture and the hand-curated overlay `curated.json` (this folder), and
-writes `audited_rules.json` and `verse_original_terms_approved.json` into --out-dir
-(the same dir that `--mode emit --approved-dir` later reads).
+writes `audited_rules.json` into --out-dir (the same dir that `--mode emit --approved-dir`
+later reads). The old original-language layer below is kept only for its statistics; it no longer
+writes `verse_original_terms_approved.json` (the site's original-language data now comes from
+scripts/original-terms/, see dev-notes/original-terms/).
 
 Usage:
   python scripts/verse-compat/audit.py --scripture-root <root> --cache-dir <cache> --candidates-dir <dir> [--out-dir <dir>]
@@ -1511,14 +1513,10 @@ def run(BASE: str, CACHE: str, RAW_DIR: str, OUT: str, CURATED: str) -> None:
     with open(out_json_path, "w", encoding="utf-8") as f:
         json.dump(audited_rules, f, ensure_ascii=False, indent=2)
 
-    # Also write active_1to1 and approved 66-book verse-original-terms JSON for --mode emit
+    # Also write active_1to1 for --mode emit
     audited_rules["active1To1CharFoldMap"] = dict(sorted(active_1to1.items()))
     with open(out_json_path, "w", encoding="utf-8") as f:
         json.dump(audited_rules, f, ensure_ascii=False, indent=2)
-
-    approved_terms_path = os.path.join(OUT, "verse_original_terms_approved.json")
-    with open(approved_terms_path, "w", encoding="utf-8") as f:
-        json.dump(payload_all, f, ensure_ascii=False, separators=(",", ":"))
 
     # Re-parse to guarantee 100% clean JSON
     with open(out_json_path, "r", encoding="utf-8") as f:

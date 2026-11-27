@@ -14,14 +14,15 @@ Modes:
   (step 2, separate script) scripts/verse-compat/audit.py
       Reads the candidate JSONs + Unihan.zip + raw_scripture + the hand-curated overlay
       scripts/verse-compat/curated.json and writes audited_rules.json and
-      verse_original_terms_approved.json. Hand-edited bridge rules live in BRIDGE_TERMS in audit.py.
+      (legacy statistics only). Hand-edited bridge rules live in BRIDGE_TERMS in audit.py.
       Example:
         python scripts/verse-compat/audit.py --scripture-root <scripture-root> --cache-dir <cache-dir> --candidates-dir <out-dir>
 
   --mode emit
       Consumes audited/approved compatibility rules JSON from `--approved-dir` and writes:
         - `plugins/semantic-search/src/data/compatData.ts`
-        - `quartz/data/verse-original-terms.json`
+      It no longer writes `quartz/data/verse-original-terms.json`: since 2026-11-28 that file is
+      produced by `scripts/original-terms/` (MACULA-based, format v2). See dev-notes/original-terms/.
       Example:
         python scripts/build-verse-compat.py --mode emit --scripture-root <scripture-root> --approved-dir <out-dir>
 
@@ -32,7 +33,7 @@ Full chain (steps 1 -> 2 -> 3; same <out-dir> throughout; add --emit-root <dir> 
 
 Note: emit writes unformatted TS; the committed compatData.ts is prettier-formatted (the plugin's
 prettier config, semicolons on), so run `npx prettier --write plugins/semantic-search/src/data/compatData.ts`
-afterwards. verse-original-terms.json is byte-identical without formatting.
+afterwards.
 
 Paths (no machine-specific defaults are built in; a missing required path is a usage error):
   --repo-root       default: the repo containing this script (parent of scripts/)
@@ -40,7 +41,7 @@ Paths (no machine-specific defaults are built in; a missing required path is a u
   --cache-dir       env VERSE_COMPAT_CACHE_DIR       (required in candidates mode)
   --out-dir         env VERSE_COMPAT_OUT_DIR         (required in candidates mode)
   --approved-dir    default: --out-dir
-  --emit-root       emit mode only: write compatData.ts / verse-original-terms.json under this root
+  --emit-root       emit mode only: write compatData.ts under this root
                     (same relative layout as the repo) instead of --repo-root
 
 Inputs and how to obtain them
@@ -2453,22 +2454,19 @@ def run_candidates_mode(
 
 def run_emit_mode(repo_root: Path, scripture_root: Path, approved_dir: Path, emit_root: Path | None = None) -> None:
     """
-    Phase 2 emitter: reads audited `audited_rules.json` + `verse_original_terms_approved.json`
-    from `--approved-dir` and writes:
-      - `plugins/semantic-search/src/data/compatData.ts`
-      - `quartz/data/verse-original-terms.json`
+    Phase 2 emitter: reads audited `audited_rules.json` from `--approved-dir` and writes
+    `plugins/semantic-search/src/data/compatData.ts`.
+
+    The original-language data (`quartz/data/verse-original-terms.json`) is NOT written here any
+    more; it comes from `scripts/original-terms/` (MACULA-based v2). Writing the old v1 file would
+    overwrite the v2 data the site uses.
     """
     assert_not_inside_readonly(repo_root, scripture_root)
     emit_root = emit_root or repo_root
     rules_path = approved_dir / "audited_rules.json"
-    terms_path = approved_dir / "verse_original_terms_approved.json"
     if not rules_path.exists():
         raise FileNotFoundError(
             f"Missing audited rules file: {rules_path}. Complete Phase 1 audit & user approval before running --mode emit."
-        )
-    if not terms_path.exists():
-        raise FileNotFoundError(
-            f"Missing approved original-terms file: {terms_path}. Complete Phase 1 audit & user approval before running --mode emit."
         )
 
     rules = json.loads(rules_path.read_text(encoding="utf-8"))
@@ -2518,15 +2516,7 @@ def run_emit_mode(repo_root: Path, scripture_root: Path, approved_dir: Path, emi
         "",
     ]
     compat_ts_path.write_text("\n".join(ts_lines), encoding="utf-8")
-
-    out_terms_path = emit_root / "quartz" / "data" / "verse-original-terms.json"
-    out_terms_path.parent.mkdir(parents=True, exist_ok=True)
-    terms_payload = json.loads(terms_path.read_text(encoding="utf-8"))
-    out_terms_path.write_text(
-        json.dumps(terms_payload, ensure_ascii=False, separators=(",", ":")),
-        encoding="utf-8",
-    )
-    print(f"Emitted {compat_ts_path} ({compat_ts_path.stat().st_size:,} B) and {out_terms_path} ({out_terms_path.stat().st_size:,} B)")
+    print(f"Emitted {compat_ts_path} ({compat_ts_path.stat().st_size:,} B)")
 
 
 def _env_path(name: str) -> Path | None:

@@ -8,7 +8,7 @@
 
 ## 現在的資料為什麼會錯（2026-11-27 追查）
 
-目前的 `quartz/data/verse-original-terms.json` 由 `scripts/build-verse-compat.py` + `scripts/verse-compat/audit.py` 產生，來源是 CrossWire 的 ChiUn 模組（資料來源欄：信望愛 FHL）。
+（以下為 2026-11-27 改版前的狀況；2026-11-28 起這個檔案改由 `scripts/original-terms/` 產生，舊程式的原文資料輸出已停用。）當時的 `quartz/data/verse-original-terms.json` 由 `scripts/build-verse-compat.py` + `scripts/verse-compat/audit.py` 產生，來源是 CrossWire 的 ChiUn 模組（資料來源欄：信望愛 FHL）。
 
 - **信望愛的標法是「編號標在一段中文後面」**，編號涵蓋從上一個編號到這裡的全部文字，例如 `我做<H6213>這<H2088>事是心<H3824>正<H8537>`。中間沒有自己編號的字（「事」「是」「的時候」）會被併進下一個編號。信望愛目前線上 API 的資料還是這樣。
 - **原文有、和合本沒譯出的字**，編號會被掛在旁邊的詞上，例如王上 11:4 `大衛<H1732><H9003><H3824>`（原文「像他父親大衛的心」，和合本沒譯「心」）。

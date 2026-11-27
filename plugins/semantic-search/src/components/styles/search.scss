@@ -476,7 +476,7 @@
   font-size: 0.85em;
 }
 
-.search .search-original-skipped {
+.search .search-space .search-original-skipped {
   padding: 0.5em 1em;
   font-size: 0.8em;
   opacity: 0.85;
@@ -1211,6 +1211,15 @@
   margin-bottom: 0.65rem;
 }
 
+.search .search-section-header .search-original-help {
+  color: var(--secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
 .search .search-verse-row .result-card {
   border: 0 !important;
   padding: 0.7rem 0.9rem;
@@ -1281,96 +1290,61 @@
   line-height: 1.5;
 }
 
-/* 原文研讀區塊：附在經文結果之後 */
-.search .search-original-study {
+/* 換個譯法的相關經文：一個原文詞（＋意思）一張卡 */
+.search .search-space .search-original-study {
   margin: 0.25rem 0 0;
   padding: 0;
 }
 
-.search .search-original-group {
-  margin: 0 0.75rem 0.65rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 8px;
-  background: var(--light);
-  overflow: hidden;
+.search .search-space .search-original-scope {
+  margin: -0.3rem 0.9rem 0.6rem;
+  color: var(--gray);
+  font-size: 0.8rem;
 }
 
-.search .search-original-group > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.75rem;
-  padding: 0.6rem 0.8rem;
-  cursor: pointer;
+.search .search-space .search-original-card {
+  margin: 0 0.75rem 0.8rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--lightgray);
+  border-inline-start: 4px solid var(--secondary);
+  border-radius: 10px;
+  background: var(--light);
   color: var(--dark);
   font-size: 0.9rem;
-  line-height: 1.45;
-  list-style: none;
-}
-
-.search .search-original-group > summary::-webkit-details-marker {
-  display: none;
-}
-
-.search .search-original-summary-main {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.5rem;
+  line-height: 1.55;
   min-width: 0;
 }
 
-.search .search-original-summary-main::before {
-  content: "▸";
-  display: inline-block;
+.search .search-space .search-original-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+}
+
+.search .search-space .search-original-lemma {
+  font-family: "SBL Hebrew", "Ezra SIL", "Times New Roman", serif;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  unicode-bidi: isolate;
+}
+
+.search .search-space .search-original-translit {
   color: var(--gray);
-  font-size: 0.95em;
-  transition: transform 0.15s ease;
+  font-size: 0.88rem;
 }
 
-.search .search-original-group[open] > summary .search-original-summary-main::before {
-  transform: rotate(90deg);
-}
-
-.search .search-original-lemma {
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--dark);
-}
-
-.search .search-original-translit {
-  color: var(--gray);
-  font-size: 0.84rem;
-}
-
-.search .search-original-renderings {
-  display: inline-block;
-  padding: 0.08rem 0.55rem;
-  border: 1px solid var(--lightgray);
+.search .search-space .search-original-use {
+  padding: 0.05rem 0.65rem;
   border-radius: 999px;
-  background: var(--light);
-  color: var(--darkgray);
-  font-size: 0.78rem;
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light));
+  color: var(--secondary);
+  font-size: 0.86rem;
+  font-weight: 600;
 }
 
-.search .search-original-count {
-  color: var(--gray);
-  font-size: 0.82rem;
-}
-
-.search .search-original-group[open] > summary {
-  border-bottom: 1px solid var(--lightgray);
-  background: color-mix(in srgb, var(--secondary) 6%, var(--light));
-}
-
-.search .search-original-body {
-  border-inline-start: 3px solid var(--secondary);
-}
-
-.search .search-original-entry-link {
-  display: inline-block;
-  margin: 0;
+.search .search-space .search-original-entry-link {
+  margin-inline-start: auto;
   color: var(--secondary);
   font-size: 0.82rem;
   font-weight: 600;
@@ -1378,34 +1352,212 @@
   overflow-wrap: anywhere;
 }
 
-.search .search-original-entry-link:hover,
-.search .search-original-entry-link:focus-visible {
+.search .search-space .search-original-entry-link:hover,
+.search .search-space .search-original-entry-link:focus-visible {
   color: var(--tertiary);
   text-decoration: underline;
 }
 
-.search .search-original-rendering {
-  display: inline-block;
-  margin-inline-start: 0.4rem;
-  padding: 0.05rem 0.45rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 999px;
-  color: var(--darkgray);
-  font-size: 0.75rem;
-  font-weight: 400;
-  vertical-align: middle;
+.search .search-space .search-original-label {
+  margin: 0.65rem 0 0.3rem;
+  color: var(--gray);
+  font-size: 0.82rem;
 }
 
-.search .search-original-more,
-.search .search-original-credit {
-  margin: 0;
-  padding: 0.4rem 0.8rem;
+.search .search-space .search-original-bar {
+  display: flex;
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+}
+
+.search .search-space .search-original-bar > span {
+  display: block;
+  height: 100%;
+}
+
+.search .search-space .search-original-bar > .is-even {
+  background: color-mix(in srgb, var(--secondary) 35%, var(--light));
+}
+
+.search .search-space .search-original-bar > .is-odd {
+  background: color-mix(in srgb, var(--secondary) 20%, var(--light));
+}
+
+.search .search-space .search-original-bar > .is-selected {
+  background: var(--secondary);
+}
+
+.search .search-space .search-original-bar > .is-none {
+  background: repeating-linear-gradient(135deg, var(--lightgray) 0 3px, var(--light) 3px 6px);
+}
+
+.search .search-space .search-original-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+
+.search .search-space .search-original-chip,
+.search .search-space .search-original-btn,
+.search .search-space .search-original-context {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 2rem;
+  padding: 0.1rem 0.7rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 999px;
+  background: var(--light);
+  color: var(--dark);
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.search .search-space .search-original-chip.is-query {
+  border-style: dashed;
+  color: var(--darkgray);
+}
+
+.search .search-space .search-original-chip[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light));
+  border-color: var(--secondary);
+  color: var(--secondary);
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 var(--secondary);
+}
+
+.search .search-space .search-original-chip-count {
+  color: var(--gray);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.search .search-space .search-original-btn,
+.search .search-space .search-original-context {
+  border-radius: 8px;
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.search .search-space .search-original-btn.is-ghost {
+  border-color: var(--lightgray);
+  color: var(--darkgray);
+}
+
+.search .search-space .search-original-chip:hover,
+.search .search-space .search-original-btn:hover,
+.search .search-space .search-original-context:hover {
+  background: color-mix(in srgb, var(--secondary) 8%, var(--light));
+}
+
+.search .search-space .search-original-chip:focus-visible,
+.search .search-space .search-original-btn:focus-visible,
+.search .search-space .search-original-context:focus-visible,
+.search .search-space .search-original-ref:focus-visible {
+  outline: 2px solid var(--tertiary);
+  outline-offset: 2px;
+}
+
+.search .search-space .search-original-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.search .search-space .search-original-verse {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  min-width: 0;
+}
+
+.search .search-space .search-original-verse-tag {
   color: var(--gray);
   font-size: 0.78rem;
 }
 
-.search .search-original-credit {
-  border-top: 1px solid var(--lightgray);
+.search .search-space .search-original-verse-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.search .search-space .search-original-ref {
+  margin-inline-end: 0.2rem;
+  color: var(--dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.search .search-space .search-original-ref:hover {
+  text-decoration: underline;
+}
+
+/* 對應字：粗體加底線，不只靠顏色 */
+.search .search-space .search-original-hit {
+  background: none;
+  color: var(--secondary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--tertiary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.search .search-space .search-original-acts,
+.search .search-space .search-original-others {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.search .search-space .search-original-others {
+  color: var(--gray);
+  font-size: 0.84rem;
+}
+
+.search .search-space .search-original-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.search .search-space .search-original-list > div {
+  padding: 0.35rem 0.6rem;
+  border-inline-start: 2px solid var(--lightgray);
+}
+
+.search .search-space .search-original-note {
+  margin: 0.55rem 0 0;
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+.search .search-space .search-original-credit {
+  margin: 0;
+  padding: 0.4rem 0.9rem 0.6rem;
+  color: var(--gray);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+@media all and (min-width: 900px) {
+  .search .search-space .search-original-pair {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  }
 }
 
 /* 其他譯本釘選的經節：與原文研讀區塊同樣接在直接命中之後 */
@@ -1421,19 +1573,4 @@
   color: var(--gray);
   font-size: 0.8rem;
   line-height: 1.5;
-}
-
-@media all and (max-width: 800px) {
-  .search .search-original-study {
-    padding: 0;
-  }
-
-  .search .search-original-group > summary {
-    padding: 0.75rem 0.6rem;
-  }
-
-  .search .search-original-entry-link {
-    margin-inline: 0.6rem;
-    padding: 0.4rem 0;
-  }
 }

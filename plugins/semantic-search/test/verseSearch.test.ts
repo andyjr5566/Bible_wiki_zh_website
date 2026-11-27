@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  findOriginalLanguageStudyGroups,
   getVerseMatchRanges,
   getVerseSearchSuggestions,
   parseVerseSearchHints,
@@ -9,7 +8,6 @@ import {
   searchVersesWithRewrite,
   selectPinnedVerses,
   type RelatedWordTable,
-  type VerseOriginalIndex,
 } from "../src/components/verseSearch";
 
 const genesis = {
@@ -249,61 +247,5 @@ describe("Pinned verses", () => {
       related: { 意念: ["意中"] },
       pins: [{ query: "意念", id: "a#v1", cuv: "意中" }],
     });
-  });
-});
-
-describe("Original-language study groups", () => {
-  const rows = prepareVerseIndex({
-    version: 1,
-    chapters: [
-      {
-        slug: "01-創世記/第6章",
-        book: "創世記",
-        chapter: 6,
-        start: 5,
-        verses: ["所思想的盡都是惡，"],
-      },
-      {
-        slug: "05-申命記/第31章",
-        book: "申命記",
-        chapter: 31,
-        start: 21,
-        verses: ["他們所懷的意念我都知道了。"],
-      },
-    ],
-  });
-  const index: VerseOriginalIndex = {
-    version: 1,
-    attribution: "STEP Bible",
-    lexicon: { H3336: ["יֵצֶר", "yetser", "意念、傾向", ["意念", "思想"]] },
-    chapters: {
-      "01-創世記/第6章": { "5": [["H3336", "思想"]] },
-      "05-申命記/第31章": { "21": [["H3336", "意念"]] },
-    },
-    entries: { H3336: { slug: "link_folder/原文/yetser", title: "יֵצֶר", isOriginalEntry: true } },
-  };
-
-  it("shows other renderings when direct hits exist", () => {
-    const direct = new Set(["05-申命記/第31章#v21"]);
-    const [group] = findOriginalLanguageStudyGroups(rows, index, "意念", direct);
-    expect(group?.hits.map(({ verse, rendering }) => [verse.id, rendering])).toEqual([
-      ["01-創世記/第6章#v5", "思想"],
-    ]);
-    expect(group?.autoOpen).toBe(false);
-    expect(group?.entryLink?.isOriginalEntry).toBe(true);
-  });
-
-  it("keeps everything and opens the group when there are no direct hits", () => {
-    const [group] = findOriginalLanguageStudyGroups(rows, index, "意念", new Set());
-    expect(group?.hits).toHaveLength(2);
-    expect(group?.autoOpen).toBe(true);
-  });
-
-  it("returns nothing for missing index, long, or unknown queries", () => {
-    expect(findOriginalLanguageStudyGroups(rows, null, "意念", new Set())).toEqual([]);
-    expect(
-      findOriginalLanguageStudyGroups(rows, index, "完全不相關的長句子查詢", new Set()),
-    ).toEqual([]);
-    expect(findOriginalLanguageStudyGroups(rows, index, "不存在", new Set())).toEqual([]);
   });
 });

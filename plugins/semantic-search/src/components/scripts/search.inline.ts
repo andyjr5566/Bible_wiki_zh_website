@@ -11,20 +11,45 @@ import {
 import { createIndexLoader } from "../searchFlow";
 import { parseScriptureRef } from "../scriptureRef";
 import {
-  ORIGINAL_STUDY_ATTRIBUTION,
-  findOriginalLanguageStudyGroups,
+  getVerseMap,
   getVerseMatchRanges,
   normalizeVerseSearchTerm,
   parseVerseSearchHints,
   prepareVerseIndex,
   searchVersesWithRewrite,
   selectPinnedVerses,
-  type OriginalStudyGroup,
   type PinnedVerse,
   type PreparedVerse,
-  type VerseOriginalIndex,
   type VerseSearchHints,
 } from "../verseSearch";
+import {
+  bookRangeLabel,
+  buildBarSegments,
+  buildRenderingChips,
+  defaultChipIndex,
+  describeBar,
+  findOriginalCardPlans,
+  otherSensesOf,
+  parseOriginalIndex,
+  allRenderingsContainQuery,
+  pickAlternateVerse,
+  pickFoundVerse,
+  senseVerses,
+  shardIndexFor,
+  shardPath,
+  versesForChip,
+  type OriginalIndex,
+  type OriginalShard,
+  type SenseVerse,
+} from "../originalStudy";
+import {
+  LIST_PAGE_SIZE,
+  MAX_OTHER_SENSES,
+  ORIGINAL_STUDY_ATTRIBUTION,
+  ORIGINAL_STUDY_DISCLAIMER,
+  ORIGINAL_STUDY_HELP_LABEL,
+  ORIGINAL_STUDY_HELP_SLUG,
+} from "../originalStudyConfig";
 import { buildFeedbackFormUrl, parseFeedbackFormConfig } from "../feedbackForm";
 import { findTextMatchRanges } from "../textMatcher";
 import { firstHitRanges } from "../termFocus";
@@ -153,16 +178,12 @@ const ensureVerseIndex = createIndexLoader(
 );
 
 /** 原文索引只在需要時才讀；缺檔（精簡環境）或格式不對時當作沒有，不影響經文搜尋。 */
-let originalIndex: VerseOriginalIndex | null = null;
+let originalIndex: OriginalIndex | null = null;
 const ensureOriginalIndex = createIndexLoader(
-  async (): Promise<VerseOriginalIndex | null> => {
+  async (): Promise<OriginalIndex | null> => {
     try {
-      const response = await fetch(resolveSearchPath("static/verseOriginalIndex.json"));
-      if (!response.ok) return null;
-      const data = (await response.json()) as Partial<VerseOriginalIndex> | null;
-      return data && data.version === 1 && data.lexicon && data.chapters
-        ? (data as VerseOriginalIndex)
-        : null;
+      const response = await fetch(resolveSearchPath("static/verseOriginal/index.json"));
+      return response.ok ? parseOriginalIndex(await response.json()) : null;
     } catch {
       return null;
     }
@@ -171,6 +192,27 @@ const ensureOriginalIndex = createIndexLoader(
     originalIndex = data;
   },
 );
+
+/** 分片只抓用到的，抓過就留著；抓不到的不顯示那張卡，也不重試。 */
+const loadedShards = new Map<number, OriginalShard>();
+const shardRequests = new Map<number, Promise<void>>();
+function loadShard(n: number): Promise<void> {
+  let pending = shardRequests.get(n);
+  if (!pending) {
+    pending = (async () => {
+      try {
+        const response = await fetch(resolveSearchPath(shardPath(n)));
+        if (!response.ok) return;
+        const data = (await response.json()) as OriginalShard | null;
+        if (data && typeof data === "object") loadedShards.set(n, data);
+      } catch {
+        // 缺檔就不顯示那張卡
+      }
+    })();
+    shardRequests.set(n, pending);
+  }
+  return pending;
+}
 
 /** 相關詞與單節釘選是加分資料：缺檔或格式不對就當作沒有，經文搜尋照常運作。 */
 let verseHints: VerseSearchHints | null = null;
@@ -551,56 +593,6 @@ function setupSearch() {
       }
     };
 
-    const makeOriginalGroup = (group: OriginalStudyGroup) => {
-      const details = document.createElement("details");
-      details.className = "search-original-group";
-      details.open = group.autoOpen;
-      const summary = document.createElement("summary");
-      const summaryMain = document.createElement("span");
-      summaryMain.className = "search-original-summary-main";
-      const lemma = document.createElement("span");
-      lemma.className = "search-original-lemma";
-      lemma.textContent = group.lemma;
-      const translit = document.createElement("span");
-      translit.className = "search-original-translit";
-      translit.textContent = `(${group.translit})`;
-      const renderingsPill = document.createElement("span");
-      renderingsPill.className = "search-original-renderings";
-      renderingsPill.textContent = `另譯作：${group.distinctRenderings.slice(0, 4).join("、")}`;
-      const hitCount = document.createElement("span");
-      hitCount.className = "search-original-count";
-      hitCount.textContent = `・${group.hits.length} 節`;
-      summaryMain.append(lemma, translit, renderingsPill, hitCount);
-      summary.append(summaryMain);
-      // 詞義說明暫不顯示：目前的資料是和合本譯法統計，夾雜斷詞雜訊，整理好再補。
-      if (group.entryLink) {
-        const link = document.createElement("a");
-        link.className = "search-original-entry-link";
-        link.dataset.slug = group.entryLink.slug;
-        link.href = resolveSearchPath(group.entryLink.slug);
-        link.textContent =
-          (group.entryLink.isOriginalEntry ? "原文條目：" : "相關條目：") +
-          group.entryLink.title +
-          " →";
-        summary.append(link);
-      }
-      details.append(summary);
-      const body = document.createElement("div");
-      body.className = "search-original-body";
-      for (const { verse, rendering } of group.hits.slice(0, RESULT_RENDER_LIMIT)) {
-        studyVerses.set(verse.id, verse);
-        body.append(makeVerseCard(verse, rendering));
-      }
-      if (group.hits.length > RESULT_RENDER_LIMIT) {
-        const more = document.createElement("p");
-        more.className = "search-original-more";
-        more.textContent = `僅列出前 ${RESULT_RENDER_LIMIT} 節，共 ${group.hits.length} 節`;
-        body.append(more);
-      }
-      details.append(body);
-      return details;
-    };
-
     const placeBeforeFeedback = (node: HTMLElement) => {
       if (feedbackElement?.isConnected) feedbackElement.before(node);
       else results.append(node);
@@ -645,7 +637,262 @@ function setupSearch() {
       results.append(hint);
     };
 
-    /** 非阻塞：原文索引缺檔時什麼都不顯示，經文結果不受影響。 */
+    /** 一張卡片的互動狀態；每次變動就整張重畫（卡片很小，比逐一更新單純）。 */
+    interface CardState {
+      senseKey: string;
+      chip: number;
+      cycle: number;
+      listOpen: boolean;
+      listShown: number;
+    }
+
+    const makeOriginalLink = (verse: SenseVerse, className: string, text: string) => {
+      const link = document.createElement("a");
+      link.className = className;
+      link.dataset.slug = verse.slug;
+      link.dataset.verse = String(verse.verse);
+      link.href = resolveSearchPath(verse.slug) + "#v" + verse.verse;
+      link.textContent = text;
+      return link;
+    };
+
+    /** 樣式放在 @layer 裡，會輸給站台全域的 article p / article li 規則，所以這區塊不用 p、li。 */
+    const makeOriginalVerseText = (item: SenseVerse, prepared: PreparedVerse): HTMLDivElement => {
+      const text = document.createElement("div");
+      text.className = "search-original-verse-text";
+      text.append(makeOriginalLink(item, "search-original-ref", verseReference(prepared)), " ");
+      let offset = 0;
+      for (const { start, end } of getVerseMatchRanges(
+        prepared.text,
+        item.rendering ? [item.rendering] : [],
+        false,
+      )) {
+        text.append(prepared.text.slice(offset, start));
+        const hit = document.createElement("strong");
+        hit.className = "search-original-hit";
+        hit.textContent = prepared.text.slice(start, end);
+        text.append(hit);
+        offset = end;
+      }
+      text.append(prepared.text.slice(offset));
+      return text;
+    };
+
+    const renderOriginalCard = (
+      card: HTMLElement,
+      index: OriginalIndex,
+      state: CardState,
+      query: string,
+      directIds: ReadonlySet<string>,
+      verseMap: ReadonlyMap<string, PreparedVerse>,
+      switchSense: (senseKey: string) => void,
+      focusKey?: string,
+    ) => {
+      const sense = index.senses[state.senseKey]!;
+      const shard = loadedShards.get(shardIndexFor(state.senseKey, index.shards));
+      const verseList = senseVerses(shard?.[state.senseKey], verseMap);
+      const chips = buildRenderingChips(sense, query);
+      const chip = chips[Math.min(state.chip, chips.length - 1)];
+      const others = otherSensesOf(index, state.senseKey);
+      const rerender = (key?: string) =>
+        renderOriginalCard(card, index, state, query, directIds, verseMap, switchSense, key);
+
+      // 頭：希伯來文、轉寫、用法標籤、條目連結
+      const [lemmaText, translitText] = index.lexicon[sense.sid] ?? ["", ""];
+      const head = document.createElement("div");
+      head.className = "search-original-head";
+      const lemma = document.createElement("span");
+      lemma.className = "search-original-lemma";
+      lemma.lang = "he";
+      lemma.dir = "rtl";
+      lemma.textContent = lemmaText;
+      const translit = document.createElement("span");
+      translit.className = "search-original-translit";
+      translit.textContent = translitText;
+      const pill = document.createElement("span");
+      pill.className = "search-original-use";
+      pill.textContent = (others.length > 0 ? "這裡的用法：" : "") + sense.label;
+      head.append(lemma, translit, pill);
+      const entry = index.entries?.[sense.sid];
+      if (entry) {
+        const link = document.createElement("a");
+        link.className = "search-original-entry-link";
+        link.dataset.slug = entry.slug;
+        link.href = resolveSearchPath(entry.slug);
+        link.textContent = (entry.isHeadword ? "原文條目：" : "相關條目：") + entry.title + " →";
+        head.append(link);
+      }
+
+      const label = document.createElement("div");
+      label.className = "search-original-label";
+      label.textContent = `和合本${others.length > 0 ? "在這個用法" : "在這裡"}的譯法（共 ${sense.total} 處）`;
+
+      // 比例條：文字說明給螢幕閱讀器，顏色深淺只是輔助
+      const segments = buildBarSegments(sense, chips);
+      const sum = segments.reduce((total, segment) => total + segment.count, 0) || 1;
+      const bar = document.createElement("div");
+      bar.className = "search-original-bar";
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", describeBar(segments));
+      for (const segment of segments) {
+        const part = document.createElement("span");
+        part.style.width = (segment.count / sum) * 100 + "%";
+        part.className =
+          segment.kind === "none"
+            ? "is-none"
+            : segment.chipIndex === state.chip
+              ? "is-selected"
+              : segment.chipIndex! % 2 === 0
+                ? "is-even"
+                : "is-odd";
+        bar.append(part);
+      }
+
+      const chipRow = document.createElement("div");
+      chipRow.className = "search-original-chips";
+      chipRow.setAttribute("role", "group");
+      chipRow.setAttribute("aria-label", "和合本的譯法");
+      chips.forEach((item, position) => {
+        const button = makeSearchButton("search-original-chip", "");
+        button.dataset.focus = "chip-" + position;
+        button.classList.toggle("is-query", item.containsQuery);
+        button.setAttribute("aria-pressed", String(position === state.chip));
+        const name = document.createElement("span");
+        name.textContent = item.label;
+        const count = document.createElement("span");
+        count.className = "search-original-chip-count";
+        count.textContent = String(item.count);
+        button.append(name, count);
+        button.addEventListener("click", () => {
+          state.chip = position;
+          state.cycle = 0;
+          state.listShown = LIST_PAGE_SIZE;
+          rerender("chip-" + position);
+        });
+        chipRow.append(button);
+      });
+
+      // 兩節對照
+      const found = pickFoundVerse(verseList, directIds, query);
+      const candidates = chip ? versesForChip(verseList, chip) : [];
+      // 所有譯法都含查詢詞時沒有「另一種譯法」可比，只放找到的那一節
+      const onlyQuery = allRenderingsContainQuery(chips);
+      const alternate = onlyQuery ? null : pickAlternateVerse(candidates, found, state.cycle);
+      const single = onlyQuery ? (found ?? candidates[0] ?? null) : null;
+      const pair = document.createElement("div");
+      pair.className = "search-original-pair";
+      const makeBox = (tag: string, item: SenseVerse) => {
+        const box = document.createElement("div");
+        box.className = "search-original-verse";
+        const tagEl = document.createElement("div");
+        tagEl.className = "search-original-verse-tag";
+        tagEl.textContent = tag;
+        box.append(tagEl, makeOriginalVerseText(item, verseMap.get(item.id)!));
+        return box;
+      };
+      if (found) pair.append(makeBox("你找到的一處", found));
+      else if (single) pair.append(makeBox("經文", single));
+      if (alternate) pair.append(makeBox("另一種譯法", alternate));
+
+      // 按鈕
+      const acts = document.createElement("div");
+      acts.className = "search-original-acts";
+      const contextTarget = alternate ?? single;
+      if (contextTarget) {
+        acts.append(makeOriginalLink(contextTarget, "search-original-context", "讀前後文"));
+      }
+      if (chip && candidates.length > 0) {
+        const list = makeSearchButton(
+          "search-original-btn",
+          `列出「${chip.label}」${candidates.length} 節`,
+        );
+        list.dataset.focus = "list";
+        list.setAttribute("aria-expanded", String(state.listOpen));
+        list.addEventListener("click", () => {
+          state.listOpen = !state.listOpen;
+          rerender("list");
+        });
+        acts.append(list);
+      }
+      if (!onlyQuery && candidates.filter((item) => item.id !== found?.id).length > 1) {
+        const cycle = makeSearchButton("search-original-btn is-ghost", "換一節");
+        cycle.dataset.focus = "cycle";
+        cycle.addEventListener("click", () => {
+          state.cycle++;
+          rerender("cycle");
+        });
+        acts.append(cycle);
+      }
+
+      card.replaceChildren(head, label, bar, chipRow, pair);
+      if (onlyQuery) {
+        const same = document.createElement("div");
+        same.className = "search-original-note";
+        same.textContent = `這個用法在和合本都譯作「${chips.map((item) => item.label).join("、")}」。`;
+        card.append(same);
+      }
+      card.append(acts);
+
+      if (state.listOpen && candidates.length > 0) {
+        const panel = document.createElement("div");
+        panel.className = "search-original-list";
+        panel.setAttribute("role", "list");
+        for (const item of candidates.slice(0, state.listShown)) {
+          const row = document.createElement("div");
+          row.setAttribute("role", "listitem");
+          row.append(makeOriginalVerseText(item, verseMap.get(item.id)!));
+          panel.append(row);
+        }
+        card.append(panel);
+        if (candidates.length > state.listShown) {
+          const more = makeSearchButton(
+            "search-original-btn",
+            `顯示更多（還有 ${candidates.length - state.listShown} 節）`,
+          );
+          more.dataset.focus = "more";
+          more.addEventListener("click", () => {
+            state.listShown += LIST_PAGE_SIZE;
+            rerender("more");
+          });
+          card.append(more);
+        }
+      }
+
+      if (sense.none > 0) {
+        const note = document.createElement("div");
+        note.className = "search-original-note";
+        note.textContent = `另有 ${sense.none} 處，這個詞沒有可單獨對應的中文字，意思融入整句。`;
+        card.append(note);
+      }
+
+      if (others.length > 0) {
+        const row = document.createElement("div");
+        row.className = "search-original-others";
+        const lead = document.createElement("span");
+        lead.textContent = "這個字的其他用法：";
+        row.append(lead);
+        for (const other of others.slice(0, MAX_OTHER_SENSES)) {
+          const button = makeSearchButton(
+            "search-original-btn is-ghost",
+            `${other.label} ${other.total}`,
+          );
+          button.dataset.focus = "sense-" + other.senseKey;
+          button.setAttribute("aria-label", `改看用法「${other.label}」，共 ${other.total} 處`);
+          button.addEventListener("click", () => switchSense(other.senseKey));
+          row.append(button);
+        }
+        if (others.length > MAX_OTHER_SENSES) row.append("…");
+        card.append(row);
+      }
+
+      if (focusKey) {
+        for (const target of Array.from(card.querySelectorAll<HTMLElement>("[data-focus]"))) {
+          if (target.dataset.focus === focusKey) target.focus();
+        }
+      }
+    };
+
+    /** 非阻塞：原文索引或分片缺檔時什麼都不顯示，經文結果不受影響。 */
     const showOriginalStudy = async (
       token: number,
       query: string,
@@ -666,42 +913,75 @@ function setupSearch() {
         placeBeforeFeedback(note);
         return;
       }
-      const groups = findOriginalLanguageStudyGroups(
-        corpus,
-        originalIndex,
-        query,
-        new Set(hits.map((hit) => hit.id)),
-      );
-      if (groups.length === 0) return;
+      const index = originalIndex;
+      if (!index) return;
+      const plans = findOriginalCardPlans(index, query);
+      if (plans.length === 0) return;
+      const shardNumbers = new Set(plans.map((plan) => shardIndexFor(plan.senseKey, index.shards)));
+      await Promise.all([...shardNumbers].map((n) => loadShard(n)));
+      if (token !== request || mode !== "verse") return;
+
+      const verseMap = getVerseMap(corpus);
+      const directIds = new Set(hits.map((hit) => hit.id));
+      const cards: HTMLElement[] = [];
+      for (const plan of plans) {
+        const shard = loadedShards.get(shardIndexFor(plan.senseKey, index.shards));
+        if (senseVerses(shard?.[plan.senseKey], verseMap).length === 0) continue;
+        const card = document.createElement("article");
+        card.className = "search-original-card";
+        const state: CardState = {
+          senseKey: plan.senseKey,
+          chip: defaultChipIndex(buildRenderingChips(index.senses[plan.senseKey]!, query)),
+          cycle: 0,
+          listOpen: false,
+          listShown: LIST_PAGE_SIZE,
+        };
+        const switchSense = async (senseKey: string) => {
+          const n = shardIndexFor(senseKey, index.shards);
+          await loadShard(n);
+          if (!card.isConnected) return;
+          if (senseVerses(loadedShards.get(n)?.[senseKey], verseMap).length === 0) return;
+          state.senseKey = senseKey;
+          state.chip = defaultChipIndex(buildRenderingChips(index.senses[senseKey]!, query));
+          state.cycle = 0;
+          state.listOpen = false;
+          state.listShown = LIST_PAGE_SIZE;
+          renderOriginalCard(card, index, state, query, directIds, verseMap, switchSense);
+          card.querySelector<HTMLElement>(".search-original-chip")?.focus();
+        };
+        renderOriginalCard(card, index, state, query, directIds, verseMap, switchSense);
+        cards.push(card);
+      }
+      if (cards.length === 0) return;
+
       const section = document.createElement("section");
       section.className = "search-original-study";
-      section.setAttribute("aria-label", "原文其他譯法");
+      section.setAttribute("aria-label", "換個譯法的相關經文");
       const header = document.createElement("div");
       header.className = "search-section-header is-study";
-      const headerLeft = document.createElement("span");
-      headerLeft.className = "search-section-header-left";
       const headerTitle = document.createElement("span");
       headerTitle.className = "search-section-title";
       headerTitle.textContent =
-        hits.length > 0 ? "② 同一原文詞在本站的其他譯法" : "對應原文詞在本站譯法";
-      const headerBadge = document.createElement("span");
-      headerBadge.className = "search-section-badge";
-      headerBadge.textContent = `延伸研讀・${groups.length} 個詞根`;
-      headerLeft.append(headerTitle, headerBadge);
-      const headerHint = document.createElement("span");
-      headerHint.className = "search-section-meta";
-      headerHint.textContent = "點擊可展開／收合";
-      header.append(headerLeft, headerHint);
-      section.append(header, ...groups.map((group) => makeOriginalGroup(group)));
-      const credit = document.createElement("p");
-      credit.className = "search-original-credit";
-      credit.textContent = ORIGINAL_STUDY_ATTRIBUTION;
-      section.append(credit);
+        hits.length > 0 ? "② 換個譯法，也找得到相關經文" : "換個譯法找到的相關經文";
+      const helpLink = document.createElement("a");
+      helpLink.className = "search-original-help";
+      helpLink.href = resolveSearchPath(ORIGINAL_STUDY_HELP_SLUG);
+      helpLink.textContent = ORIGINAL_STUDY_HELP_LABEL;
+      helpLink.setAttribute("aria-label", "這一區是什麼：換個譯法找經文的說明");
+      header.append(headerTitle, helpLink);
+      const scope = document.createElement("div");
+      scope.className = "search-original-scope";
+      scope.textContent = `目前涵蓋${bookRangeLabel(corpus)}・依出現次數排序`;
+      section.append(header, scope, ...cards);
+      const footer = document.createElement("div");
+      footer.className = "search-original-credit";
+      footer.textContent = ORIGINAL_STUDY_DISCLAIMER + " " + ORIGINAL_STUDY_ATTRIBUTION;
+      section.append(footer);
       studyElement = section;
       if (pinElement?.isConnected) pinElement.after(section);
       else placeBeforeFeedback(section);
       if (hits.length === 0) {
-        const message = "字面無直接相符經文，以下顯示同原文詞在本站已收錄的經文";
+        const message = "字面無直接相符經文，以下顯示和合本用其他譯法翻同一原文詞的經文";
         count.hidden = false;
         count.textContent = message;
         announce(message);
@@ -1319,10 +1599,10 @@ function setupSearch() {
           return;
         }
         const link = target.closest<HTMLAnchorElement>(
-          "a.result-card[href], a.search-original-entry-link[href]",
+          "a.result-card[href], a.search-original-entry-link[href], a.search-original-ref[href], a.search-original-context[href]",
         );
         if (link) {
-          if (link.classList.contains("search-original-entry-link")) event.stopPropagation();
+          if (link.className.includes("search-original-")) event.stopPropagation();
           if (!event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey)
             handleNavigate(link);
         }
